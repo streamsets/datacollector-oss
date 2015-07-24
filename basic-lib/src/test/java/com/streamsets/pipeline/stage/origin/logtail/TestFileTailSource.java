@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
@@ -21,7 +22,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -520,5 +523,150 @@ public class TestFileTailSource {
     }
   }
 
+  private Source createSourceForPeriodicFile(String filePathWithPattern, String pattern) {
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = filePathWithPattern;
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = pattern;
+    return new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
+                                               PostProcessingOptions.NONE, null, null,
+                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+  }
+
+  private SourceRunner createRunner(Source source) {
+    return new SourceRunner.Builder(FileTailDSource.class, source).addOutputLane("lane").addOutputLane("meta").build();
+  }
+
+  @Test
+  public void testFileTruncatedBetweenRuns() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    File file = new File(testDataDir, "file.txt-1");
+    Files.write(file.toPath(), Arrays.asList("A", "B", "C"), StandardCharsets.UTF_8);
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]";
+    Source source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+    SourceRunner runner = createRunner(source);
+    try {
+      // run till current end and stop pipeline
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(3, output.getRecords().get("lane").size());
+      runner.runDestroy();
+
+      // truncate file
+      FileChannel channel = new FileOutputStream(file, true).getChannel();
+      channel.truncate(2);
+      channel.close();
+
+      // run again, no new data, no error
+      source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+      runner = createRunner(source);
+      runner.runInit();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+      runner.runDestroy();
+
+      file = new File(testDataDir, "file.txt-2");
+      Files.write(file.toPath(), Arrays.asList("A", "B"), StandardCharsets.UTF_8);
+
+      // run again, new file
+      source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+      runner = createRunner(source);
+      runner.runInit();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testFileDeletedBetweenRuns() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    File file = new File(testDataDir, "file.txt-1");
+    Files.write(file.toPath(), Arrays.asList("A", "B", "C"), StandardCharsets.UTF_8);
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]";
+    Source source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+    SourceRunner runner = createRunner(source);
+    try {
+      // run till current end and stop pipeline
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(3, output.getRecords().get("lane").size());
+      runner.runDestroy();
+
+      Files.delete(file.toPath());
+
+      // run again, no new data, no error
+      source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+      runner = createRunner(source);
+      runner.runInit();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+      runner.runDestroy();
+
+      file = new File(testDataDir, "file.txt-2");
+      Files.write(file.toPath(), Arrays.asList("A", "B"), StandardCharsets.UTF_8);
+
+      // run again, new file
+      source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+      runner = createRunner(source);
+      runner.runInit();
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testFileDeletedWhileRunning() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    File file = new File(testDataDir, "file.txt-1");
+    Files.write(file.toPath(), Arrays.asList("A", "B", "C"), StandardCharsets.UTF_8);
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}";
+    fileInfo.fileRollMode = FileRollMode.PATTERN;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "[0-9]";
+    Source source = createSourceForPeriodicFile(testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}", "[0-9]");
+    SourceRunner runner = createRunner(source);
+    try {
+      // run till current end and stop pipeline
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertEquals(3, output.getRecords().get("lane").size());
+
+      Files.delete(file.toPath());
+
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+
+      file = new File(testDataDir, "file.txt-2");
+      Files.write(file.toPath(), Arrays.asList("A", "B"), StandardCharsets.UTF_8);
+
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
 
 }

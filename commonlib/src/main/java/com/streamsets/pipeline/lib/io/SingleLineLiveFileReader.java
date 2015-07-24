@@ -109,19 +109,45 @@ public class SingleLineLiveFileReader implements LiveFileReader {
     }
 
     channel = Files.newByteChannel(currentFile.getPath(), StandardOpenOption.READ);
-    if (offset > channel.size()) {
-      throw new IOException(Utils.format("File '{}', offset '{}' beyond file size '{}'", currentFile.getPath(), offset,
-                                         channel.size()));
+    open = true;
+
+    long actualSize = -1;
+    try {
+      actualSize = channel.size();
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
     }
-    channel.position(this.offset);
+
+    if (offset > actualSize) {
+      channel.close();
+      throw new IOException(Utils.format("File '{}', offset '{}' beyond file size '{}'", currentFile.getPath(), offset,
+                                         actualSize));
+    }
+
+    try {
+      channel.position(this.offset);
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
+    }
     LOG.debug("File '{}', positioned at offset '{}'", currentFile, offset);
 
     buffer = ByteBuffer.allocate(maxLineLen);
     chunkBytes = new byte[maxLineLen];
 
     lastPosCheckedForEol = 0;
+  }
 
-    open = true;
+  private void closeChannel() {
+    if (open) {
+      try {
+        open = false;
+        channel.close();
+      } catch (IOException ex) {
+        //NOP
+      }
+    }
   }
 
   private void validateCharset(Charset charset, char c, String cStr) {
@@ -168,45 +194,51 @@ public class SingleLineLiveFileReader implements LiveFileReader {
     Utils.checkState(open, Utils.formatL("LiveFileReader for '{}' is not open", currentFile));
     LiveFileChunk liveFileChunk = null;
     long start = System.currentTimeMillis() + waitMillis;
-    while (true) {
-      if (!hasNext()) {
-        break;
-      }
-      if (truncateMode) {
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("File '{}' at offset '{} in fast forward mode", currentFile, channel.position());
+    try {
+      while (true) {
+        if (!hasNext()) {
+          break;
         }
-        truncateMode = fastForward();
-      }
-      if (!truncateMode) {
-        liveFileChunk = readChunk();
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("File '{}' at offset '{} got chunk '{}'", currentFile, channel.position(), liveFileChunk != null);
+        if (truncateMode) {
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("File '{}' at offset '{} in fast forward mode", currentFile, channel.position());
+          }
+          truncateMode = fastForward();
         }
-        if (liveFileChunk != null) {
+        if (!truncateMode) {
+          liveFileChunk = readChunk();
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("File '{}' at offset '{} got chunk '{}'", currentFile, channel.position(), liveFileChunk != null);
+          }
+          if (liveFileChunk != null) {
+            break;
+          }
+        }
+        if (System.currentTimeMillis() - start >= 0) {
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("File '{}' at offset '{} timed out while waiting for chunk", currentFile, channel.position());
+          }
+          //wait timeout
+          break;
+        }
+        //yielding CPU while in wait loop
+        if (!ThreadUtil.sleep(YIELD_INTERVAL)) {
+          LOG.trace("File '{}' at offset '{} interrupted while yielding CPU", currentFile, channel.position());
           break;
         }
       }
-      if (System.currentTimeMillis() - start >= 0) {
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("File '{}' at offset '{} timed out while waiting for chunk", currentFile, channel.position());
-        }
-        //wait timeout
-        break;
-      }
-      //yielding CPU while in wait loop
-      if (!ThreadUtil.sleep(YIELD_INTERVAL)) {
-        LOG.trace("File '{}' at offset '{} interrupted while yielding CPU", currentFile, channel.position());
-        break;
-      }
+      offset = channel.position() - buffer.position();
+      return liveFileChunk;
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
     }
-    offset = channel.position() - buffer.position();
-    return liveFileChunk;
   }
 
   @Override
   public void close() throws IOException {
     if (open) {
+      open = false;
       channel.close();
     }
   }
@@ -215,82 +247,97 @@ public class SingleLineLiveFileReader implements LiveFileReader {
 
   // returns true if still in truncate mode, false otherwise
   private boolean fastForward() throws IOException {
-    boolean stillTruncate;
-    buffer.clear();
-    if (channel.read(buffer) > -1 || isEof()) {
-      //set the buffer into read from mode
-      buffer.flip();
-      //we have data, lets look for the first EOL in it.
-      int firstEolIdx = findEndOfFirstLine(buffer);
-      if (firstEolIdx > -1) {
-        // set position to position after first EOL
-        buffer.position(firstEolIdx + 1);
-        // set the buffer back into write into mode keeping data after first EOL
-        buffer.compact();
-        stillTruncate = false;
-        offset = channel.position() - buffer.position();
+    try {
+      boolean stillTruncate;
+      buffer.clear();
+      if (channel.read(buffer) > -1 || isEof()) {
+        //set the buffer into read from mode
+        buffer.flip();
+        //we have data, lets look for the first EOL in it.
+        int firstEolIdx = findEndOfFirstLine(buffer);
+        if (firstEolIdx > -1) {
+          // set position to position after first EOL
+          buffer.position(firstEolIdx + 1);
+          // set the buffer back into write into mode keeping data after first EOL
+          buffer.compact();
+          stillTruncate = false;
+          offset = channel.position() - buffer.position();
+        } else {
+          // no EOL yet
+          // whatever was read will be discarded on next next() call
+          stillTruncate = true;
+          offset = channel.position();
+        }
       } else {
-        // no EOL yet
+        // no data read
         // whatever was read will be discarded on next next() call
         stillTruncate = true;
         offset = channel.position();
       }
-    } else {
-      // no data read
-      // whatever was read will be discarded on next next() call
-      stillTruncate = true;
-      offset = channel.position();
+      return stillTruncate;
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
     }
-    return stillTruncate;
   }
 
   private LiveFileChunk readChunk() throws IOException {
-    LiveFileChunk liveFileChunk = null;
-    if (channel.read(buffer) > 0 || buffer.limit() - buffer.position() > 0 || isEof()) {
-      // we have data, set the buffer into read from mode
-      buffer.flip();
-      // lets look for the last EOL in it
-      int lastEolIdx = (isEof()) ? buffer.limit() : findEndOfLastLine(buffer);
-      if (lastEolIdx > -1) {
-        // we have an EOL in the buffer or we are at the end of the file
-        int chunkSize =lastEolIdx - buffer.position();
-        buffer.get(chunkBytes, 0, chunkSize);
-        // create reader with exactly the chunk
-        Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, false);
-      } else if (buffer.limit() == buffer.capacity()) {
-        // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
-        // we have an EOL in the buffer or we are at the end of the file
-        int chunkSize = buffer.limit() - buffer.position();
-        buffer.get(chunkBytes, 0, chunkSize);
-        // create reader with exactly the chunk
-        Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
-        liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, true);
-        truncateMode = true;
-      } else {
-        // we don't have an EOL and the buffer is not full, no chunk in this read
-        liveFileChunk = null;
+    try {
+      LiveFileChunk liveFileChunk = null;
+      if (channel.read(buffer) > 0 || buffer.limit() - buffer.position() > 0 || isEof()) {
+        // we have data, set the buffer into read from mode
+        buffer.flip();
+        // lets look for the last EOL in it
+        int lastEolIdx = (isEof()) ? buffer.limit() : findEndOfLastLine(buffer);
+        if (lastEolIdx > -1) {
+          // we have an EOL in the buffer or we are at the end of the file
+          int chunkSize = lastEolIdx - buffer.position();
+          buffer.get(chunkBytes, 0, chunkSize);
+          // create reader with exactly the chunk
+          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
+          liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, false);
+        } else if (buffer.limit() == buffer.capacity()) {
+          // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
+          // we have an EOL in the buffer or we are at the end of the file
+          int chunkSize = buffer.limit() - buffer.position();
+          buffer.get(chunkBytes, 0, chunkSize);
+          // create reader with exactly the chunk
+          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
+          liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, true);
+          truncateMode = true;
+        } else {
+          // we don't have an EOL and the buffer is not full, no chunk in this read
+          liveFileChunk = null;
+        }
+        // set the buffer back into write into mode with the leftover data
+        buffer.compact();
+        // correcting next position in buffer scanned for EOL to reflect post compact() position.
+        lastPosCheckedForEol = buffer.position();
       }
-      // set the buffer back into write into mode with the leftover data
-      buffer.compact();
-      // correcting next position in buffer scanned for EOL to reflect post compact() position.
-      lastPosCheckedForEol = buffer.position();
+      return liveFileChunk;
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
     }
-    return liveFileChunk;
   }
 
   private boolean isEof() throws IOException {
-    if (!rolled) {
-      if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
-        currentFile = originalFile.refresh();
-        if (!currentFile.equals(originalFile)) {
-          LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
+    try {
+      if (!rolled) {
+        if (originalFile.equals(currentFile) && System.currentTimeMillis() - lastLiveFileRefresh > REFRESH_INTERVAL) {
+          currentFile = originalFile.refresh();
+          if (!currentFile.equals(originalFile)) {
+            LOG.debug("Original file '{}' refreshed to '{}'", originalFile, currentFile);
+          }
+          rolled = rollMode.isFileRolled(currentFile);
+          lastLiveFileRefresh = System.currentTimeMillis();
         }
-        rolled = rollMode.isFileRolled(currentFile);
-        lastLiveFileRefresh = System.currentTimeMillis();
       }
+      return rolled && channel.position() >= channel.size();
+    } catch (IOException ex) {
+      closeChannel();
+      throw ex;
     }
-    return rolled && channel.position() == channel.size();
   }
 
   private int findEndOfLastLine(ByteBuffer buffer) {

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib.io;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +106,7 @@ public class FileContext {
         }
         if (fileOffset == 0) {
           // file start event
-          eventPublisher.publish(new FileEvent(currentFile, true));
+          eventPublisher.publish(new FileEvent(currentFile, FileEvent.Action.START));
         }
       }
     }
@@ -113,12 +114,20 @@ public class FileContext {
   }
 
   // updates reader and offsets after a read.
-  public void releaseReader() throws IOException {
+  public void releaseReader(boolean inErrorDiscardReader) throws IOException {
     Utils.checkState(open, "FileContext is closed");
     // update starting offsets for next invocation either cold (no reader) or hot (reader)
-    if (!getReader().hasNext()) {
-      // reached EOF
-      getReader().close();
+    boolean hasNext;
+    try {
+      hasNext = reader != null && reader.hasNext();
+    } catch (IOException ex) {
+      IOUtils.closeQuietly(reader);
+      reader = null;
+      hasNext = false;
+    }
+    boolean doneWithFile = !hasNext || inErrorDiscardReader;
+    if (doneWithFile) {
+      IOUtils.closeQuietly(reader);
       reader = null;
       //using Long.MAX_VALUE to signal we reach the end of the file and next iteration should get the next file.
       setStartingCurrentFileName(currentFile);
@@ -126,25 +135,36 @@ public class FileContext {
 
       // file end event
       LiveFile file = currentFile.refresh();
-      eventPublisher.publish(new FileEvent(file, false));
-      switch (postProcessing) {
-        case NONE:
-          LOG.debug("File '{}' processing completed, post processing action 'NONE'", file);
-          break;
-        case DELETE:
-          Files.delete(file.getPath());
-          LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
-          break;
-        case ARCHIVE:
-          Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
-          try {
-            Files.createDirectories(fileArchive.getParent());
-            Files.move(file.getPath(), fileArchive);
-            LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
-          } catch (IOException ex) {
-            throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.getMessage()), ex);
-          }
-          break;
+
+      if (inErrorDiscardReader) {
+        LOG.warn("Processing file '{}' produced an error, skipping '{}' post processing on that file",
+                 file, postProcessing);
+        eventPublisher.publish(new FileEvent(file, FileEvent.Action.ERROR));
+      } else {
+        eventPublisher.publish(new FileEvent(file, FileEvent.Action.END));
+        switch (postProcessing) {
+          case NONE:
+            LOG.debug("File '{}' processing completed, post processing action 'NONE'", file);
+            break;
+          case DELETE:
+            try {
+              Files.delete(file.getPath());
+              LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
+            } catch (IOException ex) {
+              throw new IOException(Utils.format("Could not delete '{}': {}", file, ex.getMessage()), ex);
+            }
+            break;
+          case ARCHIVE:
+            Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
+            try {
+              Files.createDirectories(fileArchive.getParent());
+              Files.move(file.getPath(), fileArchive);
+              LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
+            } catch (IOException ex) {
+              throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.getMessage()), ex);
+            }
+            break;
+        }
       }
     } else {
       setStartingCurrentFileName(currentFile);

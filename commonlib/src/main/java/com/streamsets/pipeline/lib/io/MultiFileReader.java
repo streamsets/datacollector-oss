@@ -147,10 +147,9 @@ public class MultiFileReader implements Closeable {
    * Reads the next {@link LiveFileChunk} from the directories waiting the specified time for one.
    *
    * @param waitMillis number of milliseconds to block waiting for a chunk.
-   * @return the next chunk, or <code>null</code> if there is no next chunk adn teh waiting time passed.
-   * @throws IOException thrown if there was an IO error while reading a chunk.
+   * @return the next chunk, or <code>null</code> if there is no next chunk and the waiting time passed.
    */
-  public LiveFileChunk next(long waitMillis) throws IOException {
+  public LiveFileChunk next(long waitMillis) {
     Utils.checkState(open, "Not open");
     waitMillis = (waitMillis > 0) ? waitMillis : 0;
     long startTime = System.currentTimeMillis();
@@ -160,26 +159,36 @@ public class MultiFileReader implements Closeable {
     while (!exit) {
       if (!fileContextProvider.didFullLoop()) {
         FileContext fileContext = fileContextProvider.next();
-        LiveFileReader reader = fileContext.getReader();
-        if (reader != null) {
-          if (reader.hasNext()) {
-            chunk = reader.next(0);
-            if (LOG.isTraceEnabled()) {
-              LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'",
-                        fileContext.getMultiFileInfo().getFileFullPath(),
-                        reader.getLiveFile(), reader.getOffset(), chunk != null);
+        try {
+          LiveFileReader reader = fileContext.getReader();
+          if (reader != null) {
+            if (reader.hasNext()) {
+              chunk = reader.next(0);
+              if (LOG.isTraceEnabled()) {
+                LOG.trace("next(): directory '{}', file '{}', offset '{}' got data '{}'",
+                          fileContext.getMultiFileInfo().getFileFullPath(),
+                          reader.getLiveFile(), reader.getOffset(), chunk != null);
+              }
+            } else {
+              if (LOG.isTraceEnabled()) {
+                LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached",
+                          fileContext.getMultiFileInfo().getFileFullPath(),
+                          reader.getLiveFile(), reader.getOffset());
+              }
             }
+            fileContext.releaseReader(false);
           } else {
             if (LOG.isTraceEnabled()) {
-              LOG.trace("next(): directory '{}', file '{}', offset '{}' EOF reached",
-                        fileContext.getMultiFileInfo().getFileFullPath(),
-                        reader.getLiveFile(), reader.getOffset());
+              LOG.trace("next(): directory '{}', no reader available",
+                        fileContext.getMultiFileInfo().getFileFullPath());
             }
           }
-          fileContext.releaseReader();
-        } else {
-          if (LOG.isTraceEnabled()) {
-            LOG.trace("next(): directory '{}', no reader available", fileContext.getMultiFileInfo().getFileFullPath());
+        } catch (IOException ex) {
+          LOG.warn("Error while reading file: {}", ex.toString(), ex);
+          try {
+            fileContext.releaseReader(true);
+          } catch (IOException ex1) {
+            LOG.warn("Error while releasing reader in error: {}", ex1.getMessage(), ex1);
           }
         }
       }
