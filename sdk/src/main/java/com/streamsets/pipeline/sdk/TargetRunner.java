@@ -13,12 +13,15 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.BatchImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class TargetRunner extends StageRunner<Target> {
+  private static final Logger LOG = LoggerFactory.getLogger(TargetRunner.class);
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> targetClass, Target target, Map<String, Object> configuration, boolean isPreview,
@@ -36,9 +39,11 @@ public class TargetRunner extends StageRunner<Target> {
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
+    LOG.debug("Stage '{}' write starts", getInfo().getInstanceName());
     ensureStatus(Status.INITIALIZED);
     BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk:sourceOffset", inputRecords);
     getStage().write(batch);
+    LOG.debug("Stage '{}' write ends", getInfo().getInstanceName());
   }
 
   public static class Builder extends StageRunner.Builder<Target, TargetRunner, Builder> {

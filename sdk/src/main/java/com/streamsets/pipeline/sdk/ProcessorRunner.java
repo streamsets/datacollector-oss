@@ -14,11 +14,14 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.BatchImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class ProcessorRunner extends StageRunner<Processor> {
+  private static final Logger LOG = LoggerFactory.getLogger(Processor.class);
 
   public ProcessorRunner(Class<Processor> processorClass, Processor processor, Map<String, Object> configuration,
                          List<String> outputLanes, boolean isPreview, OnRecordError onRecordError,
@@ -35,11 +38,16 @@ public class ProcessorRunner extends StageRunner<Processor> {
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
-    ensureStatus(Status.INITIALIZED);
-    BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk:sourceOffset", inputRecords);
-    BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context)getContext()).getOutputLanes());
-    getStage().process(batch, batchMaker);
-    return new Output("sdk:sourceOffset", batchMaker.getOutput());
+    try {
+      LOG.debug("Stage '{}' process starts", getInfo().getInstanceName());
+      ensureStatus(Status.INITIALIZED);
+      BatchImpl batch = new BatchImpl(getInfo().getInstanceName(), "sdk:sourceOffset", inputRecords);
+      BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context) getContext()).getOutputLanes());
+      getStage().process(batch, batchMaker);
+      return new Output("sdk:sourceOffset", batchMaker.getOutput());
+    } finally {
+      LOG.debug("Stage '{}' process ends", getInfo().getInstanceName());
+    }
   }
 
   public static class Builder extends StageRunner.Builder<Processor, ProcessorRunner, Builder> {

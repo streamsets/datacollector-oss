@@ -11,11 +11,14 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.StageType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
 public class SourceRunner extends StageRunner<Source> {
+  private static final Logger LOG = LoggerFactory.getLogger(SourceRunner.class);
 
   public SourceRunner(Class<Source> sourceClass, Source source, Map<String, Object> configuration,
                       List<String> outputLanes, boolean isPreview, OnRecordError onRecordError,
@@ -32,10 +35,15 @@ public class SourceRunner extends StageRunner<Source> {
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {
-    ensureStatus(Status.INITIALIZED);
-    BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context)getContext()).getOutputLanes());
-    String newOffset = getStage().produce(lastOffset, maxBatchSize, batchMaker);
-    return new Output(newOffset, batchMaker.getOutput());
+    try {
+      LOG.debug("Stage '{}' produce starts", getInfo().getInstanceName());
+      ensureStatus(Status.INITIALIZED);
+      BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context) getContext()).getOutputLanes());
+      String newOffset = getStage().produce(lastOffset, maxBatchSize, batchMaker);
+      return new Output(newOffset, batchMaker.getOutput());
+    } finally {
+      LOG.debug("Stage '{}' produce ends", getInfo().getInstanceName());
+    }
   }
 
   public static class Builder extends StageRunner.Builder<Source, SourceRunner, Builder> {

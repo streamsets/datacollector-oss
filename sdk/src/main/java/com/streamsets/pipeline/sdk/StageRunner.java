@@ -20,6 +20,8 @@ import com.streamsets.pipeline.config.StageType;
 import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import com.streamsets.pipeline.util.ContainerError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class StageRunner<S extends Stage> {
+  private static final Logger LOG = LoggerFactory.getLogger(StageRunner.class);
 
   enum Status { CREATED, INITIALIZED, DESTROYED}
 
@@ -224,16 +227,22 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   public List<Stage.ConfigIssue> runValidateConfigs() throws StageException {
-    ensureStatus(Status.CREATED);
     try {
-      return stage.init(getInfo(), getContext());
+      LOG.debug("Stage '{}' validateConfgis starts", getInfo().getInstanceName());
+      ensureStatus(Status.CREATED);
+      try {
+        return stage.init(getInfo(), getContext());
+      } finally {
+        stage.destroy();
+      }
     } finally {
-      stage.destroy();
+      LOG.debug("Stage '{}' validateConfigs starts", getInfo().getInstanceName());
     }
   }
 
   @SuppressWarnings("unchecked")
   public void runInit() throws StageException {
+    LOG.debug("Stage '{}' init starts", getInfo().getInstanceName());
     ensureStatus(Status.CREATED);
     List<Stage.ConfigIssue> issues = stage.init(getInfo(), getContext());
     if (!issues.isEmpty()) {
@@ -244,12 +253,15 @@ public abstract class StageRunner<S extends Stage> {
       throw new StageException(ContainerError.CONTAINER_0010, list);
     }
     status = Status.INITIALIZED;
+    LOG.debug("Stage '{}' init ends", getInfo().getInstanceName());
   }
 
   public void runDestroy() throws StageException {
+    LOG.debug("Stage '{}' destroy starts", getInfo().getInstanceName());
     ensureStatus(Status.INITIALIZED);
     stage.destroy();
     status = Status.DESTROYED;
+    LOG.debug("Stage '{}' destroy ends", getInfo().getInstanceName());
   }
 
   public List<Record> getErrorRecords() {
