@@ -184,30 +184,6 @@ public class BootstrapCluster {
    * @return a source object associated with the newly created pipeline
    * @throws Exception
    */
-  public static Object createPipeline(Runnable postBatchRunnable) throws Exception {
-    BootstrapCluster.initialize();
-    ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-    try {
-      Thread.currentThread().setContextClassLoader(containerCL);
-      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.pipeline.datacollector.EmbeddedDataCollectorFactory",
-        true, containerCL);
-      Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("createPipeline", Runnable.class);
-      return createPipelineMethod.invoke(null, postBatchRunnable);
-    } catch (Exception ex) {
-      String msg = "Error trying to create pipeline: " + ex;
-      throw new IllegalStateException(msg, ex);
-    } finally {
-      Thread.currentThread().setContextClassLoader(originalClassLoader);
-    }
-  }
-
-  /**
-   * Obtaining a reference on the dummy source which is used to feed a pipeline<br/>
-   * Direction: Stage -> Container
-   * @param postBatchRunnable
-   * @return a source object associated with the newly created pipeline
-   * @throws Exception
-   */
   public static /*Source*/ Object startPipeline(
                                                  Runnable postBatchRunnable) throws Exception {
     BootstrapCluster.initialize();
@@ -250,7 +226,7 @@ public class BootstrapCluster {
       return Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl", true,
         sparkCL).getMethod("create", Properties.class, Integer.class).invoke(null, properties, id);
     } catch (Exception ex) {
-      String msg = "Error trying to obtain HadoopMapFunction Class: " + ex;
+      String msg = "Error trying to obtain ClusterFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
     } finally {
       Thread.currentThread().setContextClassLoader(originalClassLoader);

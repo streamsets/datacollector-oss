@@ -5,9 +5,19 @@
  */
 package com.streamsets.pipeline.impl;
 
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Common interface for cluster mode sources which push data.
+ */
 public interface ClusterFunction {
 
-  void invoke(Object ... args) throws Exception;
+  /**
+   * Invoke pipeline to process a batch. List passed to this interface
+   * may not be reused after this call returns.
+   */
+  void invoke(List<Map.Entry> batch) throws Exception;
 
   void shutdown() throws Exception;
 }

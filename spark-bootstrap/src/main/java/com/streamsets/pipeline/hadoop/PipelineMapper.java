@@ -7,6 +7,7 @@ package com.streamsets.pipeline.hadoop;
 
 import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.impl.ClusterFunction;
+import com.streamsets.pipeline.impl.Pair;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
@@ -71,25 +72,18 @@ public class PipelineMapper extends Mapper {
     int batchSize = Integer.parseInt(properties.getProperty("production.maxBatchSize", "1000").trim());
     boolean errorOccurred = true;
     try {
-      List<MapEntry> batch = new ArrayList<>();
       boolean hasNext = context.nextKeyValue();
       while (hasNext) {
+        List<Map.Entry> batch = new ArrayList<>();
         while (hasNext && batch.size() < batchSize) {
-          batch.add(new MapEntry(file + context.getCurrentKey(), String.valueOf(context.getCurrentValue())));
+          batch.add(new Pair(file + context.getCurrentKey(), String.valueOf(context.getCurrentValue())));
           hasNext = context.nextKeyValue(); // not like iterator.hasNext, actually advances
         }
         clusterFunction.invoke(batch);
-        batch.clear();
       }
       errorOccurred = false;
-    } catch (IllegalAccessException ex) {
-      throw new RuntimeException("Error invoking map function: " + ex, ex);
     } catch (Exception ex) {
-      Throwable error = ex;
-      if (error.getCause() != null) {
-        error = ex.getCause();
-      }
-      throw new RuntimeException("Error invoking map function: " + error, error);
+      throw new RuntimeException("Error invoking map function: " + ex, ex);
     } finally {
       try {
         clusterFunction.shutdown();
@@ -105,31 +99,6 @@ public class PipelineMapper extends Mapper {
           }
         }
       }
-    }
-  }
-
-  private static class MapEntry implements Map.Entry {
-    private final Object key;
-    private final Object value;
-
-    private MapEntry(Object key, Object value) {
-      this.key = key;
-      this.value = value;
-    }
-
-    @Override
-    public Object getKey() {
-      return key;
-    }
-
-    @Override
-    public Object getValue() {
-      return value;
-    }
-
-    @Override
-    public Object setValue(Object value) {
-      throw new UnsupportedOperationException();
     }
   }
 }

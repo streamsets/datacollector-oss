@@ -51,14 +51,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   }
 
   @Override
-  public void invoke(Object... args) throws Exception {
-    if (args == null || args.length != 1) {
-      throw new IllegalArgumentException("Expected one argument, got: " + Arrays.toString(args));
-    }
-    if (!(args[0] instanceof List)) {
-      throw new IllegalArgumentException("Expected argument to be list, got: " + args[0].getClass().getName());
-    }
-    List<Map.Entry> batch = (List)args[0];
+  public void invoke(List<Map.Entry> batch) throws Exception {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
