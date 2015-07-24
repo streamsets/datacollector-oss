@@ -53,9 +53,10 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $timeout, $translate, authService, userRoles, configuration, Analytics) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q) {
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
+      alertsTimer,
       isWebSocketSupported,
       loc = window.location,
       webSocketBaseURL = ((loc.protocol === "https:") ?
@@ -66,7 +67,9 @@ angular.module('dataCollectorApp')
       Y_KEY = 89,
       destroyed = false,
       webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
-      statusWebSocket;
+      statusWebSocket,
+      webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
+      alertsWebSocket;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
@@ -88,6 +91,8 @@ angular.module('dataCollectorApp')
         saveOperationInProgress: 0,
         pipelineStatus: {},
         pipelineStatusMap: {},
+        alertsMap: {},
+        alertsTotalCount: 0,
         errors: [],
         infoList: [],
         successList: [],
@@ -216,7 +221,77 @@ angular.module('dataCollectorApp')
           if(configuration.isAnalyticsEnabled()) {
             Analytics.trackEvent(category, action, label, value);
           }
+        },
+
+        /**
+         * Callback function when Alert is clicked.
+         *
+         * @param alert
+         */
+        onAlertClick: function(alert) {
+          $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION,
+            'Notification Message', 1);
+
+          //var edges = $scope.edges,
+            //edge;
+
+          //$scope.$storage.maximizeDetailPane = false;
+          //$scope.$storage.minimizeDetailPane = false;
+
+          if(alert.ruleDefinition.metricId) {
+            //Select Pipeline Config
+            /*
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            });*/
+            $location.path('/collector/pipeline/' + alert.pipelineName);
+          } else {
+            //Select edge
+            /*edge = _.find(edges, function(ed) {
+              return ed.outputLane === alert.rule.lane;
+            });
+
+            $scope.changeStageSelection({
+              selectedObject: edge,
+              type: pipelineConstant.LINK
+            });*/
+
+            $location.path('/collector/pipeline/' + alert.pipelineName);
+          }
+        },
+
+        /**
+         * Delete Triggered Alert
+         */
+        deleteTriggeredAlert: function(triggeredAlert, event) {
+
+          if(event) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+
+          var alerts = $rootScope.common.alertsMap[triggeredAlert.pipelineName];
+
+          if(alerts) {
+            $rootScope.common.alertsTotalCount--;
+
+            $rootScope.common.alertsMap[triggeredAlert.pipelineName] = _.filter(alerts, function(alert) {
+              return alert.ruleDefinition.id !== triggeredAlert.ruleDefinition.id;
+            });
+          }
+
+
+          api.pipelineAgent.deleteAlert(triggeredAlert.pipelineName, triggeredAlert.ruleDefinition.id)
+            .success(function() {
+
+            })
+            .error(function(data, status, headers, config) {
+              $rootScope.common.errors = [data];
+            });
         }
+
       };
 
     var logMessages = [];
@@ -228,17 +303,37 @@ angular.module('dataCollectorApp')
       $rootScope.isAuthorized = authService.isAuthorized;
     });
 
-    configuration.init().then(function() {
-      $rootScope.common.authenticationType = configuration.getAuthenticationType();
-      $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
-      $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
-      $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
-      if(configuration.isAnalyticsEnabled()) {
-        Analytics.createAnalyticsScriptTag();
-      }
-      isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
-      refreshPipelineStatus();
-    });
+    $q.all([api.pipelineAgent.getAllAlerts(), configuration.init()])
+      .then(function(results) {
+        $rootScope.common.authenticationType = configuration.getAuthenticationType();
+        $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
+        $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
+        $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.createAnalyticsScriptTag();
+        }
+
+        var alertsInfoList = results[0].data;
+        $rootScope.common.alertsTotalCount = alertsInfoList.length;
+        $rootScope.common.alertsMap = _.reduce(alertsInfoList,
+          function (alertsMap, alertInfo) {
+            if(!alertsMap[alertInfo.pipelineName]) {
+              alertsMap[alertInfo.pipelineName] = [];
+            }
+            alertsMap[alertInfo.pipelineName].push(alertInfo);
+            return alertsMap;
+          },
+          {}
+        );
+
+
+        isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
+        refreshPipelineStatus();
+
+        if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
+          refreshAlerts();
+        }
+      });
 
     // set actions to be taken each time the user navigates
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
@@ -279,6 +374,15 @@ angular.module('dataCollectorApp')
           $rootScope.$apply(function() {
             var parsedStatus = JSON.parse(received_msg);
             $rootScope.common.pipelineStatusMap[parsedStatus.name] = parsedStatus;
+
+            if(parsedStatus.status !== 'RUNNING') {
+              var alerts = $rootScope.common.alertsMap[parsedStatus.name];
+
+              if(alerts) {
+                delete $rootScope.common.alertsMap[parsedStatus.name];
+                $rootScope.common.alertsTotalCount -= alerts.length;
+              }
+            }
           });
         };
 
@@ -327,12 +431,106 @@ angular.module('dataCollectorApp')
       }
     };
 
+    /**
+     * Fetch the Pipeline Status every configured refresh interval.
+     *
+     */
+    var refreshAlerts = function() {
+      if(destroyed) {
+        return;
+      }
+
+      if(isWebSocketSupported && 'Notification' in window) {
+        Notification.requestPermission(function(permission) {
+          if(alertsWebSocket) {
+            alertsWebSocket.close();
+          }
+          alertsWebSocket = new WebSocket(webSocketAlertsURL);
+          alertsWebSocket.onmessage = function (evt) {
+            var received_msg = evt.data;
+            if(received_msg) {
+              var alertInfo = JSON.parse(received_msg);
+
+              $rootScope.$apply(function() {
+                var alertsMap = $rootScope.common.alertsMap;
+
+                if(!alertsMap[alertInfo.pipelineName]) {
+                  alertsMap[alertInfo.pipelineName] = [];
+                }
+                alertsMap[alertInfo.pipelineName].push(alertInfo);
+
+                $rootScope.common.alertsTotalCount++;
+              });
+
+              var notification = new Notification(alertInfo.pipelineName, {
+                body: alertInfo.ruleDefinition.alertText,
+                icon: '/assets/favicon.png'
+              });
+
+              notification.onclick = function() {
+                notification.close();
+                window.open('/collector/pipeline/' + alertInfo.pipelineName);
+              };
+
+            }
+          };
+        });
+      } else {
+        //WebSocket is not support use polling to get Pipeline Status
+
+        alertsTimer = $timeout(
+          function() {
+            //console.log( "Pipeline Status Timeout executed", Date.now() );
+          },
+          configuration.getRefreshInterval()
+        );
+
+        alertsTimer.then(
+          function() {
+            api.pipelineAgent.getAllAlerts()
+              .success(function(data) {
+                if(!_.isObject(data) && _.isString(data) && data.indexOf('<!doctype html>') !== -1) {
+                  //Session invalidated
+                  window.location.reload();
+                  return;
+                }
+
+                $rootScope.common.alertsTotalCount = data.length;
+                $rootScope.common.alertsMap = _.reduce(data,
+                  function (alertsMap, alertInfo) {
+                    if(!alertsMap[alertInfo.pipelineName]) {
+                      alertsMap[alertInfo.pipelineName] = [];
+                    }
+                    alertsMap[alertInfo.pipelineName].push(alertInfo);
+                    return alertsMap;
+                  },
+                  {}
+                );
+
+                refreshAlerts();
+              })
+              .error(function(data, status, headers, config) {
+                $rootScope.common.errors = [data];
+              });
+          },
+          function() {
+            //console.log( "Timer rejected!" );
+          }
+        );
+      }
+    };
 
     $rootScope.$on('$destroy', function() {
       if(isWebSocketSupported) {
-        statusWebSocket.close();
+        if(statusWebSocket) {
+          statusWebSocket.close();
+        }
+        if(alertsWebSocket) {
+          alertsWebSocket.close();
+        }
       } else {
         $timeout.cancel(pipelineStatusTimer);
+        $timeout.cancel(alertsTimer);
       }
 
       destroyed = true;

@@ -5,7 +5,7 @@
          ng-repeat="triggeredAlert in triggeredAlerts | filter: {type: 'METRIC_ALERT'}">
       <div class="alert alert-danger" role="alert">
         <i class="fa fa-exclamation-triangle"></i>
-        <span>{{triggeredAlert.rule.alertText}}</span>
+        <span>{{triggeredAlert.ruleDefinition.alertText}}</span>
         <span class="alert-details"> ( {{'home.detailPane.summaryTab.currentValue' | translate}}: {{triggeredAlert.gauge.value.currentValue}}, {{'home.detailPane.summaryTab.triggered' | translate}}: {{triggeredAlert.gauge.value.timestamp | amTimeAgo}} )</span>
         <div class="pull-right">
           <a href="#"

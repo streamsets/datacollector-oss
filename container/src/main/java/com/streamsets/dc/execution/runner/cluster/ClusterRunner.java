@@ -20,6 +20,7 @@ import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.StateListener;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.dc.execution.cluster.ClusterHelper;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.dc.execution.runner.common.ProductionPipelineBuilder;
@@ -403,6 +404,11 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public List<AlertInfo> getAlerts() throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }
 

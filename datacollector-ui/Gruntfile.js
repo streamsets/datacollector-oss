@@ -576,7 +576,7 @@ module.exports = function(grunt) {
       less: {
         files: [
           'src/**/*.less',
-          '<%= common_base_dir %>common/**/*.less'
+          '<%= common_base_dir %>**/*.less'
         ],
         tasks: [ 'less:build', 'concat:build_css' ]
       },

@@ -1,8 +1,10 @@
 /*
  * Orange angular-swagger-ui - v0.1.5
  *
+ * https://github.com/Orange-OpenSource/angular-swagger-ui
  * (C) 2015 Orange, all right reserved
  * MIT Licensed
+ *
  */
 
 angular

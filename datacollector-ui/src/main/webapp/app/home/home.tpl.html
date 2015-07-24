@@ -157,6 +157,14 @@
           </section>
 
 
+          <section class="triggered-alert-status"
+                   ng-if="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' &&
+                   common.alertsMap[pipeline.name] && common.alertsMap[pipeline.name].length > 0">
+            <i class="fa fa-bell fa-12x"></i>
+            <span ng-bind="common.alertsMap[pipeline.name].length"></span>
+          </section>
+
+
           <section class="pipeline-menu">
             <span class="split-bar"></span>
             <div class="action-menu" dropdown

@@ -32,7 +32,7 @@
            ng-switch-when="RUNNING">
         <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
         <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
-        <h3 class="pull-left" am-time-ago="common.pipelineStatus.timeStamp"></h3>
+        <h3 class="pull-left" am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].timeStamp"></h3>
 
         <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
       </div>
@@ -286,7 +286,7 @@
       </a>
 
 
-      <div class="btn-group notifications-dropdown"
+      <!--div class="btn-group notifications-dropdown"
            ng-show="isPipelineRunning && !snapshotMode && common.sdcExecutionMode != pipelineConstant.CLUSTER">
         <a class="btn btn-link dropdown-toggle"
            data-toggle="dropdown"
@@ -331,7 +331,7 @@
           </li>
 
         </ul>
-      </div>
+      </div-->
 
     </div>
 

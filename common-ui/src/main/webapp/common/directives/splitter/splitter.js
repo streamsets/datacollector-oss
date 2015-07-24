@@ -1,3 +1,7 @@
+/**
+ * https://github.com/blackgate/bg-splitter
+ */
+
 angular.module('splitterDirectives', [])
   .directive('bgSplitter', function() {
     return {

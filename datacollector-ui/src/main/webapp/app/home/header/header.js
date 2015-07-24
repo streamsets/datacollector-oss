@@ -146,6 +146,13 @@ angular
         modalInstance.result.then(function(status) {
           $scope.moveGraphToCenter();
           $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
+          var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
+
+          if(alerts) {
+            delete $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
+            $rootScope.common.alertsTotalCount -= alerts.length;
+          }
+
           $scope.refreshGraph();
           $scope.stopMonitoring();
         }, function () {
@@ -203,38 +210,6 @@ angular
             }
           }
         });
-      },
-
-      /**
-       * Callback function when Notification is clicked.
-       *
-       * @param alert
-       */
-      onNotificationClick: function(alert) {
-        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Notification Message', 1);
-        var edges = $scope.edges,
-          edge;
-        $scope.$storage.maximizeDetailPane = false;
-        $scope.$storage.minimizeDetailPane = false;
-
-        if(alert.type === 'METRIC_ALERT') {
-          //Select Pipeline Config
-          $scope.$broadcast('selectNode');
-          $scope.changeStageSelection({
-            selectedObject: undefined,
-            type: pipelineConstant.PIPELINE
-          });
-        } else {
-          //Select edge
-          edge = _.find(edges, function(ed) {
-            return ed.outputLane === alert.rule.lane;
-          });
-
-          $scope.changeStageSelection({
-            selectedObject: edge,
-            type: pipelineConstant.LINK
-          });
-        }
       },
 
       /**

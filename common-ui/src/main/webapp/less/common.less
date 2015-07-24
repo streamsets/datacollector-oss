@@ -47,8 +47,9 @@ body {
     }
 
     .navbar-nav {
-      padding-right: 2 * @defaultPadding;
+      padding-right: 2.4 * @defaultPadding;
       >li {
+        min-width: 50px;
         >a {
           font-size: 1.05em;
           padding-top: @defaultPadding * 1.5;
@@ -73,6 +74,49 @@ body {
     font-size: 14px;
   }
 
+  .notifications-dropdown {
+    padding-left: @smallPadding;
+    height: 50px;
+
+    .dropdown-toggle {
+      padding-bottom: 0;
+      padding-top: 0;
+      margin: 0;
+      color: @streamsets-icon-btn-color;
+      width: 50px;
+      height: 50px;
+
+      &:hover {
+        color: @streamsets-icon-btn-hover-color;
+      }
+
+      .fa-bell, .fa-exclamation-triangle {
+        position: absolute;
+        top: 17px;
+        //right: 15px;
+      }
+
+      .badge {
+        position: absolute;
+        top: 10px;
+        right: 6px;
+        color: #fff;
+        background-color: #d9534f;
+        font-size: .7em;
+      }
+    }
+
+    li {
+      a {
+        white-space: normal;
+        width: 400px;
+      }
+
+      &.dropdown-header {
+        text-transform: capitalize;
+      }
+    }
+  }
 
   .page-panel {
     margin-top: 50px;
@@ -149,6 +193,10 @@ body {
 
   .form-group.has-error .help-block {
     display: inherit;
+  }
+
+  .fa-11x {
+    font-size: 1.1em;
   }
 
   .fa-12x {

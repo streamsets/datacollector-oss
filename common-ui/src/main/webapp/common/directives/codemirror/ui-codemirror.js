@@ -1,5 +1,8 @@
 /**
  * Binds a CodeMirror widget to a <textarea> element.
+ *
+ * https://github.com/angular-ui/ui-codemirror
+ *
  */
 angular.module('dataCollectorApp.codemirrorDirectives')
   .constant('uiCodemirrorConfig', {})

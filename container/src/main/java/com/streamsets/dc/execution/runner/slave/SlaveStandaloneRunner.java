@@ -11,6 +11,7 @@ import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.StateEventListener;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.dc.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.pipeline.alerts.AlertEventListener;
@@ -169,6 +170,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     return standaloneRunner.deleteAlert(alertId);
+  }
+
+  @Override
+  public List<AlertInfo> getAlerts() throws PipelineStoreException {
+    return standaloneRunner.getAlerts();
   }
 
   @Override

@@ -1472,7 +1472,7 @@ angular.module('pipelineGraphDirectives', [])
       var atLeastOneRuleDefined = false,
         atLeastOneRuleActive = false,
         triggeredAlert = _.filter(triggeredAlerts, function(triggered) {
-          return triggered.rule.lane === d.outputLane;
+          return triggered.ruleDefinition.lane === d.outputLane;
         });
 
       _.each(pipelineRules.dataRuleDefinitions, function(ruleDefn) {

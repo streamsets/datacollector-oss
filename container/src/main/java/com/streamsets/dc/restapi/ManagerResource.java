@@ -10,7 +10,9 @@ import com.streamsets.dc.execution.PipelineState;
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.SnapshotInfo;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
+import com.streamsets.dc.restapi.bean.AlertInfoJson;
 import com.streamsets.dc.restapi.bean.PipelineStateJson;
 import com.streamsets.dc.restapi.bean.SnapshotInfoJson;
 import com.streamsets.pipeline.api.StageException;
@@ -391,6 +393,25 @@ public class ManagerResource {
     }
     return Response.noContent().build();
   }
+
+  @Path("/pipelines/alerts")
+  @GET
+  @ApiOperation(value = "Returns alerts triggered for all pipelines", response = AlertInfoJson.class,
+    responseContainer = "List", authorizations = @Authorization(value = "basic"))
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
+  public Response getAllAlerts()
+    throws PipelineException {
+    List<AlertInfo> alertInfoList = new ArrayList<>();
+    for(PipelineState pipelineState: manager.getPipelines()) {
+      Runner runner = manager.getRunner(user, pipelineState.getName(), pipelineState.getRev());
+      if(runner != null && runner.getState().getStatus().isActive()) {
+        alertInfoList.addAll(runner.getAlerts());
+      }
+    }
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapAlertInfoList(
+      alertInfoList)).build();
+  }
+
 
   @Path("/pipeline/{pipelineName}/alerts")
   @DELETE

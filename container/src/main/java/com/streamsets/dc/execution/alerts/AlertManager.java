@@ -121,6 +121,14 @@ public class AlertManager {
     alertResponse.put(CURRENT_VALUE, value);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+
+    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
+      @Override
+      public Object getValue() {
+        return alertResponse;
+      }
+    };
+
     if (gauge == null) {
       alertResponse.put(TIMESTAMP, System.currentTimeMillis());
       //send email the first time alert is triggered
@@ -146,19 +154,13 @@ public class AlertManager {
           }
         }
       }
-      eventListenerManager.broadcastAlerts(ruleDefinition);
+      eventListenerManager.broadcastAlerts(new AlertInfo(pipelineName, ruleDefinition, alertResponseGauge));
     } else {
       //remove existing gauge
       MetricsConfigurator.removeGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()), pipelineName,
         revision);
       alertResponse.put(TIMESTAMP, ((Map<String, Object>) gauge.getValue()).get(TIMESTAMP));
     }
-    Gauge<Object> alertResponseGauge = new Gauge<Object>() {
-      @Override
-      public Object getValue() {
-        return alertResponse;
-      }
-    };
     MetricsConfigurator.createGauge(metrics, AlertsUtil.getAlertGaugeName(ruleDefinition.getId()),
       alertResponseGauge, pipelineName, revision);
   }

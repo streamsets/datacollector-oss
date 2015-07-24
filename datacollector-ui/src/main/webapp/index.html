@@ -28,28 +28,86 @@
 
       <ul class="nav navbar-nav navbar-right" ng-cloak>
         <li>
-          <a href="/">
+          <a href="/"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.home' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
             <i class="fa fa-home fa-lg"></i>
-            <span translate="global.menu.home">Home</span>
+            <!--span translate="global.menu.home">Home</span-->
           </a>
         </li>
 
         <li ng-if="common.sdcExecutionMode === pipelineConstant.SLAVE">
-          <a ng-href="{{common.sdcClusterManagerURL}}">
+          <a ng-href="{{common.sdcClusterManagerURL}}"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.clusterManager' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
             <i class="fa fa-cloud fa-lg"></i>
-            <span translate="global.menu.clusterManager">Cluster Manager</span>
+            <!--span translate="global.menu.clusterManager">Cluster Manager</span-->
           </a>
         </li>
 
+
+        <li class="dropdown pointer notifications-dropdown"
+            ng-if="common.userName && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
+             tooltip-placement="bottom"
+             tooltip="{{'home.header.notifications' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+            <i class="fa fa-bell fa-11x"></i>
+            <span class="badge"
+                  ng-show="common.alertsTotalCount > 0"
+                  ng-bind="common.alertsTotalCount"></span>
+
+            <!--span class="hidden-tablet" translate="global.menu.admin.main">Alerts</span>
+            <b class="caret"></b-->
+          </a>
+          <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+            <li role="presentation" class="dropdown-header"
+                translate="home.header.emptyAlerts"
+                ng-if="common.alertsTotalCount == 0">It’s all good! You don’t have any new alerts.</li>
+
+
+            <li role="presentation" class="dropdown-header"
+                ng-repeat-start="(pipelineName, alerts) in common.alertsMap">Pipeline - {{pipelineName}}</li>
+
+            <li role="presentation" ng-repeat="alert in alerts">
+              <a role="menuitem" tabindex="-1" href="#"
+                 ng-click="common.onAlertClick(alert)">
+
+                <span ng-if="alert.gauge.value.exceptionMessage">
+                  <strong>{{alert.ruleDefinition.label}}: </strong> {{alert.gauge.value.exceptionMessage}}
+                </span>
+
+                <span ng-if="!alert.gauge.value.exceptionMessage" ng-bind="alert.ruleDefinition.alertText"></span>
+
+                <button type="button" class="close" aria-label="Close"
+                        ng-click="common.deleteTriggeredAlert(alert, $event)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </a>
+            </li>
+
+            <li ng-repeat-end role="presentation" class="divider" ng-if="!$last"></li>
+          </ul>
+        </li>
+
+
         <li class="dropdown pointer"
             ng-if="common.userName && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.admin.main' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
             <span>
                 <i class="fa fa-cogs fa-lg"></i>
-                <span class="hidden-tablet" translate="global.menu.admin.main">
-                    Administration
-                </span>
-                <b class="caret"></b>
+                <!--span class="hidden-tablet" translate="global.menu.admin.main">Administration</span>
+                <b class="caret"></b-->
             </span>
           </a>
           <ul class="dropdown-menu">
@@ -89,12 +147,14 @@
         </li>
 
         <li class="dropdown pointer" ng-if="common.authenticationType != 'none'">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-            <span>
-                <i class="fa fa-user fa-lg"></i>
-                <span class="hidden-tablet">{{common.userName}}</span>
-                <b class="caret"></b>
-            </span>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
+             tooltip-placement="bottom"
+             tooltip="{{common.userName}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+              <i class="fa fa-user fa-lg"></i>
+              <!--span class="hidden-tablet">{{common.userName}}</span>
+              <b class="caret"></b-->
           </a>
           <ul class="dropdown-menu">
 
@@ -119,14 +179,14 @@
 
 
         <li class="dropdown pointer">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-            <span>
-                <i class="fa fa-question-circle fa-lg"></i>
-                <span class="hidden-tablet" translate="global.menu.help.main">
-                    Help
-                </span>
-                <b class="caret"></b>
-            </span>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.help.main' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+              <i class="fa fa-question-circle fa-15x"></i>
+              <!--span class="hidden-tablet" translate="global.menu.help.main">Help</span>
+              <b class="caret"></b-->
           </a>
           <ul class="dropdown-menu">
 

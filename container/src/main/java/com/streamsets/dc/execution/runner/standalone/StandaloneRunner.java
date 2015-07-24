@@ -5,6 +5,7 @@
  */
 package com.streamsets.dc.execution.runner.standalone;
 
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -18,7 +19,7 @@ import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.SnapshotStore;
 import com.streamsets.dc.execution.StateListener;
-import com.streamsets.dc.execution.common.ExecutorConstants;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.dc.execution.metrics.MetricsEventRunnable;
 import com.streamsets.dc.execution.runner.common.Constants;
 import com.streamsets.dc.execution.runner.common.DataObserverRunnable;
@@ -42,6 +43,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.MemoryLimitConfiguration;
 import com.streamsets.pipeline.config.MemoryLimitExceeded;
 import com.streamsets.pipeline.config.PipelineConfiguration;
+import com.streamsets.pipeline.config.RuleDefinition;
+import com.streamsets.pipeline.config.RuleDefinitions;
 import com.streamsets.pipeline.creation.PipelineBeanCreator;
 import com.streamsets.pipeline.creation.PipelineConfigBean;
 import com.streamsets.pipeline.el.JvmEL;
@@ -55,6 +58,7 @@ import com.streamsets.pipeline.runner.PipelineRuntimeException;
 import com.streamsets.pipeline.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.pipeline.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.pipeline.store.PipelineStoreException;
+import com.streamsets.pipeline.store.PipelineStoreTask;
 import com.streamsets.pipeline.util.Configuration;
 import com.streamsets.pipeline.util.ContainerError;
 import com.streamsets.pipeline.util.PipelineException;
@@ -82,6 +86,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Inject RuntimeInfo runtimeInfo;
   @Inject Configuration configuration;
+  @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject SnapshotStore snapshotStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
@@ -325,6 +330,36 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
     checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
     return observerRunnable.getSampledRecords(sampleId, max);
+  }
+
+  @Override
+  public List<AlertInfo> getAlerts() throws PipelineStoreException {
+    List<AlertInfo> alertInfoList = new ArrayList<>();
+    MetricRegistry metrics = (MetricRegistry)getMetrics();
+
+    if(metrics != null) {
+      RuleDefinitions ruleDefinitions = pipelineStoreTask.retrieveRules(name, rev);
+
+      for(RuleDefinition ruleDefinition: ruleDefinitions.getMetricsRuleDefinitions()) {
+        Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
+          AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+
+        if(gauge != null) {
+          alertInfoList.add(new AlertInfo(name, ruleDefinition, gauge));
+        }
+      }
+
+      for(RuleDefinition ruleDefinition: ruleDefinitions.getDataRuleDefinitions()) {
+        Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
+          AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
+
+        if(gauge != null) {
+          alertInfoList.add(new AlertInfo(name, ruleDefinition, gauge));
+        }
+      }
+    }
+
+    return alertInfoList;
   }
 
   @Override

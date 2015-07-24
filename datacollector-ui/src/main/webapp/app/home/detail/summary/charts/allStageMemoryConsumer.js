@@ -143,9 +143,9 @@ angular
         var stageCounter = pipelineMetrics.counters['stage.' + data.instanceName + '.memoryConsumed.counter'];
         if(stageCounter) {
           data.value =  (stageCounter.count / 1000000);
+          values.push(data);
+          total += stageCounter.count;
         }
-        values.push(data);
-        total += stageCounter.count;
       });
 
       $scope.chartData = values;

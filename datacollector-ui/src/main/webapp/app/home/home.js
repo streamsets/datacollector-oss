@@ -134,6 +134,13 @@ angular
 
         modalInstance.result.then(function(status) {
           $rootScope.common.pipelineStatusMap[pipelineInfo.name] = status;
+
+          var alerts = $rootScope.common.alertsMap[pipelineInfo.name];
+
+          if(alerts) {
+            delete $rootScope.common.alertsMap[pipelineInfo.name];
+            $rootScope.common.alertsTotalCount -= alerts.length;
+          }
         }, function () {
 
         });

@@ -40,8 +40,6 @@ angular
           "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
       webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics&pipelineName=' + routeParamPipelineName,
       metricsWebSocket,
-      webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts&pipelineName=' + routeParamPipelineName,
-      alertsWebSocket,
       undoLimit = 10,
       archive = [],
       currArchivePos = null,
@@ -427,7 +425,7 @@ angular
        */
       startMonitoring: function() {
         refreshPipelineMetrics();
-        initializeAlertWebSocket();
+        //initializeAlertWebSocket();
       },
 
       /**
@@ -438,9 +436,9 @@ angular
           if(metricsWebSocket) {
             metricsWebSocket.close();
           }
-          if(alertsWebSocket) {
+          /*if(alertsWebSocket) {
             alertsWebSocket.close();
-          }
+          }*/
         } else {
           $timeout.cancel(pipelineMetricsTimer);
         }
@@ -560,19 +558,10 @@ angular
         }
 
         $scope.triggeredAlerts = _.filter($scope.triggeredAlerts, function(alert) {
-          return alert.rule.id !== triggeredAlert.rule.id;
+          return alert.ruleDefinition.id !== triggeredAlert.ruleDefinition.id;
         });
 
-        api.pipelineAgent.deleteAlert($scope.pipelineConfig.info.name, triggeredAlert.rule.id)
-          .success(function() {
-            //Alert deleted successfully
-            /*$rootScope.$storage.readNotifications = _.filter($rootScope.$storage.readNotifications, function(alertId) {
-              return alertId !== triggeredAlert.rule.id;
-            });*/
-          })
-          .error(function(data, status, headers, config) {
-            $rootScope.common.errors = [data];
-          });
+        $rootScope.common.deleteTriggeredAlert(triggeredAlert);
       },
 
       /**
@@ -686,10 +675,6 @@ angular
           $rootScope.common.pipelineMetrics = results[2].data;
           if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RUNNING') {
             refreshPipelineMetrics();
-
-            if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
-              initializeAlertWebSocket();
-            }
           }
 
           updateGraph(config, rules);
@@ -1168,28 +1153,6 @@ angular
       }
     };
 
-    var initializeAlertWebSocket = function() {
-      if(isWebSocketSupported && 'Notification' in window) {
-        Notification.requestPermission(function(permission) {
-          if(alertsWebSocket) {
-            alertsWebSocket.close();
-          }
-          alertsWebSocket = new WebSocket(webSocketAlertsURL);
-          alertsWebSocket.onmessage = function (evt) {
-            var received_msg = evt.data;
-            if(received_msg) {
-              var alertDefn = JSON.parse(received_msg),
-                pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
-              var notification = new Notification(pipelineStatus.name, {
-                body: alertDefn.alertText,
-                icon: '/assets/favicon.png'
-              });
-            }
-          };
-        });
-      }
-    };
-
     var getStageErrorCounts = function() {
       var stageInstanceErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics;
@@ -1466,7 +1429,7 @@ angular
           $scope.$broadcast('updateErrorCount', getStageErrorCounts());
         }
 
-        $scope.triggeredAlerts = pipelineService.getTriggeredAlerts($scope.pipelineRules,
+        $scope.triggeredAlerts = pipelineService.getTriggeredAlerts(routeParamPipelineName, $scope.pipelineRules,
           $rootScope.common.pipelineMetrics);
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
       } else {
@@ -1497,9 +1460,6 @@ angular
       if(isWebSocketSupported) {
         if(metricsWebSocket) {
           metricsWebSocket.close();
-        }
-        if(alertsWebSocket) {
-          alertsWebSocket.close();
         }
       } else {
         $timeout.cancel(pipelineMetricsTimer);

@@ -7,11 +7,14 @@ package com.streamsets.pipeline.restapi.bean;
 
 import com.streamsets.dc.execution.PipelineStatus;
 import com.streamsets.dc.execution.PreviewOutput;
+import com.streamsets.dc.execution.alerts.AlertInfo;
+import com.streamsets.dc.restapi.bean.AlertInfoJson;
 import com.streamsets.dc.restapi.bean.ExecutionModeJson;
 import com.streamsets.dc.restapi.bean.PreviewOutputJson;
 import com.streamsets.dc.restapi.bean.StatusJson;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.config.MetricsRuleDefinition;
 import com.streamsets.pipeline.el.ElConstantDefinition;
 import com.streamsets.pipeline.el.ElFunctionArgumentDefinition;
 import com.streamsets.pipeline.el.ElFunctionDefinition;
@@ -1112,5 +1115,19 @@ public class BeanHelper {
       default:
         throw new IllegalArgumentException("Unrecognized execution mode");
     }
+  }
+
+  public static List<AlertInfoJson> wrapAlertInfoList(List<AlertInfo> alertInfoList) {
+    if(alertInfoList == null) {
+      return null;
+    }
+
+    List<AlertInfoJson> alertInfoJsonList = new ArrayList<>();
+
+    for(AlertInfo alertInfo: alertInfoList) {
+      alertInfoJsonList.add(new AlertInfoJson(alertInfo));
+    }
+
+    return alertInfoJsonList;
   }
 }

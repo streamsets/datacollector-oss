@@ -13,6 +13,7 @@ import com.streamsets.dc.execution.Runner;
 import com.streamsets.dc.execution.Snapshot;
 import com.streamsets.dc.execution.SnapshotInfo;
 import com.streamsets.dc.execution.StateEventListener;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -169,6 +170,11 @@ public class AsyncRunner implements Runner, PipelineInfo {
   @Override
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException {
     return runner.deleteAlert(alertId);
+  }
+
+  @Override
+  public List<AlertInfo> getAlerts() throws PipelineStoreException {
+    return runner.getAlerts();
   }
 
   @Override

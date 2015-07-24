@@ -704,6 +704,17 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Get all pipeline alers
+       */
+      getAllAlerts: function() {
+        var url = apiBase + '/pipelines/alerts' ;
+        return $http({
+          method: 'GET',
+          url: url
+        });
+      },
+
+      /**
        * Delete Alert
        *
        * @param name

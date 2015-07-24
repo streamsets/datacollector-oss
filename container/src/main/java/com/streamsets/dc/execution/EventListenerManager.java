@@ -5,8 +5,11 @@
  */
 package com.streamsets.dc.execution;
 
+import com.codahale.metrics.Gauge;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.config.RuleDefinition;
 import com.streamsets.pipeline.json.ObjectMapperFactory;
@@ -16,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EventListenerManager {
   private static final Logger LOG = LoggerFactory.getLogger(EventListenerManager.class);
@@ -69,7 +73,7 @@ public class EventListenerManager {
     return metricsEventListenerList;
   }
 
-  public void broadcastAlerts(RuleDefinition ruleDefinition) {
+  public void broadcastAlerts(AlertInfo alertInfo) {
     if(alertEventListenerList.size() > 0) {
       try {
         List<AlertEventListener> alertEventListenerListCopy;
@@ -78,7 +82,7 @@ public class EventListenerManager {
         }
 
         ObjectMapper objectMapper = ObjectMapperFactory.get();
-        String ruleDefinitionJSONStr = objectMapper.writer().writeValueAsString(ruleDefinition);
+        String ruleDefinitionJSONStr = objectMapper.writer().writeValueAsString(alertInfo);
         for(AlertEventListener alertEventListener : alertEventListenerListCopy) {
           try {
             alertEventListener.notification(ruleDefinitionJSONStr);

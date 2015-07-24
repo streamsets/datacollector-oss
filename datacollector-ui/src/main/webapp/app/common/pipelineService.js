@@ -1231,10 +1231,11 @@ angular.module('dataCollectorApp.common')
     /**
      * Return Pipeline and lane triggered alerts.
      *
+     * @param pipelineName
      * @param pipelineRules
      * @param pipelineMetrics
      */
-    this.getTriggeredAlerts = function(pipelineRules, pipelineMetrics) {
+    this.getTriggeredAlerts = function(pipelineName, pipelineRules, pipelineMetrics) {
       if(!pipelineMetrics || !pipelineMetrics.gauges) {
         return;
       }
@@ -1246,7 +1247,8 @@ angular.module('dataCollectorApp.common')
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
           alerts.push({
-            rule: rule,
+            pipelineName: pipelineName,
+            ruleDefinition: rule,
             gauge: gauges[gaugeName],
             type: 'METRIC_ALERT'
           });
@@ -1257,7 +1259,8 @@ angular.module('dataCollectorApp.common')
         var gaugeName = 'alert.' + rule.id + '.gauge';
         if(gauges[gaugeName]) {
           alerts.push({
-            rule: rule,
+            pipelineName: pipelineName,
+            ruleDefinition: rule,
             gauge: gauges[gaugeName],
             type: 'DATA_ALERT'
           });

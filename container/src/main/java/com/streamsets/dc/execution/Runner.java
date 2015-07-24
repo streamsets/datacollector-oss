@@ -6,6 +6,7 @@
 package com.streamsets.dc.execution;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.dc.execution.alerts.AlertInfo;
 import com.streamsets.dc.execution.runner.common.PipelineRunnerException;
 import com.streamsets.pipeline.alerts.AlertEventListener;
 import com.streamsets.pipeline.api.Record;
@@ -116,6 +117,8 @@ public interface Runner {
   public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException;
 
   public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException;
+
+  public List<AlertInfo> getAlerts() throws PipelineStoreException;
 
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException;
 
