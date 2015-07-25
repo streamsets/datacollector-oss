@@ -38,15 +38,25 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   private ClusterHdfsSource clusterHDFSSource;
 
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.STRING,
-    defaultValue = "",
+    label = "Hadoop FS URI",
+    description = "",
+    displayPosition = 10,
+    group = "HADOOP_FS"
+  )
+  public String hdfsUri;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.LIST,
+    defaultValue = "[]",
     label = "Directory path",
     description = "Path of input directory on hdfs, should include scheme and authority ",
     displayPosition = 10,
     group = "HADOOP_FS"
   )
-  public String hdfsDirLocation;
+  public List<String> hdfsDirLocations; // hdfsDirLocation
 
   @ConfigDef(
     required = true,
@@ -298,9 +308,10 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
 
   @Override
   protected Source createSource() {
-     clusterHDFSSource = new ClusterHdfsSource(hdfsDirLocation, recursive, hdfsConfigs, dataFormat, textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine,
-      customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat,
-      log4jCustomLogFormat, logMaxObjectLen, produceSingleRecordPerMessage, hdfsKerberos, kerberosPrincipal, kerberosKeytab);
+     clusterHDFSSource = new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat,
+      textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
+       grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
+       produceSingleRecordPerMessage, hdfsKerberos, kerberosPrincipal, kerberosKeytab);
      return clusterHDFSSource;
   }
 

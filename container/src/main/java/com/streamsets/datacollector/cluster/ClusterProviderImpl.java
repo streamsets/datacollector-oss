@@ -13,8 +13,10 @@ import com.google.common.collect.Maps;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.http.WebServerTask;
@@ -253,14 +255,22 @@ public class ClusterProviderImpl implements ClusterProvider {
     ImmutableList.Builder<StageConfiguration> pipelineConfigurations = ImmutableList.builder();
     // order is important here as we don't want error stage
     // configs overriding source stage configs
-    pipelineConfigurations.add(pipelineConfiguration.getErrorStage());
-    pipelineConfigurations.addAll(pipelineConfiguration.getStages());
     String sdcClusterToken = UUID.randomUUID().toString();
     if (runtimeInfo != null) {
       runtimeInfo.setSDCToken(sdcClusterToken);
     }
     ClusterOrigin clusterOrigin = null;
     String pathToSparkKafkaJar = null;
+    List<Issue> errors = new ArrayList<>();
+    PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
+    if (!errors.isEmpty()) {
+      String msg = Utils.format("Found '{}' configuration errors: {}", errors.size(), errors);
+      throw new IllegalStateException(msg);
+    }
+    pipelineConfigurations.add(pipelineBean.getErrorStage().getConfiguration());
+    for (StageBean stageBean : pipelineBean.getStages()) {
+      pipelineConfigurations.add(stageBean.getConfiguration());
+    }
     for (StageConfiguration stageConf : pipelineConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                        false);
@@ -269,11 +279,19 @@ public class ClusterProviderImpl implements ClusterProvider {
           if (conf.getValue() != null) {
             Object value = conf.getValue();
             if (value instanceof List) {
-              List<Map<String, Object>> arrayListValues = (List<Map<String, Object>>) value;
-              if (!arrayListValues.isEmpty()) {
-                addToSourceConfigs(sourceConfigs, arrayListValues);
-              } else {
+              List values = (List) value;
+              if (values.isEmpty()) {
                 LOG.debug("Conf value for " + conf.getName() + " is empty");
+              } else {
+                Object first = values.get(0);
+                if (canCastToString(first)) {
+                  sourceConfigs.put(conf.getName(), Joiner.on(",").join(values));
+                } else if (first instanceof Map) {
+                  addToSourceConfigs(sourceConfigs, (List<Map<String,Object>>)values);
+                } else {
+                  LOG.info("List is of type '{}' which cannot be converted to property value.", first.getClass()
+                    .getName());
+                }
               }
             } else if (canCastToString(conf.getValue())) {
               LOG.debug("Adding to source configs " + conf.getName() + "=" + value);
@@ -405,7 +423,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
     }
     addKerberosConfiguration(environment, pipelineConfiguration);
-    List<Issue> errors = new ArrayList<>();
+    errors.clear();
     PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY);

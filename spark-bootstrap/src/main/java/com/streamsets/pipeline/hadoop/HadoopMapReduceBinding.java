@@ -57,7 +57,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
-      String hdfsDirLocation = getProperty("hdfsDirLocation");
+      String hdfsUri = getProperty("hdfsUri");
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
@@ -77,9 +77,13 @@ public class HadoopMapReduceBinding implements ClusterBinding {
       job.setMapperClass(PipelineMapper.class);
       job.setOutputKeyClass(NullWritable.class);
       job.setOutputValueClass(NullWritable.class);
-      FileInputFormat.setInputPaths(job, new Path(hdfsDirLocation));
       job.setOutputFormatClass(NullOutputFormat.class);
-      LOG.info("Creating for file path " + hdfsDirLocation);
+      Path fsRoot = new Path(hdfsUri);
+      for (String hdfsDirLocation : getProperty("hdfsDirLocations").split(",")) {
+        Path path = new Path(fsRoot, hdfsDirLocation);
+        FileInputFormat.addInputPath(job, path);
+        LOG.info("Input path: " + path);
+      }
     }
   }
 

@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,8 @@ public class TestClusterHDFSSource {
   }
 
   private void configure(ClusterHdfsDSource hdfsClusterSource, String dirLocation) {
-    hdfsClusterSource.hdfsDirLocation = dirLocation;
+    hdfsClusterSource.hdfsUri = miniDFS.getURI().toString();
+    hdfsClusterSource.hdfsDirLocations = Arrays.asList(dirLocation);
     hdfsClusterSource.hdfsConfigs = new HashMap<String, String>();
     hdfsClusterSource.hdfsConfigs.put("x", "X");
     hdfsClusterSource.dataFormat = DataFormat.TEXT;
@@ -86,94 +88,99 @@ public class TestClusterHDFSSource {
   @Test
   public void testWrongHDFSDirLocation() throws Exception {
     ClusterHdfsDSource dSource = new ForTestClusterHdfsDSource();
-    configure(dSource, dir.toString());
-    dSource.hdfsDirLocation = "/pathwithnoschemeorauthority";
+    configure(dSource, dir.toUri().getPath());
+    dSource.hdfsUri = "/pathwithnoschemeorauthority";
     ClusterHdfsSource clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
     try {
       List<ConfigIssue> issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_02"));
 
-      dSource.hdfsDirLocation = "file://localhost:8020/wrongscheme";
+      dSource.hdfsUri = "file://localhost:8020/";
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_12"));
 
-      dSource.hdfsDirLocation = "hdfs:///noauthority";
+      dSource.hdfsUri = "hdfs:///noauthority";
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_13"));
 
-      dSource.hdfsDirLocation = "hdfs://localhost/invalidauthorityformat";
+      dSource.hdfsUri = "hdfs://localhost/invalidauthorityformat";
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_14"));
 
-      dSource.hdfsDirLocation = "hdfs://localhost:8020/validpath";
+      dSource.hdfsUri = "hdfs://localhost:8020";
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_11"));
 
-      dSource.hdfsDirLocation = dir.toString() + "/pathdoesnotexist";
+      dSource.hdfsUri = miniDFS.getURI().toString();
+      dSource.hdfsDirLocations = Arrays.asList("/pathdoesnotexist");
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_10"));
 
+      dSource.hdfsUri = miniDFS.getURI().toString();
+      dSource.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
       FileSystem fs = miniDFS.getFileSystem();
-      dSource.hdfsDirLocation = dir.toString();
-      Path someFile = new Path(dir.toString() + "/someFile");
-      fs.create(someFile);
+      Path someFile = new Path(new Path(dir.toUri()), "/someFile");
+      fs.create(someFile).close();
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(0, issues.size());
+      assertEquals(String.valueOf(issues), 0, issues.size());
 
-      Path dummyFile = new Path(dir.toString() + "/dummyFile");
-      fs.create(dummyFile);
-      dSource.hdfsDirLocation = dummyFile.toString();
+      Path dummyFile = new Path(new Path(dir.toUri()), "/dummyFile");
+      fs.create(dummyFile).close();
+      dSource.hdfsUri = miniDFS.getURI().toString();
+      dSource.hdfsDirLocations = Arrays.asList(dummyFile.toUri().getPath());
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
-          .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+        .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
+          ImmutableList.of("lane")));
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_15"));
 
-      Path emptyDir = new Path(dir.toString() + "/emptyDir");
+      Path emptyDir = new Path(dir.toUri().getPath(), "emptyDir");
       fs.mkdirs(emptyDir);
-      dSource.hdfsDirLocation = emptyDir.toString();
+      dSource.hdfsUri = miniDFS.getURI().toString();
+      dSource.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(1, issues.size());
+      assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(issues.get(0).toString().contains("HADOOPFS_16"));
 
-      Path path1 = new Path(emptyDir.toString() + "/path1");
-      fs.create(path1);
-      dSource.hdfsDirLocation = emptyDir.toString();
+      Path path1 = new Path(emptyDir, "path1");
+      fs.create(path1).close();
+      dSource.hdfsUri = miniDFS.getURI().toString();
+      dSource.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
-      assertEquals(0, issues.size());
+      assertEquals(String.valueOf(issues), 0, issues.size());
     } finally {
       clusterHdfsSource.destroy();
     }
@@ -199,7 +206,8 @@ public class TestClusterHDFSSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
       .setClusterMode(true)
-      .addConfiguration("hdfsDirLocation", dir.toString())
+      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
+      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)
       .addConfiguration("hdfsConfigs", new HashMap<String, String>())
       .addConfiguration("dataFormat", DataFormat.TEXT)
@@ -280,7 +288,7 @@ public class TestClusterHDFSSource {
   static class ForTestClusterHdfsDSource extends ClusterHdfsDSource {
     @Override
     protected ClusterHdfsSource createSource() {
-      return new ClusterHdfsSource(hdfsDirLocation, recursive, hdfsConfigs, dataFormat, textMaxLineLen,
+      return new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat, textMaxLineLen,
         jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
         grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
         produceSingleRecordPerMessage, hdfsKerberos, kerberosPrincipal, kerberosKeytab);
