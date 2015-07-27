@@ -47,7 +47,6 @@
       <select class="form-control"
               name="stageLibrary"
               ng-disabled="isPipelineReadOnly || isPipelineRunning"
-              ng-change="stageLibraryChange()"
               ng-model="detailPaneConfig.library"
               ng-options="item.library as item.libraryLabel for item in stageLibraryList">
       </select>

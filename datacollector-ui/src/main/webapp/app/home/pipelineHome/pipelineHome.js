@@ -1322,10 +1322,16 @@ angular
           });
 
           if(badRecordsStage) {
+            var configuration;
+            if(errorStageInst && errorStageInst.stageName == badRecordsStage.name  &&
+              errorStageInst.stageVersion == badRecordsStage.version) {
+              configuration = errorStageInst.configuration;
+            }
             newValue.errorStage = pipelineService.getNewStageInstance({
               stage: badRecordsStage,
               pipelineConfig: $scope.pipelineConfig,
-              errorStage: true
+              errorStage: true,
+              configuration: configuration
             });
           }
         }
