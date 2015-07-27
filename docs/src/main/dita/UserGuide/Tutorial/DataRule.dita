@@ -57,16 +57,20 @@
                             <stentry>10</stentry>
                         </strow>
                     </simpletable>
-                    <note>With a larger data set, a smaller sampling percentage might be
-                        appropriate, but for the purposes of this tutorial, we'll use 20.</note>
+                    <note>With a larger data set, a smaller sampling percentage and higher threshold
+                        value might be appropriate, but we'll use these numbers for the purposes of
+                        the tutorial.</note>
                 </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
-                <info>The rule displays in the data rule list. </info>
+                <info>The rule displays in the data rule list. And the Data Inspection icon darkens
+                    to show that a data rule is configured for the stream.</info>
             </step>
             <step>
                 <cmd>To enable the data rule and alert, click <uicontrol>Active</uicontrol>. </cmd>
+                <info>Notice the Data Inspection icon becomes a darker grey to show that a data rule
+                    is active on the stream.</info>
             </step>
         </steps>
     </taskbody>

@@ -83,6 +83,11 @@
                                     <entry>When using a snapshot for source data, select the
                                         snapshot to use. </entry>
                                 </row>
+                                <row>
+                                    <entry>Remember the Configuration<draft-comment author="Loretta"
+                                            >come back to this</draft-comment></entry>
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -96,26 +101,8 @@
                 <cmd>To delete a record that you do not want to use, click the
                         <uicontrol>Delete</uicontrol> icon.</cmd>
             </step>
-            <step id="EditingPData1">
-                <cmd>To change field values, in the Input Data column, click the value that you want
-                    to change and enter a new value. </cmd>
-                <info>You can edit values for any input data. </info>
-            </step>
-            <step id="EditingPData2">
-                <cmd>To process changed data, click the <uicontrol>Run Preview With
-                        Changes</uicontrol> icon.</cmd>
-                <stepresult>In the Input Data column, records with changed values display with an
-                    asterisk and the changed values are highlighted. The Output Data column displays
-                    the results of processing. You can change and process preview data as often as
-                    necessary. </stepresult>
-            </step>
-            <step id="RevertRefreshClose1">
-                <cmd>To revert all changes and return to the beginning of the data preview, click
-                    the <uicontrol>Revert Changes</uicontrol> icon.</cmd>
-            </step>
             <step id="RefreshPreview">
-                <cmd>To preview the next set of data, click <uicontrol>Refresh Preview</uicontrol>.
-                </cmd>
+                <cmd>To preview another set of data, click <uicontrol>Refresh Preview</uicontrol>. </cmd>
             </step>
             <step id="RevertRefreshClose2">
                 <cmd>To exit data preview and return to pipeline configuration, click

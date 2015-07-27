@@ -20,8 +20,10 @@
               <li>Scroll down and note that index 20 is highlighted. This indicates the stage
                 changed data in the field.</li>
               <li> Expand index 20 for both the input and output data. Notice how all digits except
-                the last 4 are masked. </li>
+                the last four are masked. </li>
             </ol></dd>
+          <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="70"
+            /></dd>
           <dd>Say we want to change the mask type to mask the whole credit card number. To review
             the stage configuration and try a different option:<ol id="ol_vvw_wlg_qs">
               <li>On the left side of the Preview panel, select the <uicontrol>Stage
@@ -32,15 +34,16 @@
               <li>Change the <uicontrol>Mask Type</uicontrol> to <uicontrol>Variable
                   Length</uicontrol> to mask all numbers while showing how many numbers there are in
                 the data. </li>
-              <li>To view the data with this change, click the <uicontrol>Run Preview with
+              <li>To view the data with this change, click the <uicontrol>Run with
                   Changes</uicontrol> icon: <image href="../Graphics/icon_PreviewRerun.png"
-                  scale="95" id="image_apd_ztd_5s"/>.<draft-comment author="Loretta">Check if
-                  there's a New Data/Old data option later?</draft-comment></li>
+                  scale="95" id="image_apd_ztd_5s"/>.</li>
               <li>In the canvas, select the <uicontrol>Field Masker</uicontrol> processor and if the
                 Preview panel displays the stage configuration, select the
-                  <uicontrol>Records</uicontrol> tab to view the preview records. </li>
+                  <uicontrol>Records</uicontrol> tab to view the preview records: <image
+                  href="../Graphics/icon_PrevRecords.png" id="image_m3w_sdl_5s" scale="75"/>.</li>
               <li> Expand an output record, expand index 20, and notice how the entire number is now
-                masked. </li>
+                    masked:<p><image href="../Graphics/Tutorial-PreviewFMasker2.png"
+                    id="image_chj_c2l_5s" scale="70"/></p></li>
             </ol></dd>
         </dlentry>
         <dlentry>
@@ -97,9 +100,8 @@
                   data,<uicontrol> 40.730068</uicontrol>, add a negative sign before the data, and
                 hit <uicontrol>Enter</uicontrol> or click outside the data.<p>The edited input data
                   becomes red to indicate a change. </p></li>
-              <li>To test the change, click the <uicontrol>Run Preview with Changes</uicontrol>
-                    icon.<p><draft-comment author="Loretta">Check if there's a New Data/Old data
-                    option later?</draft-comment>The <ph
+              <li>To test the change, click the <uicontrol>Run with Changes</uicontrol> icon.<p>The
+                    <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> runs the preview with the change. Notice the corresponding output record now
                   has -40.730068 for both pickup_latitude and pickup_location. </p><p><image

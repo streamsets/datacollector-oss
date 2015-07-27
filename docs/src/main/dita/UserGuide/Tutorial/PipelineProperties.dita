@@ -15,9 +15,18 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</cmd>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline2">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
+                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
+                <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
+                            id="image_jnr_wtk_5s" scale="70"/></p></info>
+                <info>At the top of the canvas, the Pipeline Creation Help Bar indicates that the
+                    origin is missing and offers a list of origins to choose from. On the right, the
+                    stage library displays a list of available origins as well. You can change the
+                    stages that display as necessary.</info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab, for

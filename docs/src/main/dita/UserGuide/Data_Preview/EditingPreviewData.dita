@@ -1,20 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_d24_1rj_br">
- <title>Editing Preview Data</title>
- <shortdesc>You can edit preview data to view how a stage or group of stages processes the changed
-  data. Edit preview data to test for data conditions that might not appear in data
-  preview.</shortdesc>
- <conbody>
-  <p><indexterm>data preview<indexterm>editing data</indexterm></indexterm>For example, when the
-   stage filters integer data based on an expression, you might change the input data to test
-   positive and negative integer values, as well as zero. </p>
-  <p>You can edit preview data in the following locations: <ul
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
-    id="ul_rg5_xhn_tq">
-    <li/>
-   </ul></p>
-  <p>When you edit preview data, you can pass the changed data through the pipeline, or you can
-      revert your changes to return to the original data.</p>
- </conbody>
-</concept>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_nyy_13l_5s">
+    <title>Editing Preview Data</title>
+    <shortdesc>You can edit preview data to view how a stage or group of stages processes the
+        changed data. Edit preview data to test for data conditions that might not appear in data
+        preview.</shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>data preview<indexterm>editing data</indexterm></indexterm>For example,
+                when the stage filters integer data based on an expression, you might change the
+                input data to test positive and negative integer values, as well as zero. </p>
+            <p>You can edit preview data in the following locations: <ul
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_EditPreview"
+                    id="ul_rg5_xhn_tq">
+                    <li/>
+                </ul></p>
+            <p>When you edit preview data, you can pass the changed data through the pipeline, or
+                you can revert your changes to return to the original data.</p>
+        </context>
+        <steps id="steps_sx5_c3l_5s">
+            <step>
+                <cmd>To change field values, in the <uicontrol>Output Data</uicontrol> column of an
+                    origin or the <wintitle>Input Data</wintitle> column for all other stages, click
+                    the value that you want to change and enter a new value. </cmd>
+                <info>You can edit values for any input data. </info>
+            </step>
+            <step>
+                <cmd>To process changed data, click the <uicontrol>Run With Changes</uicontrol>
+                    icon.</cmd>
+                <info>This runs the data preview with the current set of data and stage
+                    configuration.</info>
+                <stepresult>In the Input Data column, records with changed values display with an
+                    asterisk and the changed values are highlighted. The Output Data column displays
+                    the results of processing. You can change and process preview data as often as
+                    necessary. </stepresult>
+            </step>
+            <step>
+                <cmd>To refresh the preview, click the <uicontrol>Refresh Preview</uicontrol>
+                    icon.</cmd>
+                <info>Based on the origin, Refresh Preview either runs the same or a new set of data
+                    through the pipeline.</info>
+            </step>
+            <step>
+                <cmd>To revert changes to data, click the <uicontrol>Revert Data Changes</uicontrol>
+                    icon.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

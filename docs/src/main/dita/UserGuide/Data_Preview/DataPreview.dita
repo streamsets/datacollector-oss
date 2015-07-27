@@ -10,11 +10,10 @@
     <p><indexterm>data preview<indexterm>overview</indexterm></indexterm><indexterm>previewing
                     data<index-see>data preview</index-see></indexterm>You can use data preview to
             help you configure the pipeline. After you configure the origin and link the stages that
-            you want to review, you start the data preview. In preview mode, you cannot add or
-            delete stages, but you can edit stage properties and rerun the preview to view how your
-            changes affect the data. </p>
-        <p>You can also use data preview to tune pipeline configuration by editing preview data and
-            examining the results. </p>
+            you want to review, you start the data preview. </p>
+        <p>In preview mode, you cannot add or delete stages, but you can edit stage properties and
+            run the preview again to see how your changes affect preview data. Similarly, you can
+            edit preview data to test and tune pipeline configuration. </p>
         <p>You can view preview data in list or table view, and for one stage at a time or for a
             group of stages. You can also refresh the preview to view an entirely different set of
             data. </p>

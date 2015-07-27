@@ -34,6 +34,13 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file. </dd>
     </dlentry>
+        <dlentry>
+          <dt>In data preview, I edited stage configuration and clicked Run with Changes, but I
+            don't see any change in the data.</dt>
+          <dd>This might happen if the configuration change is in the origin. Run with Changes uses
+            the existing preview data. To see how changes to origin configuration affects preview
+            data, use Refresh Preview. </dd>
+        </dlentry>
    </dl></p>
  </conbody>
 </concept>
