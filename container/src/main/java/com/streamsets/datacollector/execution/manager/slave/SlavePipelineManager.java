@@ -55,7 +55,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
   }
 
   @Override
-  public Previewer getPreview(String previewerId) {
+  public Previewer getPreviewer(String previewerId) {
     throw new UnsupportedOperationException();
   }
 

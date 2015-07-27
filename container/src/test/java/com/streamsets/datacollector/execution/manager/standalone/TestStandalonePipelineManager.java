@@ -197,9 +197,9 @@ public class TestStandalonePipelineManager {
   @Test
   public void testPreviewer() {
     Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0");
-    assertEquals(previewer, pipelineManager.getPreview(previewer.getId()));
+    assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
-    assertNull(pipelineManager.getPreview(previewer.getId()));
+    assertNull(pipelineManager.getPreviewer(previewer.getId()));
   }
 
   @Test

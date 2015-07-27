@@ -27,7 +27,7 @@ public interface Manager extends Task {
   public Previewer createPreviewer(String user, String name, String rev);
 
   // returns the previewer from the cache with the specified ID
-  public Previewer getPreview(String previewerId);
+  public Previewer getPreviewer(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
   public Runner getRunner(String user, String name, String rev) throws PipelineStoreException, PipelineManagerException;

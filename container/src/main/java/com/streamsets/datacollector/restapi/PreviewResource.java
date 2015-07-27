@@ -22,7 +22,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -127,7 +126,10 @@ public class PreviewResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getPreviewStatus(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
-    Previewer previewer = manager.getPreview(previewerId);
+    Previewer previewer = manager.getPreviewer(previewerId);
+    if(previewer == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
+    }
     RestAPIUtils.injectPipelineInMDC(previewer.getName());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("status", previewer.getStatus())).build();
   }
@@ -140,7 +142,10 @@ public class PreviewResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getPreviewData(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
-    Previewer previewer = manager.getPreview(previewerId);
+    Previewer previewer = manager.getPreviewer(previewerId);
+    if(previewer == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
+    }
     RestAPIUtils.injectPipelineInMDC(previewer.getName());
     PreviewOutput previewOutput = previewer.getOutput();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(previewOutput)).build();
@@ -154,7 +159,10 @@ public class PreviewResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response stopPreview(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
-    Previewer previewer = manager.getPreview(previewerId);
+    Previewer previewer = manager.getPreviewer(previewerId);
+    if(previewer == null) {
+      return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
+    }
     RestAPIUtils.injectPipelineInMDC(previewer.getName());
     previewer.stop();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewer.getStatus()).build();
@@ -206,6 +214,5 @@ public class PreviewResource {
       }
     }
   }
-
 
 }

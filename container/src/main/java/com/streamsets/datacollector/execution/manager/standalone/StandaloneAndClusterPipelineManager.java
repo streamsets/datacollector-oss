@@ -93,7 +93,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public Previewer getPreview(String previewerId) {
+  public Previewer getPreviewer(String previewerId) {
     Utils.checkNotNull(previewerId, "previewerId");
     Previewer previewer = previewerCache.getIfPresent(previewerId);
     if (previewer == null) {

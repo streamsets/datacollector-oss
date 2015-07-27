@@ -76,9 +76,9 @@ public class TestPipelineManagerModule {
 
     //Create previewer
     Previewer previewer = pipelineManager.createPreviewer("user", "p1", "1");
-    assertEquals(previewer, pipelineManager.getPreview(previewer.getId()));
+    assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
-    assertNull(pipelineManager.getPreview(previewer.getId()));
+    assertNull(pipelineManager.getPreviewer(previewer.getId()));
 
     //create and save empty pipeline
     PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
