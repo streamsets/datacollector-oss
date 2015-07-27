@@ -58,6 +58,22 @@
         <updatePolicy>never</updatePolicy>
         <checksumPolicy>fail</checksumPolicy>
       </snapshots>
+      <id>HDPRehosted</id>
+      <name>HDP Releases</name>
+      <url>http://repo.hortonworks.com/content/repositories/re-hosted/</url>
+      <layout>default</layout>
+    </repository>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+        <checksumPolicy>warn</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+        <checksumPolicy>fail</checksumPolicy>
+      </snapshots>
       <id>HDPJetty</id>
       <name>HDP Jetty</name>
       <url>http://repo.hortonworks.com/content/repositories/jetty-hadoop/</url>
@@ -230,10 +246,6 @@
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -246,41 +258,19 @@
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
       </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.101tec</groupId>
-      <artifactId>zk-client</artifactId>
-      <version>${zk-client.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
       <version>${kafka.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
       <version>${kafka.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.101tec</groupId>
-          <artifactId>zkclient</artifactId>
-        </exclusion>
-      </exclusions>
       <classifier>test</classifier>
       <scope>test</scope>
     </dependency>
