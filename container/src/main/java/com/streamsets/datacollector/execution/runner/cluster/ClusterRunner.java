@@ -131,8 +131,7 @@ public class ClusterRunner extends AbstractRunner {
   @VisibleForTesting
   ClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
-    SafeScheduledExecutorService executorService, ClusterHelper clusterManager, ResourceManager resourceManager) {
-
+    SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStateStore = pipelineStateStore;
@@ -147,10 +146,10 @@ public class ClusterRunner extends AbstractRunner {
       .expireAfterWrite(1, TimeUnit.MINUTES)
       .build();
     this.tempDir = Files.createTempDir();
-    if (clusterManager == null) {
+    if (clusterHelper == null) {
       this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     } else {
-      this.clusterHelper = clusterManager;
+      this.clusterHelper = clusterHelper;
     }
     this.resourceManager = resourceManager;
     this.eventListenerManager = new EventListenerManager();
@@ -166,7 +165,12 @@ public class ClusterRunner extends AbstractRunner {
     this.slaveCallbackList = CacheBuilder.newBuilder()
       .expireAfterWrite(1, TimeUnit.MINUTES)
       .build();
-    this.tempDir = Files.createTempDir();
+    this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), Utils.format("pipeline-{}-{}-{}", user, name,
+      rev));
+    this.tempDir.mkdirs();
+    if (!this.tempDir.isDirectory()) {
+      throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
+    }
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {

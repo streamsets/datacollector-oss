@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,20 +22,28 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class SystemProcessImpl implements SystemProcess {
   private static final Logger LOG = LoggerFactory.getLogger(SystemProcessImpl.class);
+  private static final AtomicLong fileCounter = new AtomicLong(0);
+  private static final int OUT_FILE_LIMIT = 50;
+  static final String OUT_EXT = ".out";
+  static final String ERR_EXT = ".err";
   private static final Method DESTROY_FORCIBLY;
   static {
     Method destroyForcibly;
@@ -55,18 +64,49 @@ public class SystemProcessImpl implements SystemProcess {
   private Process delegate;
 
   SystemProcessImpl(String name, File tempDir, File logDir) {
-    String uuid = UUID.randomUUID().toString();
+    String id = nextId();
     this.tempDir = tempDir;
-    output = new File(logDir, Utils.format("{}-{}.out", name, uuid));
-    error = new File(logDir, Utils.format("{}-{}.err", name, uuid));
+    output = new File(logDir, Utils.format("{}-{}{}", name, id, OUT_EXT));
+    error = new File(logDir, Utils.format("{}-{}{}", name, id, ERR_EXT));
   }
 
   public SystemProcessImpl(String name, File tempDir, List<String> args) {
-    String uuid = UUID.randomUUID().toString();
-    output = new File(tempDir, Utils.format("{}-{}.out", name, uuid));
-    error = new File(tempDir, Utils.format("{}-{}.err", name, uuid));
+    clean(tempDir, OUT_FILE_LIMIT);
+    String id = nextId();
+    output = new File(tempDir, Utils.format("{}-{}{}", name, id, OUT_EXT));
+    error = new File(tempDir, Utils.format("{}-{}{}", name, id, ERR_EXT));
     this.tempDir = tempDir;
     this.args = ImmutableList.copyOf(args);
+  }
+
+  /**
+   * @return a unique number which shorts in descending order
+   */
+  private static String nextId() {
+    NumberFormat numberFormat = NumberFormat.getInstance();
+    numberFormat.setMinimumIntegerDigits(10);
+    numberFormat.setGroupingUsed(false);
+    return numberFormat.format(fileCounter.incrementAndGet());
+  }
+
+  static void clean(File tempDir, int limit) {
+    String[] files = tempDir.list(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String name) {
+        return name.endsWith(OUT_EXT) || name.endsWith(ERR_EXT);
+      }
+    });
+    if (files != null && files.length > limit) {
+      List<String> fileList = new ArrayList<>(files.length);
+      fileList.addAll(Arrays.asList(files));
+      Collections.sort(fileList);
+      while (fileList.size() > limit) {
+        File file = new File(tempDir, fileList.remove(0));
+        if (!FileUtils.deleteQuietly(file)) {
+          LOG.warn("Could not delete: {}", file);
+        }
+      }
+    }
   }
 
   @Override
@@ -111,10 +151,6 @@ public class SystemProcessImpl implements SystemProcess {
     }
     if (errorTailer != null) {
       errorTailer.close();
-    }
-    if (!Boolean.getBoolean("sdc.testing-mode")) {
-      error.delete();
-      output.delete();
     }
     kill(5000);
   }

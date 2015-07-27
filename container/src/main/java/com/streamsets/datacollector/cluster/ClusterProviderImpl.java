@@ -101,7 +101,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(ClusterHelper.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -138,7 +138,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
-    SystemProcess process = systemProcessFactory.create(ClusterHelper.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -243,11 +243,34 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   @Override
-  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File clusterManager, File tempDir,
+  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File clusterManager, File outputDir,
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                        File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
                        URLClassLoader containerCL, long timeToWaitForFailure) throws IOException, TimeoutException {
+    File stagingDir = new File(outputDir, "staging");
+    stagingDir.mkdirs();
+    if (!stagingDir.isDirectory()) {
+      String msg = Utils.format("Could not create staging directory: {}", stagingDir);
+      throw new IllegalStateException(msg);
+    }
+    try {
+      return startPipelineInternal(systemProcessFactory, clusterManager, outputDir, environment, sourceInfo,
+        pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
+        timeToWaitForFailure, stagingDir);
+    } finally {
+      if (!FileUtils.deleteQuietly(stagingDir)) {
+        LOG.warn("Unable to cleanup: {}", stagingDir);
+      }
+    }
+  }
+
+
+  private ApplicationState  startPipelineInternal(SystemProcessFactory systemProcessFactory, File clusterManager,
+      File outputDir, Map<String, String> environment, Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
+      File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
+      URLClassLoader containerCL, long timeToWaitForFailure, File stagingDir) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     // create libs.tar.gz file for pipeline
     Map<String, List<URL> > streamsetsLibsCl = new HashMap<>();
@@ -352,13 +375,14 @@ public class ClusterProviderImpl implements ClusterProvider {
       Utils.checkState(pathToSparkKafkaJar != null, "Could not find spark kafka jar");
     }
 
+    LOG.info("stagingDir = '{}'", stagingDir);
     LOG.info("bootstrapDir = '{}'", bootstrapDir);
     LOG.info("etcDir = '{}'", etcDir);
     LOG.info("resourcesDir = '{}'", resourcesDir);
     LOG.info("staticWebDir = '{}'", staticWebDir);
 
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected '{}' to be a directory", staticWebDir));
-    File libsTarGz = new File(tempDir, "libs.tar.gz");
+    File libsTarGz = new File(stagingDir, "libs.tar.gz");
     try {
       TarFileCreator.createLibsTarGz(ImmutableList.copyOf(apiCL.getURLs()), ImmutableList.copyOf(containerCL.getURLs()),
         streamsetsLibsCl, userLibsCL, staticWebDir,
@@ -367,18 +391,18 @@ public class ClusterProviderImpl implements ClusterProvider {
       String msg = errorString("Serializing classpath: '{}'", ex);
       throw new RuntimeException(msg, ex);
     }
-    File resourcesTarGz = new File(tempDir, "resources.tar.gz");
+    File resourcesTarGz = new File(stagingDir, "resources.tar.gz");
     try {
-      resourcesDir = createDirectoryClone(resourcesDir, tempDir);
+      resourcesDir = createDirectoryClone(resourcesDir, stagingDir);
       TarFileCreator.createTarGz(resourcesDir, resourcesTarGz);
     } catch (Exception ex) {
       String msg = errorString("Serializing resources directory: '{}'", resourcesDir.getName(), ex);
       throw new RuntimeException(msg, ex);
     }
-    File etcTarGz = new File(tempDir, "etc.tar.gz");
+    File etcTarGz = new File(stagingDir, "etc.tar.gz");
     File sdcPropertiesFile;
     try {
-      etcDir = createDirectoryClone(etcDir, tempDir);
+      etcDir = createDirectoryClone(etcDir, stagingDir);
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getName();
       File pipelineBaseDir = new File(etcDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
@@ -404,7 +428,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
     File clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
       "streamsets-datacollector-spark-bootstrap");
-    File log4jProperties = new File(tempDir, "log4j.properties");
+    File log4jProperties = new File(stagingDir, "log4j.properties");
     InputStream clusterLog4jProperties = null;
     try {
       if (isBatch) {
@@ -444,7 +468,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
         pathToSparkKafkaJar, clusterBootstrapJar.getAbsolutePath());
     }
-    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args);
+    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), outputDir, args);
     LOG.info("Starting: " + process);
     try {
       process.start(environment);
