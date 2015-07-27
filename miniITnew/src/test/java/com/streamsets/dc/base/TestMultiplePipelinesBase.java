@@ -5,9 +5,9 @@
  */
 package com.streamsets.dc.base;
 
-import com.streamsets.dc.MiniSDC;
-import com.streamsets.dc.MiniSDCTestingUtility;
-import com.streamsets.dc.util.VerifyUtils;
+import com.streamsets.datacollector.MiniSDC;
+import com.streamsets.datacollector.MiniSDCTestingUtility;
+import com.streamsets.datacollector.util.VerifyUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
