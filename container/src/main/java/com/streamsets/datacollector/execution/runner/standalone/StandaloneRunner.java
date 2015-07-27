@@ -29,7 +29,6 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
-import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.DataObserverRunnable;
@@ -65,12 +64,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
+import com.streamsets.pipeline.lib.log.LogConstants;
 import dagger.ObjectGraph;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -149,84 +149,102 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void prepareForDataCollectorStart() throws PipelineStoreException, PipelineRunnerException {
     PipelineStatus status = getState().getStatus();
-    LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
-    String msg = null;
-    switch (status) {
-      case STARTING:
-        msg = "Pipeline was in STARTING state, forcing it to DISCONNECTING";
-      case CONNECTING:
-        msg = msg == null ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
-      case RUNNING:
-        msg = msg == null ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, msg, null);
-      case DISCONNECTING:
-        msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, msg, null);
-      case DISCONNECTED:
-        break;
-      case RUNNING_ERROR:
-        msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg, null);
-        break;
-      case STOPPING:
-        msg = "Pipeline was in STOPPING state, forcing it to terminal state of STOPPED";
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.STOPPED, msg, null);
-        break;
-      case FINISHING:
-        msg = "Pipeline was in FINISHING state, forcing it to terminal state of FINISHED";
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.FINISHED, null, null);
-        break;
-      case RUN_ERROR: // do nothing
-      case EDITED:
-      case FINISHED:
-      case KILLED:
-      case START_ERROR:
-      case STOPPED:
-        break;
-      default:
-        throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
+    try {
+      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.ENTITY, name);
+      LOG.info("Pipeline " + name + " with rev " + rev + " is in state: " + status);
+      String msg = null;
+      switch (status) {
+        case STARTING:
+          msg = "Pipeline was in STARTING state, forcing it to DISCONNECTING";
+        case CONNECTING:
+          msg = msg == null ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
+        case RUNNING:
+          msg = msg == null ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.DISCONNECTING, msg, null);
+        case DISCONNECTING:
+          msg = "Pipeline was in DISCONNECTING state, forcing it to DISCONNECTED";
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.DISCONNECTED, msg, null);
+        case DISCONNECTED:
+          break;
+        case RUNNING_ERROR:
+          msg = "Pipeline was in RUNNING_ERROR state, forcing it to terminal state of RUN_ERROR";
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg, null);
+          break;
+        case STOPPING:
+          msg = "Pipeline was in STOPPING state, forcing it to terminal state of STOPPED";
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.STOPPED, msg, null);
+          break;
+        case FINISHING:
+          msg = "Pipeline was in FINISHING state, forcing it to terminal state of FINISHED";
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.FINISHED, null, null);
+          break;
+        case RUN_ERROR: // do nothing
+        case EDITED:
+        case FINISHED:
+        case KILLED:
+        case START_ERROR:
+        case STOPPED:
+          break;
+        default:
+          throw new IllegalStateException(Utils.format("Pipeline in undefined state: '{}'", status));
+      }
+    } finally {
+      MDC.clear();
     }
   }
 
   @Override
   public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
-    PipelineStatus status = getState().getStatus();
-    LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
-    switch (status) {
-      case DISCONNECTED:
-        String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
-        LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
-        prepareForStart();
-        start();
-      default:
-        LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
+    try {
+      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.ENTITY, name);
+      PipelineStatus status = getState().getStatus();
+      LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+      switch (status) {
+        case DISCONNECTED:
+          String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
+          LOG.debug(msg);
+          validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
+          prepareForStart();
+          start();
+        default:
+          LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
+      }
+    } finally {
+      MDC.clear();
     }
   }
 
   @Override
   public void onDataCollectorStop() throws PipelineStoreException {
-    if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
-      LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
-      return;
-    }
-    LOG.info("Stopping pipeline {}::{}", name, rev);
     try {
-      try {
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
-          null);
-      } catch (PipelineRunnerException ex) {
-        // its ok if state validation fails - we will still try to stop pipeline if active
-        LOG.warn("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.getMessage(), ex);
+      MDC.put(LogConstants.USER, user);
+      MDC.put(LogConstants.ENTITY, name);
+      if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
+        LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
+        return;
       }
-      stopPipeline(true /* shutting down node process */);
-    } catch (Exception e) {
-      LOG.warn("Error while stopping the pipeline: {} ", e.getMessage(), e);
+      LOG.info("Stopping pipeline {}::{}", name, rev);
+      try {
+        try {
+          validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Stopping the pipeline as SDC is shutting down",
+                                        null);
+        } catch (PipelineRunnerException ex) {
+          // its ok if state validation fails - we will still try to stop pipeline if active
+          LOG.warn("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.getMessage(), ex);
+        }
+        stopPipeline(true /* shutting down node process */);
+      } catch (Exception e) {
+        LOG.warn("Error while stopping the pipeline: {} ", e.getMessage(), e);
+      }
+    } finally {
+      MDC.clear();
     }
   }
 

@@ -8,11 +8,6 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.execution.Manager;
-import com.streamsets.datacollector.http.ContextConfigurator;
-import com.streamsets.datacollector.http.JMXJsonServlet;
-import com.streamsets.datacollector.http.LocaleDetectorFilter;
-import com.streamsets.datacollector.http.LoginServlet;
-import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.RestAPI;
@@ -29,6 +24,7 @@ import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.websockets.SDCWebSocketServlet;
 
+import com.streamsets.pipeline.http.MDCFilter;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
@@ -83,6 +79,17 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         FilterHolder filter = new FilterHolder(GzipFilter.class);
+        context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideMDCFilter() {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder filter = new FilterHolder(new MDCFilter());
         context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
       }
     };

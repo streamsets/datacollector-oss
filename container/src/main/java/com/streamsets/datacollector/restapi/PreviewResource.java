@@ -96,6 +96,7 @@ public class PreviewResource {
     }
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
+    RestAPIUtils.injectPipelineInMDC(pipelineName);
 
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
@@ -130,6 +131,7 @@ public class PreviewResource {
   public Response getPreviewStatus(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreview(previewerId);
+    RestAPIUtils.injectPipelineInMDC(previewer.getName());
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("status", previewer.getStatus())).build();
   }
 
@@ -142,6 +144,7 @@ public class PreviewResource {
   public Response getPreviewData(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreview(previewerId);
+    RestAPIUtils.injectPipelineInMDC(previewer.getName());
     PreviewOutput previewOutput = previewer.getOutput();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(previewOutput)).build();
   }
@@ -155,6 +158,7 @@ public class PreviewResource {
   public Response stopPreview(@PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreview(previewerId);
+    RestAPIUtils.injectPipelineInMDC(previewer.getName());
     previewer.stop();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewer.getStatus()).build();
   }
@@ -170,6 +174,7 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @Context UriInfo uriInfo) throws PipelineStoreException,
       PipelineRuntimeException, IOException {
+    RestAPIUtils.injectPipelineInMDC(pipelineName);
 
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
     Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
@@ -188,6 +193,7 @@ public class PreviewResource {
       @QueryParam("rev") String rev,
       @QueryParam("timeout") @DefaultValue("2000") long timeout)
       throws PipelineException, StageException {
+    RestAPIUtils.injectPipelineInMDC(pipelineName);
     try {
       Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
       previewer.validateConfigs(timeout);

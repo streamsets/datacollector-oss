@@ -108,6 +108,7 @@ public class PipelineStoreResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getPipelines() throws PipelineStoreException {
+    RestAPIUtils.injectPipelineInMDC("*");
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineInfo(store.getPipelines()))
       .build();
   }
@@ -124,6 +125,7 @@ public class PipelineStoreResource {
       @QueryParam("get") @DefaultValue("pipeline") String get,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment)
       throws PipelineStoreException, URISyntaxException {
+    RestAPIUtils.injectPipelineInMDC(name);
     Object data;
     if (get.equals("pipeline")) {
       PipelineConfiguration pipeline = store.load(name, rev);
@@ -165,6 +167,7 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
+    RestAPIUtils.injectPipelineInMDC(name);
     PipelineConfiguration pipeline = store.create(user, name, description);
 
     //Add predefined Metric Rules to the pipeline
@@ -208,6 +211,7 @@ public class PipelineStoreResource {
       throws PipelineStoreException, URISyntaxException {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
+    RestAPIUtils.injectPipelineInMDC(name);
     store.delete(name);
     store.deleteRules(name);
     return Response.ok().build();
@@ -229,8 +233,8 @@ public class PipelineStoreResource {
     Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
 
-    PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(
-      pipeline);
+    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
     pipelineConfig = store.save(user, name, rev, description, pipelineConfig);
@@ -246,7 +250,8 @@ public class PipelineStoreResource {
   public Response getPipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
-    com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+    RestAPIUtils.injectPipelineInMDC(name);
+    RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     if(ruleDefinitions != null) {
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
       ruleDefinitionValidator.validateRuleDefinition(ruleDefinitions);
@@ -265,7 +270,8 @@ public class PipelineStoreResource {
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
     @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {
-    com.streamsets.datacollector.config.RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
+    RestAPIUtils.injectPipelineInMDC(name);
+    RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
     ruleDefinitionValidator.validateRuleDefinition(ruleDefs);
     ruleDefs = store.storeRules(name, rev, ruleDefs);
