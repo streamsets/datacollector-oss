@@ -18,6 +18,7 @@
 
 public class TestFuzzyFieldProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(TestFuzzyFieldProcessor.class);
+
   @Test
   public void testSimpleMatchInPlace() throws Exception {
     List<String> outputFields = ImmutableList.of("Stream", "Google", "Hadoop");
@@ -28,6 +29,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", false)
         .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -74,6 +76,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", false)
         .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -121,6 +124,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", true)
         .addConfiguration("inPlace", false)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -190,6 +194,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", true)
         .addConfiguration("inPlace", false)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -267,6 +272,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", false)
         .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -314,6 +320,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", false)
         .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -361,6 +368,7 @@ public class TestFuzzyFieldProcessor {
         .addConfiguration("matchThreshold", 60)
         .addConfiguration("allCandidates", false)
         .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
         .addOutputLane("a").build();
 
     runner.runInit();
@@ -393,6 +401,54 @@ public class TestFuzzyFieldProcessor {
       Assert.assertEquals("1000", result.get("sale_price").getValueAsString());
       Assert.assertEquals("100", result.get("invoice_PriceMsrp").getValueAsString());
       Assert.assertEquals("2015-01-01", result.get("dateSold").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testUnmatchedFieldInPlace() throws Exception {
+    List<String> outputFields = ImmutableList.of("sale_price", "invoice_PriceMsrp");
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FuzzyFieldDProcessor.class)
+        .addConfiguration("rootFieldPaths", ImmutableList.of("/"))
+        .addConfiguration("outputFieldNames", outputFields)
+        .addConfiguration("matchThreshold", 60)
+        .addConfiguration("allCandidates", false)
+        .addConfiguration("inPlace", true)
+        .addConfiguration("preserveUnmatchedFields", true)
+        .addOutputLane("a").build();
+
+    runner.runInit();
+
+    try {
+      List<Field> csvWithHeader = new ArrayList<>();
+      Map<String, Field> f1 = new HashMap<>();
+      f1.put("header", Field.create("Invoice Price"));
+      f1.put("value", Field.create("100"));
+      csvWithHeader.add(Field.create(f1));
+      Map<String, Field> f2 = new HashMap<>();
+      f2.put("header", Field.create("Sale"));
+      f2.put("value", Field.create("1000"));
+      csvWithHeader.add(Field.create(f2));
+      Map<String, Field> f3 = new HashMap<>();
+      f3.put("header", Field.create("Sold Date"));
+      f3.put("value", Field.create("2015-01-01"));
+      csvWithHeader.add(Field.create(f3));
+      Record record = RecordCreator.create("s", "s:1");
+
+      record.set(Field.create(csvWithHeader));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(0, runner.getErrorRecords().size());
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+
+      Assert.assertEquals("1000", result.get("sale_price").getValueAsString());
+      Assert.assertEquals("100", result.get("invoice_PriceMsrp").getValueAsString());
+      Assert.assertEquals("2015-01-01", result.get("Sold Date").getValueAsString());
     } finally {
       runner.runDestroy();
     }

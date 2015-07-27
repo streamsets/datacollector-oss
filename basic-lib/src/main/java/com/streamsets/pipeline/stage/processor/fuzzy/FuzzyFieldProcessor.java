@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.Set;
 
 public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
   private static final String HEADER = "header";
@@ -28,19 +29,22 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
   private final int matchThreshold;
   private final boolean allCandidates;
   private final boolean inPlace;
+  private final boolean preserveUnmatchedFields;
 
   public FuzzyFieldProcessor(
       List<String> rootFieldPaths,
       List<String> outputFieldNames,
       int matchThreshold,
       boolean allCandidates,
-      boolean inPlace
+      boolean inPlace,
+      boolean preserveUnmatchedFields
   ) {
     this.rootFieldPaths = rootFieldPaths;
     this.outputFieldNames = outputFieldNames;
     this.matchThreshold = matchThreshold;
     this.allCandidates = allCandidates;
     this.inPlace = inPlace;
+    this.preserveUnmatchedFields = preserveUnmatchedFields;
   }
 
   @Override
@@ -51,8 +55,11 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     for (String rootFieldPath : rootFieldPaths) {
-      Field rootField = record.get(rootFieldPath);
-      SortedSetMultimap<String, MatchCandidate> candidates = findCandidatesFor(rootField);
+      final Field rootField = record.get(rootFieldPath);
+      final Map<String, Field> rootFieldMap = flattenRootField(rootField);
+      final Set<String> originalFieldNames = rootFieldMap.keySet();
+
+      SortedSetMultimap<String, MatchCandidate> candidates = findCandidatesFor(rootFieldMap);
 
       Map<String, Field> newFields = new HashMap<>();
 
@@ -64,6 +71,8 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
           @Override
           public Field apply(MatchCandidate input) {
             Field field;
+            originalFieldNames.remove(input.getFieldPath());
+
             if (inPlace) {
               field = input.getField();
             } else {
@@ -86,6 +95,12 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
         }
       }
 
+      if (preserveUnmatchedFields) {
+        for (String originalFieldName : originalFieldNames) {
+          newFields.put(originalFieldName, rootFieldMap.get(originalFieldName));
+        }
+      }
+
       record.set(rootFieldPath, Field.create(newFields));
     }
 
@@ -102,7 +117,7 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
     return isMaxScore;
   }
 
-  private TreeMultimap<String, MatchCandidate> findCandidatesFor(Field rootField) throws StageException {
+  private Map<String, Field> flattenRootField(Field rootField) throws StageException {
     Map<String, Field> fields;
     switch (rootField.getType()) {
       case LIST:
@@ -123,7 +138,10 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
       default:
         throw new StageException(Errors.FUZZY_00, rootField.getType());
     }
+    return fields;
+  }
 
+  private TreeMultimap<String, MatchCandidate> findCandidatesFor(Map<String, Field> fields) throws StageException {
     TreeMultimap<String, MatchCandidate> candidates = TreeMultimap.create();
 
     for (String outputField : outputFieldNames) {

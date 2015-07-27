@@ -79,6 +79,17 @@ public class FuzzyFieldDProcessor extends DProcessor {
   )
   public boolean inPlace;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Preserve Unmatched Fields",
+      description = "If checked, preserves fields which did not match any desired field name.",
+      displayPosition = 50,
+      group = "FUZZY"
+  )
+  public boolean preserveUnmatchedFields;
+
   @Override
   protected Processor createProcessor() {
     return new FuzzyFieldProcessor(
@@ -86,7 +97,8 @@ public class FuzzyFieldDProcessor extends DProcessor {
         outputFieldNames,
         matchThreshold,
         allCandidates,
-        inPlace
+        inPlace,
+        preserveUnmatchedFields
     );
   }
 }
