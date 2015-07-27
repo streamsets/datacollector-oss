@@ -16,8 +16,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
     version = 1,
-    label = "MongoDB",
-    description = "Reads records from a MongoDB Collection",
+    label = "MongoDB Source",
+    description = "Reads records from a MongoDB collection",
     icon="mongodb.png",
     recordsByRef = true
 )
@@ -27,7 +27,7 @@ public class MongoDBDSource extends DSource {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      label = "MongoDB Connection String",
+      label = "Connection String",
       required = true,
       group = "MONGODB",
       displayPosition = 10
@@ -36,7 +36,7 @@ public class MongoDBDSource extends DSource {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      label = "MongoDB Database",
+      label = "Database",
       required = true,
       group = "MONGODB",
       displayPosition = 20
@@ -45,7 +45,7 @@ public class MongoDBDSource extends DSource {
 
   @ConfigDef(
       type = ConfigDef.Type.STRING,
-      label = "MongoDB Collection",
+      label = "Collection",
       required = true,
       group = "MONGODB",
       displayPosition = 30
@@ -79,7 +79,7 @@ public class MongoDBDSource extends DSource {
       type = ConfigDef.Type.STRING,
       defaultValue = "_id",
       label = "Offset Field",
-      description = "Field checked to track current offset. Must be an ObjectId",
+      description = "Field checked to track current offset. Must be an ObjectId.",
       displayPosition = 50,
       group = "MONGODB"
   )
@@ -87,7 +87,7 @@ public class MongoDBDSource extends DSource {
 
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
-      label = "Batch Size",
+      label = "Batch Size (records)",
       defaultValue = "1000",
       required = true,
       min = 2, // Batch size of 1 in MongoDB is special and analogous to LIMIT 1
@@ -124,7 +124,7 @@ public class MongoDBDSource extends DSource {
       label = "Username",
       required = true,
       dependsOn = "authenticationType",
-      triggeredByValue = {"USER_PASS", "X509"},
+      triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
       displayPosition = 90
   )

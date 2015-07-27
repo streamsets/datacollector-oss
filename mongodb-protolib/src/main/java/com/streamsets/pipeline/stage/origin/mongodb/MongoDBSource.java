@@ -36,7 +36,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -247,9 +246,6 @@ public class MongoDBSource extends BaseSource {
       case USER_PASS:
         credential = MongoCredential.createCredential(username, mongoDatabaseName, password.toCharArray());
         break;
-      case X509:
-        credential = MongoCredential.createMongoX509Credential(username);
-        break;
       case NONE:
       default:
         break;
@@ -293,12 +289,6 @@ public class MongoDBSource extends BaseSource {
       isOk = parseServerList(mongoConnectionString, servers, issues);
       List<MongoCredential> credentials = createCredentials();
       MongoClientOptions options = MongoClientOptions.builder().build();
-
-      if (AuthenticationType.X509 == authenticationType) {
-        options = MongoClientOptions.builder()
-            .socketFactory(SSLSocketFactory.getDefault())
-            .build();
-      }
 
       if (isOk) {
         try {

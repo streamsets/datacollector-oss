@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.Label;
 public enum AuthenticationType implements Label {
   NONE("None"),
   USER_PASS("Username/Password"),
-  X509("X.509"),
   ;
 
   private final String label;
