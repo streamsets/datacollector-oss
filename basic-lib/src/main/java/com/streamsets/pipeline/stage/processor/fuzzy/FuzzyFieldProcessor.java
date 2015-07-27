@@ -130,7 +130,7 @@ public class FuzzyFieldProcessor extends SingleLaneRecordProcessor {
       for (Map.Entry<String, Field> entry : fields.entrySet()) {
         String fieldPath = entry.getKey();
         Field field = entry.getValue();
-        int score = FuzzyMatch.getRatio(outputField, fieldPath);
+        int score = FuzzyMatch.getRatio(outputField, fieldPath, true);
         if (score >= matchThreshold) {
           if (greaterScore(candidates.get(outputField), score) || allCandidates) {
             if (!allCandidates) {
