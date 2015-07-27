@@ -5,8 +5,11 @@
  */
 package com.streamsets.datacollector.cluster;
 
+import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -43,6 +46,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -54,6 +58,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,6 +80,8 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String KERBEROS_AUTH = "KERBEROS_AUTH";
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
+  private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
+  private static final String ALL_STAGES = "*";
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
@@ -233,13 +240,64 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   static boolean exclude(List<String> blacklist, String name) {
     for (String pattern : blacklist) {
-      if(Pattern.compile(pattern).matcher(name).find()) {
+      if (Pattern.compile(pattern).matcher(name).find()) {
         return true;
       } else if (IS_TRACE_ENABLED) {
         LOG.trace("Pattern '{}' does not match '{}'", pattern, name);
       }
     }
     return false;
+  }
+
+  private static Properties readDataCollectorProperties(ClassLoader cl) throws IOException {
+    Properties properties = new Properties();
+    while (cl != null) {
+      Enumeration<URL> urls = cl.getResources(DATA_COLLECTOR_LIBRARY_PROPERTIES);
+      if (urls != null) {
+        while (urls.hasMoreElements()) {
+          URL url = urls.nextElement();
+          LOG.trace("Loading data collector library properties: {}", url);
+          try (InputStream inputStream = url.openStream()) {
+            properties.load(inputStream);
+          }
+        }
+      }
+      cl = cl.getParent();
+    }
+    LOG.trace("Final properties: {} ", properties);
+    return properties;
+  }
+
+  private static List<URL> findJars(String name, URLClassLoader cl, @Nullable String stageClazzName)
+    throws IOException {
+    Properties properties = readDataCollectorProperties(cl);
+    List<String> blacklist = new ArrayList<>();
+    for (Map.Entry entry : properties.entrySet()) {
+      String key = (String) entry.getKey();
+      if (stageClazzName != null && key.equals(CLUSTER_MODE_JAR_BLACKLIST + stageClazzName)) {
+        String value = (String) entry.getValue();
+        blacklist.addAll(Splitter.on(",").trimResults().omitEmptyStrings().splitToList(value));
+      } else if (key.equals(CLUSTER_MODE_JAR_BLACKLIST + ALL_STAGES)) {
+        String value = (String) entry.getValue();
+        blacklist.addAll(Splitter.on(",").trimResults().omitEmptyStrings().splitToList(value));
+      }
+    }
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Blacklist for '{}': '{}'", name, blacklist);
+    }
+    List<URL> urls = new ArrayList<>();
+    for (URL url : cl.getURLs()) {
+      if (blacklist.isEmpty()) {
+        urls.add(url);
+      } else {
+        if (exclude(blacklist, FilenameUtils.getName(url.getPath()))) {
+          LOG.trace("Skipping '{}' for '{}' due to '{}'", url, name, blacklist);
+        } else {
+          urls.add(url);
+        }
+      }
+    }
+    return urls;
   }
 
   @Override
@@ -348,25 +406,10 @@ public class ClusterProviderImpl implements ClusterProvider {
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
       if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
-        List<URL> urls = new ArrayList<>();
-        List<String> blacklist = stageDef.getJarBlacklist();
-        if (IS_TRACE_ENABLED) {
-          LOG.trace("Blacklist for '{}': '{}'", name, blacklist);
-        }
-        for (URL url : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
-          if (blacklist.isEmpty()) {
-            urls.add(url);
-          } else {
-              if (exclude(blacklist, FilenameUtils.getName(url.getPath()))) {
-                LOG.debug("Skipping '{}' for '{}' due to '{}'", url, name, blacklist);
-              } else {
-                urls.add(url);
-              }
-          }
-        }
-        streamsetsLibsCl.put(name, urls);
+        streamsetsLibsCl.put(name, findJars(name, (URLClassLoader)stageDef.getStageClassLoader(),
+          stageDef.getClassName()));
       } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
-        userLibsCL.put(name, ImmutableList.copyOf(((URLClassLoader) stageDef.getStageClassLoader()).getURLs()));
+        userLibsCL.put(name, findJars(name, (URLClassLoader) stageDef.getStageClassLoader(), stageDef.getClassName()));
       } else {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
       }
@@ -384,9 +427,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected '{}' to be a directory", staticWebDir));
     File libsTarGz = new File(stagingDir, "libs.tar.gz");
     try {
-      TarFileCreator.createLibsTarGz(ImmutableList.copyOf(apiCL.getURLs()), ImmutableList.copyOf(containerCL.getURLs()),
-        streamsetsLibsCl, userLibsCL, staticWebDir,
-        libsTarGz);
+      TarFileCreator.createLibsTarGz(findJars("api", apiCL, null), findJars("container", containerCL, null),
+        streamsetsLibsCl, userLibsCL, staticWebDir, libsTarGz);
     } catch (Exception ex) {
       String msg = errorString("Serializing classpath: '{}'", ex);
       throw new RuntimeException(msg, ex);

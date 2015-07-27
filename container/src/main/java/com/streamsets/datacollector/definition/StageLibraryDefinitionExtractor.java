@@ -22,7 +22,7 @@ import java.util.Properties;
 public abstract class StageLibraryDefinitionExtractor {
   private static final Logger LOG = LoggerFactory.getLogger(StageLibraryDefinitionExtractor.class);
 
-  private static final String DATA_COLLECTOR_LIBRARY_PROPERTIES = "data-collector-library.properties";
+  public static final String DATA_COLLECTOR_LIBRARY_PROPERTIES = "data-collector-library.properties";
 
   private static final StageLibraryDefinitionExtractor EXTRACTOR = new StageLibraryDefinitionExtractor() {};
 
