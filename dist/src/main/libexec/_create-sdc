@@ -138,7 +138,7 @@ run echo "" >> ${SCRIPT}
 
 run chmod a+x ${SCRIPT}
 run cp -r -p "${SDC_DIST}/etc/"* "${SDC_HOME}/etc/"
-run cp -r -p "${SDC_DIST}/libexec/"* "${SDC_HOME}/libexec/"
+run cp -p "${SDC_DIST}/libexec/"*".sh" "${SDC_HOME}/libexec/"
 run rm "${SDC_HOME}/etc/sdc.properties"
 
 SED_OPTIONS=""

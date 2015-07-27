@@ -46,7 +46,6 @@ while test $# -gt 0; do
       echo "  Sub-commands:"
       echo ""
       echo "    dc: starts the Data Collector"
-      echo "    create-dc: creates a Data Collector instance"
       echo ""
       exit 0
       ;;
