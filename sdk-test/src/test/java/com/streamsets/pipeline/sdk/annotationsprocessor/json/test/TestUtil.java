@@ -5,8 +5,9 @@
  */
 package com.streamsets.pipeline.sdk.annotationsprocessor.json.test;
 
-import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
+
 import org.junit.Assert;
 
 import java.io.IOException;

@@ -7,6 +7,9 @@ package com.streamsets.pipeline.sdk;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -16,13 +19,9 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.runner.StageContext;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
-import com.streamsets.pipeline.util.ContainerError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;

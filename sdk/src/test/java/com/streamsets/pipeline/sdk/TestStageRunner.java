@@ -5,10 +5,11 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.config.StageType;
+
 import org.junit.Assert;
 import org.junit.Test;
 

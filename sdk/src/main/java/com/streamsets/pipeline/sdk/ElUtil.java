@@ -5,9 +5,9 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.el.RuntimeEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.lang.reflect.Field;

@@ -1,8 +1,8 @@
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.record.RecordImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

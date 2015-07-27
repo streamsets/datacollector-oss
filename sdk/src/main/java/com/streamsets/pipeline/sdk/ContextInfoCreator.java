@@ -5,12 +5,12 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.config.StageType;
-import com.streamsets.pipeline.runner.StageContext;
 
 import java.util.Collections;
 import java.util.HashMap;

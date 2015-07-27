@@ -159,7 +159,7 @@ public class BootstrapCluster {
     try {
       Instrumentation instrumentation = BootstrapMain.getInstrumentation();
       if (instrumentation != null) {
-        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.pipeline.memory.MemoryUsageCollector",
+        Method memoryUsageCollectorInitialize = Class.forName("com.streamsets.datacollector.memory.MemoryUsageCollector",
           true, containerCL).getMethod("initialize", Instrumentation.class);
         memoryUsageCollectorInitialize.invoke(null, instrumentation);
       }
@@ -168,7 +168,7 @@ public class BootstrapCluster {
       throw new IllegalStateException(msg, ex);
     }
     try {
-      Class<?> runtimeModuleClz = Class.forName("com.streamsets.pipeline.main.RuntimeModule", true, containerCL);
+      Class<?> runtimeModuleClz = Class.forName("com.streamsets.datacollector.main.RuntimeModule", true, containerCL);
       Method setStageLibraryClassLoadersMethod = runtimeModuleClz.getMethod("setStageLibraryClassLoaders", List.class);
       setStageLibraryClassLoadersMethod.invoke(null, stageLibrariesCLs);
     } catch (Exception ex) {
@@ -190,7 +190,7 @@ public class BootstrapCluster {
     ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
-      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.dc.datacollector.EmbeddedDataCollectorFactory", true,
+      Class embeddedPipelineFactoryClz = Class.forName("com.streamsets.datacollector.EmbeddedDataCollectorFactory", true,
         containerCL);
       Method createPipelineMethod = embeddedPipelineFactoryClz.getMethod("startPipeline", Runnable.class);
       return createPipelineMethod.invoke(null, postBatchRunnable);
@@ -207,7 +207,7 @@ public class BootstrapCluster {
     try {
       Thread.currentThread().setContextClassLoader(containerCL);
       Class pipelineConfigurationUtil =
-        Class.forName("com.streamsets.pipeline.util.PipelineConfigurationUtil", true, containerCL);
+        Class.forName("com.streamsets.datacollector.util.PipelineConfigurationUtil", true, containerCL);
       Method createPipelineMethod = pipelineConfigurationUtil.getMethod("getSourceLibName", String.class);
       return (String) createPipelineMethod.invoke(null, pipelineJson);
     } catch (Exception ex) {
