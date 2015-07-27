@@ -5,9 +5,13 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.el.RuntimeEL;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -22,8 +26,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +41,16 @@ import java.util.Set;
 
 public abstract class StageRunner<S extends Stage> {
   private static final Logger LOG = LoggerFactory.getLogger(StageRunner.class);
+
+  static {
+    RuntimeInfo runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+                                              Arrays.asList(StageRunner.class.getClassLoader()));
+    try {
+      RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
 
   enum Status { CREATED, INITIALIZED, DESTROYED}
 

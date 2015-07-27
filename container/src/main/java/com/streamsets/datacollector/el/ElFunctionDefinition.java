@@ -5,6 +5,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -15,15 +17,17 @@ public class ElFunctionDefinition {
   private final String group;
   private final String returnType;
   private final List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition;
+  public final Method method;
 
   public ElFunctionDefinition(String index, String group, String name, String description,
-      List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType) {
+      List<ElFunctionArgumentDefinition> elFunctionArgumentDefinition, String returnType, Method method) {
     this.index = index;
     this.name = name;
     this.description = description;
     this.group = group;
     this.returnType = returnType;
     this.elFunctionArgumentDefinition = elFunctionArgumentDefinition;
+    this.method = method;
   }
 
   public String getIndex() {
@@ -50,6 +54,10 @@ public class ElFunctionDefinition {
     return elFunctionArgumentDefinition;
   }
 
+  public Method getMethod() {
+    return method;
+  }
+
   @Override
   public int hashCode() {
     return toString().hashCode();
@@ -67,7 +75,8 @@ public class ElFunctionDefinition {
   }
 
   public String toString() {
-    return name;
+    return Utils.format("ELFunctionDefinition[name='{}', arguments='{}' returnType='{}']", name,
+                        elFunctionArgumentDefinition, returnType);
   }
 
 }

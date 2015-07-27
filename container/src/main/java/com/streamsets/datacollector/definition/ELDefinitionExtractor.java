@@ -160,7 +160,7 @@ public abstract class
               }
               fDef = new ElFunctionDefinition(Integer.toString(indexCounter.incrementAndGet()), fAnnotation.prefix(),
                                               fName, fAnnotation.description(), fArgDefs,
-                                              method.getReturnType().getSimpleName());
+                                              method.getReturnType().getSimpleName(), method);
               elFunctionsIdx.put(fDef.getIndex(), fDef);
               elFunctions.put(method, fDef);
             }
@@ -220,8 +220,15 @@ public abstract class
             ElConstant cAnnotation = field.getAnnotation(ElConstant.class);
             if (cAnnotation != null) {
               String cName = cAnnotation.name();
+              Object value;
+              try {
+                value = field.get(null);
+              } catch (IllegalAccessException ex) {
+                throw new IllegalArgumentException(Utils.format("{}, could not retrieve constant '{}' value: {}",
+                                                                contextMsg, cName, ex.getMessage(), ex));
+              }
               cDef = new ElConstantDefinition(Integer.toString(indexCounter.incrementAndGet()), cName,
-                                              cAnnotation.description(), field.getType().getSimpleName());
+                                              cAnnotation.description(), field.getType().getSimpleName(), value);
               elConstantsIdx.put(cDef.getIndex(), cDef);
               elConstants.put(field, cDef);
             }

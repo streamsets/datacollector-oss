@@ -5,6 +5,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.pipeline.api.impl.Utils;
+
 public class ElFunctionArgumentDefinition {
 
   private final String name;
@@ -23,4 +25,7 @@ public class ElFunctionArgumentDefinition {
     return type;
   }
 
+  public String toString() {
+    return Utils.format("{}:{}", name, type);
+  }
 }

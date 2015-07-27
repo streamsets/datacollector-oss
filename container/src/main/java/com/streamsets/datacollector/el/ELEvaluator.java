@@ -5,34 +5,24 @@
  */
 package com.streamsets.datacollector.el;
 
-import com.streamsets.pipeline.api.ElConstant;
-import com.streamsets.pipeline.api.ElFunction;
-import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
 import javax.servlet.jsp.el.VariableResolver;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ELEvaluator extends ELEval {
-  private final static Logger LOG = LoggerFactory.getLogger(ELEvaluator.class);
 
   private final String configName;
   private final Map<String, Object> constants;
@@ -60,83 +50,14 @@ public class ELEvaluator extends ELEval {
 
   private void populateConstantsAndFunctions(Class<?>... elFuncConstDefClasses) {
     if(elFuncConstDefClasses != null) {
-      Set<ElFunctionDefinition> elFunctions = new HashSet<>();
-      Set<ElConstantDefinition> elConstants = new HashSet<>();
-      for (Class<?> klass : elFuncConstDefClasses) {
-        for (Method m : klass.getMethods()) {
-          ElFunction elFunctionAnnot = m.getAnnotation(ElFunction.class);
-          if (elFunctionAnnot != null) {
-            if (!Modifier.isStatic(m.getModifiers())) {
-              throw new RuntimeException(Utils.format("EL function method must be static, class:'{}' method:'{}",
-                klass.getName(), m));
-            }
-            //getMethods returns only public methods, so the following is always true
-            if (!Modifier.isPublic(m.getModifiers())) {
-              throw new RuntimeException(Utils.format("EL function method must be public, class:'{}' method:'{}",
-                klass.getName(), m));
-            }
-            String functionName = elFunctionAnnot.name();
-            if (functionName.isEmpty()) {
-              throw new RuntimeException(Utils.format("EL function name cannot be empty, class:'{}' method:'{}",
-                klass.getName(), m));
-            }
-            if (!elFunctionAnnot.prefix().isEmpty()) {
-              functionName = elFunctionAnnot.prefix() + ":" + functionName;
-            }
-            if (functions.containsKey(functionName)) {
-              LOG.warn("The function '{}' is already defined for '{}', overriding to '{}'", functionName,
-                       functions.get(functionName).getName(), m.getName());
-            }
-            functions.put(functionName, m);
-            Annotation[][] parameterAnnotations = m.getParameterAnnotations();
-            Class<?>[] parameterTypes = m.getParameterTypes();
-            List<ElFunctionArgumentDefinition> elFunctionArgumentDefinitions = new ArrayList<>(
-              parameterTypes.length);
-            for (int i = 0; i < parameterTypes.length; i++) {
-              Annotation annotation = parameterAnnotations[i][0];
-              elFunctionArgumentDefinitions.add(new ElFunctionArgumentDefinition(((ElParam) annotation).value(),
-                parameterTypes[i].getSimpleName()));
-            }
-            elFunctions.add(new ElFunctionDefinition(null, elFunctionAnnot.prefix(), functionName,
-              elFunctionAnnot.description(),
-              elFunctionArgumentDefinitions,
-              m.getReturnType().getSimpleName()));
-          }
-        }
-        for (Field f : klass.getFields()) {
-          ElConstant elConstant = f.getAnnotation(ElConstant.class);
-          if (elConstant != null) {
-            if (!Modifier.isStatic(f.getModifiers())) {
-              throw new RuntimeException(Utils.format("EL constant field must be static, class:'{}' field:'{}",
-                klass.getName(), f));
-            }
-            //getFields returns only accessible public fields, so the following is always true
-            if (!Modifier.isPublic(f.getModifiers())) {
-              throw new RuntimeException(Utils.format("EL constant field must be public, class:'{}' field:'{}",
-                klass.getName(), f));
-            }
-            String constantName = elConstant.name();
-            if (constantName.isEmpty()) {
-              throw new RuntimeException(Utils.format("EL constant name cannot be empty, class:'{}' field:'{}",
-                klass.getName(), f));
-            }
-            try {
-              if (constants.containsKey(constantName)) {
-                LOG.warn("The constant '{}' is already defined for '{}', overriding to '{}'", constantName,
-                         constants.get(constantName), f.get(null));
-              }
-              constants.put(constantName, f.get(null));
-              elConstants.add(new ElConstantDefinition(null, constantName, elConstant.description(),
-                f.getType().getSimpleName()));
-            } catch (IllegalAccessException e) {
-              throw new RuntimeException(e);
-            }
-          }
-        }
+      for (ElFunctionDefinition function : ELDefinitionExtractor.get().extractFunctions(elFuncConstDefClasses, "")) {
+        elFunctionDefinitions.add(function);
+        functions.put(function.getName(), function.getMethod());
       }
-      //we are using sets to remove duplicate functions and constants
-      elFunctionDefinitions.addAll(elFunctions);
-      elConstantDefinitions.addAll(elConstants);
+      for (ElConstantDefinition constant : ELDefinitionExtractor.get().extractConstants(elFuncConstDefClasses, "")) {
+        elConstantDefinitions.add(constant);
+        constants.put(constant.getName(), constant.getValue());
+      }
     }
   }
 
@@ -146,8 +67,7 @@ public class ELEvaluator extends ELEval {
   }
 
   public ELVars createVariables() {
-    ELVars variables = new ELVariables(constants);
-    return variables;
+    return new ELVariables(constants);
   }
 
   public static void parseEL(String el) throws ELEvalException {
@@ -159,6 +79,7 @@ public class ELEvaluator extends ELEval {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> T evaluate (final ELVars vars, String expression, Class<T> returnType) throws ELEvalException {
 
     VariableResolver variableResolver = new VariableResolver() {

@@ -36,13 +36,18 @@ public class TestELEvaluator {
     Assert.assertEquals(elEval.getConfigName(), "testElFunctionMetadata");
 
     List<ElFunctionDefinition> elFunctionDefinitions = ((ELEvaluator) elEval).getElFunctionDefinitions();
-    Assert.assertEquals(1, elFunctionDefinitions.size());
 
-    ElFunctionDefinition cityDef = elFunctionDefinitions.get(0);
-    Assert.assertEquals("location:city", cityDef.getName());
-    Assert.assertEquals("location", cityDef.getGroup());
-    Assert.assertEquals("Returns the Address", cityDef.getDescription());
-    Assert.assertEquals("String", cityDef.getReturnType());
+    boolean found = false;
+    for (ElFunctionDefinition def : elFunctionDefinitions) {
+      if (def.getName().equals("location:city")) {
+        Assert.assertEquals("location:city", def.getName());
+        Assert.assertEquals("location", def.getGroup());
+        Assert.assertEquals("Returns the Address", def.getDescription());
+        Assert.assertEquals("String", def.getReturnType());
+        found = true;
+      }
+    }
+    Assert.assertTrue(found);
   }
 
   @Test(expected = RuntimeException.class)

@@ -5,6 +5,8 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.pipeline.api.impl.Utils;
+
 import java.lang.reflect.Field;
 
 public class ElConstantDefinition {
@@ -12,12 +14,14 @@ public class ElConstantDefinition {
   private final String name;
   private final String description;
   private final String returnType;
+  private final Object value;
 
-  public ElConstantDefinition(String index, String name, String description, String returnType) {
+  public ElConstantDefinition(String index, String name, String description, String returnType, Object value) {
     this.index = index;
     this.name = name;
     this.description = description;
     this.returnType = returnType;
+    this.value = value;
   }
 
   public String getIndex() {
@@ -34,6 +38,10 @@ public class ElConstantDefinition {
 
   public String getReturnType() {
     return returnType;
+  }
+
+  public Object getValue() {
+    return value;
   }
 
   @Override
@@ -53,7 +61,7 @@ public class ElConstantDefinition {
   }
 
   public String toString() {
-    return name;
+    return Utils.format("ELConstantDefinition[name='{}', type='{}']", name, returnType);
   }
 
 }
