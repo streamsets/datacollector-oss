@@ -46,14 +46,12 @@ public class TestSafeScheduledExecutorService {
     }
   }
   static class ExecutorSupportForTests extends ExecutorSupport {
-    private Throwable throwable;
     private AtomicInteger uncaughtThrowableInRunnableCount = new AtomicInteger(0);
     public ExecutorSupportForTests(Logger logger) {
       super(logger);
     }
     public void uncaughtThrowableInRunnable(Throwable throwable, Runnable delegate, String delegateName) {
       uncaughtThrowableInRunnableCount.incrementAndGet();
-      this.throwable = throwable;
       super.uncaughtThrowableInRunnable(throwable, delegate, delegateName);
     }
   }

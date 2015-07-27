@@ -47,6 +47,6 @@ public class TestResourceControlledScheduledExecutor {
     TimeUnit.SECONDS.sleep(9);
     executor.shutdown();
     int result = executions.get();
-    Assert.assertTrue("Expected between 40 and 60 executions but got: " + result, result >= 40 && result <= 50);
+    Assert.assertTrue("Expected between 30 and 60 executions but got: " + result, result >= 30 && result <= 60);
   }
 }
