@@ -20,7 +20,7 @@ public enum Errors implements ErrorCode {
   KAFKA_06("Zookeeper URI cannot be empty"),
   KAFKA_07("Invalid broker URI '{}'"),
   KAFKA_08("Unsupported charset '{}'"),
-
+  KAFKA_09("Invalid Zookeeper connect string '{}' : {}"),
   KAFKA_10("Cannot validate configuration: {}"),
 
   //Kafka source messages

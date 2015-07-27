@@ -133,9 +133,9 @@ public class KafkaTarget extends BaseTarget {
     allowAllTopics = false;
 
     //metadata broker list should be one or more <host>:<port> separated by a comma
-    kafkaBrokers = KafkaUtil.validateConnectionString(issues, metadataBrokerList,
-                                                                  Groups.KAFKA.name(), "metadataBrokerList",
-                                                                  getContext());
+    kafkaBrokers = KafkaUtil.validateKafkaBrokerConnectionString(issues, metadataBrokerList,
+      Groups.KAFKA.name(), "metadataBrokerList",
+      getContext());
 
     //check if the topic contains EL expression with record: functions
     //If yes, then validate the EL expression. Do not validate for existence of topic

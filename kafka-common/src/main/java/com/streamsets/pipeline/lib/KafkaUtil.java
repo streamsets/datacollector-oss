@@ -6,12 +6,12 @@
 package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
 import kafka.javaapi.consumer.SimpleConsumer;
+import org.apache.zookeeper.common.PathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,22 +93,15 @@ public class KafkaUtil {
     return topicMetadata.partitionsMetadata().size();
   }
 
-  public static List<KafkaBroker> validateConnectionString(List<Stage.ConfigIssue> issues, String connectionString,
-                                                     String configGroupName, String configName, Stage.Context context) {
+  public static List<KafkaBroker> validateKafkaBrokerConnectionString(List<Stage.ConfigIssue> issues, String connectionString,
+                                                                      String configGroupName, String configName, Stage.Context context) {
     if(connectionString == null || connectionString.isEmpty()) {
       issues.add(context.createConfigIssue(configGroupName, configName,
         Errors.KAFKA_06, configName));
       return null;
     }
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-
-    // Technically, this is only necessary for testing Zookeeper connection strings, since Kafka's root znode may
-    // be something other than / (as in CDH5.2, where it was /kafka). However, we're terrible people
-    // who are overloading a function intended for Kafka broker lists and using it for ZK connection strings, as well.
-    String[] chroot = connectionString.split("/");
-    String brokerList = chroot[0];
-
-    String[] brokers = brokerList.split(",");
+    String[] brokers = connectionString.split(",");
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
@@ -119,6 +112,53 @@ public class KafkaUtil {
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
           issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectionString));
+        }
+      }
+    }
+    return kafkaBrokers;
+  }
+
+  public static List<KafkaBroker> validateZkConnectionString(List<Stage.ConfigIssue> issues, String connectString,
+                                                             String configGroupName, String configName,
+                                                             Stage.Context context) {
+    if(connectString == null || connectString.isEmpty()) {
+      issues.add(context.createConfigIssue(configGroupName, configName,
+        Errors.KAFKA_06, configName));
+      return null;
+    }
+
+    String chrootPath;
+    int off = connectString.indexOf('/');
+    if (off >= 0) {
+      chrootPath = connectString.substring(off);
+      // ignore a single "/". Same as null. Anything longer must be validated
+      if (chrootPath.length() > 1) {
+        try {
+          PathUtils.validatePath(chrootPath);
+        } catch (IllegalArgumentException e) {
+          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_09, connectString,
+            e.getMessage()));
+        }
+      }
+      connectString = connectString.substring(0, off);
+    } else {
+      //do nothing
+    }
+
+    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
+    String brokers[] = connectString.split(",");
+    for(String broker : brokers) {
+      String[] brokerHostAndPort = broker.split(":");
+      if(brokerHostAndPort.length != 2) {
+        issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_09, connectString,
+          "The connection String is not of the form <HOST>:<PORT>"));
+      } else {
+        try {
+          int port = Integer.parseInt(brokerHostAndPort[1].trim());
+          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
+        } catch (NumberFormatException e) {
+          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectString,
+            e.getMessage()));
         }
       }
     }

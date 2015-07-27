@@ -68,7 +68,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     type = ConfigDef.Type.STRING,
     defaultValue = "localhost:2181",
     label = "ZooKeeper URI",
-    description = "Comma-separated list of ZooKeepers. Use format <HOST>:<PORT>",
+    description = "Comma-separated list of ZooKeepers followed by optional chroot path. Use format: <HOST1>:<PORT1>,<HOST2>:<PORT2>,<HOST3>:<PORT3>/<ital><CHROOT_PATH></ital>",
     displayPosition = 10,
     group = "KAFKA"
   )

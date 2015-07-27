@@ -19,7 +19,6 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.KafkaBroker;
-import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -200,9 +199,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     }
 
     // Validate zookeeper config
-
-    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateConnectionString(issues, zookeeperConnect, Groups.KAFKA.name(),
-      "zookeeperConnect", getContext());
+    List<KafkaBroker> kafkaBrokers = KafkaUtil.validateZkConnectionString(issues, zookeeperConnect,
+      Groups.KAFKA.name(), "zookeeperConnect", getContext());
 
      //validate connecting to kafka
      if(kafkaBrokers != null && !kafkaBrokers.isEmpty() && topic !=null && !topic.isEmpty()) {
