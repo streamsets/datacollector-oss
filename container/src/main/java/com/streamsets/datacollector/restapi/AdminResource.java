@@ -8,7 +8,6 @@ package com.streamsets.datacollector.restapi;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import io.swagger.annotations.Api;
@@ -52,9 +51,6 @@ public class AdminResource {
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(AuthzRole.ADMIN)
   public Response shutdown() throws PipelineStoreException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
-
     Thread thread = new Thread("Shutdown Request") {
       @Override
       public void run() {

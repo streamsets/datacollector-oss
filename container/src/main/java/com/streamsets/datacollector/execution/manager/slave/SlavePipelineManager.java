@@ -16,6 +16,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
@@ -69,7 +70,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
     }
     runner = runnerProvider.createRunner(user, name, rev, null, objectGraph);
     // Set the initial state
-    pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, null, null);
+    pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, null, ExecutionMode.SLAVE);
     return runner;
   }
 

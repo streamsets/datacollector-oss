@@ -270,8 +270,6 @@ public class MiniSDCTestingUtility {
         sdcProperties.setProperty(mapEntry.getKey(), mapEntry.getValue());
       }
 
-      sdcProperties.setProperty("sdc.execution.mode", executionMode.name());
-
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
       sdcProperties.store(sdcOutStream, null);
       sdcOutStream.flush();

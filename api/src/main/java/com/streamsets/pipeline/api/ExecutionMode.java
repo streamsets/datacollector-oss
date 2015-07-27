@@ -8,6 +8,7 @@ package com.streamsets.pipeline.api;
 public enum ExecutionMode implements Label {
   STANDALONE("Standalone"),
   CLUSTER("Cluster"),
+  SLAVE("Slave")
   ;
 
   private final String label;

@@ -106,8 +106,6 @@ public class TestKafkaSource {
 
     producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
 
-    // remove this
-    System.setProperty("sdc.clustermode", "false");
   }
 
   @AfterClass

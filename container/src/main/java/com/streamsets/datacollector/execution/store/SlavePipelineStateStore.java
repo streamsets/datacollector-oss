@@ -10,6 +10,7 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -37,11 +38,11 @@ public class SlavePipelineStateStore implements PipelineStateStore {
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
     Map<String, Object> attributes, ExecutionMode executionMode) throws PipelineStoreException {
     if (pipelineState != null && (!pipelineState.getName().equals(name) || !pipelineState.getRev().equals(rev))) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0212, name, rev, RuntimeInfo.ExecutionMode.SLAVE,
+      throw new PipelineStoreException(ContainerError.CONTAINER_0212, name, rev, ExecutionMode.SLAVE,
         pipelineState.getName(), pipelineState.getRev());
     }
     pipelineState =
-      new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode);
+      new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, ExecutionMode.SLAVE);
     return pipelineState;
   }
 
@@ -50,7 +51,7 @@ public class SlavePipelineStateStore implements PipelineStateStore {
     if (pipelineState != null && pipelineState.getName().equals(name) && pipelineState.getRev().equals(rev)) {
       return pipelineState;
     } else {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0211, name, rev, RuntimeInfo.ExecutionMode.SLAVE);
+      throw new PipelineStoreException(ContainerError.CONTAINER_0211, name, rev, ExecutionMode.SLAVE);
     }
   }
 

@@ -63,7 +63,6 @@ public class BootstrapCluster {
       etcRoot = (new File(System.getProperty("user.dir") + "/etc.tar.gz/etc/")).getAbsolutePath();
       resourcesRoot = (new File(System.getProperty("user.dir") + "/resources.tar.gz/resources/")).getAbsolutePath();
     }
-    System.setProperty("sdc.clustermode", "true");
     System.setProperty("sdc.transient-env", "true");
     System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "sdc-static-web")).getAbsolutePath());
     System.setProperty("sdc.conf.dir", etcRoot);

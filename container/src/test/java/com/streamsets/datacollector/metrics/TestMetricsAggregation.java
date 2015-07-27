@@ -16,6 +16,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.pipeline.api.ExecutionMode;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,14 +58,10 @@ public class TestMetricsAggregation {
     runner = Mockito.mock(Runner.class);
     Mockito.when(runner.getState())
       .thenReturn(new PipelineStateImpl("aaa", "samplePipeline", "1.0.0",
-        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, null));
+        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, ExecutionMode.CLUSTER));
 
     Mockito.when(runner.getSlaveCallbackList())
       .thenReturn(callbackInfoCollection);
-
-    runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getExecutionMode())
-      .thenReturn(RuntimeInfo.ExecutionMode.CLUSTER);
 
   }
 
@@ -75,7 +72,7 @@ public class TestMetricsAggregation {
 
   @Test
   public void testAggregatedMetrics() {
-    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, 2000, runner, null, new EventListenerManager());
+    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(2000, runner, null, new EventListenerManager());
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
 
     Map<String, CounterJson> counters = aggregatedMetrics.getCounters();

@@ -11,6 +11,6 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class ExecutionModeChooserValues extends BaseEnumChooserValues {
 
   public ExecutionModeChooserValues() {
-    super(ExecutionMode.class);
+    super(ExecutionMode.STANDALONE, ExecutionMode.CLUSTER);
   }
 }

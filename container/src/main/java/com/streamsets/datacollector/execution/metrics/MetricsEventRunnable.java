@@ -12,12 +12,11 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.pipeline.api.ExecutionMode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,16 +35,14 @@ public class MetricsEventRunnable implements Runnable {
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private final Map<String, MetricRegistryJson> slaveMetrics;
-  private final RuntimeInfo runtimeInfo;
   private ThreadHealthReporter threadHealthReporter;
   private final int scheduledDelay;
   private final Runner runner;
   private final EventListenerManager eventListenerManager;
 
   @Inject
-  public MetricsEventRunnable(RuntimeInfo runtimeInfo, int scheduledDelay, Runner runner,
-                              ThreadHealthReporter threadHealthReporter, EventListenerManager eventListenerManager) {
-    this.runtimeInfo = runtimeInfo;
+  public MetricsEventRunnable(int scheduledDelay, Runner runner, ThreadHealthReporter threadHealthReporter,
+                              EventListenerManager eventListenerManager) {
     this.scheduledDelay = scheduledDelay/1000;
     slaveMetrics = new HashMap<>();
     this.runner = runner;
@@ -76,7 +73,7 @@ public class MetricsEventRunnable implements Runnable {
       if (eventListenerManager.getMetricsEventListenerList().size() > 0 && runner.getState().getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
         String metricsJSONStr;
-        if(runtimeInfo.getExecutionMode().equals(RuntimeInfo.ExecutionMode.CLUSTER)) {
+        if(runner.getState().getExecutionMode() == ExecutionMode.CLUSTER) {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {

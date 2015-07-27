@@ -138,8 +138,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     objectGraph.inject(this);
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(runtimeInfo, refreshInterval, this, threadHealthReporter,
-        eventListenerManager);
+      metricsEventRunnable = new MetricsEventRunnable(refreshInterval, this, threadHealthReporter, eventListenerManager);
     } else {
       metricsEventRunnable = null;
     }

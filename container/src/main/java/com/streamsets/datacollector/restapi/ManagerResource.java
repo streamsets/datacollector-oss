@@ -25,6 +25,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -119,12 +120,12 @@ public class ManagerResource {
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
     throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if(pipelineName != null) {
       try {
         Runner runner = manager.getRunner(user, pipelineName, rev);
+        Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
+          "This operation is not supported in SLAVE mode");
         runner.start();
         return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
       } catch (PipelineRuntimeException ex) {
@@ -150,10 +151,10 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
     PipelineRunnerException, PipelineRuntimeException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     Runner runner = manager.getRunner(user, pipelineName, rev);
+    Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
+      "This operation is not supported in SLAVE mode");
     runner.stop();
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPipelineState(runner.getState())).build();
   }
@@ -167,8 +168,6 @@ public class ManagerResource {
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
     PipelineRunnerException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(name);
     Runner runner = manager.getRunner(user, name, rev);
     runner.resetOffset();

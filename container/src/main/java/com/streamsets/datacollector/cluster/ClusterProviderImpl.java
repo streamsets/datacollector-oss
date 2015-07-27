@@ -33,6 +33,7 @@ import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
 
@@ -166,8 +167,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
-      sdcProperties.setProperty(RuntimeModule.SDC_EXECUTION_MODE_KEY,
-        RuntimeInfo.ExecutionMode.SLAVE.name().toLowerCase());
+      sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
+        ExecutionMode.SLAVE.name().toLowerCase());
       if(runtimeInfo != null) {
         sdcProperties.setProperty(Constants.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());

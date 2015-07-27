@@ -59,7 +59,6 @@ public class TestFilePipelineStoreTask {
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
       Mockito.when(mock.getDataDir()).thenReturn("target/" + UUID.randomUUID());
-      Mockito.when(mock.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.STANDALONE);
       return mock;
     }
 

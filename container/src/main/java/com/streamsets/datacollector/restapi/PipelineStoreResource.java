@@ -165,8 +165,6 @@ public class PipelineStoreResource {
       @PathParam("pipelineName") String name,
       @QueryParam("description") @DefaultValue("") String description)
       throws PipelineStoreException, URISyntaxException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(name);
     PipelineConfiguration pipeline = store.create(user, name, description);
 
@@ -209,8 +207,6 @@ public class PipelineStoreResource {
   public Response deletePipeline(
       @PathParam("pipelineName") String name)
       throws PipelineStoreException, URISyntaxException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(name);
     store.delete(name);
     store.deleteRules(name);
@@ -230,9 +226,6 @@ public class PipelineStoreResource {
       @QueryParam("description") String description,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
       throws PipelineStoreException, URISyntaxException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
-
     RestAPIUtils.injectPipelineInMDC(name);
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);

@@ -94,10 +94,7 @@ public class PreviewResource {
     if (stageOutputsToOverrideJson == null) {
       stageOutputsToOverrideJson = Collections.EMPTY_LIST;
     }
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
     RestAPIUtils.injectPipelineInMDC(pipelineName);
-
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);

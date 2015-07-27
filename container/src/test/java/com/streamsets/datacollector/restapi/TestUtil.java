@@ -200,7 +200,6 @@ public class TestUtil {
     @Override
     public RuntimeInfo provide() {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-      Mockito.when(runtimeInfo.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.STANDALONE);
       return runtimeInfo;
     }
 
@@ -215,7 +214,6 @@ public class TestUtil {
     @Override
     public RuntimeInfo provide() {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-      Mockito.when(runtimeInfo.getExecutionMode()).thenReturn(RuntimeInfo.ExecutionMode.SLAVE);
       return runtimeInfo;
     }
 

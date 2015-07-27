@@ -225,8 +225,7 @@ public class SyncPreviewer implements Previewer {
   private PreviewPipeline buildPreviewPipeline(int batches, int batchSize, String endStageInstanceName,
                                                boolean skipTargets)
     throws PipelineStoreException, StageException, PipelineRuntimeException {
-    Utils.checkState(runtimeInfo.getExecutionMode() != RuntimeInfo.ExecutionMode.SLAVE,
-      "This operation is not supported in SLAVE mode");
+
     int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);

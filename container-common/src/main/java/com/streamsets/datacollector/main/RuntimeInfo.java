@@ -26,11 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.io.File;
 
 public class RuntimeInfo {
-  /**
-   * Note this differs from the Pipeline level enum named ExecutionMode
-   */
-  public enum ExecutionMode { CLUSTER, STANDALONE, SLAVE }
-
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
@@ -56,7 +51,6 @@ public class RuntimeInfo {
   private final String propertyPrefix;
   private final File baseDir;
   private final UUID randomUUID;
-  private ExecutionMode executionMode = ExecutionMode.STANDALONE;
   private String sdcToken;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
@@ -267,18 +261,6 @@ public class RuntimeInfo {
   public void reloadAuthenticationToken() {
     for(String role: AuthzRole.ALL_ROLES) {
       authenticationTokens.put(role, UUID.randomUUID().toString() + SPLITTER + role);
-    }
-  }
-
-  public ExecutionMode getExecutionMode() {
-    return executionMode;
-  }
-
-  public void setExecutionMode(String executionMode) {
-    try {
-      this.executionMode = ExecutionMode.valueOf(executionMode.trim().toUpperCase());
-    } catch (IllegalArgumentException ex) {
-      this.executionMode = ExecutionMode.STANDALONE;
     }
   }
 

@@ -10,18 +10,22 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
 public class TestProdSourceOffsetTracker {
+  private static Logger LOG = LoggerFactory.getLogger(TestProdSourceOffsetTracker.class);
 
   private static final String PIPELINE_NAME = "myPipeline";
   private static final String PIPELINE_REV = "2.0";
@@ -30,7 +34,11 @@ public class TestProdSourceOffsetTracker {
   public static void beforeClass() throws IOException {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
-    FileUtils.deleteDirectory(f);
+    try {
+      FileUtils.deleteDirectory(f);
+    } catch (Exception ex) {
+      LOG.info(Utils.format("Got exception while deleting directory: {}", f.getAbsolutePath()), ex);
+    }
   }
 
   @AfterClass

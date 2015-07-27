@@ -13,6 +13,7 @@ import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
@@ -48,28 +49,22 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
 
   @Test
   public void testCreate() {
-    boolean exceptionThrown = false;
     try {
       Response response = target("/v1/pipeline-library/myPipeline").queryParam("description", "my description").request()
         .put(Entity.json("abc"));
+      Assert.fail("Expected exception but didn't get any");
     } catch (Exception ex) {
-      Assert.assertEquals(ex.getCause().getMessage(), "This operation is not supported in SLAVE mode");
-      exceptionThrown = true;
-    } finally {
-      Assert.assertTrue(exceptionThrown);
+      // Expected
     }
   }
 
   @Test
   public void testDelete() {
-    boolean exceptionThrown = false;
     try {
       Response response = target("/v1/pipeline-library/myPipeline").request().delete();
+      Assert.fail("Expected exception but didn't get any");
     } catch (Exception ex) {
-      Assert.assertEquals(ex.getCause().getMessage(), "This operation is not supported in SLAVE mode");
-      exceptionThrown = true;
-    } finally {
-      Assert.assertTrue(exceptionThrown);
+      // expected
     }
   }
 
@@ -82,11 +77,10 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
         .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));
+      Assert.fail("Expected exception but didn't get any");
     } catch (Exception ex) {
-      Assert.assertEquals(ex.getCause().getMessage(), "This operation is not supported in SLAVE mode");
-      exceptionThrown = true;
+      // expected
     } finally {
-      Assert.assertTrue(exceptionThrown);
     }
   }
 
@@ -186,7 +180,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
       } catch (PipelineStoreException e) {
         e.printStackTrace();
       }
-      return pipelineStore;
+      return new SlavePipelineStoreTask(pipelineStore);
     }
 
     @Override

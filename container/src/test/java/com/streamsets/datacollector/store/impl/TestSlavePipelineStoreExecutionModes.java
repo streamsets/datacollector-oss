@@ -36,7 +36,6 @@ public class TestSlavePipelineStoreExecutionModes {
       new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    runtimeInfo.setExecutionMode(RuntimeInfo.ExecutionMode.SLAVE.name());
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
       new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
@@ -52,7 +51,6 @@ public class TestSlavePipelineStoreExecutionModes {
       new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-    runtimeInfo.setExecutionMode(RuntimeInfo.ExecutionMode.STANDALONE.name());
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
       new SlavePipelineStateStore(), new LockCache<String>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);

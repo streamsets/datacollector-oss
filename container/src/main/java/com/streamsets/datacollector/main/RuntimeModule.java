@@ -9,9 +9,9 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.main.RuntimeInfo.ExecutionMode;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.ExecutionMode;
 
 import dagger.Module;
 import dagger.Provides;
@@ -33,9 +33,7 @@ public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String SDC_PROPERTY_PREFIX = "sdc";
-  public static final String SDC_EXECUTION_MODE_KEY = "sdc.execution.mode";
-  private static final String SDC_EXECUTION_MODE_DEFAULT = "standalone";
-
+  public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   private static List<ClassLoader> stageLibraryClassLoaders = ImmutableList.of(RuntimeModule.class.getClassLoader());
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
@@ -63,8 +61,8 @@ public class RuntimeModule {
       try {
         conf.load(new FileReader(configFile));
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
-        runtimeInfo.setExecutionMode(conf.get(SDC_EXECUTION_MODE_KEY, SDC_EXECUTION_MODE_DEFAULT));
-        if (runtimeInfo.getExecutionMode() == RuntimeInfo.ExecutionMode.SLAVE) {
+        String executionMode = conf.get(PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name());
+        if (executionMode.equalsIgnoreCase(ExecutionMode.SLAVE.name())) {
           runtimeInfo.setSDCToken(UUID.randomUUID().toString());
         }
       } catch (IOException ex) {
