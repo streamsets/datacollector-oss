@@ -152,6 +152,6 @@ public class MetricsEventRunnable implements Runnable {
   }
 
   public int getScheduledDelay() {
-    return scheduledDelay;
+    return scheduledDelay * 1000;
   }
 }

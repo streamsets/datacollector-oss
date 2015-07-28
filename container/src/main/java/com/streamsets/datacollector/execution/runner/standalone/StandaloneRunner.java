@@ -501,7 +501,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         if (metricsEventRunnable != null) {
           metricsFuture =
             runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
-              TimeUnit.SECONDS);
+              TimeUnit.MILLISECONDS);
         }
         //Schedule Rules Config Loader
         try {
