@@ -3,7 +3,7 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.dc.base;
+package com.streamsets.datacollector.base;
 
 import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.datacollector.MiniSDCTestingUtility;

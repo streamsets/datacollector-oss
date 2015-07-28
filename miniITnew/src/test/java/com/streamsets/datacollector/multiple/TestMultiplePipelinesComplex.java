@@ -3,17 +3,19 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.dc.multiple;
+package com.streamsets.datacollector.multiple;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
 import com.streamsets.datacollector.util.TestUtil;
-import com.streamsets.dc.base.TestMultiplePipelinesBase;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
+
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -30,6 +32,7 @@ import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +47,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Ignore
 public class TestMultiplePipelinesComplex extends TestMultiplePipelinesBase {
 
   private static final String TOPIC1 = "KafkaToFlume";
@@ -90,6 +94,7 @@ public class TestMultiplePipelinesComplex extends TestMultiplePipelinesBase {
     return ImmutableList.of(randomToKafka, kafkaToFlume, kafkaToHDFS);
   }
 
+  @Override
   protected Map<String, String> getPipelineNameAndRev() {
     return ImmutableMap.of("kafka_destination_pipeline", "0", "kafka_origin_pipeline_cluster", "0", "cluster_kafka_hdfs", "0");
   }

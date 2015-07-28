@@ -3,10 +3,11 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.dc.multiple;
+package com.streamsets.datacollector.multiple;
 
 import com.google.common.io.Resources;
-import com.streamsets.dc.base.TestMultiplePipelinesBase;
+import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
