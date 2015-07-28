@@ -24,6 +24,7 @@ angular
             then(
               function(res) {
                 $modalInstance.close(res.data);
+                $rootScope.common.refreshStatusAndAlertWebSocket();
               },
               function(res) {
                 $scope.common.errors = [res.data];

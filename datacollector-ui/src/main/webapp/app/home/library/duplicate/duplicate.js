@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
+  .controller('DuplicateModalInstanceController', function ($rootScope, $scope, $modalInstance, pipelineInfo, api, $q) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -17,6 +17,7 @@ angular
         $q.when(api.pipelineAgent.duplicatePipelineConfig($scope.newConfig.name, $scope.newConfig.description,
           pipelineInfo)).
           then(function(configObject) {
+            $rootScope.common.refreshStatusAndAlertWebSocket();
             $modalInstance.close(configObject);
           },function(res) {
             $scope.common.errors = [res.data];
