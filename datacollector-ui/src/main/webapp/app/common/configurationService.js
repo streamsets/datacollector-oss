@@ -11,7 +11,7 @@ angular.module('dataCollectorApp.common')
       UI_ENABLE_USAGE_DATA_COLLECTION = 'ui.enable.usage.data.collection',
       UI_ENABLE_WEB_SOCKET = 'ui.enable.webSocket',
       HTTP_AUTHENTICATION = 'http.authentication',
-      SDC_EXECUTION_MODE = 'sdc.execution.mode',
+      PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode',
       CALLBACK_SERVER_URL = 'callback.server.url',
       UI_UNDO_LIMIT = 'ui.undo.limit',
       METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable';
@@ -115,14 +115,12 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns SDC Execution Mode
+     * Returns true if SDC running in Slave mode otherwise false
      * @returns {*}
      */
-    this.getSDCExecutionMode = function() {
-      if(self.config && self.config[SDC_EXECUTION_MODE]) {
-        return self.config[SDC_EXECUTION_MODE].toLowerCase();
-      }
-      return 'standalone';
+    this.isSlaveNode = function() {
+      return self.config && self.config[PIPELINE_EXECUTION_MODE] &&
+        self.config[PIPELINE_EXECUTION_MODE].toLowerCase() === 'slave';
     };
 
     /**

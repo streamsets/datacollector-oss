@@ -18,9 +18,9 @@ angular.module('dataCollectorApp.common')
     CONFIGURED_SOURCE: 'CONFIGURED_SOURCE',
     SNAPSHOT_SOURCE: 'SNAPSHOT_SOURCE',
     USER_PROVIDED: 'USER_PROVIDED',
-    STANDALONE: 'standalone',
-    CLUSTER: 'cluster',
-    SLAVE: 'slave',
+    STANDALONE: 'STANDALONE',
+    CLUSTER: 'CLUSTER',
+    SLAVE: 'SLAVE',
     NON_LIST_MAP_ROOT: 'root',
 
     BUTTON_CATEGORY: 'button',

@@ -11,14 +11,14 @@
   <div class="create-pipeline-btn-group">
     <h2 translate="home.getStarted">Get Started</h2>
     <button class="btn btn-primary pull-left create-pipeline-btn"
-        ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.sdcExecutionMode == pipelineConstant.SLAVE"
+        ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
         ng-click="addPipelineConfig()">
       <span class="fa fa-plus"></span>
       <span translate="home.createPipeline">Create Pipeline</span>
     </button>
 
     <button class="btn btn-primary pull-left import-pipeline-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.sdcExecutionMode == pipelineConstant.SLAVE"
+            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
             ng-click="importPipelineConfig()">
       <span class="fa fa-arrow-circle-down"></span>
       <span translate="home.importPipeline">Import Pipeline</span>

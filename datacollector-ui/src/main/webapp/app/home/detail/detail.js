@@ -68,11 +68,11 @@ angular
      */
     var getDetailTabsList = function(type, isPipelineRunning) {
       var tabsList = [],
-        sdcExecutionMode = $rootScope.common.sdcExecutionMode;
+        executionMode = $scope.activeConfigStatus.executionMode;
       switch(type) {
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
-            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+            if(executionMode === pipelineConstant.CLUSTER ) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
@@ -84,7 +84,7 @@ angular
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
-            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+            if(executionMode === pipelineConstant.CLUSTER ) {
               tabsList = [summaryTab, infoTab, configurationTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab];
@@ -100,7 +100,7 @@ angular
           return tabsList;
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
-            if(sdcExecutionMode === pipelineConstant.CLUSTER ) {
+            if(executionMode === pipelineConstant.CLUSTER ) {
               return [dataRulesTab, infoTab];
             } else {
               return [dataSummaryTab, dataRulesTab, infoTab];

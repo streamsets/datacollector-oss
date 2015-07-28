@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('PreviewConfigModalInstanceController', function ($scope, $rootScope, $modalInstance, pipelineConfig,
-                                                                $timeout, pipelineService, api, pipelineConstant) {
+                                                                pipelineStatus, $timeout, pipelineService, api, pipelineConstant) {
     angular.extend($scope, {
       previewConfig: angular.copy(pipelineConfig.uiInfo.previewConfig),
       refreshCodemirror: false,
@@ -42,7 +42,7 @@ angular
     });
 
 
-    if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
+    if(pipelineStatus.executionMode !== pipelineConstant.CLUSTER) {
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
           $scope.snapshotsInfo = res.data;

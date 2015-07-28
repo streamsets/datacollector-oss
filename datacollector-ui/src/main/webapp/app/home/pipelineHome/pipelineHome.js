@@ -226,6 +226,9 @@ angular
             resolve: {
               pipelineConfig: function () {
                 return $scope.pipelineConfig;
+              },
+              pipelineStatus: function () {
+                return $scope.activeConfigStatus;
               }
             }
           });
@@ -777,7 +780,7 @@ angular
      */
     var saveUpdates = function (config) {
       if (configSaveInProgress || $scope.isPipelineReadOnly ||
-        $rootScope.common.sdcExecutionMode === pipelineConstant.SLAVE) {
+        $rootScope.common.isSlaveNode) {
         return;
       }
 

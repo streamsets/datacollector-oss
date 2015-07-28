@@ -306,7 +306,7 @@ angular.module('dataCollectorApp')
     $q.all([api.pipelineAgent.getAllAlerts(), configuration.init()])
       .then(function(results) {
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
-        $rootScope.common.sdcExecutionMode = configuration.getSDCExecutionMode();
+        $rootScope.common.isSlaveNode = configuration.isSlaveNode();
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
         if(configuration.isAnalyticsEnabled()) {
@@ -329,10 +329,7 @@ angular.module('dataCollectorApp')
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         refreshPipelineStatus();
-
-        if($rootScope.common.sdcExecutionMode !== pipelineConstant.CLUSTER) {
-          refreshAlerts();
-        }
+        refreshAlerts();
       });
 
     // set actions to be taken each time the user navigates
@@ -342,12 +339,6 @@ angular.module('dataCollectorApp')
         var authorizedRoles = current.$$route.data.authorizedRoles;
         $rootScope.notAuthorized = !authService.isAuthorized(authorizedRoles);
       }
-
-      //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
-      //window.nv.charts = {};
-      //window.nv.graphs = [];
-      //window.nv.logs = {};
-      //window.onresize = null;
     });
 
     $rootScope.go = function ( path ) {

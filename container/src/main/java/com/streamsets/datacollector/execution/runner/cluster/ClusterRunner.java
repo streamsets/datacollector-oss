@@ -66,6 +66,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -343,7 +344,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<SnapshotInfo> getSnapshotsInfo() {
-    throw new UnsupportedOperationException();
+    return Collections.EMPTY_LIST;
   }
 
   @Override
@@ -398,13 +399,12 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public void addAlertEventListener(AlertEventListener alertEventListener) {
-    throw new UnsupportedOperationException();
-
+    //Currently not supported
   }
 
   @Override
   public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    throw new UnsupportedOperationException();
+    //Currently not supported
   }
 
   @Override
@@ -414,7 +414,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<AlertInfo> getAlerts() throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return Collections.EMPTY_LIST;
   }
 
   @Override
