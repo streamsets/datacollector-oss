@@ -311,20 +311,20 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public synchronized void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException,
     StageException {
-    Utils.checkState(!isClosed,
-      Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
-    ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
-    if (executionMode != ExecutionMode.CLUSTER) {
-      throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
-    }
-    LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
     try {
+      Utils.checkState(!isClosed,
+        Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
+      ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
+      if (executionMode != ExecutionMode.CLUSTER) {
+        throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
+      }
+      LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
       pipelineConf = getPipelineConf(name, rev);
-    } catch (PipelineRunnerException e) {
-      validateAndSetStateTransition(PipelineStatus.START_ERROR, e.getMessage(), new HashMap<String, Object>());
+      doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
+    } catch (Exception e) {
+      validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), new HashMap<String, Object>());
       throw e;
     }
-    doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
   }
 
   @Override
@@ -624,19 +624,19 @@ public class ClusterRunner extends AbstractRunner {
 
   private synchronized void doStart(PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) throws PipelineStoreException,
     PipelineRunnerException {
-    Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
-    Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
-    List<Issue> errors = new ArrayList<>();
-    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
-    if (pipelineConfigBean == null) {
-      throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
-    }
-    Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
-    Map<String, String> sourceInfo = new HashMap<>();
-    File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
     String msg = null;
     try {
-      //create pipeline and get the parallelism info from the source
+      Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
+      Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
+      List<Issue> errors = new ArrayList<>();
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
+      if (pipelineConfigBean == null) {
+        throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
+      }
+      Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
+      Map<String, String> sourceInfo = new HashMap<>();
+      File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
+      // create pipeline and get the parallelism info from the source
       sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
       sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, clusterSourceInfo.getClusterSourceName());
       sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, String.valueOf(clusterSourceInfo.isInBatchMode()));
@@ -650,7 +650,8 @@ public class ClusterRunner extends AbstractRunner {
       // This is needed for UI
       runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
       clearSlaveList();
-      ApplicationState applicationState = clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
+      ApplicationState applicationState =
+        clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
           sourceInfo, SUBMIT_TIMEOUT_SECS);
       // set state of running before adding callback which modified attributes
