@@ -10,9 +10,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
-import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.creation.PipelineBeanCreator;
-import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -32,7 +29,6 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
@@ -86,7 +82,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public Previewer createPreviewer(String user, String name, String rev) {
+  public Previewer createPreviewer(String user, String name, String rev) throws PipelineStoreException {
+    if (!pipelineStore.hasPipeline(name)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+    }
     Previewer previewer = previewerProvider.createPreviewer(user, name, rev, this, objectGraph);
     previewerCache.put(previewer.getId(), previewer);
     return previewer;
@@ -104,6 +103,9 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException, PipelineManagerException {
+    if (!pipelineStore.hasPipeline(name)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+    }
     final String nameAndRevString = getNameAndRevString(name, rev);
     RunnerInfo runnerInfo;
     try {
@@ -153,6 +155,9 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
+    if (!pipelineStore.hasPipeline(name)) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
+    }
     Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev)).runner;
     return (runner == null) ? false : runner.getState().getStatus().isActive();
   }
@@ -270,12 +275,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
-    List<Issue> errors = new ArrayList<>();
-    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
-    if (pipelineConfigBean == null) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
-    }
     Runner runner = runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
     runner.addStateEventListener(resourceManager);
     return runner;

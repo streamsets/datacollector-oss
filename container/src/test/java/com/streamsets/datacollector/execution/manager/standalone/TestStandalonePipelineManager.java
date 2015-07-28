@@ -27,6 +27,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -195,11 +196,24 @@ public class TestStandalonePipelineManager {
   }
 
   @Test
-  public void testPreviewer() {
+  public void testPreviewer() throws PipelineStoreException {
+    pipelineStoreTask.create("user", "abcd", "blah");
     Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
+  }
+
+  @Test
+  public void testPipelineNotExist() {
+    try {
+      pipelineManager.getRunner("user", "none_existing_pipeline", "0");
+      fail("Expected PipelineStoreException but didn't get any");
+    } catch (PipelineStoreException ex) {
+      ex.printStackTrace();
+    } catch (Exception ex) {
+      fail("Expected PipelineStoreException but got " + ex);
+    }
   }
 
   @Test

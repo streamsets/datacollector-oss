@@ -24,7 +24,7 @@ public interface Manager extends Task {
   // (using a last-access cache). the previewer is given a PreviewerListener at <init> time which will be used
   // by the previewer to signal the PreviewOutput has been given back to the client and the Previewer could be
   // eagerly removed from the cache.
-  public Previewer createPreviewer(String user, String name, String rev);
+  public Previewer createPreviewer(String user, String name, String rev) throws PipelineStoreException;
 
   // returns the previewer from the cache with the specified ID
   public Previewer getPreviewer(String previewerId);

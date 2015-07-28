@@ -14,20 +14,18 @@ import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
-import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.MainSlavePipelineManagerModule;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
-import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.PipelineException;
-import com.streamsets.pipeline.api.StageException;
+
 
 import dagger.ObjectGraph;
 
@@ -74,15 +72,14 @@ public class TestPipelineManagerModule {
     Manager pipelineManager = pipelineTask.getManager();
     Assert.assertTrue(pipelineManager instanceof StandaloneAndClusterPipelineManager);
 
+    PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
+    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "description");
     //Create previewer
     Previewer previewer = pipelineManager.createPreviewer("user", "p1", "1");
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
 
-    //create and save empty pipeline
-    PipelineStoreTask pipelineStoreTask = pipelineTask.getPipelineStoreTask();
-    PipelineConfiguration pc = pipelineStoreTask.create("user", "p1", "description");
     pipelineStoreTask.save("user", "p1", "0", "description", pc);
 
     //create Runner
