@@ -89,15 +89,14 @@ public class ClusterRunner extends AbstractRunner {
   @Inject PipelineStateStore pipelineStateStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject ResourceManager resourceManager;
+  @Inject SlaveCallbackManager slaveCallbackManager;
 
   private final String name;
   private final String rev;
   private final String user;
   private ObjectGraph objectGraph;
-  private final ReentrantLock callbackCacheLock;
   private ClusterHelper clusterHelper;
   private final File tempDir;
-  private final Cache<String, CallbackInfo> slaveCallbackList;
   private static final long SUBMIT_TIMEOUT_SECS = 120;
   private ScheduledFuture<?> managerRunnableFuture;
   private ScheduledFuture<?> metricRunnableFuture;
@@ -106,7 +105,6 @@ public class ClusterRunner extends AbstractRunner {
   private UpdateChecker updateChecker;
   private MetricsEventRunnable metricsEventRunnable;
   private PipelineConfiguration pipelineConf;
-
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
      new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -142,10 +140,6 @@ public class ClusterRunner extends AbstractRunner {
     this.name = name;
     this.rev = rev;
     this.user = user;
-    this.callbackCacheLock = new ReentrantLock();
-    this.slaveCallbackList = CacheBuilder.newBuilder()
-      .expireAfterWrite(1, TimeUnit.MINUTES)
-      .build();
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
       this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
@@ -154,6 +148,7 @@ public class ClusterRunner extends AbstractRunner {
     }
     this.resourceManager = resourceManager;
     this.eventListenerManager = eventListenerManager;
+    this.slaveCallbackManager = new SlaveCallbackManager(runtimeInfo);
   }
 
   public ClusterRunner(String user, String name, String rev, ObjectGraph objectGraph) {
@@ -162,15 +157,11 @@ public class ClusterRunner extends AbstractRunner {
     this.user = user;
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    this.callbackCacheLock = new ReentrantLock();
-    this.slaveCallbackList = CacheBuilder.newBuilder()
-      .expireAfterWrite(1, TimeUnit.MINUTES)
-      .build();
     this.tempDir = Files.createTempDir();
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
-    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
-    if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(refreshInterval, this, null, eventListenerManager);
+    if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
+      MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
+      metricsEventRunnable = objectGraph.get(MetricsEventRunnable.class);
     }
   }
 
@@ -387,14 +378,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public Collection<CallbackInfo> getSlaveCallbackList() {
-    List<CallbackInfo> callbackInfoSet;
-    callbackCacheLock.lock();
-    try {
-      callbackInfoSet = new ArrayList<>(slaveCallbackList.asMap().values());
-    } finally {
-      callbackCacheLock.unlock();
-    }
-    return callbackInfoSet;
+    return slaveCallbackManager.getSlaveCallbackList();
   }
 
   @Override
@@ -444,27 +428,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    String sdcToken = Strings.nullToEmpty(runtimeInfo.getSDCToken());
-    if (sdcToken.equals(callbackInfo.getSdcClusterToken()) &&
-      !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
-      callbackCacheLock.lock();
-      try {
-        slaveCallbackList.put(callbackInfo.getSdcURL(), callbackInfo);
-      } finally {
-        callbackCacheLock.unlock();
-      }
-    } else {
-      LOG.warn("SDC Cluster token not matched");
-    }
-  }
-
-  private void clearSlaveList() {
-    callbackCacheLock.lock();
-    try {
-      slaveCallbackList.invalidateAll();
-    } finally {
-      callbackCacheLock.unlock();
-    }
+    slaveCallbackManager.updateSlaveCallbackInfo(callbackInfo);
   }
 
   @VisibleForTesting
@@ -639,9 +603,8 @@ public class ClusterRunner extends AbstractRunner {
       }
       // This is needed for UI
       runtimeInfo.setAttribute(ClusterModeConstants.NUM_EXECUTORS_KEY, clusterSourceInfo.getParallelism());
-      clearSlaveList();
-      ApplicationState applicationState =
-        clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
+      slaveCallbackManager.clearSlaveList();
+      ApplicationState applicationState = clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
           sourceInfo, SUBMIT_TIMEOUT_SECS);
       // set state of running before adding callback which modified attributes
@@ -669,7 +632,7 @@ public class ClusterRunner extends AbstractRunner {
     PipelineRunnerException {
     updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConf, this);
     updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
-    if (metricsEventRunnable != null) {
+    if(metricsEventRunnable != null) {
       metricRunnableFuture =
         runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
           TimeUnit.MILLISECONDS);

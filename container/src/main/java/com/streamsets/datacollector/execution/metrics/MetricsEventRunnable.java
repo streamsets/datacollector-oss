@@ -6,23 +6,26 @@
 
 package com.streamsets.datacollector.execution.metrics;
 
+import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.EventListenerManager;
-import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.runner.cluster.SlaveCallbackManager;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-
+import javax.inject.Named;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,28 +35,36 @@ import java.util.List;
 import java.util.Map;
 
 public class MetricsEventRunnable implements Runnable {
+
+  public static final String REFRESH_INTERVAL_PROPERTY = "ui.refresh.interval.ms";
+  public static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
+
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private final Map<String, MetricRegistryJson> slaveMetrics;
   private ThreadHealthReporter threadHealthReporter;
-  private final int scheduledDelay;
-  private final Runner runner;
   private final EventListenerManager eventListenerManager;
+  private final SlaveCallbackManager slaveCallbackManager;
+  private final PipelineStateStore pipelineStateStore;
+  private final MetricRegistry metricRegistry;
+  private final String name;
+  private final String rev;
+  private int scheduledDelay;
 
   @Inject
-  public MetricsEventRunnable(int scheduledDelay, Runner runner, ThreadHealthReporter threadHealthReporter,
-                              EventListenerManager eventListenerManager) {
-    this.scheduledDelay = scheduledDelay/1000;
+  public MetricsEventRunnable(@Named("name") String name, @Named("rev") String rev, Configuration configuration,
+                              PipelineStateStore pipelineStateStore, ThreadHealthReporter threadHealthReporter,
+                              EventListenerManager eventListenerManager, MetricRegistry metricRegistry,
+                              SlaveCallbackManager slaveCallbackManager) {
     slaveMetrics = new HashMap<>();
-    this.runner = runner;
     this.threadHealthReporter = threadHealthReporter;
     this.eventListenerManager = eventListenerManager;
-  }
-
-
-
-  public void clearSlaveMetrics() {
-    slaveMetrics.clear();
+    this.slaveCallbackManager = slaveCallbackManager;
+    this.pipelineStateStore = pipelineStateStore;
+    this.metricRegistry = metricRegistry;
+    this.name = name;
+    this.rev = rev;
+    this.scheduledDelay = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
   }
 
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
@@ -66,22 +77,22 @@ public class MetricsEventRunnable implements Runnable {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     Date now = new Date();
     LOG.trace("MetricsEventRunnable Run - " + sdf.format(now));
-    String pipelineName = runner.getName();
     try {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
-      if (eventListenerManager.hasMetricEventListeners(pipelineName) && runner.getState().getStatus().isActive()) {
+      PipelineState state = pipelineStateStore.getState(name, rev);
+      if (eventListenerManager.hasMetricEventListeners(name) && state.getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
         String metricsJSONStr;
-        if(runner.getState().getExecutionMode() == ExecutionMode.CLUSTER) {
+        if(state.getExecutionMode() == ExecutionMode.CLUSTER) {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
           metricsJSONStr =
-            objectMapper.writer().writeValueAsString(runner.getMetrics());
+            objectMapper.writer().writeValueAsString(metricRegistry);
         }
-        eventListenerManager.broadcastMetrics(pipelineName, metricsJSONStr);
+        eventListenerManager.broadcastMetrics(name, metricsJSONStr);
       }
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);
@@ -96,8 +107,7 @@ public class MetricsEventRunnable implements Runnable {
     Map<String, MeterJson> aggregatedMeters = null;
     List<String> slaves = new ArrayList<>();
 
-    //FIXME<Hari>: Eventually there wont be PipelineManager. Sort this out.
-    for(CallbackInfo callbackInfo : runner.getSlaveCallbackList()) {
+    for(CallbackInfo callbackInfo : slaveCallbackManager.getSlaveCallbackList()) {
       slaves.add(callbackInfo.getSdcURL());
       MetricRegistryJson metricRegistryJson = callbackInfo.getMetricRegistryJson();
       if(metricRegistryJson != null) {
@@ -150,6 +160,6 @@ public class MetricsEventRunnable implements Runnable {
   }
 
   public int getScheduledDelay() {
-    return scheduledDelay * 1000;
+    return scheduledDelay;
   }
 }

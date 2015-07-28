@@ -139,13 +139,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     this.user = user;
     this.objectGraph = objectGraph;
     objectGraph.inject(this);
-    int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
-    if (refreshInterval > 0) {
-      metricsEventRunnable = new MetricsEventRunnable(refreshInterval, this, threadHealthReporter, eventListenerManager);
-    } else {
-      metricsEventRunnable = null;
-    }
-
   }
 
   @Override
@@ -486,6 +479,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         threadHealthReporter = objectGraph.get(ThreadHealthReporter.class);
         observerRunnable = objectGraph.get(DataObserverRunnable.class);
+        metricsEventRunnable = objectGraph.get(MetricsEventRunnable.class);
 
         ProductionObserver productionObserver = (ProductionObserver) objectGraph.get(Observer.class);
         RulesConfigLoader rulesConfigLoader = objectGraph.get(RulesConfigLoader.class);
@@ -504,7 +498,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;
-        if (metricsEventRunnable != null) {
+        int refreshInterval = configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
+          MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
+        if(refreshInterval > 0) {
           metricsFuture =
             runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
               TimeUnit.MILLISECONDS);

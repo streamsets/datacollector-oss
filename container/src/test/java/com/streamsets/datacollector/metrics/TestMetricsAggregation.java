@@ -8,19 +8,21 @@ package com.streamsets.datacollector.metrics;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
-import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
-import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.execution.runner.cluster.SlaveCallbackManager;
+import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -32,9 +34,9 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class TestMetricsAggregation {
-  RuntimeInfo runtimeInfo;
   Collection<CallbackInfo> callbackInfoCollection;
-  Runner runner;
+  PipelineStateStore pipelineStateStore;
+  SlaveCallbackManager slaveCallbackManager;
 
   @Before
   public void setup() throws Exception {
@@ -55,13 +57,16 @@ public class TestMetricsAggregation {
       readFile(classLoader.getResource("metrics/metrics4.json").getFile())));
 
 
-    runner = Mockito.mock(Runner.class);
-    Mockito.when(runner.getState())
-      .thenReturn(new PipelineStateImpl("aaa", "samplePipeline", "1.0.0",
-        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, ExecutionMode.CLUSTER));
-
-    Mockito.when(runner.getSlaveCallbackList())
+    slaveCallbackManager = Mockito.mock(SlaveCallbackManager.class);
+    Mockito.when(slaveCallbackManager.getSlaveCallbackList())
       .thenReturn(callbackInfoCollection);
+
+    pipelineStateStore = Mockito.mock(PipelineStateStore.class);
+    Mockito.when(pipelineStateStore.getState(Matchers.anyString(), Matchers.anyString())).thenReturn(
+      new PipelineStateImpl("aaa", "samplePipeline", "1.0.0",
+        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, ExecutionMode.CLUSTER)
+    );
+
 
   }
 
@@ -72,7 +77,9 @@ public class TestMetricsAggregation {
 
   @Test
   public void testAggregatedMetrics() {
-    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(2000, runner, null, new EventListenerManager());
+    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable("a", "0", new Configuration(), pipelineStateStore
+      , Mockito.mock(ThreadHealthReporter.class), new EventListenerManager(),
+      null, slaveCallbackManager);
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
 
     Map<String, CounterJson> counters = aggregatedMetrics.getCounters();

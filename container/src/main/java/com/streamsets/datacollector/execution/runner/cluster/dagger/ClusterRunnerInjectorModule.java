@@ -5,14 +5,10 @@
  */
 package com.streamsets.datacollector.execution.runner.cluster.dagger;
 
-import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner;
-
 import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Singleton;
-
-@Module(injects = ClusterRunner.class, library = true, complete = false)
+@Module(injects = {ClusterRunner.class}, library = true, complete = false)
 public class ClusterRunnerInjectorModule {
+
 }

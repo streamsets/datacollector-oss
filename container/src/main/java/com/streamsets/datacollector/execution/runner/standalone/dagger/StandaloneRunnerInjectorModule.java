@@ -5,15 +5,10 @@
  */
 package com.streamsets.datacollector.execution.runner.standalone.dagger;
 
-import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
-
 import dagger.Module;
-import dagger.Provides;
-
-import javax.inject.Singleton;
-import javax.ws.rs.ext.Provider;
 
 @Module(injects = StandaloneRunner.class, library = true, complete = false)
 public class StandaloneRunnerInjectorModule {
+
 }
