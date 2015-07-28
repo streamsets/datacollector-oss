@@ -179,4 +179,34 @@ public class TestHdfsTarget {
     }
   }
 
+  @Test
+  public void testInvalidDirValidation() throws Exception {
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .addConfiguration("hdfsUri", "file:///")
+        .addConfiguration("hdfsUser", "foo")
+        .addConfiguration("hdfsKerberos", false)
+        .addConfiguration("hdfsConfDir", null)
+        .addConfiguration("hdfsConfigs", new HashMap<>())
+        .addConfiguration("uniquePrefix", "foo")
+        .addConfiguration("dirPathTemplate", "nonabsolutedir")
+        .addConfiguration("timeZoneID", "UTC")
+        .addConfiguration("fileType", HdfsFileType.TEXT)
+        .addConfiguration("keyEl", "${uuid()}")
+        .addConfiguration("compression", CompressionMode.NONE)
+        .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
+        .addConfiguration("maxRecordsPerFile", 1)
+        .addConfiguration("maxFileSize", 1)
+        .addConfiguration("timeDriver", "${time:now()}")
+        .addConfiguration("lateRecordsLimit", "${1 * SECONDS}")
+        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_ERROR)
+        .addConfiguration("lateRecordsDirPathTemplate", "")
+        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+        .addConfiguration("csvFileFormat", null)
+        .addConfiguration("csvReplaceNewLines", false)
+        .addConfiguration("charset", "UTF-8")
+        .build();
+    Assert.assertFalse(runner.runValidateConfigs().isEmpty());
+  }
+
 }

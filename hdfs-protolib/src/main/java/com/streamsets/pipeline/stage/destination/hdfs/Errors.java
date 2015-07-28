@@ -57,6 +57,12 @@ public enum Errors implements ErrorCode {
   HADOOPFS_36("The 'ss()' function cannot be used within and outside of the 'every()' function at the same time"),
   HADOOPFS_37("The 'mm()' function cannot be used within and outside of the 'every()' function at the same time"),
 
+  HADOOPFS_40("Base directory path must be absolute"),
+  HADOOPFS_41("Base directory path could not be created"),
+  HADOOPFS_42("Base directory path could not be created: '{}'"),
+  HADOOPFS_43("Could not create a file/directory under base directory: '{}'"),
+  HADOOPFS_44("Could verify the base directory: '{}'"),
+
   ;
   private final String msg;
 

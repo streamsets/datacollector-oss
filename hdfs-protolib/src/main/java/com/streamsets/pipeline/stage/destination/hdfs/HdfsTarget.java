@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 
 public class HdfsTarget extends RecordTarget {
@@ -140,7 +141,13 @@ public class HdfsTarget extends RecordTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    boolean validHadoopFsUri = validateHadoopFS(issues);
+    boolean validHadoopDir = false;
+    if (validateHadoopFS(issues)) {
+      validHadoopDir = validateHadoopDir("dirPathTemplate", dirPathTemplate, issues);
+      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
+        validHadoopDir &= validateHadoopDir("lateRecordsDirPathTemplate", lateRecordsDirPathTemplate, issues);
+      }
+    }
     try {
       lateRecordsLimitEvaluator = getContext().createELEval("lateRecordsLimit");
       getContext().parseEL(lateRecordsLimit);
@@ -191,7 +198,7 @@ public class HdfsTarget extends RecordTarget {
           compressionCodec = compression.getCodec().newInstance();
           break;
       }
-      if(validHadoopFsUri) {
+      if(validHadoopDir) {
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
           dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSizeMBs * MEGA_BYTE,
           maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl, generatorFactory, getContext(),
@@ -207,7 +214,7 @@ public class HdfsTarget extends RecordTarget {
     }
 
     if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-      if(validHadoopFsUri) {
+      if(validHadoopDir) {
         try {
           RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
             lateRecordsDirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs,
@@ -363,6 +370,56 @@ public class HdfsTarget extends RecordTarget {
     LOG.info("Authentication Config: " + logMessage);
     return validHapoopFsUri;
   }
+
+  boolean validateHadoopDir(String configName, String dirPathTemplate, List<ConfigIssue> issues) {
+    boolean ok;
+    if (!dirPathTemplate.startsWith("/")) {
+      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_40));
+      ok = false;
+    } else {
+      int firstEL = dirPathTemplate.indexOf("$");
+      if (firstEL > -1) {
+        int lastDir = dirPathTemplate.lastIndexOf("/", firstEL);
+        dirPathTemplate = dirPathTemplate.substring(0, lastDir);
+      }
+      dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
+      try {
+        Path dir = new Path(dirPathTemplate);
+        FileSystem fs = getFileSystemForInitDestroy();
+        if (!fs.exists(dir)) {
+          try {
+            if (fs.mkdirs(dir)) {
+              ok = true;
+            } else {
+              issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_41));
+              ok = false;
+            }
+          } catch (IOException ex) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_42,
+                                                      ex.getMessage()));
+            ok = false;
+          }
+        } else {
+          try {
+            Path dummy = new Path(dir, "_sdc-dummy-" + UUID.randomUUID().toString());
+            fs.create(dummy).close();
+            fs.delete(dummy, false);
+            ok = true;
+          } catch (IOException ex) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_43,
+                                                      ex.getMessage()));
+            ok = false;
+          }
+        }
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_44,
+                                                  ex.getMessage()));
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
 
   private UserGroupInformation getUGI() {
     return (hdfsUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hdfsUser, loginUgi);

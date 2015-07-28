@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -20,6 +21,7 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
@@ -44,6 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -101,7 +104,7 @@ public class TestBaseHdfsTarget {
     target.hdfsConfigs = new HashMap<>();
     target.hdfsConfigs.put("x", "X");
     target.timeZoneID = "UTC";
-    target.dirPathTemplate = "${YYYY()}";
+    target.dirPathTemplate = "/${YYYY()}";
     target.lateRecordsDirPathTemplate = "";
     target.compression = CompressionMode.NONE;
     target.otherCompression = null;
@@ -228,6 +231,42 @@ public class TestBaseHdfsTarget {
     } finally {
       target.destroy();
     }
+  }
+
+  private void testDir(String dir, String lateDir, boolean ok) {
+    HdfsDTarget dTarget = new ForTestHdfsTarget();
+    configure(dTarget);
+    dTarget.dirPathTemplate = dir;
+    dTarget.lateRecordsDirPathTemplate = lateDir;
+    dTarget.hdfsUser = "foo";
+    HdfsTarget target = (HdfsTarget) dTarget.createTarget();
+    try {
+      List<Stage.ConfigIssue> issues = target.init(null,
+          ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false, OnRecordError.TO_ERROR, null));
+      Assert.assertEquals((ok) ? 0 : 1 , issues.size());
+    } finally {
+      target.destroy();
+    }
+  }
+
+  @Test
+  public void testDirValidity() throws Exception {
+    //valid dirs
+    testDir("/foo", "/foo", true);
+    testDir("/foo/${YY()}", "/foo/bar-${YY()}", true);
+
+    //non absolute dir
+    testDir("foo", "/foo", false);
+    testDir("/foo", "foo", false);
+
+    FileSystem fs = miniDFS.getFileSystem();
+    fs.mkdirs(new Path("/bar"));
+
+    //no permissions
+    testDir("/bar/foo", "/foo", false);
+    testDir("/foo", "/bar/foo", false);
+    testDir("/bar/foo/${YY()}", "/foo/${YY()}", false);
+    testDir("/foo/${YY()}", "/bar/foo/${YY()}", false);
   }
 
   @Test
