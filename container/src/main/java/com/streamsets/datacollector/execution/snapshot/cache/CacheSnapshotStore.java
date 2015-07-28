@@ -13,6 +13,7 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineException;
 
 import javax.inject.Inject;
@@ -27,10 +28,12 @@ public class CacheSnapshotStore implements SnapshotStore {
 
   private final SnapshotStore snapshotStore;
   private final LoadingCache<String, SnapshotInfo> snapshotStateCache;
+  private final LockCache<String> lockCache;
 
   @Inject
-  public CacheSnapshotStore(SnapshotStore snapshotStore) {
+  public CacheSnapshotStore(SnapshotStore snapshotStore, LockCache<String> lockCache) {
     this.snapshotStore = snapshotStore;
+    this.lockCache = lockCache;
     snapshotStateCache = CacheBuilder.newBuilder().
       maximumSize(100).
       expireAfterAccess(10, TimeUnit.MINUTES).
@@ -44,24 +47,28 @@ public class CacheSnapshotStore implements SnapshotStore {
 
   @Override
   public SnapshotInfo create(String user, String name, String rev, String id) throws PipelineException {
-    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, id);
-    snapshotStateCache.put(getCacheKey(name, rev, id), snapshotInfo);
-    return snapshotInfo;
+    synchronized (lockCache.getLock(name)) {
+      SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, id);
+      snapshotStateCache.put(getCacheKey(name, rev, id), snapshotInfo);
+      return snapshotInfo;
+    }
   }
 
   @Override
   public SnapshotInfo save(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
     throws PipelineException {
-    try {
-      SnapshotInfo snapshotInfo = getSnapshotInfoFromCache(name, rev, id);
-      if(snapshotInfo == null) {
-        throw new PipelineException(ContainerError.CONTAINER_0605);
+    synchronized (lockCache.getLock(name)) {
+      try {
+        SnapshotInfo snapshotInfo = getSnapshotInfoFromCache(name, rev, id);
+        if (snapshotInfo == null) {
+          throw new PipelineException(ContainerError.CONTAINER_0605);
+        }
+        SnapshotInfo updatedSnapshotInfo = snapshotStore.save(name, rev, id, snapshotBatches);
+        snapshotStateCache.put(getCacheKey(name, rev, id), updatedSnapshotInfo);
+        return updatedSnapshotInfo;
+      } catch (ExecutionException e) {
+        throw new PipelineException(ContainerError.CONTAINER_0600, id, name, rev, e.getMessage(), e);
       }
-      SnapshotInfo updatedSnapshotInfo = snapshotStore.save(name, rev, id, snapshotBatches);
-      snapshotStateCache.put(getCacheKey(name, rev, id), updatedSnapshotInfo);
-      return updatedSnapshotInfo;
-    } catch (ExecutionException e) {
-      throw new PipelineException(ContainerError.CONTAINER_0600, id, name, rev, e.getMessage(), e);
     }
   }
 
@@ -72,26 +79,32 @@ public class CacheSnapshotStore implements SnapshotStore {
 
   @Override
   public SnapshotInfo getInfo(String name, String rev, String id) throws PipelineException {
-    try {
-      return snapshotStateCache.get(getCacheKey(name ,rev, id));
-    } catch (ExecutionException e) {
-      return null;
+    synchronized (lockCache.getLock(name)) {
+      try {
+        return snapshotStateCache.get(getCacheKey(name, rev, id));
+      } catch (ExecutionException e) {
+        return null;
+      }
     }
   }
 
   @Override
   public List<SnapshotInfo> getSummaryForPipeline(String name, String rev) throws PipelineException {
-    List<SnapshotInfo> summaryForPipeline = snapshotStore.getSummaryForPipeline(name, rev);
-    for(SnapshotInfo snapshotInfo : summaryForPipeline) {
-      snapshotStateCache.put(getCacheKey(name, rev, snapshotInfo.getId()), snapshotInfo);
+    synchronized (lockCache.getLock(name)) {
+      List<SnapshotInfo> summaryForPipeline = snapshotStore.getSummaryForPipeline(name, rev);
+      for (SnapshotInfo snapshotInfo : summaryForPipeline) {
+        snapshotStateCache.put(getCacheKey(name, rev, snapshotInfo.getId()), snapshotInfo);
+      }
+      return summaryForPipeline;
     }
-    return summaryForPipeline;
   }
 
   @Override
   public void deleteSnapshot(String name, String rev, String id) throws PipelineException {
-    snapshotStateCache.invalidate(getCacheKey(name, rev, id));
-    snapshotStore.deleteSnapshot(name, rev, id);
+    synchronized (lockCache.getLock(name)) {
+      snapshotStateCache.invalidate(getCacheKey(name, rev, id));
+      snapshotStore.deleteSnapshot(name, rev, id);
+    }
   }
 
   private String getCacheKey(String name, String rev, String id) {

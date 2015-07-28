@@ -513,12 +513,14 @@ public class TestUtil {
 
   /*************** SnapshotStore ***************/
 
-  @Module(injects = SnapshotStore.class, library = true, includes = {TestRuntimeModule.class})
+  @Module(injects = SnapshotStore.class, library = true, includes = {TestRuntimeModule.class,
+    LockCacheModule.class})
   public static class TestSnapshotStoreModule {
     @Provides
     @Singleton
-    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo) {
-      return new FileSnapshotStore(runtimeInfo);
+    public SnapshotStore provideSnapshotStore(RuntimeInfo runtimeInfo,
+      LockCache<String> lockCache) {
+      return new FileSnapshotStore(runtimeInfo, lockCache);
     }
   }
 

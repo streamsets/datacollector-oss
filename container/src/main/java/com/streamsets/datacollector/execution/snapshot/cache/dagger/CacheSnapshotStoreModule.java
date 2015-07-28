@@ -9,6 +9,8 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.snapshot.cache.CacheSnapshotStore;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.execution.snapshot.file.dagger.FileSnapshotStoreModule;
+import com.streamsets.datacollector.util.LockCache;
+import com.streamsets.datacollector.util.LockCacheModule;
 
 import dagger.Module;
 import dagger.Provides;
@@ -18,13 +20,15 @@ import javax.inject.Singleton;
 /**
  * Provides a singleton instance of FileSnapshotStore
  */
-@Module(injects = SnapshotStore.class, library = true, includes = {FileSnapshotStoreModule.class})
+@Module(injects = SnapshotStore.class, library = true, includes = {FileSnapshotStoreModule.class,
+  LockCacheModule.class})
 public class CacheSnapshotStoreModule {
 
   @Provides
   @Singleton
-  public SnapshotStore provideSnapshotStore(FileSnapshotStore fileSnapshotStore) {
-    return new CacheSnapshotStore(fileSnapshotStore);
+  public SnapshotStore provideSnapshotStore(FileSnapshotStore fileSnapshotStore,
+     LockCache<String> lockCache) {
+    return new CacheSnapshotStore(fileSnapshotStore, lockCache);
   }
 
 }
