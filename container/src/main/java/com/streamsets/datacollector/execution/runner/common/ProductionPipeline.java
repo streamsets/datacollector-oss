@@ -72,7 +72,7 @@ public class ProductionPipeline {
         List<Issue> issues = null;
         try {
           issues = pipeline.init();
-        } catch (Exception e) {
+        } catch (Throwable e) {
           if (!wasStopped()) {
             LOG.warn("Error while starting: {}", e.getMessage(), e);
             stateChanged(PipelineStatus.START_ERROR, e.getMessage(), null);
@@ -89,7 +89,7 @@ public class ProductionPipeline {
               stateChanged(PipelineStatus.FINISHING, null, null);
               finishing = true;
             }
-          } catch (Exception e) {
+          } catch (Throwable e) {
             if (!wasStopped()) {
               runningErrorMsg = e.getMessage();
               LOG.warn("Error while running: {}", runningErrorMsg, e);
