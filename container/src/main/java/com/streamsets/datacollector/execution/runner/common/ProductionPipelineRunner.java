@@ -464,28 +464,25 @@ public class ProductionPipelineRunner implements PipelineRunner {
         || stageToErrorRecordsMap.get(instanceName) == null || stageToErrorRecordsMap.get(instanceName).isEmpty()) {
         return Collections.emptyList();
       }
-    }
-
-    if(stageToErrorRecordsMap.get(instanceName).size() > size) {
-      return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName)).subList(0, size);
-    } else {
-      return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
+      if (stageToErrorRecordsMap.get(instanceName).size() > size) {
+        return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName)).subList(0, size);
+      } else {
+        return new CopyOnWriteArrayList<>(stageToErrorRecordsMap.get(instanceName));
+      }
     }
   }
 
   public List<ErrorMessage> getErrorMessages(String instanceName, int size) {
     synchronized (errorRecordsMutex) {
       if (stageToErrorMessagesMap == null || stageToErrorMessagesMap.isEmpty()
-        || stageToErrorMessagesMap.get(instanceName) == null
-        || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
+        || stageToErrorMessagesMap.get(instanceName) == null || stageToErrorMessagesMap.get(instanceName).isEmpty()) {
         return Collections.emptyList();
       }
-    }
-
-    if(stageToErrorMessagesMap.get(instanceName).size() > size) {
-      return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName)).subList(0, size);
-    } else {
-      return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
+      if (stageToErrorMessagesMap.get(instanceName).size() > size) {
+        return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName)).subList(0, size);
+      } else {
+        return new CopyOnWriteArrayList<>(stageToErrorMessagesMap.get(instanceName));
+      }
     }
   }
 
