@@ -45,7 +45,7 @@ public class TestProducerConsumer {
     executorService.shutdownNow();
   }
 
-  @Test(timeout = 60000)
+  @Test(timeout = 5000)
   public void testProducerComplete() throws Exception {
     Future<?> putFuture = put(1);
     producer.complete();
@@ -55,29 +55,28 @@ public class TestProducerConsumer {
     Assert.assertNull(consumer.take()); // should not block and should return null
   }
 
-  @Test(timeout = 60000, expected = TimeoutException.class)
+  @Test(timeout = 5000, expected = TimeoutException.class)
   public void testNoCommitTimesOutProducer() throws Exception {
     Future<?> putFuture = put(1);
     take(false);
     putFuture.get(1, TimeUnit.SECONDS);
   }
 
-  @Test(timeout = 60000, expected = IllegalStateException.class)
+  @Test(timeout = 5000, expected = IllegalStateException.class)
   public void testNoCommitCausesIllegalStateException() throws Exception {
     put(1);
     take(false).get();
     Throwables.propagate(getError(take(false)));
   }
 
-  @Test(timeout = 60000)
+  @Test(timeout = 5000)
   public void testConsumerErrorCausesPutToReturn() throws Exception {
     RuntimeException consumerError = new RuntimeException();
     consumer.error(consumerError);
     Assert.assertSame(consumerError, getError(put(1)));
   }
-
-  @Test(timeout = 60000)
-  public void testConsumerErrorPassedToProducer() throws Exception {
+  @Test(timeout = 5000)
+  public void testConsumerErrorPassedToProducer1() throws Exception {
     RuntimeException consumerError = new RuntimeException();
     consumer.error(consumerError);
     List<ControlChannel.Message> producerMessages = controlChannel.getProducerMessages();
@@ -85,11 +84,16 @@ public class TestProducerConsumer {
     ControlChannel.Message producerMessage = producerMessages.get(0);
     Assert.assertEquals(ControlChannel.MessageType.CONSUMER_ERROR, producerMessage.getType());
     Assert.assertSame(consumerError, producerMessage.getPayload());
+  }
+
+  @Test(timeout = 5000)
+  public void testConsumerErrorPassedToProducer2() throws Exception {
+    RuntimeException consumerError = new RuntimeException();
     consumer.error(consumerError);
     Assert.assertSame(consumerError, getError(put(1)));
   }
 
-  @Test(timeout = 60000)
+  @Test(timeout = 5000)
   public void testProducerErrorPassedToConsumer() throws Exception {
     RuntimeException producerError = new RuntimeException();
     controlChannel.producerError(producerError);

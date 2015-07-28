@@ -28,10 +28,12 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +88,8 @@ public class SystemProcessImpl implements SystemProcess {
     NumberFormat numberFormat = NumberFormat.getInstance();
     numberFormat.setMinimumIntegerDigits(10);
     numberFormat.setGroupingUsed(false);
-    return numberFormat.format(fileCounter.incrementAndGet());
+    SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd_HH.mm.ss");
+    return Utils.format("{}-{}", dateFormat.format(new Date()), numberFormat.format(fileCounter.incrementAndGet()));
   }
 
   static void clean(File tempDir, int limit) {

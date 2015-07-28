@@ -46,6 +46,9 @@ public class Producer {
     if (consumerError != null) {
       throw new RuntimeException(Utils.format("Consumer encountered error: {}", consumerError), consumerError);
     }
+    if (producerError != null) {
+      throw new RuntimeException(Utils.format("Producer encountered error: {}", producerError), producerError);
+    }
     try {
       final Object expectedOffset = batch.getOffset();
       while (!dataChannel.offer(batch, 10, TimeUnit.MILLISECONDS)) {
@@ -86,8 +89,10 @@ public class Producer {
     } catch (Throwable throwable) {
       controlChannel.producerComplete();
       if (!(throwable instanceof ConsumerRuntimeException)) {
+        String msg = "Error caught in producer: " + throwable;
+        LOG.error(msg, throwable);
         controlChannel.producerError(throwable);
-        if (producerError != null) {
+        if (producerError == null) {
           producerError = throwable;
         }
       }

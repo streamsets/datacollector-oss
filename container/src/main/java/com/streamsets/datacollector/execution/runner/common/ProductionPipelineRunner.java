@@ -13,6 +13,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.EvictingQueue;
+import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
@@ -56,6 +57,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -217,16 +219,21 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   private void errorNotification(Pipe[] pipes, Throwable throwable) throws StageException {
+    Set<ErrorListener> listeners = Sets.newIdentityHashSet();
     for (Pipe pipe : pipes) {
       Stage stage = pipe.getStage().getStage();
       if (stage instanceof ErrorListener) {
-        try {
-          ((ErrorListener) stage).errorNotification(throwable);
-        } catch (Exception ex) {
-          String msg = Utils.format("Error in calling ErrorListenerStage {}: {}", stage.getClass().getName(), ex);
-          LOG.error(msg, ex);
-        }
+        listeners.add((ErrorListener) stage);
       }
+    }
+    for (ErrorListener listener : listeners) {
+      try {
+        listener.errorNotification(throwable);
+      } catch (Exception ex) {
+        String msg = Utils.format("Error in calling ErrorListenerStage {}: {}", listener.getClass().getName(), ex);
+        LOG.error(msg, ex);
+      }
+
     }
   }
 
