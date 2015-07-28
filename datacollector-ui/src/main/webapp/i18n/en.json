@@ -260,6 +260,7 @@
       "metricAlertRules": "Metric Rules",
       "monitoring": "Monitoring",
       "monitoringJSONData": "Pipeline Monitoring",
+      "noStageDefinitionFound": "Could not find stage definition",
       "pipelineConfigJSONData": "Pipeline Configuration",
       "pipelinePreviewJSONData": "Pipeline Preview",
       "pipelineRulesJSONData": "Pipeline Rules",

@@ -1014,6 +1014,8 @@ angular
         //Stage Instance Configuration
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
 
+        $scope.detailPaneConfigDefn = undefined;
+
         _.each($scope.stageLibraries, function (stageLibrary) {
           if(stageLibrary.name === selectedObject.stageName &&
             stageLibrary.version === selectedObject.stageVersion) {

@@ -93,7 +93,7 @@ angular
             tabsList = [infoTab, configurationTab];
           }
 
-          if($scope.detailPaneConfigDefn.rawSourceDefinition) {
+          if($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.rawSourceDefinition) {
             tabsList.push(rawPreviewTab);
           }
 

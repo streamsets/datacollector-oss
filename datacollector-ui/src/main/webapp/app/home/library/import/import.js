@@ -117,6 +117,10 @@ angular
                     }
                   },function(res) {
                     $scope.common.errors = [res.data];
+
+                    //Failed to import pipeline. If new pipeline is created during import revert it back.
+
+                    api.pipelineAgent.deletePipelineConfig(name);
                   });
               }
 

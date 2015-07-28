@@ -55,23 +55,28 @@
               translate="home.detailPane.restURL">REST URL</li>
 
           <li role="presentation" ng-if="isPipelineRunning && !$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/metrics?rev=0" target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/metrics?rev=0"
+               target="_blank">{{'home.detailPane.monitoringJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}" target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}"
+               target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/rules" target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/rules"
+               target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/status?rev=0" target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/status?rev=0"
+               target="_blank">{{'home.detailPane.pipelineStatusJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/definitions" target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/definitions"
+               target="_blank">{{'home.detailPane.definitionsJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="isPipelineRunning"
@@ -134,7 +139,7 @@
   </div>
 
   <div class="panel-body">
-    <tabset class="detail-tabs-left tabs-left">
+    <tabset class="detail-tabs-left tabs-left" ng-if="detailPaneConfigDefn">
       <tab ng-repeat="tab in detailPaneTabs track by $index" active="tab.active" disable="tab.disabled"
            select="onTabSelect(tab)">
         <tab-heading>  <!--tooltip-placement="right" tooltip="{{tab.label}}" -->
@@ -149,6 +154,16 @@
         <div ng-if="tab.active" ng-include="tab.template"></div>
       </tab>
     </tabset>
+
+    <div class="row" ng-if="!detailPaneConfigDefn">
+      <div class="col-md-12" >
+        <div class="alert alert-danger" role="alert">
+          <i class="fa fa-exclamation-triangle"></i>
+          <span>{{'home.detailPane.noStageDefinitionFound' | translate}}</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 

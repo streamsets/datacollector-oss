@@ -589,7 +589,7 @@ angular
     };
 
     var initializeGroupInformation = function(options) {
-      var groupDefn = $scope.detailPaneConfigDefn.configGroupDefinition;
+      var groupDefn = $scope.detailPaneConfigDefn ? $scope.detailPaneConfigDefn.configGroupDefinition : undefined;
 
       if(groupDefn && groupDefn.groupNameToLabelMapList) {
         $scope.showGroups = (groupDefn.groupNameToLabelMapList.length > 0);
