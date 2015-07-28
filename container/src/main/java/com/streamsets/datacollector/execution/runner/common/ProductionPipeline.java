@@ -15,6 +15,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.Record;
@@ -131,7 +132,7 @@ public class ProductionPipeline {
     return this.pipeline;
   }
 
-  public void stop() {
+  public void stop() throws PipelineException {
     pipelineRunner.stop();
   }
 
@@ -145,6 +146,10 @@ public class ProductionPipeline {
 
   public void captureSnapshot(String snapshotName, int batchSize, int batches) {
     pipelineRunner.capture(snapshotName, batchSize, batches);
+  }
+
+  public void cancelSnapshot(String snapshotName) throws PipelineException {
+    pipelineRunner.cancelSnapshot(snapshotName);
   }
 
   public void setOffset(String offset) {

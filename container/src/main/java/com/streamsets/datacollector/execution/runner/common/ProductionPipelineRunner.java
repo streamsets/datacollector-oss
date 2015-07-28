@@ -107,7 +107,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
   private ThreadHealthReporter threadHealthReporter;
-  private final List<List<StageOutput>> capturedbatches = new ArrayList<>();
+  private final List<List<StageOutput>> capturedBatches = new ArrayList<>();
 
   @Inject
   public ProductionPipelineRunner(@Named("name") String pipelineName, @Named ("rev") String revision,
@@ -258,8 +258,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /**
    * Stops execution of the pipeline after the current batch completes
    */
-  public void stop() {
+  public void stop() throws PipelineException {
     this.stop = true;
+    if(batchesToCapture > 0) {
+      cancelSnapshot(this.snapshotName);
+      snapshotStore.deleteSnapshot(pipelineName, revision, snapshotName);
+    }
   }
 
   public boolean wasStopped() {
@@ -271,6 +275,15 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.snapshotName = snapshotName;
     this.snapshotBatchSize = batchSize;
     this.batchesToCapture = batches;
+  }
+
+  public void cancelSnapshot(String snapshotName) throws PipelineException {
+    Preconditions.checkArgument(this.snapshotName != null && this.snapshotName.equals(snapshotName));
+    synchronized (this) {
+      this.snapshotBatchSize = 0;
+      this.batchesToCapture = 0;
+      capturedBatches.clear();
+    }
   }
 
   private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineException, StageException {
@@ -329,20 +342,24 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
     newSourceOffset = offsetTracker.getOffset();
 
-    if(batchCaptured) {
-      List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
-      if(!snapshot.isEmpty()) {
-        capturedbatches.add(snapshot);
-      }
-      /*
-       * Reset the capture snapshot variable only after capturing the snapshot
-       * This guarantees that once captureSnapshot is called, the output is captured exactly once
-       * */
-      batchesToCapture--;
-      if(batchesToCapture == 0) {
-        snapshotBatchSize = 0;
-        if(!capturedbatches.isEmpty()) {
-          snapshotStore.save(pipelineName, revision, snapshotName, capturedbatches);
+    synchronized (this) {
+      if(batchCaptured && batchesToCapture > 0) {
+        List<StageOutput> snapshot = pipeBatch.getSnapshotsOfAllStagesOutput();
+        if (!snapshot.isEmpty()) {
+          capturedBatches.add(snapshot);
+        }
+        /*
+         * Reset the capture snapshot variable only after capturing the snapshot
+         * This guarantees that once captureSnapshot is called, the output is captured exactly once
+         * */
+        batchesToCapture--;
+        if (batchesToCapture == 0) {
+          snapshotBatchSize = 0;
+          batchesToCapture = 0;
+          if (!capturedBatches.isEmpty()) {
+            snapshotStore.save(pipelineName, revision, snapshotName, capturedBatches);
+            capturedBatches.clear();
+          }
         }
       }
     }

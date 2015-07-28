@@ -94,7 +94,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public void stop() throws PipelineStoreException, PipelineRunnerException {
+  public void stop() throws PipelineException {
     standaloneRunner.stop();
   }
 

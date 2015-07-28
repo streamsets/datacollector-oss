@@ -66,14 +66,14 @@ public interface Runner {
   // called for all existing pipelines when the data collector starts
   // it should reconnect/reset-status of all pipelines
   // returns whether to start the pipeline on sdc start
-  public void onDataCollectorStart() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
+  public void onDataCollectorStart() throws PipelineException, StageException;
 
   // called for all existing pipelines when the data collector is shutting down
   // it should disconnect/reset-status of all pipelines
   public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
 
   // stops the pipeline
-  public void stop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException;
+  public void stop() throws PipelineException;
 
   // Sets the state to STARTING. Should be called before doing a start on async runners.
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException;
@@ -83,7 +83,7 @@ public interface Runner {
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException, PipelineStoreException;
+  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException;
 
   // retrieves a snapshot base on its ID
   // delegates to SnapshotStore

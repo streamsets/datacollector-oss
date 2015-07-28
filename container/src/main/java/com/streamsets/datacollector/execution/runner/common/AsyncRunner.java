@@ -76,11 +76,10 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException,
-    StageException {
+  public void onDataCollectorStart() throws PipelineException, StageException {
     Callable<Object> callable = new Callable<Object>() {
       @Override
-      public Object call() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+      public Object call() throws PipelineException, StageException {
          runner.onDataCollectorStart();
          return null;
       }
@@ -94,7 +93,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public synchronized void stop() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException {
+  public synchronized void stop() throws PipelineException {
     runner.stop();
   }
 

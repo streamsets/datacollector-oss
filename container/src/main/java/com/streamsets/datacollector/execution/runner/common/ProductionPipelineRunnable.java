@@ -8,6 +8,7 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.slf4j.Logger;
@@ -92,7 +93,7 @@ public class ProductionPipelineRunnable implements Runnable {
     }
   }
 
-  public void stop(boolean nodeProcessShutdown) {
+  public void stop(boolean nodeProcessShutdown) throws PipelineException {
     this.isStopped = true;
     this.nodeProcessShutdown = nodeProcessShutdown;
     pipeline.stop();

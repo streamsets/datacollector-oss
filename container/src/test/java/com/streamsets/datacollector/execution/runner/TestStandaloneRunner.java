@@ -10,6 +10,8 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
+import com.streamsets.datacollector.execution.Snapshot;
+import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -34,7 +36,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class TestStandaloneRunner {
 
@@ -251,6 +253,52 @@ public class TestStandaloneRunner {
   }
 
   @Test
+  public void testSnapshot() throws Exception {
+    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    runner.start();
+    waitAndAssertState(runner, PipelineStatus.RUNNING);
+
+    //request to capture snapshot and check the status
+    String snapshotId = runner.captureSnapshot("mySnapshot", 5, 10);
+    assertNotNull(snapshotId);
+
+    Snapshot snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+
+    SnapshotInfo info = snapshot.getInfo();
+    assertNotNull(info);
+    assertNull(snapshot.getOutput());
+    assertTrue(info.isInProgress());
+    assertEquals(snapshotId, info.getId());
+    assertEquals(TestUtil.MY_PIPELINE, info.getName());
+    assertEquals("0", info.getRev());
+
+    //request cancel snapshot
+    runner.deleteSnapshot(snapshotId);
+    snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+    assertNull(snapshot.getInfo());
+    assertNull(snapshot.getOutput());
+
+    //call cancel again - no op
+    runner.deleteSnapshot("mySnapshot");
+    snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+    assertNull(snapshot.getInfo());
+    assertNull(snapshot.getOutput());
+
+    //call cancel on some other snapshot which does not exist - no op
+    runner.deleteSnapshot("mySnapshot1");
+    snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+    assertNull(snapshot.getInfo());
+    assertNull(snapshot.getOutput());
+
+    runner.stop();
+    waitAndAssertState(runner, PipelineStatus.STOPPED);
+  }
+
+  @Test
   public void testRunningMaxPipelines() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule(), ConfigModule.class);
     Manager pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
@@ -285,16 +333,20 @@ public class TestStandaloneRunner {
 
   @Module(overrides = true, library = true)
   static class ConfigModule {
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
       configuration.set(ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY, 3);
       return configuration;
     }
 
-    @Provides @Singleton
+    @Provides
+    @Singleton
     public ResourceManager provideResourceManager(Configuration configuration) {
       return new ResourceManager(configuration);
     }
   }
+
+
 }

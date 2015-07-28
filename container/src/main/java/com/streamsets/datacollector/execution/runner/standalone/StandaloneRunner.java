@@ -195,12 +195,20 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public void onDataCollectorStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+  public void onDataCollectorStart() throws PipelineException, StageException {
     try {
       MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
       PipelineStatus status = getState().getStatus();
       LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
+
+      //if the pipeline was running and capture snapshot in progress, then cancel and delete snapshots
+      for(SnapshotInfo snapshotInfo : getSnapshotsInfo()) {
+        if(snapshotInfo.isInProgress()) {
+          snapshotStore.deleteSnapshot(snapshotInfo.getName(), snapshotInfo.getRev(), snapshotInfo.getId());
+        }
+      }
+
       switch (status) {
         case DISCONNECTED:
           String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
@@ -275,7 +283,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public synchronized void stop() throws PipelineStoreException, PipelineRunnerException {
+  public synchronized void stop() throws PipelineException {
     validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline", null);
     stopPipeline(false);
   }
@@ -319,6 +327,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void deleteSnapshot(String id) throws PipelineException {
+    Snapshot snapshot = getSnapshot(id);
+    if(snapshot != null && snapshot.getInfo() != null && snapshot.getInfo().isInProgress()) {
+      prodPipeline.cancelSnapshot(snapshot.getInfo().getId());
+    }
     snapshotStore.deleteSnapshot(name, rev, id);
   }
 
@@ -546,7 +558,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     LOG.debug("Started pipeline {} {}", name, rev);
   }
 
-  private synchronized void stopPipeline(boolean sdcShutting) {
+  private synchronized void stopPipeline(boolean sdcShutting) throws PipelineException {
    if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
       LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
       pipelineRunnable.stop(sdcShutting);
