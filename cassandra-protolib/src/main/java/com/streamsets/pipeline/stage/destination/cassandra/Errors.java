@@ -15,11 +15,11 @@ public enum Errors implements ErrorCode {
   CASSANDRA_00("No valid contact points provided."),
   CASSANDRA_01("Contact node value cannot be empty"),
   CASSANDRA_02("Table name must be fully qualified with a key space."),
-  CASSANDRA_03("Failed to establish connection to Cassandra"),
+  CASSANDRA_03("Failed to establish connection to Cassandra: {}"),
   CASSANDRA_04("Couldn't resolve hostname for contact node [{}]."),
   CASSANDRA_05("Could not connect to Cassandra cluster: {}"),
-  CASSANDRA_06("Could not prepare record '{}': {}"),
-  CASSANDRA_07("Could not insert batch."),
+  CASSANDRA_06("Could not prepare record id'{}' due to: {}"),
+  CASSANDRA_07("Could not insert batch due to: {}"),
   CASSANDRA_08("Invalid column mappings specified. Table doesn't have columns: {}"),
   CASSANDRA_09("Could not insert batch which included record: '{}': {}")
   ;

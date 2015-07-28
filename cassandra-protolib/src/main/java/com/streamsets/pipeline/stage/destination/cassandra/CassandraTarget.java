@@ -10,6 +10,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ProtocolOptions;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.exceptions.AuthenticationException;
@@ -62,6 +63,7 @@ public class CassandraTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(CassandraTarget.class);
 
   private final List<String> addresses;
+  private final ProtocolOptions.Compression compression;
   private List<InetAddress> contactPoints;
   private final int port;
   private final String username;
@@ -80,6 +82,7 @@ public class CassandraTarget extends BaseTarget {
   public CassandraTarget(
       final List<String> addresses,
       final int port,
+      final ProtocolOptions.Compression compression,
       final String username,
       final String password,
       final String qualifiedTableName,
@@ -87,6 +90,7 @@ public class CassandraTarget extends BaseTarget {
   ) {
     this.addresses = addresses;
     this.port = port;
+    this.compression = compression;
     this.username = username;
     this.password = password;
     this.qualifiedTableName = qualifiedTableName;
@@ -148,6 +152,7 @@ public class CassandraTarget extends BaseTarget {
     if (issues.isEmpty()) {
       cluster = Cluster.builder()
           .addContactPoints(contactPoints)
+          .withCompression(compression)
           .withPort(port)
               // If authentication is disabled on the C* cluster, this method has no effect.
           .withCredentials(username, password)
@@ -182,7 +187,7 @@ public class CassandraTarget extends BaseTarget {
                 }
             );
       } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
-        issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.getMessage()));
+        issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.toString()));
       }
     }
     return issues;
@@ -197,6 +202,7 @@ public class CassandraTarget extends BaseTarget {
 
   private List<String> checkColumnMappings() {
     List<String> invalidColumnMappings = new ArrayList<>();
+
     columnMappings = new TreeMap<>();
     for (CassandraFieldMappingConfig column : columnNames) {
       columnMappings.put(column.columnName, column.field);
@@ -242,7 +248,7 @@ public class CassandraTarget extends BaseTarget {
               context.createConfigIssue(
               Groups.CASSANDRA.name(),
               "contactNodes",
-              Errors.CASSANDRA_05, e.getMessage()
+              Errors.CASSANDRA_05, e.toString()
           )
       );
     }
@@ -300,10 +306,10 @@ public class CassandraTarget extends BaseTarget {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.getMessage(), e);
+              getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
               break;
             case STOP_PIPELINE:
-              throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.getMessage(), e);
+              throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
             default:
               throw new IllegalStateException(
                   Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)
@@ -322,11 +328,12 @@ public class CassandraTarget extends BaseTarget {
             case TO_ERROR:
               Iterator<Record> failedRecords = batch.getRecords();
               while (failedRecords.hasNext()) {
-                final Record record = records.next();
-                getContext().toError(record, Errors.CASSANDRA_09, record.getHeader().getSourceId(), e.getMessage(), e);
+                final Record record = failedRecords.next();
+                getContext().toError(record, Errors.CASSANDRA_09, record.getHeader().getSourceId(), e.toString());
               }
+              break;
             case STOP_PIPELINE:
-              throw new StageException(Errors.CASSANDRA_07, e);
+              throw new StageException(Errors.CASSANDRA_07, e.toString());
             default:
               throw new IllegalStateException(
                   Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)

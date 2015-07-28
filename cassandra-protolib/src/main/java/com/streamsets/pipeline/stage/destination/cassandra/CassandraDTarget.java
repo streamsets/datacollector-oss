@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.List;
@@ -48,13 +49,48 @@ public class CassandraDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LZ4",
+      label = "Compression",
+      description = "Optional compression for transport-level requests and responses.",
+      displayPosition = 30,
+      group = "CASSANDRA"
+  )
+  @ValueChooser(CompressionChooserValues.class)
+  public CassandraCompressionCodec compression;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Credentials",
       defaultValue = "false",
-      displayPosition = 25,
+      displayPosition = 40,
       group = "CASSANDRA"
   )
   public boolean useCredentials;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Fully Qualified Table Name",
+      description = "Table write to, e.g. <keyspace>.<table_name>",
+      displayPosition = 50,
+      group = "CASSANDRA"
+  )
+  public String qualifiedTableName;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = "Field to Column Mapping",
+      description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
+      displayPosition = 60,
+      group = "CASSANDRA"
+  )
+  @ComplexField(CassandraFieldMappingConfig.class)
+  public List<CassandraFieldMappingConfig> columnNames;
 
   @ConfigDef(
       required = true,
@@ -80,31 +116,16 @@ public class CassandraDTarget extends DTarget {
   )
   public String password;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "",
-      label = "Fully Qualified Table Name",
-      description = "Table write to, e.g. <keyspace>.<table_name>",
-      displayPosition = 30,
-      group = "CASSANDRA"
-  )
-  public String qualifiedTableName;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="",
-      label = "Field to Column Mapping",
-      description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
-      displayPosition = 40,
-      group = "CASSANDRA"
-  )
-  @ComplexField(CassandraFieldMappingConfig.class)
-  public List<CassandraFieldMappingConfig> columnNames;
-
   @Override
   protected Target createTarget() {
-    return new CassandraTarget(contactNodes, port, username, password, qualifiedTableName, columnNames);
+    return new CassandraTarget(
+        contactNodes,
+        port,
+        compression.getCodec(),
+        username,
+        password,
+        qualifiedTableName,
+        columnNames
+    );
   }
 }
