@@ -15,7 +15,7 @@
     <bg-pane min-size="0">
 
       <bg-splitter orientation="horizontal" class="stage-library-splitter"
-                   ng-class="{'hide-stage-library-panel': !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode}"
+                   ng-class="{'hide-stage-library-panel': !pipelineConfig || !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode}"
                    ng-cloak>
 
         <bg-pane min-size="0">
@@ -40,7 +40,7 @@
 
       </bg-splitter>
 
-      <div class="pipeline-empty-container" ng-class="{'show': (!pipelines || pipelines.length === 0) && !pipelineConfig && loaded}"  ng-cloak>
+      <!--div class="pipeline-empty-container" ng-class="{'show': (!pipelines || pipelines.length === 0) && !pipelineConfig && loaded}"  ng-cloak>
         <div class="create-pipeline-btn-group">
           <h2 translate="home.getStarted">Get Started</h2>
           <button class="btn btn-primary pull-left create-pipeline-btn" ng-click="addPipelineConfig()">
@@ -53,7 +53,7 @@
             <span translate="home.importPipeline">Import Pipeline</span>
           </button>
         </div>
-      </div>
+      </div-->
 
     </bg-pane>
 

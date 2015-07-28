@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row" ng-if="summaryDataLoaded">
     <ng-include ng-repeat="(chartIndex, chart) in $storage.summaryPanelList" src="chart.templateId">
     </ng-include>
   </div>
@@ -45,8 +45,10 @@
       </div>
       <div class="panel-body">
 
-        <nvd3 ng-if="timeRange === 'latest'"
+        <nvd3 ng-if="timeRange === 'latest' && !allDataZero"
               options="chartOptions" data="pieChartData" config="{ refreshDataOnly: true }"></nvd3>
+
+        <span class="zero-value" ng-if="allDataZero">0</span>
 
       </div>
     </div>

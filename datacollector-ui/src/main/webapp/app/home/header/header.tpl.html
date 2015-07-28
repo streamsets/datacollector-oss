@@ -285,54 +285,6 @@
         <span class="fa fa-th fa-14x"></span>
       </a>
 
-
-      <!--div class="btn-group notifications-dropdown"
-           ng-show="isPipelineRunning && !snapshotMode && common.sdcExecutionMode != pipelineConstant.CLUSTER">
-        <a class="btn btn-link dropdown-toggle"
-           data-toggle="dropdown"
-           tooltip-placement="top"
-           tooltip="{{'home.header.notifications' | translate}}"
-           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
-           tooltip-popup-delay="500">
-          <span class="fa fa-bell fa-12x"></span>
-          <span ng-hide="iconOnly" translate="home.header.notifications">Notifications</span>
-          <span class="badge"
-                ng-if="triggeredAlerts.length > 0"
-                ng-bind="triggeredAlerts.length"></span>
-        </a>
-        <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
-
-          <li role="presentation" class="dropdown-header" ng-if="triggeredAlerts.length > 0"
-              translate="home.header.alerts">
-            Alerts
-          </li>
-
-          <li role="presentation"
-              ng-repeat="alert in triggeredAlerts">
-            <a role="menuitem" tabindex="-1" href="#"
-               ng-click="onNotificationClick(alert)">
-
-              <span ng-if="alert.gauge.value.exceptionMessage">
-                <strong>{{alert.rule.label}}: </strong> {{alert.gauge.value.exceptionMessage}}
-              </span>
-
-              <span ng-if="!alert.gauge.value.exceptionMessage" ng-bind="alert.rule.alertText"></span>
-
-              <button type="button" class="close" aria-label="Close" ng-click="deleteTriggeredAlert(alert, $event)">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </a>
-          </li>
-
-          <li role="presentation" class="dropdown-header"
-              translate="home.header.emptyAlerts"
-              ng-if="triggeredAlerts.length === 0">
-            It’s all good! You don’t have any new alerts.
-          </li>
-
-        </ul>
-      </div-->
-
     </div>
 
   </div>

@@ -8,6 +8,7 @@ angular
     var colorArray = ['#5cb85c', '#FF3333'];
 
     angular.extend($scope, {
+      allDataZero: false,
       chartOptions: {
         chart: {
           type: 'pieChart',
@@ -59,12 +60,17 @@ angular
     });
 
     var refreshChartData = function() {
+      $scope.allDataZero = true;
       if($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
         angular.forEach($scope.pieChartData, function(chartData) {
           if(chartData.key === 'goodRecords') {
             chartData.value = $scope.summaryMeters.outputRecords.count;
           } else if(chartData.key === 'errorRecords') {
             chartData.value = $scope.summaryMeters.errorRecords.count;
+          }
+
+          if(chartData.value > 0) {
+            $scope.allDataZero = false;
           }
         });
       }

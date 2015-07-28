@@ -5,7 +5,7 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant, $filter) {
+  .controller('BadRecordsController', function ($scope, $rootScope, _, api, pipelineConstant, $filter, $timeout) {
 
     var formatValue = function(d){
       return $filter('abbreviateNumber')(d);
@@ -126,6 +126,16 @@ angular
         return function() {
           return '';
         };
+      },
+
+      /**
+       * Callback function when tab is selected.
+       */
+      onTabSelect: function() {
+        $scope.errorDataLoaded = false;
+        $timeout(function() {
+          $scope.errorDataLoaded = true;
+        });
       }
     });
 
@@ -281,6 +291,11 @@ angular
         }
 
       }
+    });
+
+    //Workaround for refreshing the graph after data is loaded
+    $timeout(function() {
+      $scope.errorDataLoaded = true;
     });
 
   });

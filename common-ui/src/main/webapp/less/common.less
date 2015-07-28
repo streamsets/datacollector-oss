@@ -277,7 +277,7 @@ body {
     min-height: 34px;
     height: auto;
     //min-width: 500px;
-    padding: @smallPadding @defaultPadding;
+    padding: 0 @smallPadding;
     border-radius: 3px;
     position: relative;
     color: #555;
@@ -298,6 +298,10 @@ body {
       min-height: 100px;
       padding: 0;
       height: auto;
+
+      .CodeMirror-scroll {
+        min-height: 100px;
+      }
     }
   }
 

@@ -222,7 +222,12 @@
     }
 
     .CodeMirror {
-      padding: @smallPadding *.5 @defaultPadding;
+      min-height: 30px;
+      padding: 0 @defaultPadding;
+
+      .CodeMirror-lines {
+        padding: 2px 0;
+      }
     }
   }
 
@@ -268,7 +273,13 @@
     }
 
     .CodeMirror {
+      min-height: 27px;
       padding: 0 @smallPadding;
+
+      .CodeMirror-lines {
+        padding: 0;
+      }
+
     }
   }
 

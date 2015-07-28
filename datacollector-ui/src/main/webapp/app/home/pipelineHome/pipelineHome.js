@@ -1170,7 +1170,7 @@ angular
           } else {
             // Failed to fetch metrics
             // $rootScope.common.errors = ['Failed to fetch pipeline metrics'];
-            console.log('Failed to fetch stage meter metrics');
+            // console.log('Failed to fetch stage meter metrics');
           }
 
         });

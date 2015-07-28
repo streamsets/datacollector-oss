@@ -5,7 +5,8 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant, $filter, authService) {
+  .controller('SummaryController', function ($scope, $rootScope, $modal, $http, pipelineConstant, $filter, authService,
+                                             $timeout) {
     var chartList = [
       {
         label: 'home.detailPane.summaryTab.slaveSDCInstances',
@@ -151,6 +152,12 @@ angular
         pipelineMetrics = $rootScope.common.pipelineMetrics,
         currentSelection = $scope.detailPaneConfig,
         isStageSelected = $scope.stageSelected;
+
+      //Workaround for refreshing the graph after data is loaded
+      $timeout(function() {
+        $scope.summaryDataLoaded = true;
+      });
+
 
       if(angular.equals({},pipelineMetrics)) {
         return;
