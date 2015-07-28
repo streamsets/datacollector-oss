@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
@@ -329,5 +330,55 @@ public class TestCassandraTarget {
     ResultSet resultSet = session.execute("SELECT * FROM test.trips");
     List<Row> allRows = resultSet.all();
     Assert.assertEquals(0, allRows.size());
+  }
+
+  @Test
+  public void testWriteRecordWithMissingFields() throws InterruptedException, StageException {
+    final String tableName = "test.trips";
+    List<CassandraFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new CassandraFieldMappingConfig("/driver", "driver_id"),
+        new CassandraFieldMappingConfig("/trip", "trip_id"),
+        new CassandraFieldMappingConfig("/time", "time"),
+        new CassandraFieldMappingConfig("/x", "x"),
+        new CassandraFieldMappingConfig("/y", "y")
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("useCredentials", false)
+        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("columnNames", fieldMappings)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
+        .build();
+
+    Record record = RecordCreator.create();
+    Map<String, Field> fields = new ImmutableMap.Builder<String, Field>()
+        .put("driver", Field.create(1))
+        .put("trip", Field.create(2))
+        .put("time", Field.create(3))
+        .put("y", Field.create(5.0))
+        .build();
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+
+    // Should not be any error records.
+    Assert.assertTrue(targetRunner.getErrorRecords().isEmpty());
+    Assert.assertTrue(targetRunner.getErrors().isEmpty());
+
+    targetRunner.runDestroy();
+
+    ResultSet resultSet = session.execute("SELECT * FROM test.trips");
+    List<Row> allRows = resultSet.all();
+    Assert.assertEquals(1, allRows.size());
+
+    Row row = allRows.get(0);
+    Assert.assertEquals(1, row.getInt("driver_id"));
+    Assert.assertEquals(2, row.getInt("trip_id"));
+    Assert.assertEquals(3, row.getInt("time"));
+    Assert.assertEquals(null, row.getBytesUnsafe("x"));
+    Assert.assertEquals(5.0, row.getDouble("y"), EPSILON);
   }
 }

@@ -20,7 +20,7 @@ public enum Errors implements ErrorCode {
   CASSANDRA_05("Could not connect to Cassandra cluster: {}"),
   CASSANDRA_06("Could not prepare record '{}': {}"),
   CASSANDRA_07("Could not insert batch."),
-  CASSANDRA_08("Invalid column mappings specified. Target column(s) do not exist in table."),
+  CASSANDRA_08("Invalid column mappings specified. Table doesn't have columns: {}"),
   CASSANDRA_09("Could not insert batch which included record: '{}': {}")
   ;
   private final String msg;

@@ -14,8 +14,14 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.exceptions.AuthenticationException;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
+import com.google.common.base.Function;
 import com.google.common.base.Joiner;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -27,6 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -36,7 +43,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Cassandra Destination for StreamSets Data Collector
@@ -65,8 +74,8 @@ public class CassandraTarget extends BaseTarget {
   private Cluster cluster = null;
   private Session session = null;
 
-  private PreparedStatement insertStatement = null;
-  private SortedMap<String, String> columnMappings = new TreeMap<>();
+  private SortedMap<String, String> columnMappings;
+  private LoadingCache<SortedSet<String>, PreparedStatement> statementCache;
 
   public CassandraTarget(
       final List<String> addresses,
@@ -123,14 +132,22 @@ public class CassandraTarget extends BaseTarget {
     }
 
     if (checkCassandraReachable(issues)) {
-      if (!isColumnMappingValid()) {
-        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "columnNames", Errors.CASSANDRA_08));
+      List<String> invalidColumns = checkColumnMappings();
+      if (invalidColumns.size() != 0) {
+        issues.add(
+            context.createConfigIssue(
+                Groups.CASSANDRA.name(),
+                "columnNames",
+                Errors.CASSANDRA_08,
+                Joiner.on(", ").join(invalidColumns)
+            )
+        );
       }
     }
 
     if (issues.isEmpty()) {
       cluster = Cluster.builder()
-                       .addContactPoints(contactPoints)
+          .addContactPoints(contactPoints)
           .withPort(port)
               // If authentication is disabled on the C* cluster, this method has no effect.
           .withCredentials(username, password)
@@ -138,22 +155,35 @@ public class CassandraTarget extends BaseTarget {
 
       try {
         session = cluster.connect();
+
+        statementCache = CacheBuilder.newBuilder()
+            // No expiration as prepared statements are good for the entire session.
+            .build(
+                new CacheLoader<SortedSet<String>, PreparedStatement>() {
+                  @Override
+                  public PreparedStatement load(SortedSet<String> columns) throws Exception {
+                    // The INSERT query we're going to perform (parameterized).
+                    SortedSet<String> statementColumns = new TreeSet<>();
+                    for (String fieldPath : columnMappings.keySet()) {
+                      final String fieldName = fieldPath.replaceAll("/", "");
+                      if (columns.contains(fieldName)) {
+                        statementColumns.add(fieldName);
+                      }
+                    }
+                    final String query = String.format(
+                        "INSERT INTO %s (%s) VALUES (%s);",
+                        qualifiedTableName,
+                        Joiner.on(", ").join(statementColumns),
+                        Joiner.on(", ").join(Collections.nCopies(statementColumns.size(), "?"))
+                    );
+                    LOG.trace("Prepared Query: {}", query);
+                    return session.prepare(query);
+                  }
+                }
+            );
       } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
         issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.getMessage()));
       }
-
-      setColumnMappings();
-
-      // The INSERT query we're going to perform (parameterized).
-      final String query = String.format(
-          "INSERT INTO %s (%s) VALUES (%s);",
-          qualifiedTableName,
-          Joiner.on(", ").join(columnMappings.keySet()).replaceAll("/", ""),
-          Joiner.on(", ").join(Collections.nCopies(columnNames.size(), "?"))
-      );
-      LOG.info("Prepared Query: {}", query);
-      insertStatement = session.prepare(query);
-
     }
     return issues;
   }
@@ -165,7 +195,8 @@ public class CassandraTarget extends BaseTarget {
     super.destroy();
   }
 
-  private boolean isColumnMappingValid() {
+  private List<String> checkColumnMappings() {
+    List<String> invalidColumnMappings = new ArrayList<>();
     columnMappings = new TreeMap<>();
     for (CassandraFieldMappingConfig column : columnNames) {
       columnMappings.put(column.columnName, column.field);
@@ -178,18 +209,25 @@ public class CassandraTarget extends BaseTarget {
     try (Cluster cluster = getCluster()) {
       final KeyspaceMetadata keyspaceMetadata = cluster.getMetadata().getKeyspace(keyspace);
       final TableMetadata tableMetadata = keyspaceMetadata.getTable(table);
-      final List<ColumnMetadata> columns = tableMetadata.getColumns();
+      final List<String> columns = Lists.transform(
+          tableMetadata.getColumns(),
+          new Function<ColumnMetadata, String>() {
+            @Nullable
+            @Override
+            public String apply(ColumnMetadata columnMetadata) {
+              return columnMetadata.getName();
+            }
+          }
+      );
 
-      for (ColumnMetadata column : columns) {
-        if (!columnMappings.keySet().contains(column.getName())) {
-          return false;
+      for (String columnName : columnMappings.keySet()) {
+        if (!columns.contains(columnName)) {
+          invalidColumnMappings.add(columnName);
         }
       }
-    } catch (Exception ignored) {
-      return false;
     }
 
-    return true;
+    return invalidColumnMappings;
   }
 
   private boolean checkCassandraReachable(List<ConfigIssue> issues) {
@@ -224,8 +262,18 @@ public class CassandraTarget extends BaseTarget {
 
         try {
           ImmutableList.Builder<Object> values = new ImmutableList.Builder<>();
-          for (String field : columnMappings.values()) {
-            final Object value = record.get(field).getValue();
+          SortedSet<String> columnsPresent = Sets.newTreeSet(columnMappings.keySet());
+          for (Map.Entry<String, String> mapping : columnMappings.entrySet()) {
+            String columnName = mapping.getKey();
+            String fieldPath = mapping.getValue();
+
+            // If we're missing fields, skip them.
+            if (!record.has(fieldPath)) {
+              columnsPresent.remove(columnName);
+              continue;
+            }
+
+            final Object value = record.get(fieldPath).getValue();
             // Special cases for handling SDC Lists and Maps,
             // basically unpacking them into raw types.
             if (value instanceof List) {
@@ -246,7 +294,7 @@ public class CassandraTarget extends BaseTarget {
           }
 
           // .toArray required to pass in a list to a varargs method.
-          batchedStatement.add(insertStatement.bind(values.build().toArray()));
+          batchedStatement.add(statementCache.get(columnsPresent).bind(values.build().toArray()));
         } catch (Exception e) {
           switch (getContext().getOnErrorRecord()) {
             case DISCARD:
@@ -293,12 +341,5 @@ public class CassandraTarget extends BaseTarget {
         .addContactPoints(contactPoints)
         .withPort(port)
         .build();
-  }
-
-  private void setColumnMappings() {
-    columnMappings = new TreeMap<>();
-    for (CassandraFieldMappingConfig column : columnNames) {
-      columnMappings.put(column.columnName, column.field);
-    }
   }
 }
