@@ -10,6 +10,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -117,7 +118,7 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
             runnerList.add(manager.getRunner(userName, pipelineState.getName(), pipelineState.getRev()));
           }
         }
-      } catch (PipelineStoreException ex) {
+      } catch (PipelineStoreException | PipelineManagerException ex) {
         LOG.warn("Failed to create WebSocket: {}", ex.getMessage(), ex);
         return null;
       }

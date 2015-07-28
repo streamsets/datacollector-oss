@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -32,6 +33,8 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
@@ -70,7 +73,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Inject
   PreviewerProvider previewerProvider;
 
-  private Cache<String, Runner> runnerCache;
+  private Cache<String, RunnerInfo> runnerCache;
   private Cache<String, Previewer> previewerCache;
   static final long DEFAULT_RUNNER_EXPIRY_INTERVAL = 60*60*1000;
   static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
@@ -103,16 +106,28 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
-  public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException {
+  public Runner getRunner(final String user, final String name, final String rev) throws PipelineStoreException, PipelineManagerException {
     final String nameAndRevString = getNameAndRevString(name, rev);
-    Runner runner;
+    RunnerInfo runnerInfo;
     try {
-      runner = runnerCache.get(nameAndRevString, new Callable<Runner>() {
+      runnerInfo = runnerCache.get(nameAndRevString, new Callable<RunnerInfo>() {
         @Override
-        public Runner call() throws PipelineStoreException {
-          return getRunner(pipelineStateStore.getState(name, rev), name, rev);
+        public RunnerInfo call() throws PipelineStoreException {
+          ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
+          Runner runner = getRunner(pipelineStateStore.getState(name, rev).getUser(), name, rev, executionMode);
+          return new RunnerInfo(runner, executionMode);
         }
       });
+      if (runnerInfo.executionMode != pipelineStateStore.getState(name, rev).getExecutionMode()) {
+        LOG.info(Utils.format("Invalidate the existing runner for pipeline '{}::{}' as execution mode has changed",
+          name, rev));
+        if (!removeRunnerIfActive(runnerInfo.runner)) {
+          throw new PipelineManagerException(ValidationError.VALIDATION_0082, pipelineStateStore.getState(name, rev).getExecutionMode(),
+            runnerInfo.executionMode);
+        } else {
+          return getRunner(user, name, rev);
+        }
+      }
     } catch (ExecutionException ex) {
       if (ex.getCause() instanceof RuntimeException) {
         throw (RuntimeException) ex.getCause();
@@ -122,7 +137,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.getMessage(), ex);
       }
     }
-    return runner;
+    return runnerInfo.runner;
   }
 
   @Override
@@ -141,7 +156,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException {
-    Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev));
+    Runner runner = runnerCache.getIfPresent(getNameAndRevString(name, rev)).runner;
     return (runner == null) ? false : runner.getState().getStatus().isActive();
   }
 
@@ -172,10 +187,11 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         // Create runner if active
         if (pipelineState.getStatus().isActive()) {
-          Runner runner = getRunner(pipelineState, name, rev);
+          ExecutionMode executionMode = pipelineState.getExecutionMode();
+          Runner runner = getRunner(pipelineState.getUser(), name, rev, executionMode);
           runner.prepareForDataCollectorStart();
           if (runner.getState().getStatus() == PipelineStatus.DISCONNECTED) {
-            runnerCache.put(getNameAndRevString(name, rev), runner);
+            runnerCache.put(getNameAndRevString(name, rev), new RunnerInfo(runner, executionMode));
             runner.onDataCollectorStart();
           }
         }
@@ -187,15 +203,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     runnerExpiryFuture = managerExecutor.schedule(new Runnable() {
       @Override
       public void run() {
-        for (Runner runner : runnerCache.asMap().values()) {
+        for (RunnerInfo runnerInfo : runnerCache.asMap().values()) {
+          Runner runner = runnerInfo.runner;
           try {
             LOG.debug("Runner for pipeline '{}::{}' is in status: '{}'", runner.getName(), runner.getRev(),
               runner.getState());
-            if (!runner.getState().getStatus().isActive()) {
-              runner.close();
-              runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
-              LOG.info("Removing runner for pipeline '{}::'{}'", runner.getName(), runner.getRev());
-            }
+            removeRunnerIfActive(runner);
           } catch (PipelineStoreException ex) {
             LOG.warn("Cannot remove runner for pipeline: '{}::{}' due to '{}'", runner.getName(), runner.getRev(),
               ex.getMessage(), ex);
@@ -211,9 +224,21 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   }
 
+  private boolean removeRunnerIfActive(Runner runner) throws PipelineStoreException {
+    if (!runner.getState().getStatus().isActive()) {
+      runner.close();
+      runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
+      LOG.info("Removing runner for pipeline '{}::'{}'", runner.getName(), runner.getRev());
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @Override
   public void stopTask() {
-    for (Runner runner : runnerCache.asMap().values()) {
+    for (RunnerInfo runnerInfo : runnerCache.asMap().values()) {
+      Runner runner = runnerInfo.runner;
       try {
         runner.close();
         runner.onDataCollectorStop();
@@ -248,19 +273,22 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
 
-  private Runner getRunner(PipelineState pipelineState, String name, String rev) throws PipelineStoreException {
-    LOG.debug("Status of pipeline: '{}::{}' is: '{}'", name, rev, pipelineState.getStatus());
-    List<Issue> errors = new ArrayList<>();
-    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
-    if (pipelineConfigBean == null) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
-    }
-    return runnerProvider.createRunner(pipelineState.getUser(), name, rev, pipelineConfigBean, objectGraph);
+  private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
+    return runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
   }
 
   private String getNameAndRevString(String name, String rev) {
     return name + NAME_AND_REV_SEPARATOR + rev;
+  }
+
+  private static class RunnerInfo {
+    private final Runner runner;
+    private final ExecutionMode executionMode;
+
+    private RunnerInfo(Runner runner, ExecutionMode executionMode) {
+      this.runner = runner;
+      this.executionMode = executionMode;
+    }
   }
 
 }

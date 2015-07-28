@@ -10,6 +10,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
@@ -25,6 +26,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.StageException;
 
 import dagger.ObjectGraph;
@@ -60,7 +62,7 @@ public class TestPipelineManagerModule {
   }
 
   @Test
-  public void testStandalonePipelineManagerModule() throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException {
+  public void testStandalonePipelineManagerModule() throws PipelineException {
     //Start SDC and get an instance of PipelineTask
     ObjectGraph objectGraph = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
@@ -96,7 +98,7 @@ public class TestPipelineManagerModule {
   }
 
   @Test
-  public void testSlavePipelineManagerModule() throws PipelineStoreException {
+  public void testSlavePipelineManagerModule() throws PipelineStoreException, PipelineManagerException {
     ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     taskWrapper.init();

@@ -15,6 +15,7 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.SnapshotStore;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
@@ -43,6 +44,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -67,7 +70,7 @@ public class TestStandalonePipelineManager {
     StandaloneRunner.class, EventListenerManager.class, LockCache.class},  includes = LockCacheModule.class,
     library = true)
   public static class TestPipelineManagerModule {
-
+    private static Logger LOG = LoggerFactory.getLogger(TestPipelineManagerModule.class);
     private final long expiry;
 
     public TestPipelineManagerModule(long expiry) {
@@ -76,8 +79,21 @@ public class TestStandalonePipelineManager {
 
     @Provides @Singleton
     public RuntimeInfo providesRuntimeInfo() {
-      return new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      RuntimeInfo runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestStandalonePipelineManager.class.getClassLoader()));
+
+      File targetDir = new File("target", UUID.randomUUID().toString());
+      targetDir.mkdir();
+      File absFile = new File(targetDir, "_cluster-manager");
+      try {
+        absFile.createNewFile();
+      } catch (IOException e) {
+        LOG.info("Got exception " + e, e);
+      }
+      System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LIBEXEC_DIR,
+        targetDir.getAbsolutePath());
+      absFile.setExecutable(true);
+      return runtimeInfo;
     }
 
     @Provides @Singleton
@@ -178,6 +194,7 @@ public class TestStandalonePipelineManager {
 
   @After
   public void tearDown() {
+    System.clearProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LIBEXEC_DIR);
     pipelineManager.stop();
     pipelineStoreTask.stop();
   }
@@ -260,6 +277,25 @@ public class TestStandalonePipelineManager {
     setUpManager(100);
     Thread.sleep(2000);
     assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
+  }
+
+  @Test
+  public void testChangeExecutionModes() throws Exception {
+    pipelineStoreTask.create("user1", "pipeline2", "blah");
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.STANDALONE);
+    Runner runner1 = pipelineManager.getRunner("user1", "pipeline2", "0");
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.CLUSTER);
+    Runner runner2 = pipelineManager.getRunner("user1", "pipeline2", "0");
+    assertTrue(runner1 != runner2);
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.CLUSTER);
+    pipelineManager.getRunner("user1", "pipeline2", "0");
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.STANDALONE);
+    try {
+      pipelineManager.getRunner("user1", "pipeline2", "0");
+      fail("Expected exception but didn't get any");
+    } catch (PipelineManagerException pme) {
+      // Expected
+    }
   }
 
 }

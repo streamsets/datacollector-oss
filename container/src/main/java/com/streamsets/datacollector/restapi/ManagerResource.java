@@ -11,6 +11,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.AlertInfoJson;
@@ -99,7 +100,7 @@ public class ManagerResource {
   @PermitAll
   public Response getPipelineStatus(
     @PathParam("pipelineName") String pipelineName,
-    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
+    @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
@@ -119,9 +120,9 @@ public class ManagerResource {
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
-    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException {
-    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException, PipelineManagerException {
     if(pipelineName != null) {
+      RestAPIUtils.injectPipelineInMDC(pipelineName);
       try {
         Runner runner = manager.getRunner(user, pipelineName, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
@@ -150,7 +151,7 @@ public class ManagerResource {
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
-    PipelineRunnerException, PipelineRuntimeException {
+    PipelineRunnerException, PipelineRuntimeException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     Runner runner = manager.getRunner(user, pipelineName, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
@@ -167,7 +168,7 @@ public class ManagerResource {
   public Response resetOffset(
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
-    PipelineRunnerException {
+    PipelineRunnerException, PipelineRunnerException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(name);
     Runner runner = manager.getRunner(user, name, rev);
     runner.resetOffset();
@@ -181,7 +182,7 @@ public class ManagerResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getMetrics(@PathParam("pipelineName") String pipelineName,
-                             @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException {
+                             @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
@@ -378,7 +379,7 @@ public class ManagerResource {
   public Response getHistory(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineStoreException {
+    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineStoreException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(name);
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
@@ -399,7 +400,7 @@ public class ManagerResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam ("sampleId") String sampleId,
     @QueryParam ("sampleSize") @DefaultValue("10") int sampleSize) throws
-    PipelineStoreException, PipelineRunnerException {
+    PipelineStoreException, PipelineRunnerException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     sampleSize = sampleSize > 100 ? 100 : sampleSize;
     Runner runner = manager.getRunner(user, pipelineName, rev);
@@ -440,7 +441,7 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("alertId") String alertId) throws PipelineStoreException,
-    PipelineRunnerException {
+    PipelineRunnerException, PipelineManagerException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       manager.getRunner(user, pipelineName, rev).deleteAlert(alertId)).build();

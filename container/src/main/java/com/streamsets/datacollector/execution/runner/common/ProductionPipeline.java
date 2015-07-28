@@ -54,7 +54,6 @@ public class ProductionPipeline {
   private void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
     throws PipelineRuntimeException {
     this.pipelineStatus = pipelineStatus;
-    LOG.info("Changing pipeline status from '{}' to '{}'", this.pipelineStatus, pipelineStatus);
     if (stateListener != null) {
       stateListener.stateChanged(pipelineStatus, message, attributes);
     }

@@ -10,6 +10,7 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.restapi.bean.CallbackInfoJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -50,7 +51,7 @@ public class ClusterResource {
   @POST
   @Path("/callback")
   @PermitAll
-  public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineStoreException {
+  public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineStoreException, PipelineManagerException {
     Runner runner = manager.getRunner(callbackInfoJson.getUser(), callbackInfoJson.getName(), callbackInfoJson.getRev());
     if (runner.getState().getStatus() != PipelineStatus.RUNNING) {
       throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not running, but is '{}'", callbackInfoJson.getName(), callbackInfoJson.getRev(),
@@ -69,7 +70,7 @@ public class ClusterResource {
     @QueryParam("rev") @DefaultValue("0") String rev,
     @QueryParam("sdcURL") String sdcURL,
     @Context final HttpServletResponse response,
-    @Context SecurityContext context) throws IOException, PipelineStoreException {
+    @Context SecurityContext context) throws IOException, PipelineStoreException, PipelineManagerException {
     Runner runner = manager.getRunner(user, name, rev);
     Collection<CallbackInfo> callbackInfoCollection = runner.getSlaveCallbackList();
     CallbackInfo slaveCallbackInfo = null;

@@ -11,7 +11,6 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
-import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -610,8 +609,8 @@ public class TestUtil {
     public RunnerProvider provideRunnerProvider() {
       return new RunnerProvider() {
         @Override
-        public Runner createRunner(String user, String name, String rev, PipelineConfigBean pipelineConfigBean,
-                                   ObjectGraph objectGraph) {
+        public Runner createRunner(String user, String name, String rev, ObjectGraph objectGraph,
+                                   ExecutionMode executionMode) {
           ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
           TestRunnerModule testRunnerModule = new TestRunnerModule(user, name, rev, plus);
           return testRunnerModule.provideRunner(new SafeScheduledExecutorService(1, "asyncExecutor"));

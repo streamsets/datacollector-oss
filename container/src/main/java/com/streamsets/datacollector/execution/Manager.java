@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.task.Task;
 
@@ -29,7 +30,7 @@ public interface Manager extends Task {
   public Previewer getPreview(String previewerId);
 
   // creates a runner for a given pipeline, the runner will have the current state of the pipeline.
-  public Runner getRunner(String user, String name, String rev) throws PipelineStoreException;
+  public Runner getRunner(String user, String name, String rev) throws PipelineStoreException, PipelineManagerException;
 
   public List<PipelineState> getPipelines() throws PipelineStoreException;
 

@@ -68,7 +68,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
       throw new IllegalStateException(Utils.format("Cannot create runner for '{}::{}', only one "
         + "runner allowed in a slave SDC", name, rev));
     }
-    runner = runnerProvider.createRunner(user, name, rev, null, objectGraph);
+    runner = runnerProvider.createRunner(user, name, rev, objectGraph, null);
     // Set the initial state
     pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, null, ExecutionMode.SLAVE);
     return runner;
