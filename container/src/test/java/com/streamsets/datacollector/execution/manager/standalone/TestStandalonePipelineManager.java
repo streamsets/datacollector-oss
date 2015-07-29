@@ -247,7 +247,7 @@ public class TestStandalonePipelineManager {
   public void testInitTask() throws Exception {
 
     pipelineStoreTask.create("user", "aaaa", "blah");
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.CONNECTING, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.CONNECTING, "blah", null, ExecutionMode.STANDALONE, null);
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
@@ -257,7 +257,7 @@ public class TestStandalonePipelineManager {
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
     assertTrue(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null);
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
@@ -276,7 +276,7 @@ public class TestStandalonePipelineManager {
   public void testExpiry() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "blah");
     Runner runner = pipelineManager.getRunner("user1", "aaaa", "0");
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null);
     assertEquals(PipelineStatus.RUNNING_ERROR, runner.getState().getStatus());
 
     pipelineManager.stop();
@@ -291,14 +291,14 @@ public class TestStandalonePipelineManager {
   @Test
   public void testChangeExecutionModes() throws Exception {
     pipelineStoreTask.create("user1", "pipeline2", "blah");
-    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.STANDALONE, null);
     Runner runner1 = pipelineManager.getRunner("user1", "pipeline2", "0");
-    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.EDITED, "blah", null, ExecutionMode.CLUSTER, null);
     Runner runner2 = pipelineManager.getRunner("user1", "pipeline2", "0");
     assertTrue(runner1 != runner2);
-    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.CLUSTER, null);
     pipelineManager.getRunner("user1", "pipeline2", "0");
-    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.STANDALONE);
+    pipelineStateStore.saveState("user", "pipeline2", "0", PipelineStatus.STARTING, "blah", null, ExecutionMode.STANDALONE, null);
     try {
       pipelineManager.getRunner("user1", "pipeline2", "0");
       fail("Expected exception but didn't get any");

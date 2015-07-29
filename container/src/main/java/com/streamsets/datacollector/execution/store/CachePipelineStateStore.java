@@ -70,9 +70,9 @@ public class CachePipelineStateStore implements PipelineStateStore {
 
   @Override
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-      Map<String, Object> attributes, ExecutionMode executionMode) throws PipelineStoreException {
+      Map<String, Object> attributes, ExecutionMode executionMode, String metrics) throws PipelineStoreException {
     PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, status, message, attributes,
-                                                               executionMode);
+                                                               executionMode, metrics);
     pipelineStateCache.put(getNameAndRevString(name, rev), pipelineState);
     return pipelineState;
   }

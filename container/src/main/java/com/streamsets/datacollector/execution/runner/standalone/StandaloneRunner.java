@@ -7,6 +7,8 @@ package com.streamsets.datacollector.execution.runner.standalone;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -42,6 +44,7 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRu
 import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.Observer;
@@ -411,13 +414,34 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
-  private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
+  private void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
-    PipelineState fromState = getState();
-    checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
-      fromState.getStatus(), toStatus);
-    PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
-      ExecutionMode.STANDALONE);
+    PipelineState fromState;
+    PipelineState pipelineState;
+    synchronized (this) {
+      fromState = getState();
+      checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
+        fromState.getStatus(), toStatus);
+
+      String metricString = null;
+      if (!toStatus.isActive() || toStatus == PipelineStatus.DISCONNECTED) {
+        Object metrics = getMetrics();
+        if (metrics != null) {
+          ObjectMapper objectMapper = ObjectMapperFactory.get();
+          try {
+            metricString = objectMapper.writeValueAsString(metrics);
+          } catch (JsonProcessingException e) {
+            throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
+          }
+        }
+        if (metricString == null) {
+          metricString = getState().getMetrics();
+        }
+      }
+      pipelineState =
+        pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
+          metricString);
+    }
     eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.STANDALONE);
   }
 

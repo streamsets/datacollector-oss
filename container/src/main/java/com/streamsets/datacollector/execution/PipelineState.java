@@ -27,4 +27,6 @@ public interface PipelineState {
 
   public ExecutionMode getExecutionMode();
 
+  public String getMetrics();
+
 }

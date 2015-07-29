@@ -76,7 +76,7 @@ public class TestProdPipelineRunnable {
     ProductionPipelineRunnable runnable =
       new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner)runner).getRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
         Collections.<Future<?>> emptyList());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null);
     runnable.run();
     // The source returns null offset because all the data from source was read
     Assert.assertNull(pipeline.getCommittedOffset());
@@ -89,7 +89,7 @@ public class TestProdPipelineRunnable {
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable
       (null, (StandaloneRunner) ((AsyncRunner)runner).getRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
       Collections.<Future<?>>emptyList());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null);
     //Stops after the first batch
     runnable.run();
     runnable.stop(false);
@@ -157,7 +157,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", runtimeInfo, MockStages.createStageLibrary(),
       runner, null).build(MockStages.createPipelineConfigurationSourceProcessorTarget());
 
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null);
 
     if(captureNextBatch) {
       runner.capture(SNAPSHOT_NAME, 1, 1);

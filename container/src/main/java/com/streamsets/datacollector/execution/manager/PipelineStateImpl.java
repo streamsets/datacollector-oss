@@ -22,10 +22,11 @@ public class PipelineStateImpl implements PipelineState {
   private final Map<String, Object> attributes;
   private final String user;
   private final ExecutionMode executionMode;
+  private final String metrics;
 
   @SuppressWarnings("unchecked")
   public PipelineStateImpl(String user, String name, String rev, PipelineStatus status, String message, long timeStamp,
-                        Map<String, Object> attributes, ExecutionMode executionMode) {
+                        Map<String, Object> attributes, ExecutionMode executionMode, String metrics) {
     this.name = name;
     this.rev = rev;
     this.user = user;
@@ -34,6 +35,7 @@ public class PipelineStateImpl implements PipelineState {
     this.timeStamp = timeStamp;
     this.attributes = (Map) ((attributes != null) ? new HashMap<>(attributes) : new HashMap<>());
     this.executionMode = executionMode;
+    this.metrics = metrics;
   }
 
   @Override
@@ -80,5 +82,10 @@ public class PipelineStateImpl implements PipelineState {
   @Override
   public ExecutionMode getExecutionMode() {
     return executionMode;
+  }
+
+  @Override
+  public String getMetrics() {
+    return metrics;
   }
 }

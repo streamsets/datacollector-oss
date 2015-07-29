@@ -22,7 +22,7 @@ public class TestSlavePipelineStateStore {
   public void testSaveState() throws Exception {
     SlavePipelineStateStore slavePipelineStateStore = new SlavePipelineStateStore();
     slavePipelineStateStore.saveState("user", "pipe1", "1", PipelineStatus.EDITED, "msg", new HashMap<String, Object>(),
-      ExecutionMode.STANDALONE);
+      ExecutionMode.STANDALONE, null);
     assertEquals(PipelineStatus.EDITED, slavePipelineStateStore.getState("pipe1", "1").getStatus());
     try {
       slavePipelineStateStore.getState("blah", "blah");
@@ -33,14 +33,14 @@ public class TestSlavePipelineStateStore {
 
     try {
       slavePipelineStateStore.saveState("user", "pipe2", "1", PipelineStatus.EDITED, "msg", new HashMap<String, Object>(),
-        ExecutionMode.STANDALONE);
+        ExecutionMode.STANDALONE, null);
       fail("Expected exception but didn't get any");
     } catch (PipelineStoreException ex) {
       // expected
     }
     try {
       slavePipelineStateStore.saveState("user", "pipe1", "2", PipelineStatus.EDITED, "msg", new HashMap<String, Object>(),
-        ExecutionMode.STANDALONE);
+        ExecutionMode.STANDALONE, null);
       fail("Expected exception but didn't get any");
     } catch (PipelineStoreException ex) {
       // expected

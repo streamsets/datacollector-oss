@@ -6,14 +6,12 @@
 package com.streamsets.datacollector.execution.runner.cluster;
 
 import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Strings;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
@@ -35,6 +33,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineRunnerExcept
 import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -414,11 +413,31 @@ public class ClusterRunner extends AbstractRunner {
     if (fromState.getStatus() == toStatus) {
       LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", fromState.getStatus()));
     } else {
-      checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
-        fromState.getStatus(), toStatus);
-      PipelineState pipelineState = pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes,
-        ExecutionMode.CLUSTER);
-      if(eventListenerManager != null) {
+      PipelineState pipelineState;
+      synchronized (this) {
+        fromState = getState();
+        checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
+          fromState.getStatus(), toStatus);
+        ObjectMapper objectMapper = ObjectMapperFactory.get();
+        String metricsJSONStr = null;
+        if (!toStatus.isActive() || toStatus == PipelineStatus.DISCONNECTED) {
+          Object metrics = getMetrics();
+          if (metrics != null) {
+            try {
+              metricsJSONStr = objectMapper.writer().writeValueAsString(metrics);
+            } catch (JsonProcessingException e) {
+              throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
+            }
+          }
+          if (metricsJSONStr == null) {
+            metricsJSONStr = getState().getMetrics();
+          }
+        }
+        pipelineState =
+          pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.CLUSTER,
+            metricsJSONStr);
+      }
+      if (eventListenerManager != null) {
         eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.CLUSTER);
       }
     }

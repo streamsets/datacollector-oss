@@ -25,10 +25,11 @@ public class PipelineStateJson {
     @JsonProperty("message") String message,
     @JsonProperty("timeStamp") long timeStamp,
     @JsonProperty("attributes") Map<String, Object> attributes,
-    @JsonProperty("executionMode") ExecutionModeJson executionModeJson) {
+    @JsonProperty("executionMode") ExecutionModeJson executionModeJson,
+    @JsonProperty("metrics") String metrics) {
     pipelineState = new com.streamsets.datacollector.execution.manager.PipelineStateImpl(user, name, rev,
       BeanHelper.unwrapState(statusJson), message, timeStamp, attributes,
-      BeanHelper.unwrapExecutionMode(executionModeJson));
+      BeanHelper.unwrapExecutionMode(executionModeJson), metrics);
   }
 
   public PipelineStateJson(com.streamsets.datacollector.execution.PipelineState pipelineState) {
@@ -65,6 +66,10 @@ public class PipelineStateJson {
 
   public ExecutionModeJson getExecutionMode() {
     return BeanHelper.wrapExecutionMode(pipelineState.getExecutionMode());
+  }
+
+  public String getMetrics() {
+    return pipelineState.getMetrics();
   }
 
   @JsonIgnore

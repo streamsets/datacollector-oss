@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -143,24 +144,24 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.EDITED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER, null);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER, null);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore
-      .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER);
+      .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER, null);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER, null);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER, null);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING_ERROR, null, attributes,
-      ExecutionMode.CLUSTER);
+      ExecutionMode.CLUSTER, null);
     try {
       clusterRunner.prepareForDataCollectorStart();
       fail("Expected exception but didn't get any");
@@ -169,8 +170,26 @@ public class TestClusterRunner {
     }
   }
 
+  @Test
+  public void testMetricsInStore() throws Exception {
+    eventListenerManager = new EventListenerManager();
+    MyClusterRunner clusterRunner =
+      new MyClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
+        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
+    assertEquals("My_dummy_metrics", clusterRunner.getMetrics().toString());
+    assertNull(clusterRunner.getState().getMetrics());
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER,
+      null);
+    clusterRunner.prepareForDataCollectorStart();
+    assertEquals("\"My_dummy_metrics\"", clusterRunner.getState().getMetrics());
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes,
+      ExecutionMode.CLUSTER, null);
+    clusterRunner.prepareForStart();
+    assertNull(clusterRunner.getState().getMetrics());
+  }
+
   private void setState(PipelineStatus status) throws Exception {
-    pipelineStateStore.saveState("admin", NAME, "0", status, null, attributes, ExecutionMode.CLUSTER);
+    pipelineStateStore.saveState("admin", NAME, "0", status, null, attributes, ExecutionMode.CLUSTER, null);
   }
 
   @Test
@@ -337,7 +356,7 @@ public class TestClusterRunner {
   @Test
   public void tesOnDataCollectorStartUnsupportedPipeline1() throws Exception {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.STARTING, null,
-      attributes, ExecutionMode.CLUSTER);
+      attributes, ExecutionMode.CLUSTER, null);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
@@ -353,7 +372,7 @@ public class TestClusterRunner {
   @Test
   public void tesOnDataCollectorStartUnsupportedPipeline2() throws Exception {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.RUNNING, null,
-      attributes, ExecutionMode.CLUSTER);
+      attributes, ExecutionMode.CLUSTER, null);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
@@ -443,6 +462,31 @@ public class TestClusterRunner {
     return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
       pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
       new ResourceManager(conf), eventListenerManager, "myToken"), new SafeScheduledExecutorService(1, "runner"));
+  }
+
+  static class MyClusterRunner extends ClusterRunner {
+
+    private static final boolean METRICS_TEST = true;
+
+    MyClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
+      PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
+      SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager, EventListenerManager
+      eventListenerManager) {
+      super(name, rev, user, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
+        clusterHelper, resourceManager, eventListenerManager, "myToken");
+    }
+
+    @Override
+    public Object getMetrics() {
+      String metrics = "My_dummy_metrics";
+      if (METRICS_TEST) {
+        Object obj;
+        return obj = metrics;
+      } else {
+        return getMetrics();
+      }
+    }
+
   }
 
 }
