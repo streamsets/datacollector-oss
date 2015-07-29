@@ -28,6 +28,14 @@ public enum Errors implements ErrorCode {
   HADOOPFS_16("Cannot generate splits, directory '{}'" + " might not have any files" ),
   HADOOPFS_17("Cannot validate kerberos configuration: {}"),
   HADOOPFS_18("No directories specified"),
+  HADOOPFS_22("Invalid URI '{}': {}"),
+  HADOOPFS_25("Hadoop configuration directory '{}' under SDC resources does not exist"),
+  HADOOPFS_26("Hadoop configuration directory '{}' path under  SDC resources is not a directory"),
+  HADOOPFS_27("Hadoop configuration file '{}/{}' under SDC resources is not a file"),
+  HADOOPFS_28("Could not resolve the default Kerberos realm, you must set the 'dfs.namenode.kerberos.principal' " +
+    "property to the HDFS principal name: {}"),
+
+
   ;
   private final String msg;
 

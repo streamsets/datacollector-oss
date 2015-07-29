@@ -38,6 +38,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -145,7 +146,7 @@ public class ClusterRunner extends AbstractRunner {
     this.user = user;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
-      this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
+      this.clusterHelper = new ClusterHelper(runtimeInfo, null, tempDir);
     } else {
       this.clusterHelper = clusterHelper;
     }
@@ -167,7 +168,8 @@ public class ClusterRunner extends AbstractRunner {
     if (!this.tempDir.isDirectory()) {
       throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
     }
-    this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
+    this.clusterHelper = new ClusterHelper(runtimeInfo, new SecurityConfiguration(runtimeInfo,
+      configuration), tempDir);
     if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
       MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
       metricsEventRunnable = this.objectGraph.get(MetricsEventRunnable.class);
@@ -484,7 +486,7 @@ public class ClusterRunner extends AbstractRunner {
     try {
       int parallelism = clusterSource.getParallelism();
       String clusterSourceName  = clusterSource.getName();
-      if(parallelism < 1) {
+      if (parallelism < 1) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
       }
       return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(),
@@ -578,15 +580,15 @@ public class ClusterRunner extends AbstractRunner {
       clusterPipelineState = clusterHelper.getStatus(appState, pipelineConf);
       connected = true;
     } catch (IOException ex) {
-      msg = "IO Error while trying to check the status of pipeline" + ex;
+      msg = "IO Error while trying to check the status of pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     } catch (TimeoutException ex) {
-      msg = "Timedout while trying to check the status of pipeline" + ex;
+      msg = "Timedout while trying to check the status of pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     } catch (Exception ex) {
-      msg = "Error getting status of pipeline" + ex;
+      msg = "Error getting status of pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     }
@@ -631,7 +633,9 @@ public class ClusterRunner extends AbstractRunner {
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);
       for (Map.Entry<String, String> configsToShip : clusterSourceInfo.getConfigsToShip().entrySet()) {
-        LOG.info("Config to ship " + configsToShip.getKey() + ":" + configsToShip.getValue());
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Config to ship " + configsToShip.getKey() + " = " + configsToShip.getValue());
+        }
         sourceInfo.put(configsToShip.getKey(), configsToShip.getValue());
       }
       // This is needed for UI
@@ -648,15 +652,15 @@ public class ClusterRunner extends AbstractRunner {
       validateAndSetStateTransition(PipelineStatus.RUNNING, "Pipeline in cluster is running", attributes);
       scheduleRunnable(pipelineConf);
     } catch (IOException ex) {
-      msg = "IO Error while trying to start the pipeline" + ex;
+      msg = "IO Error while trying to start the pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.START_ERROR, msg);
     } catch (TimeoutException ex) {
-      msg = "Timedout while trying to start the pipeline" + ex;
+      msg = "Timedout while trying to start the pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.START_ERROR, msg);
     } catch (Exception ex) {
-      msg = "Unexpected error starting pipeline" + ex;
+      msg = "Unexpected error starting pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.START_ERROR, msg);
     }
@@ -696,15 +700,15 @@ public class ClusterRunner extends AbstractRunner {
       clusterHelper.kill(applicationState, pipelineConf);
       stopped = true;
     } catch (IOException ex) {
-      msg = "IO Error while trying to stop the pipeline" + ex;
+      msg = "IO Error while trying to stop the pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     } catch (TimeoutException ex) {
-      msg = "Timedout while trying to stop the pipeline" + ex;
+      msg = "Timedout while trying to stop the pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     } catch (Exception ex) {
-      msg = "Unexpected error stopping pipeline" + ex;
+      msg = "Unexpected error stopping pipeline: " + ex;
       LOG.error(msg, ex);
       validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, msg);
     }

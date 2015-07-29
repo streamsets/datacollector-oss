@@ -174,7 +174,7 @@ public class SystemProcessImpl implements SystemProcess {
   }
 
   @Override
-  public List<String> getOutput() {
+  public Collection<String> getOutput() {
     if (outputTailer != null) {
       return outputTailer.getData();
     }

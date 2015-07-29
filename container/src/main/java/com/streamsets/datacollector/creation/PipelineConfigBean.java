@@ -134,40 +134,6 @@ public class PipelineConfigBean implements Stage {
 
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Kerberos Authentication",
-    defaultValue = "false",
-    displayPosition = 30,
-    group = "CLUSTER",
-    dependsOn = "executionMode",
-    triggeredByValue = "CLUSTER"
-  )
-  public boolean clusterKerberos;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Kerberos Principal",
-    displayPosition = 40,
-    group = "CLUSTER",
-    dependsOn = "clusterKerberos",
-    triggeredByValue = "true"
-  )
-  public String kerberosPrincipal;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Kerberos Keytab (file)",
-    displayPosition = 50,
-    group = "CLUSTER",
-    dependsOn = "clusterKerberos",
-    triggeredByValue = "true"
-  )
-  public String kerberosKeytab;
-
-  @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
     label = "Launcher ENV",

@@ -342,7 +342,7 @@ public class HdfsTarget extends RecordTarget {
       loginUgi = UserGroupInformation.getLoginUser();
 
       if (hdfsKerberos) {
-        logMessage.append("Using Kerberos: ");
+        logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
                                                     loginUgi.getAuthenticationMethod(),

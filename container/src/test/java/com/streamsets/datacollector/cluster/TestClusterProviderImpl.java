@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -123,6 +124,21 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
         new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+  }
+
+  @Test
+  public void testKerberosError() throws Throwable {
+    MockSystemProcess.output.add("Caused by: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]");
+    MockSystemProcess.output.add("\tat com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)");
+    try {
+      sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
+      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId();
+      Assert.fail("Expected IO Exception");
+    } catch (IOException ex) {
+      Assert.assertTrue("Incorrect message: " + ex, ex.getMessage().contains("No valid credentials provided"));
+    }
   }
 
   @Test

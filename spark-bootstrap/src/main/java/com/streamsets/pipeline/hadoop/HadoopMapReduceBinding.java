@@ -34,10 +34,10 @@ public class HadoopMapReduceBinding implements ClusterBinding {
   }
 
   private String getProperty(String name) {
-    Utils.checkArgumentNotNull(properties.getProperty(name),
-      "Property " + name + " cannot be null");
-    LOG.info("Value of property: " + name + " is " + properties.getProperty(name).trim());
-    return properties.getProperty(name).trim();
+    String val = Utils.checkArgumentNotNull(properties.getProperty(name),
+      "Property " + name + " cannot be null").trim();
+    LOG.info("Value of property: " + name + " is " + val);
+    return val;
   }
 
   @Override
@@ -94,6 +94,8 @@ public class HadoopMapReduceBinding implements ClusterBinding {
 
   @Override
   public void close() throws Exception {
-    job.killJob();
+    if (job != null) {
+      job.killJob();
+    }
   }
 }

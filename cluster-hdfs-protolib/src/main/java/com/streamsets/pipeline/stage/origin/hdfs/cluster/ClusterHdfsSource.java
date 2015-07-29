@@ -5,16 +5,19 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
@@ -24,8 +27,11 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.RawLocalFileSystem;
+import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.security.UserGroupInformation;
+import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +56,8 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+
+import javax.security.auth.Subject;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
@@ -77,19 +85,18 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private DataParserFactory parserFactory;
   private boolean produceSingleRecordPerMessage;
   private Map<String, String> hdfsConfigs;
-  private boolean kerberosAuth;
-  private String kerberosPrincipal;
-  private String kerberosKeytab;
-  private UserGroupInformation ugi;
+  private boolean hdfsKerberos;
+  private String hdfsUser;
+  private String hadoopConfDir;
+  private UserGroupInformation loginUgi;
   private final boolean recursive;
   private long recordsProduced;
-
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
     List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition, String grokPattern,
     boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen, boolean produceSingleRecordPerMessage,
-    boolean kerberosAuth, String kerberosPrincipal, String kerberosKeytab) {
+    boolean hdfsKerberos, String hdfsUser, String hadoopConfDir) {
     controlChannel = new ControlChannel();
     dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
@@ -112,65 +119,25 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.log4jCustomLogFormat = log4jCustomLogFormat;
     this.logMaxObjectLen = logMaxObjectLen;
     this.produceSingleRecordPerMessage = produceSingleRecordPerMessage;
-    this.kerberosAuth = kerberosAuth;
-    this.kerberosPrincipal = kerberosPrincipal;
-    this.kerberosKeytab = kerberosKeytab;
+    this.hdfsKerberos = hdfsKerberos;
+    this.hdfsUser = hdfsUser;
+    this.hadoopConfDir = hadoopConfDir;
     this.recordsProduced = 0;
   }
-
   @Override
   public List<ConfigIssue> init() {
-    hadoopConf = new Configuration();
+    List<ConfigIssue> issues = super.init();
+    validateHadoopFS(issues);
     // This is for getting no of splits - no of executors
     hadoopConf.set(FileInputFormat.LIST_STATUS_NUM_THREADS, "5"); // Per Hive-on-Spark
     hadoopConf.set(FileInputFormat.SPLIT_MAXSIZE, String.valueOf(750000000)); // Per Hive-on-Spark
     for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
       hadoopConf.set(config.getKey(), config.getValue());
     }
-    List<ConfigIssue> issues = super.init();
-    if (hdfsUri == null || hdfsUri.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_00));
-    } else {
-      try {
-        validateKerberosConfigs(issues);
-      } catch (IOException ex) {
-        LOG.warn("Error validating kerberos configuration: " + ex, ex);
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_17,
-          ex.toString(), ex));
-      }
-      if (hdfsUri.contains("://")) {
-        try {
-          URI hdfsURI = new URI(hdfsUri);
-          if (!"hdfs".equals(hdfsURI.getScheme())) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_12,
-              hdfsURI.getScheme()));
-          }
-          String authority = hdfsURI.getAuthority();
-          if (authority == null) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_13,
-              hdfsUri));
-          } else {
-            String[] hostPort = authority.split(":");
-            if (hostPort.length != 2) {
-              issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_14,
-                authority));
-            }
-          }
-          hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY,
-            hdfsURI.getScheme() + "://" + hdfsURI.getAuthority());
-        } catch (Exception ex) {
-          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_03,
-            hdfsUri, ex.toString(), ex));
-        }
-      } else {
-        issues.add(getContext()
-          .createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_02, hdfsUri));
-      }
-    }
+    List<Path> hdfsDirPaths = new ArrayList<>();
     if (hdfsDirLocations == null || hdfsDirLocations.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_18));
     } else if (issues.isEmpty()) {
-      List<Path> hdfsDirPaths = new ArrayList<>();
       for (String hdfsDirLocation : hdfsDirLocations) {
         try {
           FileSystem fs = getFileSystemForInitDestroy();
@@ -200,11 +167,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             hdfsDirLocation, ioe.toString(), ioe));
         }
       }
-      if (!issues.isEmpty()) {
-        hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirPaths, ","));
-        hadoopConf.set(FileInputFormat.INPUT_DIR_RECURSIVE, Boolean.toString(recursive));
-      }
     }
+    hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirPaths, ","));
+    hadoopConf.set(FileInputFormat.INPUT_DIR_RECURSIVE, Boolean.toString(recursive));
     switch (dataFormat) {
       case JSON:
         if (jsonMaxObjectLen < 1) {
@@ -228,6 +193,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         issues.add(getContext().createConfigIssue(Groups.LOG.name(), "dataFormat", Errors.HADOOPFS_06, dataFormat));
     }
     validateParserFactoryConfigs(issues);
+    LOG.info("Issues: " + issues);
     return issues;
   }
 
@@ -236,11 +202,133 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return hadoopConf;
   }
 
+  Configuration getHadoopConfiguration(List<ConfigIssue> issues) {
+    Configuration conf = new Configuration();
+    if (hdfsKerberos) {
+      conf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+        UserGroupInformation.AuthenticationMethod.KERBEROS.name());
+      try {
+        conf.set(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY, "hdfs/_HOST@" + KerberosUtil.getDefaultRealm());
+      } catch (Exception ex) {
+        if (!hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY)) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
+            ex.getMessage()));
+        }
+      }
+    }
+    if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
+      File hadoopConfigDir = new File(hadoopConfDir);
+      if (!hadoopConfigDir.isAbsolute()) {
+        hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
+      }
+      if (!hadoopConfigDir.exists()) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
+          hadoopConfDir));
+      } else if (!hadoopConfigDir.isDirectory()) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
+          hadoopConfDir));
+      } else {
+        File coreSite = new File(hadoopConfigDir, "core-site.xml");
+        if (coreSite.exists()) {
+          if (!coreSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+              hadoopConfDir, "core-site.xml"));
+          }
+          conf.addResource(new Path(coreSite.getAbsolutePath()));
+        }
+        File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
+        if (hdfsSite.exists()) {
+          if (!hdfsSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+              hadoopConfDir, "hdfs-site.xml"));
+          }
+          conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+        }
+      }
+    }
+    for (Map.Entry<String, String> config : hdfsConfigs.entrySet()) {
+      conf.set(config.getKey(), config.getValue());
+    }
+    return conf;
+  }
+
+
+  private void validateHadoopFS(List<ConfigIssue> issues) {
+    boolean validHapoopFsUri = true;
+    if (hdfsUri.contains("://")) {
+      try {
+        URI uri = new URI(hdfsUri);
+        if (!"hdfs".equals(uri.getScheme())) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_12, hdfsUri,
+            uri.getScheme()));
+          validHapoopFsUri = false;
+        } else if (uri.getAuthority() == null) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_13, hdfsUri));
+          validHapoopFsUri = false;
+        } else {
+          String authority = uri.getAuthority();
+          String[] hostPort = authority.split(":");
+          if (hostPort.length != 2) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_14, authority));
+          }
+        }
+      } catch (Exception ex) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
+          ex.getMessage(), ex));
+        validHapoopFsUri = false;
+      }
+    } else {
+      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_02, hdfsUri));
+      validHapoopFsUri = false;
+    }
+
+    StringBuilder logMessage = new StringBuilder();
+    try {
+      hadoopConf = getHadoopConfiguration(issues);
+
+      hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
+
+      // forcing UGI to initialize with the security settings from the stage
+      UserGroupInformation.setConfiguration(hadoopConf);
+
+      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
+      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
+      // we now extract the UGI we just logged in as.
+      loginUgi = UserGroupInformation.getLoginUser();
+
+      if (hdfsKerberos) {
+        logMessage.append("Using Kerberos");
+        if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
+            loginUgi.getAuthenticationMethod(),
+            UserGroupInformation.AuthenticationMethod.KERBEROS));
+        }
+      } else {
+        logMessage.append("Using Simple");
+        hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
+          UserGroupInformation.AuthenticationMethod.SIMPLE.name());
+      }
+      if (validHapoopFsUri) {
+        getUGI().doAs(new PrivilegedExceptionAction<Void>() {
+          @Override
+          public Void run() throws Exception {
+            try (FileSystem fs = getFileSystemForInitDestroy()) { //to trigger the close
+            }
+            return null;
+          }
+        });
+      }
+    } catch (Exception ex) {
+      LOG.info("Error connecting to FileSystem: " + ex, ex);
+      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_11, hdfsUri,
+        String.valueOf(ex), ex));
+    }
+    LOG.info("Authentication Config: " + logMessage);
+  }
+
   private FileSystem getFileSystemForInitDestroy() throws IOException {
     try {
-      // we need to relogin if the TGT is expiring
-      ugi.checkTGTAndReloginFromKeytab();
-      return ugi.doAs(new PrivilegedExceptionAction<FileSystem>() {
+      return getUGI().doAs(new PrivilegedExceptionAction<FileSystem>() {
         @Override
         public FileSystem run() throws Exception {
           return FileSystem.get(new URI(hdfsUri), hadoopConf);
@@ -253,23 +341,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
   }
 
-  private void validateKerberosConfigs(List<ConfigIssue> issues) throws IOException {
-    if (kerberosAuth) {
-      LOG.info("Using Kerberos Authentication");
-      hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-        UserGroupInformation.AuthenticationMethod.KERBEROS.name());
-      UserGroupInformation.setConfiguration(hadoopConf);
-      ugi = UserGroupInformation.loginUserFromKeytabAndReturnUGI(kerberosPrincipal, kerberosKeytab);
-      if (ugi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
-          ugi.getAuthenticationMethod(), UserGroupInformation.AuthenticationMethod.KERBEROS));
-      }
-    } else {
-      LOG.info("Using Simple Authentication");
-      hadoopConf.set(CommonConfigurationKeys.HADOOP_SECURITY_AUTHENTICATION,
-        UserGroupInformation.AuthenticationMethod.SIMPLE.name());
-      ugi = UserGroupInformation.getLoginUser();
-    }
+  private UserGroupInformation getUGI() {
+    return (hdfsUser == null || hdfsUser.isEmpty()) ? loginUgi : UserGroupInformation.createProxyUser(hdfsUser, loginUgi);
   }
 
   private void validateParserFactoryConfigs(List<ConfigIssue> issues) {
@@ -413,7 +486,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @Override
   public int getParallelism() throws IOException {
-    return 0; // not used as MR calculates splits
+    return 1; // not used as MR calculates splits
   }
 
   @Override
@@ -430,9 +503,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @Override
   public Map<String, String> getConfigsToShip() {
     Map<String, String> configsToShip = new HashMap<String, String>();
-    configsToShip.put(FileInputFormat.LIST_STATUS_NUM_THREADS, hadoopConf.get(FileInputFormat.LIST_STATUS_NUM_THREADS));
-    configsToShip.put(FileInputFormat.SPLIT_MAXSIZE, hadoopConf.get(FileInputFormat.SPLIT_MAXSIZE));
-    configsToShip.put(FileInputFormat.INPUT_DIR_RECURSIVE, hadoopConf.get(FileInputFormat.INPUT_DIR_RECURSIVE));
+    // results in the settings in an absolute resources directory such
+    // as /etc/hadoop/conf/ getting shipped to the cluster
+    for (Map.Entry<String, String> entry : hadoopConf) {
+      configsToShip.put(entry.getKey(), entry.getValue());
+    }
     return configsToShip;
   }
 

@@ -27,6 +27,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.security.SecurityConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -74,6 +75,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClusterProviderImpl implements ClusterProvider {
+  static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
+  static final Pattern NO_VALID_CREDENTIALS = Pattern.compile("(No valid credentials provided.*)");
   private static final String CLUSTER_TYPE = "CLUSTER_TYPE";
   private static final String CLUSTER_TYPE_SPARK = "spark";
   private static final String CLUSTER_TYPE_MAPREDUCE = "mr";
@@ -83,19 +86,24 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
   private static final String ALL_STAGES = "*";
-  static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
+  /**
+   * Only null in the case of tests
+   */
+  private final @Nullable SecurityConfiguration securityConfiguration;
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterProviderImpl.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   @VisibleForTesting
   ClusterProviderImpl() {
-    this(null);
+    this(null, null);
   }
-  public ClusterProviderImpl(RuntimeInfo runtimeInfo) {
+
+  public ClusterProviderImpl(RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration) {
     this.runtimeInfo = runtimeInfo;
+    this.securityConfiguration = securityConfiguration;
     this.yarnStatusParser = new YARNStatusParser();
   }
 
@@ -104,7 +112,7 @@ public class ClusterProviderImpl implements ClusterProvider {
                     String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
-    addKerberosConfiguration(environment, pipelineConfiguration);
+    addKerberosConfiguration(environment);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
@@ -141,7 +149,7 @@ public class ClusterProviderImpl implements ClusterProvider {
 
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
-    addKerberosConfiguration(environment, pipelineConfiguration);
+    addKerberosConfiguration(environment);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
@@ -166,9 +174,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs, Map<String, String> sourceInfo,
-    String clusterToken)
-    throws IOException{
+  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs,
+                                 Map<String, String> sourceInfo, String clusterToken) throws IOException{
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
     Properties sdcProperties = new Properties();
@@ -184,15 +191,29 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
 
       for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
-        sdcProperties.setProperty(entry.getKey(), entry.getValue());
+        try {
+          sdcProperties.setProperty(entry.getKey(), entry.getValue());
+        } catch (NullPointerException ex) {
+          // we've had bugs where a key or value was null in the past
+          String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
+          throw new NullPointerException(msg);
+        }
       }
-
       for (Map.Entry<String, String> entry : sourceInfo.entrySet()) {
-        sdcProperties.setProperty(entry.getKey(), entry.getValue());
+        try {
+          sdcProperties.setProperty(entry.getKey(), entry.getValue());
+        } catch (NullPointerException ex) {
+          // we've had bugs where a key or value was null in the past
+          String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
+          throw new NullPointerException(msg);
+        }
       }
 
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
       sdcProperties.store(sdcOutStream, null);
+      LOG.debug("sourceConfigs = {}", sourceConfigs);
+      LOG.debug("sourceInfo = {}", sourceInfo);
+      LOG.debug("sdcProperties = {}", sdcProperties);
       sdcOutStream.flush();
       sdcOutStream.close();
     } finally {
@@ -220,15 +241,13 @@ public class ClusterProviderImpl implements ClusterProvider {
     return candidates[0];
   }
 
-  private void addKerberosConfiguration(Map<String, String> environment, PipelineConfiguration pipelineConfiguration) {
-    List<Issue> errors = new ArrayList<>();
-    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
-    Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
-
-    environment.put(KERBEROS_AUTH, String.valueOf(config.clusterKerberos));
-    if (config.clusterKerberos) {
-      environment.put(KERBEROS_PRINCIPAL, config.kerberosPrincipal);
-      environment.put(KERBEROS_KEYTAB, config.kerberosKeytab);
+  private void addKerberosConfiguration(Map<String, String> environment) {
+    if (securityConfiguration != null) {
+      environment.put(KERBEROS_AUTH, String.valueOf(securityConfiguration.isKerberosEnabled()));
+      if (securityConfiguration.isKerberosEnabled()) {
+        environment.put(KERBEROS_PRINCIPAL, securityConfiguration.getKerberosPrincipal());
+        environment.put(KERBEROS_KEYTAB, securityConfiguration.getKerberosKeytab());
+      }
     }
   }
 
@@ -493,7 +512,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         IOUtils.closeQuietly(clusterLog4jProperties);
       }
     }
-    addKerberosConfiguration(environment, pipelineConfiguration);
+    addKerberosConfiguration(environment);
     errors.clear();
     PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors);
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
@@ -537,11 +556,20 @@ public class ClusterProviderImpl implements ClusterProvider {
         if (!ThreadUtil.sleep(1000)) {
           throw new IllegalStateException("Interrupted while waiting for pipeline to start");
         }
-        for (String line : process.getOutput()) {
+        List<String> lines = new ArrayList<>();
+        lines.addAll(process.getOutput());
+        lines.addAll(process.getError());
+        for (String line : lines) {
           Matcher m = YARN_APPLICATION_ID_REGEX.matcher(line);
           if (m.find()) {
             LOG.info("Found application id " + m.group(1));
             applicationIds.add(m.group(1));
+          }
+          m = NO_VALID_CREDENTIALS.matcher(line);
+          if (m.find()) {
+            LOG.info("Kerberos Error found on line: " + line);
+            String msg = "Kerberos Error: " + m.group(1);
+            throw new IOException(msg);
           }
         }
         if (elapsedSeconds > timeToWaitForFailure) {

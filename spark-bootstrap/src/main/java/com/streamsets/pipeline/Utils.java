@@ -14,9 +14,10 @@ public class Utils {
     return value;
   }
 
-  public static void checkArgumentNotNull(Object arg, Object msg) {
+  public static <T> T  checkArgumentNotNull(T arg, Object msg) {
     if (arg == null) {
       throw new IllegalArgumentException((msg != null) ? msg.toString() : "");
     }
+    return arg;
   }
 }

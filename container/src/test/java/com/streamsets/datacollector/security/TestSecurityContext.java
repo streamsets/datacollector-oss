@@ -58,10 +58,10 @@ public class TestSecurityContext {
   @Test
   public void testPrincipalResolution() {
     Configuration conf = new Configuration();
-    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
-    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, "test.keytab");
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, "test.keytab");
 
-    String hostname = SecurityContext.getLocalHostName();
+    String hostname = SecurityConfiguration.getLocalHostName();
 
     Map<String, String> principals = ImmutableMap.<String, String>builder()
                                                  .put("foo", "foo")
@@ -73,29 +73,29 @@ public class TestSecurityContext {
                                                  .put("foo/0.0.0.0@REALM", "foo/" + hostname + "@REALM").build();
 
     for (Map.Entry<String, String> entry : principals.entrySet()) {
-      conf.set(SecurityContext.KERBEROS_PRINCIPAL_KEY, entry.getKey());
+      conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, entry.getKey());
       SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
-      Assert.assertEquals(entry.getValue(), context.getKerberosPrincipal());
+      Assert.assertEquals(entry.getValue(), context.getSecurityConfiguration().getKerberosPrincipal());
     }
   }
 
   @Test(expected = RuntimeException.class)
   public void invalidLogin() throws Exception {
     Configuration conf = new Configuration();
-    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
-    conf.set(SecurityContext.KERBEROS_PRINCIPAL_KEY, "foo");
-    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, "foo.keytab");
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "foo");
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, "foo.keytab");
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
-    Assert.assertTrue(context.isKerberosEnabled());
+    Assert.assertTrue(context.getSecurityConfiguration().isKerberosEnabled());
     context.login();
   }
 
   @Test
   public void notLoggedIn() throws Exception {
     Configuration conf = new Configuration();
-    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
-    conf.set(SecurityContext.KERBEROS_PRINCIPAL_KEY, "foo");
-    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, "test.keytab");
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "foo");
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, "test.keytab");
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
     Assert.assertNull(context.getSubject());
   }
@@ -103,9 +103,9 @@ public class TestSecurityContext {
   @Test
   public void loginKerberosDisabled() throws Exception {
     Configuration conf = new Configuration();
-    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, false);
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, false);
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
-    Assert.assertFalse(context.isKerberosEnabled());
+    Assert.assertFalse(context.getSecurityConfiguration().isKerberosEnabled());
     context.login();
     Subject subject = context.getSubject();
     Assert.assertNotNull(subject);
@@ -115,11 +115,11 @@ public class TestSecurityContext {
 
   private void loginFromKeytab(String keytab) throws Exception {
     Configuration conf = new Configuration();
-    conf.set(SecurityContext.KERBEROS_ENABLED_KEY, true);
-    conf.set(SecurityContext.KERBEROS_PRINCIPAL_KEY, "foo");
-    conf.set(SecurityContext.KERBEROS_KEYTAB_KEY, keytab);
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, true);
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, "foo");
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, keytab);
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
-    Assert.assertTrue(context.isKerberosEnabled());
+    Assert.assertTrue(context.getSecurityConfiguration().isKerberosEnabled());
     context.login();
     Subject subject = context.getSubject();
     Assert.assertNotNull(subject);

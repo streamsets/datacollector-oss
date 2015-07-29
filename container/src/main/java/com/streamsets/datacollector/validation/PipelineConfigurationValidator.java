@@ -122,7 +122,6 @@ public class PipelineConfigurationValidator {
       canPreview &= validatePipelineLanes();
       canPreview &= validateErrorStage();
       canPreview &= validateStagesExecutionMode(pipelineConfiguration.getStages(), false);
-      canPreview &= validateClusterModeConfig();
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -180,24 +179,6 @@ public class PipelineConfigurationValidator {
     }
     issues.addAll(upgradeIssues);
     return upgradeIssues.isEmpty();
-  }
-
-  private boolean validateClusterModeConfig() {
-    boolean canPreview = true;
-    if (pipelineBean != null) {
-      PipelineConfigBean configs = pipelineBean.getConfig();
-      if (configs.executionMode == ExecutionMode.CLUSTER && configs.clusterKerberos &&
-          !Boolean.getBoolean(RuntimeInfo.TRANSIENT_ENVIRONMENT)) {
-        File keyTab = new File(configs.kerberosKeytab);
-        if (!keyTab.isFile() || !keyTab.canRead()) {
-          canPreview = false;
-          issues.add(IssueCreator.getPipeline().create(PipelineGroups.CLUSTER.name(), "kerberosKeytab",
-                                                       ValidationError.VALIDATION_0033,
-                                                       "Kerberos Keytab file does not exist or cannot be read"));
-        }
-      }
-    }
-    return canPreview;
   }
 
   private boolean validateStagesExecutionMode(List<StageConfiguration> stageConfigs, boolean errorStage) {

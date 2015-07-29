@@ -112,7 +112,7 @@ public class TestClusterRunner {
       , mockPipelineConf);
 
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
-      emptyCL, emptyCL);
+      emptyCL, emptyCL, null);
     setExecMode(ExecutionMode.CLUSTER);
   }
 

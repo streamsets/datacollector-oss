@@ -8,7 +8,6 @@ package com.streamsets.pipeline.util;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -26,7 +25,7 @@ public interface SystemProcess {
 
   public Collection<String> getAllError();
 
-  public List<String> getOutput();
+  public Collection<String> getOutput();
 
   public Collection<String> getError();
 

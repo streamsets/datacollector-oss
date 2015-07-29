@@ -276,25 +276,25 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
-    label = "Kerberos Principal",
-    description = "",
+    defaultValue = "",
+    label = "Hadoop FS Configuration Directory",
+    description = "An absolute path or a directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
+      "to configure the Hadoop FileSystem.",
     displayPosition = 180,
-    group = "HADOOP_FS",
-    dependsOn = "hdfsKerberos",
-    triggeredByValue = "true"
-   )
-   public String kerberosPrincipal;
+    group = "HADOOP_FS"
+  )
+  public String hdfsConfDir;
 
-   @ConfigDef(required = false,
+  @ConfigDef(
+    required = false,
     type = ConfigDef.Type.STRING,
-    label = "Kerberos Keytab (file)",
-    description = "",
+    label = "HDFS User",
+    description = "If set, the data collector will read from HDFS as this user. " +
+      "The data collector user must be configured as a proxy user in HDFS.",
     displayPosition = 190,
-    group = "HADOOP_FS",
-    dependsOn = "hdfsKerberos",
-    triggeredByValue = "true"
-   )
-   public String kerberosKeytab;
+    group = "HADOOP_FS"
+  )
+   public String hdfsUser;
 
   @ConfigDef(
     required = false,
@@ -311,7 +311,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
      clusterHDFSSource = new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat,
       textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-       produceSingleRecordPerMessage, hdfsKerberos, kerberosPrincipal, kerberosKeytab);
+       produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir);
      return clusterHDFSSource;
   }
 

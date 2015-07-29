@@ -68,10 +68,10 @@ public class Main {
       securityContext.login();
 
       log.info("-----------------------------------------------------------------");
-      log.info("  Kerberos enabled: {}", securityContext.isKerberosEnabled());
-      if (securityContext.isKerberosEnabled()) {
-        log.info("  Kerberos principal: {}", securityContext.getKerberosPrincipal());
-        log.info("  Kerberos keytab: {}", securityContext.getKerberosKeytab());
+      log.info("  Kerberos enabled: {}", securityContext.getSecurityConfiguration().isKerberosEnabled());
+      if (securityContext.getSecurityConfiguration().isKerberosEnabled()) {
+        log.info("  Kerberos principal: {}", securityContext.getSecurityConfiguration().getKerberosPrincipal());
+        log.info("  Kerberos keytab: {}", securityContext.getSecurityConfiguration().getKerberosKeytab());
       }
       log.info("-----------------------------------------------------------------");
       log.info("Starting ...");
