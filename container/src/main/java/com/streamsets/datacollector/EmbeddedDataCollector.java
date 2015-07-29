@@ -80,6 +80,7 @@ public class EmbeddedDataCollector implements DataCollector {
     dagger = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     task = dagger.get(TaskWrapper.class);
     pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
+    pipelineName = pipelineTask.getName();
     pipelineManager = pipelineTask.getManager();
     runtimeInfo = dagger.get(RuntimeInfo.class);
     dagger.get(LogConfigurator.class).configure();

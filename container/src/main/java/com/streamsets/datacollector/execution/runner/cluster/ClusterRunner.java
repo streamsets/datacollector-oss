@@ -160,7 +160,12 @@ public class ClusterRunner extends AbstractRunner {
     this.user = user;
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    this.tempDir = Files.createTempDir();
+    this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), Utils.format("pipeline-{}-{}-{}", user, name,
+      rev));
+    this.tempDir.mkdirs();
+    if (!this.tempDir.isDirectory()) {
+      throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
+    }
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
       MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
