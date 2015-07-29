@@ -8,8 +8,8 @@ package com.streamsets.pipeline.lib.parser.xml;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -31,12 +31,10 @@ public class TestXmlDataParserFactory {
 
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(20)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
         .build();
-    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
-    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
@@ -51,11 +49,9 @@ public class TestXmlDataParserFactory {
   public void testGetParserNoRecordElement() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(40)
         .build();
-    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
-    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>".getBytes());
@@ -72,12 +68,10 @@ public class TestXmlDataParserFactory {
   public void testGetParserReader() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(20)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
         .build();
-    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
-    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
@@ -93,12 +87,10 @@ public class TestXmlDataParserFactory {
   public void testGetParserReaderWithOffset() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(20)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
         .build();
-    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
-    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
     DataParser parser = factory.getParser("id", is, 18);
@@ -114,12 +106,10 @@ public class TestXmlDataParserFactory {
   public void testCharacterBaseParserMethod() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.XML);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(20)
         .setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, "e")
         .build();
-    Assert.assertTrue(dataFactory instanceof XmlDataParserFactory);
-    XmlDataParserFactory factory = (XmlDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "<r><e>Hello</e><e>Bye</e></r>");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));

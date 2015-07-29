@@ -9,9 +9,9 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -127,7 +127,7 @@ public class TestGrokParser {
     InputStream is = new ByteArrayInputStream(logLine.getBytes());
 
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.GROK)
       .setOverRunLimit(1000)
@@ -135,8 +135,6 @@ public class TestGrokParser {
       .setConfig(LogDataParserFactory.GROK_PATTERN_KEY, REGEX)
       .setConfig(LogDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
-    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
 
     return factory.getParser("id", is, readerOffset);
   }

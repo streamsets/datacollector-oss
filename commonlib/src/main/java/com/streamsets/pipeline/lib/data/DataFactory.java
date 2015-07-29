@@ -82,7 +82,7 @@ public abstract class DataFactory {
     this.settings = settings;
   }
 
-  protected Settings getSettings() {
+  public Settings getSettings() {
     return settings;
   }
 

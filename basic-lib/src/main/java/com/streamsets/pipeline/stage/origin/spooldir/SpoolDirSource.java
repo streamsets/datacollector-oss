@@ -22,6 +22,7 @@ import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
@@ -57,7 +58,7 @@ public class SpoolDirSource extends BaseSource {
   private String charset;
   private boolean removeCtrlChars;
   private final int overrunLimit;
-  private final String spoolDir;
+  final String spoolDir;
   private final int batchSize;
   private long poolingTimeoutSecs;
   private String filePattern;
@@ -546,13 +547,18 @@ public class SpoolDirSource extends BaseSource {
           }
         }
       }
-    } catch (IOException ex) {
+    } catch (IOException|DataParserException ex) {
       offset = MINUS_ONE;
       String exOffset;
       if (ex instanceof OverrunException) {
         exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
       } else {
-        exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
+        try {
+          exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
+        } catch (IOException ex1) {
+          LOG.warn("Could not get the file offset to report with error, reason: {}", ex1.toString(), ex);
+          exOffset = MINUS_ONE;
+        }
       }
       switch (getContext().getOnErrorRecord()) {
         case DISCARD:

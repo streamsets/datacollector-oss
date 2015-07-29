@@ -9,8 +9,8 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -31,12 +31,10 @@ public class TestJsonDataParserFactory {
   public void testGetParserString() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(1000)
         .setMode(JsonMode.MULTIPLE_OBJECTS)
         .build();
-    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
-    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "[\"Hello\"]\n".getBytes());
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
@@ -50,12 +48,10 @@ public class TestJsonDataParserFactory {
   public void testGetParserReader() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(1000)
         .setMode(JsonMode.MULTIPLE_OBJECTS)
         .build();
-    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
-    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("[\"Hello\"]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 0);
@@ -70,12 +66,10 @@ public class TestJsonDataParserFactory {
   public void testGetParserReaderWithOffset() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(1000)
         .setMode(JsonMode.ARRAY_OBJECTS)
         .build();
-    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
-    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     InputStream is = new ByteArrayInputStream("[[\"Hello\"],[\"Bye\"]]\n".getBytes());
     DataParser parser = factory.getParser("id", is, 10);
@@ -90,12 +84,10 @@ public class TestJsonDataParserFactory {
   public void testCharacterBaseParserMethod() throws Exception {
     DataParserFactoryBuilder dataParserFactoryBuilder =
         new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
         .setMaxDataLen(1000)
         .setMode(JsonMode.ARRAY_OBJECTS)
         .build();
-    Assert.assertTrue(dataFactory instanceof JsonDataParserFactory);
-    JsonDataParserFactory factory = (JsonDataParserFactory) dataFactory;
 
     DataParser parser = factory.getParser("id", "[[\"Hello\"],[\"Bye\"]]\n");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));

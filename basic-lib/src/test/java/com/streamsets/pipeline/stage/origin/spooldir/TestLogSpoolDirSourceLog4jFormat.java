@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
@@ -527,7 +528,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
     }
   }
 
-  @Test(expected = DataParserException.class)
+  @Test(expected = StageException.class)
   public void testTreatStackTraceAsError() throws Exception {
     SpoolDirSource source = createSource(OnParseError.ERROR, 0);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();

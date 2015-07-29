@@ -10,12 +10,12 @@ public class ExceptionUtils {
   /**
    * Throws an undeclared checked exception, use with caution.
    */
-  public static void throwUndeclared(Exception ex) {
+  public static void throwUndeclared(Throwable ex) {
     ExceptionUtils.<RuntimeException>_throw(ex);
   }
 
   @SuppressWarnings("unchecked")
-  private static <E extends Exception> void _throw(Exception e) throws E {
+  private static <E extends Exception> void _throw(Throwable e) throws E {
     throw (E)e;
   }
 

@@ -8,9 +8,9 @@ package com.streamsets.pipeline.lib.parser.avro;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
@@ -26,9 +26,7 @@ public class TestAvroDataFileParser {
   @Test
   public void testAvroDataFileParser() throws Exception {
     File avroDataFile = SdcAvroTestUtil.createAvroDataFile();
-    DataParser dataParser = getDataParser(avroDataFile, 1024, null);
-    Assert.assertTrue(dataParser instanceof AvroDataFileParser);
-    AvroDataFileParser avroDataFileParser = (AvroDataFileParser) dataParser;
+    DataParser avroDataFileParser = getDataParser(avroDataFile, 1024, null);
 
     Record parse = avroDataFileParser.parse();
     Assert.assertNotNull(parse);
@@ -52,30 +50,25 @@ public class TestAvroDataFileParser {
   public void testAvroDataFileParserOffset() throws Exception {
     File avroDataFile = SdcAvroTestUtil.createAvroDataFile();
     DataParser dataParser = getDataParser(avroDataFile, 1024, null);
-    Assert.assertTrue(dataParser instanceof AvroDataFileParser);
-    AvroDataFileParser avroDataFileParser = (AvroDataFileParser) dataParser;
 
-    Record parse = avroDataFileParser.parse();
+    Record parse = dataParser.parse();
     Assert.assertNotNull(parse);
-    Assert.assertEquals("244::1", avroDataFileParser.getOffset());
+    Assert.assertEquals("244::1", dataParser.getOffset());
 
-    dataParser = getDataParser(avroDataFile, 1024, avroDataFileParser.getOffset());
-    avroDataFileParser = (AvroDataFileParser) dataParser;
-    parse = avroDataFileParser.parse();
+    dataParser = getDataParser(avroDataFile, 1024, dataParser.getOffset());
+    parse = dataParser.parse();
     Assert.assertNotNull(parse);
-    Assert.assertEquals("244::2", avroDataFileParser.getOffset());
+    Assert.assertEquals("244::2", dataParser.getOffset());
 
-    dataParser = getDataParser(avroDataFile, 1024, avroDataFileParser.getOffset());
-    avroDataFileParser = (AvroDataFileParser) dataParser;
-    parse = avroDataFileParser.parse();
+    dataParser = getDataParser(avroDataFile, 1024, dataParser.getOffset());
+    parse = dataParser.parse();
     Assert.assertNotNull(parse);
-    Assert.assertEquals("500::1", avroDataFileParser.getOffset());
+    Assert.assertEquals("500::1", dataParser.getOffset());
 
-    dataParser = getDataParser(avroDataFile, 1024, avroDataFileParser.getOffset());
-    avroDataFileParser = (AvroDataFileParser) dataParser;
-    parse = avroDataFileParser.parse();
+    dataParser = getDataParser(avroDataFile, 1024, dataParser.getOffset());
+    parse = dataParser.parse();
     Assert.assertNull(parse);
-    Assert.assertEquals("-1", avroDataFileParser.getOffset());
+    Assert.assertEquals("-1", dataParser.getOffset());
 
   }
 
@@ -87,13 +80,11 @@ public class TestAvroDataFileParser {
   private DataParser getDataParser(File file, int maxObjectLength, String readerOffset) throws DataParserException {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
       DataParserFormat.AVRO);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
       .setConfig(AvroDataParserFactory.SCHEMA_KEY, SdcAvroTestUtil.AVRO_SCHEMA)
       .setOverRunLimit(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof AvroDataParserFactory);
-    AvroDataParserFactory factory = (AvroDataParserFactory) dataFactory;
     return factory.getParser(file, readerOffset);
   }
 }

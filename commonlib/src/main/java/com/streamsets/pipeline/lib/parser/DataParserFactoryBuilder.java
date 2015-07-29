@@ -15,4 +15,9 @@ public class DataParserFactoryBuilder extends
     super(context, format);
   }
 
+  @Override
+  public DataParserFactory build() {
+    return new WrapperDataParserFactory(super.build());
+  }
+
 }

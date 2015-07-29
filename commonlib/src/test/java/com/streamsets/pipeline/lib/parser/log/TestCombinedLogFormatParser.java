@@ -12,6 +12,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -181,14 +182,12 @@ public class TestCombinedLogFormatParser {
   private DataParser getDataParser(String logLine, int maxObjectLength, int readerOffset) throws DataParserException {
     InputStream is = new ByteArrayInputStream(logLine.getBytes());
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
-    DataFactory dataFactory = dataParserFactoryBuilder
+    DataParserFactory factory = dataParserFactoryBuilder
       .setMaxDataLen(maxObjectLength)
       .setMode(LogMode.COMBINED_LOG_FORMAT)
       .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
       .setOverRunLimit(1000)
       .build();
-    Assert.assertTrue(dataFactory instanceof LogDataParserFactory);
-    LogDataParserFactory factory = (LogDataParserFactory) dataFactory;
     return factory.getParser("id", is, readerOffset);
   }
 }

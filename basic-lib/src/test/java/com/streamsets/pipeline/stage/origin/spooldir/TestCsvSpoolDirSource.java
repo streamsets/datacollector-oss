@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -163,6 +164,30 @@ public class TestCsvSpoolDirSource {
       Assert.assertEquals("A", records.get(0).get("[0]/value").getValueAsString());
       Assert.assertEquals("B ", records.get(0).get("[1]/value").getValueAsString());
       Assert.assertEquals("^A", records.get(0).get("[2]/value").getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private File createInvalidDataFile(String file) throws Exception {
+    File f = new File(file);
+    Writer writer = new FileWriter(f);
+    writer.write(",\",\"\"a,");
+    writer.close();
+    return f;
+  }
+
+  @Test //this test works for all formats as we are using a WrapperDataParser
+  public void testInvalidData() throws Exception {
+    SpoolDirSource source = createSource(CsvMode.EXCEL, CsvHeader.NO_HEADER, '^', '$', '!', 20);
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").
+        setOnRecordError(OnRecordError.TO_ERROR).build();
+    createInvalidDataFile(source.spoolDir + "/file-0.log");
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 10);
+      Assert.assertTrue(output.getRecords().get("lane").isEmpty());
+      Assert.assertFalse(runner.getErrors().isEmpty());
     } finally {
       runner.runDestroy();
     }

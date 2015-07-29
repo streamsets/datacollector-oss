@@ -17,7 +17,7 @@ public interface DataParser extends Closeable {
   public Record parse() throws IOException, DataParserException;
 
   // returns current offset or -1 after reaching OEF
-  public String getOffset() throws DataParserException;
+  public String getOffset() throws DataParserException, IOException;
 
   public void close() throws IOException;
 
