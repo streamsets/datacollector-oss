@@ -95,7 +95,7 @@ public class UpdateChecker implements Runnable {
       }
 
       uploadInfo = new LinkedHashMap();
-      uploadInfo.put("sdc.sha256", getSha256(runtimeInfo.getSDCToken()));
+      uploadInfo.put("sdc.sha256", getSha256(runner.getToken()));
       uploadInfo.put("sdc.buildInfo", new BuildInfo());
       uploadInfo.put("sdc.stages", stages);
     }

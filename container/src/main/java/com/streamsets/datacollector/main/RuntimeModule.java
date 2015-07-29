@@ -62,10 +62,8 @@ public class RuntimeModule {
       try {
         conf.load(new FileReader(configFile));
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
+        // Remove this config;
         String executionMode = conf.get(PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name());
-        if (executionMode.equalsIgnoreCase(ExecutionMode.SLAVE.name())) {
-          runtimeInfo.setSDCToken(UUID.randomUUID().toString());
-        }
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

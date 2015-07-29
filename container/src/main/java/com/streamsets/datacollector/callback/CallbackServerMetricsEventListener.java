@@ -30,22 +30,24 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
   private final RuntimeInfo runtimeInfo;
   private final String callbackServerURL;
   private final String sdcClusterToken;
+  private final String sdcSlaveToken;
 
   public CallbackServerMetricsEventListener(String user, String name, String rev,
-    RuntimeInfo runtimeInfo, String callbackServerURL, String sdcClusterToken) {
+    RuntimeInfo runtimeInfo, String callbackServerURL, String sdcClusterToken, String sdcSlaveToken) {
     this.name = name;
     this.rev = rev;
     this.user = user;
     this.runtimeInfo = runtimeInfo;
     this.callbackServerURL = callbackServerURL;
+    Utils.checkNotNull(sdcClusterToken, "SDC Cluster Token");
     this.sdcClusterToken = sdcClusterToken;
+    Utils.checkNotNull(sdcSlaveToken, "SDC Slave Token");
+    this.sdcSlaveToken = sdcSlaveToken;
   }
 
   @Override
   public void notification(String metrics) {
     try {
-      // this is in the slave, as such getSDCToken returns the slave token
-      String sdcSlaveToken = Utils.checkNotNull(runtimeInfo.getSDCToken(), "SDC Slave Token");
       Map<String, String> authenticationToken = runtimeInfo.getAuthenticationTokens();
       CallbackInfo callbackInfo =
         new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, runtimeInfo.getBaseHttpUrl(),

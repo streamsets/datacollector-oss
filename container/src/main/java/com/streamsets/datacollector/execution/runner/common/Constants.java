@@ -11,7 +11,7 @@ public class Constants {
   public static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
   public static final String CALLBACK_SERVER_URL_KEY = "callback.server.url";
   public static final String CALLBACK_SERVER_URL_DEFAULT = null;
-  public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
+  public static final String PIPELINE_CLUSTER_TOKEN_KEY = "pipeline.cluster.token";
   public static final String MAX_BATCH_SIZE_KEY = "production.maxBatchSize";
   public static final int MAX_BATCH_SIZE_DEFAULT = 1000;
   public static final String DELIVERY_GUARANTEE = "deliveryGuarantee";

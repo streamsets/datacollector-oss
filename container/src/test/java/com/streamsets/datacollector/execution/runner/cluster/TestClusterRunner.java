@@ -91,7 +91,6 @@ public class TestClusterRunner {
     MockSystemProcess.output.clear();
     MockSystemProcess.error.clear();
     runtimeInfo = new RuntimeInfo("dummy", null, Arrays.asList(emptyCL), tempDir);
-    runtimeInfo.setSDCToken("myToken");
     clusterProvider = new MockClusterProvider();
     conf = new Configuration();
     pipelineStateStore = new CachePipelineStateStore(new FilePipelineStateStore(runtimeInfo, conf));
@@ -297,13 +296,13 @@ public class TestClusterRunner {
   @Test
   public void testSlaveList() throws Exception {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
-    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", runtimeInfo.getSDCToken(), "slaveToken", "",
+    CallbackInfo callbackInfo = new CallbackInfo("user", "name", "rev", "myToken", "slaveToken", "",
       "", "", "", "", "");
     clusterRunner.updateSlaveCallbackInfo(callbackInfo);
     List<CallbackInfo> slaves = new ArrayList<CallbackInfo>(clusterRunner.getSlaveCallbackList());
     assertFalse(slaves.isEmpty());
     assertEquals("slaveToken", slaves.get(0).getSdcSlaveToken());
-    assertEquals(runtimeInfo.getSDCToken(), slaves.get(0).getSdcClusterToken());
+    assertEquals("myToken", slaves.get(0).getSdcClusterToken());
     clusterRunner.prepareForStart();
     clusterRunner.start();
     slaves = new ArrayList<>(clusterRunner.getSlaveCallbackList());
@@ -428,13 +427,13 @@ public class TestClusterRunner {
   private Runner createClusterRunner() {
     eventListenerManager = new EventListenerManager();
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
+      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
   }
 
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
     eventListenerManager = new EventListenerManager();
     Runner runner = new ClusterRunner(name, "0", "a", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager);
+      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken");
     eventListenerManager.addStateEventListener(resourceManager);
     return runner;
   }
@@ -443,7 +442,7 @@ public class TestClusterRunner {
     eventListenerManager = new EventListenerManager();
     return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
       pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
-      new ResourceManager(conf), eventListenerManager), new SafeScheduledExecutorService(1, "runner"));
+      new ResourceManager(conf), eventListenerManager, "myToken"), new SafeScheduledExecutorService(1, "runner"));
   }
 
 }

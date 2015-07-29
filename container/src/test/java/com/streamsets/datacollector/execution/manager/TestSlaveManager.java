@@ -13,6 +13,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.provider.SlaveRunnerProviderImpl;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
@@ -73,7 +74,8 @@ public class TestSlaveManager {
     @Singleton
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
-      configuration.set(Runner.CALLBACK_SERVER_URL_KEY, "/dummy/v1");
+      configuration.set(Constants.PIPELINE_CLUSTER_TOKEN_KEY, "sdcClusterToken");
+      configuration.set(Constants.CALLBACK_SERVER_URL_KEY, "/dummy/v1");
       return configuration;
     }
 

@@ -7,7 +7,6 @@ package com.streamsets.datacollector.execution.runner.cluster.dagger;
 
 import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner;
 import com.streamsets.datacollector.execution.runner.cluster.SlaveCallbackManager;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import dagger.Module;
 import dagger.Provides;
 
@@ -17,8 +16,8 @@ import javax.inject.Singleton;
 public class ClusterRunnerInjectorModule {
 
   @Provides @Singleton
-  public SlaveCallbackManager provideSlaveCallbackManager(RuntimeInfo runtimeInfo) {
-    return new SlaveCallbackManager(runtimeInfo);
+  public SlaveCallbackManager provideSlaveCallbackManager() {
+    return new SlaveCallbackManager();
   }
 
 }

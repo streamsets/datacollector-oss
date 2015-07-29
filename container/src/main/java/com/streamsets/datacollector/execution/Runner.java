@@ -29,9 +29,6 @@ import java.util.Map;
 //  SLAVE: cluster streaming
 //  BATCH  : cluster batch
 public interface Runner {
-  public static final String CALLBACK_SERVER_URL_KEY = "callback.server.url";
-  public static final String CALLBACK_SERVER_URL_DEFAULT = null;
-  public static final String SDC_CLUSTER_TOKEN_KEY = "sdc.cluster.token";
 
   //Runners are lightweight control classes, they are created on every Manager.getRunner() call
 
@@ -127,5 +124,7 @@ public interface Runner {
   void updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 
   Map getUpdateInfo();
+
+  String getToken();
 
 }

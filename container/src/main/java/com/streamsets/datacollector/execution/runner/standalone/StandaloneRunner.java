@@ -66,8 +66,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import com.streamsets.pipeline.lib.log.LogConstants;
+
 import dagger.ObjectGraph;
 
 import org.slf4j.Logger;
@@ -82,6 +82,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
@@ -103,6 +104,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private final String name;
   private final String rev;
   private final String user;
+  private String token;
 
   /*Mutex objects to synchronize start and stop pipeline methods*/
   private ThreadHealthReporter threadHealthReporter;
@@ -448,6 +450,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
     validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
+    token = UUID.randomUUID().toString();
+
   }
 
   @Override
@@ -595,5 +599,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
     throw new UnsupportedOperationException("This method is only supported in Cluster Runner");
+  }
+
+  @Override
+  public String getToken() {
+    return token;
   }
 }

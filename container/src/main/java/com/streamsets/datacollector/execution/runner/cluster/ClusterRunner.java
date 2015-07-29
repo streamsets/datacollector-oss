@@ -56,12 +56,15 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -130,7 +133,7 @@ public class ClusterRunner extends AbstractRunner {
   ClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
     SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager,
-    EventListenerManager eventListenerManager) {
+    EventListenerManager eventListenerManager, String sdcToken) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStateStore = pipelineStateStore;
@@ -148,7 +151,8 @@ public class ClusterRunner extends AbstractRunner {
     }
     this.resourceManager = resourceManager;
     this.eventListenerManager = eventListenerManager;
-    this.slaveCallbackManager = new SlaveCallbackManager(runtimeInfo);
+    this.slaveCallbackManager = new SlaveCallbackManager();
+    this.slaveCallbackManager.setClusterToken(sdcToken);
   }
 
   public ClusterRunner(String user, String name, String rev, ObjectGraph objectGraph) {
@@ -276,8 +280,8 @@ public class ClusterRunner extends AbstractRunner {
       prepareForStart();
       start();
     } else {
-      runtimeInfo.setSDCToken(appState.getSdcToken());
       try {
+        slaveCallbackManager.setClusterToken(appState.getSdcToken());
         pipelineConf = getPipelineConf(name, rev);
       } catch (PipelineRunnerException e) {
         validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.getMessage(), new HashMap<String, Object>());
@@ -611,6 +615,7 @@ public class ClusterRunner extends AbstractRunner {
       Map<String, Object> attributes = new HashMap<>();
       attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
+      slaveCallbackManager.setClusterToken(applicationState.getSdcToken());
       validateAndSetStateTransition(PipelineStatus.RUNNING, "Pipeline in cluster is running", attributes);
       scheduleRunnable(pipelineConf);
     } catch (IOException ex) {
@@ -685,5 +690,10 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public Map getUpdateInfo() {
     return updateChecker.getUpdateInfo();
+  }
+
+  @Override
+  public String getToken() {
+    return slaveCallbackManager.getClusterToken();
   }
 }

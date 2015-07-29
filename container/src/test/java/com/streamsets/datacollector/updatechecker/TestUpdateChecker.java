@@ -59,9 +59,9 @@ public class TestUpdateChecker {
   public void testUploadInfo() {
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
     Configuration conf = new Configuration();
     Runner runner = Mockito.mock(Runner.class);
+    Mockito.when(runner.getToken()).thenReturn("hello");
     UpdateChecker checker = new UpdateChecker(runtimeInfo, conf, pipelineConf, runner);
     Map uploadInfo = checker.getUploadInfo();
     Assert.assertNotNull(uploadInfo);
@@ -84,9 +84,9 @@ public class TestUpdateChecker {
   public void testRunPipelineNotRunning() throws Exception {
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
-    Configuration conf = new Configuration();
     Runner runner = Mockito.mock(Runner.class);
+    Mockito.when(runner.getToken()).thenReturn("hello");
+    Configuration conf = new Configuration();
     PipelineState state = Mockito.mock(PipelineState.class);
     Mockito.when(state.getStatus()).thenReturn(PipelineStatus.STOPPED);
     Mockito.when(runner.getState()).thenReturn(state);
@@ -100,9 +100,9 @@ public class TestUpdateChecker {
   public void testRunUpdateCheckNotReachable() throws Exception {
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
     Configuration conf = new Configuration();
     Runner runner = Mockito.mock(Runner.class);
+    Mockito.when(runner.getToken()).thenReturn("hello");
     PipelineState state = Mockito.mock(PipelineState.class);
 
     //running unreachable update checker site
@@ -148,10 +148,10 @@ public class TestUpdateChecker {
       int port = server.getURI().getPort();
 
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-      Mockito.when(runtimeInfo.getSDCToken()).thenReturn("hello");
       Configuration conf = new Configuration();
       conf.set(UpdateChecker.URL_KEY, "http://localhost:" + port + "/updatecheck");
       Runner runner = Mockito.mock(Runner.class);
+      Mockito.when(runner.getToken()).thenReturn("hello");
       PipelineState state = Mockito.mock(PipelineState.class);
 
       Mockito.when(state.getStatus()).thenReturn(PipelineStatus.RUNNING);

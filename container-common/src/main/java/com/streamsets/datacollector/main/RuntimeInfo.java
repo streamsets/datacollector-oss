@@ -51,7 +51,6 @@ public class RuntimeInfo {
   private final String propertyPrefix;
   private final File baseDir;
   private final UUID randomUUID;
-  private String sdcToken;
 
   public RuntimeInfo(String propertyPrefix, MetricRegistry metrics,
                      List<? extends ClassLoader> stageLibraryClassLoaders) {
@@ -262,14 +261,6 @@ public class RuntimeInfo {
     for(String role: AuthzRole.ALL_ROLES) {
       authenticationTokens.put(role, UUID.randomUUID().toString() + SPLITTER + role);
     }
-  }
-
-  public void setSDCToken(String sdcToken) {
-    this.sdcToken = sdcToken;
-  }
-
-  public String getSDCToken() {
-    return sdcToken;
   }
 
   public String getClusterCallbackURL() {

@@ -5,7 +5,6 @@
  */
 package com.streamsets.datacollector.execution.runner.slave;
 
-import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackServerMetricsEventListener;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -15,6 +14,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -105,11 +105,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
   @Override
   public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException {
-    String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
-    String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
+    String callbackServerURL = configuration.get(Constants.CALLBACK_SERVER_URL_KEY, Constants.CALLBACK_SERVER_URL_DEFAULT);
+    String clusterToken = configuration.get(Constants.PIPELINE_CLUSTER_TOKEN_KEY, null);
     if (callbackServerURL != null) {
       eventListenerManager.addMetricsEventListener(this.getName(), new CallbackServerMetricsEventListener(getUser(),
-        getName(), getRev(), runtimeInfo, callbackServerURL, sdcClusterToken));
+        getName(), getRev(), runtimeInfo, callbackServerURL, clusterToken, standaloneRunner.getToken()));
     } else {
       throw new RuntimeException(
         "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
@@ -201,6 +201,11 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public Map getUpdateInfo() {
     return standaloneRunner.getUpdateInfo();
+  }
+
+  @Override
+  public String getToken() {
+    return standaloneRunner.getToken();
   }
 
 

@@ -211,4 +211,9 @@ public class AsyncRunner implements Runner, PipelineInfo {
   public Map getUpdateInfo() {
     return runner.getUpdateInfo();
   }
+
+  @Override
+  public String getToken() {
+    return runner.getToken();
+  }
 }

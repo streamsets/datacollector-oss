@@ -165,7 +165,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs, Map<String, String> sourceInfo)
+  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs, Map<String, String> sourceInfo,
+    String clusterToken)
     throws IOException{
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
@@ -177,7 +178,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
         ExecutionMode.SLAVE.name().toLowerCase());
       if(runtimeInfo != null) {
-        sdcProperties.setProperty(Constants.SDC_CLUSTER_TOKEN_KEY, runtimeInfo.getSDCToken());
+        sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
 
@@ -314,10 +315,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     ImmutableList.Builder<StageConfiguration> pipelineConfigurations = ImmutableList.builder();
     // order is important here as we don't want error stage
     // configs overriding source stage configs
-    String sdcClusterToken = UUID.randomUUID().toString();
-    if (runtimeInfo != null) {
-      runtimeInfo.setSDCToken(sdcClusterToken);
-    }
+    String clusterToken = UUID.randomUUID().toString();
     ClusterOrigin clusterOrigin = null;
     String pathToSparkKafkaJar = null;
     List<Issue> errors = new ArrayList<>();
@@ -434,7 +432,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
       ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
-      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo);
+      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (Exception ex) {
       String msg = errorString("serializing etc directory: {}", ex);
@@ -503,7 +501,7 @@ public class ClusterProviderImpl implements ClusterProvider {
           logOutput(appId, process);
           ApplicationState applicationState = new ApplicationState();
           applicationState.setId(appId);
-          applicationState.setSdcToken(sdcClusterToken);
+          applicationState.setSdcToken(clusterToken);
           return applicationState;
         }
         if (!ThreadUtil.sleep(1000)) {

@@ -10,6 +10,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +24,11 @@ public class SlaveCallbackManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlaveCallbackManager.class);
 
-  private final RuntimeInfo runtimeInfo;
   private final ReentrantLock callbackCacheLock;
   private final Cache<String, CallbackInfo> slaveCallbackList;
+  private String clusterToken;
 
-  public SlaveCallbackManager(RuntimeInfo runtimeInfo) {
-    this.runtimeInfo = runtimeInfo;
+  public SlaveCallbackManager() {
     this.callbackCacheLock = new ReentrantLock();
     this.slaveCallbackList = CacheBuilder.newBuilder()
       .expireAfterWrite(1, TimeUnit.MINUTES)
@@ -47,7 +47,7 @@ public class SlaveCallbackManager {
   }
 
   public void updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-    String sdcToken = Strings.nullToEmpty(runtimeInfo.getSDCToken());
+    String sdcToken = Strings.nullToEmpty(this.clusterToken);
     if (sdcToken.equals(callbackInfo.getSdcClusterToken()) &&
       !RuntimeInfo.UNDEF.equals(callbackInfo.getSdcURL())) {
       callbackCacheLock.lock();
@@ -68,5 +68,13 @@ public class SlaveCallbackManager {
     } finally {
       callbackCacheLock.unlock();
     }
+  }
+
+  public void setClusterToken(String clusterToken) {
+    this.clusterToken = clusterToken;
+  }
+
+  public String getClusterToken() {
+    return clusterToken;
   }
 }
