@@ -103,12 +103,13 @@ public class SyncPreviewer implements Previewer {
       previewPipeline = buildPreviewPipeline(0, 0, null, false);
       List<Issue> stageIssues = previewPipeline.validateConfigs();
       PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
-      changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null));
+      changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null, null));
     } catch (PipelineRuntimeException e) {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
-        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null));
+        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
+          e.getMessage()));
       } else {
         //Leave the state as is.
         throw e;
@@ -148,21 +149,23 @@ public class SyncPreviewer implements Previewer {
       previewPipeline = buildPreviewPipeline(batches, batchSize, stopStage, skipTargets);
       PreviewPipelineOutput output = previewPipeline.run(stagesOverride);
       changeState(PreviewStatus.FINISHED, new PreviewOutputImpl(PreviewStatus.FINISHED, output.getIssues(),
-        output.getBatchesOutput()));
+        output.getBatchesOutput(), null));
     } catch (PipelineRuntimeException e) {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
-        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null));
+        changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
+          e.getMessage()));
       } else {
-        changeState(PreviewStatus.RUN_ERROR, null);
+        changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e.getIssues(), null,
+          e.getMessage()));
         throw e;
       }
     } catch (PipelineStoreException e) {
-      changeState(PreviewStatus.RUN_ERROR, null);
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.getMessage()));
       throw e;
     } catch (StageException e) {
-      changeState(PreviewStatus.RUN_ERROR, null);
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.getMessage()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e);
     } finally {
       if(previewPipeline != null) {

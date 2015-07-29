@@ -18,4 +18,5 @@ public interface PreviewOutput {
 
   public List<List<StageOutput>> getOutput();
 
+  public String getMessage();
 }

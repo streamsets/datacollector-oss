@@ -17,11 +17,13 @@ public class PreviewOutputImpl implements PreviewOutput {
   private final PreviewStatus previewStatus;
   private final Issues issues;
   private final List<List<StageOutput>> output;
+  private final String message;
 
-  public PreviewOutputImpl(PreviewStatus previewStatus, Issues issues, List<List<StageOutput>> output) {
+  public PreviewOutputImpl(PreviewStatus previewStatus, Issues issues, List<List<StageOutput>> output, String message) {
     this.previewStatus = previewStatus;
     this.issues = issues;
     this.output = output;
+    this.message = message;
   }
 
   @Override
@@ -37,5 +39,10 @@ public class PreviewOutputImpl implements PreviewOutput {
   @Override
   public List<List<StageOutput>> getOutput() {
     return output;
+  }
+
+  @Override
+  public String getMessage() {
+    return message;
   }
 }
