@@ -56,6 +56,27 @@ public class TestCollectdParser {
       .put("tx", Field.create(4551L))
       .build();
 
+  private static final Map<String, Field> expectedRecordNoInterval0 = new ImmutableMap.Builder<String, Field>()
+      .put("host", HOST)
+      .put("time_hires", Field.create(1543270991079203521L))
+      .put("plugin", Field.create("cpu"))
+      .put("plugin_instance", Field.create("7"))
+      .put("type", Field.create("cpu"))
+      .put("type_instance", Field.create("nice"))
+      .put("value", Field.create(0L))
+      .build();
+
+  private static final Map<String, Field> expectedRecordNoInterval2 = new ImmutableMap.Builder<String, Field>()
+      .put("host", HOST)
+      .put("time_hires", Field.create(1543270991079198152L))
+      .put("plugin", Field.create("interface"))
+      .put("plugin_instance", Field.create("utun0"))
+      .put("type", Field.create("if_packets"))
+      .put("type_instance", Field.create(""))
+      .put("rx", Field.create(4282L))
+      .put("tx", Field.create(4551L))
+      .build();
+
   // Common record values for encrypted test set
   private static final Field ENC_HOST = Field.create("ip-192-168-42-238.us-west-2.compute.internal");
 
@@ -115,6 +136,25 @@ public class TestCollectdParser {
 
     Record record2 = records.get(2);
     verifyRecord(expectedRecord2, record2);
+
+  }
+
+  @Test
+  public void testParserExcludeInterval() throws Exception {
+    UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
+    CollectdParser parser = new CollectdParser(getContext(), false, null, true, null, CHARSET);
+    byte[] bytes = Files.readAllBytes(SINGLE_PACKET.toPath());
+    ByteBuf buf = allocator.buffer(bytes.length);
+    buf.writeBytes(bytes);
+    List<Record> records = parser.parse(buf, null, null);
+
+    Assert.assertEquals(23, records.size()); // 23 Value parts
+
+    Record record0 = records.get(0);
+    verifyRecord(expectedRecordNoInterval0, record0);
+
+    Record record2 = records.get(2);
+    verifyRecord(expectedRecordNoInterval2, record2);
 
   }
 

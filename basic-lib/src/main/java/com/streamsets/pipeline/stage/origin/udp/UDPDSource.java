@@ -155,7 +155,7 @@ public class UDPDSource extends DSource {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 50,
-      group = "SYSLOG",
+      group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
   )

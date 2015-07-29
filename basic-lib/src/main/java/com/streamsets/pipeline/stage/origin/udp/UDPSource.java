@@ -21,6 +21,7 @@ import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -112,14 +113,17 @@ public class UDPSource extends BaseSource {
         parser = new SyslogParser(getContext(), charset);
         break;
       case COLLECTD:
-        parser = new CollectdParser(
-            getContext(),
-            parserConfig.getBoolean(CONVERT_TIME),
-            parserConfig.getString(TYPES_DB_PATH),
-            parserConfig.getBoolean(EXCLUDE_INTERVAL),
-            parserConfig.getString(AUTH_FILE_PATH),
-            charset
-        );
+        checkCollectdParserConfigs(issues);
+        if (issues.size() == 0) {
+          parser = new CollectdParser(
+              getContext(),
+              parserConfig.getBoolean(CONVERT_TIME),
+              parserConfig.getString(TYPES_DB_PATH),
+              parserConfig.getBoolean(EXCLUDE_INTERVAL),
+              parserConfig.getString(AUTH_FILE_PATH),
+              charset
+          );
+        }
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.UDP.name(), "dataFormat",
@@ -141,6 +145,27 @@ public class UDPSource extends BaseSource {
       }
     }
     return issues;
+  }
+
+  private void checkCollectdParserConfigs(List<ConfigIssue> issues) {
+    String typesDbLocation = parserConfig.getString(TYPES_DB_PATH);
+    if (!typesDbLocation.isEmpty()) {
+      File typesDbFile = new File(typesDbLocation);
+      if (!typesDbFile.canRead() || !typesDbFile.isFile()) {
+        issues.add(
+            getContext().createConfigIssue(Groups.COLLECTD.name(), "typesDbPath", Errors.UDP_05, typesDbLocation)
+        );
+      }
+    }
+    String authFileLocation = parserConfig.getString(AUTH_FILE_PATH);
+    if (!authFileLocation.isEmpty()) {
+      File authFile = new File(authFileLocation);
+      if (!authFile.canRead() || !authFile.isFile()) {
+        issues.add(
+            getContext().createConfigIssue(Groups.COLLECTD.name(), "authFilePath", Errors.UDP_06, authFileLocation)
+        );
+      }
+    }
   }
 
 

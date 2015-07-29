@@ -17,7 +17,7 @@ public class ParserConfig {
   }
 
   public String getString(ParserConfigKey key) {
-    return (String) configs.get(ParserConfigKey.CHARSET);
+    return (String) configs.get(key);
   }
 
   public long getLong(ParserConfigKey key) {

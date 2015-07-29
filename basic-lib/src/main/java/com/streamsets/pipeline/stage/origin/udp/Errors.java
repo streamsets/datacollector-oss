@@ -16,6 +16,8 @@ public enum Errors implements ErrorCode {
   UDP_02("No ports specified"),
   UDP_03("Port '{}' is invalid"),
   UDP_04("Charset '{}' is not supported"),
+  UDP_05("collectd Types DB '{}' not found"),
+  UDP_06("collectd Auth File '{}' not found"),
   ;
 
   private final String msg;

@@ -249,24 +249,22 @@ public class CollectdParser extends AbstractParser {
         break;
       case TIME_HIRES:
       case INTERVAL_HIRES:
-        if (type == INTERVAL_HIRES && excludeInterval) {
-          break;
+        if (type != INTERVAL_HIRES || !excludeInterval) {
+          long value = parseNumeric(offset, buf);
+          if (convertTime) {
+            value *= (Math.pow(2, -30) * 1000);
+            type = type == TIME_HIRES ? TIME : INTERVAL;
+          }
+          fields.put(PART_TYPES.get(type), Field.create(value));
         }
-        long value = parseNumeric(offset, buf);
-        if (convertTime) {
-          value *= (Math.pow(2, -30) * 1000);
-          type = type == TIME_HIRES ? TIME : INTERVAL;
-        }
-        fields.put(PART_TYPES.get(type), Field.create(value));
         offset += 8;
         break;
       case TIME:
       case INTERVAL:
       case SEVERITY:
-        if (type == INTERVAL && excludeInterval) {
-          break;
+        if (type != INTERVAL || !excludeInterval) {
+          fields.put(PART_TYPES.get(type), Field.create(parseNumeric(offset, buf)));
         }
-        fields.put(PART_TYPES.get(type), Field.create(parseNumeric(offset, buf)));
         offset += 8;
         break;
       case VALUES:
