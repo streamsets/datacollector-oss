@@ -122,18 +122,6 @@ public interface Runner {
 
   public boolean deleteAlert(String alertId) throws PipelineRunnerException, PipelineStoreException;
 
-  void addStateEventListener(StateEventListener stateEventListener);
-
-  void removeStateEventListener(StateEventListener stateEventListener);
-
-  void addAlertEventListener(AlertEventListener alertEventListener);
-
-  void removeAlertEventListener(AlertEventListener alertEventListener);
-
-  void addMetricsEventListener(MetricsEventListener metricsEventListener);
-
-  void removeMetricsEventListener(MetricsEventListener metricsEventListener);
-
   Collection<CallbackInfo> getSlaveCallbackList();
 
   void close();

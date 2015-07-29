@@ -4,8 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ImportModalInstanceController', function ($rootScope, $scope, $modalInstance, api, pipelineInfo,
-                                                         $translate) {
+  .controller('ImportModalInstanceController', function ($scope, $modalInstance, api, pipelineInfo, $translate) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
     angular.extend($scope, {
@@ -98,7 +97,6 @@ angular
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
-                    $rootScope.common.refreshStatusAndAlertWebSocket();
                     if(jsonRulesObj && jsonRulesObj.uuid) {
                       api.pipelineAgent.getPipelineRules(name).
                         then(function(res) {

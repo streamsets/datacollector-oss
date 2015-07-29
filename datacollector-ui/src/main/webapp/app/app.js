@@ -290,25 +290,7 @@ angular.module('dataCollectorApp')
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];
             });
-        },
-
-        /**
-         * Refresh Status and Alert WebSocket connection when new pipeline is added
-         */
-        refreshStatusAndAlertWebSocket: function() {
-          if(isWebSocketSupported) {
-            if(statusWebSocket) {
-              statusWebSocket.close();
-            }
-            if(alertsWebSocket) {
-              alertsWebSocket.close();
-            }
-
-            refreshPipelineStatus();
-            refreshAlerts();
-          }
         }
-
       };
 
     var logMessages = [];

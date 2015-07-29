@@ -203,7 +203,7 @@
                   </a>
                 </li>
 
-                <li ng-repeat-end role="presentation" class="divider"></li>
+                <li ng-repeat-end role="presentation" class="divider" ng-show="pipeline.valid"></li>
 
                 <li role="presentation"
                     ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || !pipeline.valid">

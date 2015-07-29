@@ -8,17 +8,16 @@ package com.streamsets.datacollector.execution.runner.slave;
 import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackServerMetricsEventListener;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
-import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -42,13 +41,15 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   private final StandaloneRunner standaloneRunner;
   private final Configuration configuration;
   private final RuntimeInfo runtimeInfo;
+  private final EventListenerManager eventListenerManager;
 
   @Inject
   public SlaveStandaloneRunner(StandaloneRunner standaloneRunner, Configuration configuration, RuntimeInfo
-    runtimeInfo) {
+    runtimeInfo, EventListenerManager eventListenerManager) {
     this.standaloneRunner = standaloneRunner;
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+    this.eventListenerManager = eventListenerManager;
   }
 
   @Override
@@ -112,8 +113,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
     String callbackServerURL = configuration.get(CALLBACK_SERVER_URL_KEY, CALLBACK_SERVER_URL_DEFAULT);
     String sdcClusterToken = configuration.get(SDC_CLUSTER_TOKEN_KEY, null);
     if (callbackServerURL != null) {
-      addMetricsEventListener(new CallbackServerMetricsEventListener(getUser(), getName(), getRev(), runtimeInfo,
-        callbackServerURL, sdcClusterToken));
+      eventListenerManager.addMetricsEventListener(this.getName(), new CallbackServerMetricsEventListener(getUser(),
+        getName(), getRev(), runtimeInfo, callbackServerURL, sdcClusterToken));
     } else {
       throw new RuntimeException(
         "No callback server URL is passed. SDC in Slave mode requires callback server URL (callback.server.url).");
@@ -180,36 +181,6 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   @Override
   public List<AlertInfo> getAlerts() throws PipelineStoreException {
     return standaloneRunner.getAlerts();
-  }
-
-  @Override
-  public void addStateEventListener(StateEventListener stateEventListener) {
-    standaloneRunner.addStateEventListener(stateEventListener);
-  }
-
-  @Override
-  public void removeStateEventListener(StateEventListener stateEventListener) {
-    standaloneRunner.removeStateEventListener(stateEventListener);
-  }
-
-  @Override
-  public void addAlertEventListener(AlertEventListener alertEventListener) {
-    standaloneRunner.addAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    standaloneRunner.removeAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    standaloneRunner.addMetricsEventListener(metricsEventListener);
-  }
-
-  @Override
-  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
-    standaloneRunner.removeMetricsEventListener(metricsEventListener);
   }
 
   @Override

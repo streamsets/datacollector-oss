@@ -131,7 +131,8 @@ public class ClusterRunner extends AbstractRunner {
   @VisibleForTesting
   ClusterRunner(String name, String rev, String user, RuntimeInfo runtimeInfo, Configuration configuration,
     PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
-    SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager) {
+    SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager,
+    EventListenerManager eventListenerManager) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.pipelineStateStore = pipelineStateStore;
@@ -152,7 +153,7 @@ public class ClusterRunner extends AbstractRunner {
       this.clusterHelper = clusterHelper;
     }
     this.resourceManager = resourceManager;
-    this.eventListenerManager = new EventListenerManager();
+    this.eventListenerManager = eventListenerManager;
   }
 
   public ClusterRunner(String user, String name, String rev, ObjectGraph objectGraph) {
@@ -399,16 +400,6 @@ public class ClusterRunner extends AbstractRunner {
       callbackCacheLock.unlock();
     }
     return callbackInfoSet;
-  }
-
-  @Override
-  public void addAlertEventListener(AlertEventListener alertEventListener) {
-    //Currently not supported
-  }
-
-  @Override
-  public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    //Currently not supported
   }
 
   @Override

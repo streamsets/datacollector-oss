@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.execution.runner.slave.dagger;
 
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.slave.SlaveStandaloneRunner;
@@ -36,8 +37,10 @@ public class SlaveRunnerModule {
   }
 
   @Provides
-  public SlaveStandaloneRunner provideStandaloneRunner(Configuration configuration, RuntimeInfo runtimeInfo) {
-    return new SlaveStandaloneRunner(new StandaloneRunner(user, name, rev, objectGraph), configuration, runtimeInfo);
+  public SlaveStandaloneRunner provideStandaloneRunner(Configuration configuration, RuntimeInfo runtimeInfo,
+                                                       EventListenerManager eventListenerManager) {
+    return new SlaveStandaloneRunner(new StandaloneRunner(user, name, rev, objectGraph), configuration, runtimeInfo,
+      eventListenerManager);
   }
 
   @Provides

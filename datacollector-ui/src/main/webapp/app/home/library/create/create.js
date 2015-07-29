@@ -4,7 +4,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CreateModalInstanceController', function ($scope, $rootScope, $modalInstance, $translate, api) {
+  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -24,7 +24,6 @@ angular
             then(
               function(res) {
                 $modalInstance.close(res.data);
-                $rootScope.common.refreshStatusAndAlertWebSocket();
               },
               function(res) {
                 $scope.common.errors = [res.data];

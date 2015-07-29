@@ -66,11 +66,12 @@ public class MetricsEventRunnable implements Runnable {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     Date now = new Date();
     LOG.trace("MetricsEventRunnable Run - " + sdf.format(now));
+    String pipelineName = runner.getName();
     try {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
-      if (eventListenerManager.getMetricsEventListenerList().size() > 0 && runner.getState().getStatus().isActive()) {
+      if (eventListenerManager.hasMetricEventListeners(pipelineName) && runner.getState().getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
         String metricsJSONStr;
         if(runner.getState().getExecutionMode() == ExecutionMode.CLUSTER) {
@@ -80,7 +81,7 @@ public class MetricsEventRunnable implements Runnable {
           metricsJSONStr =
             objectMapper.writer().writeValueAsString(runner.getMetrics());
         }
-        eventListenerManager.broadcastMetrics(metricsJSONStr);
+        eventListenerManager.broadcastMetrics(pipelineName, metricsJSONStr);
       }
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);

@@ -17,17 +17,19 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventListenerManager {
   private static final Logger LOG = LoggerFactory.getLogger(EventListenerManager.class);
-  private final List<MetricsEventListener> metricsEventListenerList;
+  private final Map<String, List<MetricsEventListener>> metricsEventListenerMap;
   private final List<StateEventListener> stateEventListenerList;
   private final List<AlertEventListener> alertEventListenerList;
 
   @Inject
   public EventListenerManager() {
-    metricsEventListenerList = new ArrayList<>();
+    metricsEventListenerMap = new HashMap<>();
     stateEventListenerList = new ArrayList<>();
     alertEventListenerList = new ArrayList<>();
   }
@@ -44,15 +46,22 @@ public class EventListenerManager {
     }
   }
 
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    synchronized (metricsEventListenerList) {
-      metricsEventListenerList.add(metricsEventListener);
+  public void addMetricsEventListener(String pipelineName, MetricsEventListener metricsEventListener) {
+    synchronized (metricsEventListenerMap) {
+      List<MetricsEventListener> metricsEventListeners = metricsEventListenerMap.get(pipelineName);
+      if(metricsEventListeners == null) {
+        metricsEventListeners = new ArrayList<>();
+        metricsEventListenerMap.put(pipelineName, metricsEventListeners);
+      }
+      metricsEventListeners.add(metricsEventListener);
     }
   }
 
-  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
-    synchronized (metricsEventListenerList) {
-      metricsEventListenerList.remove(metricsEventListener);
+  public void removeMetricsEventListener(String pipelineName, MetricsEventListener metricsEventListener) {
+    synchronized (metricsEventListenerMap) {
+      if(metricsEventListenerMap.containsKey(pipelineName)) {
+        metricsEventListenerMap.get(pipelineName).remove(metricsEventListener);
+      }
     }
   }
 
@@ -68,8 +77,8 @@ public class EventListenerManager {
     }
   }
 
-  public List<MetricsEventListener> getMetricsEventListenerList() {
-    return metricsEventListenerList;
+  public boolean hasMetricEventListeners(String pipelineName) {
+    return metricsEventListenerMap.get(pipelineName) != null &&  metricsEventListenerMap.get(pipelineName).size() > 0;
   }
 
   public void broadcastAlerts(AlertInfo alertInfo) {
@@ -119,11 +128,11 @@ public class EventListenerManager {
     }
   }
 
-  public void broadcastMetrics(String metricsJSONStr) {
-    if(metricsEventListenerList.size() > 0) {
+  public void broadcastMetrics(String pipelineName, String metricsJSONStr) {
+    if(metricsEventListenerMap.containsKey(pipelineName) && metricsEventListenerMap.get(pipelineName).size() > 0) {
       List<MetricsEventListener> metricsEventListenerListCopy;
-      synchronized (metricsEventListenerList) {
-        metricsEventListenerListCopy = new ArrayList(metricsEventListenerList);
+      synchronized (metricsEventListenerMap) {
+        metricsEventListenerListCopy = new ArrayList(metricsEventListenerMap.get(pipelineName));
       }
 
       for(MetricsEventListener metricsEventListener : metricsEventListenerListCopy) {

@@ -15,9 +15,4 @@ import javax.inject.Singleton;
 
 @Module(injects = ClusterRunner.class, library = true, complete = false)
 public class ClusterRunnerInjectorModule {
-  @Provides
-  @Singleton
-  public EventListenerManager provideEventListenerManager() {
-    return new EventListenerManager();
-  }
 }

@@ -10,6 +10,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -65,6 +66,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Inject RunnerProvider runnerProvider;
   @Inject PreviewerProvider previewerProvider;
   @Inject ResourceManager resourceManager;
+  @Inject EventListenerManager eventListenerManager;
 
   private Cache<String, RunnerInfo> runnerCache;
   private Cache<String, Previewer> previewerCache;
@@ -79,6 +81,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
     runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
+    eventListenerManager.addStateEventListener(resourceManager);
   }
 
   @Override
@@ -276,7 +279,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
     Runner runner = runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
-    runner.addStateEventListener(resourceManager);
     return runner;
   }
 

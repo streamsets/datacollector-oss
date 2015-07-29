@@ -658,12 +658,11 @@ angular
             api.pipelineAgent.getPipelineRules($scope.activeConfigInfo.name),
             api.pipelineAgent.getPipelineMetrics($scope.activeConfigInfo.name, 0)]);
         } else {
-          $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName}).then(function(translation) {
-            $rootScope.common.errors = [translation];
-          });
-
-          $location.path('/');
-          $location.replace();
+          $translate('global.messages.info.noPipelineExists', {name: routeParamPipelineName})
+            .then(function(translation) {
+              $location.path('/').search({errors: translation});
+              $location.replace();
+            });
         }
 
       },function(resp) {

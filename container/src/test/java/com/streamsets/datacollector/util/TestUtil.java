@@ -345,6 +345,12 @@ public class TestUtil {
       return conf;
     }
 
+    @Provides @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return new EventListenerManager();
+    }
+
+
   }
 
   /*************** SafeScheduledExecutorService ***************/
@@ -478,12 +484,6 @@ public class TestUtil {
                                                                       PipelineRunner runner, Observer observer) {
       return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib,
         (ProductionPipelineRunner)runner, observer);
-    }
-
-
-    @Provides @Singleton
-    public EventListenerManager provideEventListenerManager() {
-      return new EventListenerManager();
     }
   }
 

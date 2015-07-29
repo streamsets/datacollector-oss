@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.execution.manager.slave;
 
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -19,15 +20,12 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.List;
 
 public class SlavePipelineManager extends AbstractTask implements Manager {
@@ -39,8 +37,8 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
   @Inject Configuration configuration;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
-  @Inject
-  RunnerProvider runnerProvider;
+  @Inject RunnerProvider runnerProvider;
+  @Inject EventListenerManager eventListenerManager;
   private Runner runner;
 
   public SlavePipelineManager(ObjectGraph objectGraph) {

@@ -11,10 +11,7 @@ import com.streamsets.datacollector.cluster.MockClusterProvider;
 import com.streamsets.datacollector.cluster.MockSystemProcess;
 import com.streamsets.datacollector.cluster.MockSystemProcessFactory;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.execution.PipelineState;
-import com.streamsets.datacollector.execution.PipelineStateStore;
-import com.streamsets.datacollector.execution.PipelineStatus;
-import com.streamsets.datacollector.execution.Runner;
+import com.streamsets.datacollector.execution.*;
 import com.streamsets.datacollector.execution.cluster.ClusterHelper;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.runner.cluster.ClusterRunner.ClusterSourceInfo;
@@ -69,6 +66,7 @@ public class TestClusterRunner {
   private URLClassLoader emptyCL;
   private RuntimeInfo runtimeInfo;
   private Configuration conf;
+  private EventListenerManager eventListenerManager;
   private PipelineStoreTask pipelineStoreTask;
   private PipelineStateStore pipelineStateStore;
   private StageLibraryTask stageLibraryTask;
@@ -428,21 +426,24 @@ public class TestClusterRunner {
   }
 
   private Runner createClusterRunner() {
+    eventListenerManager = new EventListenerManager();
     return new ClusterRunner(NAME, "0", "admin", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf));
+      stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
   }
 
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
+    eventListenerManager = new EventListenerManager();
     Runner runner = new ClusterRunner(name, "0", "a", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, resourceManager);
-    runner.addStateEventListener(resourceManager);
+      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager);
+    eventListenerManager.addStateEventListener(resourceManager);
     return runner;
   }
 
   private Runner createClusterRunnerForUnsupportedPipeline() {
+    eventListenerManager = new EventListenerManager();
     return new AsyncRunner(new ClusterRunner(TestUtil.HIGHER_VERSION_PIPELINE, "0", "admin", runtimeInfo, conf,
       pipelineStoreTask, pipelineStateStore, stageLibraryTask, executorService, clusterHelper,
-      new ResourceManager(conf)), new SafeScheduledExecutorService(1, "runner"));
+      new ResourceManager(conf), eventListenerManager), new SafeScheduledExecutorService(1, "runner"));
   }
 
 }

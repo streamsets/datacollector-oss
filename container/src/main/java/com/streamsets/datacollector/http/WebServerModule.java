@@ -7,6 +7,7 @@ package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.JmxReporter;
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -144,12 +145,12 @@ public class WebServerModule {
 
   @Provides(type = Type.SET)
   ContextConfigurator provideWebSocketServlet(final Configuration configuration, final RuntimeInfo runtimeInfo,
-                                        final Manager manager) {
+                                        final EventListenerManager eventListenerManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
         ServletHolder holderEvents = new ServletHolder(new SDCWebSocketServlet(configuration, runtimeInfo,
-          manager));
+          eventListenerManager));
         context.addServlet(holderEvents, "/rest/v1/webSocket");
       }
     };

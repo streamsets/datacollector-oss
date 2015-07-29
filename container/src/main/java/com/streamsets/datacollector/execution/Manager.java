@@ -36,5 +36,4 @@ public interface Manager extends Task {
 
   // returns if the pipeline is in a 'running' state (starting, stopping, running)
   public boolean isPipelineActive(String name, String rev) throws PipelineStoreException;
-
 }

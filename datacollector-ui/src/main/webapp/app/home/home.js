@@ -19,11 +19,19 @@ angular
         }
       });
   }])
-  .controller('HomeController', function ($scope, $rootScope, $q, $modal, $location, pipelineService, api,
+  .controller('HomeController', function ($scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api,
                                           pipelineConstant) {
 
     $location.search('auth_token', null);
     $location.search('auth_user', null);
+
+    if($routeParams.errors) {
+      $rootScope.common.errors = [$routeParams.errors];
+      //$location.search('errors', null);
+    } else {
+      $rootScope.common.errors = [];
+    }
+
 
     angular.extend($scope, {
       loaded: false,

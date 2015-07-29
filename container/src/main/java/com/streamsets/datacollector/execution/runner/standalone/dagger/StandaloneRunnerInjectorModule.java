@@ -16,8 +16,4 @@ import javax.ws.rs.ext.Provider;
 
 @Module(injects = StandaloneRunner.class, library = true, complete = false)
 public class StandaloneRunnerInjectorModule {
-  @Provides @Singleton
-  public EventListenerManager provideEventListenerManager() {
-    return new EventListenerManager();
-  }
 }

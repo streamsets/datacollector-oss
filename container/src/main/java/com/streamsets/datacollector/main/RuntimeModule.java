@@ -7,6 +7,7 @@ package com.streamsets.datacollector.main;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsModule;
@@ -27,7 +28,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class},
+@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class, EventListenerManager.class},
     includes = MetricsModule.class)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
@@ -72,6 +73,11 @@ public class RuntimeModule {
       LOG.error("Error did not find sdc.properties at expected location: {}", configFile);
     }
     return conf;
+  }
+
+  @Provides @Singleton
+  public EventListenerManager provideEventListenerManager() {
+    return new EventListenerManager();
   }
 
 }

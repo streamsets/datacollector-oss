@@ -179,36 +179,6 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public void addStateEventListener(StateEventListener stateEventListener) {
-    runner.addStateEventListener(stateEventListener);
-  }
-
-  @Override
-  public void removeStateEventListener(StateEventListener stateEventListener) {
-    runner.removeStateEventListener(stateEventListener);
-  }
-
-  @Override
-  public void addAlertEventListener(AlertEventListener alertEventListener) {
-    runner.addAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void removeAlertEventListener(AlertEventListener alertEventListener) {
-    runner.removeAlertEventListener(alertEventListener);
-  }
-
-  @Override
-  public void addMetricsEventListener(MetricsEventListener metricsEventListener) {
-    runner.addMetricsEventListener(metricsEventListener);
-  }
-
-  @Override
-  public void removeMetricsEventListener(MetricsEventListener metricsEventListener) {
-    runner.removeMetricsEventListener(metricsEventListener);
-  }
-
-  @Override
   public void close() {
     runner.close();
   }
