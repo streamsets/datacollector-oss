@@ -26,8 +26,6 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.lib.log.LogConstants;
-import org.slf4j.MDC;
 
 import javax.inject.Inject;
 
@@ -102,9 +100,6 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
-    // no need for clear since slaves never run more than one pipeline
-    MDC.put(LogConstants.USER, getUser());
-    MDC.put(LogConstants.ENTITY, getName());
     standaloneRunner.prepareForStart();
   }
 

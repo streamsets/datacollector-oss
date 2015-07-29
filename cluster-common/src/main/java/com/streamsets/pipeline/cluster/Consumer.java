@@ -47,9 +47,6 @@ public class Consumer {
     if (producerError != null) {
       throw new RuntimeException(Utils.format("Producer encountered error: {}", producerError), producerError);
     }
-    if (consumerError != null) {
-      throw new RuntimeException(Utils.format("Consumer encountered error: {}", consumerError), consumerError);
-    }
     try {
       Utils.checkState(batchCommitted, "Cannot take messages when last batch is uncommitted");
       while (running) {
@@ -80,9 +77,10 @@ public class Consumer {
       return null;
     } catch (Throwable throwable) {
       if (!(throwable instanceof ProducerRuntimeException)) {
-        String msg = "Error caught in consumer: " + throwable;
-        LOG.error(msg, throwable);
-        error(throwable);
+        controlChannel.consumerError(throwable);
+        if (consumerError != null) {
+          consumerError = throwable;
+        }
       }
       throw Throwables.propagate(throwable);
     }
@@ -103,10 +101,10 @@ public class Consumer {
    * Send a control message indicating the consumer has encountered an error.
    */
   public void error(Throwable throwable) {
-    if (consumerError == null) {
+    if (consumerError != null) {
       consumerError = throwable;
-      controlChannel.consumerError(throwable);
     }
+    controlChannel.consumerError(throwable);
   }
 
   public boolean inErrorState() {

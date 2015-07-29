@@ -166,12 +166,7 @@ public class ClusterRunner extends AbstractRunner {
     this.slaveCallbackList = CacheBuilder.newBuilder()
       .expireAfterWrite(1, TimeUnit.MINUTES)
       .build();
-    this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), Utils.format("pipeline-{}-{}-{}", user, name,
-      rev));
-    this.tempDir.mkdirs();
-    if (!this.tempDir.isDirectory()) {
-      throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
-    }
+    this.tempDir = Files.createTempDir();
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     int refreshInterval = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     if (refreshInterval > 0) {

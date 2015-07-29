@@ -24,7 +24,6 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private static volatile EmbeddedSDCPool sdcPool;
   private static volatile boolean initialized = false;
-  private Throwable error;
 
   private static synchronized void initialize(Properties properties, Integer id) throws Exception {
     if (initialized) {
@@ -56,17 +55,8 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     if (IS_TRACE_ENABLED) {
       LOG.trace("In executor function " + " " + Thread.currentThread().getName() + ": " + batch.size());
     }
-    if (error != null) {
-      String msg = "Error in previous run: " + error;
-      throw new RuntimeException(msg, error);
-    }
-    try {
-      EmbeddedSDC embeddedSDC = sdcPool.checkout();
-      embeddedSDC.getSource().put(batch);
-    } catch (Exception | Error e) {
-      error = e;
-      throw e;
-    }
+    EmbeddedSDC embeddedSDC = sdcPool.checkout();
+    embeddedSDC.getSource().put(batch);
   }
 
   @Override

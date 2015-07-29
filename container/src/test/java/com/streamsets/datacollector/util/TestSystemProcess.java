@@ -7,16 +7,12 @@ package com.streamsets.datacollector.util;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import com.google.common.io.Files;
 import com.streamsets.datacollector.util.SystemProcessImpl;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,24 +24,27 @@ import java.util.concurrent.TimeUnit;
 
 public class TestSystemProcess {
 
-  private File tempDir;
+  private static final File tempDir;
+
+  static {
+    try {
+      tempDir =  File.createTempFile("test-" + TestSystemProcess.class.getSimpleName() + "-", "");
+      tempDir.delete();
+      tempDir.mkdir();
+      Utils.checkState(tempDir.isDirectory(), "Dir " + tempDir + " does not exist");
+    } catch (IOException e) {
+      throw new IllegalStateException(e);
+    }
+  }
 
   private SystemProcessImpl process;
 
-  @Before
-  public void setup() throws Exception {
-    tempDir = Files.createTempDir();
-  }
   @After
   public void tearDown() {
     if (process != null) {
       process.cleanup();
     }
-    if (tempDir != null) {
-      FileUtils.deleteQuietly(tempDir);
-    }
   }
-
 
   @Test
   public void testStart() throws Exception {
@@ -109,18 +108,5 @@ public class TestSystemProcess {
     List<String> lines = new ArrayList<>();
     Iterables.addAll(lines, process.getError());
     Assert.assertEquals(Arrays.asList("0", "1", "2"), lines);
-  }
-
-  @Test
-  public void testCleanup() throws Exception {
-    for (int i = 0; i < 10; i++) {
-      File f = new File(tempDir, Utils.format("file-{}{}", i, SystemProcessImpl.OUT_EXT));
-      Assert.assertTrue(f.createNewFile());
-    }
-    SystemProcessImpl.clean(tempDir, 5);
-    String[] expected = tempDir.list();
-    Arrays.sort(expected);
-    Assert.assertArrayEquals(new String[]{"file-5.out", "file-6.out", "file-7.out", "file-8.out", "file-9.out"},
-      expected);
   }
 }
