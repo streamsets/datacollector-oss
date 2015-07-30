@@ -18,7 +18,7 @@ angular.module('dataCollectorApp.common')
        * @param endingOffset
        */
       getCurrentLog: function(endingOffset) {
-        var url = apiBase + '/log?endingOffset=' +  (endingOffset ? endingOffset : '-1');
+        var url = apiBase + '/system/logs?endingOffset=' +  (endingOffset ? endingOffset : '-1');
         return $http({
           method: 'GET',
           url: url
@@ -31,7 +31,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getFilesList: function() {
-        var url = apiBase + '/log/files';
+        var url = apiBase + '/system/logs/files';
         return $http({
           method: 'GET',
           url: url
@@ -45,7 +45,7 @@ angular.module('dataCollectorApp.common')
        * Fetch Help IDs
        */
       getHelpRef: function() {
-        var url = apiBase + '/helpref';
+        var url = apiBase + '/definitions/helpref';
         return $http({
           method: 'GET',
           url: url
@@ -69,7 +69,7 @@ angular.module('dataCollectorApp.common')
        * Fetches JVM Thread Dump
        */
       getThreadDump: function() {
-        var url = apiBase + '/admin/threadsDump';
+        var url = apiBase + '/system/threads';
         return $http({
           method: 'GET',
           url: url
@@ -80,7 +80,7 @@ angular.module('dataCollectorApp.common')
        * Fetched User Information
        */
       getUserInfo: function() {
-        var url = apiBase + '/info/user';
+        var url = apiBase + '/system/info/currentUser';
         return $http({
           method: 'GET',
           url: url
@@ -91,7 +91,7 @@ angular.module('dataCollectorApp.common')
        * Fetched Build Information
        */
       getBuildInfo: function() {
-        var url = apiBase + '/info/sdc';
+        var url = apiBase + '/system/info';
         return $http({
           method: 'GET',
           url: url
@@ -103,7 +103,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       shutdownCollector: function() {
-        var url = apiBase + '/admin/shutdown';
+        var url = apiBase + '/system/shutdown';
         return $http({
           method: 'POST',
           url: url
@@ -126,7 +126,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getSDCDirectories: function() {
-        var url = apiBase + '/admin/sdcDirectories';
+        var url = apiBase + '/system/directories';
         return $http({
           method: 'GET',
           url: url
@@ -142,7 +142,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getConfiguration: function() {
-        var url = apiBase + '/configuration/all';
+        var url = apiBase + '/system/configuration';
         return $http({
           method: 'GET',
           url: url
@@ -168,7 +168,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getPipelines: function() {
-        var url = apiBase + '/pipeline-library';
+        var url = apiBase + '/pipelines';
         return $http({
           method: 'GET',
           url: url
@@ -188,7 +188,7 @@ angular.module('dataCollectorApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipeline-library/' + name;
+        url = apiBase + '/pipeline/' + name;
         return $http({
           method: 'GET',
           url: url
@@ -208,7 +208,7 @@ angular.module('dataCollectorApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipeline-library/' + name + '?get=info';
+        url = apiBase + '/pipeline/' + name + '?get=info';
         return $http({
           method: 'GET',
           url: url
@@ -229,7 +229,7 @@ angular.module('dataCollectorApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipeline-library/' + name;
+        url = apiBase + '/pipeline/' + name;
         return $http({
           method: 'POST',
           url: url,
@@ -244,7 +244,7 @@ angular.module('dataCollectorApp.common')
        * @param description
        */
       createNewPipelineConfig: function(name, description) {
-        var url = apiBase + '/pipeline-library/' + name + '?description=' + description;
+        var url = apiBase + '/pipeline/' + name + '?description=' + description;
 
         return $http({
           method: 'PUT',
@@ -259,7 +259,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       deletePipelineConfig: function(name) {
-        var url = apiBase + '/pipeline-library/' + name;
+        var url = apiBase + '/pipeline/' + name;
 
         return $http({
           method: 'DELETE',
@@ -329,7 +329,7 @@ angular.module('dataCollectorApp.common')
           name = 'xyz';
         }
 
-        url = apiBase + '/pipeline-library/' + name + '?attachment=true';
+        url = apiBase + '/pipeline/' + name + '?attachment=true';
 
         window.open(url, '_blank', '');
       },
@@ -353,7 +353,7 @@ angular.module('dataCollectorApp.common')
           batchSize = 10;
         }
 
-        url = apiBase + '/preview/' + name + '/create?batchSize=' + batchSize + '&rev=' + rev +
+        url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
             '&skipTargets=' + skipTargets;
 
         if(endStage) {
@@ -372,9 +372,10 @@ angular.module('dataCollectorApp.common')
        * Fetches Preview Status
        *
        * @param previewerId
+       * @param pipelineName
        */
-      getPreviewStatus: function(previewerId) {
-        var url = apiBase + '/preview-id/' + previewerId + '/status' ;
+      getPreviewStatus: function(previewerId, pipelineName) {
+        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId + '/status' ;
         return $http({
           method: 'GET',
           url: url
@@ -386,9 +387,10 @@ angular.module('dataCollectorApp.common')
        * Fetches Preview Data
        *
        * @param previewerId
+       * @param pipelineName
        */
-      getPreviewData: function(previewerId) {
-        var url = apiBase + '/preview-id/' + previewerId;
+      getPreviewData: function(previewerId, pipelineName) {
+        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId;
         return $http({
           method: 'GET',
           url: url
@@ -399,11 +401,12 @@ angular.module('dataCollectorApp.common')
        * Stop Preview
        *
        * @param previewerId
+       * @param pipelineName
        */
-      cancelPreview: function(previewerId) {
-        var url = apiBase + '/preview-id/' + previewerId + '/cancel' ;
+      cancelPreview: function(previewerId, pipelineName) {
+        var url = apiBase + '/pipeline/pipelineName/preview/' + previewerId;
         return $http({
-          method: 'POST',
+          method: 'DELETE',
           url: url
         });
       },
@@ -613,7 +616,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       rawSourcePreview: function(name, rev, configurations) {
-        var url = apiBase + '/preview/' + name + '/rawSourcePreview?rev=' + rev;
+        var url = apiBase + '/pipeline/' + name + '/rawSourcePreview?rev=' + rev;
 
         angular.forEach(configurations, function(config) {
           if(config.name && config.value !== undefined) {
@@ -664,7 +667,7 @@ angular.module('dataCollectorApp.common')
       getPipelineRules: function(name) {
         var url;
 
-        url = apiBase + '/pipeline-library/' + name + '/rules';
+        url = apiBase + '/pipeline/' + name + '/rules';
         return $http({
           method: 'GET',
           url: url
@@ -679,7 +682,7 @@ angular.module('dataCollectorApp.common')
        * @returns Updated Pipeline Rules
        */
       savePipelineRules: function(name, rules) {
-        var url = apiBase + '/pipeline-library/' + name + '/rules';
+        var url = apiBase + '/pipeline/' + name + '/rules';
         return $http({
           method: 'POST',
           url: url,

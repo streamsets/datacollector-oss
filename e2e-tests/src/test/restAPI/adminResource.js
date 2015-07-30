@@ -11,7 +11,7 @@ frisby.create('Login to StreamSets Data Collector using admin role')
      * GET rest/v1/admin/threadsDump
      */
     frisby.create('Should return SDC JVM Thread Dump')
-      .get(browser.baseUrl + 'rest/v1/admin/threadsDump', {
+      .get(browser.baseUrl + 'rest/v1/system/threads', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -46,7 +46,7 @@ frisby.create('Login to StreamSets Data Collector using creator role')
      * GET rest/v1/admin/threadsDump
      */
     frisby.create('Should throw 403 forbidden error when non admin user requests for SDC JVM Thread Dump')
-      .get(browser.baseUrl + 'rest/v1/admin/threadsDump', {
+      .get(browser.baseUrl + 'rest/v1/system/threads', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -62,7 +62,7 @@ frisby.create('Login to StreamSets Data Collector using creator role')
      * GET rest/v1/admin/shutdown
      */
     frisby.create('Should throw 403 forbidden error when non admin user requests for shutdown')
-      .post(browser.baseUrl + 'rest/v1/admin/shutdown', {}, {
+      .post(browser.baseUrl + 'rest/v1/system/shutdown', {}, {
         headers:  {
           "Cookie": cookie
         }

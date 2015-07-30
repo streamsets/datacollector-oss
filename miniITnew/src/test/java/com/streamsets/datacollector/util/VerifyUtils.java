@@ -196,8 +196,8 @@ public class VerifyUtils {
   public static String preview(URI serverURI, String pipelineName, String rev)
     throws MalformedURLException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/preview/" + pipelineName
-      + "/" + "create").queryParam("rev", rev);
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + pipelineName
+      + "/preview").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity("", MediaType.APPLICATION_JSON));
     checkResponse(response, Response.Status.OK);
     Map<String, Object> map = response.readEntity(Map.class);
@@ -208,7 +208,7 @@ public class VerifyUtils {
   public static boolean isPreviewDone(URI serverURI, String previewerId) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
     WebTarget target =
-      client.target(serverURI.toURL().toString()).path("/rest/v1/preview-id/" + previewerId + "/" + "status");
+      client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/foo/preview/" + previewerId + "/" + "status");
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     Map<String, Object> map = response.readEntity(Map.class);
@@ -219,7 +219,7 @@ public class VerifyUtils {
 
   public static Map<String, Object> getPreviewOutput(URI serverURI, String previewerId) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
-    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/preview-id/" + previewerId);
+    WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/foo/preview/" + previewerId);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);
     System.out.println();

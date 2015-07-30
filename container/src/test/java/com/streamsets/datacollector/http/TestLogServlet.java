@@ -126,7 +126,7 @@ public class TestLogServlet {
 
   @Test
   public void testLogs() throws Exception {
-      String baseLogUrl = startServer() + "/rest/v1/log";
+      String baseLogUrl = startServer() + "/rest/v1/system/logs";
       try {
       HttpURLConnection conn = (HttpURLConnection) new URL(baseLogUrl + "/files").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());

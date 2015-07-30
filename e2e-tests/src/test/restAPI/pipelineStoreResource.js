@@ -9,10 +9,10 @@ frisby.create('Login to StreamSets Data Collector')
       initialPipelineCount = 0;
 
     /**
-     * GET rest/v1/pipeline-library
+     * GET rest/v1/pipelines
      */
     frisby.create('Should return all Pipeline Configuration Info.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library', {
+      .get(browser.baseUrl + 'rest/v1/pipelines', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -32,10 +32,10 @@ frisby.create('Login to StreamSets Data Collector')
 
 
     /**
-     * PUT rest/v1/pipeline-library/<PIPELINE_NAME>?description=<DESCRIPTION>
+     * PUT rest/v1/pipeline/<PIPELINE_NAME>?description=<DESCRIPTION>
      */
     frisby.create('Should be able to save new pipeline.')
-      .put(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1?description=pipeline%20description', {}, {
+      .put(browser.baseUrl + 'rest/v1/pipeline/pipeline1?description=pipeline%20description', {}, {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -53,10 +53,10 @@ frisby.create('Login to StreamSets Data Collector')
       .toss();
 
     /**
-     * GET rest/v1/pipeline-library
+     * GET rest/v1/pipeline
      */
     frisby.create('Should return newly saved Pipeline Configuration Info.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library', {
+      .get(browser.baseUrl + 'rest/v1/pipelines', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -83,10 +83,10 @@ frisby.create('Login to StreamSets Data Collector')
       .toss();
 
     /**
-     * PUT rest/v1/pipeline-library/<PIPELINE_NAME>?description=<DESCRIPTION>
+     * PUT rest/v1/pipeline/<PIPELINE_NAME>?description=<DESCRIPTION>
      */
     frisby.create('Should throw exception when trying to save pipeline with duplicate name.')
-      .put(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1?description=pipeline%20description', {}, {
+      .put(browser.baseUrl + 'rest/v1/pipeline/pipeline1?description=pipeline%20description', {}, {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -105,10 +105,10 @@ frisby.create('Login to StreamSets Data Collector')
 
 
     /**
-     * GET rest/v1/pipeline-library/<PIPELINE_NAME>?get=info
+     * GET rest/v1/pipeline/<PIPELINE_NAME>?get=info
      */
     frisby.create('Should be able to fetch pipeline info.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1?get=info', {
+      .get(browser.baseUrl + 'rest/v1/pipeline/pipeline1?get=info', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -129,10 +129,10 @@ frisby.create('Login to StreamSets Data Collector')
       .toss();
 
     /**
-     * GET rest/v1/pipeline-library/<PIPELINE_NAME>
+     * GET rest/v1/pipeline/<PIPELINE_NAME>
      */
     frisby.create('Should be able to fetch pipeline configuration.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1', {
+      .get(browser.baseUrl + 'rest/v1/pipeline/pipeline1', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -178,7 +178,7 @@ frisby.create('Login to StreamSets Data Collector')
         console.log(pipeline1ConfigJSON);
 
         frisby.create('Should be save pipeline configuration.')
-          .post(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1',
+          .post(browser.baseUrl + 'rest/v1/pipeline/pipeline1',
             pipeline1ConfigJSON,
             {
               json: true,
@@ -227,10 +227,10 @@ frisby.create('Login to StreamSets Data Collector')
 
 
     /**
-     * GET rest/v1/pipeline-library/<PIPELINE_NAME>/rules
+     * GET rest/v1/pipeline/<PIPELINE_NAME>/rules
      */
     frisby.create('Should be able to fetch pipeline rules.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1/rules', {
+      .get(browser.baseUrl + 'rest/v1/pipeline/pipeline1/rules', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -255,10 +255,10 @@ frisby.create('Login to StreamSets Data Collector')
       .toss();
 
     /**
-     * DELETE rest/v1/pipeline-library/<PIPELINE_NAME>
+     * DELETE rest/v1/pipeline/<PIPELINE_NAME>
      */
     frisby.create('Should be able to delete pipeline configuration.')
-      .delete(browser.baseUrl + 'rest/v1/pipeline-library/pipeline1', {}, {
+      .delete(browser.baseUrl + 'rest/v1/pipeline/pipeline1', {}, {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",

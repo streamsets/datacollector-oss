@@ -12,7 +12,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/pipeline-library
      */
     frisby.create('Should return all Pipeline Configuration Info.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library', {
+      .get(browser.baseUrl + 'rest/v1/pipelines', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -27,7 +27,7 @@ frisby.create('Login to StreamSets Data Collector')
 
         pipelineListJSON.forEach(function(pipelineInfo) {
           frisby.create('Should be able to delete pipeline configuration.')
-            .delete(browser.baseUrl + 'rest/v1/pipeline-library/' + pipelineInfo.name, {}, {
+            .delete(browser.baseUrl + 'rest/v1/pipeline/' + pipelineInfo.name, {}, {
               headers:  {
                 "Content-Type": "application/json",
                 "Accept": "application/json",

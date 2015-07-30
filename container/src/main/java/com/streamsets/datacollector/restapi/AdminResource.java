@@ -33,8 +33,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v1/admin")
-@Api(value = "admin")
+@Path("/v1/system")
+@Api(value = "system")
 @DenyAll
 public class AdminResource {
 
@@ -65,7 +65,7 @@ public class AdminResource {
   }
 
   @GET
-  @Path("/threadsDump")
+  @Path("/threads")
   @ApiOperation(value = "Returns Thread Dump along with stack trace", response = Map.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ public class AdminResource {
 
 
   @GET
-  @Path("/sdcDirectories")
+  @Path("/directories")
   @ApiOperation(value = "Returns SDC Directories", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed(AuthzRole.ADMIN)

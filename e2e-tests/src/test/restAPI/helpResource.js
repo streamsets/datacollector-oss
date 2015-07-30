@@ -11,7 +11,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/helpref
      */
     frisby.create('Should return Help Reference data')
-      .get(browser.baseUrl + 'rest/v1/helpref', {
+      .get(browser.baseUrl + 'rest/v1/definitions/helpref', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",

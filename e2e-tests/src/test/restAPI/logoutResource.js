@@ -21,7 +21,7 @@ frisby.create('Login to StreamSets Data Collector')
       .after(function(body, res) {
         var cookie = res.headers['set-cookie'];
         frisby.create('Trying to access build info after logout should redirect to login page.')
-          .get(browser.baseUrl + 'rest/v1/admin/threadsDump', {
+          .get(browser.baseUrl + 'rest/v1/system/threads', {
             headers:  {
               "Content-Type": "application/json",
               "Accept": "application/json",

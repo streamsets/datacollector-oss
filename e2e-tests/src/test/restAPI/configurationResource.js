@@ -11,7 +11,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/configuration/all
      */
     frisby.create('Should return SDC Configuration data')
-      .get(browser.baseUrl + 'rest/v1/configuration/all', {
+      .get(browser.baseUrl + 'rest/v1/system/configuration', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",

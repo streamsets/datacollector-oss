@@ -505,8 +505,7 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageIconURL = function(stage) {
       if(stage.icon) {
-        return '/rest/' + api.apiVersion + '/definitions/stages/icon?name=' + stage.name +
-        '&library=' + stage.library + '&version=' + stage.version;
+        return '/rest/' + api.apiVersion + '/definitions/stages/' + stage.library + '/' + stage.name + '/icon';
       } else {
         switch(stage.type) {
           case pipelineConstant.SOURCE_STAGE_TYPE:

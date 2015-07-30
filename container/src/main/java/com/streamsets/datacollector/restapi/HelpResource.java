@@ -27,8 +27,8 @@ import java.io.Reader;
 import java.util.Map;
 import java.util.Properties;
 
-@Path("/v1/helpref")
-@Api(value = "helpref")
+@Path("/v1/definitions/helpref")
+@Api(value = "definitions")
 @DenyAll
 public class HelpResource {
   private final RuntimeInfo runtimeInfo;

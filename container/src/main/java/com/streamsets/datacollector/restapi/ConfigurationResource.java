@@ -23,8 +23,8 @@ import javax.ws.rs.core.Response;
 
 import java.util.Map;
 
-@Path("/v1/configuration")
-@Api(value = "configuration")
+@Path("/v1/system")
+@Api(value = "system")
 @DenyAll
 public class ConfigurationResource {
   private static final String UI_PREFIX = "ui.";
@@ -37,7 +37,7 @@ public class ConfigurationResource {
   }
 
   @GET
-  @Path("/ui")
+  @Path("/configuration/ui")
   @ApiOperation(value = "Returns UI SDC Configuration", response = Map.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
@@ -49,7 +49,7 @@ public class ConfigurationResource {
 
 
   @GET
-  @Path("/all")
+  @Path("configuration")
   @ApiOperation(value = "Returns ALL SDC Configuration", response = Map.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)

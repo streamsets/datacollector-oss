@@ -31,8 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v1/info")
-@Api(value = "info")
+@Path("/v1/system")
+@Api(value = "system")
 @DenyAll
 public class InfoResource {
 
@@ -44,7 +44,7 @@ public class InfoResource {
   }
 
   @GET
-  @Path("/sdc")
+  @Path("/info")
   @ApiOperation(value = "Returns SDC Info", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
@@ -53,7 +53,7 @@ public class InfoResource {
   }
 
   @GET
-  @Path("/user")
+  @Path("/info/currentUser")
   @ApiOperation(value = "Returns User Info", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll

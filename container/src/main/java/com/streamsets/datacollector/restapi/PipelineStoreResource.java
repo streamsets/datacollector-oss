@@ -56,8 +56,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v1/pipeline-library")
-@Api(value = "pipeline-library")
+@Path("/v1")
+@Api(value = "store")
 @DenyAll
 public class PipelineStoreResource {
   private static final String HIGH_BAD_RECORDS_ID = "badRecordsAlertID";
@@ -102,6 +102,7 @@ public class PipelineStoreResource {
     this.runtimeInfo = runtimeInfo;
   }
 
+  @Path("/pipelines")
   @GET
   @ApiOperation(value = "Returns all Pipeline Configuration Info", response = PipelineInfoJson.class,
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
@@ -113,7 +114,7 @@ public class PipelineStoreResource {
       .build();
   }
 
-  @Path("/{pipelineName}")
+  @Path("/pipeline/{pipelineName}")
   @GET
   @ApiOperation(value = "Find Pipeline Configuration by name and revision", response = PipelineConfigurationJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -155,7 +156,7 @@ public class PipelineStoreResource {
 
   }
 
-  @Path("/{pipelineName}")
+  @Path("/pipeline/{pipelineName}")
   @PUT
   @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -199,7 +200,7 @@ public class PipelineStoreResource {
       BeanHelper.wrapPipelineConfiguration(pipeline)).build();
   }
 
-  @Path("/{pipelineName}")
+  @Path("/pipeline/{pipelineName}")
   @DELETE
   @ApiOperation(value = "Delete Pipeline Configuration by name", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
@@ -213,7 +214,7 @@ public class PipelineStoreResource {
     return Response.ok().build();
   }
 
-  @Path("/{pipelineName}")
+  @Path("/pipeline/{pipelineName}")
   @POST
   @ApiOperation(value = "Update an existing Pipeline Configuration by name", response = PipelineConfigurationJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -234,7 +235,7 @@ public class PipelineStoreResource {
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
-  @Path("/{pipelineName}/rules")
+  @Path("/pipeline/{pipelineName}/rules")
   @GET
   @ApiOperation(value = "Find Pipeline Rules by name and revision", response = RuleDefinitionsJson.class,
     authorizations = @Authorization(value = "basic"))
@@ -253,7 +254,7 @@ public class PipelineStoreResource {
       BeanHelper.wrapRuleDefinitions(ruleDefinitions)).build();
   }
 
-  @Path("/{pipelineName}/rules")
+  @Path("/pipeline/{pipelineName}/rules")
   @POST
   @ApiOperation(value = "Update an existing Pipeline Rules by name", response = RuleDefinitionsJson.class,
     authorizations = @Authorization(value = "basic"))

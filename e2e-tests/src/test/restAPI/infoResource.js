@@ -11,7 +11,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/info/sdc
      */
     frisby.create('Should return SDC Build Information data')
-      .get(browser.baseUrl + 'rest/v1/info/sdc', {
+      .get(browser.baseUrl + 'rest/v1/system/info', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -35,7 +35,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/info/user
      */
     frisby.create('Should return User Information')
-      .get(browser.baseUrl + 'rest/v1/info/user', {
+      .get(browser.baseUrl + 'rest/v1/system/info/currentUser', {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",

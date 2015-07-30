@@ -57,19 +57,17 @@ import java.util.List;
 import java.util.Map;
 
 @Path("/v1")
-@Api(value = "pipeline")
+@Api(value = "manager")
 @DenyAll
 public class ManagerResource {
 
   private final String user;
   private final Manager manager;
-  private final RuntimeInfo runtimeInfo;
   private static final Logger LOG = LoggerFactory.getLogger(ManagerResource.class);
 
   @Inject
-  public ManagerResource(Manager manager, RuntimeInfo runtimeInfo, Principal user) {
+  public ManagerResource(Manager manager, Principal user) {
     this.manager = manager;
-    this.runtimeInfo = runtimeInfo;
     this.user = user.getName();
   }
 
@@ -235,7 +233,7 @@ public class ManagerResource {
       snapshotInfoList)).build();
   }
 
-  @Path("/pipeline/{pipelineName}/snapshots/")
+  @Path("/pipeline/{pipelineName}/snapshots")
   @GET
   @ApiOperation(value = "Returns Snapshot Info for the given pipeline", response = SnapshotInfoJson.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))

@@ -32,13 +32,13 @@ frisby.create('Login to StreamSets Data Collector')
 
 
         var firstStageDefinition = definitionsJSON.stages[0],
-          iconURL = browser.baseUrl + 'rest/v1/definitions/stages/icon?name=' + firstStageDefinition.name +
-            '&library=' + firstStageDefinition.library + '&version=' + firstStageDefinition.version,
+          iconURL = browser.baseUrl + 'rest/v1/definitions/stages/' + firstStageDefinition.library + '/' +
+            firstStageDefinition.name + '/icon',
           icon = firstStageDefinition.icon,
           contentType = icon.indexOf('.png') !== -1 ? 'image/png' : 'image/svg+xml';
 
         /**
-         * GET rest/v1/definitions/stages/icon?name=<STAGE_NAME>&library=<LIBRARY_NAME>&version=<VERSION>
+         * GET rest/v1/definitions/stages/<LIBRARY_NAME>/<STAGE_NAME>/icon
          */
         frisby.create('Should return icon for Stage Library')
           .get(iconURL, {

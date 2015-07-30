@@ -10,10 +10,8 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.IssueJson;
-import com.streamsets.datacollector.restapi.bean.PreviewPipelineOutputJson;
+import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -31,6 +29,7 @@ import io.swagger.annotations.Authorization;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -62,21 +61,19 @@ public class PreviewResource {
   //preview.maxBatchSize
   private final Manager manager;
   private final Configuration configuration;
-  private final RuntimeInfo runtimeInfo;
   private final String user;
 
   @Inject
-  public PreviewResource(Manager manager, Configuration configuration, Principal principal, RuntimeInfo runtimeInfo) {
+  public PreviewResource(Manager manager, Configuration configuration, Principal principal) {
     this.manager = manager;
     this.configuration = configuration;
-    this.runtimeInfo = runtimeInfo;
     this.user = principal.getName();
   }
 
-  @Path("/preview/{pipelineName}/create")
+  @Path("/pipeline/{pipelineName}/preview")
   @POST
   @ApiOperation(value = "Run Pipeline preview by overriding passed stage instance data and get preview data",
-    response = PreviewPipelineOutputJson.class, authorizations = @Authorization(value = "basic"))
+    response = String.class, responseContainer = "Map", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response previewWithOverride(
@@ -118,13 +115,14 @@ public class PreviewResource {
     }
   }
 
-  @Path("/preview-id/{previewerId}/status")
+  @Path("/pipeline/{pipelineName}/preview/{previewerId}/status")
   @GET
-  @ApiOperation(value = "Return Preview status by previewer ID", response = PreviewPipelineOutputJson.class,
+  @ApiOperation(value = "Return Preview status by previewer ID", response = String.class, responseContainer = "Map",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response getPreviewStatus(@PathParam("previewerId") String previewerId)
+  public Response getPreviewStatus(@PathParam("pipelineName") String pipelineName,
+                                   @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
@@ -134,13 +132,14 @@ public class PreviewResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("status", previewer.getStatus())).build();
   }
 
-  @Path("/preview-id/{previewerId}")
+  @Path("/pipeline/{pipelineName}/preview/{previewerId}")
   @GET
-  @ApiOperation(value = "Return Preview Data by previewer ID", response = PreviewPipelineOutputJson.class,
+  @ApiOperation(value = "Return Preview Data by previewer ID", response = PreviewOutputJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response getPreviewData(@PathParam("previewerId") String previewerId)
+  public Response getPreviewData(@PathParam("pipelineName") String pipelineName,
+                                 @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
@@ -151,13 +150,14 @@ public class PreviewResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapPreviewOutput(previewOutput)).build();
   }
 
-  @Path("/preview-id/{previewerId}/cancel")
-  @POST
-  @ApiOperation(value = "Stop Preview by previewer ID", response = PreviewPipelineOutputJson.class,
+  @Path("/pipeline/{pipelineName}/preview/{previewerId}")
+  @DELETE
+  @ApiOperation(value = "Stop Preview by previewer ID", response = String.class, responseContainer = "Map",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
-  public Response stopPreview(@PathParam("previewerId") String previewerId)
+  public Response stopPreview(@PathParam("pipelineName") String pipelineName,
+                              @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
     Previewer previewer = manager.getPreviewer(previewerId);
     if(previewer == null) {
@@ -168,7 +168,7 @@ public class PreviewResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewer.getStatus()).build();
   }
 
-  @Path("/preview/{pipelineName}/rawSourcePreview")
+  @Path("/pipeline/{pipelineName}/rawSourcePreview")
   @GET
   @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = Map.class,
     authorizations = @Authorization(value = "basic"))
@@ -190,7 +190,7 @@ public class PreviewResource {
   @Path("/pipeline/{pipelineName}/validate")
   @GET
   @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
-    response = IssueJson.class, authorizations = @Authorization(value = "basic"))
+    response = String.class, responseContainer = "Map", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response validateConfigs(

@@ -59,7 +59,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetPipelines() {
-    Response response = target("/v1/pipeline-library").request().get();
+    Response response = target("/v1/pipelines").request().get();
     List<PipelineInfoJson> pipelineInfoJsons = response.readEntity(new GenericType<List<PipelineInfoJson>>() {});
     Assert.assertNotNull(pipelineInfoJsons);
     Assert.assertEquals(1, pipelineInfoJsons.size());
@@ -67,7 +67,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoPipeline() {
-    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1").queryParam("get", "pipeline").
+    Response response = target("/v1/pipeline/xyz").queryParam("rev", "1").queryParam("get", "pipeline").
         request().get();
     PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertNotNull(pipelineConfig);
@@ -75,7 +75,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoInfo() {
-    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "info").
+    Response response = target("/v1/pipeline/xyz").queryParam("rev", "1.0.0").queryParam("get", "info").
         request().get();
     PipelineInfoJson pipelineInfoJson = response.readEntity(PipelineInfoJson.class);
     Assert.assertNotNull(pipelineInfoJson);
@@ -83,7 +83,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetInfoHistory() {
-    Response response = target("/v1/pipeline-library/xyz").queryParam("rev", "1.0.0").queryParam("get", "history").
+    Response response = target("/v1/pipeline/xyz").queryParam("rev", "1.0.0").queryParam("get", "history").
         request().get();
     List<PipelineRevInfoJson> pipelineRevInfoJson = response.readEntity(new GenericType<List<PipelineRevInfoJson>>() {});
     Assert.assertNotNull(pipelineRevInfoJson);
@@ -91,7 +91,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testCreate() {
-    Response response = target("/v1/pipeline-library/myPipeline").queryParam("description", "my description").request()
+    Response response = target("/v1/pipeline/myPipeline").queryParam("description", "my description").request()
         .put(Entity.json("abc"));
     PipelineConfigurationJson pipelineConfig = response.readEntity(PipelineConfigurationJson.class);
     Assert.assertEquals(201, response.getStatusInfo().getStatusCode());
@@ -109,14 +109,14 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testDelete() {
-    Response response = target("/v1/pipeline-library/myPipeline").request().delete();
+    Response response = target("/v1/pipeline/myPipeline").request().delete();
     Assert.assertEquals(200, response.getStatus());
   }
 
   @Test
   public void testSave() {
     com.streamsets.datacollector.config.PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    Response response = target("/v1/pipeline-library/myPipeline")
+    Response response = target("/v1/pipeline/myPipeline")
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
         .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));
@@ -149,7 +149,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
     RuleDefinitionsJson ruleDefinitionsJson = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
       Collections.<String>emptyList(), UUID.randomUUID());
-    Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag").request()
+    Response r = target("/v1/pipeline/myPipeline/rules").queryParam("rev", "tag").request()
       .post(Entity.json(ruleDefinitionsJson));
     RuleDefinitionsJson result = r.readEntity(RuleDefinitionsJson.class);
 
@@ -159,7 +159,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
   @Test
   public void testGetRules() {
-    Response r = target("/v1/pipeline-library/myPipeline/rules").queryParam("rev", "tag")
+    Response r = target("/v1/pipeline/myPipeline/rules").queryParam("rev", "tag")
       .request().get();
     Assert.assertNotNull(r);
     RuleDefinitionsJson result = r.readEntity(RuleDefinitionsJson.class);

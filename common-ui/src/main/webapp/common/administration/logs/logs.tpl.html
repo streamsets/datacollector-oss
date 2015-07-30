@@ -21,7 +21,7 @@
       </button>
 
       <div class="btn-group download-btn-group" ng-if="logFiles && logFiles.length">
-        <a href="/rest/v1/log/files/{{logFiles[0].file}}?attachment=true" target="_self"
+        <a href="/rest/v1/system/logs/files/{{logFiles[0].file}}?attachment=true" target="_self"
            class="btn btn-primary btn-sm">{{'logs.download' | translate}}</a>
         <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
           <span class="caret"></span>
@@ -29,7 +29,7 @@
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
           <li ng-repeat="logFile in logFiles">
-            <a href="/rest/v1/log/files/{{logFile.file}}?attachment=true" target="_self">{{logFile.file}}</a>
+            <a href="/rest/v1/system/logs/files/{{logFile.file}}?attachment=true" target="_self">{{logFile.file}}</a>
           </li>
         </ul>
       </div>

@@ -121,7 +121,7 @@ public class TestTokenAuthentication {
 
   @Test
   public void testFormTokenAuthentication() throws Exception {
-    String userInfoURI =  startServer("form") + "/rest/v1/info/user";
+    String userInfoURI =  startServer("form") + "/rest/v1/system/info/currentUser";
 
     //With out token
     Response response = ClientBuilder

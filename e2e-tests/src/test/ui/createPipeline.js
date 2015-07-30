@@ -161,7 +161,7 @@ frisby.create('Login to StreamSets Data Collector')
      * GET rest/v1/pipeline-library/<PIPELINE_NAME>
      */
     frisby.create('Should be able to fetch pipeline configuration.')
-      .get(browser.baseUrl + 'rest/v1/pipeline-library/' + pipelineName, {
+      .get(browser.baseUrl + 'rest/v1/pipeline/' + pipelineName, {
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",

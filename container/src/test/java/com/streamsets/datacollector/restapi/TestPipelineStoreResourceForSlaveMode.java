@@ -50,7 +50,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
   @Test
   public void testCreate() {
     try {
-      Response response = target("/v1/pipeline-library/myPipeline").queryParam("description", "my description").request()
+      Response response = target("/v1/pipeline/myPipeline").queryParam("description", "my description").request()
         .put(Entity.json("abc"));
       Assert.fail("Expected exception but didn't get any");
     } catch (Exception ex) {
@@ -61,7 +61,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
   @Test
   public void testDelete() {
     try {
-      Response response = target("/v1/pipeline-library/myPipeline").request().delete();
+      Response response = target("/v1/pipeline/myPipeline").request().delete();
       Assert.fail("Expected exception but didn't get any");
     } catch (Exception ex) {
       // expected
@@ -73,7 +73,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
     com.streamsets.datacollector.config.PipelineConfiguration toSave = MockStages.createPipelineConfigurationSourceProcessorTarget();
     boolean exceptionThrown = false;
     try {
-      Response response = target("/v1/pipeline-library/myPipeline")
+      Response response = target("/v1/pipeline/myPipeline")
         .queryParam("tag", "tag")
         .queryParam("tagDescription", "tagDescription").request()
         .post(Entity.json(BeanHelper.wrapPipelineConfiguration(toSave)));

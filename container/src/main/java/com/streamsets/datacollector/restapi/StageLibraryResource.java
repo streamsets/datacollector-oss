@@ -23,8 +23,8 @@ import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -104,13 +104,12 @@ public class StageLibraryResource {
   }
 
   @GET
-  @Path("/stages/icon")
-  @ApiOperation(value = "Return stage icon url for pipeline name, stage library and version", response = Object.class,
+  @Path("/stages/{library}/{stageName}/icon")
+  @ApiOperation(value = "Return stage icon for library and stage name", response = Object.class,
     authorizations = @Authorization(value = "basic"))
   @Produces({SVG_MEDIA_TYPE, PNG_MEDIA_TYPE})
   @PermitAll
-  public Response getIcon(@QueryParam("name") String name,
-                          @QueryParam("library") String library) {
+  public Response getIcon(@PathParam("library") String library, @PathParam("stageName") String name) {
     StageDefinition stage = Utils.checkNotNull(stageLibrary.getStage(library, name, false),
       Utils.formatL("Could not find stage library: {}, name: {}", library, name));
     String iconFile = DEFAULT_ICON_FILE;

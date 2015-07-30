@@ -38,8 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Path("/v1/log")
-@Api(value = "log")
+@Path("/v1/system")
+@Api(value = "system")
 @DenyAll
 public class LogResource {
   public static final String X_SDC_LOG_PREVIOUS_OFFSET_HEADER = "X-SDC-LOG-PREVIOUS-OFFSET";
@@ -55,7 +55,8 @@ public class LogResource {
   }
 
   @GET
-  @ApiOperation(value= "Return Log file contents", hidden = true)
+  @Path("/logs")
+  @ApiOperation(value= "Return latest log file contents")
   @Produces(MediaType.TEXT_PLAIN)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
   public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long offset) throws IOException {
@@ -86,7 +87,7 @@ public class LogResource {
   }
 
   @GET
-  @Path("/files")
+  @Path("/logs/files")
   @ApiOperation(value = "Returns all available SDC Log files", response = Map.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
@@ -105,7 +106,7 @@ public class LogResource {
   }
 
   @GET
-  @Path("/files/{logName}")
+  @Path("/logs/files/{logName}")
   @ApiOperation(value = "Returns SDC Log File Content", response = String.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.TEXT_PLAIN)
