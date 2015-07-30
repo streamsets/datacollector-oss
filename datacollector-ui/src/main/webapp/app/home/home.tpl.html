@@ -8,7 +8,7 @@
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
   </div>
 
-  <div class="create-pipeline-btn-group">
+  <div class="create-pipeline-btn-group" ng-if="!common.isSlaveNode">
     <h2 translate="home.getStarted">Get Started</h2>
     <button class="btn btn-primary pull-left create-pipeline-btn"
         ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
@@ -111,7 +111,7 @@
 
     <section class="tile-list ">
 
-      <section class="pipeline-container new-pipeline" >
+      <section class="pipeline-container new-pipeline" ng-if="!common.isSlaveNode">
         <div class="centering-container">
           <a href="" class="btn btn-primary create-pipeline-btn-link" ng-click="addPipelineConfig()">
             <span class="fa fa-plus"></span>

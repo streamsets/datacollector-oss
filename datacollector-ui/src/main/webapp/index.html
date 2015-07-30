@@ -38,7 +38,7 @@
           </a>
         </li>
 
-        <li ng-if="common.sdcExecutionMode === pipelineConstant.SLAVE">
+        <li ng-if="common.isSlaveNode">
           <a ng-href="{{common.sdcClusterManagerURL}}"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.clusterManager' | translate}}"
@@ -137,7 +137,7 @@
                 <span translate="global.menu.admin.logs">Logs</span>
               </a>
             </li>
-            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && common.sdcExecutionMode != pipelineConstant.SLAVE">
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isSlaveNode">
               <a href="javascript:;" ng-click="common.shutdownCollector()">
                 <i class="fa fa-stop"></i>
                 <span translate="global.menu.admin.shutdown">Shutdown</span>

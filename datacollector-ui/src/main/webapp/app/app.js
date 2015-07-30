@@ -83,7 +83,6 @@ angular.module('dataCollectorApp')
         userName: 'Account',
         authenticationType: 'none',
         apiVersion: api.apiVersion,
-        sdcExecutionMode: pipelineConstant.STANDALONE,
         active: {
           home: 'active'
         },
