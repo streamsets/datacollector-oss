@@ -13,19 +13,16 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.TextUtils;
-import com.streamsets.pipeline.api.Config;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.List;
-import java.util.Map;
 
 public class TestPipelineConfigurationValidator {
 
@@ -40,7 +37,7 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(validator.getOpenLanes().isEmpty());
   }
 
-  //@Test
+  @Test
   public void testRequiredInactiveConfig() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineWithRequiredDependentConfig();
