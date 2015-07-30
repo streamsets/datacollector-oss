@@ -355,7 +355,7 @@ angular.module('dataCollectorApp.common')
         }
 
         if(!timeout || timeout <=0) {
-          timeout = 2000;
+          timeout = 10000;
         }
 
         url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +

@@ -16,6 +16,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-html2js');
 
   var userConfig = {
+
+    buildTime: grunt.template.today("yyyy-mm-dd-HH-MM"),
+
     /**
      * The `build_dir` folder is where our projects are compiled.
      */
@@ -155,7 +158,7 @@ module.exports = function(grunt) {
     meta: {
       banner:
         '/**\n' +
-        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n' +
+        ' * <%= pkg.name %> - v<%= pkg.version %> - <%= buildTime %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' * (c) 2015 StreamSets, Inc. All rights reserved. May not \n' +
         ' * be copied, modified, or distributed in whole or part without \n' +
@@ -301,7 +304,7 @@ module.exports = function(grunt) {
        */
       build_css: {
         src: getBuildConcatCSSFiles(),
-        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
       },
       /**
        * The `compile_js` target is the concatenation of our application source
@@ -312,7 +315,7 @@ module.exports = function(grunt) {
           banner: '<%= meta.banner %>'
         },
         src: getCompileJSFiles(),
-        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.js'
+        dest: '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.js'
       }
     },
 
@@ -355,12 +358,12 @@ module.exports = function(grunt) {
     less: {
       build: {
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css': '<%= base_dir %><%= app_files.less %>'
         }
       },
       compile: {
         files: {
-          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css': '<%= base_dir %><%= app_files.less %>'
+          '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css': '<%= base_dir %><%= app_files.less %>'
         },
         options: {
           cleancss: true,
@@ -453,7 +456,7 @@ module.exports = function(grunt) {
           'templates-app.js',
           'templates-common.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
         ]
       },
 
@@ -465,9 +468,9 @@ module.exports = function(grunt) {
       compile: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.js',
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
         ]
       }
     },
@@ -480,14 +483,14 @@ module.exports = function(grunt) {
       build: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
         ]
       },
 
       compile: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
         ]
       }
     },
@@ -690,7 +693,7 @@ module.exports = function(grunt) {
       cssFiles.push(targetDir + '/' + file);
     });
 
-    cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= grunt.template.today("yyyy-mm-dd") %>.css');
+    cssFiles.push('<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css');
 
     return cssFiles;
 
