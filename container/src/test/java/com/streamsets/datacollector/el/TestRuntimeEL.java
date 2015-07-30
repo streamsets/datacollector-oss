@@ -102,22 +102,43 @@ public class TestRuntimeEL {
   @Test
   public void testLoadResource() throws Exception {
     Path fooFile = Paths.get(resourcesDir.getPath(), "foo.txt");
-    Files.write(fooFile, "Hello".getBytes(StandardCharsets.UTF_8));
-    RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-    Assert.assertNull(RuntimeEL.loadResource("bar.txt", false));
-    Assert.assertNull(RuntimeEL.loadResource("bar.txt", true));
-    Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", false));
     try {
-      RuntimeEL.loadResource("foo.txt", true);
-      Assert.fail();
-    } catch (IllegalArgumentException ex) {
-      //nop
-    } catch (Exception ex) {
-      Assert.fail();
+      Files.write(fooFile, "Hello".getBytes(StandardCharsets.UTF_8));
+      RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
+      Assert.assertNull(RuntimeEL.loadResource("bar.txt", false));
+      Assert.assertNull(RuntimeEL.loadResource("bar.txt", true));
+      Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", false));
+      try {
+        RuntimeEL.loadResource("foo.txt", true);
+        Assert.fail();
+      } catch (IllegalArgumentException ex) {
+        //nop
+      } catch (Exception ex) {
+        Assert.fail();
+      }
+      Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
+                                                             PosixFilePermission.OWNER_WRITE));
+      Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
+
+      try {
+        Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OTHERS_READ));
+        Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
+        Assert.fail();
+      } catch (IllegalArgumentException ex) {
+        //NOP
+      }
+
+      try {
+        Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OTHERS_WRITE));
+        Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
+        Assert.fail();
+      } catch (IllegalArgumentException ex) {
+        //NOP
+      }
+    } finally {
+      Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
+                                                             PosixFilePermission.OWNER_WRITE));
     }
-    Files.setPosixFilePermissions(fooFile, ImmutableSet.of(PosixFilePermission.OWNER_READ,
-                                                           PosixFilePermission.OTHERS_WRITE));
-    Assert.assertEquals("Hello", RuntimeEL.loadResource("foo.txt", true));
   }
 
 }

@@ -67,8 +67,10 @@ public class RuntimeEL {
           if (restricted) {
             Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(file.toPath());
             if (permissions.contains(PosixFilePermission.GROUP_READ) ||
-                permissions.contains(PosixFilePermission.OTHERS_READ)) {
-              throw new IllegalArgumentException(Utils.format("File '{}' should be owner readable only", file));
+                permissions.contains(PosixFilePermission.OTHERS_READ) ||
+                permissions.contains(PosixFilePermission.GROUP_WRITE) ||
+                permissions.contains(PosixFilePermission.OTHERS_WRITE)) {
+              throw new IllegalArgumentException(Utils.format("File '{}' should be owner read/write only", file));
             }
           }
         }
