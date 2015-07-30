@@ -111,7 +111,7 @@ public class LowLevelKafkaConsumer {
         LOG.warn(Errors.KAFKA_28.getMessage());
         return Collections.emptyList();
       } else {
-        throw new StageException(Errors.KAFKA_29, e.getMessage(), e);
+        throw new StageException(Errors.KAFKA_29, e.toString(), e);
       }
     }
 
@@ -173,7 +173,7 @@ public class LowLevelKafkaConsumer {
       return offsets[0];
     } catch (Exception e) {
       LOG.error(Errors.KAFKA_30.getMessage(), e);
-      throw new StageException(Errors.KAFKA_30, e.getMessage(), e);
+      throw new StageException(Errors.KAFKA_30, e.toString(), e);
     }
   }
 
@@ -224,7 +224,7 @@ public class LowLevelKafkaConsumer {
         }
       } catch (Exception e) {
         LOG.error(Errors.KAFKA_25.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
-          e.getMessage(), e);
+          e.toString(), e);
       } finally {
         if (simpleConsumer != null) {
           simpleConsumer.close();

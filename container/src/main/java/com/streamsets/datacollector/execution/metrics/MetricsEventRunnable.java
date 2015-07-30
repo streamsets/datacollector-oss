@@ -95,9 +95,9 @@ public class MetricsEventRunnable implements Runnable {
         eventListenerManager.broadcastMetrics(name, metricsJSONStr);
       }
     } catch (IOException ex) {
-      LOG.warn("Error while serializing metrics, {}", ex.getMessage(), ex);
+      LOG.warn("Error while serializing metrics, {}", ex.toString(), ex);
     } catch (PipelineStoreException ex) {
-      LOG.warn("Error while fetching status of pipeline,  {}", ex.getMessage(), ex);
+      LOG.warn("Error while fetching status of pipeline,  {}", ex.toString(), ex);
     }
   }
 

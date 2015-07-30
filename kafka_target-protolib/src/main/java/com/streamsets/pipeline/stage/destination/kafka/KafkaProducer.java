@@ -101,8 +101,8 @@ public class KafkaProducer {
       //Producer internally refreshes metadata and retries if there is any recoverable exception.
       //If retry fails, a FailedToSendMessageException is thrown.
       //In this case we want to fail pipeline.
-      LOG.error(Errors.KAFKA_50.getMessage(), e.getMessage(), e);
-      throw new KafkaConnectionException(Errors.KAFKA_50, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_50.getMessage(), e.toString(), e);
+      throw new KafkaConnectionException(Errors.KAFKA_50, e.toString(), e);
     }
   }
 

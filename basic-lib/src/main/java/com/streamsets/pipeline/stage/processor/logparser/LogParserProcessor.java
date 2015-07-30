@@ -85,7 +85,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
       parserFactory = builder.build();
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(null, null,
-        com.streamsets.pipeline.stage.origin.spooldir.Errors.SPOOLDIR_24, ex.getMessage(), ex));
+        com.streamsets.pipeline.stage.origin.spooldir.Errors.SPOOLDIR_24, ex.toString(), ex));
     }
     return issues;
   }
@@ -108,7 +108,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
         }
       } catch (IOException | DataParserException ex) {
         throw new OnRecordErrorException(Errors.LOGP_03, record.getHeader().getSourceId(), fieldPathToParse,
-                                         ex.getMessage(), ex);
+                                         ex.toString(), ex);
       }
       if (!record.has(parsedFieldPath)) {
         throw new OnRecordErrorException(Errors.LOGP_02, record.getHeader().getSourceId(), parsedFieldPath);

@@ -106,10 +106,10 @@ public class Main {
        return 0;
     } catch (Throwable ex) {
       if (log != null) {
-        log.error("Abnormal exit: {}", ex.getMessage(), ex);
+        log.error("Abnormal exit: {}", ex.toString(), ex);
       }
       System.out.println();
-      System.out.printf(Utils.format("Abnormal exit: {}", ex.getMessage()));
+      System.out.printf(Utils.format("Abnormal exit: {}", ex.toString()));
       System.out.printf("Check STDERR for more details");
       System.out.println();
       System.err.println();

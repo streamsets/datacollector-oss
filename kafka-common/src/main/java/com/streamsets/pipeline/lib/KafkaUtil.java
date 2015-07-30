@@ -137,7 +137,7 @@ public class KafkaUtil {
           PathUtils.validatePath(chrootPath);
         } catch (IllegalArgumentException e) {
           issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_09, connectString,
-            e.getMessage()));
+            e.toString()));
         }
       }
       connectString = connectString.substring(0, off);
@@ -158,7 +158,7 @@ public class KafkaUtil {
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
           issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectString,
-            e.getMessage()));
+            e.toString()));
         }
       }
     }

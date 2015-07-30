@@ -68,7 +68,7 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
       }
 
     } catch (Exception ex) {
-      LOG.warn("Error while calling callback to Callback Server , {}", ex.getMessage(), ex);
+      LOG.warn("Error while calling callback to Callback Server , {}", ex.toString(), ex);
     }
   }
 }

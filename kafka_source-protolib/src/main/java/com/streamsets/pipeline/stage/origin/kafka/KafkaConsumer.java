@@ -79,7 +79,7 @@ public class KafkaConsumer {
     try {
       createConsumer(issues, context);
     } catch (StageException ex) {
-      issues.add(context.createConfigIssue(null, null, Errors.KAFKA_10, ex.getMessage()));
+      issues.add(context.createConfigIssue(null, null, Errors.KAFKA_10, ex.toString()));
     }
   }
 
@@ -98,7 +98,7 @@ public class KafkaConsumer {
       try {
         consumer.shutdown();
       } catch (Exception e) {
-        LOG.error("Error shutting down Kafka Consumer, reason: {}", e.getMessage(), e);
+        LOG.error("Error shutting down Kafka Consumer, reason: {}", e.toString(), e);
       }
     }
   }
@@ -144,11 +144,11 @@ public class KafkaConsumer {
     } catch (Exception e) {
       if(issues != null) {
         issues.add(context.createConfigIssue(Groups.KAFKA.name(), "zookeeperConnect",
-          Errors.KAFKA_31, zookeeperConnect, e.getMessage()));
+          Errors.KAFKA_31, zookeeperConnect, e.toString()));
         return;
       } else {
-        LOG.error(Errors.KAFKA_31.getMessage(), zookeeperConnect, e.getMessage(), e);
-        throw new StageException(Errors.KAFKA_31, zookeeperConnect, e.getMessage(), e);
+        LOG.error(Errors.KAFKA_31.getMessage(), zookeeperConnect, e.toString(), e);
+        throw new StageException(Errors.KAFKA_31, zookeeperConnect, e.toString(), e);
       }
     }
 
@@ -168,8 +168,8 @@ public class KafkaConsumer {
     try {
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(Errors.KAFKA_32.getMessage(), e.getMessage(), e);
-      throw new StageException(Errors.KAFKA_32, e.getMessage(), e);
+      LOG.error(Errors.KAFKA_32.getMessage(), e.toString(), e);
+      throw new StageException(Errors.KAFKA_32, e.toString(), e);
     }
   }
 

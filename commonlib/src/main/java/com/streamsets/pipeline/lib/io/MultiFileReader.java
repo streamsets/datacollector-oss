@@ -188,7 +188,7 @@ public class MultiFileReader implements Closeable {
           try {
             fileContext.releaseReader(true);
           } catch (IOException ex1) {
-            LOG.warn("Error while releasing reader in error: {}", ex1.getMessage(), ex1);
+            LOG.warn("Error while releasing reader in error: {}", ex1.toString(), ex1);
           }
         }
       }

@@ -113,7 +113,7 @@ public class AsyncPreviewer implements Previewer {
         throw (PipelineException)e.getCause();
       } else {
         //some exception while previewing
-        throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e);
+        throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
       }
     } catch (InterruptedException | TimeoutException e) {
       return false;

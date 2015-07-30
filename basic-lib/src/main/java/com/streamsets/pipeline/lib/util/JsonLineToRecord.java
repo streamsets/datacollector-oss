@@ -23,7 +23,7 @@ public class JsonLineToRecord implements ToRecord {
       Object json = objectMapper.readValue(line, Object.class);
       return JsonUtil.jsonToField(json);
     } catch (Exception ex) {
-      throw new ToRecordException(Errors.RECORD_00, line, ex.getMessage(), ex);
+      throw new ToRecordException(Errors.RECORD_00, line, ex.toString(), ex);
     }
   }
 
@@ -35,7 +35,7 @@ public class JsonLineToRecord implements ToRecord {
       record.set(parse(line));
       return record;
     } catch (Exception ex) {
-      throw new ToRecordException(Errors.RECORD_00, line, ex.getMessage(), ex);
+      throw new ToRecordException(Errors.RECORD_00, line, ex.toString(), ex);
     }
   }
 

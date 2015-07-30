@@ -142,7 +142,7 @@ public class EmbeddedDataCollector implements DataCollector {
     try {
       serverURI =  pipelineTask.getWebServerTask().getServerURI();
     } catch (ServerNotYetRunningException ex) {
-      throw new RuntimeException("Cannot retrieve URI of server" + ex.getMessage(), ex);
+      throw new RuntimeException("Cannot retrieve URI of server" + ex.toString(), ex);
     }
     return serverURI;
   }

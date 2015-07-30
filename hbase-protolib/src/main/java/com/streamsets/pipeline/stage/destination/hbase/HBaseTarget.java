@@ -204,7 +204,7 @@ public class HBaseTarget extends BaseTarget {
       }
       LOG.info("Authentication Config: " + logMessage);
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_17, ex.getMessage(), ex));
+      issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_17, ex.toString(), ex));
     }
   }
 
@@ -231,7 +231,7 @@ public class HBaseTarget extends BaseTarget {
             }
           } catch (Exception ex) {
             LOG.warn("Received exception while connecting to cluster: ", ex);
-            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06, ex.getMessage(), ex));
+            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_06, ex.toString(), ex));
           } finally {
             if (hbaseAdmin != null) {
               hbaseAdmin.close();

@@ -63,7 +63,7 @@ public class LogMessageWebSocket extends WebSocketAdapter {
         try {
           session.getRemote().sendString(line);
         } catch (IOException ex) {
-          LOG.warn("Error while sending log line through WebSocket message, {}", ex.getMessage(), ex);
+          LOG.warn("Error while sending log line through WebSocket message, {}", ex.toString(), ex);
         }
       }
 
@@ -74,7 +74,7 @@ public class LogMessageWebSocket extends WebSocketAdapter {
 
       @Override
       public void handle(Exception ex) {
-        LOG.warn("Error while trying to read log file '{}': {}", logFile, ex.getMessage(), ex);
+        LOG.warn("Error while trying to read log file '{}': {}", logFile, ex.toString(), ex);
       }
     };
 
@@ -99,7 +99,7 @@ public class LogMessageWebSocket extends WebSocketAdapter {
   @Override
   public void onWebSocketError(Throwable cause) {
     super.onWebSocketError(cause);
-    LOG.warn("LogMessageWebSocket error: {}", cause.getMessage(), cause);
+    LOG.warn("LogMessageWebSocket error: {}", cause.toString(), cause);
     if(tailer != null) {
       tailer.stop();
     }

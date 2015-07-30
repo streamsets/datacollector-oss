@@ -52,7 +52,8 @@ public class TestStageContext {
     Record eRecord = errorSink.getErrorRecords().get("stage").get(0);
     Assert.assertEquals(record.getHeader().getSourceId(), eRecord.getHeader().getSourceId());
     Assert.assertEquals("CONTAINER_0001", eRecord.getHeader().getErrorCode());
-    Assert.assertEquals("CONTAINER_0001 - BAR", eRecord.getHeader().getErrorMessage());
+    Assert.assertTrue(eRecord.getHeader().getErrorMessage().contains("CONTAINER_0001"));
+    Assert.assertTrue(eRecord.getHeader().getErrorMessage().contains("BAR"));
   }
 
   @Test

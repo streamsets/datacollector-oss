@@ -253,10 +253,10 @@ public class MetricRuleEvaluator {
       //A faulty condition should not take down rest of the alerts with it.
       //Log and it and continue for now
       LOG.error("Error processing metric definition alert '{}', reason: {}", metricsRuleDefinition.getId(),
-        e.getMessage(), e);
+        e.toString(), e);
 
       //Trigger alert with exception message
-      alertManager.alertException(e.getMessage(), metricsRuleDefinition);
+      alertManager.alertException(e.toString(), metricsRuleDefinition);
     }
   }
 }

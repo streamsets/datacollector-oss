@@ -142,7 +142,7 @@ public abstract class ModelDefinitionExtractor {
         values.getValues();
         values.getLabels();
       } catch (Exception ex) {
-        errors.add(new ErrorMessage(DefinitionError.DEF_210, contextMsg, ex.getMessage()));
+        errors.add(new ErrorMessage(DefinitionError.DEF_210, contextMsg, ex.toString()));
       }
       return errors;
     }
@@ -157,7 +157,7 @@ public abstract class ModelDefinitionExtractor {
           return new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
         } catch (Exception ex) {
-          throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
         }
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
@@ -176,7 +176,7 @@ public abstract class ModelDefinitionExtractor {
         values.getValues();
         values.getLabels();
       } catch (Exception ex) {
-        errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.getMessage()));
+        errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.toString()));
       }
       return errors;
     }
@@ -191,7 +191,7 @@ public abstract class ModelDefinitionExtractor {
           return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
         } catch (Exception ex) {
-          throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
         }
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));

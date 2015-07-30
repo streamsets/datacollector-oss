@@ -58,7 +58,7 @@ public class DataStore {
         try {
           stream.close();
         } catch (IOException ex) {
-          LOG.error("DataStore '{}' error while closing stream, {}", file, ex.getMessage(), ex);
+          LOG.error("DataStore '{}' error while closing stream, {}", file, ex.toString(), ex);
         }
         FILE_LOCKS.remove(file);
         throw new IOException(Utils.format("DataStore '{}' closed while open for '{}'", file,

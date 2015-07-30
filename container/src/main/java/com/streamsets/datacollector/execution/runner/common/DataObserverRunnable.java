@@ -63,7 +63,7 @@ public class DataObserverRunnable implements Runnable {
             }
           }
         } catch (InterruptedException e) {
-          LOG.debug("Stopping the Pipeline Observer, Reason: {}", e.getMessage(), e);
+          LOG.debug("Stopping the Pipeline Observer, Reason: {}", e.toString(), e);
           return;
         }
       }

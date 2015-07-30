@@ -96,7 +96,7 @@ public class LogDataFormatValidator {
       ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat);
     } catch (DataParserException e) {
       issues.add(context.createConfigIssue(groupName, "customLogFormat", Errors.LOG_PARSER_06, customLogFormat,
-        e.getMessage(), e));
+        e.toString(), e));
     }
   }
 
@@ -111,7 +111,7 @@ public class LogDataFormatValidator {
         Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat);
       } catch (DataParserException e) {
         issues.add(context.createConfigIssue(groupName, "log4jCustomLogFormat", Errors.LOG_PARSER_06,
-          log4jCustomLogFormat, e.getMessage(), e));
+          log4jCustomLogFormat, e.toString(), e));
       }
     }
   }
@@ -130,7 +130,7 @@ public class LogDataFormatValidator {
       }
     } catch (PatternSyntaxException e) {
       issues.add(context.createConfigIssue(groupName, "regex", Errors.LOG_PARSER_07,
-        regex, e.getMessage(), e));
+        regex, e.toString(), e));
     }
   }
 
@@ -147,7 +147,7 @@ public class LogDataFormatValidator {
       grokDictionary.compileExpression(grokPattern);
     } catch (PatternSyntaxException e) {
       issues.add(context.createConfigIssue(groupName, "regex", Errors.LOG_PARSER_09,
-        regex, e.getMessage(), e));
+        regex, e.toString(), e));
     }
   }
 

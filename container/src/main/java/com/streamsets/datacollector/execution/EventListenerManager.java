@@ -95,11 +95,11 @@ public class EventListenerManager {
           try {
             alertEventListener.notification(ruleDefinitionJSONStr);
           } catch (Exception ex) {
-            LOG.warn("Error while notifying alerts, {}", ex.getMessage(), ex);
+            LOG.warn("Error while notifying alerts, {}", ex.toString(), ex);
           }
         }
       } catch (JsonProcessingException ex) {
-        LOG.warn("Error while broadcasting alerts, {}", ex.getMessage(), ex);
+        LOG.warn("Error while broadcasting alerts, {}", ex.toString(), ex);
       }
     }
   }
@@ -119,11 +119,11 @@ public class EventListenerManager {
           try {
             stateEventListener.onStateChange(fromState, toState, toStateJson, threadUsage);
           } catch(Exception ex) {
-            LOG.warn("Error while broadcasting Pipeline State, {}", ex.getMessage(), ex);
+            LOG.warn("Error while broadcasting Pipeline State, {}", ex.toString(), ex);
           }
         }
       } catch (JsonProcessingException ex) {
-        LOG.warn("Error while broadcasting Pipeline State, {}", ex.getMessage(), ex);
+        LOG.warn("Error while broadcasting Pipeline State, {}", ex.toString(), ex);
       }
     }
   }
@@ -139,7 +139,7 @@ public class EventListenerManager {
         try {
           metricsEventListener.notification(metricsJSONStr);
         } catch(Exception ex) {
-          LOG.warn("Error while notifying metrics, {}", ex.getMessage(), ex);
+          LOG.warn("Error while notifying metrics, {}", ex.toString(), ex);
         }
       }
     }

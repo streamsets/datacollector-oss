@@ -279,7 +279,7 @@ public class PathResolver {
         }
       }
     } catch (ELEvalException ex) {
-      issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_20, ex.getMessage()));
+      issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_20, ex.toString()));
     }
     validated = (issues.size() - previousIssuesCount) == 0;
     if (validated) {
@@ -287,7 +287,7 @@ public class PathResolver {
         incrementUnit = evaluateTimeIncrementUnit(config);
         incrementValue = evaluateTimeIncrementValue(config);
       } catch (ELEvalException ex) {
-        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_35, ex.getMessage()));
+        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_35, ex.toString()));
         validated = false;
       }
     }
@@ -309,7 +309,7 @@ public class PathResolver {
     try {
       freqEdgeElEval.eval(elVars, pathTemplate, String.class);
     } catch (ELEvalException ex) {
-      throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
+      throw new RuntimeException("It should not happen: " + ex.toString(), ex);
     }
     elVars.addContextVariable(DATE_CONTEXT, null);
     if (!dc.noDate) {
@@ -365,7 +365,7 @@ public class PathResolver {
       }
       return pathEval.eval(vars, pathTemplate, String.class);
     } catch (ELEvalException ex) {
-      throw new StageException(Errors.HADOOPFS_02, pathTemplate, ex.getMessage(), ex);
+      throw new StageException(Errors.HADOOPFS_02, pathTemplate, ex.toString(), ex);
     }
   }
 

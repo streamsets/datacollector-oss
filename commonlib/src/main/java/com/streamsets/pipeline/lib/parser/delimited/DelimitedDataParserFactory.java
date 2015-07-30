@@ -60,7 +60,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
       return new DelimitedCharDataParser(getSettings().getContext(), id, reader, offset, csvFormat,
                                          getSettings().getMode(CsvHeader.class), getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.DELIMITED_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.DELIMITED_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

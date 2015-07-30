@@ -61,7 +61,7 @@ public class AsynchronousFileFinder extends FileFinder {
             LOG.debug("Found '{}' new files for '{}'", newFiles.size(), globPath);
             found.addAll(newFiles);
           } catch (IOException ex) {
-            LOG.error("Error while finding files for '{}': {}", globPath, ex.getMessage(), ex);
+            LOG.error("Error while finding files for '{}': {}", globPath, ex.toString(), ex);
           }
         } else {
           LOG.error("Found queue is full ('{}' files), skipping finding files for '{}'", MAX_QUEUE_SIZE, globPath);

@@ -41,7 +41,7 @@ public abstract class StageLibraryDefinitionExtractor {
       }
     } catch (IOException ex) {
       errors.add(new ErrorMessage(DefinitionError.DEF_401, libraryName, DATA_COLLECTOR_LIBRARY_PROPERTIES,
-                                  ex.getMessage()));
+                                  ex.toString()));
     }
     return errors;
   }
@@ -57,7 +57,7 @@ public abstract class StageLibraryDefinitionExtractor {
           libraryProps.load(inputStream);
         }
       } catch (IOException ex) {
-        throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+        throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
       }
       return new StageLibraryDefinition(classLoader, libraryName, libraryLabel, libraryProps);
     } else {

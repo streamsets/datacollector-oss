@@ -67,7 +67,7 @@ public class CacheSnapshotStore implements SnapshotStore {
         snapshotStateCache.put(getCacheKey(name, rev, id), updatedSnapshotInfo);
         return updatedSnapshotInfo;
       } catch (ExecutionException e) {
-        throw new PipelineException(ContainerError.CONTAINER_0600, id, name, rev, e.getMessage(), e);
+        throw new PipelineException(ContainerError.CONTAINER_0600, id, name, rev, e.toString(), e);
       }
     }
   }

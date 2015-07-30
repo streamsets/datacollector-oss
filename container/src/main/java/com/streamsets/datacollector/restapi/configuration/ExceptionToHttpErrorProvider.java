@@ -65,7 +65,7 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
   }
 
   protected String getOneLineMessage(Throwable exception, boolean localized) {
-    String message = (localized) ? exception.getLocalizedMessage() : exception.getMessage();
+    String message = (localized) ? exception.getLocalizedMessage() : exception.toString();
     if (message != null) {
       int i = message.indexOf(ENTER);
       if (i > -1) {
@@ -80,7 +80,7 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
     if (ex instanceof WebApplicationException) {
       return ((WebApplicationException)ex).getResponse();
     } else {
-      LOG.error("REST API call error: {}", ex.getMessage(), ex);
+      LOG.error("REST API call error: {}", ex.toString(), ex);
       return createResponse(Status.INTERNAL_SERVER_ERROR, ex);
     }
   }

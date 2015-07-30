@@ -112,7 +112,7 @@ public class AlertManager {
       try {
         emailSender.send(emailIds, subject, emailBody);
       } catch (PipelineException e) {
-        LOG.error("Error sending alert email, reason: {}", e.getMessage(), e);
+        LOG.error("Error sending alert email, reason: {}", e.toString(), e);
         //Log error and move on. This should not stop the pipeline.
       }
     }
@@ -151,7 +151,7 @@ public class AlertManager {
           try {
             emailSender.send(emailIds, STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
           } catch (PipelineException e) {
-            LOG.error("Error sending alert email, reason: {}", e.getMessage(), e);
+            LOG.error("Error sending alert email, reason: {}", e.toString(), e);
             //Log error and move on. This should not stop the pipeline.
           }
         }

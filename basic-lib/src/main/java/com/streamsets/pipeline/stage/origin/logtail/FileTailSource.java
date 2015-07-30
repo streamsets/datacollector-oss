@@ -159,7 +159,7 @@ public class FileTailSource extends BaseSource {
           ok = false;
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_09,
                                                     fileInfo.fileFullPath, fileInfo.patternForToken,
-                                                    ex.getMessage()));
+                                                    ex.toString()));
         }
         ELVars elVars = getContext().createELVars();
         elVars.addVariable("PATTERN", "");
@@ -174,7 +174,7 @@ public class FileTailSource extends BaseSource {
         } catch (ELEvalException ex) {
           ok = false;
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_18,
-                                                    fileInfo.fileFullPath, ex.getMessage()));
+                                                    fileInfo.fileFullPath, ex.toString()));
         }
       }
       if (ok && fileInfo.firstFile != null && !fileInfo.firstFile.isEmpty()) {
@@ -238,7 +238,7 @@ public class FileTailSource extends BaseSource {
           multiDirReader = new MultiFileReader(dirInfos, Charset.forName(charset), maxLineLength,
                                                     postProcessing, archiveDir, true, scanIntervalSecs);
         } catch (IOException ex) {
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.getMessage(), ex));
+          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.toString(), ex));
         }
       }
     }
@@ -304,7 +304,7 @@ public class FileTailSource extends BaseSource {
       try {
         map = OBJECT_MAPPER.readValue(lastSourceOffset, Map.class);
       } catch (IOException ex) {
-        throw new StageException(Errors.TAIL_10, ex.getMessage(), ex);
+        throw new StageException(Errors.TAIL_10, ex.toString(), ex);
       }
     }
     return map;
@@ -314,7 +314,7 @@ public class FileTailSource extends BaseSource {
     try {
       return OBJECT_MAPPER.writeValueAsString(map);
     } catch (IOException ex) {
-      throw new StageException(Errors.TAIL_13, ex.getMessage(), ex);
+      throw new StageException(Errors.TAIL_13, ex.toString(), ex);
     }
   }
 
@@ -360,7 +360,7 @@ public class FileTailSource extends BaseSource {
         multiDirReader.setOffsets(offsetMap);
         offsetSet = true;
       } catch (IOException ex) {
-        LOG.warn("Error while creating reading previous offset: {}", ex.getMessage(), ex);
+        LOG.warn("Error while creating reading previous offset: {}", ex.toString(), ex);
         multiDirReader.purge();
       }
     }
@@ -405,7 +405,7 @@ public class FileTailSource extends BaseSource {
         metadataRecord.set(Field.create(map));
         batchMaker.addRecord(metadataRecord, metadataLane);
       } catch (IOException ex) {
-        LOG.warn("Error while creating metadata records: {}", ex.getMessage(), ex);
+        LOG.warn("Error while creating metadata records: {}", ex.toString(), ex);
         metadataGenerationFailure = true;
       }
     }
@@ -419,7 +419,7 @@ public class FileTailSource extends BaseSource {
         offsetMap = multiDirReader.getOffsets();
         offsetExtracted = true;
       } catch (IOException ex) {
-        LOG.warn("Error while creating creating new offset: {}", ex.getMessage(), ex);
+        LOG.warn("Error while creating creating new offset: {}", ex.toString(), ex);
         multiDirReader.purge();
       }
     }
@@ -433,13 +433,13 @@ public class FileTailSource extends BaseSource {
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(Errors.TAIL_12, sourceId, ex.getMessage(), ex);
+        getContext().reportError(Errors.TAIL_12, sourceId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.TAIL_12, sourceId, ex.getMessage(), ex);
+          throw new StageException(Errors.TAIL_12, sourceId, ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",

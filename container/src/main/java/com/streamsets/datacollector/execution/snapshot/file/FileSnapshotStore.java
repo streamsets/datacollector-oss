@@ -132,13 +132,13 @@ public class FileSnapshotStore implements SnapshotStore {
             SnapshotInfoJson snapshotInfoJsonBean = json.readValue(in, SnapshotInfoJson.class);
             return snapshotInfoJsonBean.getSnapshotInfo();
           } catch (IOException e) {
-            throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.getMessage(), e);
+            throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.toString(), e);
           }
         } else {
           return null;
         }
       } catch (Exception e) {
-        throw new PipelineRuntimeException(ContainerError.CONTAINER_0604, id, name, rev, e.getMessage(), e);
+        throw new PipelineRuntimeException(ContainerError.CONTAINER_0604, id, name, rev, e.toString(), e);
       }
     }
   }
@@ -169,7 +169,7 @@ public class FileSnapshotStore implements SnapshotStore {
       json.writeValue(out, new SnapshotInfoJson(snapshotInfo));
     } catch (IOException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0602, snapshotInfo.getId(), snapshotInfo.getName(),
-        snapshotInfo.getRev(), e.getMessage(), e);
+        snapshotInfo.getRev(), e.toString(), e);
     }
   }
 
@@ -178,7 +178,7 @@ public class FileSnapshotStore implements SnapshotStore {
     try (OutputStream out = new DataStore(getPipelineSnapshotFile(name, rev, id)).getOutputStream()) {
       json.writeValue(out, new SnapshotDataJson(new SnapshotData(snapshotBatches)));
     } catch (IOException e) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0603, id, name, rev, e.getMessage(), e);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0603, id, name, rev, e.toString(), e);
     }
   }
 

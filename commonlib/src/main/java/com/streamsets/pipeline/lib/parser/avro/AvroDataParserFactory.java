@@ -66,7 +66,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     try {
       return new AvroMessageParser(getSettings().getContext(), schema, data, id, schemaInMessage);
     } catch (IOException e) {
-      throw new DataParserException(Errors.DATA_PARSER_01, e.getMessage(), e);
+      throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
     }
   }
 
@@ -76,7 +76,7 @@ public class AvroDataParserFactory extends DataParserFactory {
       return new AvroDataFileParser(getSettings().getContext(), schema, file, fileOffset,
         getSettings().getOverRunLimit());
     } catch (IOException e) {
-      throw new DataParserException(Errors.DATA_PARSER_01, e.getMessage(), e);
+      throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
     }
   }
 }

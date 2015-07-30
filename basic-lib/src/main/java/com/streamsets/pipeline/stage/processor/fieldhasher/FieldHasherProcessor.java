@@ -76,7 +76,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     try {
       messageDigest = MessageDigest.getInstance(hashType.getDigest());
     } catch (NoSuchAlgorithmException e) {
-      throw new StageException(Errors.HASH_00, hashType.getDigest(), e.getMessage(), e);
+      throw new StageException(Errors.HASH_00, hashType.getDigest(), e.toString(), e);
     }
     messageDigest.update(valueAsString.getBytes());
     byte byteData[] = messageDigest.digest();

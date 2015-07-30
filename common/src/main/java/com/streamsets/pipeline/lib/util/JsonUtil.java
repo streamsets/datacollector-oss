@@ -127,7 +127,7 @@ public class JsonUtil {
     try {
       return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
     } catch (JsonProcessingException e) {
-      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
@@ -136,7 +136,7 @@ public class JsonUtil {
     try {
       return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
     } catch (JsonProcessingException e) {
-      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
@@ -145,7 +145,7 @@ public class JsonUtil {
     try {
       return jsonToField(objectMapper.readValue(bytes, Object.class));
     } catch (Exception e) {
-      throw new StageException(CommonError.CMN_0101, new String(bytes), e.getMessage(), e);
+      throw new StageException(CommonError.CMN_0101, new String(bytes), e.toString(), e);
     }
   }
 }

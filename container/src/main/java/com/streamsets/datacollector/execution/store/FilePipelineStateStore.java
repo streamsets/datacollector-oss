@@ -115,7 +115,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
         PipelineStateJson pipelineStatusJsonBean = ObjectMapperFactory.get().readValue(is, PipelineStateJson.class);
         pipelineState = pipelineStatusJsonBean.getPipelineState();
       } catch (IOException e) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.getMessage(), e);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0101, e.toString(), e);
       }
     } else {
       throw new PipelineStoreException(ContainerError.CONTAINER_0209, getPipelineStateFile(name, rev));
@@ -147,7 +147,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
         return BeanHelper.unwrapPipelineStatesNewAPI(pipelineStateJsons.subList(0, toIndex));
       }
     } catch (IOException e) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0115, pipelineName, rev, e.getMessage(), e);
+      throw new PipelineStoreException(ContainerError.CONTAINER_0115, pipelineName, rev, e.toString(), e);
     }
   }
 
@@ -171,12 +171,12 @@ public class FilePipelineStateStore implements PipelineStateStore {
     try {
       pipelineString = ObjectMapperFactory.get().writeValueAsString(pipelineStateJson);
     } catch (JsonProcessingException e) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.getMessage(), e);
+      throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
     }
     try (OutputStream os = new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev())).getOutputStream()) {
       os.write(pipelineString.getBytes());
     } catch (IOException e) {
-      throw new PipelineStoreException(ContainerError.CONTAINER_0100, e.getMessage(), e);
+      throw new PipelineStoreException(ContainerError.CONTAINER_0100, e.toString(), e);
     }
     // In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
     // pipeline

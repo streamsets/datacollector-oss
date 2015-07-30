@@ -156,7 +156,7 @@ public final class Utils {
     try {
       return sdcIdCallable.call();
     } catch (Exception ex) {
-      throw new RuntimeException(Utils.format("SDC ID Callable threw an unexpected exception: {}", ex.getMessage(), ex));
+      throw new RuntimeException(Utils.format("SDC ID Callable threw an unexpected exception: {}", ex.toString(), ex));
     }
   }
 

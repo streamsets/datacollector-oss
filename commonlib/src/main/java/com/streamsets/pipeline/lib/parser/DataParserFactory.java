@@ -47,7 +47,7 @@ public abstract class DataParserFactory extends DataFactory {
     try {
       return getParser(file.getName(), new FileInputStream(file), Long.parseLong(fileOffset));
     } catch (FileNotFoundException e) {
-      throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), e.getMessage(), e);
+      throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), e.toString(), e);
     }
   }
 

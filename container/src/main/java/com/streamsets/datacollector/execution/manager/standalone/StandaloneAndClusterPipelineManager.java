@@ -136,7 +136,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       } else if (ex.getCause() instanceof PipelineStoreException) {
         throw (PipelineStoreException) ex.getCause();
       } else {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.getMessage(), ex);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.toString(), ex);
       }
     }
     return runnerInfo.runner;
@@ -216,7 +216,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
             removeRunnerIfActive(runner);
           } catch (PipelineStoreException ex) {
             LOG.warn("Cannot remove runner for pipeline: '{}::{}' due to '{}'", runner.getName(), runner.getRev(),
-              ex.getMessage(), ex);
+              ex.toString(), ex);
           }
         }
       }
@@ -249,7 +249,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         runner.onDataCollectorStop();
       } catch (Exception e) {
         LOG.warn("Failed to stop the runner for pipeline: {} and rev: {} due to: {}", runner.getName(),
-          runner.getRev(), e.getMessage(), e);
+          runner.getRev(), e.toString(), e);
       }
     }
     runnerCache.invalidateAll();
@@ -258,7 +258,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         previewer.stop();
       } catch (Exception e) {
         LOG.warn("Failed to stop the previewer: {}::{}::{} due to: {}", previewer.getName(),
-          previewer.getRev(), previewer.getId(), e.getMessage(), e);
+          previewer.getRev(), previewer.getId(), e.toString(), e);
       }
     }
     previewerCache.invalidateAll();

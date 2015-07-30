@@ -48,7 +48,7 @@ public class XmlDataParserFactory extends DataParserFactory {
       return new XmlCharDataParser(getSettings().getContext(), id, reader, offset,
         (String) getSettings().getConfig(RECORD_ELEMENT_KEY), getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.XML_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.XML_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

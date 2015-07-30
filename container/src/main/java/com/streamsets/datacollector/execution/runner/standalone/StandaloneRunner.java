@@ -245,11 +245,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
                                         null);
         } catch (PipelineRunnerException ex) {
           // its ok if state validation fails - we will still try to stop pipeline if active
-          LOG.warn("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.getMessage(), ex);
+          LOG.warn("Cannot transition to PipelineStatus.DISCONNECTING: {}", ex.toString(), ex);
         }
         stopPipeline(true /* shutting down node process */);
       } catch (Exception e) {
-        LOG.warn("Error while stopping the pipeline: {} ", e.getMessage(), e);
+        LOG.warn("Error while stopping the pipeline: {} ", e.toString(), e);
       }
     } finally {
       MDC.clear();
@@ -549,7 +549,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         try {
           rulesConfigLoader.load(productionObserver);
         } catch (InterruptedException e) {
-          throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.getMessage(), e);
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0403, name, e.toString(), e);
         }
         ScheduledFuture<?> configLoaderFuture =
           runnerExecutor.scheduleWithFixedDelay(rulesConfigLoaderRunnable, 1, RulesConfigLoaderRunnable.SCHEDULED_DELAY,
@@ -575,7 +575,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         }
         pipelineRunnable = new ProductionPipelineRunnable(threadHealthReporter, this, prodPipeline, name, rev, list);
       } catch (Exception e) {
-        validateAndSetStateTransition(PipelineStatus.START_ERROR, e.getMessage(), null);
+        validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), null);
         throw e;
       }
     }

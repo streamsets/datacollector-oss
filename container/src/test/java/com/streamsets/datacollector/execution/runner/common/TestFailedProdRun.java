@@ -126,7 +126,7 @@ public class TestFailedProdRun {
       Assert.assertSame(ex, ErrorListeningSource.thrownError);
     }
     Assert.assertSame(ErrorListeningSource.thrownError, ErrorListeningSource.capturedError);
-    Assert.assertEquals(msg, ErrorListeningSource.capturedError.getMessage());
+    Assert.assertTrue(ErrorListeningSource.capturedError.toString().endsWith(msg));
   }
 
 }

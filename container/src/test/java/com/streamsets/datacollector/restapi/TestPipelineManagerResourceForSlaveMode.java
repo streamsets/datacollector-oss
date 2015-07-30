@@ -30,7 +30,7 @@ public class TestPipelineManagerResourceForSlaveMode extends JerseyTest {
       Response r = target("/v1/pipeline/start").queryParam("name", PIPELINE_NAME).queryParam("rev", PIPELINE_REV)
         .request().post(null);
     } catch (Exception ex) {
-      Assert.assertEquals(ex.getCause().getMessage(), "This operation is not supported in SLAVE mode");
+      Assert.assertEquals(ex.getCause().toString(), "This operation is not supported in SLAVE mode");
       exceptionThrown = true;
     } finally {
       Assert.assertTrue(exceptionThrown);
@@ -58,7 +58,7 @@ public class TestPipelineManagerResourceForSlaveMode extends JerseyTest {
     try {
       Response r = target("/v1/pipeline/resetOffset/myPipeline").request().post(null);
     } catch (Exception ex) {
-      Assert.assertEquals(ex.getCause().getMessage(), "This operation is not supported in SLAVE mode");
+      Assert.assertEquals(ex.getCause().toString(), "This operation is not supported in SLAVE mode");
       exceptionThrown = true;
     } finally {
       Assert.assertTrue(exceptionThrown);

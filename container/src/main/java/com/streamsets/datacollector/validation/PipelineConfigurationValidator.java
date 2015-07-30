@@ -465,7 +465,7 @@ public class PipelineConfigurationValidator {
             elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
             issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
-                                           ValidationError.VALIDATION_0081, precondition, ex.getMessage()));
+                                           ValidationError.VALIDATION_0081, precondition, ex.toString()));
             valid = false;
           }
         }

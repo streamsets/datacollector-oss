@@ -87,7 +87,7 @@ public class CachePipelineStateStore implements PipelineStateStore {
       } else if (ex.getCause() instanceof PipelineStoreException) {
         throw (PipelineStoreException) ex.getCause();
       } else {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.getMessage(), ex);
+        throw new PipelineStoreException(ContainerError.CONTAINER_0114, ex.toString(), ex);
       }
     }
   }

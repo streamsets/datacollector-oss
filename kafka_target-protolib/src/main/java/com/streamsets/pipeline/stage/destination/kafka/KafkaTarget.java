@@ -163,7 +163,7 @@ public class KafkaTarget extends BaseTarget {
         } catch (Exception ex) {
           validateTopicExists = false;
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_61, topic,
-            ex.getMessage(), ex));
+            ex.toString(), ex));
         }
       }
 
@@ -309,16 +309,16 @@ public class KafkaTarget extends BaseTarget {
               switch (getContext().getOnErrorRecord()) {
                 case DISCARD:
                   LOG.warn("Could not serialize record '{}', all records from batch '{}' for partition '{}' are " +
-                    "discarded, error: {}", sourceId, batch.getSourceOffset(), partition, ex.getMessage(), ex);
+                    "discarded, error: {}", sourceId, batch.getSourceOffset(), partition, ex.toString(), ex);
                   break;
                 case TO_ERROR:
                   for (Record record : list) {
                     getContext().toError(record, Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
-                      ex.getMessage(), ex);
+                      ex.toString(), ex);
                   }
                   break;
                 case STOP_PIPELINE:
-                  throw new StageException(Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.getMessage(),
+                  throw new StageException(Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(),
                     ex);
                 default:
                   throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -367,7 +367,7 @@ public class KafkaTarget extends BaseTarget {
             if (ex instanceof StageException) {
               throw (StageException) ex;
             } else {
-              throw new StageException(Errors.KAFKA_51, record.getHeader().getSourceId(), ex.getMessage(), ex);
+              throw new StageException(Errors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
             }
           default:
             throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -392,7 +392,7 @@ public class KafkaTarget extends BaseTarget {
         }
         partitionKey = Integer.toString(p);
       } catch (ELEvalException e) {
-        throw new StageException(Errors.KAFKA_54, partition, record.getHeader().getSourceId(), e.getMessage());
+        throw new StageException(Errors.KAFKA_54, partition, record.getHeader().getSourceId(), e.toString());
       }
     }
     return partitionKey;
@@ -461,9 +461,9 @@ public class KafkaTarget extends BaseTarget {
           LOG.warn("Encountered {} different topics while running the pipeline", topicPartitionMap.keySet().size());
         }
       } catch (IOException e) {
-        throw new StageException(Errors.KAFKA_52, result, kafkaBrokers, e.getMessage());
+        throw new StageException(Errors.KAFKA_52, result, kafkaBrokers, e.toString());
       } catch (ELEvalException e) {
-        throw new StageException(Errors.KAFKA_63, topicExpression, record.getHeader().getSourceId(), e.getMessage());
+        throw new StageException(Errors.KAFKA_63, topicExpression, record.getHeader().getSourceId(), e.toString());
       }
     }
     return result;
@@ -574,7 +574,7 @@ public class KafkaTarget extends BaseTarget {
           messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).trim());
         } catch (NullPointerException | NumberFormatException e) {
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
-            MESSAGE_SEND_MAX_RETRIES_KEY, "integer", e.getMessage(), e));
+            MESSAGE_SEND_MAX_RETRIES_KEY, "integer", e.toString(), e));
         }
         if(messageSendMaxRetries < 0) {
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
@@ -589,7 +589,7 @@ public class KafkaTarget extends BaseTarget {
           retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).trim());
         } catch (NullPointerException | NumberFormatException e) {
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
-            RETRY_BACKOFF_MS_KEY, "long", e.getMessage(), e));
+            RETRY_BACKOFF_MS_KEY, "long", e.toString(), e));
         }
         if(retryBackoffMs < 0) {
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,

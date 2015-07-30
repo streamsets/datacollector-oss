@@ -54,10 +54,10 @@ public class ProductionPipelineRunnable implements Runnable {
         pipeline.run();
       } catch (Exception e) {
         if(!pipeline.wasStopped()) {
-          LOG.error("An exception occurred while running the pipeline, {}", e.getMessage(), e);
+          LOG.error("An exception occurred while running the pipeline, {}", e.toString(), e);
         }
       } catch (Error e) {
-        LOG.error("A JVM error occurred while running the pipeline, {}", e.getMessage(), e);
+        LOG.error("A JVM error occurred while running the pipeline, {}", e.toString(), e);
         // may be go to run_error
         throw e;
       } finally {
@@ -85,7 +85,7 @@ public class ProductionPipelineRunnable implements Runnable {
                 , pipeline.getCommittedOffset()), null);
           }
         } catch (PipelineRuntimeException e) {
-          LOG.error("An exception occurred while trying to transition pipeline state, {}", e.getMessage(), e);
+          LOG.error("An exception occurred while trying to transition pipeline state, {}", e.toString(), e);
         }
       }
     } finally {

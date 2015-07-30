@@ -45,7 +45,7 @@ public class BaseWebSocket extends WebSocketAdapter {
   @Override
   public void onWebSocketError(Throwable cause) {
     super.onWebSocketError(cause);
-    LOG.warn("WebSocket '{}' error: {}", type, cause.getMessage(), cause);
+    LOG.warn("WebSocket '{}' error: {}", type, cause.toString(), cause);
     listenerManager.unregister(this);
     SDCWebSocketServlet.webSocketClients--;
     webSocketSession = null;

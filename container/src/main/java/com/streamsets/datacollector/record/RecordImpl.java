@@ -305,7 +305,7 @@ public class RecordImpl implements Record {
                   }
                 } catch (NumberFormatException ex) {
                   throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos) + ", " +
-                                                     ex.getMessage(), ex);
+                                                     ex.toString(), ex);
                 }
                 break;
               default:

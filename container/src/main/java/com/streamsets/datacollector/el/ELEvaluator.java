@@ -74,7 +74,7 @@ public class ELEvaluator extends ELEval {
     try {
       EVALUATOR.parseExpressionString(el);
     } catch (ELException e) {
-      throw new ELEvalException(CommonError.CMN_0105, el, e.getMessage(), e);
+      throw new ELEvalException(CommonError.CMN_0105, el, e.toString(), e);
     }
   }
 
@@ -104,7 +104,7 @@ public class ELEvaluator extends ELEval {
       if(e.getRootCause() != null) {
         t = e.getRootCause();
       }
-      throw new ELEvalException(CommonError.CMN_0104, expression, t.getMessage(), e);
+      throw new ELEvalException(CommonError.CMN_0104, expression, t.toString(), e);
     }
   }
 

@@ -158,7 +158,7 @@ public class HdfsTarget extends RecordTarget {
       }
     } catch (Exception ex) {
       issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_06,
-                                                lateRecordsLimit, ex.getMessage(), ex));
+                                                lateRecordsLimit, ex.toString(), ex));
     }
     if (maxFileSizeMBs < 0) {
       issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), "maxFileSize", Errors.HADOOPFS_08));
@@ -189,7 +189,7 @@ public class HdfsTarget extends RecordTarget {
               throw new StageException(Errors.HADOOPFS_04, otherCompression);
             }
           } catch (Exception ex1) {
-            throw new StageException(Errors.HADOOPFS_05, otherCompression, ex1.getMessage(), ex1);
+            throw new StageException(Errors.HADOOPFS_05, otherCompression, ex1.toString(), ex1);
           }
           break;
         case NONE:
@@ -209,7 +209,7 @@ public class HdfsTarget extends RecordTarget {
         }
       }
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.getMessage(),
+      issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.toString(),
                                                 ex));
     }
 
@@ -226,7 +226,7 @@ public class HdfsTarget extends RecordTarget {
           }
         } catch (Exception ex) {
           issues.add(getContext().createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17,
-                                                    ex.getMessage(), ex));
+                                                    ex.toString(), ex));
         }
       }
     }
@@ -240,7 +240,7 @@ public class HdfsTarget extends RecordTarget {
       timeDriverElEval.eval(variables, timeDriver, Date.class);
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), "timeDriver", Errors.HADOOPFS_19,
-                                                ex.getMessage(), ex));
+                                                ex.toString(), ex));
     }
 
     if (issues.isEmpty()) {
@@ -251,7 +251,7 @@ public class HdfsTarget extends RecordTarget {
           getLateWriters().commitOldFiles(fs);
         }
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(null, null, Errors.HADOOPFS_23, ex.getMessage(), ex));
+        issues.add(getContext().createConfigIssue(null, null, Errors.HADOOPFS_23, ex.toString(), ex));
       }
       toHdfsRecordsCounter = getContext().createCounter("toHdfsRecords");
       toHdfsRecordsMeter = getContext().createMeter("toHdfsRecords");
@@ -272,7 +272,7 @@ public class HdfsTarget extends RecordTarget {
       } catch (Exception ex) {
         if (!hdfsConfigs.containsKey(DFSConfigKeys.DFS_NAMENODE_USER_NAME_KEY)) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_28,
-                                                    ex.getMessage()));
+                                                    ex.toString()));
         }
       }
     }
@@ -319,7 +319,7 @@ public class HdfsTarget extends RecordTarget {
         new URI(hdfsUri);
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
-          ex.getMessage(), ex));
+          ex.toString(), ex));
         validHapoopFsUri = false;
       }
     } else {
@@ -396,7 +396,7 @@ public class HdfsTarget extends RecordTarget {
             }
           } catch (IOException ex) {
             issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_42,
-                                                      ex.getMessage()));
+                                                      ex.toString()));
             ok = false;
           }
         } else {
@@ -407,13 +407,13 @@ public class HdfsTarget extends RecordTarget {
             ok = true;
           } catch (IOException ex) {
             issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_43,
-                                                      ex.getMessage()));
+                                                      ex.toString()));
             ok = false;
           }
         }
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_44,
-                                                  ex.getMessage()));
+                                                  ex.toString()));
         ok = false;
       }
     }
@@ -527,7 +527,7 @@ public class HdfsTarget extends RecordTarget {
         getFileSystemForInitDestroy().close();
       }
     } catch (Exception ex) {
-      LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.getMessage(), ex);
+      LOG.warn("Error while closing HDFS FileSystem URI='{}': {}", hdfsUri, ex.toString(), ex);
     }
     super.destroy();
   }
@@ -630,9 +630,9 @@ public class HdfsTarget extends RecordTarget {
         }
       }
     } catch (IOException ex) {
-      throw new StageException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
+      throw new StageException(Errors.HADOOPFS_14, record, ex.toString(), ex);
     } catch (StageException ex) {
-      throw new OnRecordErrorException(Errors.HADOOPFS_14, record, ex.getMessage(), ex);
+      throw new OnRecordErrorException(Errors.HADOOPFS_14, record, ex.toString(), ex);
     }
   }
 

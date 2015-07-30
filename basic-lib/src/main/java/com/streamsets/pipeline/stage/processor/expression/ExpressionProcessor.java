@@ -65,7 +65,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         result = expressionEval.eval(variables, expressionProcessorConfig.expression, Object.class);
       } catch (ELEvalException e) {
         throw new OnRecordErrorException(Errors.EXPR_03, expressionProcessorConfig.expression,
-                                         record.getHeader().getSourceId(), e.getMessage(), e);
+                                         record.getHeader().getSourceId(), e.toString(), e);
       }
       Field newField = Field.create(getTypeFromObject(result), result);
 

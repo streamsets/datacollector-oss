@@ -62,7 +62,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                     fieldTypeConverterConfig.getLocale(), dateMask));
                 } catch (ParseException | NumberFormatException e) {
                   throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
-                    fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+                    fieldTypeConverterConfig.targetType.name(), e.toString(), e);
 
                 }
               }
@@ -72,7 +72,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
               } catch (IllegalArgumentException e) {
                 throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
-                  fieldTypeConverterConfig.targetType.name(), e.getMessage(), e);
+                  fieldTypeConverterConfig.targetType.name(), e.toString(), e);
               }
             }
           }

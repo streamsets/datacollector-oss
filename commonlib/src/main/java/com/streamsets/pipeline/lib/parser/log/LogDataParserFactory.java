@@ -158,7 +158,7 @@ public class LogDataParserFactory extends DataParserFactory {
           return null;
       }
     } catch (IOException ex) {
-      throw new DataParserException(Errors.LOG_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.LOG_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

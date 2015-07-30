@@ -161,7 +161,7 @@ public class StreamingJsonParser {
       }
       return value;
     } catch (RuntimeJsonMappingException ex) {
-      throw new JsonParseException(ex.getMessage(), jsonParser.getTokenLocation(), ex);
+      throw new JsonParseException(ex.toString(), jsonParser.getTokenLocation(), ex);
     }
   }
 

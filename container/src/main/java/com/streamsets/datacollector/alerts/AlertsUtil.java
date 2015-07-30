@@ -24,7 +24,7 @@ public class AlertsUtil {
       return (Boolean) elEvaluator.eval(variables, predicate, Boolean.class);
     } catch (Exception ex) {
       throw new ObserverException(ContainerError.CONTAINER_0400, predicate, record.getHeader().getSourceId(),
-        ex.getMessage(), ex);
+        ex.toString(), ex);
     }
   }
 
@@ -33,7 +33,7 @@ public class AlertsUtil {
     try {
       return (Boolean) elEvaluator.eval(variables, predicate, Boolean.class);
     } catch (Exception ex) {
-      throw new ObserverException(ContainerError.CONTAINER_0400, predicate, ex.getMessage(), ex);
+      throw new ObserverException(ContainerError.CONTAINER_0400, predicate, ex.toString(), ex);
     }
   }
 

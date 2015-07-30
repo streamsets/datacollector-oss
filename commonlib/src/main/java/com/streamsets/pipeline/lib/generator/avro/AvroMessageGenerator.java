@@ -44,7 +44,7 @@ public class AvroMessageGenerator implements DataGenerator {
     try {
       datumWriter.write((GenericRecord) AvroTypeUtil.sdcRecordToAvro(record, schema), binaryEncoder);
     } catch (StageException e) {
-      throw new DataGeneratorException(e.getErrorCode(), e.getMessage(), e);
+      throw new DataGeneratorException(e.getErrorCode(), e.toString(), e);
     }
   }
 

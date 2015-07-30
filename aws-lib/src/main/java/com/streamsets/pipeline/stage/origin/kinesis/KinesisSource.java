@@ -146,7 +146,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
           result.getStreamDescription().toString()
       );
     } catch (Exception e) {
-      issues.add(getContext().createConfigIssue(Groups.KINESIS.name(), "streamName", Errors.KINESIS_01, e.getMessage()));
+      issues.add(getContext().createConfigIssue(Groups.KINESIS.name(), "streamName", Errors.KINESIS_01, e.toString()));
     } finally {
       kinesisClient.shutdown();
     }

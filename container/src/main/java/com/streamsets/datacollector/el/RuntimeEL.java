@@ -80,7 +80,7 @@ public class RuntimeEL {
     } catch (IllegalArgumentException ex) {
       throw ex;
     } catch (Exception ex) {
-      LOG.warn("Could not load resource '{}': {}", fileName, ex.getMessage(), ex);
+      LOG.warn("Could not load resource '{}': {}", fileName, ex.toString(), ex);
     }
     return resource;
   }

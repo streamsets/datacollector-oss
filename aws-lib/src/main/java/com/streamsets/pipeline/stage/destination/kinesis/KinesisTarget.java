@@ -103,7 +103,8 @@ public class KinesisTarget extends BaseTarget {
           result.getStreamDescription().toString()
       );
     } catch (Exception e) {
-      issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.origin.kinesis.Groups.KINESIS.name(), "streamName", Errors.KINESIS_01, e.getMessage()));
+      issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.origin.kinesis.Groups.KINESIS.name(),
+                                                "streamName", Errors.KINESIS_01, e.toString()));
     } finally {
       kinesisClient.shutdown();
     }

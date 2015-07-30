@@ -83,7 +83,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
         issues.add(getContext().createConfigIssue(null, null, Errors.SCRIPTING_00, scriptingEngineName));
       }
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(null, null, Errors.SCRIPTING_01, scriptingEngineName, ex.getMessage(),
+      issues.add(getContext().createConfigIssue(null, null, Errors.SCRIPTING_01, scriptingEngineName, ex.toString(),
                                                 ex));
     }
 
@@ -151,19 +151,19 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
               getContext().toError(
                   getScriptObjectFactory().getRecord(records.get(0)),
                   Errors.SCRIPTING_05,
-                  ex.getMessage(),
+                  ex.toString(),
                   ex
               );
               break;
             case STOP_PIPELINE:
-              throw new StageException(Errors.SCRIPTING_05, ex.getMessage(), ex);
+              throw new StageException(Errors.SCRIPTING_05, ex.toString(), ex);
             default:
               throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
                                                            getContext().getOnErrorRecord(), ex));
           }
           break;
         case BATCH:
-          throw new StageException(Errors.SCRIPTING_06, ex.getMessage(), ex);
+          throw new StageException(Errors.SCRIPTING_06, ex.toString(), ex);
         default:
           throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
                                                        getContext().getOnErrorRecord(), ex));

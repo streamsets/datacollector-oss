@@ -67,7 +67,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
                 groups.add(groupToShow);
               } catch (NumberFormatException e) {
                 issues.add(getContext().createConfigIssue(Groups.MASKING.name(), "groupsToShow", Errors.MASK_01, groupString
-                  , fieldMaskConfig.regex, maxGroupCount, e.getMessage(), e));
+                  , fieldMaskConfig.regex, maxGroupCount, e.toString(), e));
               }
             }
             regexToGroupsToShowMap.put(fieldMaskConfig.regex, groups);

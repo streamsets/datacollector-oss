@@ -48,7 +48,7 @@ public class JsonDataParserFactory extends DataParserFactory {
       return new JsonCharDataParser(getSettings().getContext(), id, reader, offset,
                                     getSettings().getMode(JsonMode.class).getFormat(), getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.JSON_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.JSON_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

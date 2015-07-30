@@ -132,7 +132,7 @@ public class RecordWriterManager {
       if (ex.getCause() instanceof StageException) {
         throw (StageException) ex.getCause();
       } else{
-        throw new StageException(Errors.HADOOPFS_24, ex.getMessage(), ex);
+        throw new StageException(Errors.HADOOPFS_24, ex.toString(), ex);
       }
     }
   }

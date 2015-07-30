@@ -172,10 +172,10 @@ public class DataRuleEvaluator {
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
       //Log and it and continue for now
-      LOG.error("Error processing metric definition '{}', reason: {}", id, e.getMessage(), e);
+      LOG.error("Error processing metric definition '{}', reason: {}", id, e.toString(), e);
 
       //Trigger alert with exception message
-      alertManager.alertException(e.getMessage(), dataRuleDefinition);
+      alertManager.alertException(e.toString(), dataRuleDefinition);
 
       return false;
     }

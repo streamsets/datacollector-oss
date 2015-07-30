@@ -397,13 +397,13 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(Errors.HADOOPFS_08, messageId, ex.getMessage(), ex);
+        getContext().reportError(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.HADOOPFS_08, messageId, ex.getMessage(), ex);
+          throw new StageException(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",

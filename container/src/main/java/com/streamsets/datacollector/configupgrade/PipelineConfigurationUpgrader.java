@@ -159,7 +159,7 @@ public class PipelineConfigurationUpgrader {
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ex.getErrorCode(), ex.getParams()));
     } catch (Exception ex) {
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ContainerError.CONTAINER_0900, fromVersion,
-                                                                      toVersion, ex.getMessage()));
+                                                                      toVersion, ex.toString()));
     } finally {
       Thread.currentThread().setContextClassLoader(cl);
     }

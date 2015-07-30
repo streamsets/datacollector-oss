@@ -222,7 +222,7 @@ public class DirectorySpooler {
         scheduledExecutor = null;
       }
     } catch (RuntimeException ex) {
-      LOG.warn("Error during scheduledExecutor.shutdownNow(), {}", ex.getMessage(), ex);
+      LOG.warn("Error during scheduledExecutor.shutdownNow(), {}", ex.toString(), ex);
     }
   }
 
@@ -293,7 +293,7 @@ public class DirectorySpooler {
               LOG.debug("Deleting previous file '{}'", previousFile);
               Files.delete(previousFile);
             } catch (IOException ex) {
-              throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.getMessage(),
+              throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString(),
                                                       ex));
             }
             break;
@@ -305,7 +305,7 @@ public class DirectorySpooler {
               }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
-                                                      archiveDirPath, ex.getMessage(), ex));
+                                                      archiveDirPath, ex.toString(), ex));
             }
             break;
         }
@@ -425,7 +425,7 @@ public class DirectorySpooler {
         lastFound = findAndQueueFiles(currentFile, false, true);
       } catch (Exception ex) {
         LOG.warn("Error while scanning directory '{}' for files newer than '{}': {}", archiveDirPath, lastFound,
-                 ex.getMessage(), ex);
+                 ex.toString(), ex);
       }
       LOG.debug("Finished file finder at '{}'", lastFound);
     }
@@ -453,7 +453,7 @@ public class DirectorySpooler {
               Files.delete(file);
               purged++;
             } catch (IOException ex) {
-              LOG.warn("Error while deleting file '{}': {}", file, ex.getMessage(), ex);
+              LOG.warn("Error while deleting file '{}': {}", file, ex.toString(), ex);
             }
           } else {
             LOG.debug("Spooler has been destroyed, stopping archived files purging half way");
@@ -461,7 +461,7 @@ public class DirectorySpooler {
           }
         }
       } catch (IOException ex) {
-        LOG.warn("Error while scanning directory '{}' for archived files purging: {}", archiveDirPath, ex.getMessage(),
+        LOG.warn("Error while scanning directory '{}' for archived files purging: {}", archiveDirPath, ex.toString(),
                  ex);
       }
       LOG.debug("Finished archived files purging, deleted '{}' files", purged);

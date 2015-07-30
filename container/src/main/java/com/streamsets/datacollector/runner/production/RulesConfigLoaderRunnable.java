@@ -37,7 +37,7 @@ public class RulesConfigLoaderRunnable implements Runnable {
       threadHealthReporter.reportHealth(RUNNABLE_NAME, SCHEDULED_DELAY, System.currentTimeMillis());
       rulesConfigLoader.load(observer);
     } catch (Exception e) {
-      LOG.error("Stopping the Rules Config Loader, Reason: {}", e.getMessage(), e);
+      LOG.error("Stopping the Rules Config Loader, Reason: {}", e.toString(), e);
       return;
     } finally {
       Thread.currentThread().setName(originalName);

@@ -307,7 +307,7 @@ public class FlumeTarget extends BaseTarget {
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.FLUME_50, record.getHeader().getSourceId(), ex.getMessage(), ex);
+          throw new StageException(Errors.FLUME_50, record.getHeader().getSourceId(), ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -329,14 +329,14 @@ public class FlumeTarget extends BaseTarget {
       } catch (EventDeliveryException e) {
         ex = e;
         retries++;
-        LOG.info("Encountered exception while sending data to flume : {}", e.getMessage(), e);
+        LOG.info("Encountered exception while sending data to flume : {}", e.toString(), e);
         if(!ThreadUtil.sleep(waitBetweenRetries)) {
           break;
         }
         reconnect();
       }
     }
-    throw new StageException(Errors.FLUME_51, ex.getMessage(), ex);
+    throw new StageException(Errors.FLUME_51, ex.toString(), ex);
   }
 
   private void reconnect() {

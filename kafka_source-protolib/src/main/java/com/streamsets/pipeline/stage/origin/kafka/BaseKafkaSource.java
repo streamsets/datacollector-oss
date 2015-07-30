@@ -195,7 +195,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       }
     } catch (IOException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_41, topic, e.getMessage(), e));
+        Errors.KAFKA_41, topic, e.toString(), e));
     }
 
     // Validate zookeeper config
@@ -303,13 +303,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+        getContext().reportError(Errors.KAFKA_37, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.KAFKA_37, messageId, ex.getMessage(), ex);
+          throw new StageException(Errors.KAFKA_37, messageId, ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",

@@ -286,7 +286,7 @@ public class SpoolDirSource extends BaseSource {
         DirectorySpooler.createPathMatcher(filePattern);
       } catch (Exception ex) {
         issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, filePattern,
-          ex.getMessage(), ex));
+          ex.toString(), ex));
       }
     }
   }
@@ -349,7 +349,7 @@ public class SpoolDirSource extends BaseSource {
     try {
       parserFactory = builder.build();
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(null, null, Errors.SPOOLDIR_24, ex.getMessage(), ex));
+      issues.add(getContext().createConfigIssue(null, null, Errors.SPOOLDIR_24, ex.toString(), ex));
     }
   }
 
@@ -487,13 +487,13 @@ public class SpoolDirSource extends BaseSource {
         // we ask for a batch from the currentFile starting at offset
         offset = produce(currentFile, offset, batchSize, batchMaker);
       } catch (BadSpoolFileException ex) {
-        LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.getMessage(), ex);
-        getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.getMessage());
+        LOG.error(Errors.SPOOLDIR_01.getMessage(), ex.getFile(), ex.getPos(), ex.toString(), ex);
+        getContext().reportError(Errors.SPOOLDIR_01, ex.getFile(), ex.getPos(), ex.toString());
         try {
           // then we ask the spooler to error handle the failed file
           spooler.handleCurrentFileAsError();
         } catch (IOException ex1) {
-          throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.getMessage(), ex1);
+          throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.toString(), ex1);
         }
         // we set the offset to -1 to indicate we are done with the file and we should fetch a new one from the spooler
         offset = MINUS_ONE;
@@ -566,8 +566,8 @@ public class SpoolDirSource extends BaseSource {
         case TO_ERROR:
           throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
         case STOP_PIPELINE:
-          getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.getMessage());
-          throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.getMessage());
+          getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
+          throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
         default:
           throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
                                                        getContext().getOnErrorRecord(), ex));

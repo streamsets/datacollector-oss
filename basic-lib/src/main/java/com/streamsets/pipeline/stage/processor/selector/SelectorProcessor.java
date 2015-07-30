@@ -110,7 +110,7 @@ public class SelectorProcessor extends RecordProcessor {
           matchedAtLeastOnePredicate = true;
         }
       } catch (ELEvalException ex) {
-        throw new OnRecordErrorException(Errors.SELECTOR_09, record.getHeader().getSourceId(), pl[0], ex.getMessage(),
+        throw new OnRecordErrorException(Errors.SELECTOR_09, record.getHeader().getSourceId(), pl[0], ex.toString(),
                                          ex);
       }
     }

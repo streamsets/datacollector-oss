@@ -97,18 +97,18 @@ public class Pipeline {
     try {
       issues.addAll(badRecordsHandler.init(pipeContext));
     } catch (Exception ex) {
-      LOG.warn(ContainerError.CONTAINER_0700.getMessage(), ex.getMessage(), ex);
+      LOG.warn(ContainerError.CONTAINER_0700.getMessage(), ex.toString(), ex);
       issues.add(IssueCreator.getStage(badRecordsHandler.getInstanceName()).create(ContainerError.CONTAINER_0700,
-        ex.getMessage()));
+        ex.toString()));
     }
     for (Pipe pipe : pipes) {
       try {
         issues.addAll(pipe.init(pipeContext));
       } catch (Exception ex) {
         String instanceName = pipe.getStage().getConfiguration().getInstanceName();
-        LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.getMessage(), ex);
+        LOG.warn(ContainerError.CONTAINER_0701.getMessage(), instanceName, ex.toString(), ex);
         issues.add(IssueCreator.getStage(instanceName).create(ContainerError.CONTAINER_0701, instanceName,
-          ex.getMessage()));
+          ex.toString()));
       }
     }
     return issues;

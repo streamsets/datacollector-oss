@@ -75,7 +75,7 @@ public class XmlUtil {
     try {
       return xmlMapper.writeValueAsString(fieldToObject(r, r.get()));
     } catch (JsonProcessingException e) {
-      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.getMessage(), e);
+      throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 }

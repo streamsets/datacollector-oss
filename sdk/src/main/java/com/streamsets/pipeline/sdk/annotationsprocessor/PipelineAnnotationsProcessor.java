@@ -197,7 +197,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           DC_RESOURCE_BUNDLES_JSON);
         json.writeValue(resource.openOutputStream(), stagesAndEnumsNeedingResourceBundle);
       } catch (IOException e) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
       }
     }
   }
@@ -216,7 +216,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       map.put("stageClasses", stageClasses);
       json.writeValue(out, map);
     } catch (IOException e) {
-      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
+      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
     }
   }
 
@@ -1379,7 +1379,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       } catch (IOException e) {
         printError("stagedef.validation.cannot.access.icon.file",
           "Stage Definition {} supplies an icon {} which cannot be accessed for the following reason : {}.",
-          typeElement.getQualifiedName(), stageDefAnnotation.icon(), e.getMessage());
+          typeElement.getQualifiedName(), stageDefAnnotation.icon(), e.toString());
         valid = false;
       }
 

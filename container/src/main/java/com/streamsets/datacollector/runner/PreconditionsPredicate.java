@@ -69,8 +69,7 @@ public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
     if (failedPrecondition != null) {
       msg = (exception == null) ? new ErrorMessage(ContainerError.CONTAINER_0051, preconditions)
                                 : new ErrorMessage(ContainerError.CONTAINER_0052, preconditions,
-                                                   exception.getMessage(),
-                                                   exception);
+                                                   exception.toString(), exception);
     }
     return msg;
   }

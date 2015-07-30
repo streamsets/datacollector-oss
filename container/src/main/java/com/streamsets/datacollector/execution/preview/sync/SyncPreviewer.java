@@ -109,7 +109,7 @@ public class SyncPreviewer implements Previewer {
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
         changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-          e.getMessage()));
+          e.toString()));
       } else {
         //Leave the state as is.
         throw e;
@@ -119,7 +119,7 @@ public class SyncPreviewer implements Previewer {
       throw e;
     } catch (StageException e) {
       //Wrap stage exception in PipelineException
-      throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e) ;
+      throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
     }  finally {
       if(previewPipeline != null) {
         previewPipeline.destroy();
@@ -155,18 +155,18 @@ public class SyncPreviewer implements Previewer {
       //for validation errors.
       if (e.getErrorCode() == ContainerError.CONTAINER_0165) {
         changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
-          e.getMessage()));
+          e.toString()));
       } else {
         changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, e.getIssues(), null,
-          e.getMessage()));
+          e.toString()));
         throw e;
       }
     } catch (PipelineStoreException e) {
-      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.getMessage()));
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw e;
     } catch (StageException e) {
-      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.getMessage()));
-      throw new PipelineException(PreviewError.PREVIEW_0003, e.getMessage(), e);
+      changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
+      throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
       if(previewPipeline != null) {
         previewPipeline.destroy();

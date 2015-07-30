@@ -41,7 +41,7 @@ public class AvroDataOutputStreamGenerator implements DataGenerator {
     try {
       dataFileWriter.append((GenericRecord)AvroTypeUtil.sdcRecordToAvro(record, schema));
     } catch (StageException e) {
-      throw new DataGeneratorException(e.getErrorCode(), e.getMessage(), e);
+      throw new DataGeneratorException(e.getErrorCode(), e.toString(), e);
     }
   }
 

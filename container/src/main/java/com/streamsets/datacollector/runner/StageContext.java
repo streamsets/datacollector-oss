@@ -216,7 +216,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
       StageException stageException = (StageException)exception;
       errorSink.addError(instanceName, new ErrorMessage(stageException.getErrorCode(), stageException.getParams()));
     } else {
-      errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.getMessage()));
+      errorSink.addError(instanceName, new ErrorMessage(ContainerError.CONTAINER_0001, exception.toString()));
     }
   }
 
@@ -246,7 +246,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     if (ex instanceof StageException) {
       toError(record, new ErrorMessage((StageException) ex));
     } else {
-      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.getMessage()));
+      toError(record, new ErrorMessage(ContainerError.CONTAINER_0001, ex.toString()));
     }
   }
 

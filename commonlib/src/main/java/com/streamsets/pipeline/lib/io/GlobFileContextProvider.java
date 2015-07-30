@@ -261,7 +261,7 @@ public class GlobFileContextProvider implements FileContextProvider {
       try {
         globFileInfo.close();
       } catch (IOException ex) {
-        LOG.warn("Could not close '{}': {}", globFileInfo, ex.getMessage(), ex);
+        LOG.warn("Could not close '{}': {}", globFileInfo, ex.toString(), ex);
       }
     }
     for (FileContext fileContext : fileContexts) {

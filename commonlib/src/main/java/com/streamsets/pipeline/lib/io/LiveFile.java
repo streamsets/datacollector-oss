@@ -144,7 +144,7 @@ public class LiveFile {
     try {
       return OBJECT_MAPPER.writeValueAsString(map);
     } catch (Exception ex) {
-      throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
+      throw new RuntimeException("It should not happen: " + ex.toString(), ex);
     }
   }
 
@@ -167,7 +167,7 @@ public class LiveFile {
       return new LiveFile(path, inode, headHash, headLen);
     } catch (RuntimeException|JsonParseException ex) {
       throw new IllegalArgumentException(Utils.format("Invalid LiveFile serialized string '{}': {}", str,
-                                                      ex.getMessage()), ex);
+                                                      ex.toString()), ex);
     }
   }
 

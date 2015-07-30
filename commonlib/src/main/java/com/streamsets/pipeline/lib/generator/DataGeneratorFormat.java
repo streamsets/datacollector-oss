@@ -44,7 +44,7 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
           klass.getName()));
     } catch (Exception ex) {
       throw new RuntimeException(Utils.format("Could not obtain constructor '<init>({})' for DataFactory '{}': {}",
-        DataFactory.Settings.class, klass.getName(), ex.getMessage()), ex);
+        DataFactory.Settings.class, klass.getName(), ex.toString()), ex);
     }
     this.modes = modes;
     this.configs = configs;
@@ -67,7 +67,7 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
       return constructor.newInstance(settings);
     } catch (Exception ex) {
       throw new RuntimeException(Utils.format("Could not create DataFactory instance for '{}': {}",
-        klass.getName(), ex.getMessage(), ex));
+        klass.getName(), ex.toString(), ex));
     }
   }
 }

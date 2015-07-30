@@ -78,14 +78,14 @@ public class ElasticSearchTarget extends BaseTarget {
       getContext().parseEL(elStr);
       parsed = true;
     } catch (ELEvalException ex) {
-      issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, parseError, ex.getMessage(), ex));
+      issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, parseError, ex.toString(), ex));
     }
     if (parsed) {
       try {
         elEval.eval(vars, elStr, String.class);
       } catch (ELEvalException ex) {
         issues
-            .add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, evalError, ex.getMessage(), ex));
+            .add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, evalError, ex.toString(), ex));
       }
     }
   }
@@ -126,7 +126,7 @@ public class ElasticSearchTarget extends BaseTarget {
         elasticClient.admin().cluster().health(new ClusterHealthRequest());
       } catch (RuntimeException ex) {
         issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), null, Errors.ELASTICSEARCH_08,
-                                                  ex.getMessage(), ex));
+                                                  ex.toString(), ex));
       }
     }
 
@@ -202,7 +202,7 @@ public class ElasticSearchTarget extends BaseTarget {
             getContext().toError(record, ex);
             break;
           case STOP_PIPELINE:
-            throw new StageException(Errors.ELASTICSEARCH_10, record.getHeader().getSourceId(), ex.getMessage(), ex);
+            throw new StageException(Errors.ELASTICSEARCH_10, record.getHeader().getSourceId(), ex.toString(), ex);
           default:
             throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
                                                          getContext().getOnErrorRecord(), ex));

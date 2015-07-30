@@ -94,7 +94,7 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
       try {
         metricRegistryJson = objectMapper.readValue(this.metrics, MetricRegistryJson.class);
       } catch (IOException ex) {
-        LOG.warn("Error while serializing slave metrics: , {}", ex.getMessage(), ex);
+        LOG.warn("Error while serializing slave metrics: , {}", ex.toString(), ex);
       }
     }
     return metricRegistryJson;

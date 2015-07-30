@@ -40,7 +40,7 @@ public class SnapshotImpl implements Snapshot, Closeable {
         return output;
       } catch (Exception ex) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0600, snapshotInfo.getId(), snapshotInfo.getName(),
-          snapshotInfo.getRev(), ex.getMessage(), ex);
+          snapshotInfo.getRev(), ex.toString(), ex);
       }
     }
     return null;

@@ -451,7 +451,7 @@ public class CollectdParser extends AbstractParser {
       buf.getBytes(offset + 32, userPayload, 0, userPayloadLength);
       isVerified = Arrays.equals(sha256HMAC.doFinal(userPayload), signature);
     } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-      throw new OnRecordErrorException(Errors.COLLECTD_02, e.getMessage());
+      throw new OnRecordErrorException(Errors.COLLECTD_02, e.toString());
     }
     return isVerified;
   }
@@ -492,7 +492,7 @@ public class CollectdParser extends AbstractParser {
 
       buf.setBytes(offset, decrypted);
     } catch (GeneralSecurityException e) {
-      throw new OnRecordErrorException(Errors.COLLECTD_03, e.getMessage());
+      throw new OnRecordErrorException(Errors.COLLECTD_03, e.toString());
     }
   }
 

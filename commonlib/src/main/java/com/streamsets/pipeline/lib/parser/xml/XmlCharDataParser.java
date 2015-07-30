@@ -69,7 +69,7 @@ public class XmlCharDataParser implements DataParser {
     try {
       return (readerOffset > -1) ? readerOffset : parser.getReaderPosition();
     } catch (XMLStreamException ex) {
-      throw new DataParserException(Errors.XML_PARSER_01, ex.getMessage(), ex);
+      throw new DataParserException(Errors.XML_PARSER_01, ex.toString(), ex);
     }
   }
 

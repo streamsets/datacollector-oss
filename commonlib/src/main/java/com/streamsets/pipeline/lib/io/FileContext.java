@@ -74,7 +74,7 @@ public class FileContext {
       try {
         reader.close();
       } catch (IOException ex) {
-        LOG.warn("Could not close '{}' file property: {}", reader.getLiveFile(), ex.getMessage(), ex);
+        LOG.warn("Could not close '{}' file property: {}", reader.getLiveFile(), ex.toString(), ex);
       } finally {
         reader = null;
       }
@@ -151,7 +151,7 @@ public class FileContext {
               Files.delete(file.getPath());
               LOG.debug("File '{}' processing completed, post processing action 'DELETED'", file);
             } catch (IOException ex) {
-              throw new IOException(Utils.format("Could not delete '{}': {}", file, ex.getMessage()), ex);
+              throw new IOException(Utils.format("Could not delete '{}': {}", file, ex.toString()), ex);
             }
             break;
           case ARCHIVE:
@@ -161,7 +161,7 @@ public class FileContext {
               Files.move(file.getPath(), fileArchive);
               LOG.debug("File '{}' processing completed, post processing action 'ARCHIVED' as", file);
             } catch (IOException ex) {
-              throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.getMessage()), ex);
+              throw new IOException(Utils.format("Could not archive '{}': {}", file, ex.toString()), ex);
             }
             break;
         }

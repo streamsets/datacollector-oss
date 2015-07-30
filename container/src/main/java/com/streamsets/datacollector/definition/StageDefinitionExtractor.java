@@ -193,7 +193,7 @@ public abstract class StageDefinitionExtractor {
         upgrader = sDef.upgrader().newInstance();
       } catch (Exception ex) {
         throw new IllegalArgumentException(Utils.format(
-            "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.getMessage(), ex));
+            "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString(), ex));
       }
 
       return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,

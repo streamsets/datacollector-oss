@@ -135,7 +135,7 @@ public class AvroTypeUtil {
             int typeIndex = GenericData.get().resolveUnion(schema, object);
             schema = schema.getTypes().get(typeIndex);
           } catch (UnresolvedUnionException e) {
-             throw new StageException(CommonError.CMN_0106, schema.getName(), field1.getType().name(), e.getMessage(),
+             throw new StageException(CommonError.CMN_0106, schema.getName(), field1.getType().name(), e.toString(),
                e);
           }
         }

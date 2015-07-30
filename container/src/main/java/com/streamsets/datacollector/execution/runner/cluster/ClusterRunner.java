@@ -283,7 +283,7 @@ public class ClusterRunner extends AbstractRunner {
         slaveCallbackManager.setClusterToken(appState.getSdcToken());
         pipelineConf = getPipelineConf(name, rev);
       } catch (PipelineRunnerException e) {
-        validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.getMessage(), new HashMap<String, Object>());
+        validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.toString(), new HashMap<String, Object>());
         throw e;
       }
       connect(appState, pipelineConf);
@@ -483,7 +483,7 @@ public class ClusterRunner extends AbstractRunner {
       return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(),
                                    clusterSource.getConfigsToShip());
     } catch (IOException ex) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.getMessage(), ex);
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.toString(), ex);
     }
   }
 

@@ -102,7 +102,7 @@ public class JdbcSource extends BaseSource {
       try {
         Class.forName(driverClassName);
       } catch (ClassNotFoundException e) {
-        issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, Errors.JDBC_01, e.getMessage()));
+        issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, Errors.JDBC_01, e.toString()));
       }
     }
 
@@ -136,17 +136,17 @@ public class JdbcSource extends BaseSource {
           } catch (SQLException e) {
             logSQLException(e);
             issues.add(
-                context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, e.getMessage())
+                context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, e.toString())
             );
           }
         }
       } catch (SQLException e) {
         logSQLException(e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.getMessage()));
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
       }
     }
     catch (StageException e) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.getMessage()));
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
     }
     return issues;
   }
@@ -214,7 +214,7 @@ public class JdbcSource extends BaseSource {
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
-        handleError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), e.getMessage());
+        handleError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), e.toString());
       }
     }
     return nextSourceOffset;
@@ -225,7 +225,7 @@ public class JdbcSource extends BaseSource {
       try {
         c.close();
       } catch (Exception ex) {
-        LOG.debug("Error while closing: {}", ex.getMessage(), ex);
+        LOG.debug("Error while closing: {}", ex.toString(), ex);
       }
     }
   }
@@ -252,7 +252,7 @@ public class JdbcSource extends BaseSource {
       dataSource = new HikariDataSource(config);
     } catch (RuntimeException e) {
       LOG.error(Errors.JDBC_06.getMessage(), e);
-      throw new StageException(Errors.JDBC_06, e.getCause().getMessage());
+      throw new StageException(Errors.JDBC_06, e.getCause().toString());
     }
   }
 
@@ -304,7 +304,7 @@ public class JdbcSource extends BaseSource {
   }
   
   static void logSQLException(SQLException e) {
-    LOG.error("SQLException: {}", e.getMessage());
+    LOG.error("SQLException: {}", e.toString());
     SQLException next = e.getNextException();
     if (null != next) {
       logSQLException(e.getNextException());

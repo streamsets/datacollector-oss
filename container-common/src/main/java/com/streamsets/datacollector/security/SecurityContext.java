@@ -139,7 +139,7 @@ public class SecurityContext {
         loginContext = kerberosLogin(true);
         subject = loginContext.getSubject();
       } catch (Exception ex) {
-        throw new RuntimeException(Utils.format("It could not get Kerberos credentials: {}", ex.getMessage()), ex);
+        throw new RuntimeException(Utils.format("It could not get Kerberos credentials: {}", ex.toString()), ex);
       }
     } else {
       subject = new Subject();
@@ -157,7 +157,7 @@ public class SecurityContext {
         try {
           loginContext.logout();
         } catch (LoginException ex) {
-          LOG.warn("Error while doing logout from Kerberos: {}", ex.getMessage(), ex);
+          LOG.warn("Error while doing logout from Kerberos: {}", ex.toString(), ex);
         } finally {
           loginContext = null;
         }

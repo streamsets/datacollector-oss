@@ -184,7 +184,7 @@ public class MongoDBSource extends BaseSource {
             fields.put(entry.getKey(), value);
           }
         } catch (IOException e) {
-          handleError(Errors.MONGODB_10, e.getMessage());
+          handleError(Errors.MONGODB_10, e.toString());
           continue;
         }
 
@@ -298,7 +298,7 @@ public class MongoDBSource extends BaseSource {
               Groups.MONGODB.name(),
               "mongoConnectionString",
               Errors.MONGODB_01,
-              e.getMessage()
+              e.toString()
           ));
           isOk = false;
         }
@@ -317,7 +317,7 @@ public class MongoDBSource extends BaseSource {
           "database",
           Errors.MONGODB_02,
           mongoDatabaseName,
-          e.getMessage()
+          e.toString()
       ));
       isOk = false;
     }
@@ -334,7 +334,7 @@ public class MongoDBSource extends BaseSource {
           "collection",
           Errors.MONGODB_03,
           mongoCollectionName,
-          e.getMessage()
+          e.toString()
       ));
       isOk = false;
     }
@@ -351,7 +351,7 @@ public class MongoDBSource extends BaseSource {
             "collection",
             Errors.MONGODB_04,
             mongoDatabaseName,
-            e.getMessage()
+            e.toString()
         ));
       }
     } else {
@@ -363,7 +363,7 @@ public class MongoDBSource extends BaseSource {
             "collection",
             Errors.MONGODB_06,
             mongoDatabaseName,
-            e.getMessage()
+            e.toString()
         ));
       }
     }

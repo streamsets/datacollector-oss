@@ -75,10 +75,10 @@ public class ProductionPipeline {
           issues = pipeline.init();
         } catch (Throwable e) {
           if (!wasStopped()) {
-            LOG.warn("Error while starting: {}", e.getMessage(), e);
-            stateChanged(PipelineStatus.START_ERROR, e.getMessage(), null);
+            LOG.warn("Error while starting: {}", e.toString(), e);
+            stateChanged(PipelineStatus.START_ERROR, e.toString(), null);
           }
-          throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.getMessage(), e);
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.toString(), e);
         }
         if (issues.isEmpty()) {
           try {
@@ -92,7 +92,7 @@ public class ProductionPipeline {
             }
           } catch (Throwable e) {
             if (!wasStopped()) {
-              runningErrorMsg = e.getMessage();
+              runningErrorMsg = e.toString();
               LOG.warn("Error while running: {}", runningErrorMsg, e);
               stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, null);
               errorWhileRunning = true;

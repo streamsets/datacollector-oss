@@ -70,7 +70,7 @@ public class SolrTarget extends BaseTarget {
         solrClient = getSolrClient();
         solrClient.ping();
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.SOLR.name(), null, Errors.SOLR_03, ex.getMessage(), ex));
+        issues.add(getContext().createConfigIssue(Groups.SOLR.name(), null, Errors.SOLR_03, ex.toString(), ex));
       }
     }
 
@@ -117,7 +117,7 @@ public class SolrTarget extends BaseTarget {
             getContext().toError(record, ex);
             break;
           case STOP_PIPELINE:
-            throw new StageException(Errors.SOLR_04, record.getHeader().getSourceId(), ex.getMessage(), ex);
+            throw new StageException(Errors.SOLR_04, record.getHeader().getSourceId(), ex.toString(), ex);
           default:
             throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
               getContext().getOnErrorRecord(), ex));
@@ -154,7 +154,7 @@ public class SolrTarget extends BaseTarget {
         }
         break;
       case STOP_PIPELINE:
-        throw new StageException(Errors.SOLR_05, ex.getMessage());
+        throw new StageException(Errors.SOLR_05, ex.toString());
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
           getContext().getOnErrorRecord()));

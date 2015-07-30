@@ -100,8 +100,8 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
         // if we had non graceful shutdown we may have a _tmp file around. new file is not created.
         rotate(false);
       } catch (IOException ex) {
-        LOG.warn("Could not do rotation on init(): {}", ex.getMessage(), ex);
-        issues.add(getContext().createConfigIssue(null, null, Errors.RECORDFS_06, activeFile, ex.getMessage()));
+        LOG.warn("Could not do rotation on init(): {}", ex.toString(), ex);
+        issues.add(getContext().createConfigIssue(null, null, Errors.RECORDFS_06, activeFile, ex.toString()));
       }
     }
     return issues;
@@ -128,7 +128,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
         rotate(false);
       }
     } catch (IOException ex) {
-      throw new StageException(Errors.RECORDFS_05, activeFile, ex.getMessage(), ex);
+      throw new StageException(Errors.RECORDFS_05, activeFile, ex.toString(), ex);
     }
   }
 
@@ -177,7 +177,7 @@ public class RecordsToLocalFileSystemTarget extends BaseTarget {
       //closing file and rotating.
       rotate(false);
     } catch (IOException ex) {
-      LOG.warn("Could not do rotation on destroy(): {}", ex.getMessage(), ex);
+      LOG.warn("Could not do rotation on destroy(): {}", ex.toString(), ex);
     }
     IOUtils.closeQuietly(generator);
     IOUtils.closeQuietly(countingOutputStream);

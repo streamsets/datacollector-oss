@@ -179,7 +179,7 @@ public class WebServerTask extends AbstractTask {
       }
     } catch (IOException ex) {
       throw new RuntimeException(Utils.format("Could not get the permissions of the realm file '{}', {}", realmFile,
-                                              ex.getMessage(), ex));
+                                              ex.toString(), ex));
     }
   }
 
@@ -415,13 +415,13 @@ public class WebServerTask extends AbstractTask {
     try {
       server.stop();
     } catch (Exception ex) {
-      LOG.error("Error while stopping Jetty, {}", ex.getMessage(), ex);
+      LOG.error("Error while stopping Jetty, {}", ex.toString(), ex);
     } finally {
       for (ContextConfigurator cc : contextConfigurators) {
         try {
           cc.stop();
         } catch (Exception ex) {
-          LOG.error("Error while stopping '{}', {}", cc.getClass().getSimpleName(), ex.getMessage(), ex);
+          LOG.error("Error while stopping '{}', {}", cc.getClass().getSimpleName(), ex.toString(), ex);
         }
       }
     }
@@ -429,7 +429,7 @@ public class WebServerTask extends AbstractTask {
       try {
         redirector.stop();
       } catch (Exception ex) {
-        LOG.error("Error while stopping redirector Jetty, {}", ex.getMessage(), ex);
+        LOG.error("Error while stopping redirector Jetty, {}", ex.toString(), ex);
       }
     }
   }

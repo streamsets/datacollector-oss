@@ -48,7 +48,7 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
         }
       } catch (IOException ex) {
         throw new OnRecordErrorException(Errors.JSONP_03, record.getHeader().getSourceId(), fieldPathToParse,
-                                         ex.getMessage(), ex);
+                                         ex.toString(), ex);
       }
       batchMaker.addRecord(record);
     }

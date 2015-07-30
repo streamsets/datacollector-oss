@@ -211,7 +211,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
     } catch (IOException e) {
       throw new RuntimeException(
-        Utils.format("Could not load runtime configuration, '{}'", e.getMessage()), e);
+        Utils.format("Could not load runtime configuration, '{}'", e.toString()), e);
     }
 
     try {
@@ -251,7 +251,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
-              Utils.format("Could not load stages definition from '{}', {}", cl, ex.getMessage()), ex);
+              Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.debug("Loaded '{}' libraries with a total of '{}' stages in '{}ms'", libs, stages,
@@ -324,7 +324,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     try {
       return (LocaleInContext.get() == null) ? stageList : localizedStageList.get(LocaleInContext.get());
     } catch (ExecutionException ex) {
-      LOG.warn("Error loading locale '{}', {}", LocaleInContext.get(), ex.getMessage(), ex);
+      LOG.warn("Error loading locale '{}', {}", LocaleInContext.get(), ex.toString(), ex);
       return stageList;
     }
   }

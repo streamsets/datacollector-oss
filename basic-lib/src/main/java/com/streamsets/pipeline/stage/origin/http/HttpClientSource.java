@@ -194,13 +194,13 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
             case DISCARD:
               break;
             case TO_ERROR:
-              getContext().reportError(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
+              getContext().reportError(Errors.HTTP_00, sourceId, ex.toString(), ex);
               break;
             case STOP_PIPELINE:
               if (ex instanceof StageException) {
                 throw (StageException) ex;
               } else {
-                throw new StageException(Errors.HTTP_00, sourceId, ex.getMessage(), ex);
+                throw new StageException(Errors.HTTP_00, sourceId, ex.toString(), ex);
               }
             default:
               throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",

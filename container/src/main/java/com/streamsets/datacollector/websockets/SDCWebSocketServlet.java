@@ -69,7 +69,7 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
           } catch (InterruptedException ex) {
             //NOP
           } catch (IOException | WebSocketException ex) {
-            LOG.warn("Failed to send WebSocket message: {}", ex.getMessage(), ex);
+            LOG.warn("Failed to send WebSocket message: {}", ex.toString(), ex);
           }
         }
       }

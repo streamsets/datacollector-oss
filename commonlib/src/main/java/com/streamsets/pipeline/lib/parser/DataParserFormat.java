@@ -47,7 +47,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
                                                                  klass.getName()));
     } catch (Exception ex) {
       throw new RuntimeException(Utils.format("Could not obtain constructor '<init>({})' for DataFactory '{}': {}",
-                                              DataFactory.Settings.class, klass.getName(), ex.getMessage()), ex);
+                                              DataFactory.Settings.class, klass.getName(), ex.toString()), ex);
     }
     this.modes = modes;
     this.configs = configs;
@@ -74,7 +74,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
         cause = ex.getCause();
       }
       throw new RuntimeException(Utils.format("Could not create DataFactory instance for '{}': {}",
-                                              klass.getName(), cause.getMessage(), cause));
+                                              klass.getName(), cause.toString(), cause));
     }
   }
 

@@ -225,7 +225,7 @@ public abstract class
                 value = field.get(null);
               } catch (IllegalAccessException ex) {
                 throw new IllegalArgumentException(Utils.format("{}, could not retrieve constant '{}' value: {}",
-                                                                contextMsg, cName, ex.getMessage(), ex));
+                                                                contextMsg, cName, ex.toString(), ex));
               }
               cDef = new ElConstantDefinition(Integer.toString(indexCounter.incrementAndGet()), cName,
                                               cAnnotation.description(), field.getType().getSimpleName(), value);

@@ -112,7 +112,7 @@ public class EmailSender {
       Transport.send(message);
     } catch (Exception ex) {
       session = null;
-      throw new PipelineException(ContainerError.CONTAINER_0500, ex.getMessage(), ex);
+      throw new PipelineException(ContainerError.CONTAINER_0500, ex.toString(), ex);
     }
   }
 

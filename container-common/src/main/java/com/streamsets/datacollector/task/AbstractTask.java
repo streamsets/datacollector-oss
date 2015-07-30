@@ -53,7 +53,7 @@ public abstract class AbstractTask implements Task {
       LOG.debug("Task '{}' initialized", getName());
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to initialize, {}, calling stopTask() and going into ERROR", getName(),
-               ex.getMessage(), ex);
+               ex.toString(), ex);
       safeStop(Status.ERROR);
       throw ex;
     }
@@ -69,7 +69,7 @@ public abstract class AbstractTask implements Task {
       runTask();
       LOG.debug("Task '{}' running", getName());
     } catch (RuntimeException ex) {
-      LOG.warn("Task '{}' failed to start, {}, calling stopTask() and going into ERROR", getName(), ex.getMessage(),
+      LOG.warn("Task '{}' failed to start, {}, calling stopTask() and going into ERROR", getName(), ex.toString(),
                ex);
       safeStop(Status.ERROR);
       throw ex;
@@ -93,7 +93,7 @@ public abstract class AbstractTask implements Task {
       stopTask();
       LOG.debug("Task '{}' stopped from status '{}'", getName(), priorStatus);
     } catch (RuntimeException ex) {
-      LOG.warn("Task '{}' failed to stop properly, {}", getName(), ex.getMessage(), ex);
+      LOG.warn("Task '{}' failed to stop properly, {}", getName(), ex.toString(), ex);
       setStatus(Status.ERROR);
     }
   }

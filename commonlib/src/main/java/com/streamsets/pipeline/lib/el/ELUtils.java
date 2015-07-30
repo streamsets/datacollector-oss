@@ -23,7 +23,7 @@ public class ELUtils {
         try {
           variables.addVariable(entry.getKey(), entry.getValue());
         } catch (Exception ex) {
-          issues.add(context.createConfigIssue(group, config, err, constants, ex.getMessage(), ex));
+          issues.add(context.createConfigIssue(group, config, err, constants, ex.toString(), ex));
         }
       }
     }
@@ -38,7 +38,7 @@ public class ELUtils {
       context.parseEL(expression);
       elEvaluator.eval(variables, expression, type);
     } catch (Exception ex) {
-      issues.add(context.createConfigIssue(group, config, err, expression, ex.getMessage(), ex));
+      issues.add(context.createConfigIssue(group, config, err, expression, ex.toString(), ex));
     }
   }
 

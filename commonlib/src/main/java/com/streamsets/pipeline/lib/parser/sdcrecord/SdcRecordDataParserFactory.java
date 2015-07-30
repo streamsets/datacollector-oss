@@ -31,7 +31,7 @@ public class SdcRecordDataParserFactory extends DataParserFactory {
       return new SdcRecordDataParser(getSettings().getContext(), is, offset,
         getSettings().getMaxRecordLen());
     } catch (IOException ex) {
-      throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

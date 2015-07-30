@@ -172,7 +172,7 @@ public abstract class ConfigValueExtractor {
                 break;
             }
           } catch (Exception ex) {
-            throw new RuntimeException(Utils.format("It should not happen: {}", ex.getMessage()), ex);
+            throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
           }
         }
       }

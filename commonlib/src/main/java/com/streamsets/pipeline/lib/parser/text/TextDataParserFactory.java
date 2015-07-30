@@ -52,7 +52,7 @@ public class TextDataParserFactory extends DataParserFactory {
                                     reader, offset, getSettings().getMaxRecordLen(), TEXT_FIELD_NAME,
                                     TRUNCATED_FIELD_NAME);
     } catch (IOException ex) {
-      throw new DataParserException(Errors.TEXT_PARSER_00, id, offset, ex.getMessage(), ex);
+      throw new DataParserException(Errors.TEXT_PARSER_00, id, offset, ex.toString(), ex);
     }
   }
 

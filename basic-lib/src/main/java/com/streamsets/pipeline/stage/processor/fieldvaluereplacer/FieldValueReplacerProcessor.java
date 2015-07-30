@@ -65,7 +65,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
                     fieldValueReplacerConfig.newValue, field.getType())));
                 } catch (Exception e) {
                   throw new OnRecordErrorException(Errors.VALUE_REPLACER_00, fieldValueReplacerConfig.newValue,
-                    field.getType(), e.getMessage(), e);
+                    field.getType(), e.toString(), e);
                 }
               }
             } else {

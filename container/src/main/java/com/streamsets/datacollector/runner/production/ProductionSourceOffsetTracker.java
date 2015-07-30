@@ -99,7 +99,7 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
           pipelineName, rev)).getOutputStream()) {
       ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(s));
     } catch (IOException e) {
-      LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.getMessage(), e);
+      LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.toString(), e);
       throw new RuntimeException(e);
     }
   }

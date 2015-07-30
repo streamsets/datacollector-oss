@@ -53,7 +53,7 @@ public class UpdateChecker implements Runnable {
     try {
       this.url = new URL(url);
     } catch (Exception ex) {
-      LOG.trace("Invalid update check URL '{}': {}", url, ex.getMessage(), ex);
+      LOG.trace("Invalid update check URL '{}': {}", url, ex.toString(), ex);
     }
   }
 
@@ -110,7 +110,7 @@ public class UpdateChecker implements Runnable {
     try {
       ps = runner.getState();
     } catch (PipelineStoreException e) {
-      LOG.warn(Utils.format("Cannot get pipeline state: '{}'", e.getMessage()), e);
+      LOG.warn(Utils.format("Cannot get pipeline state: '{}'", e.toString()), e);
       return;
     }
       if (ps.getStatus() == PipelineStatus.RUNNING) {
@@ -137,7 +137,7 @@ public class UpdateChecker implements Runnable {
                 LOG.trace("Got '{} : {}' from update-check server", conn.getResponseCode(), conn.getResponseMessage());
               }
             } catch (Exception ex) {
-              LOG.trace("Could not do an update check: {}", ex.getMessage(), ex);
+              LOG.trace("Could not do an update check: {}", ex.toString(), ex);
             } finally {
               if (conn != null) {
                 conn.disconnect();

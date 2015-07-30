@@ -102,7 +102,7 @@ public enum LogRollModeFactory implements RollModeFactory {
         ((LiveFileNameSetter) obj).setName(liveFileName);
         return (Comparator<Path>) obj;
       } catch (Exception ex) {
-        throw new RuntimeException("It should not happen: " + ex.getMessage(), ex);
+        throw new RuntimeException("It should not happen: " + ex.toString(), ex);
       }
     }
 
