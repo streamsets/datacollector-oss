@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.execution.store;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -57,7 +58,7 @@ public class SlavePipelineStateStore implements PipelineStateStore {
 
   @Override
   public List<PipelineState> getHistory(String name, String rev, boolean fromBeginning) throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return ImmutableList.of(pipelineState);
   }
 
   @Override

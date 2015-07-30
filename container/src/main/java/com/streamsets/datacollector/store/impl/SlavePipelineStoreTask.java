@@ -22,7 +22,6 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
     this.pipelineStore = pipelineStore;
   }
 
-
   @Override
   public PipelineConfiguration create(String name, String description, String user) throws PipelineStoreException {
     throw new UnsupportedOperationException();
@@ -35,17 +34,17 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return pipelineStore.getPipelines();
   }
 
   @Override
   public PipelineInfo getInfo(String name) throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return pipelineStore.getInfo(name);
   }
 
   @Override
   public List<PipelineRevInfo> getHistory(String name) throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return pipelineStore.getHistory(name);
   }
 
   @Override
@@ -61,23 +60,23 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
   @Override
   public boolean hasPipeline(String name) {
-    throw new UnsupportedOperationException();
+    return pipelineStore.hasPipeline(name);
   }
 
   @Override
   public RuleDefinitions retrieveRules(String name, String tagOrRev) throws PipelineStoreException {
-    return null;
+    return pipelineStore.retrieveRules(name, tagOrRev);
   }
 
   @Override
   public RuleDefinitions storeRules(String pipelineName, String tag, RuleDefinitions ruleDefinitions)
     throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return pipelineStore.storeRules(pipelineName, tag, ruleDefinitions);
   }
 
   @Override
   public boolean deleteRules(String name) throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return pipelineStore.deleteRules(name);
   }
 
   @Override

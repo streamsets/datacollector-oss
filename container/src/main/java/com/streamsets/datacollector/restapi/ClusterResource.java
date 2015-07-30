@@ -107,7 +107,8 @@ public class ClusterResource {
       }
 
       Joiner joiner = Joiner.on( "," ).skipNulls();
-      String slaveURL = slaveCallbackInfo.getSdcURL() + "?auth_user=" + user + "&auth_token=" + joiner.join(authTokens);
+      String slaveURL = slaveCallbackInfo.getSdcURL() + "/collector/pipeline/" + name + "?auth_user=" + user +
+        "&auth_token=" + joiner.join(authTokens);
 
       response.sendRedirect(slaveURL);
 

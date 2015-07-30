@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SlavePipelineManager extends AbstractTask implements Manager {
@@ -74,7 +75,11 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
 
   @Override
   public List<PipelineState> getPipelines() throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    List<PipelineState> pipelineStates = new ArrayList<>(1);
+    if(runner != null) {
+      pipelineStates.add(runner.getState());
+    }
+    return pipelineStates;
   }
 
   @Override

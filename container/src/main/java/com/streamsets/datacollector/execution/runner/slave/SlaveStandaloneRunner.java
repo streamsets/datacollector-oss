@@ -138,7 +138,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
 
   @Override
   public List<PipelineState> getHistory() throws PipelineStoreException {
-    throw new UnsupportedOperationException();
+    return standaloneRunner.getHistory();
   }
 
   @Override
