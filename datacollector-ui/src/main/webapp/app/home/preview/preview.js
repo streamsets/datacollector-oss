@@ -430,7 +430,13 @@ angular
       api.pipelineAgent.getPreviewData(previewerId)
         .success(function(previewData) {
           if(previewData.status !== 'FINISHED') {
-            $rootScope.common.errors = [previewData.issues];
+
+            if(previewData.issues) {
+              $rootScope.common.errors = [previewData.issues];
+            } else if(previewData.message) {
+              $rootScope.common.errors = [previewData.message];
+            }
+
             $scope.closePreview();
             $scope.showLoading = false;
             defer.reject();

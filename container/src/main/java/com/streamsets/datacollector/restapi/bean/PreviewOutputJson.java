@@ -31,6 +31,10 @@ public class PreviewOutputJson {
     return BeanHelper.wrapStageOutputLists(previewOutput.getOutput());
   }
 
+  public String getMessage() {
+    return previewOutput.getMessage();
+  }
+
   @JsonIgnore
   public PreviewOutput getPreviewOutput() {
     return previewOutput;
