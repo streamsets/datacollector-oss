@@ -91,8 +91,6 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
   @Override
   public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
     HttpServletRequest httpRequest = req.getHttpServletRequest();
-    Principal principal = httpRequest.getUserPrincipal();
-    final String userName = principal.getName();
     String webSocketType = httpRequest.getParameter("type");
     final String pipelineName = httpRequest.getParameter("pipelineName");
     String rev = httpRequest.getParameter("rev");
