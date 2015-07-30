@@ -161,7 +161,7 @@ public class ClusterRunner extends AbstractRunner {
     this.clusterHelper = new ClusterHelper(runtimeInfo, tempDir);
     if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
       MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
-      metricsEventRunnable = objectGraph.get(MetricsEventRunnable.class);
+      metricsEventRunnable = this.objectGraph.get(MetricsEventRunnable.class);
     }
   }
 

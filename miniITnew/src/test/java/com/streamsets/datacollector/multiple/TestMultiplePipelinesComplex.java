@@ -12,10 +12,8 @@ import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;

@@ -1092,6 +1092,8 @@ public class BeanHelper {
         return ExecutionModeJson.CLUSTER;
       case STANDALONE:
         return ExecutionModeJson.STANDALONE;
+      case SLAVE:
+        return ExecutionModeJson.SLAVE;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode");
     }
@@ -1106,6 +1108,8 @@ public class BeanHelper {
         return ExecutionMode.CLUSTER;
       case STANDALONE:
         return ExecutionMode.STANDALONE;
+      case SLAVE:
+        return ExecutionMode.SLAVE;
       default:
         throw new IllegalArgumentException("Unrecognized execution mode");
     }

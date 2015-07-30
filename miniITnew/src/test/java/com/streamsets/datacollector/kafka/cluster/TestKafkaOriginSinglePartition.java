@@ -10,12 +10,9 @@ import com.streamsets.datacollector.base.TestPipelineOperationsCluster;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
-
 import kafka.javaapi.producer.Producer;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -25,8 +22,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-@Ignore
 public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluster {
 
   private static final String TOPIC = "TestKafkaOriginSinglePartitionCluster";

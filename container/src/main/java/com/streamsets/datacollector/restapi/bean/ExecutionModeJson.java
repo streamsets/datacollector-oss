@@ -7,6 +7,7 @@ package com.streamsets.datacollector.restapi.bean;
 
 public enum ExecutionModeJson {
   STANDALONE,
-  CLUSTER
+  CLUSTER,
+  SLAVE
   ;
 }

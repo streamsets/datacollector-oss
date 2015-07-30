@@ -10,12 +10,9 @@ import com.streamsets.datacollector.base.TestPipelineOperationsCluster;
 import com.streamsets.pipeline.lib.DataType;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
-
 import kafka.javaapi.producer.Producer;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +24,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Ignore
 public class TestKafkaOriginMultiPartition extends TestPipelineOperationsCluster {
   private static final Logger LOG = LoggerFactory.getLogger(TestKafkaOriginMultiPartition.class);
   private static final String TOPIC = "TestKafkaOriginMultiPartitionCluster";

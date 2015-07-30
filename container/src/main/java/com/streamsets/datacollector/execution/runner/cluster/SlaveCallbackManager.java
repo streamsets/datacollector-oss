@@ -13,7 +13,6 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +27,6 @@ public class SlaveCallbackManager {
   private final ReentrantLock callbackCacheLock;
   private final Cache<String, CallbackInfo> slaveCallbackList;
 
-  @Inject
   public SlaveCallbackManager(RuntimeInfo runtimeInfo) {
     this.runtimeInfo = runtimeInfo;
     this.callbackCacheLock = new ReentrantLock();
