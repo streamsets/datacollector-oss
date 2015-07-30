@@ -13,13 +13,13 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.AlertInfoJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ErrorMessageJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.datacollector.restapi.bean.RecordJson;
+import com.streamsets.datacollector.restapi.bean.SnapshotDataJson;
 import com.streamsets.datacollector.restapi.bean.SnapshotInfoJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -73,8 +73,8 @@ public class ManagerResource {
 
   @Path("/pipelines/status")
   @GET
-  @ApiOperation(value = "Returns all Pipeline Status", response = PipelineStateJson.class, responseContainer = "Map",
-    authorizations = @Authorization(value = "basic"))
+  @ApiOperation(value = "Returns all Pipeline Status", response = PipelineStateJson.class,
+    responseContainer = "Map[String, PipelineStateJson]", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getAllPipelineStatus() throws PipelineStoreException {
@@ -235,8 +235,8 @@ public class ManagerResource {
 
   @Path("/pipeline/{pipelineName}/snapshots")
   @GET
-  @ApiOperation(value = "Returns Snapshot Info for the given pipeline", response = SnapshotInfoJson.class, responseContainer = "List",
-    authorizations = @Authorization(value = "basic"))
+  @ApiOperation(value = "Returns Snapshot Info for the given pipeline", response = SnapshotInfoJson.class,
+    responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response getSnapshotsInfo(@PathParam("pipelineName") String pipelineName,
                                    @QueryParam("rev") @DefaultValue("0") String rev)
@@ -271,7 +271,7 @@ public class ManagerResource {
 
   @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}")
   @GET
-  @ApiOperation(value = "Return Snapshot data", response = Object.class,
+  @ApiOperation(value = "Return Snapshot data", response = SnapshotDataJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })

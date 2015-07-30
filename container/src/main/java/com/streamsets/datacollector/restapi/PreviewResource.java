@@ -11,6 +11,7 @@ import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -73,7 +74,7 @@ public class PreviewResource {
   @Path("/pipeline/{pipelineName}/preview")
   @POST
   @ApiOperation(value = "Run Pipeline preview by overriding passed stage instance data and get preview data",
-    response = String.class, responseContainer = "Map", authorizations = @Authorization(value = "basic"))
+    response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response previewWithOverride(
@@ -97,14 +98,11 @@ public class PreviewResource {
     batches = Math.min(maxBatches, batches);
 
     Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
-
     try {
       previewer.start(batches, batchSize, skipTargets, endStageInstanceName,
         BeanHelper.unwrapStageOutput(stageOutputsToOverrideJson), timeout);
-
-      return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("previewerId", previewer.getId()))
-        .build();
-
+      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(
@@ -117,7 +115,7 @@ public class PreviewResource {
 
   @Path("/pipeline/{pipelineName}/preview/{previewerId}/status")
   @GET
-  @ApiOperation(value = "Return Preview status by previewer ID", response = String.class, responseContainer = "Map",
+  @ApiOperation(value = "Return Preview status by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
@@ -129,7 +127,8 @@ public class PreviewResource {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     RestAPIUtils.injectPipelineInMDC(previewer.getName());
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(ImmutableMap.of("status", previewer.getStatus())).build();
+    PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
   @Path("/pipeline/{pipelineName}/preview/{previewerId}")
@@ -152,7 +151,7 @@ public class PreviewResource {
 
   @Path("/pipeline/{pipelineName}/preview/{previewerId}")
   @DELETE
-  @ApiOperation(value = "Stop Preview by previewer ID", response = String.class, responseContainer = "Map",
+  @ApiOperation(value = "Stop Preview by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
@@ -165,7 +164,8 @@ public class PreviewResource {
     }
     RestAPIUtils.injectPipelineInMDC(previewer.getName());
     previewer.stop();
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewer.getStatus()).build();
+    PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
   }
 
   @Path("/pipeline/{pipelineName}/rawSourcePreview")
@@ -190,7 +190,7 @@ public class PreviewResource {
   @Path("/pipeline/{pipelineName}/validate")
   @GET
   @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
-    response = String.class, responseContainer = "Map", authorizations = @Authorization(value = "basic"))
+    response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response validateConfigs(
@@ -202,9 +202,8 @@ public class PreviewResource {
     try {
       Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
       previewer.validateConfigs(timeout);
-
-      return Response.ok().type(MediaType.APPLICATION_JSON)
-                     .entity(ImmutableMap.of("previewerId", previewer.getId())).build();
+      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+      return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(

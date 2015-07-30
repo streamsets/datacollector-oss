@@ -11,6 +11,9 @@ import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -67,38 +70,38 @@ public class StageLibraryResource {
   }
 
   @GET
-  @ApiOperation(value = "Returns pipeline & stage configuration definitions", response = Map.class,
+  @ApiOperation(value = "Returns pipeline & stage configuration definitions", response = DefinitionsJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getDefinitions() {
     //The definitions to be returned
-    Map<String, Object> definitions = new HashMap<>();
+    DefinitionsJson definitions = new DefinitionsJson();
 
     //Populate the definitions with all the stage definitions
     List<StageDefinition> stageDefinitions = stageLibrary.getStages();
-    List<Object> stages = new ArrayList<>(stageDefinitions.size());
+    List<StageDefinitionJson> stages = new ArrayList<>(stageDefinitions.size());
     stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
-    definitions.put(STAGES, stages);
+    definitions.setStages(stages);
 
     //Populate the definitions with the PipelineDefinition
-    List<Object> pipeline = new ArrayList<>(1);
+    List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
-    definitions.put(PIPELINE, pipeline);
+    definitions.setPipeline(pipeline);
 
     Map<String, Object> map = new HashMap<>();
     map.put(EL_FUNCTION_DEFS,DataRuleEvaluator.getElFunctionIdx());
     map.put(EL_CONSTANT_DEFS, DataRuleEvaluator.getElConstantIdx());
-    definitions.put(RULES_EL_METADATA, map);
+    definitions.setRulesElMetadata(map);
 
     map = new HashMap<>();
     map.put(EL_FUNCTION_DEFS,
             BeanHelper.wrapElFunctionDefinitionsIdx(ELDefinitionExtractor.get().getElFunctionsCatalog()));
     map.put(EL_CONSTANT_DEFS,
             BeanHelper.wrapElConstantDefinitionsIdx(ELDefinitionExtractor.get().getELConstantsCatalog()));
-    definitions.put(EL_CATALOG, map);
+    definitions.setElCatalog(map);
 
-    definitions.put(RUNTIME_CONFIGS, RuntimeEL.getRuntimeConfKeys());
+    definitions.setRuntimeConfigs(RuntimeEL.getRuntimeConfKeys());
 
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
   }
