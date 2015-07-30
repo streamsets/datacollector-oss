@@ -17,6 +17,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,7 +44,7 @@ public class PipelineConfiguration implements Serializable{
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
     this.configuration = configuration;
-    this.uiInfo = uiInfo;
+    this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
     issues = new Issues();

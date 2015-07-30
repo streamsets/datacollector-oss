@@ -10,6 +10,7 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.task.Task;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PipelineStoreTask extends Task {
   public static final int SCHEMA_VERSION = 1;
@@ -37,5 +38,7 @@ public interface PipelineStoreTask extends Task {
     throws PipelineStoreException;
 
   public boolean deleteRules(String name) throws PipelineStoreException;
+
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException;
 
 }

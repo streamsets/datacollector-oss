@@ -13,6 +13,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 
 import java.util.List;
+import java.util.Map;
 
 public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
@@ -108,4 +109,10 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
   public Status getStatus() {
     return pipelineStore.getStatus();
   }
+
+  @Override
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
+    //NOP
+  }
+
 }

@@ -235,6 +235,22 @@ public class PipelineStoreResource {
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
+  @Path("/pipeline/{pipelineName}/uiInfo")
+  @POST
+  @ApiOperation(value ="", hidden = true)
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @SuppressWarnings("unchecked")
+  public Response saveUiInfo(
+      @PathParam("pipelineName") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      Map uiInfo)
+      throws PipelineStoreException, URISyntaxException {
+    store.saveUiInfo(name, rev, uiInfo);
+    return Response.ok().build();
+  }
+
   @Path("/pipeline/{pipelineName}/rules")
   @GET
   @ApiOperation(value = "Find Pipeline Rules by name and revision", response = RuleDefinitionsJson.class,

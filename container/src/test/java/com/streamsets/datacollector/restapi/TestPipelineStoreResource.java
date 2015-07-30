@@ -6,6 +6,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.PipelineStoreResource;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -23,6 +24,7 @@ import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.RuleIssue;
 import com.streamsets.datacollector.validation.ValidationError;
@@ -48,6 +50,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestPipelineStoreResource extends JerseyTest {
@@ -188,6 +191,8 @@ public class TestPipelineStoreResource extends JerseyTest {
     }
   }
 
+  static PipelineStoreTask pipelineStore;
+
   static class PipelineStoreTestInjector implements Factory<PipelineStoreTask> {
 
     public PipelineStoreTestInjector() {
@@ -199,7 +204,7 @@ public class TestPipelineStoreResource extends JerseyTest {
 
       com.streamsets.datacollector.util.TestUtil.captureStagesForProductionRun();
 
-      PipelineStoreTask pipelineStore = Mockito.mock(PipelineStoreTask.class);
+      pipelineStore = Mockito.mock(PipelineStoreTask.class);
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
             new com.streamsets.datacollector.store.PipelineInfo("name", "description", new java.util.Date(0), new java.util.Date(0), "creator",
@@ -269,6 +274,23 @@ public class TestPipelineStoreResource extends JerseyTest {
     @Override
     public void dispose(PipelineStoreTask pipelineStore) {
     }
+  }
+
+
+  @Test
+  public void testUiInfo() throws Exception {
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    conf.getUiInfo().put("a", "A");
+
+    Response response = target("/v1/pipeline/myPipeline/uiInfo")
+        .request()
+        .post(Entity.json(Collections.EMPTY_MAP));
+    Assert.assertEquals(200, response.getStatus());
+    Assert.assertEquals(0, response.getLength());
+
+    Mockito.verify(pipelineStore, Mockito.times(1)).saveUiInfo(Mockito.anyString(), Mockito.anyString(),
+                                                               Mockito.anyMap());
+
   }
 
 }

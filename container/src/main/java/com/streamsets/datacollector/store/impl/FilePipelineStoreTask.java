@@ -8,6 +8,7 @@ package com.streamsets.datacollector.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.datacollector.config.DataRuleDefinition;
@@ -48,7 +49,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -60,6 +63,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   static final String REV = "0";
   public static final String INFO_FILE = "info.json";
   public static final String PIPELINE_FILE = "pipeline.json";
+  public static final String UI_INFO_FILE = "uiinfo.json";
   private static final String RULES_FILE = "rules.json";
 
   private final StageLibraryTask stageLibrary;
@@ -117,6 +121,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   private File getPipelineFile(String name) {
     return new File(getPipelineDir(name), PIPELINE_FILE);
+  }
+
+  private File getPipelineUiInfoFile(String name) {
+    return new File(getPipelineDir(name), UI_INFO_FILE);
   }
 
   private File getRulesFile(String name) {
@@ -263,6 +271,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           pipelineStateStore.edited(user, name, tag, pipelineConfigBean.executionMode);
         }
 
+        Map uiInfo = extractUiInfo(pipeline);
+        saveUiInfo(name, tag, uiInfo);
+
       } catch (Exception ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.toString(), ex);
       }
@@ -280,6 +291,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public PipelineConfiguration load(String name, String tagOrRev) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (!hasPipeline(name)) {
@@ -291,6 +303,15 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           json.readValue(getPipelineFile(name), PipelineConfigurationJson.class);
         PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
         pipeline.setPipelineInfo(info);
+
+        Map<String, Map> uiInfo;
+        if (getPipelineUiInfoFile(name).exists()) {
+          uiInfo = json.readValue(getPipelineUiInfoFile(name), Map.class);
+        } else {
+          uiInfo = Collections.emptyMap();
+        }
+        pipeline = injectUiInfo(uiInfo, pipeline);
+
         return pipeline;
       }
       catch (Exception ex) {
@@ -374,6 +395,42 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   public String getPipelineKey(String pipelineName, String rev) {
     return pipelineName + "$" + rev;
+  }
+
+  @Override
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
+    try {
+      json.writeValue(getPipelineUiInfoFile(name), uiInfo);
+    } catch (Exception ex) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0405, name, ex.toString(), ex);
+    }
+  }
+
+  @VisibleForTesting
+  public static Map<String, Object> extractUiInfo(PipelineConfiguration pipelineConf) {
+    Map<String, Object> map = new HashMap<>();
+    map.put(":pipeline:", pipelineConf.getUiInfo());
+    for (StageConfiguration stage : pipelineConf.getStages()) {
+      map.put(stage.getInstanceName(), stage.getUiInfo());
+    }
+    return map;
+  }
+
+  @SuppressWarnings("unchecked")
+  PipelineConfiguration injectUiInfo(Map<String, Map> uiInfo, PipelineConfiguration pipelineConf) {
+    pipelineConf.getUiInfo().clear();
+    if (uiInfo.containsKey(":pipeline:")) {
+      pipelineConf.getUiInfo().clear();
+      pipelineConf.getUiInfo().putAll(uiInfo.get(":pipeline:"));
+    }
+    for (StageConfiguration stage : pipelineConf.getStages()) {
+      stage.getUiInfo().clear();
+      if (uiInfo.containsKey(stage.getInstanceName())) {
+        stage.getUiInfo().clear();
+        stage.getUiInfo().putAll(uiInfo.get(stage.getInstanceName()));
+      }
+    }
+    return pipelineConf;
   }
 
 }

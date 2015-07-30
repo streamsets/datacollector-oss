@@ -39,7 +39,7 @@ public class StageConfiguration implements Serializable {
     this.library = library;
     this.stageName = stageName;
     this.stageVersion = stageVersion;
-    this.uiInfo = uiInfo;
+    this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
     this.inputLanes = inputLanes;
     this.outputLanes = outputLanes;
     this.configuration = new ArrayList<>();

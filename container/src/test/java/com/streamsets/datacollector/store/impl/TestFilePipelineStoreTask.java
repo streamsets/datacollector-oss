@@ -14,6 +14,7 @@ import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -39,7 +40,9 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestFilePipelineStoreTask {
@@ -336,6 +339,63 @@ public class TestFilePipelineStoreTask {
 
   private void createDefaultPipeline(PipelineStoreTask store) throws PipelineStoreException {
     store.create(SYSTEM_USER, DEFAULT_PIPELINE_NAME, DEFAULT_PIPELINE_DESCRIPTION);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testUiInfoSave() throws Exception {
+    try {
+      store.init();
+      createDefaultPipeline(store);
+      PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      Assert.assertTrue(pc.getUiInfo().isEmpty());
+
+      // add a stage to pipeline
+      pc.getStages().add(new StageConfiguration("i", "l", "n", 1, Collections.EMPTY_LIST, Collections.EMPTY_MAP,
+                                                Collections.EMPTY_LIST, Collections.EMPTY_LIST));
+
+      // set some uiInfo at pipeline and stage level and dave
+      pc.getUiInfo().put("a", "A");
+      pc.getUiInfo().put("b", "B");
+      pc.getStages().get(0).getUiInfo().put("ia", "IA");
+      pc.getStages().get(0).getUiInfo().put("ib", "IB");
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
+
+      // verify uiInfo stays after save
+      Assert.assertEquals(2, pc.getUiInfo().size());
+      Assert.assertEquals("A", pc.getUiInfo().get("a"));
+      Assert.assertEquals("B", pc.getUiInfo().get("b"));
+      Assert.assertEquals(2, pc.getStages().get(0).getUiInfo().size());
+      Assert.assertEquals("IA", pc.getStages().get(0).getUiInfo().get("ia"));
+      Assert.assertEquals("IB", pc.getStages().get(0).getUiInfo().get("ib"));
+
+      // load and verify uiInfo stays
+      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      Assert.assertEquals(2, pc.getUiInfo().size());
+      Assert.assertEquals("A", pc.getUiInfo().get("a"));
+      Assert.assertEquals("B", pc.getUiInfo().get("b"));
+      Assert.assertEquals(2, pc.getStages().get(0).getUiInfo().size());
+      Assert.assertEquals("IA", pc.getStages().get(0).getUiInfo().get("ia"));
+      Assert.assertEquals("IB", pc.getStages().get(0).getUiInfo().get("ib"));
+
+      // extract uiInfo, modify and save uiInfo only
+      Map<String, Object> uiInfo = FilePipelineStoreTask.extractUiInfo(pc);
+      ((Map)uiInfo.get(":pipeline:")).clear();
+      ((Map)uiInfo.get(":pipeline:")).put("a", "AA");
+      ((Map)uiInfo.get("i")).clear();
+      ((Map)uiInfo.get("i")).put("ia", "IIAA");
+      store.saveUiInfo(DEFAULT_PIPELINE_NAME, null, uiInfo);
+
+      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      Assert.assertNotNull(pc.getUiInfo());
+      Assert.assertEquals(1, pc.getUiInfo().size());
+      Assert.assertEquals("AA", pc.getUiInfo().get("a"));
+      Assert.assertEquals(1, pc.getStages().get(0).getUiInfo().size());
+      Assert.assertEquals("IIAA",pc.getStages().get(0).getUiInfo().get("ia"));
+
+    } finally {
+      store.stop();
+    }
   }
 
 }

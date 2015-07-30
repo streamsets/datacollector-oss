@@ -98,6 +98,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0402("Cannot access alerts because the pipeline is not running"),
   CONTAINER_0403("Cannot load rule definitions for pipeline '{}': {}"),
   CONTAINER_0404("Cannot store rule definitions for pipeline '{}': {}"),
+  CONTAINER_0405("Cannot store UI info for pipeline '{}': {}"),
 
   CONTAINER_0500("EmailSender error: {}"),
 

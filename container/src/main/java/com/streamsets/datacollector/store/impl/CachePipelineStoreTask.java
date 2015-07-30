@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -150,6 +151,11 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   @VisibleForTesting
   PipelineStoreTask getActualStore()  {
     return pipelineStore;
+  }
+
+  @Override
+  public void saveUiInfo(String name, String rev, Map<String, Object> uiInfo) throws PipelineStoreException {
+    pipelineStore.saveUiInfo(name, rev, uiInfo);
   }
 
 }
