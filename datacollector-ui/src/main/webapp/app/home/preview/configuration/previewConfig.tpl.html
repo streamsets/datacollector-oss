@@ -29,6 +29,15 @@
   </div>
 
   <div class="form-group">
+    <label class="col-lg-3 col-md-4 control-label" translate="home.previewPane.timeout">Preview Timeout</label>
+    <div class="controls col-md-1">
+      <input type="text" class="form-control" name="timeout"
+             ng-disabled="isPipelineRunning"
+             ng-model="pipelineConfig.uiInfo.previewConfig.timeout">
+    </div>
+  </div>
+
+  <div class="form-group">
     <label class="col-lg-3 col-md-4 control-label">
       {{'home.previewPane.writeToDestinations' | translate}}
       <i class="fa fa-info-circle help-icon"

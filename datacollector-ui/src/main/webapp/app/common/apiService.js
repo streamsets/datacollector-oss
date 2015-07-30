@@ -344,17 +344,22 @@ angular.module('dataCollectorApp.common')
        * @param skipTargets
        * @param stageOutputList
        * @param endStage
+       * @param timeout
        * @returns {*}
        */
-      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage) {
+      createPreview: function(name, sourceOffset, batchSize, rev, skipTargets, stageOutputList, endStage, timeout) {
         var url;
 
         if(!batchSize) {
           batchSize = 10;
         }
 
+        if(!timeout || timeout <=0) {
+          timeout = 2000;
+        }
+
         url = apiBase + '/pipeline/' + name + '/preview?batchSize=' + batchSize + '&rev=' + rev +
-            '&skipTargets=' + skipTargets;
+            '&skipTargets=' + skipTargets + '&timeout=' + timeout;
 
         if(endStage) {
           url += '&endStage=' + endStage;
@@ -444,7 +449,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       validatePipeline: function(name) {
-        var url = apiBase + '/pipeline/' + name + '/validate';
+        var url = apiBase + '/pipeline/' + name + '/validate?timeout=500000';
         return $http({
           method: 'GET',
           url: url
