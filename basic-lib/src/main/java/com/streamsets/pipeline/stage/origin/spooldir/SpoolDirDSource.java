@@ -38,12 +38,13 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.util.List;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    upgrader = SpoolDirSourceUpgrader.class
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
