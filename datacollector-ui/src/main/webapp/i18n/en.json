@@ -134,9 +134,11 @@
     }
   },
   "home": {
+    "ago": "ago",
     "createPipeline": "Create new pipeline",
-    "importPipeline": "Import pipeline",
     "getStarted": "Get Started",
+    "importPipeline": "Import pipeline",
+    "invalidStatus": "Pipeline is invalid",
     "header" : {
       "addStage": "Add Stage",
       "alerts": "Alerts",
@@ -420,6 +422,7 @@
       "confirmationMessage": "The Data Collector will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed. Continue?",
       "successMessage": "Reset Origin is successful."
     },
+    "runningStatus": "Pipeline is running",
     "shutdown": {
       "confirmationMessage": "Are you sure you want to shutdown Data Collector?",
       "headerLabel": "Shutdown Collector",
@@ -438,7 +441,8 @@
       "created": "Date created",
       "lastModified": "Date updated"
     },
-    "title": "Pipelines"
+    "title": "Pipelines",
+    "updated": "Updated"
   },
   "jvmMetrics": {
     "gc": {

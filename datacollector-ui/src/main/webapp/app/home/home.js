@@ -152,6 +152,22 @@ angular
         }, function () {
 
         });
+      },
+
+      /**
+       * Return pipeline alerts for tooltip
+       *
+       * @param pipelineAlerts
+       */
+      getPipelineAlerts: function(pipelineAlerts) {
+        var alertMsg ='<span class="stage-errors-tooltip">';
+        if(pipelineAlerts) {
+          angular.forEach(pipelineAlerts, function(alert) {
+            alertMsg += alert.ruleDefinition.alertText + '<br>';
+          });
+        }
+        alertMsg += '</span>';
+        return alertMsg;
       }
     });
 

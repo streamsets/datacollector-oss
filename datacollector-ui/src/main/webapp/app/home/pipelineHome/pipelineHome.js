@@ -1470,7 +1470,8 @@ angular
         if(status.attributes && status.attributes.issues) {
           $rootScope.common.errors = [status.attributes.issues];
         } else {
-          $rootScope.common.errors = [$scope.activeConfigStatus.message];
+          $rootScope.common.errors = ['Pipeline Status: ' + $scope.activeConfigStatus.status + ': ' +
+            $scope.activeConfigStatus.message];
         }
 
       }
