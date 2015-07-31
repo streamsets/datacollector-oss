@@ -15,11 +15,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ng-annotate');
   grunt.loadNpmTasks('grunt-html2js');
 
-  var buildTimeVar = grunt.template.today("yyyy-mm-dd-HH-MM");
-
   var userConfig = {
 
-    buildTime: buildTimeVar,
+    buildTime: grunt.template.today("yyyy-mm-dd-HH-MM"),
 
     /**
      * The `build_dir` folder is where our projects are compiled.
@@ -458,7 +456,7 @@ module.exports = function(grunt) {
           'templates-app.js',
           'templates-common.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-*.css'
         ]
       },
 
@@ -470,9 +468,9 @@ module.exports = function(grunt) {
       compile: {
         cwd: '<%= build_dir %>',
         src: [
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.js',
+          'assets/<%= pkg.name %>-<%= pkg.version %>-*.js',
           '<%= vendor_files.css %>',
-          'assets/<%= pkg.name %>-<%= pkg.version %>-<%= buildTime %>.css'
+          'assets/<%= pkg.name %>-<%= pkg.version %>-*.css'
         ]
       }
     },
