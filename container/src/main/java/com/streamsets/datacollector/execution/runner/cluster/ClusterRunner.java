@@ -76,7 +76,6 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Control class to interact with slave pipelines running on cluster. It provides support for starting, stopping and
@@ -287,7 +286,7 @@ public class ClusterRunner extends AbstractRunner {
       try {
         slaveCallbackManager.setClusterToken(appState.getSdcToken());
         pipelineConf = getPipelineConf(name, rev);
-      } catch (PipelineRunnerException e) {
+      } catch (PipelineRunnerException | PipelineStoreException e) {
         validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.toString(), new HashMap<String, Object>());
         throw e;
       }
@@ -319,11 +318,11 @@ public class ClusterRunner extends AbstractRunner {
       }
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
       pipelineConf = getPipelineConf(name, rev);
-      doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
     } catch (Exception e) {
       validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), new HashMap<String, Object>());
       throw e;
     }
+    doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
   }
 
   @Override
@@ -404,18 +403,18 @@ public class ClusterRunner extends AbstractRunner {
     isClosed = true;
   }
 
-  private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message)
+  private void validateAndSetStateTransition(PipelineStatus toStatus, String message)
     throws PipelineStoreException, PipelineRunnerException {
     final Map<String, Object> attributes = new HashMap<>();
     attributes.putAll(getAttributes());
     validateAndSetStateTransition(toStatus, message, attributes);
   }
 
-  private synchronized void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
+  private void validateAndSetStateTransition(PipelineStatus toStatus, String message, Map<String, Object> attributes)
     throws PipelineStoreException, PipelineRunnerException {
     Utils.checkState(attributes!=null, "Attributes cannot be set to null");
     PipelineState fromState = getState();
-    if (fromState.getStatus() == toStatus) {
+    if (fromState.getStatus() == toStatus && toStatus != PipelineStatus.STARTING) {
       LOG.debug(Utils.format("Ignoring status '{}' as this is same as current status", fromState.getStatus()));
     } else {
       PipelineState pipelineState;
@@ -442,6 +441,7 @@ public class ClusterRunner extends AbstractRunner {
           pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.CLUSTER,
             metricsJSONStr);
       }
+      // This should be out of sync block
       if (eventListenerManager != null) {
         eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.CLUSTER);
       }
@@ -657,8 +657,7 @@ public class ClusterRunner extends AbstractRunner {
     }
   }
 
-  private void scheduleRunnable(PipelineConfiguration pipelineConf) throws PipelineStoreException,
-    PipelineRunnerException {
+  private void scheduleRunnable(PipelineConfiguration pipelineConf) {
     updateChecker = new UpdateChecker(runtimeInfo, configuration, pipelineConf, this);
     updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
     if(metricsEventRunnable != null) {

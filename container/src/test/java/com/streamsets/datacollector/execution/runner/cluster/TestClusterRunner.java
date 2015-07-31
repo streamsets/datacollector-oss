@@ -274,6 +274,15 @@ public class TestClusterRunner {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForStart();
+    Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
+    try {
+      clusterRunner.prepareForStart();
+      Assert.fail("Expected exception but didn't get any");
+    } catch (PipelineRunnerException e) {
+      assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    } catch (Exception e) {
+      Assert.fail("Expected PipelineRunnerException but got " + e);
+    }
     clusterRunner.start();
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
   }
