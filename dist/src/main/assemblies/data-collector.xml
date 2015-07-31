@@ -111,7 +111,7 @@
     <!-- local docs -->
     <fileSet>
       <directory>${docs.dist-dir}</directory>
-      <outputDirectory>/static-web/docs</outputDirectory>
+      <outputDirectory>/sdc-static-web/docs</outputDirectory>
     </fileSet>
 
     <!-- javadocs -->
