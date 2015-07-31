@@ -695,6 +695,21 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+      /**
+       * Sends updated Pipeline UI Info to server for update.
+       *
+       * @param name - Pipeline Name
+       * @param uiInfo - Modified Pipeline UI Info
+       * @returns Updated Pipeline Rules
+       */
+      savePipelineUIInfo: function(name, uiInfo) {
+        var url = apiBase + '/pipeline/' + name + '/uiInfo';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: uiInfo
+        });
+      },
 
       /**
        * Get Sampled data for given sampling rule id.

@@ -791,34 +791,72 @@ angular
       configSaveInProgress = true;
       $rootScope.common.saveOperationInProgress++;
 
-      api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
-        success(function (res) {
 
-          //Clear Previous errors
-          $rootScope.common.errors = [];
+      if(!$scope.isPipelineRunning) {
+        api.pipelineAgent.savePipelineConfig($scope.activeConfigInfo.name, config).
+          success(function (res) {
 
-          configSaveInProgress = false;
-          $rootScope.common.saveOperationInProgress--;
-          if (configDirty) {
-            config = _.clone($scope.pipelineConfig);
-            config.uuid = res.uuid;
+            //Clear Previous errors
+            $rootScope.common.errors = [];
 
-            //Updated new changes in return config
-            res.configuration = config.configuration;
-            res.uiInfo = config.uiInfo;
-            res.stages = config.stages;
-            res.errorStage = config.errorStage;
+            configSaveInProgress = false;
+            $rootScope.common.saveOperationInProgress--;
+            if (configDirty) {
+              config = _.clone($scope.pipelineConfig);
+              config.uuid = res.uuid;
 
-            saveUpdates(config);
-          }
+              //Updated new changes in return config
+              res.configuration = config.configuration;
+              res.uiInfo = config.uiInfo;
+              res.stages = config.stages;
+              res.errorStage = config.errorStage;
 
-          updateGraph(res, $scope.pipelineRules);
-        }).
-        error(function(data, status, headers, config) {
-          configSaveInProgress = false;
-          $rootScope.common.saveOperationInProgress--;
-          $rootScope.common.errors = [data];
+              saveUpdates(config);
+            }
+
+            updateGraph(res, $scope.pipelineRules);
+          }).
+          error(function(data, status, headers, config) {
+            configSaveInProgress = false;
+            $rootScope.common.saveOperationInProgress--;
+            $rootScope.common.errors = [data];
+          });
+      } else {
+
+        //If Pipeline is running save only UI Info
+
+        var uiInfoMap = {
+          ':pipeline:': config.uiInfo
+        };
+
+        angular.forEach(config.stages, function(stageInstance) {
+          uiInfoMap[stageInstance.instanceName] = stageInstance.uiInfo;
         });
+
+        api.pipelineAgent.savePipelineUIInfo($scope.activeConfigInfo.name, uiInfoMap).
+          success(function (res) {
+
+            //Clear Previous errors
+            $rootScope.common.errors = [];
+
+            configSaveInProgress = false;
+
+            if (configDirty) {
+              saveUpdates();
+            }
+
+            $rootScope.common.saveOperationInProgress--;
+
+            //updateGraph(res, $scope.pipelineRules);
+          }).
+          error(function(data, status, headers, config) {
+            configSaveInProgress = false;
+            $rootScope.common.saveOperationInProgress--;
+            $rootScope.common.errors = [data];
+          });
+      }
+
+
     };
 
     /**
@@ -1341,7 +1379,7 @@ angular
           }
         }
 
-        if (configTimeout) {
+        if(configTimeout) {
           $timeout.cancel(configTimeout);
         }
         configTimeout = $timeout(saveUpdates, 1000);

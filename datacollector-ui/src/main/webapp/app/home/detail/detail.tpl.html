@@ -60,12 +60,12 @@
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}"
                target="_blank">{{'home.detailPane.pipelineConfigJSONData' | translate}}</a>
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu">
-            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline-library/{{pipelineConfig.info.name}}/rules"
+            <a role="menuitem" tabindex="-1" href="/rest/{{common.apiVersion}}/pipeline/{{pipelineConfig.info.name}}/rules"
                target="_blank">{{'home.detailPane.pipelineRulesJSONData' | translate}}</a>
           </li>
 
