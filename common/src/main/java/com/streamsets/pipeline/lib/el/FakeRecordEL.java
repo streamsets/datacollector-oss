@@ -33,6 +33,16 @@ public class FakeRecordEL {
 
   @ElFunction(
     prefix = RECORD_EL_PREFIX,
+    name = "valueOrDefault",
+    description = "Returns the value of the field represented by path 'fieldPath' for the record in context or "
+      + "the default value if the field is not present")
+  public static String getValueOrDefault(
+    @ElParam("fieldPath") String fieldPath, @ElParam("defaultValue") String defaultValue) {
+    return "*";
+  }
+
+  @ElFunction(
+    prefix = RECORD_EL_PREFIX,
     name = "exists",
     description = "Checks if the field represented by path 'fieldPath' exists in the record")
   public static String exists(

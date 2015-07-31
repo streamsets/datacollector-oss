@@ -40,6 +40,7 @@ public class TestRecordEL {
     Mockito.when(record.get(Mockito.eq("/x"))).thenReturn(null);
     Mockito.when(record.has(Mockito.eq("/x"))).thenReturn(true);
     Mockito.when(record.has(Mockito.eq("/y"))).thenReturn(false);
+    Mockito.when(record.get(Mockito.eq("/a"))).thenReturn(Field.create("A"));
 
     RecordEL.setRecordInContext(variables, record);
 
@@ -52,6 +53,8 @@ public class TestRecordEL {
     Assert.assertEquals(true, eval.eval(variables, "${record:exists('/x')}", boolean.class));
     Assert.assertEquals(false, eval.eval(variables, "${record:exists('/y')}", boolean.class));
     Assert.assertEquals("bar", eval.eval(variables, "${record:attribute('foo')}", String.class));
+    Assert.assertEquals("dummy", eval.eval(variables, "${record:valueOrDefault('/z', 'dummy')}", Object.class));
+    Assert.assertEquals("A", eval.eval(variables, "${record:valueOrDefault('/a', 'dummy')}", Object.class));
   }
 
   @Test
