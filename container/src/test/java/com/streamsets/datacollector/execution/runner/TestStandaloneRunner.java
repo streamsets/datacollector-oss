@@ -10,6 +10,7 @@ import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
+import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
@@ -120,6 +121,8 @@ public class TestStandaloneRunner {
       ExecutionMode.STANDALONE, null);
     runner.start();
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
+      ExecutionMode.STANDALONE, null);
     assertNull(runner.getState().getMetrics());
   }
 
@@ -161,8 +164,8 @@ public class TestStandaloneRunner {
 
     runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     waitAndAssertState(runner, PipelineStatus.RUNNING);
-    runner.stop();
-    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    ((AsyncRunner)runner).getRunner().stop();
+    Assert.assertTrue(runner.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner.getState().getMetrics());
   }
 
@@ -204,8 +207,8 @@ public class TestStandaloneRunner {
 
     runner1.stop();
     waitAndAssertState(runner1, PipelineStatus.STOPPED);
-    runner2.stop();
-    waitAndAssertState(runner2, PipelineStatus.STOPPED);
+    ((AsyncRunner)runner2).getRunner().stop();
+    Assert.assertTrue(runner2.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
     assertNotNull(runner2.getState().getMetrics());
   }

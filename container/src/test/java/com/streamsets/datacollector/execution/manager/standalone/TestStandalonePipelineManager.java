@@ -257,10 +257,10 @@ public class TestStandalonePipelineManager {
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
     assertTrue(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null);
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null);
 
     setUpManager(StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL);
     Thread.sleep(2000);
@@ -278,10 +278,12 @@ public class TestStandalonePipelineManager {
     Runner runner = pipelineManager.getRunner("user1", "aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null);
     assertEquals(PipelineStatus.RUNNING_ERROR, runner.getState().getStatus());
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUN_ERROR, "blah", null, ExecutionMode.STANDALONE, null);
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
+    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode.STANDALONE, null);
     pipelineManager = null;
     setUpManager(100);
     Thread.sleep(2000);

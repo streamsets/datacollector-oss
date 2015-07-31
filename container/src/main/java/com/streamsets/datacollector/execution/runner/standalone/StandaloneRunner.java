@@ -9,6 +9,7 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -70,6 +71,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import dagger.ObjectGraph;
 
@@ -288,7 +290,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public synchronized void stop() throws PipelineException {
+  public void stop() throws PipelineException {
     validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline", null);
     stopPipeline(false);
   }
@@ -586,19 +588,33 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     LOG.debug("Started pipeline {} {}", name, rev);
   }
 
-  private synchronized void stopPipeline(boolean sdcShutting) throws PipelineException {
-   if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
-      LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
-      pipelineRunnable.stop(sdcShutting);
+  private void stopPipeline(boolean sdcShutting) throws PipelineException {
+    synchronized (this) {
+      if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
+        LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
+        pipelineRunnable.stop(sdcShutting);
+      }
+      if (metricsEventRunnable != null) {
+        metricsEventRunnable.setThreadHealthReporter(null);
+      }
+      if (threadHealthReporter != null) {
+        threadHealthReporter.destroy();
+        threadHealthReporter = null;
+      }
     }
-    if(metricsEventRunnable != null) {
-      metricsEventRunnable.setThreadHealthReporter(null);
+    Stopwatch stopWatch = Stopwatch.createStarted();
+    while (getState().getStatus() != PipelineStatus.DISCONNECTED && getState().getStatus().isActive()) {
+      if (stopWatch.elapsed(TimeUnit.MINUTES) > 2) {
+        break;
+      }
+      ThreadUtil.sleep(500);
     }
-    if (threadHealthReporter != null) {
-      threadHealthReporter.destroy();
-      threadHealthReporter = null;
+    PipelineStatus pipelineStatus = getState().getStatus();
+    if (pipelineStatus.isActive() && pipelineStatus != PipelineStatus.DISCONNECTED) {
+      LOG.warn(Utils.format("Pipeline couldn't be stopped properly, it is in non terminal state: {}", pipelineStatus));
+    } else {
+      LOG.debug("Stopped pipeline");
     }
-    LOG.debug("Stopped pipeline");
   }
 
   @Override
