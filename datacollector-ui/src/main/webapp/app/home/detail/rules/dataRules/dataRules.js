@@ -24,7 +24,8 @@ angular
        * Callback function for Create New Data Rule button.
        */
       createDataRule: function() {
-        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK) {
+        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK &&
+          !$rootScope.common.isSlaveNode) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -75,7 +76,8 @@ angular
           $event.stopPropagation();
         }
 
-        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK) {
+        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK &&
+          !$rootScope.common.isSlaveNode) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
