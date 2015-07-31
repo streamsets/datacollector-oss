@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_xy5_4tm_vs">
+ <title>Kerberos Authentication</title>
+ <shortdesc>You can use Kerberos authentication to connect to HBase. When you use Kerberos
+  authentication the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
+  Kerberos principal and keytab to connect to HBase. </shortdesc>
+ <conbody>
+  <p><indexterm>HBase destination<indexterm>Kerberos
+    authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
+     HBase</indexterm></indexterm>The Kerberos principal and keytab are defined in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
+   file. To use Kerberos authentication, configure all Kerberos properties in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
+   file. </p>
+ </conbody>
+</concept>

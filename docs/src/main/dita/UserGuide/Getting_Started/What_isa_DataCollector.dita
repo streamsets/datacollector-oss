@@ -2,11 +2,10 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_sjz_rmx_3q">
  <title>What is a Data Collector?</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/company"/>
-  <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is a
-  lightweight, powerful engine that streams data in real time. Use the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to route and
-  process data in your data streams. </shortdesc>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+    /> is a lightweight, powerful engine that streams data in real time. Use the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to route and
+    process data in your data streams. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>description</indexterm></indexterm>To define the flow of
       data for the <ph

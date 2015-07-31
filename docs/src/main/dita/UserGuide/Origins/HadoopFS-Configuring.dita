@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_hgl_vgn_vs">
+    <title>Configuring a Hadoop FS Origin</title>
+    <shortdesc>Configure a Hadoop FS origin to read data from HDFS.</shortdesc>
+    <taskbody>
+        <context/>
+        <steps id="steps_v51_1hn_vs">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Hadoop FS</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_b55_mkn_vs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="1.86*"/>
+                            <thead>
+                                <row>
+                                    <entry>Hadoop FS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Directory Path</entry>
+                                    <entry>Directory for the data to be read. Include the HDFS
+                                        scheme and authority in the path as follows:
+                                            <codeph>&lt;scheme>://&lt;authority>/path</codeph>.</entry>
+                                </row>
+                                <row>
+                                    <entry>Include All Subdirectories</entry>
+                                    <entry>Reads from all directories within the specified directory
+                                        path.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format <xref
+                                            href="HadoopFS-DataFormat.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_mfn_hwx_5r"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Type of data to be read. Use one of the following
+                                            options: <ul id="ul_czf_y14_vs">
+                                                <li>Text</li>
+                                                <li>JSON</li>
+                                                <li>Log</li>
+                                            </ul></p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record when a record includes multiple
+                                        objects. </entry>
+                                </row>
+                                <row>
+                                    <entry>Kerberos Authentication <xref
+                                            href="HadoopFS-Kerberos.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a5x_jzn_vs"
+                                        /></xref></entry>
+                                    <entry>Uses Kerberos credentials to connect to HDFS. </entry>
+                                </row>
+                                <row>
+                                    <entry>Hadoop FS Configuration <xref
+                                            href="HadoopFS-AdditionalProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a3b_kzn_vs"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Additional Hadoop configuration properties to use. To add
+                                            properties, click <uicontrol>Add</uicontrol> and define
+                                            the property name and value. </p>
+                                        <p>Use the property names and values as expected by Hadoop.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

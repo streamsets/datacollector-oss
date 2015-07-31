@@ -273,26 +273,9 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. <p>When you define runtime properties in a separate
                                             file, do not prefix the property names with
-                                            runtime.conf_ .</p></li>
-                                </ul></entry>
-                        </row>
-                        <row>
-                            <entry>sdc.execution.mode<p> </p></entry>
-                            <entry>Execution mode for the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    />:<ul id="ul_icj_t5n_1s">
-                                    <li>standalone - Runs the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> in the default mode, allowing it to read and write from
-                                        all endpoints.</li>
-                                    <li>cluster - Runs the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> in cluster mode, reading only from Kafka clusters. <xref
-                                            href="../Advanced_Config/ExecutionMode.dita"><image
-                                                href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_o5j_f5g_cs"/>
-                                        </xref><draft-comment author="Loretta">Tucu says not to doc
-                                            the observer properties. 6/23/15.</draft-comment></li>
+                                            runtime.conf_ .<draft-comment author="Loretta">Tucu says
+                                                not to doc the observer properties.
+                                                6/23/15.</draft-comment></p></li>
                                 </ul></entry>
                         </row>
                     </tbody>

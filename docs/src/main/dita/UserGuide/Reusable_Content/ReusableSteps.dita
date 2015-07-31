@@ -84,9 +84,16 @@
                                         snapshot to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>Remember the Configuration<draft-comment author="Loretta"
-                                            >come back to this</draft-comment></entry>
-                                    <entry/>
+                                    <entry>Remember the Configuration</entry>
+                                    <entry>Stores the current preview configuration for use every
+                                        time you request a preview for this pipeline. <p>After you
+                                            run data preview, you can change this option in the
+                                            Preview panel by selecting the Preview Configuration
+                                            icon (<image
+                                                href="../Graphics/icon_PrevPreviewConfig.png"
+                                                id="image_qzd_tnf_vs" scale="80"/>) and clearing the
+                                            option. The change takes effect the next time you run
+                                            data preview.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -178,7 +185,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Use this step for processors that have error
-                        handling - should be all I think? s</draft-comment>
+                        handling - should be all I think? </draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ReqField-ErrorHandling">

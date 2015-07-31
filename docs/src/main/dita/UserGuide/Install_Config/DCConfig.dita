@@ -13,6 +13,7 @@
     <p>You can define runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file or in a separate file. For more information, see <xref
-        href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>. </p>
+        href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"/>. <draft-comment
+        author="Loretta">add runtime resources?</draft-comment></p>
   </conbody>
 </concept>

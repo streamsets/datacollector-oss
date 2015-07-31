@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following tips for help with origin stages and systems. My MySQL JDBC Driver 5.0 fails to validate the query in my JBDC origin. This can occur when you use a LIMIT clause in your query. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips for help with origin stages and systems. The Hadoop FS origin has an error icon with the following message: Validation_0071 - Stage '&lt;stage id&gt;' does not support 'Standalone' ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -20,6 +20,31 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ocw_b3g_vs">
+ <h2 class="title topictitle2">Hadoop FS</h2>
+
+ <div class="body conbody">
+  <dl class="dl">
+   
+    <dt class="dt dlterm">The Hadoop FS origin has an error icon with the following message:</dt>
+
+    <dd class="dd">
+     <pre class="pre codeblock">Validation_0071 - Stage '&lt;stage id&gt;' does not support 'Standalone' execution mode</pre>
+
+    </dd>
+
+    <dd class="dd">You can use the Hadoop FS origin in cluster mode pipelines. </dd>
+
+    <dd class="dd">Workaround: In the pipeline properties, set the <span class="ph uicontrol">Execution Mode</span> to
+      <span class="ph uicontrol">Cluster</span>. Or if you want to run the pipeline in standalone mode, use the
+     Directory or File Tail origins to process file data. </dd>
+
+   
+  </dl>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ggx_s23_ks">
  <h2 class="title topictitle2">JDBC</h2>
 

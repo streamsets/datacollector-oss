@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_akz_w5b_ws">
+    <title>HDFS Requirements</title>
+    <taskbody>
+        <context>
+            <p><indexterm>cluster mode<indexterm>configuration for HDFS</indexterm></indexterm>Use
+                the following requirements to configure a cluster mode pipeline to read from HDFS:
+                    <ol id="ol_e32_llw_yr">
+                    <li>Install HDFS.<draft-comment author="Loretta">above: clarify if we need to
+                            use CDH version or any. below: find out what to
+                        say.</draft-comment></li>
+                    <li>Install the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> on the YARN gateway node.</li>
+                    <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
+                            <uicontrol>Execution Mode</uicontrol> property to
+                            <uicontrol>Cluster</uicontrol>.</li>
+                    <li>In the pipeline, use the Hadoop FS origin. </li>
+                </ol></p>
+        </context>
+    </taskbody>
+    <related-links>
+        <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq"
+            type="topic"/>
+        <link href="../Origins/HadoopFS.dita#concept_lw2_tnm_vs"/>
+    </related-links>
+</task>

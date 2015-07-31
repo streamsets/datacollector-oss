@@ -3,14 +3,6 @@
 <map>
  <title>Advanced Configuration</title>
  <topicref href="../Advanced_Config/AdvancedPipelineConfig-title.dita">
-  <topicref href="../Advanced_Config/ExecutionMode.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Advanced_Config/ClusterMode-ErrorHandlingLimitations.dita"/>
-   <topicref href="../Advanced_Config/MonitoringaCluster.dita"/>
-   <topicref href="../Advanced_Config/ClusterMode-Configuration.dita"/>
-  </topicref>
   <topicref href="../Advanced_Config/RuntimeProperties.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

@@ -18,6 +18,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Troubleshooting/Origins-HadoopFS.dita"/>
    <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
    <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
   </topicref>

@@ -10,11 +10,6 @@
    <topicref href="../Data_Preview/DataPreviewAvailability.dita"/>
    <topicref href="../Data_Preview/SourceData.dita"/>
    <topicref href="../Data_Preview/WritingToDestinations.dita"/>
-   <topicref href="../Data_Preview/EditingPreviewData.dita">
-    <topicmeta>
-     <shortdesc/>
-    </topicmeta>
-   </topicref>
   </topicref>
   <topicref href="../Data_Preview/DataCollectorWindow-Preview.dita" chunk="to-content">
    <topicmeta>
@@ -28,6 +23,16 @@
    </topicmeta>
   </topicref>
   <topicref href="../Data_Preview/PreviewingMultipleStages.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Data_Preview/EditingPreviewData.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Data_Preview/EditingProperties.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

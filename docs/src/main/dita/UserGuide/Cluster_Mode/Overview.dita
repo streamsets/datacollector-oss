@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hmh_kfn_1s">
+ <title>Cluster Execution Mode</title>
+ <shortdesc>You can run a pipeline in standalone mode or cluster mode. </shortdesc>
+ <conbody>
+  <p><indexterm>execution mode<indexterm>standalone and cluster
+    modes</indexterm></indexterm><indexterm>cluster
+    mode<indexterm>description</indexterm></indexterm><indexterm>standalone
+     mode<indexterm>description</indexterm></indexterm>In standalone mode, a single <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> process runs
+   the pipeline. A pipeline runs in standalone mode by default. In cluster mode, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns
+   additional workers as needed. Use cluster mode to process data from a Kafka cluster or
+    HDFS.<draft-comment author="Loretta">use of process &amp; worker seem right
+    above?</draft-comment></p>
+  <p>When would you choose standalone or cluster mode? Say you want to ingest logs from applications
+   servers and perform a computationally expensive transformation. To do this, you might use a set
+   of standalone pipelines to stream log data from each application server to Kafka. And then use a
+   cluster mode pipeline to process the data from the Kafka cluster and perform the expensive
+   transformation.</p>
+  <p>Or, you might use cluster mode to move data from HDFS to another destination, such as
+   Elasticsearch.</p>
+  <p>The origin system determines how a <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a cluster
+   mode pipeline:<dl>
+    <dlentry>
+     <dt>Kafka cluster</dt>
+     <dd>When processing data from a Kafka cluster, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
+      data continuously until you stop the pipeline. </dd>
+     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      runs as an application within Spark Streaming, an open source cluster-computing application.
+      Within Spark Streaming, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a
+       <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker
+      for each partition in the Kafka cluster. So each partition has a <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
+      process data. </dd>
+     <dd>Use the CDH Kafka Consumer origin to process data from Kafka in cluster mode.<draft-comment
+       author="Loretta">Still just CDH version? </draft-comment></dd>
+    </dlentry>
+   </dl><dl>
+    <dlentry>
+     <dt>HDFS</dt>
+     <dd>When processing data from HDFS, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
+      all available data and then stops the pipeline. </dd>
+     <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      runs as an application on top of MapReduce, which generates additional worker nodes as needed.
+      MapReduce generates one map task for each HDFS block. <draft-comment author="Loretta">Are the
+       2 sentences above redundant? Checking with Virag about whether I should say CDH or HDP or
+       leave it because we support them all?</draft-comment></dd>
+     <dd>Use the Hadoop FS origin to process data from HDFS in cluster mode.</dd>
+    </dlentry>
+   </dl></p>
+  <p>You can use any processor or destination in cluster mode pipelines.</p>
+ </conbody>
+</concept>

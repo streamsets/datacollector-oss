@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline. You can use the following types of origins in a pipeline: Directory - Reads fully-written files ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline. You can use different origins based on the execution mode of the pipeline. In standalone ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,8 +17,10 @@
  <div class="body conbody"><p class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin
     stage in a pipeline.</p>
 
-  <div class="p">You can use the following types of
-      origins in a pipeline: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
+  <p class="p">You can use different origins
+      based on the execution mode of the pipeline. </p>
+
+    <div class="p">In standalone pipelines, you can use the following origins: <ul class="ul" id="concept_hpr_twm_jq__ul_mxz_jxm_jq">
         <li class="li">Directory - Reads fully-written files from a directory. </li>
 
         <li class="li">File Tail - Reads lines of data from an active file after reading related archived files
@@ -37,6 +39,15 @@
         <li class="li">Omniture - Reads web usage reports from the Omniture reporting API.</li>
 
         <li class="li">UDP Source - Reads messages from one or more UDP ports. </li>
+
+      </ul>
+</div>
+
+    <div class="p">In cluster pipelines, you can use the following origins:<ul class="ul" id="concept_hpr_twm_jq__ul_unr_xhb_ws">
+        <li class="li">Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
+
+        <li class="li">Kafka Consumer - Reads messages from Kafka. Use the Kafka CDH version of the
+            origin.</li>
 
       </ul>
 </div>
@@ -107,9 +118,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="39.525691699604735%" id="d30903e186">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="39.525691699604735%" id="d31883e202">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="60.47430830039525%" id="d30903e189">Description</th>
+                                    <th class="entry" valign="top" width="60.47430830039525%" id="d31883e205">Description</th>
 
                                 </tr>
 
@@ -117,38 +128,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d30903e186 ">Topic</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d31883e202 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d30903e189 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d30903e186 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d30903e189 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d31883e205 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d30903e186 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d31883e202 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d30903e189 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d31883e205 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d31883e202 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d31883e205 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d30903e186 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d31883e202 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d30903e189 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d31883e205 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d30903e186 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="39.525691699604735%" headers="d31883e202 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d30903e189 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="60.47430830039525%" headers="d31883e205 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

@@ -31,6 +31,15 @@
    <topicref href="../Origins/FileTail-Nodes.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/HadoopFS.dita" chunk="to-content">   
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/HadoopFS-Kerberos.dita"/>
+   <topicref href="../Origins/HadoopFS-AdditionalProperties.dita"/>
+   <topicref href="../Origins/HadoopFS-DataFormat.dita">
+    <topicref href="../Origins/HadoopFS-LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/HadoopFS-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/HTTPClient-ProcessingMode.dita"/>

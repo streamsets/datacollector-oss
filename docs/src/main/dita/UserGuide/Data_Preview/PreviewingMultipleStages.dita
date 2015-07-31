@@ -38,14 +38,6 @@
                 <info>The Preview panel displays the input and output data for the group of stages.
                     You can review the details of each record.</info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/EditingPData1"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/EditingPData2">
-                <cmd/>
-            </step>
-            <step>
-                <cmd>To revert all changes, click the <uicontrol>Revert Changes</uicontrol>
-                    icon.</cmd>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RefreshPreview">
                 <cmd/>
             </step>

@@ -34,7 +34,11 @@
                                     <entry>HDFS URI.</entry>
                                 </row>
                                 <row>
-                                    <entry>Kerberos Authentication</entry>
+                                    <entry>Kerberos Authentication<xref
+                                            href="HadoopFS-Kerberos.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_a5x_jzn_vs"
+                                        /></xref></entry>
                                     <entry>Enables that HDFS uses Kerberos authentication. To use
                                         Kerberos authentication, the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ocw_b3g_vs">
+ <title>Hadoop FS</title>
+ <conbody>
+  <dl>
+   <dlentry>
+    <dt>The Hadoop FS origin has an error icon with the following message:</dt>
+    <dd>
+     <codeblock>Validation_0071 - Stage '&lt;stage id>' does not support 'Standalone' execution mode</codeblock>
+    </dd>
+    <dd>You can use the Hadoop FS origin in cluster mode pipelines. </dd>
+    <dd>Workaround: In the pipeline properties, set the <uicontrol>Execution Mode</uicontrol> to
+      <uicontrol>Cluster</uicontrol>. Or if you want to run the pipeline in standalone mode, use the
+     Directory or File Tail origins to process file data. </dd>
+   </dlentry>
+  </dl>
+ </conbody>
+</concept>

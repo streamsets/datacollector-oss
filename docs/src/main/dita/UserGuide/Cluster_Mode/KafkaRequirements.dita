@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_gmd_msw_yr">
-    <title>Cluster Mode Configuration</title>
+    <title>Kafka Requirements</title>
     <taskbody>
         <context>
-            <p><indexterm>cluster mode<indexterm>configuration</indexterm></indexterm>To run the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> in cluster mode, perform the following steps:<ol id="ol_e32_llw_yr">
-                    <li>Install Kafka, Spark Streaming, and YARN from the Cloudera
-                            CDH.<draft-comment author="Loretta">or should I say Cloudera
+            <p><indexterm>cluster mode<indexterm>configuration for Kafka</indexterm></indexterm>Use
+                the following requirements to configure a cluster mode pipeline to read from a Kafka
+                cluster: <ol id="ol_e32_llw_yr">
+                    <li>Verify the installation of Kafka, Spark Streaming, and YARN from the
+                        Cloudera CDH.<draft-comment author="Loretta">or should I say Cloudera
                             Manager.</draft-comment></li>
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> on a Spark on YARN gateway node.</li>
-                    <li>In the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> properties file, set the <uicontrol>sdc.execution.mode</uicontrol>
-                        property to <uicontrol>Cluster</uicontrol>.</li>
+                        /> on a Spark and YARN gateway node.</li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>
                     <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>If you
-                            have more than one Kafka stage library installed, make sure you have the
-                            cluster mode stage library selected on the General tab of the
-                            origin.</p></li>
+                            have more than one Kafka stage library installed, select the cluster
+                            mode stage library on the General tab of the origin.</p></li>
                 </ol><note>When you add a partition to the Kafka topic, restart the pipeline to
                     enable the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -31,7 +26,6 @@
         </context>
     </taskbody>
     <related-links>
-        <link href="../Install_Config/DCConfig.dita#concept_pq5_xjq_kr" type="topic"/>
         <link href="../Pipeline_Configuration/ConfiguringAPipeline.dita#task_xlv_jdw_kq" type="topic"/>
         <link href="../Origins/KConsumer.dita#concept_msz_wnr_5q" type="topic"/>
     </related-links>

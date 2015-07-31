@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_lw2_tnm_vs">
+ <title>Hadoop FS</title>
+ <shortdesc>The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can
+    read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines
+    configured for cluster execution mode.</shortdesc>
+ <conbody>
+  <p><indexterm>Hadoop FS
+     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Hadoop
+     FS</indexterm></indexterm>When you configure Hadoop FS, you specify the directory path and data
+   format for the data. You can configure the origin to read from all subdirectories and to generate
+   a single record for records that include multiple objects. </p>
+  <p>You can also use Kerberos authentication to connect to HDFS and add additional HDFS
+   configuration properties as needed. </p>
+ </conbody>
+  <related-links>
+    <link href="../Cluster_Mode/Overview.dita#concept_hmh_kfn_1s"/>
+  </related-links>
+</concept>

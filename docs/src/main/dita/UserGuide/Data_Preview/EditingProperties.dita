@@ -11,9 +11,9 @@
             with the existing preview data or you can refresh the preview data. <p>When changing
                 properties in the origin, refresh the preview data to test your changes. Refreshing
                 the preview data allows the <ph
-                    conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use the latest
-                origin properties to process preview data instead of using the cached
-                    data.<note>Unlike changes to data, you cannot automatically revert property
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to use the latest origin properties to process preview data instead of using the
+                cached data.<note>Unlike changes to data, you cannot automatically revert property
                     changes. Manually revert any changes that you do not want to
                 preserve.</note></p></context>
         <steps id="steps_sx5_c3l_5s">

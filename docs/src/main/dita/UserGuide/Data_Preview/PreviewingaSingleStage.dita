@@ -23,18 +23,10 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/NextStage">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/EditingPData1"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/EditingPData2">
-                <cmd/>
-            </step>
             <step>
-                <cmd>To view the changed data in other stages, use the stage navigation icons or
-                    select the stage to review. </cmd>
-            </step>
-            <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RevertRefreshClose1"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RevertRefreshClose2">
-                <cmd/>
+                <cmd>To exit data preview, click the <uicontrol>Close Preview</uicontrol> icon:
+                        <image href="../Graphics/icon_PrevClose.png" id="image_hdl_qfg_vs" 
+                        scale="80"/>.</cmd>
             </step>
         </steps>
     </taskbody>

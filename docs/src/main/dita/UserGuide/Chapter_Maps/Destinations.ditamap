@@ -32,6 +32,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/HadoopFS-Kerberos.dita"/>
    <topicref href="../Destinations/HadoopFS-HDFSUser.dita"/>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
@@ -44,6 +45,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/HBase-Kerberos.dita"/>
    <topicref href="../Destinations/HBase-HBaseUser.dita"/>
    <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
    <topicref href="../Destinations/HBase-Configuring.dita"/>

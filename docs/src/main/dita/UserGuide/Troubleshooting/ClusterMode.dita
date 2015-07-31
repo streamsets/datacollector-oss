@@ -4,7 +4,8 @@
  <title>Cluster Mode </title>
  <conbody>
   <p><indexterm>troubleshooting<indexterm>cluster mode</indexterm></indexterm>Use the following tips
-      for help with cluster mode:<dl>
+      for help with cluster mode:<draft-comment author="Loretta">review all these, see if they are
+        Kafka only and reword if necessary.</draft-comment><dl>
         <dlentry>
           <dt>Why isn't the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -12,18 +13,6 @@
           <dd>If you create a new partition in the Kafka topic, to launch a new <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             worker to read from the partition, you need to restart the pipeline.</dd>
-        </dlentry>
-        <dlentry>
-          <dt>My pipeline fails to start with the following error: </dt>
-          <dd><codeblock>VALIDATION_0072 - Data collector is in standalone mode, cannot run pipeline cluster mode.</codeblock>Though
-            the pipeline is configured for cluster mode, the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
-            not. To configure the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            run in cluster mode, in the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file, set the <uicontrol>sdc.execution.mode</uicontrol> property to
-            "cluster".</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline fails to start with the following error: </dt>

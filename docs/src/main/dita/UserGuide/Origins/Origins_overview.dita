@@ -5,8 +5,9 @@
  <shortdesc>An origin stage represents the source for the pipeline. You can use a single origin
     stage in a pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use the following types of
-      origins in a pipeline: <ul id="ul_mxz_jxm_jq">
+  <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use different origins
+      based on the execution mode of the pipeline. </p>
+    <p>In standalone pipelines, you can use the following origins: <ul id="ul_mxz_jxm_jq">
         <li>Directory - Reads fully-written files from a directory. </li>
         <li>File Tail - Reads lines of data from an active file after reading related archived files
           in the directory. </li>
@@ -17,6 +18,11 @@
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
         <li>UDP Source - Reads messages from one or more UDP ports. </li>
+      </ul></p>
+    <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
+        <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
+        <li>Kafka Consumer - Reads messages from Kafka. Use the Kafka CDH version of the
+            origin.<draft-comment author="Loretta">check version description.</draft-comment></li>
       </ul></p>
  </conbody>
 </concept>
