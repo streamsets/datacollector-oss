@@ -307,11 +307,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         Map<String, Map> uiInfo;
         if (getPipelineUiInfoFile(name).exists()) {
           uiInfo = json.readValue(getPipelineUiInfoFile(name), Map.class);
-        } else {
-          uiInfo = Collections.emptyMap();
+          pipeline = injectUiInfo(uiInfo, pipeline);
         }
-        pipeline = injectUiInfo(uiInfo, pipeline);
-
+        
         return pipeline;
       }
       catch (Exception ex) {
