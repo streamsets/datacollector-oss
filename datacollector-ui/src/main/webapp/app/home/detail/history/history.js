@@ -24,10 +24,15 @@ angular
        * @param $index
        */
       viewSummary: function(history, $index) {
-        var prevHistory;
+        var prevHistory,
+          runHistory = $scope.runHistory;
 
-        if($index + 1 < $scope.runHistory.length) {
-          prevHistory = $scope.runHistory[$index + 1];
+        while($index + 1 < $scope.runHistory.length) {
+          if(runHistory[$index + 1].status === 'STARTING') {
+            prevHistory = runHistory[$index + 1];
+            break;
+          }
+          $index++;
         }
 
         $modal.open({

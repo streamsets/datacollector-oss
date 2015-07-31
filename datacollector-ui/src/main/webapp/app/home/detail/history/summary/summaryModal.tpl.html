@@ -45,20 +45,7 @@
               translate="home.detailPane.historyTab.summaryModal.recordCountBarChartTitle">Record Count</span>
           </div>
           <div class="panel-body">
-            <nvd3-discrete-bar-chart
-              data="barChartData"
-              id="HistorySummaryRecordProcessedBarChartID"
-              height="250"
-              color="getColor()"
-              showXAxis="true"
-              showYAxis="true"
-              showValues="true"
-              showLegend="true"
-              staggerLabels="true"
-              yAxisTickFormat="getYAxisLabel()"
-              valueformat="valueFormatFunction()"
-              margin="{left:20,top:20,bottom:40,right:20}">
-            </nvd3-discrete-bar-chart>
+            <nvd3 options="chartOptions" data="barChartData" config="{ refreshDataOnly: true }"></nvd3>
           </div>
         </div>
       </div>

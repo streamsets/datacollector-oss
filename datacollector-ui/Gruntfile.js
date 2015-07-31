@@ -15,9 +15,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ng-annotate');
   grunt.loadNpmTasks('grunt-html2js');
 
+  var buildTimeVar = grunt.template.today("yyyy-mm-dd-HH-MM");
+
   var userConfig = {
 
-    buildTime: grunt.template.today("yyyy-mm-dd-HH-MM"),
+    buildTime: buildTimeVar,
 
     /**
      * The `build_dir` folder is where our projects are compiled.

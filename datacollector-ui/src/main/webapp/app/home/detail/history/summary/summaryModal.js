@@ -6,15 +6,14 @@ angular
   .module('dataCollectorApp.home')
   .controller('SummaryModalInstanceController', function ($scope, $modalInstance, pipelineConfig, history, prevHistory,
                                                           pipelineConstant) {
-    console.log(prevHistory);
 
     var isStageSelected = false,
       pipelineMetrics = JSON.parse(history.metrics),
-      startTime = (prevHistory && prevHistory.state === 'RUNNING') ? prevHistory.lastStatusChange : undefined;
+      startTime = (prevHistory && prevHistory.status === 'STARTING') ? prevHistory.timeStamp : undefined;
 
     angular.extend($scope, {
       pipelineStartTime: startTime,
-      pipelineStopTime: history.lastStatusChange,
+      pipelineStopTime: history.timeStamp,
       selectedType: pipelineConstant.PIPELINE,
       summaryMeters: {},
       pipelineConfig: pipelineConfig,
@@ -34,6 +33,7 @@ angular
         'Output 6': '#138808',
         'Output 7': '#556B2F'
       },
+      timeRange: 'latest',
 
       /**
        * Value format function for D3 NVD3 charts.
@@ -73,6 +73,34 @@ angular
         $scope.selectedObject = options.selectedObject;
         $scope.selectedType = options.type;
         updateSummary();
+      },
+
+      dateFormat: function() {
+        return function(d){
+          var timeRange = $scope.timeRange;
+          switch(timeRange) {
+            case 'last5m':
+            case 'last15m':
+            case 'last1h':
+            case 'last6h':
+            case 'last12h':
+              return d3.time.format('%H:%M')(new Date(d));
+            case 'last24h':
+            case 'last2d':
+              return d3.time.format('%m/%d %H:%M')(new Date(d));
+            case 'last7d':
+            case 'last30d':
+              return d3.time.format('%m/%d')(new Date(d));
+            default:
+              return d3.time.format('%H:%M:%S')(new Date(d));
+          }
+        };
+      },
+
+      formatValue: function() {
+        return function(d){
+          return $filter('abbreviateNumber')(d);
+        };
       }
     });
 
