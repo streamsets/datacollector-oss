@@ -15,7 +15,7 @@ public class GeolocationFieldConfig {
       type = ConfigDef.Type.STRING,
       defaultValue="",
       label = "Input Field Name",
-      description = "Must either be an integer or a string in a.b.c.d format",
+      description = "Use an integer or string field with IP address data in the following format: n.n.n.n",
       displayPosition = 10
   )
   public String inputFieldName;
@@ -25,7 +25,7 @@ public class GeolocationFieldConfig {
     type = ConfigDef.Type.STRING,
     defaultValue="",
     label = "Output Field Name",
-    description = "Examples: /srcaddr_country_name, /srcaddr_city_name, /srcaddr_city_name, /srcaddr_latitude",
+    description = "Examples: /<field name>",
     displayPosition = 10
   )
   public String outputFieldName;
@@ -34,7 +34,7 @@ public class GeolocationFieldConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="COUNTRY_NAME",
-      label = "Geolocation Field",
+      label = "GeoIP2 Field",
       description = "",
       displayPosition = 10
   )

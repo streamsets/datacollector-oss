@@ -17,7 +17,7 @@ import java.util.List;
 
 @StageDef(
     version=1,
-    label="Geolocation",
+    label="GEO IP",
     description = "IP Address Geolocation using a Maxmind GeoIP2 Database File",
     icon="globe.png"
 )
@@ -29,7 +29,7 @@ public class GeolocationDProcessor extends DProcessor {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "GeoIP2 DB File",
+      label = "GeoIP2 Database File",
       description = "An absolute path or a file under SDC resources directory in GeoIP2 format",
       displayPosition = 10,
       group = "GEOLOCATION"

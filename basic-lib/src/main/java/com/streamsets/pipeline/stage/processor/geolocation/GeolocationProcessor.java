@@ -94,7 +94,8 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
           }
         }
       } catch (IOException ex) {
-        result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_01, ex));
+        result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_01, database.getPath(),
+          ex));
         LOG.info(Utils.format(Errors.GEOIP_01.getMessage(), ex), ex);
       }
     } else {
