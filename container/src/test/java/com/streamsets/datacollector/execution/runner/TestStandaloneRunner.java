@@ -47,14 +47,18 @@ import static org.junit.Assert.assertTrue;
 
 public class TestStandaloneRunner {
 
+  private static final String DATA_DIR_KEY = RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR;
+
+  private File dataDir;
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
 
   @Before
   public void setUp() throws IOException {
-    File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    Assert.assertTrue(testDir.mkdirs());
-    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, testDir.getAbsolutePath());
+    dataDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    dataDir.mkdirs();
+    Assert.assertTrue("Could not create: " + dataDir, dataDir.isDirectory());
+    System.setProperty(DATA_DIR_KEY, dataDir.getAbsolutePath());
     TestUtil.captureStagesForProductionRun();
     TestUtil.EMPTY_OFFSET = false;
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
@@ -66,15 +70,15 @@ public class TestStandaloneRunner {
   @After
   public void tearDown() throws Exception {
     TestUtil.EMPTY_OFFSET = false;
-    pipelineManager.stop();
-    try {
-      File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
-      FileUtils.deleteDirectory(f);
-    } catch (Exception e) {
-
+    if (pipelineManager != null) {
+      pipelineManager.stop();
     }
     TestUtil.EMPTY_OFFSET = false;
-    System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
+    System.getProperties().remove(DATA_DIR_KEY);
+    while (dataDir.isDirectory()) {
+      FileUtils.deleteQuietly(dataDir);
+      Thread.sleep(1000);
+    }
   }
 
   @Test(timeout = 20000)
@@ -215,7 +219,7 @@ public class TestStandaloneRunner {
 
   @Test(timeout = 20000)
   public void testMultiplePipelineFinish() throws Exception {
-    Runner runner1 = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner1 = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     Runner runner2 = pipelineManager.getRunner("admin2", TestUtil.MY_SECOND_PIPELINE, "0");
 
     runner1.start();

@@ -55,10 +55,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
     this.runtimeInfo = runtimeInfo;
     this.configuration = conf;
     File stateDir = new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_BASE_DIR);
-    if (!stateDir.exists()) {
-      if (!stateDir.mkdirs()) {
-        throw new RuntimeException(Utils.format("Could not create directory '{}'", stateDir));
-      }
+    stateDir.mkdirs();
+    if (!stateDir.isDirectory()) {
+      throw new RuntimeException(Utils.format("Could not create directory '{}'", stateDir));
     }
   }
 
