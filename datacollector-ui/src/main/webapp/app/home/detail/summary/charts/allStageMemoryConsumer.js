@@ -7,7 +7,7 @@ angular
   .controller('AllStageMemoryConsumedChartController', function($rootScope, $scope, api, pipelineConstant) {
     var baseQuery = "select count,metric from counters where (pipeline='" + $scope.pipelineConfig.info.name + "') and ",
       sizeFormat = function(d){
-        var mbValue = d / 1000000;
+        var mbValue = d;
         return mbValue.toFixed(1) + ' MB';
       };
 
@@ -111,7 +111,7 @@ angular
       yValue: function(){
         return function(d){
           if(d[1] > 0) {
-            return (d[1] / 1000000).toFixed(2);
+            return (d[1]).toFixed(2);
           } else {
             return 0;
           }
@@ -142,14 +142,14 @@ angular
       angular.forEach($scope.chartData, function(data) {
         var stageCounter = pipelineMetrics.counters['stage.' + data.instanceName + '.memoryConsumed.counter'];
         if(stageCounter) {
-          data.value =  (stageCounter.count / 1000000);
+          data.value =  (stageCounter.count);
           values.push(data);
           total += stageCounter.count;
         }
       });
 
       $scope.chartData = values;
-      $scope.totalValue = (total/1000000).toFixed(2);
+      $scope.totalValue = (total).toFixed(2);
     });
 
 

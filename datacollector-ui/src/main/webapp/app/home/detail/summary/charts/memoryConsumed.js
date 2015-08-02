@@ -17,7 +17,7 @@ angular
         }
       },
       sizeFormat = function(d){
-        var mbValue = d / 1000000;
+        var mbValue = d;
         return mbValue.toFixed(2) + ' MB';
       };
 

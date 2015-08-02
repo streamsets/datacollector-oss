@@ -29,6 +29,6 @@ public class MemoryMonitor implements Runnable {
       name, Utils.humanReadableInt(snapshot.getMemoryConsumed()), snapshot.getElapsedTime(),
       snapshot.getNumClassesLoaded()));
     long currentValue = memoryConsumed.getCount();
-    memoryConsumed.inc(snapshot.getMemoryConsumed() - currentValue);
+    memoryConsumed.inc((snapshot.getMemoryConsumed() / 1000000) - currentValue);
   }
 }

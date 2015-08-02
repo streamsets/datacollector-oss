@@ -393,7 +393,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
       totalMemoryConsumed += entry.getValue();
     }
     memoryConsumedCounter.inc(totalMemoryConsumed - memoryConsumedCounter.getCount());
-    long memoryLimit = memoryLimitConfiguration.getMemoryLimit() * 1000 * 1000;
+    long memoryLimit = memoryLimitConfiguration.getMemoryLimit();
     if (memoryLimit > 0 && totalMemoryConsumed > memoryLimit) {
       String largestConsumer = "unknown";
       long largestConsumed = 0;
