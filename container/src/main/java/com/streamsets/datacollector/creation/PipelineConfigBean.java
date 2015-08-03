@@ -55,32 +55,34 @@ public class PipelineConfigBean implements Stage {
   @ValueChooser(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
 
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    label = "Max Pipeline Memory (MB)",
+    defaultValue = "${jvm:maxMemoryMB() * 0.65}",
+    description = "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap " +
+      "size. Default is 668.",
+    displayPosition = 30,
+    min = 128,
+    group = ""
+  )
+  public long memoryLimit;
+
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="STOP_PIPELINE",
-      label = "Memory Limit Exceeded",
-      description = "Behavior when a pipeline has exceeded the " +
-                    "memory limit. Use Metric Alerts to alert before this limit has been exceeded." ,
-      displayPosition = 30,
+      label = "On Memory Exceeded",
+      description = "Behavior when the pipeline exceeds the memory limit. Tip: Configure an alert to indicate when the " +
+        "memory use approaches the limit." ,
+      displayPosition = 40,
       group = ""
   )
   @ValueChooser(MemoryLimitExceededChooserValues.class)
   public MemoryLimitExceeded memoryLimitExceeded;
 
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Memory Limit (MB)",
-      defaultValue = "${jvm:maxMemoryMB() * 0.65}",
-      description = "Maximum memory in MB a pipeline will be allowed to " +
-                    "consume. Maximum and minimum values are based on SDC Java heap size.",
-      displayPosition = 40,
-      min = 128,
-      group = ""
-  )
-  public long memoryLimit;
 
 
   @ConfigDef(
