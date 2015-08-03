@@ -33,6 +33,7 @@
    <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
    <topicref href="../Pipeline_Configuration/PipelineConstants.dita"/>
   </topicref>
+  <topicref href="../Pipeline_Configuration/PipelineKerberos.dita"/>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>
     <shortdesc/>

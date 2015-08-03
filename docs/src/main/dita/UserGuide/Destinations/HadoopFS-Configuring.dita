@@ -39,10 +39,11 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Enables that HDFS uses Kerberos authentication. To use
-                                        Kerberos authentication, the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> must be configured to use Kerberos.</entry>
+                                    <entry>Uses Kerberos credentials to connect to HDFS. <p>When
+                                            selected, uses the Kerberos principal and keytab defined
+                                            in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory <xref

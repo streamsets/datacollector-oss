@@ -32,8 +32,7 @@
                 Error records are written in the SDC Record data format so you can create an error
                 pipeline to process error records. We'll show you how to create an error pipeline to
                 process these error records in a future tutorial.</p><p>That's it for this tutorial.
-                Hope you found it helpful. Now, go boldly forth and create your own pipelines. And
-                let us know if you have any trouble! <draft-comment author="Loretta">link to
+                Hope you found it helpful. <draft-comment author="Loretta">link to
                     communities/email</draft-comment></p></result>
     </taskbody>
 </task>

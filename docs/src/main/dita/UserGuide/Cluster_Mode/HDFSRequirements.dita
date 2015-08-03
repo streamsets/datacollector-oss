@@ -7,9 +7,7 @@
             <p><indexterm>cluster mode<indexterm>configuration for HDFS</indexterm></indexterm>Use
                 the following requirements to configure a cluster mode pipeline to read from HDFS:
                     <ol id="ol_e32_llw_yr">
-                    <li>Install HDFS.<draft-comment author="Loretta">above: clarify if we need to
-                            use CDH version or any. below: find out what to
-                        say.</draft-comment></li>
+                    <li>Install HDFS.</li>
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> on the YARN gateway node.</li>

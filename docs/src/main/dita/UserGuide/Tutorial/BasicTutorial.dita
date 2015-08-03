@@ -3,7 +3,7 @@
 <concept id="concept_phf_cjt_ls">
  <title>Basic Tutorial</title>
  <shortdesc>The basic tutorial creates a pipeline that processes data in two branches and writes all
-  data to a file system. You'll use data prevew to help configure the pipeline, and you'll create a
+  data to a file system. You'll use data preview to help configure the pipeline, and you'll create a
   data alert and run the pipeline. </shortdesc>
  <conbody>
   <p><indexterm>tutorial<indexterm>basic</indexterm></indexterm>Here are high level steps for

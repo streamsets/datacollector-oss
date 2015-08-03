@@ -7,9 +7,7 @@
             <p><indexterm>cluster mode<indexterm>configuration for Kafka</indexterm></indexterm>Use
                 the following requirements to configure a cluster mode pipeline to read from a Kafka
                 cluster: <ol id="ol_e32_llw_yr">
-                    <li>Verify the installation of Kafka, Spark Streaming, and YARN from the
-                        Cloudera CDH.<draft-comment author="Loretta">or should I say Cloudera
-                            Manager.</draft-comment></li>
+                    <li>Verify the installation of Kafka, Spark Streaming, and YARN.</li>
                     <li>Install the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> on a Spark and YARN gateway node.</li>

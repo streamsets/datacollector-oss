@@ -2,13 +2,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ftt_2vq_ks">
     <title>Configure the Origin</title>
-    <shortdesc>The origin represents the source data for the pipeline. When you configure the origin
-        you define how to connect to the origin system, the type of data to be processed, and other
-        origin-specific properties. </shortdesc>
+    <shortdesc>The origin represents the source data for the pipeline. When you configure the
+        origin, you define how to connect to the origin system, the type of data to be processed,
+        and other origin-specific properties. </shortdesc>
     <taskbody>
         <context>
             <p>To process data in a static file, we'll use the Directory origin. If we wanted to
-                tail a file in use, we would use the File Tail origin.</p>
+                tail an active file, we would use the File Tail origin.</p>
         </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
@@ -44,30 +44,30 @@
                                 <row>
                                     <entry>Files Directory</entry>
                                     <entry>Directory where you saved the source file. <p>For
-                                            example: <codeph>/myFiles/Tutorial</codeph></p></entry>
+                                            example: <codeph>/myFiles/Tutorial</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
                                     <entry>The Directory origin processes only the files in the
-                                        directory that match the file name pattern.  <p>The tutorial
+                                        directory that match the file name pattern. <p>The tutorial
                                             sample file name is <codeph>nyc_taxi_data.csv</codeph>.
                                             If the file is the only file in the directory, you can
                                             use the asterisk wild card (*) or something similarly
-                                            generic, like *.csv.</p><p>But if you had other .csv
-                                            files in the directory, you might be more specific, like
-                                            this: <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you
+                                            generic, like *.csv.</p><p>If you had other .csv files
+                                            in the directory, you might be more specific, like this:
+                                                <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you
                                             knew that you'd be processing files from other cities,
                                             you might use <codeph>*taxi*.csv</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process</entry>
                                     <entry>When processing a set of files with the same file name
-                                        pattern,  Directory normally starts with the first file and
+                                        pattern, Directory normally starts with the first file and
                                         continues in naturally ascending order, e.g.
-                                        nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. If you
-                                        wanted to skip some files, you would enter the file to start
-                                        with. In this case, we're processing a single file, so let's
-                                        leave this empty. </entry>
+                                        nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. <p>If you
+                                            wanted to skip some files, you would enter the file to
+                                            start with. In this case, we're processing a single
+                                            file, so let's leave this empty. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -85,8 +85,9 @@
         </steps>
         <result>This is how the stage and pipeline should look at this point:<p><image
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
-                /></p><p>Notice the error icons on the page. If you click the Issues icon or hover
-                over the Directory error icon, you see a warning that the origin isn't connected to
-                anything yet. We'll take care of that next.</p></result>
+                    /></p><p><draft-comment author="Loretta">retake or trim this for
+                    icons.</draft-comment>Notice the error icons on the page. If you click the
+                Issues icon or hover over the Directory error icon, you see a warning that the
+                origin isn't connected to anything yet. We'll take care of that next.</p></result>
     </taskbody>
 </task>

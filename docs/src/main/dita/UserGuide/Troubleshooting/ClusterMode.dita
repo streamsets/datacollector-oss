@@ -9,19 +9,28 @@
         <dlentry>
           <dt>Why isn't the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            reading data from my new partition?</dt>
+            reading data from my new Kafka partition?</dt>
           <dd>If you create a new partition in the Kafka topic, to launch a new <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             worker to read from the partition, you need to restart the pipeline.</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline fails to start with the following error: </dt>
-          <dd><codeblock>Error starting application: java.util.concurrent.ExecutionException: java.lang.IllegalStateException: 
-Process submitting the spark job is dead and couldn't retrieve the YARN application id.</codeblock>Check
+          <dd><codeblock>Pipeline Status: START_ERROR: Unexpected error starting pipeline:java.lang.IllegalStateException: 
+Timed out after waiting 121 seconds for for cluster application to start. Submit command is not alive.</codeblock>Check
             the Spark on YARN logs for more information. It's possible that the Spark on YARN client
             configuration is not in place, the node is not a gateway node, or the installation is
-            out of date.<draft-comment author="Loretta">are these correct? reworded from original
-              email.</draft-comment></dd>
+            out of date.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>My pipeline fails to start with the following error: </dt>
+          <dd>
+            <codeblock>Pipeline Status: START_ERROR: IO Error while trying to start the pipeline: java.io.IOException: 
+Kerberos Error: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]</codeblock>
+          </dd>
+          <dd>It's likely that the cluster is configured to use Kerberos, but the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
+            not configured to use Kerberos.</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline stopped unexpectedly.</dt>

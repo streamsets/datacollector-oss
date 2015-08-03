@@ -4,4 +4,9 @@
  <title>Pipeline Properties</title>
  <shortdesc>Pipeline properties apply to the entire pipeline. Pipeline properties display in the
   Properties panel when you click on the pipeline canvas.</shortdesc>
+ <conbody>
+  <p>To process large volumes of data from a Kafka cluster or HDFS, you can configure a pipeline to
+   run in cluster execution mode. For more information, see <xref
+    href="../Cluster_Mode/ClusterMode_title.dita#concept_fpz_5r4_vs"/>.</p>
+ </conbody>
 </concept>

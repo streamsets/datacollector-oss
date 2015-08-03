@@ -2,14 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_is5_lrq_ks">
  <title>Tutorial Overview</title>
- <shortdesc>This tutorial walks through how to create and run a pipeline. You can download sample
+ <shortdesc>This tutorial walks through creating and running a pipeline. You can download sample
   data so you can perform data preview, run the completed pipeline, and monitor the results. </shortdesc>
  <conbody>
   <p>We have a basic and extended version of the tutorial. The basic version allows you to read from
    and write to a local file system so you can easily use the sample data. </p>
   <p>The extended version flattens and manipulates the data before writing to the Trash destination.
    Trash is a development destination that we use to test a pipeline without writing to a
-   destination system. If you want, you can write to any destination that works for you. </p>
+   destination system. If you prefer, you can write to any destination that works for you. </p>
   <p>The sample data is a file of delimited data that we'll flatten along the way. The <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a special
    record format for delimited data. So, in addition to learning some basic <ph

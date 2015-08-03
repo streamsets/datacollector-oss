@@ -293,18 +293,29 @@
                                         /> worker in the cluster.<p>Default is 1024 MB.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Worker JAVA Options</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">emailed Brock
-                                            7/30</draft-comment>
-                                    </entry>
+                                    <entry>Worker Java Options</entry>
+                                    <entry>Additional Java properties for the pipeline. Separate
+                                        properties with a space.<p>The following properties are set
+                                            by default. </p><p>
+                                            <ul id="ul_hf3_xqj_ws">
+                                                <li>XX:PermSize is set to 128 MB and XX:MaxPermSize
+                                                  is set to 256 MB. This defines the PermGen size
+                                                  for the pipeline. </li>
+                                                <li>Dlog4j.debug enables debug logging for
+                                                  log4j.</li>
+                                            </ul>
+                                        </p><p>Changing the default properties is not
+                                            recommended.</p><p>You can add any valid Java property.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication</entry>
                                     <entry>
-                                        <draft-comment author="Loretta">emailed brock 7/30 - add
-                                            section on Kerberos Authentication to
-                                            chapter?</draft-comment>
+                                        <p>Uses Kerberos credentials to connect to the YARN cluster. </p>
+                                        <p>When selected, uses the Kerberos principal and keytab
+                                            defined in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> configuration file. </p>
                                     </entry>
                                 </row>
                                 <row>
