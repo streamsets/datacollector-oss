@@ -16,14 +16,13 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.TestDataRuleEvaluator;
 import com.streamsets.datacollector.execution.alerts.TestUtil;
-import com.streamsets.datacollector.execution.runner.common.DataObserverRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.util.Configuration;
-
+import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -113,9 +113,29 @@ public class TestDataObserverRunner {
     Map<String, Integer> ruleIdToSampledRecordsSize = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
+      new RulesConfigurationChangeRequest(ruleDefinitions, new HashSet<String>(),
         Collections.<String>emptySet(), laneToRuleDefinition, ruleIdToSampledRecordsSize);
     return rulesConfigurationChangeRequest;
   }
 
+  @Test
+  public void testSampleRecords() {
+    RulesConfigurationChangeRequest rulesConfigurationChangeRequest = createRulesConfigurationChangeRequest(true, false);
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+    dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
+
+    List<Record> sampleRecords = dataObserverRunner.getSampledRecords("myId", 5);
+    Assert.assertNotNull(sampleRecords);
+    Assert.assertEquals(3, sampleRecords.size());
+
+    Assert.assertTrue(rulesConfigurationChangeRequest.getRulesToRemove().isEmpty());
+    //Create rule configuration change request where the previous rule is removed.
+    // This simulates user action - change/disable/delete rule
+    rulesConfigurationChangeRequest.getRulesToRemove().add("myId");
+    dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
+
+    sampleRecords = dataObserverRunner.getSampledRecords("myId", 5);
+    Assert.assertNotNull(sampleRecords);
+    Assert.assertEquals(0, sampleRecords.size());
+  }
 }

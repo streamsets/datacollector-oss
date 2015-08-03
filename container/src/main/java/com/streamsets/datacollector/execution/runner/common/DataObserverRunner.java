@@ -59,12 +59,23 @@ public class DataObserverRunner {
       String lane = e.getKey();
       Map<String, List<Record>> ruleIdToSampledRecords = e.getValue();
       List<DataRuleDefinition> dataRuleDefinitions = rulesConfigurationChangeRequest.getLaneToDataRuleMap().get(lane);
+
       if (dataRuleDefinitions != null) {
         for (DataRuleDefinition dataRuleDefinition : dataRuleDefinitions) {
-          DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(name, rev, metrics, alertManager,
-            rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
-          dataRuleEvaluator.evaluateRule(ruleIdToSampledRecords.get(dataRuleDefinition.getId()), lane,
-            ruleToSampledRecordsMap);
+          //sampled records for that rule
+          List<Record> sampledRecords = ruleIdToSampledRecords.get(dataRuleDefinition.getId());
+          if(dataRuleDefinition.isEnabled()  && sampledRecords != null && sampledRecords.size() > 0) {
+            //evaluate rule only if it is enabled and there are sampled records.
+            DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(name, rev, metrics, alertManager,
+              rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
+            dataRuleEvaluator.evaluateRule(sampledRecords, lane, ruleToSampledRecordsMap);
+          } else if (!dataRuleDefinition.isEnabled()) {
+            //If data rule is disabled, clear the sampled records for that rule
+            EvictingQueue<Record> records = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
+            if(records != null) {
+              records.clear();
+            }
+          }
         }
       }
     }
@@ -78,6 +89,10 @@ public class DataObserverRunner {
     for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
       MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId, name, rev);
       MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId, name, rev);
+      EvictingQueue<Record> records = ruleToSampledRecordsMap.get(ruleId);
+      if(records != null) {
+        records.clear();
+      }
     }
 
     //resize evicting queue which retains sampled records
