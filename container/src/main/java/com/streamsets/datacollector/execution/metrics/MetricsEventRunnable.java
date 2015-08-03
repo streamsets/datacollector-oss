@@ -30,9 +30,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class MetricsEventRunnable implements Runnable {
 
@@ -41,7 +42,7 @@ public class MetricsEventRunnable implements Runnable {
 
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
-  private final Map<String, MetricRegistryJson> slaveMetrics;
+  private final ConcurrentMap<String, MetricRegistryJson> slaveMetrics;
   private ThreadHealthReporter threadHealthReporter;
   private final EventListenerManager eventListenerManager;
   private final SlaveCallbackManager slaveCallbackManager;
@@ -56,7 +57,7 @@ public class MetricsEventRunnable implements Runnable {
                               PipelineStateStore pipelineStateStore, ThreadHealthReporter threadHealthReporter,
                               EventListenerManager eventListenerManager, MetricRegistry metricRegistry,
                               SlaveCallbackManager slaveCallbackManager) {
-    slaveMetrics = new HashMap<>();
+    slaveMetrics = new ConcurrentHashMap<>();
     this.threadHealthReporter = threadHealthReporter;
     this.eventListenerManager = eventListenerManager;
     this.slaveCallbackManager = slaveCallbackManager;
@@ -167,4 +168,9 @@ public class MetricsEventRunnable implements Runnable {
   public int getScheduledDelay() {
     return scheduledDelay;
   }
+
+  public void clearSlaveMetrics() {
+    this.slaveMetrics.clear();
+  }
+
 }

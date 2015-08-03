@@ -611,6 +611,9 @@ public class ClusterRunner extends AbstractRunner {
     try {
       Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
       Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
+      if(metricsEventRunnable != null) {
+        metricsEventRunnable.clearSlaveMetrics();
+      }
       List<Issue> errors = new ArrayList<>();
       PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors);
       if (pipelineConfigBean == null) {
@@ -672,6 +675,7 @@ public class ClusterRunner extends AbstractRunner {
 
   private void cancelRunnable() {
     if (metricRunnableFuture != null) {
+      metricsEventRunnable.clearSlaveMetrics();
       metricRunnableFuture.cancel(true);
     }
     if (managerRunnableFuture != null) {
