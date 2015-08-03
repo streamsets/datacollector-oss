@@ -64,6 +64,24 @@ angular
       },
 
       /**
+       * Cancel Snapshot
+       *
+       * @param snapshotName
+       * @param index
+       */
+      cancelSnapshot: function(snapshotName, index) {
+        $scope.snapshotsInfo.splice(index, 1);
+        $timeout.cancel(captureSnapshotStatusTimer);
+        $scope.snapshotInProgress = false;
+        api.pipelineAgent.deleteSnapshot(pipelineConfig.info.name, 0, snapshotName).
+          then(function() {
+
+          }, function(res) {
+            $scope.common.errors = [res.data];
+          });
+      },
+
+      /**
        * Close and Escape Command Handler
        */
       close: function() {
@@ -141,7 +159,7 @@ angular
             });
         },
         function() {
-          console.log( "Timer rejected!" );
+          //console.log( "Timer rejected!" );
         }
       );
     };

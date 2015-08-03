@@ -39,6 +39,9 @@
             <a href="javascript:;" translate="global.form.delete"
                ng-if="!snapshotInfo.inProgress"
                ng-click="deleteSnapshot(snapshotInfo.id, $index)"> Delete </a>
+            <a href="javascript:;" translate="global.form.cancel"
+               ng-if="snapshotInfo.inProgress"
+               ng-click="cancelSnapshot(snapshotInfo.id, $index)"> Cancel </a>
           </td>
         </tr>
 
