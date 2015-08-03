@@ -5,17 +5,17 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
-import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
 
-@StageDef(
-    version = 1,
-    label = "Fuzzy Field Replacer",
-    description = "Canonicalizes Field Names based on fuzzy matching.",
-    icon = "replacer.png"
-)
+// Hide this processor from users until its fate is sealed.
+//@StageDef(
+//    version = 1,
+//    label = "Fuzzy Field Replacer",
+//    description = "Canonicalizes Field Names based on fuzzy matching.",
+//    icon = "replacer.png"
+//)
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class FuzzyFieldDProcessor extends DProcessor {
