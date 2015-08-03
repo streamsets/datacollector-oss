@@ -38,15 +38,16 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import dagger.ObjectGraph;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BoundedInputStream;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +138,11 @@ public class SyncPreviewer implements Previewer {
     RawSourcePreviewer rawSourcePreviewer = createRawSourcePreviewer(previewParams);
     BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead);
     changeState(PreviewStatus.FINISHED, null);
-    return new RawPreviewImpl(bIn, rawSourcePreviewer.getMimeType());
+    try {
+      return new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
+    } catch (IOException ex) {
+      throw new PipelineRuntimeException(PreviewError.PREVIEW_0003, ex.toString(), ex);
+    }
   }
 
   @Override

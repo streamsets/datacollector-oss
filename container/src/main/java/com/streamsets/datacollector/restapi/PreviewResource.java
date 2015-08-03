@@ -5,7 +5,6 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.Previewer;
@@ -48,7 +47,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Path("/v1")
 @Api(value = "preview")
@@ -170,7 +168,7 @@ public class PreviewResource {
 
   @Path("/pipeline/{pipelineName}/rawSourcePreview")
   @GET
-  @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = Map.class,
+  @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = RawPreview.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
@@ -184,7 +182,7 @@ public class PreviewResource {
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
     Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview.getData()).build();
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
 
   @Path("/pipeline/{pipelineName}/validate")

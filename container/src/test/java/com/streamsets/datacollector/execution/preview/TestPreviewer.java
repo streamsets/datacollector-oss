@@ -567,7 +567,7 @@ public abstract class TestPreviewer {
     RawPreview rawSource = previewer.getRawSource(100, map);
 
     Assert.assertEquals("*/*", rawSource.getMimeType());
-    Assert.assertEquals("localhost:9001", IOUtils.toString(rawSource.getData()));
+    Assert.assertEquals("localhost:9001", rawSource.getPreviewData());
 
   }
 }

@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 public interface RawPreview {
 
-  public InputStream getData();
+  public String getPreviewData();
 
   public String getMimeType();
 

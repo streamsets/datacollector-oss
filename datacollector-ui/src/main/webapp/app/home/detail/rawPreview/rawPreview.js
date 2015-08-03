@@ -15,7 +15,7 @@ angular
         api.pipelineAgent.rawSourcePreview($scope.activeConfigInfo.name, 0, $scope.detailPaneConfig.uiInfo.rawSource.configuration)
           .success(function(data) {
             $rootScope.common.errors = [];
-            $scope.rawSourcePreviewData = data ? data.previewString : '';
+            $scope.rawSourcePreviewData = data ? data.previewData : '';
           })
           .error(function(data, status, headers, config) {
             $rootScope.common.errors = [data];

@@ -7,21 +7,19 @@ package com.streamsets.datacollector.execution.preview.common;
 
 import com.streamsets.datacollector.execution.RawPreview;
 
-import java.io.InputStream;
-
 public class RawPreviewImpl implements RawPreview {
 
-  private final InputStream inputStream;
+  private final String previewData;
   private final String mimeType;
 
-  public RawPreviewImpl(InputStream inputStream, String mimeType) {
-    this.inputStream = inputStream;
+  public RawPreviewImpl(String previewData, String mimeType) {
+    this.previewData = previewData;
     this.mimeType = mimeType;
   }
 
   @Override
-  public InputStream getData() {
-    return inputStream;
+  public String getPreviewData() {
+    return previewData;
   }
 
   @Override
