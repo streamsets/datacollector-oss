@@ -110,7 +110,8 @@ public class ClusterRunner extends AbstractRunner {
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
      new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
     .put(PipelineStatus.EDITED, ImmutableSet.of(PipelineStatus.STARTING))
-    .put(PipelineStatus.STARTING, ImmutableSet.of(PipelineStatus.START_ERROR, PipelineStatus.RUNNING, PipelineStatus.DISCONNECTED))
+    .put(PipelineStatus.STARTING, ImmutableSet.of(PipelineStatus.START_ERROR, PipelineStatus.RUNNING,
+      PipelineStatus.STOPPING, PipelineStatus.DISCONNECTED))
     .put(PipelineStatus.START_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
     // cannot transition to disconnecting from Running
     .put(PipelineStatus.RUNNING, ImmutableSet.of(PipelineStatus.CONNECT_ERROR, PipelineStatus.STOPPING, PipelineStatus.DISCONNECTED,
@@ -318,11 +319,11 @@ public class ClusterRunner extends AbstractRunner {
       }
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
       pipelineConf = getPipelineConf(name, rev);
+      doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
     } catch (Exception e) {
       validateAndSetStateTransition(PipelineStatus.START_ERROR, e.toString(), new HashMap<String, Object>());
       throw e;
     }
-    doStart(pipelineConf, getClusterSourceInfo(name, rev, pipelineConf));
   }
 
   @Override
