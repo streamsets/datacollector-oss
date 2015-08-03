@@ -22,6 +22,7 @@ import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.impl.ClusterSource;
@@ -215,9 +216,15 @@ public class MockStages {
 
   public static class ClusterMSource implements ClusterSource {
 
+    public static boolean MOCK_VALIDATION_ISSUES = false;
+
     @Override
     public List<ConfigIssue> init(Info info, Context context) {
-      if (sourceCapture != null) {
+      if (MOCK_VALIDATION_ISSUES) {
+        List<ConfigIssue> issues = new ArrayList<ConfigIssue>();
+        issues.add(context.createConfigIssue("a", "b", ContainerError.CONTAINER_0001, "dummy_stage_error"));
+        return issues;
+      } else if (sourceCapture != null) {
         return sourceCapture.init(info, context);
       } else {
         return Collections.emptyList();

@@ -29,6 +29,7 @@ import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.Config;
@@ -338,7 +339,7 @@ public class TestClusterRunner {
   }
 
   @Test
-  public void testGetParallelism() throws PipelineRuntimeException, StageException, PipelineStoreException {
+  public void testGetParallelism() throws PipelineException, StageException {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     ClusterSourceInfo clusterSourceInfo =
       clusterRunner.getClusterSourceInfo(NAME, REV,
@@ -348,6 +349,26 @@ public class TestClusterRunner {
         );
     Assert.assertEquals(25, clusterSourceInfo.getParallelism());
     Assert.assertEquals("ClusterMSource", clusterSourceInfo.getClusterSourceName());
+  }
+
+  @Test
+  public void testPipelineWithValidationIssues() throws PipelineException, StageException {
+    ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
+    pipelineStateStore.saveState("admin", NAME, REV, PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER,
+      null);
+    try {
+      MockStages.ClusterMSource.MOCK_VALIDATION_ISSUES = true;
+      clusterRunner.getClusterSourceInfo(NAME, REV,
+        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER));
+      fail("Expected PipelineRuntimeException but didn't get any");
+    } catch (PipelineRuntimeException pe) {
+      assertEquals(ContainerError.CONTAINER_0800, pe.getErrorCode());
+      assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
+    } catch (Exception e) {
+      fail("Expected exception but got " + e);
+    } finally {
+      MockStages.ClusterMSource.MOCK_VALIDATION_ISSUES = false;
+    }
   }
 
   @Test(timeout = 20000)

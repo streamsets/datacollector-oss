@@ -36,6 +36,7 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBu
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.security.SecurityConfiguration;
@@ -46,6 +47,7 @@ import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.ValidationError;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
@@ -465,12 +467,20 @@ public class ClusterRunner extends AbstractRunner {
 
   @VisibleForTesting
   ClusterSourceInfo getClusterSourceInfo(String name, String rev, PipelineConfiguration pipelineConf)
-    throws PipelineRuntimeException, StageException, PipelineStoreException {
+    throws PipelineRuntimeException, StageException, PipelineStoreException, PipelineRunnerException {
 
     ProductionPipeline p = createProductionPipeline(name, rev, configuration, pipelineConf);
     Pipeline pipeline = p.getPipeline();
     try {
-      pipeline.init();
+      List<Issue> issues = pipeline.init();
+      if (!issues.isEmpty()) {
+        PipelineRuntimeException e =
+          new PipelineRuntimeException(ContainerError.CONTAINER_0800, name, issues.get(0).getMessage());
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("issues", new IssuesJson(new Issues(issues)));
+        validateAndSetStateTransition(PipelineStatus.START_ERROR, issues.get(0).getMessage(), attributes);
+        throw e;
+      }
     } finally {
       pipeline.destroy();
     }
