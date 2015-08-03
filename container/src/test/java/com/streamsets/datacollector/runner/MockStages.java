@@ -508,6 +508,19 @@ public class MockStages {
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default()
         );
 
+        ConfigDefinition reqField = new ConfigDefinition(
+          "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
+          "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+          ConfigDef.Evaluation.IMPLICIT, null);
+
+        StageDefinition targetWithReqField = new StageDefinition(createLibraryDef(cl),
+          false, MTarget.class, "targetWithReqField", 1, "targetWithReqField",
+          "targetWithReqField", StageType.TARGET, false, true, true, Arrays.asList(reqField),
+          null/*raw source definition*/, "", null, false, 0, null,
+          Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default()
+        );
+
         //error target configurations
         ConfigDefinition errorTargetConf = new ConfigDefinition(
           "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
@@ -582,7 +595,7 @@ public class MockStages {
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default());
 
         StageDefinition[] stageDefs =
-          new StageDefinition[] { sDef, socDef, pDef, tDef, swcDef, eDef, clusterStageDef, complexStage,
+          new StageDefinition[] { sDef, socDef, pDef, tDef, targetWithReqField, swcDef, eDef, clusterStageDef, complexStage,
               clusterLibraryStageDef, commonLibraryTargetDef };
         stages = new HashMap<>();
         for (StageDefinition def : stageDefs) {
@@ -865,6 +878,25 @@ public class MockStages {
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
     null, Arrays.asList(new Config("executionMode", executionMode.name())), null, stages, getErrorStageConfig());
+  }
+
+  @SuppressWarnings("unchecked")
+  public static PipelineConfiguration createPipelineConfTargetWithReqField() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source =
+      new StageConfiguration("s", "default", "sourceName", 1, Collections.<Config> emptyList(),
+        null, Collections.<String> emptyList(), lanes);
+    stages.add(source);
+
+    // Create target with empty value for the required field "requiredFieldConfName".
+    //Empty value simulates providing a value and then deleting it
+    StageConfiguration target =
+      new StageConfiguration("t", "default", "targetWithReqField", 1,
+        Arrays.asList(new Config("requiredFieldConfName", "")), null, lanes, Collections.<String> emptyList());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
+      null, Arrays.asList(new Config("executionMode", ExecutionMode.STANDALONE)), null, stages, getErrorStageConfig());
   }
 
 

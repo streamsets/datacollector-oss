@@ -145,8 +145,8 @@ public class TestPipelineConfigurationValidator {
     Mockito.when(pipelineDef.getUpgrader()).thenReturn(new StageUpgrader() {
       @Override
       public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion,
-          int toVersion,
-          List<Config> configs) throws StageException {
+                                  int toVersion,
+                                  List<Config> configs) throws StageException {
         return configs;
       }
     });
@@ -174,4 +174,16 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(stageLib, conf.getStages().get(0).getLibrary());
   }
 
+  @Test
+  public void testEmptyValueRequiredField() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfTargetWithReqField();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(ValidationError.VALIDATION_0007.name(), issues.get(0).getErrorCode());
+  }
 }

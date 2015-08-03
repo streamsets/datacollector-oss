@@ -27,18 +27,19 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
-import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,7 +49,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.File;
 
 public class PipelineConfigurationValidator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationValidator.class);
@@ -381,7 +381,8 @@ public class PipelineConfigurationValidator {
           break;
       }
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
-        if (stageConf.getConfig(confDef.getName()) == null && confDef.isRequired()) {
+        Config config = stageConf.getConfig(confDef.getName());
+        if (confDef.isRequired() && (config == null || isNullOrEmptyString(confDef, config))) {
           preview &= validateRequiredField(confDef, stageConf, issueCreator);
         }
       }
@@ -394,6 +395,18 @@ public class PipelineConfigurationValidator {
       }
     }
     return preview;
+  }
+
+  private boolean isNullOrEmptyString(ConfigDefinition confDef, Config config) {
+    boolean isNullOrEmptyString = false;
+    if(config.getValue() == null) {
+      isNullOrEmptyString = true;
+    } else if (confDef.getType() == ConfigDef.Type.STRING) {
+      if(((String) config.getValue()).isEmpty()) {
+        isNullOrEmptyString = true;
+      }
+    }
+    return isNullOrEmptyString;
   }
 
   private boolean validateRequiredField(ConfigDefinition confDef, StageConfiguration stageConf,
@@ -466,8 +479,6 @@ public class PipelineConfigurationValidator {
       issues.add(issueCreator.create(stageConf.getInstanceName(), null, conf.getName(),
                                      ValidationError.VALIDATION_0008));
       return false;
-    } else if (conf.getValue() == null && confDef.isRequired()) {
-      preview &= validateRequiredField(confDef, stageConf, issueCreator);
     }
     boolean validateConfig = true;
     if (confDef.getDependsOn() != null &&
