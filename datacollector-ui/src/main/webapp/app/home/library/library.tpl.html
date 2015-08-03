@@ -24,7 +24,7 @@
         </div>
 
         <div class="action-menu pull-right" dropdown
-             ng-show="pipeline.name === activeConfigInfo.name && isAuthorized([userRoles.admin, userRoles.creator])">
+             ng-show="pipeline.name === activeConfigInfo.name && isAuthorized([userRoles.admin, userRoles.creator]) && !common.isSlaveNode">
           <span class="dropdown-toggle" dropdown-toggle aria-expanded="true"
                 tooltip-placement="bottom"
                 tooltip="{{'global.form.actions' | translate}}"

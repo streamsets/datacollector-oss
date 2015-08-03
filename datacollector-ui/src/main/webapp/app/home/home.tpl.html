@@ -175,7 +175,7 @@
             <span ng-bind="common.alertsMap[pipeline.name].length"></span>
           </section>
 
-          <section class="pipeline-menu">
+          <section class="pipeline-menu" ng-if="!common.isSlaveNode">
             <span class="split-bar"></span>
             <div class="action-menu" dropdown
                  ng-if="isAuthorized([userRoles.admin, userRoles.creator])">

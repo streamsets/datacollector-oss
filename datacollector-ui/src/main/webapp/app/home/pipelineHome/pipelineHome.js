@@ -439,9 +439,6 @@ angular
           if(metricsWebSocket) {
             metricsWebSocket.close();
           }
-          /*if(alertsWebSocket) {
-            alertsWebSocket.close();
-          }*/
         } else {
           $timeout.cancel(pipelineMetricsTimer);
         }

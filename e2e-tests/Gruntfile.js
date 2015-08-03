@@ -92,7 +92,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask( 'clean', ['protractor:clean']);
 
-  grunt.registerTask( 'test', ['protractor:clean', 'protractor:chrome', 'protractor:clean', 'protractor:firefox']);
+  grunt.registerTask( 'test', [
+    'protractor:clean', 'protractor:chrome',
+    'protractor:clean', 'protractor:firefox',
+    'protractor:clean', 'protractor:safari']);
 
 };
 

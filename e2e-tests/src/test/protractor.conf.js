@@ -22,7 +22,7 @@ exports.config = {
       'ui/logPage.js'
     ],
     single: [
-      'ui/createPipeline.js'
+      'ui/pipelineHomePage.js'
       //'ui/homePage.js'
     ]
   },
@@ -47,6 +47,10 @@ exports.config = {
     browser.driver.findElement(by.id('usernameId')).sendKeys('admin');
     browser.driver.findElement(by.id('passwordId')).sendKeys('admin');
     browser.driver.findElement(by.id('loginId')).click();
+
+    browser.getCapabilities().then(function (cap) {
+      browser.browserName = cap.caps_.browserName;
+    });
 
     // Login takes some time, so wait until it's done.
     return browser.driver.wait(function() {

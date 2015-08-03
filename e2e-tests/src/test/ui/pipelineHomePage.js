@@ -41,35 +41,63 @@ describe('StreamSets Data Collector App', function() {
       });
     });
 
-    it('should be able to import pipeline', function() {
-      browser.get('/');
-      browser.sleep(1000);
-      element.all(by.css('.import-pipeline-btn')).then(function(elements) {
-        var importBtnElement = elements[elements.length - 1];
-        importBtnElement.click();
+    if(browser.browserName != 'safari') {
+      it('should be able to import pipeline', function() {
+        browser.get('/');
+        browser.sleep(1000);
+        element.all(by.css('.import-pipeline-btn')).then(function(elements) {
+          var importBtnElement = elements[elements.length - 1];
+          importBtnElement.click();
 
-        browser.sleep(1500);
+          browser.sleep(1500);
 
-        element(by.css('input[type="file"]')).sendKeys(__dirname + '/testData/testPipeline.json');
+          element(by.css('input[type="file"]')).sendKeys(__dirname + '/testData/testPipeline.json');
 
-        browser.sleep(1500);
+          browser.sleep(1500);
 
-        element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
-        element(by.css('button[type="submit"]')).click();
+          element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
+          element(by.css('button[type="submit"]')).click();
 
-        browser.sleep(1500);
+          browser.sleep(1500);
 
-        //Toggle Library Pane
-        element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
+          //Toggle Library Pane
+          element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
 
-        //Test pipeline creation by checking list of pipelines
-        element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
-          expect(pipelines.length).toEqual(1);
-          expect(pipelines[0].element(by.binding('pipeline.name')).getText()).toEqual('UI End to End Test Pipeline');
+          //Test pipeline creation by checking list of pipelines
+          element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+            expect(pipelines.length).toEqual(1);
+            expect(pipelines[0].element(by.binding('pipeline.name')).getText()).toEqual('UI End to End Test Pipeline');
+          });
+
         });
-
       });
-    });
+    } else {
+
+      //Bug in Safari test driver for importing file so creating pipeline instead of importing it
+      it('should be able to import pipeline', function() {
+        element.all(by.css('.create-pipeline-btn')).then(function(elements) {
+          var importBtnElement = elements[elements.length - 1];
+          importBtnElement.click();
+
+          browser.sleep(1500);
+
+          element(by.model('newConfig.name')).sendKeys('UI End to End Test Pipeline');
+          element(by.css('button[type="submit"]')).click();
+
+          browser.sleep(1500);
+
+          //Toggle Library Pane
+          element(by.css('[ng-click="toggleLibraryPanel()"]')).click();
+
+          //Test pipeline creation by checking list of pipelines
+          element.all(by.repeater('pipeline in pipelines')).then(function(pipelines) {
+            expect(pipelines.length).toEqual(1);
+            expect(pipelines[0].element(by.binding('pipeline.name')).getText()).toEqual('UI End to End Test Pipeline');
+          });
+
+        });
+      });
+    }
 
 
     it('should be able to create new pipeline', function() {
