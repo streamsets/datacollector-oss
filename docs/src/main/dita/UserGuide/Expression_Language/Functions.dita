@@ -30,6 +30,7 @@
           <li>record:path()</li>
           <li>record:type('&lt;field path>')</li>
           <li>record:value('&lt;field path>')</li>
+          <li>record:valueOrDefault('&lt;field path>', &lt;default value>)</li>
          </ul>
         </p>
        </entry>

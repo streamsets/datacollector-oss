@@ -5,11 +5,13 @@
  <conbody>
   <dl>
       <dlentry>
-        <dt>cluster mode</dt>
-        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm><ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          execution mode that allows you to process large volumes of data from a Kafka CDH
-          cluster.</dd>
+        <dt>cluster execution mode</dt>
+        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>Pipeline
+          execution mode that allows you to process large volumes of data from Kafka or HDFS.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>cluster pipeline, cluster mode pipeline</dt>
+        <dd>A pipeline configured to run in cluster execution mode. </dd>
       </dlentry>
       <dlentry>
         <dt>control character</dt>
@@ -93,6 +95,10 @@
         <dt>snapshot</dt>
         <dd>A set of data captured as a pipeline runs. You can step through the snapshot like data
           preview. You can also use it as a source for data preview.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>standalone pipeline, standalone mode pipeline</dt>
+        <dd>A pipeline configured to run in the default standalone execution mode.</dd>
       </dlentry>
   </dl>
  </conbody>

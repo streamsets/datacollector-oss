@@ -64,7 +64,28 @@
    <dlentry>
     <dt>record:value('&lt;field path>')</dt>
     <dd>Returns the value of the field in the appropriate data type.</dd>
-    <dd>Return type: Variable, based on the field value.</dd>
+    <dd>Return type: When the field includes a value, returns the type based on the field value.
+     When the field is null, the function returns no value. </dd>
+    <dd>
+     <p>Nulls are coerced based on the expected return type of the function. For example, if an EL
+      is expected to return a string, null will be coerced to an empty string. However, a null
+      integer is coerced to 0.</p>
+    </dd>
+   </dlentry>
+   <dlentry>
+    <dt>record:valueOrDefault('&lt;field path>' , &lt;default value>)</dt>
+    <dd>Returns the value of the field in the appropriate data type. If the field does not exist,
+     returns the default value. If the field is null, the function returns a null value. </dd>
+    <dd>Use to provide a default value when a field does not exist. </dd>
+    <dd>Return type: Variable, based on whether the function returns the field value or default
+     value.</dd>
+    <dd>
+     <p>
+      <note outputclass="" othertype="" type="tip">To replace null values, you might add a tertiary
+       operator as
+       follows:<codeblock>record:value('/field path') == null ? '&lt;default value&gt;' : record:value('/field path')</codeblock></note>
+     </p>
+    </dd>
    </dlentry>
   </dl>
  </conbody>

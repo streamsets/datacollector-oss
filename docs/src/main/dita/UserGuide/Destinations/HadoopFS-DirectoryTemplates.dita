@@ -9,19 +9,18 @@
   <p><indexterm>Hadoop FS destination<indexterm>directory
     templates</indexterm></indexterm><indexterm>directory templates<indexterm>Hadoop
     FS</indexterm></indexterm>You can use a mix of constants, field values, and datetime variables
-   in a directory template. You can also use the <codeph>every</codeph> function to create new
-   directories at regular intervals based on seconds or minutes. </p>
+   in a directory template. You can use the <codeph>every</codeph> function to create new
+   directories at regular intervals based on seconds or minutes. You can also use the
+    <codeph>record:valueOrDefault</codeph> function to use field values or a default in the
+   directory template. </p>
   <p>For example, the following directory template creates output directories for event data based
-   on the state and timestamp of a record with hours as the smallest unit of
-   measure:<codeblock> /outputfiles/${record:value("/State")}/${YY()}-${MM()}-${DD()}-${hh()}</codeblock></p>
+   on the state and timestamp of a record with hours as the smallest unit of measure, creating a new
+   directory every twelve
+   hours:<codeblock> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</codeblock></p>
   <p>You can use the following elements in a directory template:<dl>
     <dlentry>
      <dt>Constants</dt>
      <dd>You can use any constant, such as "output" or "lateRecords."</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Field Values</dt>
-     <dd>You can call a field in an expression: ${record:value("/&lt;field name>")}.</dd>
     </dlentry>
     <dlentry>
      <dt>Datetime Variables</dt>
@@ -58,6 +57,20 @@ ${YY()}_${MM()}_${DD()}</codeblock>
       minutes:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
      <dd>For details about the <codeph>every()</codeph> function, see <xref
        href="../Expression_Language/MiscFunctions.dita#concept_ddw_ld1_1s"/>.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>record:valueOrDefault function</dt>
+     <dd>You can use the following expression to use the value of a field and the specified default
+      value if the field does ont exist: ${record:valueOrDefault("/&lt;field name>", &lt;default
+      value>)}.</dd>
+     <dd>For example, the following directory template creates a directory based on the product
+      field every day, and if the product field is empty, uses Misc in the directory path:
+      <codeblock>/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</codeblock></dd>
+     <dd>This template might create the following
+      paths:<codeblock>/Shirts/2015-07-31 
+/Misc/2015-07-31</codeblock></dd>
+     <dd>For a tip on how to replace null values, see <xref
+       href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
     </dlentry>
    </dl></p>
  </conbody>

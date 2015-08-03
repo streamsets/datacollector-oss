@@ -18,13 +18,12 @@
     IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must
     provide your own copy of the database file. </p>
 
-  
   <p class="p">To use the Geo IP processor, you define the location of the
       database file, specify one or more IP address input fields, name the corresponding output
       field, and specify the geolocation information that you want. </p>
 
-    <p class="p">The input field must be an Integer or String datatype with IP addresses formatted as follows:
-        n.n.n.n.</p>
+    <p class="p">The input field must be an Integer or String datatype with IP addresses formatted as
+        follows:<samp class="ph codeph"> n.n.n.n.</samp></p>
 
   <div class="p">Geo IP can provide the following geolocation information for each IP address:<ul class="ul" id="concept_fch_fc3_ms__ul_ptx_mg3_ms">
         <li class="li">Country name</li>
@@ -52,7 +51,8 @@
                   Collector</span> or in the
         <span class="ph">Data
                   Collector</span>
-      Resources directory. And then define the location of the database file in the processor.</p>
+      resources directory: <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>. And then define the
+      location of the database file in the processor.</p>
 
  </div>
 
@@ -69,14 +69,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__d4022e488" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__d3990e488" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d42175e136">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d42281e136">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d42175e139">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d42281e139">Description</th>
 
                                 </tr>
 
@@ -84,24 +84,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42175e136 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42281e136 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42175e139 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42175e136 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42175e139 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42281e139 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42175e136 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_wpz_nhs_ns__d4022e534" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42281e136 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42175e139 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42281e139 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42281e136 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d3990e534" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42281e139 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -109,10 +109,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42175e136 ">Preconditions <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_wpz_nhs_ns__d4022e548" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d42281e136 ">Preconditions <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d3990e548" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42175e139 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d42281e139 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -127,7 +127,7 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="keyword wintitle">Geo IP </span> tab, configure the following
+                <span class="ph cmd">On the <span class="keyword wintitle">Geolocation</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
                     
@@ -136,9 +136,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" id="d42175e228">Geo IP Property</th>
+                                    <th class="entry" valign="top" width="34.96503496503497%" id="d42281e228">Geo IP Property</th>
 
-                                    <th class="entry" valign="top" id="d42175e231">Description</th>
+                                    <th class="entry" valign="top" width="65.03496503496503%" id="d42281e231">Description</th>
 
                                 </tr>
 
@@ -146,35 +146,36 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d42175e228 ">GeoIP2 DB File </td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d42281e228 ">GeoIP2 Database File </td>
 
-                                    <td class="entry" valign="top" headers="d42175e231 ">Directory where the GeoIP2 database file is located.
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d42281e231 ">Directory where the GeoIP2 database file is located.
                                         Enter a fully-qualified location or the <span class="ph">Data
-                  Collector</span> resources directory. </td>
+                  Collector</span> resources directory:
+                                            <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d42175e228 ">Input Field Name</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d42281e228 ">Input Field Name</td>
 
-                                    <td class="entry" valign="top" headers="d42175e231 ">Incoming field with the IP address to use. The field can
-                                        be an Integer or String data type. The </td>
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d42281e231 ">Incoming field with the IP address to use. The field can
+                                        be an Integer or String data type. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d42175e228 ">Output Field Name</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d42281e228 ">Output Field Name</td>
 
-                                    <td class="entry" valign="top" headers="d42175e231 ">Name of the field to pass the selected geolocation
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d42281e231 ">Name of the field to pass the selected geolocation
                                         data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" headers="d42175e228 ">Geolocation Field</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d42281e228 ">GeoIP2 Field</td>
 
-                                    <td class="entry" valign="top" headers="d42175e231 ">Geolocation data to be passed by the output
-                                        field.</td>
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d42281e231 ">Geolocation data to be passed by the output field.
+                                    </td>
 
                                 </tr>
 
@@ -184,6 +185,12 @@
 </div>
 
                 </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To return additional geolocation data, click the <span class="ph uicontrol">Add</span>
+                    icon.</span>
+                <div class="itemgroup info">You can return geolocation data for the same input field or a different input
+                    field. </div>
             </li>
 </ol>
 

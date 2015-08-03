@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hmh_kfn_1s">
  <title>Cluster Execution Mode</title>
- <shortdesc>You can run a pipeline in standalone mode or cluster mode. </shortdesc>
+ <shortdesc>You can run a pipeline in standalone or cluster execution mode. </shortdesc>
  <conbody>
   <p><indexterm>execution mode<indexterm>standalone and cluster
     modes</indexterm></indexterm><indexterm>cluster

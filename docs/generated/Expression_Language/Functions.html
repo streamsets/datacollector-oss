@@ -21,9 +21,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="31.25%" id="d15846e37">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d15876e37">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d15846e40">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d15876e40">Functions</th>
 
       </tr>
 
@@ -31,9 +31,9 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d15846e37 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d15876e37 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d15846e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15876e40 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute('&lt;attribute name&gt;') </li>
@@ -50,6 +50,8 @@
 
           <li class="li">record:value('&lt;field path&gt;')</li>
 
+          <li class="li">record:valueOrDefault('&lt;field path&gt;', &lt;default value&gt;)</li>
+
          </ul>
 
         </div>
@@ -59,10 +61,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d15846e37 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data record functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d15876e37 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data record functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d15846e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15876e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists('&lt;header&gt;') </li>
 
@@ -85,10 +87,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d15846e37 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d15876e37 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d15846e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15876e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -109,9 +111,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d15846e37 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d15876e37 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d15846e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15876e40 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
           <li class="li">str:contains("&lt;string&gt;", "&lt;subset&gt;") </li>
@@ -145,10 +147,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d15846e37 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d15876e37 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d15846e40 ">
+       <td class="entry" valign="top" width="68.75%" headers="d15876e40 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">emptyList</li>
 
@@ -282,7 +284,38 @@
 
     <dd class="dd">Returns the value of the field in the appropriate data type.</dd>
 
-    <dd class="dd">Return type: Variable, based on the field value.</dd>
+    <dd class="dd">Return type: When the field includes a value, returns the type based on the field value.
+     When the field is null, the function returns no value. </dd>
+
+    <dd class="dd">
+     <p class="p">Nulls are coerced based on the expected return type of the function. For example, if an EL
+      is expected to return a string, null will be coerced to an empty string. However, a null
+      integer is coerced to 0.</p>
+
+    </dd>
+
+   
+   
+    <dt class="dt dlterm">record:valueOrDefault('&lt;field path&gt;' , &lt;default value&gt;)</dt>
+
+    <dd class="dd">Returns the value of the field in the appropriate data type. If the field does not exist,
+     returns the default value. If the field is null, the function returns a null value. </dd>
+
+    <dd class="dd">Use to provide a default value when a field does not exist. </dd>
+
+    <dd class="dd">Return type: Variable, based on whether the function returns the field value or default
+     value.</dd>
+
+    <dd class="dd">
+     <div class="p">
+      <div class="note tip"><span class="tiptitle">Tip:</span> To replace null values, you might add a tertiary
+       operator as
+       follows:<pre class="pre codeblock">record:value('/field path') == null ? '&lt;default value&gt;' : record:value('/field path')</pre>
+</div>
+
+     </div>
+
+    </dd>
 
    
   </dl>
@@ -764,17 +797,15 @@
 
         <dd class="dd">Returns the <span class="ph">Data
                   Collector</span> ID.
-            <p class="p">When the <span class="ph">Data
-                  Collector</span> runs
-            in standalone execution mode, the ID is a unique identifier associated with the <span class="ph">Data
+            <p class="p">For a pipeline that runs in standalone execution mode, the ID is a unique identifier
+            associated with the <span class="ph">Data
                   Collector</span>,
             such as 58efbb7c-faf4-4d8e-a056-f38667e325d0. The ID is stored in the following file:
               <span class="ph filepath">&lt;SDCinstalldir&gt;/data/sdc.id</span>.</p>
-<p class="p">When the <span class="ph">Data
-                  Collector</span> runs
-            in cluster mode, the ID is the <span class="ph">Data
+<p class="p">For a pipeline that runs in
+            cluster mode, the ID is the <span class="ph">Data
                   Collector</span>
-            worker partition ID generated by Spark.</p>
+            worker partition ID generated by a cluster manager, such as Spark or MapReduce.</p>
 </dd>
 
       

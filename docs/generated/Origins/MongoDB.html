@@ -88,14 +88,14 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d2649e290" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__d2617e290" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d30970e144">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d31076e144">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d30970e147">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d31076e147">Description</th>
 
                                 </tr>
 
@@ -103,29 +103,30 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30970e144 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d31076e144 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30970e147 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30970e144 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30970e147 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d31076e147 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d30970e144 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d31076e144 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d30970e147 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d2649e337">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d31076e147 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d31076e144 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d31076e147 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d2617e337">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
                                                 error handling.</li>
 
-                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for a
+                                                cluster pipeline.</li>
 
                                         </ul>
 </td>
@@ -149,9 +150,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="38.02281368821293%" id="d30970e219">MongoDB Property</th>
+                                    <th class="entry" valign="top" width="38.02281368821293%" id="d31076e219">MongoDB Property</th>
 
-                                    <th class="entry" valign="top" width="61.97718631178707%" id="d30970e222">Description</th>
+                                    <th class="entry" valign="top" width="61.97718631178707%" id="d31076e222">Description</th>
 
                                 </tr>
 
@@ -159,62 +160,62 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">MongoDB Connection String</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">MongoDB Connection String</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Connection string for the MongoDB instance.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">MongoDB Database</td>
-
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Name of the MongoDB database.</td>
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Connection string for the MongoDB instance.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">MongoDB Collection</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">MongoDB Database</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Name of the MongoDB collection to use.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">Capped Collection</td>
-
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">The collection is capped. </td>
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Name of the MongoDB database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">Start Timestamp</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">MongoDB Collection</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Timestamp to begin reading data based on the timestamp in
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Name of the MongoDB collection to use.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">Capped Collection</td>
+
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">The collection is capped. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">Start Timestamp</td>
+
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Timestamp to begin reading data based on the timestamp in
                                         the offset field. Use the following format:
                                             <samp class="ph codeph">YYYY-MM-DD hh:mm:ss</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">Offset Field</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">Offset Field</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Field to use to track reads. Default is the _id field.
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Field to use to track reads. Default is the _id field.
                                         You can use any Object ID field, but results are not
                                         guaranteed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">Batch Size</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">Batch Size</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Maximum number of records allowed in a batch.</td>
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Maximum number of records allowed in a batch.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d30970e219 ">Max Batch Wait Time</td>
+                                    <td class="entry" valign="top" width="38.02281368821293%" headers="d31076e219 ">Max Batch Wait Time</td>
 
-                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d30970e222 ">Amount of time the origin will wait to fill a batch
+                                    <td class="entry" valign="top" width="61.97718631178707%" headers="d31076e222 ">Amount of time the origin will wait to fill a batch
                                         before sending an empty batch. </td>
 
                                 </tr>

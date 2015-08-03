@@ -26,6 +26,12 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Hadoop FS URI</entry>
+                                    <entry>HDFS URI. Include the HDFS scheme and authority as
+                                        follows:
+                                        <codeph>&lt;scheme>://&lt;authority></codeph>.</entry>
+                                </row>
+                                <row>
                                     <entry>Directory Path</entry>
                                     <entry>Directory for the data to be read. Include the HDFS
                                         scheme and authority in the path as follows:

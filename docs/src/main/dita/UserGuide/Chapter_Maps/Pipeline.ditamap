@@ -7,6 +7,14 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita"/>
+   <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
+   <topicref href="../Pipeline_Configuration/PipelineConstants.dita"/>
+  </topicref>
   <topicref href="../Pipeline_Configuration/PipelineDesign.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -25,15 +33,6 @@
    </topicref>
    <topicref href="../Pipeline_Configuration/ControlCharacters.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineProperties.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Pipeline_Configuration/DeliveryGuarantee.dita"/>
-   <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
-   <topicref href="../Pipeline_Configuration/PipelineConstants.dita"/>
-  </topicref>
-  <topicref href="../Pipeline_Configuration/PipelineKerberos.dita"/>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>
     <shortdesc/>

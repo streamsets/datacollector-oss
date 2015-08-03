@@ -4,13 +4,11 @@
  <title>Monitoring a Cluster</title>
  <conbody>
   <p><indexterm>cluster mode<indexterm>monitoring</indexterm></indexterm>After you start a pipeline,
-   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
-   displays basic monitoring information for the pipeline and a list of <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> workers. </p>
-  <p>You can monitor each <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker in the
-   cluster. To monitor a <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker, select
-   it from the list. </p>
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      console displays basic monitoring information for the pipeline and links to each <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker. </p>
+  <p>For monitoring details for a <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker,
+      click the worker link.</p>
  </conbody>
 </concept>
