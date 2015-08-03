@@ -17,8 +17,8 @@ import java.util.List;
 
 @StageDef(
     version=1,
-    label="GEO IP",
-    description = "IP Address Geolocation using a Maxmind GeoIP2 Database File",
+    label="Geo IP",
+    description = "IP address geolocation using a Maxmind GeoIP2 database file",
     icon="globe.png"
 )
 @ConfigGroups(Groups.class)
