@@ -2,6 +2,7 @@ package com.streamsets.datacollector.flume.cluster;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
+import com.streamsets.datacollector.hdfs.cluster.TestKafkaToHDFS;
 import com.streamsets.datacollector.util.ClusterUtil;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
@@ -25,6 +26,8 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -45,6 +48,7 @@ import java.util.Map;
  */
 public class TestKafkaToFlume {
 
+  private static final Logger LOG = LoggerFactory.getLogger(TestKafkaToFlume.class);
   //Kafka messages contain text "Hello Kafka<i>" i in the range [0-29]
   private static int RECORDS_PRODUCED = 30;
   //Based on the expression parser and stream selector target ends up with messages which have even first digit of i.
@@ -130,11 +134,18 @@ public class TestKafkaToFlume {
 
     Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
     Assert.assertNotNull(countersMap);
-    Assert.assertEquals("Output records counters for source should be equal to " + RECORDS_PRODUCED, RECORDS_PRODUCED,
-      VerifyUtils.getSourceOutputRecords(countersMap));
-    Assert.assertEquals("Output records counters for target should be equal to " + RECORDS_REACHING_TARGET, RECORDS_REACHING_TARGET,
-      VerifyUtils.getTargetInputRecords(countersMap));
-
+    while (VerifyUtils.getSourceOutputRecords(countersMap) != RECORDS_PRODUCED) {
+      LOG.debug("Source output records are not equal to " + RECORDS_PRODUCED + " retrying again");
+      Thread.sleep(500);
+      countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
+      Assert.assertNotNull(countersMap);
+    }
+    while (VerifyUtils.getTargetInputRecords(countersMap) != RECORDS_REACHING_TARGET) {
+      LOG.debug("Target Input records are not equal to " + RECORDS_REACHING_TARGET + " retrying again");
+      Thread.sleep(500);
+      countersMap = VerifyUtils.getCounters(list, "kafka_origin_pipeline_cluster", "0");
+      Assert.assertNotNull(countersMap);
+    }
     //check from flume
     for(int i = 0; i < RECORDS_REACHING_TARGET; i++) {
       Transaction transaction = ch.getTransaction();

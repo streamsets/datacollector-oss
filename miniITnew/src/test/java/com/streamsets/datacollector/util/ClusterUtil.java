@@ -87,9 +87,10 @@ public class ClusterUtil {
 
     int attempt = 0;
     //Hard wait for 2 minutes
-    while(miniSDC.getListOfSlaveSDCURI().size() == 0 && attempt < 6) {
-      Thread.sleep(20000);
+    while(miniSDC.getListOfSlaveSDCURI().size() == 0 && attempt < 24) {
+      Thread.sleep(5000);
       attempt++;
+      LOG.debug("Attempt no: " + attempt + " to retrieve list of slaves");
     }
     if(miniSDC.getListOfSlaveSDCURI().size() == 0) {
       throw new IllegalStateException("Timed out waiting for slaves to come up.");

@@ -33,9 +33,13 @@ public abstract class TestPipelineOperationsBase {
 
   protected abstract boolean clusterModeTest();
 
-  @Test
+  @Test(timeout = 120000)
   public void testCaptureSnapshot() throws Exception {
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(getServerURI(), getPipelineName(), getPipelineRev()));
+    String status = VerifyUtils.getPipelineState(getServerURI(), getPipelineName(), getPipelineRev());
+    while (!("RUNNING".equals(status))) {
+      Thread.sleep(200);
+      status = VerifyUtils.getPipelineState(getServerURI(), getPipelineName(), getPipelineRev());
+    }
     if(clusterModeTest()) {
       Assert.assertTrue(getWorkerURI().size() > 0);
       for(URI workerURI : getWorkerURI()) {
@@ -46,10 +50,14 @@ public abstract class TestPipelineOperationsBase {
     }
   }
 
-  @Test()
+  @Test(timeout = 120000)
   public void testMetrics() throws Exception {
     URI serverURI = getServerURI();
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()));
+    String status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    while (!("RUNNING".equals(status))) {
+      Thread.sleep(200);
+      status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    }
     testMetrics(serverURI);
     if(clusterModeTest()) {
       Assert.assertTrue(getWorkerURI().size() > 0);
@@ -60,16 +68,55 @@ public abstract class TestPipelineOperationsBase {
   }
 
   private void testCaptureSnapshot(URI serverURI) throws Exception {
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()));
+    String status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    while (!("RUNNING".equals(status))) {
+      Thread.sleep(200);
+      status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    }
     String snapShotName = "mySnapShot";
 
     VerifyUtils.captureSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapShotName, 10);
     VerifyUtils.waitForSnapshot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
 
-    Map<String, List<List<Map<String, Object>>>> snapShot = VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
+    Map<String, List<List<Map<String, Object>>>> snapShot =
+      VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
     List<Map<String, Object>> stageOutputs = snapShot.get("snapshotBatches").get(0);
-    Assert.assertNotNull(stageOutputs);
+    List<Map<String, Object>> records = getRecords(stageOutputs);
+    while (records == null) {
+      Thread.sleep(500);
+      LOG.debug("Got empty records from stageOutput of snaphot, retrying again");
+      snapShot = VerifyUtils.getSnapShot(serverURI, getPipelineName(), getPipelineRev(), snapShotName);
+      stageOutputs = snapShot.get("snapshotBatches").get(0);
+      records = getRecords(stageOutputs);
+    }
+    for (Map<String, Object> record : records) {
+      // each record has header and value
+      Map<String, Object> val = (Map<String, Object>) record.get("value");
+      Assert.assertNotNull(val);
+      // value has root field with path "", and Map with key "text" for the text field
+      Assert.assertTrue(val.containsKey("value"));
+      Map<String, Map<String, String>> value = (Map<String, Map<String, String>>) val.get("value");
+      Assert.assertNotNull(value);
+      // The text field in the record [/text]
+      if (value.containsKey("text")) {
+        // Kafka origin pipelines generate record with text data.
+        // Additional tests for those
+        Map<String, String> text = value.get("text");
+        Assert.assertNotNull(text);
+        // Field has type, path and value
+        Assert.assertTrue(text.containsKey("value"));
+        Assert.assertEquals("Hello Kafka", text.get("value"));
+        Assert.assertTrue(text.containsKey("path"));
+        Assert.assertEquals("/text", text.get("path"));
+        Assert.assertTrue(text.containsKey("type"));
+        Assert.assertEquals("STRING", text.get("type"));
+      }
+    }
 
+  }
+
+  private List<Map<String, Object>> getRecords(List<Map<String, Object>> stageOutputs) {
+    Assert.assertNotNull(stageOutputs);
     for (Map<String, Object> stageOutput : stageOutputs) {
       LOG.info("stageOutput = " + stageOutput.keySet());
       Map<String, Object> output = (Map<String, Object>) stageOutput.get("output");
@@ -77,39 +124,27 @@ public abstract class TestPipelineOperationsBase {
         LOG.info("output key = " + e.getKey());
         Assert.assertTrue(e.getValue() instanceof List);
         List<Map<String, Object>> records = (List<Map<String, Object>>) e.getValue();
-        Assert.assertFalse("Records were empty", records.isEmpty());
-        //This is the list of records
-        for (Map<String, Object> record : records) {
-          //each record has header and value
-          Map<String, Object> val = (Map<String, Object>) record.get("value");
-          Assert.assertNotNull(val);
-          //value has root field with path "", and Map with key "text" for the text field
-          Assert.assertTrue(val.containsKey("value"));
-          Map<String, Map<String, String>> value = (Map<String, Map<String, String>>) val.get("value");
-          Assert.assertNotNull(value);
-          //The text field in the record [/text]
-          if(value.containsKey("text")) {
-            //Kafka origin pipelines generate record with text data.
-            //Additional tests for those
-            Map<String, String> text = value.get("text");
-            Assert.assertNotNull(text);
-            //Field has type, path and value
-            Assert.assertTrue(text.containsKey("value"));
-            Assert.assertEquals("Hello Kafka", text.get("value"));
-            Assert.assertTrue(text.containsKey("path"));
-            Assert.assertEquals("/text", text.get("path"));
-            Assert.assertTrue(text.containsKey("type"));
-            Assert.assertEquals("STRING", text.get("type"));
-          }
-        }
+        return records;
       }
     }
+    return null;
+
   }
 
   private void testMetrics(URI serverURI) throws IOException, InterruptedException {
-    Assert.assertEquals("RUNNING", VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev()));
+    String status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    while (!("RUNNING".equals(status))) {
+      Thread.sleep(200);
+      status = VerifyUtils.getPipelineState(serverURI, getPipelineName(), getPipelineRev());
+    }
     Thread.sleep(2000);
     Map<String, Map<String, Object>> metrics = VerifyUtils.getCountersFromMetrics(serverURI, getPipelineName(), getPipelineRev());
+
+    while (VerifyUtils.getSourceOutputRecords(metrics) == 0) {
+      metrics = VerifyUtils.getCountersFromMetrics(serverURI, getPipelineName(), getPipelineRev());
+      LOG.debug("Got 0 output records from source, retrying");
+      Thread.sleep(200);
+    }
 
     Assert.assertTrue(VerifyUtils.getSourceOutputRecords(metrics) > 0);
     Assert.assertTrue(VerifyUtils.getSourceInputRecords(metrics) == 0);

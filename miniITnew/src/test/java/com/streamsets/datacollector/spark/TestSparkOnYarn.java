@@ -131,8 +131,13 @@ public class TestSparkOnYarn {
       miniSDC.createAndStartPipeline(pipelineJson);
       URI serverURI = miniSDC.getServerURI();
       LOG.info("Starting on URI " + serverURI);
-      // TODO - Start a new thread listening for slave metrics
-      Thread.sleep(60000);
+      int attempt = 0;
+      //Hard wait for 2 minutes
+      while(miniSDC.getListOfSlaveSDCURI().size() == 0 && attempt < 24) {
+        Thread.sleep(5000);
+        attempt++;
+        LOG.debug("Attempt no: " + attempt + " to retrieve list of slaves");
+      }
       List<URI> list = miniSDC.getListOfSlaveSDCURI();
       assertTrue(list != null && !list.isEmpty());
       Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "admin", "0");

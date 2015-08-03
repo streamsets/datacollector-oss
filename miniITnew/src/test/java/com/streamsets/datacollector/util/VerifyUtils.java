@@ -97,10 +97,6 @@ public class VerifyUtils {
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/metrics")
       .queryParam("name", name).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
-    if (response.getStatusInfo().equals(Response.noContent().build().getStatusInfo())) {
-      LOG.debug("Got empty status info");
-      return null;
-    }
     checkResponse(response, Response.Status.OK);
     Map<String, Map<String, Map<String, Object>>> map = response.readEntity(Map.class);
     return map;
@@ -253,7 +249,11 @@ public class VerifyUtils {
 
   private static void checkResponse(Response response, Response.Status expectedStatus) {
     if(response.getStatusInfo().getStatusCode() != expectedStatus.getStatusCode()) {
-      throw new RuntimeException("Request Failed with Error code : " + response.getStatusInfo()
+      if (response.getStatusInfo().getStatusCode() == Response.Status.NO_CONTENT.getStatusCode()) {
+        LOG.debug("Failed with No Content: 204, will retry again");
+        return;
+      }
+      throw new RuntimeException("Request Failed with Error code : " + response.getStatusInfo().getStatusCode()
         + ". Error details: " + response.getStatusInfo().getReasonPhrase());
     }
   }
