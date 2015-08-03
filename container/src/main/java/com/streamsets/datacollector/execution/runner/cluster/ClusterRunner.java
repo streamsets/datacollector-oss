@@ -675,8 +675,8 @@ public class ClusterRunner extends AbstractRunner {
 
   private void cancelRunnable() {
     if (metricRunnableFuture != null) {
-      metricsEventRunnable.clearSlaveMetrics();
       metricRunnableFuture.cancel(true);
+      metricsEventRunnable.clearSlaveMetrics();
     }
     if (managerRunnableFuture != null) {
       managerRunnableFuture.cancel(false);
