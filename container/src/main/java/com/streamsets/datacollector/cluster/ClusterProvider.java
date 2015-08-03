@@ -6,6 +6,7 @@
 package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 
@@ -29,6 +30,6 @@ public interface ClusterProvider {
                                       Map<String, String> environment, Map<String, String> sourceInfo,
                                       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                                       File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir,
-                                      URLClassLoader apiCL, URLClassLoader containerCL, long timeToWaitForFailure)
+                                      URLClassLoader apiCL, URLClassLoader containerCL, long timeToWaitForFailure, RuleDefinitions ruleDefinitions)
     throws TimeoutException, IOException;
 }

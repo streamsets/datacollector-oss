@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBean;
@@ -46,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -305,7 +307,7 @@ public class ClusterProviderImpl implements ClusterProvider {
                        Map<String, String> environment, Map<String, String> sourceInfo,
                        PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                        File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                       URLClassLoader containerCL, long timeToWaitForFailure) throws IOException, TimeoutException {
+                       URLClassLoader containerCL, long timeToWaitForFailure, RuleDefinitions ruleDefinitions) throws IOException, TimeoutException {
     File stagingDir = new File(outputDir, "staging");
     stagingDir.mkdirs();
     if (!stagingDir.isDirectory()) {
@@ -315,7 +317,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     try {
       return startPipelineInternal(systemProcessFactory, clusterManager, outputDir, environment, sourceInfo,
         pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-        timeToWaitForFailure, stagingDir);
+        timeToWaitForFailure, stagingDir, ruleDefinitions);
     } finally {
       // in testing mode the staging dir is used by yarn
       // tasks and thus cannot be deleted
@@ -330,7 +332,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       File outputDir, Map<String, String> environment, Map<String, String> sourceInfo,
       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
       File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-      URLClassLoader containerCL, long timeToWaitForFailure, File stagingDir) throws IOException, TimeoutException {
+      URLClassLoader containerCL, long timeToWaitForFailure, File stagingDir, RuleDefinitions ruleDefinitions) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     // create libs.tar.gz file for pipeline
     Map<String, List<URL> > streamsetsLibsCl = new HashMap<>();
@@ -456,6 +458,9 @@ public class ClusterProviderImpl implements ClusterProvider {
         BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
       File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
       ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
+      Utils.checkNotNull(ruleDefinitions, "ruleDefinitions");
+      File rulesFile = new File(pipelineDir, FilePipelineStoreTask.RULES_FILE);
+      ObjectMapperFactory.getOneLine().writeValue(rulesFile, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);
       TarFileCreator.createTarGz(etcDir, etcTarGz);

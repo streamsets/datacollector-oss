@@ -64,7 +64,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   public static final String INFO_FILE = "info.json";
   public static final String PIPELINE_FILE = "pipeline.json";
   public static final String UI_INFO_FILE = "uiinfo.json";
-  private static final String RULES_FILE = "rules.json";
+  public static final String RULES_FILE = "rules.json";
 
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
@@ -309,7 +309,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           uiInfo = json.readValue(getPipelineUiInfoFile(name), Map.class);
           pipeline = injectUiInfo(uiInfo, pipeline);
         }
-        
+
         return pipeline;
       }
       catch (Exception ex) {

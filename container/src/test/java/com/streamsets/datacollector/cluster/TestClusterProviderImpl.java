@@ -7,7 +7,10 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.cluster.ClusterProviderImpl;
+import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.runner.MockStages;
@@ -118,7 +121,8 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" application_1429587312661_0025 ");
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader,  60).getId());
+      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
   }
 
   @Test
@@ -128,7 +132,8 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" " + id + " ");
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
-      bootstrapLibDir, classLoader, classLoader, 60).getId());
+      bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
     Assert.assertArrayEquals(new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster",
       "--executor-memory", "512m", "--executor-cores", "1", "--num-executors", "64", "--archives",
       "<masked>/provider-temp/staging/libs.tar.gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",

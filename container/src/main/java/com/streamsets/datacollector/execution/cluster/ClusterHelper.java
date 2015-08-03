@@ -10,6 +10,7 @@ import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
 import com.streamsets.datacollector.cluster.ClusterProvider;
 import com.streamsets.datacollector.cluster.ClusterProviderImpl;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
@@ -65,11 +66,11 @@ public class ClusterHelper {
   public ApplicationState submit(final PipelineConfiguration pipelineConfiguration,
     final StageLibraryTask stageLibrary, final File etcDir, final File resourcesDir, final File staticWebDir,
     final File bootstrapDir, final Map<String, String> environment, final Map<String, String> sourceInfo,
-    final long timeout) throws TimeoutException, IOException {
+    final long timeout, RuleDefinitions ruleDefinitions) throws TimeoutException, IOException {
 
     return clusterProvider.startPipeline(systemProcessFactory, clusterManagerFile, tempDir, environment, sourceInfo,
       pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-      timeout);
+      timeout, ruleDefinitions);
   }
 
   public void kill(final ApplicationState applicationState, final PipelineConfiguration pipelineConfiguration)

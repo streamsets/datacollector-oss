@@ -9,6 +9,7 @@ import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
 import com.streamsets.datacollector.cluster.ClusterProvider;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 
@@ -65,7 +66,7 @@ public class MockClusterProvider implements ClusterProvider {
                               Map<String, String> environment, Map<String, String> sourceInfo,
                               PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
                               File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                              URLClassLoader containerCL, long timeout)
+                              URLClassLoader containerCL, long timeout, RuleDefinitions ruleDefinitions)
   throws TimeoutException {
     LOG.info("startPipeline");
     if (submitTimesOut) {

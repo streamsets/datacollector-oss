@@ -17,6 +17,7 @@ import com.streamsets.datacollector.cluster.ApplicationState;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.AbstractRunner;
@@ -638,7 +639,7 @@ public class ClusterRunner extends AbstractRunner {
       slaveCallbackManager.clearSlaveList();
       ApplicationState applicationState = clusterHelper.submit(pipelineConf, stageLibrary, new File(runtimeInfo.getConfigDir()),
           new File(runtimeInfo.getResourcesDir()), new File(runtimeInfo.getStaticWebDir()), bootstrapDir, environment,
-          sourceInfo, SUBMIT_TIMEOUT_SECS);
+          sourceInfo, SUBMIT_TIMEOUT_SECS, getRules());
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = new HashMap<>();
       attributes.putAll(getAttributes());
@@ -718,6 +719,10 @@ public class ClusterRunner extends AbstractRunner {
   @Override
   public Map getUpdateInfo() {
     return updateChecker.getUpdateInfo();
+  }
+
+  RuleDefinitions getRules() throws PipelineStoreException {
+    return pipelineStore.retrieveRules(name, rev);
   }
 
   @Override
