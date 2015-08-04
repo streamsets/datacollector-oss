@@ -222,27 +222,43 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
       }
       if (!hadoopConfigDir.exists()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
-          hadoopConfDir));
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_25,
+          hadoopConfigDir.getPath()));
       } else if (!hadoopConfigDir.isDirectory()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
-          hadoopConfDir));
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_26,
+          hadoopConfigDir.getPath()));
       } else {
         File coreSite = new File(hadoopConfigDir, "core-site.xml");
         if (coreSite.exists()) {
           if (!coreSite.isFile()) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-              hadoopConfDir, "core-site.xml"));
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
+              coreSite.getPath()));
           }
           conf.addResource(new Path(coreSite.getAbsolutePath()));
         }
         File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
         if (hdfsSite.exists()) {
           if (!hdfsSite.isFile()) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-              hadoopConfDir, "hdfs-site.xml"));
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
+              hdfsSite.getPath()));
           }
           conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+        }
+        File yarnSite = new File(hadoopConfigDir, "yarn-site.xml");
+        if (yarnSite.exists()) {
+          if (!yarnSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
+              yarnSite.getPath()));
+          }
+          conf.addResource(new Path(yarnSite.getAbsolutePath()));
+        }
+        File mapredSite = new File(hadoopConfigDir, "mapred-site.xml");
+        if (mapredSite.exists()) {
+          if (!mapredSite.isFile()) {
+            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
+              mapredSite.getPath()));
+          }
+          conf.addResource(new Path(mapredSite.getAbsolutePath()));
         }
       }
     }

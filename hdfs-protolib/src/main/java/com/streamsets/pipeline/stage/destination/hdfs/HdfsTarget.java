@@ -294,16 +294,16 @@ public class HdfsTarget extends RecordTarget {
         }
         if (!hadoopConfigDir.exists()) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
-            hadoopConfDir));
+            hadoopConfigDir.getPath()));
         } else if (!hadoopConfigDir.isDirectory()) {
           issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
-            hadoopConfDir));
+            hadoopConfigDir.getPath()));
         } else {
           File coreSite = new File(hadoopConfigDir, "core-site.xml");
           if (coreSite.exists()) {
             if (!coreSite.isFile()) {
               issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-                hadoopConfDir, "core-site.xml"));
+                coreSite.getPath()));
             }
             conf.addResource(new Path(coreSite.getAbsolutePath()));
           }
@@ -311,7 +311,7 @@ public class HdfsTarget extends RecordTarget {
           if (hdfsSite.exists()) {
             if (!hdfsSite.isFile()) {
               issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-                hadoopConfDir, "hdfs-site.xml"));
+                hdfsSite.getPath()));
             }
             conf.addResource(new Path(hdfsSite.getAbsolutePath()));
           }

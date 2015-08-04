@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface DataCollector {
 
-  void init();
+  void init() throws Exception;
 
   void destroy();
 

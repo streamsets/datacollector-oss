@@ -30,7 +30,6 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     if (initialized) {
       return;
     }
-    initialized = true;
     // must occur before creating the EmbeddedSDCPool as
     // the hdfs target validation evaluates the sdc:id EL
     NumberFormat numberFormat = NumberFormat.getInstance();
@@ -44,6 +43,7 @@ public class ClusterFunctionImpl implements ClusterFunction  {
       }
     });
     sdcPool = new EmbeddedSDCPool(properties);
+    initialized = true;
   }
 
   public static ClusterFunction create(Properties properties, Integer id) throws Exception {

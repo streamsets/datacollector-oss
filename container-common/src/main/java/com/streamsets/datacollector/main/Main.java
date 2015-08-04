@@ -44,11 +44,10 @@ public class Main {
   }
 
   public int doMain() {
-    SecurityContext securityContext = null;
+    SecurityContext securityContext;
     Logger log = null;
     try {
       final Task task = this.task;
-
       dagger.get(LogConfigurator.class).configure();
       log = LoggerFactory.getLogger(Main.class);
       log.info("-----------------------------------------------------------------");
@@ -98,7 +97,12 @@ public class Main {
           });
           task.run();
           task.waitWhileRunning();
-          getRuntime().removeShutdownHook(shutdownHookThread);
+          try {
+            getRuntime().removeShutdownHook(shutdownHookThread);
+          } catch (IllegalStateException ignored) {
+            // thrown when we try and remove the shutdown
+            // hook but it is already running
+          }
           finalLog.debug("Stopping, reason: programmatic stop()");
           return null;
         }

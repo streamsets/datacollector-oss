@@ -61,7 +61,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
-        String value = properties.getProperty(realKey);
+        String value = getProperty(realKey);
         conf.set(realKey, value, source);
       }
       conf.set(FileInputFormat.INPUT_DIR_RECURSIVE, getProperty(FileInputFormat.INPUT_DIR_RECURSIVE));
