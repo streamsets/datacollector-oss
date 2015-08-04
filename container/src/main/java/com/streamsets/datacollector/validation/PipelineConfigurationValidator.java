@@ -498,7 +498,7 @@ public class PipelineConfigurationValidator {
         }
       }
     }
-    if(confDef.getModel() != null) {
+    if(conf.getValue() != null && confDef.getModel() != null) {
       preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
     }
     return preview;
