@@ -551,7 +551,7 @@ public class PipelineConfigurationValidator {
               PathElement.parse(fieldPath, false);
             } catch (IllegalArgumentException e) {
               issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0033,
-                e.getMessage()));
+                e.toString()));
               preview = false;
               break;
             }
