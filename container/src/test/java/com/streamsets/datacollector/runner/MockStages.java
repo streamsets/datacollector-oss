@@ -501,9 +501,16 @@ public class MockStages {
           false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default());
 
+        ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, Collections.<String>emptyList(),
+          Collections.<String>emptyList(), null, null);
+        ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
+          "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+          ConfigDef.Evaluation.IMPLICIT, null);
+
         StageDefinition tDef = new StageDefinition(createLibraryDef(cl),
                                                    false, MTarget.class, "targetName", 1, "targetLabel",
-          "targetDesc", StageType.TARGET, false, true, true, Collections.<ConfigDefinition>emptyList(),
+          "targetDesc", StageType.TARGET, false, true, true, Arrays.asList(stageReqField),
           null/*raw source definition*/, "", null, false, 0, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default()
         );
@@ -899,5 +906,18 @@ public class MockStages {
       null, Arrays.asList(new Config("executionMode", ExecutionMode.STANDALONE)), null, stages, getErrorStageConfig());
   }
 
+  public static PipelineConfiguration createPipelineConfigurationSourceTargetWithRequiredFields() {
+    List<String> lanes = ImmutableList.of("a");
+    List<StageConfiguration> stages = new ArrayList<>();
+    StageConfiguration source = new StageConfiguration("s", "default", "sourceName", 1,
+      new ArrayList<Config>(), null, new ArrayList<String>(),
+      lanes);
+    stages.add(source);
+    StageConfiguration target = new StageConfiguration("t", "default", "targetName", 1,
+      Arrays.asList(new Config("stageRequiredFields", Arrays.asList("dummy"))), null, lanes, new ArrayList<String>());
+    stages.add(target);
+    return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
+      null, createPipelineConfigs(), null, stages, getErrorStageConfig());
+  }
 
 }

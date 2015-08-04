@@ -10,7 +10,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -22,14 +21,13 @@ import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.RuntimeEL;
-import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -39,7 +37,6 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -501,6 +498,9 @@ public class PipelineConfigurationValidator {
         }
       }
     }
+    if(confDef.getModel() != null) {
+      preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
+    }
     return preview;
   }
 
@@ -543,6 +543,19 @@ public class PipelineConfigurationValidator {
           issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
                                          ValidationError.VALIDATION_0009, "List"));
           preview = false;
+        } else {
+          //validate all the field names for proper syntax
+          List<String> fieldPaths = (List<String>) conf.getValue();
+          for(String fieldPath : fieldPaths) {
+            try {
+              PathElement.parse(fieldPath, false);
+            } catch (IllegalArgumentException e) {
+              issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0033,
+                e.getMessage()));
+              preview = false;
+              break;
+            }
+          }
         }
         break;
       case COMPLEX_FIELD:
