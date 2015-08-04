@@ -5,6 +5,7 @@
  <topicref href="../Cluster_Mode/ClusterMode_title.dita">
   <topicref href="../Cluster_Mode/Overview.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Cluster_Mode/KerberosAuthentication.dita"/>
    <topicref href="../Cluster_Mode/ErrorHandlingLimitations.dita">
     <topicmeta>
      <shortdesc/>

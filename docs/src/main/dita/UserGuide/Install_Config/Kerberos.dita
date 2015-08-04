@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_hnm_n4l_xs">
+ <title>Enabling Kerberos Authentication</title>
+ <shortdesc>You can use Kerberos authentication to connect to origin and destination systems, as
+  well as YARN clusters. </shortdesc>
+ <conbody>
+  <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
+     authenticaion</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>enabling for
+     the Data Collector</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user connects
+   to external systems. By default, the Data Collector user is the user who starts the Data
+   Collector. When you enable Kerberos, the Data Collector user is the Kerberos principal. </p>
+  <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
+    <li>Configure the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+     Kerberos - Configure the Kerberos properties to enable Kerberos and define the principal and
+     keytab in the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+     configuration file. </li>
+    <li>Configure the origin or destination stage to use Kerberos - You can configure Kerberos
+     authentication for the following stages:</li>
+   </ol><ul id="ul_mwv_prl_xs">
+    <li>Hadoop FS origin</li>
+    <li>Hadoop FS destination</li>
+    <li>HBase destination</li>
+   </ul><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
+    requires it and Kerberos is enabled for the <ph
+     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </note></p>
+ </conbody>
+</concept>

@@ -28,6 +28,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Install_Config/Kerberos.dita"/>
    <topicref href="../Install_Config/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Install_Config/HTTP_protocols.dita">
     <topicref href="../Install_Config/HTTP-GenSelfSignedCert.dita"/>

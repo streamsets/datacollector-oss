@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can edit the Data Collector environment file, sdc-env.sh, to add or update Java configuration options. The Data Collector environment configuration file includes the following Java configuration ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="abstract" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can edit the Data Collector environment file to add or update Java configuration options. If you start the Data Collector manually, use the following file: &lt;SDCinstalldir&gt;/libexec/sdc-env.sh If ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="abstract" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -23,28 +23,30 @@
 <div class="topic concept nested1" id="concept_vrx_4fg_qr">
  <h2 class="title topictitle2">Java Configuration Options</h2>
 
- 
- <div class="body conbody"><p class="shortdesc"></p>
-
-  <div class="p">You can edit the <span class="ph">Data
+ <div class="body conbody">
+  <p class="p">You can edit the <span class="ph">Data
                   Collector</span>
-      environment file, sdc-env.sh, to add or update Java configuration options. The <span class="ph">Data
+      environment file to add or update Java configuration options. </p>
+
+    <p class="p">If you start the <span class="ph">Data
+                  Collector</span> manually,
+      use the following file: <span class="ph filepath">&lt;SDCinstalldir&gt;/libexec/sdc-env.sh</span></p>
+
+    <p class="p">If you start the <span class="ph">Data
+                  Collector</span> as a
+      service, use the following file:
+      <span class="ph filepath">&lt;SDCinstalldir&gt;/libexec/sdcd-env.sh</span></p>
+
+    <div class="p">The <span class="ph">Data
                   Collector</span>
       environment configuration file includes the following Java configuration options:<dl class="dl">
         
-          <dt class="dt dlterm">SDC_PRE_CLASSPATH</dt>
+          <dt class="dt dlterm">SDC_ROOT_CLASSPATH</dt>
 
-          <dd class="dd">Defines the path to Java classes that you can use in custom stages such as the
-            JavaScript or Jython Evaluator. Classes in this list load before those in the
-            post-classpath list.</dd>
-
-        
-        
-          <dt class="dt dlterm">SDC_POST_CLASSPATH</dt>
-
-          <dd class="dd">Defines the path to Java classes that you can call from custom stages such as the
-            JavaScript or Jython Evaluator. Classes in this list load after those in the
-            pre-classpath list.</dd>
+          <dd class="dd">Defines the path to jar files to be added to the <span class="ph">Data
+                  Collector</span> root
+            classloader. Use for components that must be in the root classloader, such as Snappy.
+          </dd>
 
         
         
@@ -173,9 +175,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="37.87878787878788%" id="d20881e275">Environment Configuration Property</th>
+                                <th class="entry" valign="top" width="37.87878787878788%" id="d21203e294">Environment Configuration Property</th>
 
-                                <th class="entry" valign="top" width="62.121212121212125%" id="d20881e278">Description</th>
+                                <th class="entry" valign="top" width="62.121212121212125%" id="d21203e297">Description</th>
 
                             </tr>
 
@@ -183,27 +185,27 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d20881e275 ">SDC_PRE_CLASSPATH</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d21203e294 ">SDC_PRE_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d20881e278 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d21203e297 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load before the
                                     post-classpath list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d20881e275 ">SDC_POST_CLASSPATH</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d21203e294 ">SDC_POST_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d20881e278 ">Path to a directory of Java classes that can be called by
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d21203e297 ">Path to a directory of Java classes that can be called by
                                     custom stages. Classes in this list load after the pre-classpath
                                     list.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d20881e275 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d21203e294 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d20881e278 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d21203e297 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -215,9 +217,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="37.87878787878788%" headers="d20881e275 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="37.87878787878788%" headers="d21203e294 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="62.121212121212125%" headers="d20881e278 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="62.121212121212125%" headers="d21203e297 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

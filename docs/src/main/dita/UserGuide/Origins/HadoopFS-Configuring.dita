@@ -75,10 +75,40 @@
                                             /> configuration file. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Hadoop FS Configuration <xref
-                                            href="HadoopFS-AdditionalProperties.dita">
+                                    <entry>Hadoop FS Configuration Directory  <xref
+                                        href="HadoopFS-HadoopProperties-origin.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_a3b_kzn_vs"
+                                                placement="inline" id="image_ocv_4qg_xs"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Directory for a local HDFS configuration files. To use
+                                            properties defined in the
+                                                <filepath>core-site.xml</filepath> and
+                                                <filepath>hdfs-site.xml</filepath> configuration
+                                            files, enter the directory where the files are located. </p>
+                                        <p>
+                                            <note>Properties in the configuration files are
+                                                overridden by individual properties defined in the
+                                                stage. </note>
+                                        </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>HDFS User  <xref href="HadoopFS-HDFSUser-origin.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_t3x_4qg_xs"
+                                        /></xref></entry>
+                                    <entry>The HDFS user to use to connect to HDFS. When using this
+                                        property, make sure HDFS is configured appropriately.<p>By
+                                            default, the pipeline uses the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user to connect to HDFS.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Hadoop FS Configuration  <xref
+                                            href="HadoopFS-HadoopProperties-origin.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_if3_4hl_xs"
                                         /></xref></entry>
                                     <entry>
                                         <p>Additional Hadoop configuration properties to use. To add

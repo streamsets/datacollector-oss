@@ -137,38 +137,6 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/AvroProps">
                 <cmd/>
             </step>
-            <step>
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
-                            <thead>
-                                <row>
-                                    <entry>Avro Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
-                                </row>
-                                <row>
-                                    <entry>Include Schema</entry>
-                                    <entry>Includes the schema in each Flume event. <note>Omitting
-                                            the schema definition can improve performance, but
-                                            requires the appropriate schema management to avoid
-                                            losing track of the schema associated with the
-                                            data.</note></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
         </steps>
     </taskbody>
 </task>

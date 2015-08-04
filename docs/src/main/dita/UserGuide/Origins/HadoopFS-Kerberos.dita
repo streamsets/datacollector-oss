@@ -16,4 +16,7 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
    file. </p>
  </conbody>
+ <related-links>
+  <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>
+ </related-links>
 </concept>

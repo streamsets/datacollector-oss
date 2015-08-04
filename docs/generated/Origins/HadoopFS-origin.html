@@ -22,8 +22,9 @@
    format for the data. You can configure the origin to read from all subdirectories and to generate
    a single record for records that include multiple objects. </p>
 
-  <p class="p">You can also use Kerberos authentication to connect to HDFS and add additional HDFS
-   configuration properties as needed. </p>
+    <p class="p">When necessary, you can enable Kerberos authentication or use an
+                  HDFS user to connect to HDFS. You can also use HDFS properties files and add other
+                  HDFS configuration properties as needed. </p>
 
  </div>
 
@@ -48,18 +49,74 @@
 
  </div>
 
+ <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to origin and destination systems, as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
 </div>
-<div class="topic concept nested1" id="concept_xyj_l1n_vs">
- <h2 class="title topictitle2">Additional HDFS Properties</h2>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_u4h_lwt_ls">
+ <h2 class="title topictitle2">Using an HDFS User</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can add custom HDFS configuration properties to the Hadoop FS origin.</p>
+ <div class="body conbody"><p class="shortdesc">You can configure the origin to use an HDFS user to write data to HDFS. By default,
+    Hadoop FS uses the <span class="ph">Data
+                  Collector</span> user. </p>
 
-  <p class="p">When you add the HDFS
-   configuration property, enter the exact property name and the value. The Hadoop FS origin does
-   not validate the property names or values.</p>
+  <p class="p">The <span class="ph">Data
+                  Collector</span> user is
+      the user who started the <span class="ph">Data
+                  Collector</span>. Or, when
+      using Kerberos, the <span class="ph">Data
+                  Collector</span> user is
+      the Kerberos principal. </p>
+
+  <div class="p">To use an HDFS user, perform the following tasks:<ol class="ol" id="concept_u4h_lwt_ls__ul_mb1_xpt_ls">
+    <li class="li">On HDFS, configure the <span class="ph">Data
+                  Collector</span> user as a
+     proxy user and authorize the <span class="ph">Data
+                  Collector</span> user to
+     impersonate the HDFS user. <p class="p">For more information, see the HDFS documentation. </p>
+</li>
+
+    <li class="li">In the Hadoop FS origin, enter the HDFS user name.</li>
+
+   </ol>
+</div>
 
  </div>
+
+</div>
+<div class="topic concept nested1" id="concept_xh5_y4d_br">
+ <h2 class="title topictitle2">Hadoop Properties and Configuration Files</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can configure the Hadoop origin to use HDFS properties. </p>
+
+        <div class="p">The Hadoop FS origin provides the following
+            options for using HDFS properties:<dl class="dl">
+                
+                    <dt class="dt dlterm">HDFS configuration files: core-site.xml and hdfs-site.xml</dt>
+
+                    <dd class="dd">You can store the core-site.xml and hdfs-site.xml configuration files in a
+                        directory local to the <span class="ph">Data
+                  Collector</span> and define the directory in the origin.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Individual properties</dt>
+
+                    <dd class="dd">You can configure individual HDFS properties in the origin. To add an HDFS
+                        property, you specify the exact property name and the value. The Hadoop FS
+                        origin does not validate the property names or values.<div class="note note"><span class="notetitle">Note:</span> Individual
+                            properties override properties defined in the HDFS configuration file.
+                        </div>
+</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
 
 </div>
 <div class="topic concept nested1" id="concept_jx4_zym_vs">
@@ -202,14 +259,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d2617e290" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d2775e290" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d27232e333">General Property</th>
+                                    <th class="entry" valign="top" width="24.509803921568626%" id="d27575e425">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d27232e336">Description</th>
+                                    <th class="entry" valign="top" width="75.49019607843137%" id="d27575e428">Description</th>
 
                                 </tr>
 
@@ -217,23 +274,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27232e333 ">Name</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27575e425 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27232e336 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27232e333 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27232e336 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27575e428 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27232e333 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27575e425 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27232e336 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d2617e337">
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27575e428 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27575e425 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27575e428 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d2775e337">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -264,9 +321,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="34.96503496503497%" id="d27232e408">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="34.96503496503497%" id="d27575e500">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="65.03496503496503%" id="d27232e411">Description</th>
+                                    <th class="entry" valign="top" width="65.03496503496503%" id="d27575e503">Description</th>
 
                                 </tr>
 
@@ -274,36 +331,36 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">HDFS URI. Include the HDFS scheme and authority as
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">HDFS URI. Include the HDFS scheme and authority as
                                         follows:
                                         <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Directory Path</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Directory Path</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">Directory for the data to be read. Include the HDFS
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">Directory for the data to be read. Include the HDFS
                                         scheme and authority in the path as follows:
                                             <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;/path</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Include All Subdirectories</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Include All Subdirectories</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">Reads from all directories within the specified directory
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">Reads from all directories within the specified directory
                                         path.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Data Format <a class="xref" href="HadoopFS.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_hgl_vgn_vs__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">
                                         <div class="p">Type of data to be read. Use one of the following
                                             options: <ul class="ul" id="task_hgl_vgn_vs__ul_czf_y14_vs">
                                                 <li class="li">Text</li>
@@ -320,18 +377,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">Generates a single record when a record includes multiple
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">Generates a single record when a record includes multiple
                                         objects. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Kerberos Authentication <a class="xref" href="HadoopFS.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
                                             <img class="image" id="task_hgl_vgn_vs__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file. </p>
@@ -340,10 +397,44 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27232e408 ">Hadoop FS Configuration <a class="xref" href="HadoopFS.html#concept_xyj_l1n_vs" title="You can add custom HDFS configuration properties to the Hadoop FS origin.">
-                                            <img class="image" id="task_hgl_vgn_vs__image_a3b_kzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop origin to use HDFS properties.">
+                                            <img class="image" id="task_hgl_vgn_vs__image_ocv_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27232e411 ">
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">
+                                        <p class="p">Directory for a local HDFS configuration files. To use
+                                            properties defined in the
+                                                <span class="ph filepath">core-site.xml</span> and
+                                                <span class="ph filepath">hdfs-site.xml</span> configuration
+                                            files, enter the directory where the files are located. </p>
+
+                                        <div class="p">
+                                            <div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are
+                                                overridden by individual properties defined in the
+                                                stage. </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">HDFS User  <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls" title="You can configure the origin to use an HDFS user to write data to HDFS. By default, Hadoop FS uses the Data Collector user.">
+                                            <img class="image" id="task_hgl_vgn_vs__image_t3x_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">The HDFS user to use to connect to HDFS. When using this
+                                        property, make sure HDFS is configured appropriately.<p class="p">By
+                                            default, the pipeline uses the <span class="ph">Data
+                  Collector</span> user to connect to HDFS.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27575e500 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop origin to use HDFS properties.">
+                                            <img class="image" id="task_hgl_vgn_vs__image_if3_4hl_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27575e503 ">
                                         <p class="p">Additional Hadoop configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the property name and value. </p>

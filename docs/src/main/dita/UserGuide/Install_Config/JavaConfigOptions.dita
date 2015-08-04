@@ -2,26 +2,29 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vrx_4fg_qr">
  <title>Java Configuration Options</title>
- <shortdesc/>
  <conbody>
   <p><indexterm>Java configuration options<indexterm>Data Collector environment
         file</indexterm></indexterm><indexterm>Data Collector<indexterm>Java configuration
-          options</indexterm></indexterm>You can edit the <ph
+          options</indexterm></indexterm><indexterm>SDC_ROOT_CLASSPATH<indexterm>Java configuration
+          option</indexterm></indexterm><indexterm>SDC_JAVA_OPTS<indexterm>Java configuration
+          option</indexterm></indexterm>You can edit the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      environment file, sdc-env.sh, to add or update Java configuration options. The <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      environment file to add or update Java configuration options. </p>
+    <p>If you start the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> manually,
+      use the following file: <filepath>&lt;SDCinstalldir>/libexec/sdc-env.sh</filepath></p>
+    <p>If you start the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
+      service, use the following file:
+      <filepath>&lt;SDCinstalldir>/libexec/sdcd-env.sh</filepath></p>
+    <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file includes the following Java configuration options:<dl>
         <dlentry>
-          <dt>SDC_PRE_CLASSPATH</dt>
-          <dd>Defines the path to Java classes that you can use in custom stages such as the
-            JavaScript or Jython Evaluator. Classes in this list load before those in the
-            post-classpath list.</dd>
-        </dlentry>
-        <dlentry>
-          <dt>SDC_POST_CLASSPATH</dt>
-          <dd>Defines the path to Java classes that you can call from custom stages such as the
-            JavaScript or Jython Evaluator. Classes in this list load after those in the
-            pre-classpath list.</dd>
+          <dt>SDC_ROOT_CLASSPATH</dt>
+          <dd>Defines the path to jar files to be added to the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> root
+            classloader. Use for components that must be in the root classloader, such as Snappy.
+          </dd>
         </dlentry>
         <dlentry>
           <dt>SDC_JAVA_OPTS</dt>

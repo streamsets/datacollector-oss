@@ -7,13 +7,14 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>using an HDFS user to write to
-    Hadoop</indexterm></indexterm>The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is the
-   user who started the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Or, when
-   using Kerberos, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is the
-   Kerberos principal. </p>
+        Hadoop</indexterm></indexterm>The <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is
+      the user who started the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. Or, when
+      using Kerberos, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user is
+      the Kerberos principal. <draft-comment author="Loretta">Make sure updates to this topic go
+        into the origin version of this file.</draft-comment></p>
   <p>To use an HDFS user, perform the following tasks:<ol id="ul_mb1_xpt_ls">
     <li>On HDFS, configure the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> user as a

@@ -78,7 +78,9 @@
                                         Use the following format:
                                             <codeph>&lt;host>:&lt;port></codeph>. <p>To use a
                                             ZooKeeper quorum, enter a comma-separated list.
-                                        </p></entry>
+                                            </p><p>To use a ZooKeeper chroot path, add the path at
+                                            the end of the list as
+                                            follows:<codeblock>&lt;host>:&lt;port>, &lt;host2>:&lt;port2>, .../&lt;chroot_path></codeblock></p></entry>
                                 </row>  <row>
                                     <entry>Consumer Group</entry>
                                     <entry>Kafka consumer group that the <ph

@@ -12,7 +12,11 @@
    Hadoop FS writes records to the directories based on the time basis as well.</p>
   <p>You can specify the amount of time that a record can be written to its associated directory and
       what happens to late records. </p>
-    <p>When necessary, you can enable Kerberos authentication. You can also implement HDFS
-      properties.</p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
+    <p>If you want to use Snappy or LZO compression to write to HDFS, make sure the configuration
+      requirements are complete. </p>
  </conbody>
+  <related-links>
+    <link href="Compression-Overview.dita#concept_h4y_ycm_xs"/>
+  </related-links>
 </concept>

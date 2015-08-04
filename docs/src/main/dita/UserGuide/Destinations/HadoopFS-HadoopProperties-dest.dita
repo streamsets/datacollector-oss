@@ -4,10 +4,11 @@
  <title>Hadoop Properties and Configuration Files</title>
     <shortdesc>You can configure the Hadoop destination to use HDFS properties. </shortdesc>
     <conbody>
-        <p><indexterm>Hadoop FS destination<indexterm>additional
-                properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop
-                    FS</indexterm></indexterm>The Hadoop FS destination provides the following
-            options for using HDFS properties:<dl>
+        <p><indexterm>Hadoop FS destination<indexterm>using or adding HDFS
+                properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop FS
+                    destination</indexterm></indexterm>The Hadoop FS destination provides the
+            following options for using HDFS properties:<draft-comment author="Loretta">Make sure
+                changes go into the origin version of this file.</draft-comment><dl>
                 <dlentry>
                     <dt>HDFS configuration files: core-site.xml and hdfs-site.xml</dt>
                     <dd>You can store the core-site.xml and hdfs-site.xml configuration files in a

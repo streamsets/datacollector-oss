@@ -11,8 +11,7 @@
      FS</indexterm></indexterm>When you configure Hadoop FS, you specify the directory path and data
    format for the data. You can configure the origin to read from all subdirectories and to generate
    a single record for records that include multiple objects. </p>
-  <p>You can also use Kerberos authentication to connect to HDFS and add additional HDFS
-   configuration properties as needed. </p>
+    <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
  </conbody>
   <related-links>
     <link href="../Cluster_Mode/Overview.dita#concept_hmh_kfn_1s"/>

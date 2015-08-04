@@ -2,10 +2,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_mdf_2rs_ns">
     <title>Configuring a MongoDB Origin</title>
-    <shortdesc>Configure a MongoDB origin to read data from MongoDB.</shortdesc>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>MongoDB origin<indexterm>configuring</indexterm></indexterm>Configure a
+                MongoDB origin to read data from MongoDB.</p>
         </context>
         <steps id="steps_kg4_jws_ns">
             <step

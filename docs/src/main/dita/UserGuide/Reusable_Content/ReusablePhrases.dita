@@ -162,5 +162,10 @@
             <p id="FilePrefix">By default, the files are prefixed with "SDC" and an expression that
                   returns the <ph conref="#concept_vhs_5tz_xp/pName-long"/> ID, but that's more than
                   we need here. </p>
+            <draft-comment author="Loretta">The following is used in HDFS origin and destination
+                  overviews:</draft-comment>
+            <p id="HDFS_user_props">When necessary, you can enable Kerberos authentication or use an
+                  HDFS user to connect to HDFS. You can also use HDFS properties files and add other
+                  HDFS configuration properties as needed. </p>
       </conbody>
 </concept>

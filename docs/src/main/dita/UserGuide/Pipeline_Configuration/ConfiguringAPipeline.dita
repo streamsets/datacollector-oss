@@ -147,10 +147,9 @@
                                                 the specified directory. </li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
-                                        </ul><p>For cluster mode, use Discard. Other options are not
-                                            supported at this time. <draft-comment author="Loretta"
-                                                >remove this after it's
-                                        fixed.</draft-comment></p></entry>
+                                        </ul><p>For cluster mode, use Discard or Write to Kafka.
+                                            Writing to file is not supported at this time.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

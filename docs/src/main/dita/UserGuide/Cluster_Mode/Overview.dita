@@ -9,9 +9,11 @@
     mode<indexterm>description</indexterm></indexterm><indexterm>standalone
      mode<indexterm>description</indexterm></indexterm>In standalone mode, a single <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> process runs
-   the pipeline. A pipeline runs in standalone mode by default. In cluster mode, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns
-   additional workers as needed. Use cluster mode to process data from a Kafka cluster or HDFS.</p>
+   the pipeline. A pipeline runs in standalone mode by default. </p>
+  <p>In cluster mode, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> utilizes YARN
+   and a cluster application to spawn additional workers as needed. Use cluster mode to process data
+   from a Kafka cluster or HDFS.</p>
   <p>When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to Kafka. And then use a
@@ -29,10 +31,9 @@
       data continuously until you stop the pipeline. </dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application within Spark Streaming, an open source cluster-computing application.
-      Within Spark Streaming, the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> spawns a
-       <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker
-      for each partition in the Kafka cluster. So each partition has a <ph
+      YARN and Spark Streaming spawn a <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
+      each partition in the Kafka cluster. So each partition has a <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
       process data. </dd>
      <dd>Use the Kafka Consumer origin to process data from Kafka in cluster mode.</dd>
@@ -44,8 +45,9 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
       all available data and then stops the pipeline. </dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      runs as an application on top of MapReduce, which generates additional worker nodes as needed.
-      MapReduce generates one map task for each HDFS block. </dd>
+      runs as an application on top of MapReduce, an open-source cluster-computing framework. YARN
+      and MapReduce generate additional worker nodes as needed. MapReduce creates one map task for
+      each HDFS block. </dd>
      <dd>Use the Hadoop FS origin to process data from HDFS in cluster mode.</dd>
     </dlentry>
    </dl></p>

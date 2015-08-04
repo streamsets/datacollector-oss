@@ -34,6 +34,17 @@
                                     <entry>HDFS URI.</entry>
                                 </row>
                                 <row>
+                                    <entry>HDFS User <xref href="HadoopFS-HDFSUser-dest.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_byg_yqg_xs"
+                                        /></xref></entry>
+                                    <entry>The HDFS user to use to connect to HDFS. When using this
+                                        property, make sure HDFS is configured appropriately.<p>By
+                                            default, the pipeline uses the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> user to connect to HDFS.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Kerberos Authentication<xref
                                             href="HadoopFS-Kerberos.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -47,7 +58,7 @@
                                 </row>
                                 <row>
                                     <entry>Hadoop FS Configuration Directory <xref
-                                            href="HadoopFS-HadoopProperties.dita">
+                                            href="HadoopFS-HadoopProperties-dest.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
                                     <entry>Directory for a local HDFS configuration files. To use
@@ -169,7 +180,12 @@
                                             <li>gzip</li>
                                             <li>bzip2</li>
                                             <li>Snappy</li>
-                                        </ul></entry>
+                                            <li>Other - use for LZO or other compression types.
+                                            </li>
+                                        </ul><p>LZO and Snappy compression require additional
+                                            configuration. For more information, see <xref
+                                                href="Compression-Overview.dita#concept_h4y_ycm_xs"
+                                            />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Sequence File Key</entry>

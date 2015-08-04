@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_a15_fcm_xs">
+ <title>Enabling LZO and Snappy Compression</title>
+ <conbody>
+  <p>The steps to enable compression differ based on the compression type and destinations that you
+      want to use them with:<dl>
+        <dlentry>
+          <dt>Using Snappy with the Hadoop FS or HBase destinations</dt>
+          <dd>You can use Snappy with one version of Hadoop FS or HBase. If you enable Snappy for
+            Hadoop FS and HBase, do not enable it for Cassandra. </dd>
+          <dd>To enable Snappy for Hadoop FS and HBase, perform the following steps:</dd>
+          <dd>
+            <ol id="ol_ufy_42m_xs">
+              <li>Verify the location of the libsnappy.so file.<p>With the Hadoop installation, the
+                  libsnappy.so file is generally installed in the following directory: <filepath>
+                    /usr/lib/hadoop/lib/native/</filepath>. </p><p>If the file is not installed at
+                  this location, see the documentation for your Hadoop distribution for the location
+                  of the file or instructions on how to install the file. For details, see the
+                  documentation for your Hadoop distribution.</p>If you have two versions of Hadoop
+                FS and HBase installed, make sure to locate the file for the version you want to
+                use. </li>
+              <li>In the <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                environment file, add the libsnappy.so directory to the SDC_JAVA_OPTS environment
+                variable. <p>For information about the SDC_JAVA_OPTS environment variable, see <xref
+                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
+            </ol>
+          </dd>
+        </dlentry>
+        <dlentry>
+          <dt>Using LZO with the Hadoop FS or HBase destinations</dt>
+          <dd>You can use LZO with one version of Hadoop FS or HBase. </dd>
+          <dd>To enable LZO for Hadoop FS and HBase, perform the following steps:<ol
+              id="ol_l3s_fjm_xs">
+              <li>If necessary, install the Hadoop LZO native library. <p>If you have two versions
+                  of Hadoop FS and HBase installed, make sure you install the version that you want
+                  to use. See the documentation for your Hadoop distribution for details. </p></li>
+              <li>In the <ph
+                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+                environment file, add the Hadoop LZO directory to the SDC_JAVA_OPTS environment
+                variable.</li>
+            </ol><p>For information about the SDC_JAVA_OPTS environment variable, see <xref
+                href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></dd>
+        </dlentry>
+        <dlentry>
+          <dt>Using Snappy with the Cassandra destination</dt>
+          <dd>
+            <draft-comment author="Loretta">come back to this. </draft-comment>
+          </dd>
+        </dlentry>
+      </dl></p>
+ </conbody>
+</concept>

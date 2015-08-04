@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_h4y_ycm_xs">
+ <title>LZO and Snappy Compression</title>
+ <shortdesc>You can use LZO or Snappy compression for Hadoop FS and HBase destinations. Or you can
+  use Snappy compression for Cassandra. </shortdesc>
+ <conbody>
+  <p>Note that due to JVM limitations, you cannot use Snappy for Cassandra and the Hadoop
+   destinations - you can use Snappy with Cassandra or with Hadoop FS and HBase. </p>
+  <p>In addition, JVM limitations allow you to use LZO or Snappy compression with only one version
+   of Hadoop FS and HBase. The Hadoop FS and HBase destinations are installed together in a library
+   version. If you installed multiple libraries, resulting in multiple versions of the destinations,
+   make sure to configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+   compression with the library that you want to use. </p>
+ </conbody>
+</concept>
