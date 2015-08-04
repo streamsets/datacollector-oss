@@ -29,6 +29,15 @@ public class UDPConsumingServer {
   private final List<ChannelFuture> channelFutures;
   private EventLoopGroup group;
 
+  static {
+    // required to fully disable direct buffers which
+    // while faster to allocate when shared, come with
+    // unpredictable limits
+    if (System.getProperty("io.netty.noUnsafe") == null) {
+      System.setProperty("io.netty.noUnsafe", "true");
+    }
+  }
+
   public UDPConsumingServer(List<InetSocketAddress> addresses, UDPConsumer udpConsumer) {
     this.addresses = ImmutableList.copyOf(addresses);
     this.udpConsumer = udpConsumer;
@@ -43,7 +52,7 @@ public class UDPConsumingServer {
         .channel(NioDatagramChannel.class)
         .handler(new UDPConsumingServerHandler(udpConsumer))
         .option(ChannelOption.SO_REUSEADDR, true)
-        .option(ChannelOption.ALLOCATOR, new PooledByteBufAllocator());
+        .option(ChannelOption.ALLOCATOR, new PooledByteBufAllocator()); // use on-heap buffers
       LOG.info("Starting server on address {}", address);
       ChannelFuture channelFuture = b.bind(address).sync();
       channelFutures.add(channelFuture);

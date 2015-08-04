@@ -105,7 +105,7 @@ public class TestUDPSource {
             getBytes(StandardCharsets.UTF_8);
           break;
         default:
-          Assert.fail("Uknown data format: " + dataFormat);
+          Assert.fail("Unknown data format: " + dataFormat);
       }
       for (String port : ports) {
         DatagramSocket clientSocket = new DatagramSocket();
@@ -125,7 +125,7 @@ public class TestUDPSource {
           Assert.assertEquals(String.valueOf(records), ports.size(), records.size());
           break;
         default:
-          Assert.fail("Uknown data format: " + dataFormat);
+          Assert.fail("Unknown data format: " + dataFormat);
       }
       output = runner.runProduce(null, 14);
       Assert.assertTrue(source.produceCalled);
@@ -138,7 +138,7 @@ public class TestUDPSource {
           Assert.assertEquals(String.valueOf(records), 0, records.size());
           break;
         default:
-          Assert.fail("Uknown data format: " + dataFormat);
+          Assert.fail("Unknown data format: " + dataFormat);
       }
       output = runner.runProduce(null, 1);
       Assert.assertTrue(source.produceCalled);
