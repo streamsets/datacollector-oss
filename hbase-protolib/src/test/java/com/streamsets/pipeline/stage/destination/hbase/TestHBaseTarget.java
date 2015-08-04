@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
@@ -689,4 +690,35 @@ public class TestHBaseTarget {
     testUser("foo");
   }
 
+  @Test(timeout=60000)
+  public void testClusterModeHbaseConfDirAbsPath() throws Exception {
+
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+
+    TargetRunner targetRunner =
+      new TargetRunner.Builder(HBaseDTarget.class)
+        .addConfiguration("zookeeperQuorum", "127.0.0.1")
+        .addConfiguration("clientPort", miniZK.getClientPort())
+        .addConfiguration("zookeeperParentZnode", "/hbase")
+        .addConfiguration("tableName", tableName)
+        .addConfiguration("hbaseRowKey", "[0]")
+        .addConfiguration("hbaseFieldColumnMapping",
+          ImmutableList.of(new HBaseFieldMappingConfig("cf:a", "[1]", StorageType.TEXT)))
+        .addConfiguration("kerberosAuth", false)
+        .addConfiguration("hbaseConfigs", new HashMap<String, String>())
+        .addConfiguration("hbaseUser", "")
+        .addConfiguration("hbaseConfDir", dir.getAbsolutePath())
+        .addConfiguration("rowKeyStorageType", StorageType.BINARY)
+      .setOnRecordError(OnRecordError.DISCARD)
+      .setClusterMode(true).build();
+
+    try {
+      targetRunner.runInit();
+      Assert.fail(Utils.format("Expected StageException as absolute hbaseConfDir path '{}' is specified in cluster mode",
+        dir.getAbsolutePath()));
+    } catch (StageException e) {
+      Assert.assertTrue(e.getMessage().contains("HBASE_24"));
+    }
+  }
 }

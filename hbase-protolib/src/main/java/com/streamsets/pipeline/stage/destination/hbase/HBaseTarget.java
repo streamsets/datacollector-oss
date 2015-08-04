@@ -118,24 +118,29 @@ public class HBaseTarget extends BaseTarget {
   private Configuration getHBaseConfiguration(List<ConfigIssue> issues) {
     Configuration hbaseConf = HBaseConfiguration.create();
     if (hbaseConfDir != null && !hbaseConfDir.isEmpty()) {
-    File hbaseConfigDir = new File(hbaseConfDir);
-      if (!hbaseConfigDir.isAbsolute()) {
-        hbaseConfigDir = new File(getContext().getResourcesDirectory(), hbaseConfDir).getAbsoluteFile();
-      }
-      if (!hbaseConfigDir.exists()) {
-        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_19,
-          hbaseConfDir));
-      } else if (!hbaseConfigDir.isDirectory()) {
-        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_20,
-          hbaseConfDir));
+      File hbaseConfigDir = new File(hbaseConfDir);
+      if(getContext().isClusterMode() && hbaseConfigDir.isAbsolute()) {
+        //Do not allow absolute hdfs config directory in cluster mode
+        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_24, hbaseConfDir));
       } else {
-        File hbaseSiteXml = new File(hbaseConfigDir, "hbase-site.xml");
-        if (hbaseSiteXml.exists()) {
-          if (!hbaseSiteXml.isFile()) {
-            issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_21,
-              hbaseConfDir, "hbase-site.xml"));
+        if (!hbaseConfigDir.isAbsolute()) {
+          hbaseConfigDir = new File(getContext().getResourcesDirectory(), hbaseConfDir).getAbsoluteFile();
+        }
+        if (!hbaseConfigDir.exists()) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_19,
+            hbaseConfDir));
+        } else if (!hbaseConfigDir.isDirectory()) {
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_20,
+            hbaseConfDir));
+        } else {
+          File hbaseSiteXml = new File(hbaseConfigDir, "hbase-site.xml");
+          if (hbaseSiteXml.exists()) {
+            if (!hbaseSiteXml.isFile()) {
+              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_21,
+                hbaseConfDir, "hbase-site.xml"));
+            }
+            hbaseConf.addResource(new Path(hbaseSiteXml.getAbsolutePath()));
           }
-          hbaseConf.addResource(new Path(hbaseSiteXml.getAbsolutePath()));
         }
       }
     }

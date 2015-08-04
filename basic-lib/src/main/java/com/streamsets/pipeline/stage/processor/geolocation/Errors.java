@@ -19,7 +19,8 @@ public enum Errors implements ErrorCode {
   GEOIP_06("String IP addresses must be dot delimited [0-9].[0-9].[0-9].[0-9] or an integer: '{}'"),
   GEOIP_07("Unknown error occurred during initialization: '{}'"),
   GEOIP_08("Input field name is empty"),
-  GEOIP_09("Output field name is empty")
+  GEOIP_09("Output field name is empty"),
+  GEOIP_10("Database file '{}' must be relative to SDC resources directory in cluster mode"),
   ;
 
 

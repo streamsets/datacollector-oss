@@ -9,8 +9,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -23,13 +25,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.io.File;
 
 public class TestGeolocationProcessor {
 
@@ -145,6 +147,31 @@ public class TestGeolocationProcessor {
       Assert.assertEquals("United States", Utils.checkNotNull(result.get("stringIpCountry"), "stringIpCountry").getValue());
     } finally {
       runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testClusterModeHadoopDbFileAbsPath() {
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ipAsInt";
+    config.outputFieldName = "/intIpCountry";
+    config.targetType = GeolocationField.COUNTRY_NAME;
+    configs.add(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+      .addConfiguration("fieldTypeConverterConfigs", configs)
+      .setClusterMode(true)
+      .addOutputLane("a").build();
+    try {
+      runner.runInit();
+      Assert.fail(Utils.format("Expected StageException as absolute database file path '{}' is specified in cluster mode",
+        databaseFile.getAbsolutePath()));
+    } catch (StageException e) {
+      Assert.assertTrue(e.getMessage().contains("GEOIP_10"));
     }
   }
 }

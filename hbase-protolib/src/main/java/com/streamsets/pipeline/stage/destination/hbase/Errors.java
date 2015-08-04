@@ -35,6 +35,7 @@ public enum Errors implements ErrorCode {
     "property to the HBase master principal name: {}"),
   HBASE_23("Could not resolve the default Kerberos realm, you must set the 'hbase.regionserver.kerberos.principal' " +
     "property to the HBase Regionserver principal name: {}"),
+  HBASE_24("HBase Configuration Directory '{}' must be relative to SDC resources directory in cluster mode"),
   ;
   private final String msg;
 

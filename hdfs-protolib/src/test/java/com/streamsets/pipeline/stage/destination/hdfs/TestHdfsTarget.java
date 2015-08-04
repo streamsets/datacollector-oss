@@ -8,6 +8,8 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.configurablestage.DStage;
@@ -209,4 +211,40 @@ public class TestHdfsTarget {
     Assert.assertFalse(runner.runValidateConfigs().isEmpty());
   }
 
+  @Test
+  public void testClusterModeHadoopConfDirAbsPath() {
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .addConfiguration("hdfsUri", "file:///")
+      .addConfiguration("hdfsUser", "foo")
+      .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", testDir)
+      .addConfiguration("hdfsConfigs", new HashMap<>())
+      .addConfiguration("uniquePrefix", "foo")
+      .addConfiguration("dirPathTemplate", getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}")
+      .addConfiguration("timeZoneID", "UTC")
+      .addConfiguration("fileType", HdfsFileType.TEXT)
+      .addConfiguration("keyEl", "${uuid()}")
+      .addConfiguration("compression", CompressionMode.NONE)
+      .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
+      .addConfiguration("maxRecordsPerFile", 5)
+      .addConfiguration("maxFileSize", 0)
+      .addConfiguration("timeDriver", "${record:value('/time')}")
+      .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
+      .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_ERROR)
+      .addConfiguration("lateRecordsDirPathTemplate", "")
+      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+      .addConfiguration("csvFileFormat", null)
+      .addConfiguration("csvReplaceNewLines", false)
+      .addConfiguration("charset", "UTF-8")
+      .setClusterMode(true)
+      .build();
+    try {
+      runner.runInit();
+      Assert.fail(Utils.format("Expected StageException as absolute hdfsConfDir path '{}' is specified in cluster mode",
+        testDir));
+    } catch (StageException e) {
+      Assert.assertTrue(e.getMessage().contains("HADOOPFS_45"));
+    }
+  }
 }

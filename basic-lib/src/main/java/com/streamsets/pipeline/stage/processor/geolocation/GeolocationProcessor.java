@@ -6,10 +6,11 @@
 package com.streamsets.pipeline.stage.processor.geolocation;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.base.Throwables;
+import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
@@ -19,21 +20,17 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.File;
-import java.util.concurrent.ExecutionException;
-
-import com.maxmind.geoip2.DatabaseReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class GeolocationProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(GeolocationProcessor.class);
@@ -62,44 +59,49 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> result = super.init();
     File database = new File(geoIP2DBFile);
-    if (!database.isAbsolute()) {
-      database = new File(getContext().getResourcesDirectory(), geoIP2DBFile).getAbsoluteFile();
-    }
-    if (database.isFile()) {
-      try {
-        reader = new DatabaseReader.Builder(database).build();
-        for (GeolocationFieldConfig config : configs) {
-          try {
-            switch (config.targetType) {
-              case COUNTRY_NAME:
-              case COUNTRY_ISO_CODE:
-                reader.country(KNOWN_GOOD_ADDRESS);
-                break;
-              case CITY_NAME:
-              case LATITUDE:
-              case LONGITUDE:
-                reader.city(KNOWN_GOOD_ADDRESS);
-                break;
-              default:
-                throw new IllegalStateException(Utils.format("Unknown configuration value: ", config.targetType));
-            }
-          } catch (UnsupportedOperationException ex) {
-            result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_05,
-              config.targetType.name()));
-            LOG.info(Utils.format(Errors.GEOIP_05.getMessage(), config.targetType.name()), ex);
-          } catch (GeoIp2Exception ex) {
-            result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_07,
-              ex));
-            LOG.error(Utils.format(Errors.GEOIP_07.getMessage(), ex), ex);
-          }
-        }
-      } catch (IOException ex) {
-        result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_01, database.getPath(),
-          ex));
-        LOG.info(Utils.format(Errors.GEOIP_01.getMessage(), ex), ex);
-      }
+    if(getContext().isClusterMode() && database.isAbsolute()) {
+      //Do not allow absolute geoIP2DBFile in cluster mode
+      result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_10, geoIP2DBFile));
     } else {
-      result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_00, geoIP2DBFile));
+      if (!database.isAbsolute()) {
+        database = new File(getContext().getResourcesDirectory(), geoIP2DBFile).getAbsoluteFile();
+      }
+      if (database.isFile()) {
+        try {
+          reader = new DatabaseReader.Builder(database).build();
+          for (GeolocationFieldConfig config : configs) {
+            try {
+              switch (config.targetType) {
+                case COUNTRY_NAME:
+                case COUNTRY_ISO_CODE:
+                  reader.country(KNOWN_GOOD_ADDRESS);
+                  break;
+                case CITY_NAME:
+                case LATITUDE:
+                case LONGITUDE:
+                  reader.city(KNOWN_GOOD_ADDRESS);
+                  break;
+                default:
+                  throw new IllegalStateException(Utils.format("Unknown configuration value: ", config.targetType));
+              }
+            } catch (UnsupportedOperationException ex) {
+              result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_05,
+                config.targetType.name()));
+              LOG.info(Utils.format(Errors.GEOIP_05.getMessage(), config.targetType.name()), ex);
+            } catch (GeoIp2Exception ex) {
+              result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_07,
+                ex));
+              LOG.error(Utils.format(Errors.GEOIP_07.getMessage(), ex), ex);
+            }
+          }
+        } catch (IOException ex) {
+          result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_01, database.getPath(),
+            ex));
+          LOG.info(Utils.format(Errors.GEOIP_01.getMessage(), ex), ex);
+        }
+      } else {
+        result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_00, geoIP2DBFile));
+      }
     }
     if (configs.isEmpty()) {
       result.add(getContext().createConfigIssue("GEOLOCATION", "fieldTypeConverterConfigs", Errors.GEOIP_04));

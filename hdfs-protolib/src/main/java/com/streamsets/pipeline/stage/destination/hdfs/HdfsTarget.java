@@ -284,31 +284,37 @@ public class HdfsTarget extends RecordTarget {
     }
     if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
       File hadoopConfigDir = new File(hadoopConfDir);
-      if (!hadoopConfigDir.isAbsolute()) {
-        hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
-      }
-      if (!hadoopConfigDir.exists()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
-                                                  hadoopConfDir));
-      } else if (!hadoopConfigDir.isDirectory()) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
-                                                  hadoopConfDir));
+      if(getContext().isClusterMode() && hadoopConfigDir.isAbsolute()) {
+        //Do not allow absolute hadoop config directory in cluster mode
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_45,
+          hadoopConfDir));
       } else {
-        File coreSite = new File(hadoopConfigDir, "core-site.xml");
-        if (coreSite.exists()) {
-          if (!coreSite.isFile()) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-                                                      hadoopConfDir, "core-site.xml"));
-          }
-          conf.addResource(new Path(coreSite.getAbsolutePath()));
+        if (!hadoopConfigDir.isAbsolute()) {
+          hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
         }
-        File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
-        if (hdfsSite.exists()) {
-          if (!hdfsSite.isFile()) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
-                                                      hadoopConfDir, "hdfs-site.xml"));
+        if (!hadoopConfigDir.exists()) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_25,
+            hadoopConfDir));
+        } else if (!hadoopConfigDir.isDirectory()) {
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_26,
+            hadoopConfDir));
+        } else {
+          File coreSite = new File(hadoopConfigDir, "core-site.xml");
+          if (coreSite.exists()) {
+            if (!coreSite.isFile()) {
+              issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+                hadoopConfDir, "core-site.xml"));
+            }
+            conf.addResource(new Path(coreSite.getAbsolutePath()));
           }
-          conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+          File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
+          if (hdfsSite.exists()) {
+            if (!hdfsSite.isFile()) {
+              issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_27,
+                hadoopConfDir, "hdfs-site.xml"));
+            }
+            conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+          }
         }
       }
     }
