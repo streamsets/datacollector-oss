@@ -199,18 +199,22 @@
       <scope>test</scope>
     </dependency>
 
-     <dependency>
+    <dependency>
       <groupId>org.apache.hbase</groupId>
       <artifactId>hbase-client</artifactId>
       <version>${hbase.version}</version>
       <scope>compile</scope>
       <exclusions>
-      <exclusion>
+        <exclusion>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-core</artifactId>
-      </exclusion>
+        </exclusion>
+        <exclusion>
+          <groupId>com.github.stephenc.findbugs</groupId>
+          <artifactId>findbugs-annotations</artifactId>
+        </exclusion>
       </exclusions>
-     </dependency>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.hbase</groupId>
