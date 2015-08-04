@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
+import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FileSystem;
@@ -197,6 +198,11 @@ public class HdfsTarget extends RecordTarget {
         default:
           compressionCodec = compression.getCodec().newInstance();
           break;
+      }
+      if (compressionCodec != null) {
+        if (compressionCodec instanceof Configurable) {
+          ((Configurable) compressionCodec).setConf(hdfsConfiguration);
+        }
       }
       if(validHadoopDir) {
         RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
