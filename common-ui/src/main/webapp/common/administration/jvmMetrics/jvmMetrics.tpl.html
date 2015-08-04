@@ -35,7 +35,7 @@
           </li>
 
           <li role="presentation" ng-if="!$storage.dontShowRESTResponseMenu && isAuthorized(userRoles.admin)">
-            <a role="menuitem" tabindex="-1" href="/rest/v1/admin/threadsDump"
+            <a role="menuitem" tabindex="-1" href="/rest/v1/system/threads"
                target="_blank">{{'jvmMetrics.threads.threadDump' | translate}}</a>
           </li>
 
@@ -60,22 +60,6 @@
           <div class="panel-body">
 
             <nvd3 options="chartOptions" data="chart.values" config="{ refreshDataOnly: false }"></nvd3>
-
-            <!--nvd3-line-chart
-              objectequality="true"
-              data="chart.values"
-              id="{{chart.name}}id"
-              height="200"
-              isArea="false"
-              xAxisTickFormat="chart.xAxisTickFormat"
-              yAxisTickFormat="chart.yAxisTickFormat"
-              showXAxis="true"
-              showYAxis="true"
-              showLegend="true"
-              tooltips="true"
-              margin="{left:50,top:20,bottom:40,right:40}">
-              <svg></svg>
-            </nvd3-line-chart-->
 
             <ul class="properties">
               <li ng-repeat="value in chart.values">

@@ -73,7 +73,7 @@ public class PreviewResource {
 
   @Path("/pipeline/{pipelineName}/preview")
   @POST
-  @ApiOperation(value = "Run Pipeline preview by overriding passed stage instance data and get preview data",
+  @ApiOperation(value = "Run Pipeline preview",
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })

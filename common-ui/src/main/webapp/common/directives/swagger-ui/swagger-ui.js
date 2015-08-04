@@ -13,7 +13,7 @@ angular
 
 		return {
 			restrict: 'A',
-			controller: 'swaggerUiController',
+			controller: 'SwaggerUiController',
 			templateUrl: 'common/directives/swagger-ui/swagger-ui.tpl.html',
 			scope: {
 				url: '=',
@@ -23,7 +23,7 @@ angular
 			}
 		};
 	})
-	.controller('swaggerUiController', ['$scope', '$http', '$sce', '$location', 'swaggerModel', 'swaggerClient',
+	.controller('SwaggerUiController', ['$scope', '$http', '$sce', '$location', 'swaggerModel', 'swaggerClient',
 		function($scope, $http, $sce, $location, swaggerModel, swaggerClient) {
 
 			var swagger;
