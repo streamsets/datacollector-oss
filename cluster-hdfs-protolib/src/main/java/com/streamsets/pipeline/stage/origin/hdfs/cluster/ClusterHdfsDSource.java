@@ -41,7 +41,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Hadoop FS URI",
-    description = "",
+    description = "Include the HDFS scheme and authority: hdfs://<authority>:<port>",
     displayPosition = 10,
     group = "HADOOP_FS"
   )
@@ -51,8 +51,8 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     required = false,
     type = ConfigDef.Type.LIST,
     defaultValue = "[]",
-    label = "Directory path",
-    description = "Path of input directory on hdfs, should include scheme and authority ",
+    label = "Directory Path",
+    description = "HDFS directory path",
     displayPosition = 10,
     group = "HADOOP_FS"
   )
@@ -61,9 +61,9 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    label = "Recursive",
+    label = "Include All Subdirectories",
     defaultValue = "true",
-    description = "Recursively read files from input directory",
+    description = "Reads all subdirectories within the directory path",
     displayPosition = 20,
     group = "HADOOP_FS"
   )
@@ -73,7 +73,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
-    description = "The data format in the files (IMPORTANT: if Log, Log4j files with stack traces are not handled)",
+    description = "Data format",
     displayPosition = 30,
     group = "HADOOP_FS"
    )
@@ -133,7 +133,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     type = ConfigDef.Type.MODEL,
     defaultValue = "COMMON_LOG_FORMAT",
     label = "Log Format",
-    description = "",
+    description = "Log format. Stack traces are not supported for Log4j",
     displayPosition = 70,
     group = "LOG",
     dependsOn = "dataFormat",
