@@ -45,7 +45,9 @@ public class TestKafkaOriginMultiPartitionPipelineOperations extends TestPipelin
 
   @AfterClass
   public static void afterClass() throws Exception {
-    executorService.shutdownNow();
+    if (executorService != null) {
+      executorService.shutdownNow();
+    }
     KafkaTestUtil.shutdown();
     TestPipelineOperationsStandalone.afterClass();
   }

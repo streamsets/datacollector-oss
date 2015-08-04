@@ -6,6 +6,7 @@
 
 package com.streamsets.datacollector;
 
+import com.google.common.base.Splitter;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineInfo;
@@ -17,8 +18,10 @@ import com.streamsets.datacollector.main.MainSlavePipelineManagerModule;
 import com.streamsets.datacollector.main.PipelineTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
+import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.impl.DataCollector;
 
@@ -27,10 +30,12 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -73,13 +78,18 @@ public class EmbeddedDataCollector implements DataCollector {
   }
 
   @Override
-  public void init() {
+  public void init() throws Exception {
     final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    LOG.info("Entering Embedded SDC with ClassLoader: " + classLoader);
-    LOG.info("Java classpath is " + System.getProperty("java.class.path"));
+    LOG.info("Entering SDC with ClassLoader: " + Thread.currentThread().getContextClassLoader());
+    LOG.info("Java classpath");
+    for (String entry : Splitter.on(File.pathSeparator).omitEmptyStrings().
+      split(System.getProperty("java.class.path"))) {
+      LOG.info(entry);
+    }
+
     dagger = ObjectGraph.create(MainSlavePipelineManagerModule.class);
     task = dagger.get(TaskWrapper.class);
-    pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
+    pipelineTask = (PipelineTask) ((TaskWrapper) task).getTask();
     pipelineName = pipelineTask.getName();
     pipelineManager = pipelineTask.getManager();
     runtimeInfo = dagger.get(RuntimeInfo.class);
@@ -95,53 +105,73 @@ public class EmbeddedDataCollector implements DataCollector {
     LOG.info("-----------------------------------------------------------------");
     LOG.info("Starting ...");
 
-    task.init();
-    final Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+    SecurityContext securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
+    securityContext.login();
+
+    LOG.info("-----------------------------------------------------------------");
+    LOG.info("  Kerberos enabled: {}", securityContext.getSecurityConfiguration().isKerberosEnabled());
+    if (securityContext.getSecurityConfiguration().isKerberosEnabled()) {
+      LOG.info("  Kerberos principal: {}", securityContext.getSecurityConfiguration().getKerberosPrincipal());
+      LOG.info("  Kerberos keytab: {}", securityContext.getSecurityConfiguration().getKerberosKeytab());
+    }
+    LOG.info("-----------------------------------------------------------------");
+    LOG.info("Starting ...");
+
+    Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
       @Override
-      public void run() {
-        LOG.debug("Stopping, reason: SIGTERM (kill)");
-        task.stop();
-      }
-    };
-    shutdownHookThread.setContextClassLoader(classLoader);
-    Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-    dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
-      @Override
-      public void run() {
-        LOG.debug("Stopping, reason: requested");
-        task.stop();
+      public Void run() throws Exception {
+        task.init();
+        final Thread shutdownHookThread = new Thread("Main.shutdownHook") {
+          @Override
+          public void run() {
+            LOG.debug("Stopping, reason: SIGTERM (kill)");
+            task.stop();
+          }
+        };
+        shutdownHookThread.setContextClassLoader(classLoader);
+        Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+        dagger.get(RuntimeInfo.class).setShutdownHandler(new Runnable() {
+          @Override
+          public void run() {
+            LOG.debug("Stopping, reason: requested");
+            task.stop();
+          }
+        });
+        task.run();
+
+        // this thread waits until the pipeline is shutdown
+        waitingThread = new Thread() {
+          @Override
+          public void run() {
+            try {
+              task.waitWhileRunning();
+              try {
+                Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
+              } catch (IllegalStateException ignored) {
+                // thrown when we try and remove the shutdown
+                // hook but it is already running
+              }
+              LOG.debug("Stopping, reason: programmatic stop()");
+            } catch (Throwable throwable) {
+              String msg = "Error running pipeline: " + throwable;
+              LOG.error(msg, throwable);
+            }
+          }
+        };
+        waitingThread.setContextClassLoader(classLoader);
+        waitingThread.setName("Pipeline-" + pipelineName);
+        waitingThread.setDaemon(true);
+        waitingThread.start();
+        return null;
       }
     });
-    task.run();
-
-    // this thread waits until the pipeline is shutdown
-    waitingThread = new Thread() {
-      @Override
-      public void run() {
-        try {
-          task.waitWhileRunning();
-          try {
-            Runtime.getRuntime().removeShutdownHook(shutdownHookThread);
-          } catch (IllegalStateException ignored) {
-          }
-          LOG.debug("Stopping, reason: programmatic stop()");
-        } catch(Throwable throwable) {
-          String msg = "Error running pipeline: " + throwable;
-          LOG.error(msg, throwable);
-        }
-      }
-    };
-    waitingThread.setContextClassLoader(classLoader);
-    waitingThread.setName("Pipeline-" + pipelineName);
-    waitingThread.setDaemon(true);
-    waitingThread.start();
   }
 
   @Override
   public URI getServerURI() {
     URI serverURI;
     try {
-      serverURI =  pipelineTask.getWebServerTask().getServerURI();
+      serverURI = pipelineTask.getWebServerTask().getServerURI();
     } catch (ServerNotYetRunningException ex) {
       throw new RuntimeException("Cannot retrieve URI of server" + ex.toString(), ex);
     }
@@ -154,7 +184,7 @@ public class EmbeddedDataCollector implements DataCollector {
   }
 
   public Pipeline getPipeline() {
-    return ((PipelineInfo)runner).getPipeline();
+    return ((PipelineInfo) runner).getPipeline();
   }
 
   @Override

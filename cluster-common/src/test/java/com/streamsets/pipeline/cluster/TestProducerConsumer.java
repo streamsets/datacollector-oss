@@ -103,8 +103,8 @@ public class TestProducerConsumer {
     Assert.assertEquals(ControlChannel.MessageType.PRODUCER_ERROR, consumerMessage.getType());
     Assert.assertSame(producerError, consumerMessage.getPayload());
     controlChannel.producerError(producerError);
-    take(true); // error thrown
-    Assert.assertSame(producerError, getError(take(true))); // should now return null immediately
+    Assert.assertSame(producerError, getError(take(true)));
+    Assert.assertSame(producerError, getError(take(true)));
   }
 
   private Throwable getError(Future future) throws InterruptedException {
@@ -125,6 +125,9 @@ public class TestProducerConsumer {
       @Override
       public List<Map.Entry> call() throws Exception {
         OffsetAndResult<Map.Entry> result = consumer.take();
+        if (result == null) {
+          throw new NullPointerException("result");
+        }
         if (commit) {
           consumer.commit(String.valueOf(result.getOffset()));
         }

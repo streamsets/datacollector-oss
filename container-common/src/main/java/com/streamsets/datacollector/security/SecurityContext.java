@@ -154,7 +154,7 @@ public class SecurityContext {
       } else {
         options.put("ticketCache", new File(runtimeInfo.getDataDir(), "krb5.ticketCache").getAbsolutePath());
       }
-      options.put("debug", System.getProperty("sun.security.krb5.debug=true", "false"));
+      options.put("debug", System.getProperty("sun.security.krb5.debug", "false"));
 
       return new AppConfigurationEntry[]{
           new AppConfigurationEntry(getJvmKrb5LoginModuleName(), AppConfigurationEntry.LoginModuleControlFlag.REQUIRED,
