@@ -19,9 +19,11 @@ import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.zk.EmbeddedZookeeper;
+
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -33,6 +35,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -443,6 +446,7 @@ public class TestKafkaTargetSinglePartition {
 
   }
 
+  @Ignore
   @Test
   /**
    * Tests runtime topic resolution from record where topics resolved are part of the white list.
