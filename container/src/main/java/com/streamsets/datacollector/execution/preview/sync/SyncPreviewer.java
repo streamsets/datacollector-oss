@@ -136,13 +136,14 @@ public class SyncPreviewer implements Previewer {
     int bytesToRead = configuration.get(MAX_SOURCE_PREVIEW_SIZE_KEY, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
     bytesToRead = Math.min(bytesToRead, maxLength);
     RawSourcePreviewer rawSourcePreviewer = createRawSourcePreviewer(previewParams);
-    BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead);
-    changeState(PreviewStatus.FINISHED, null);
-    try {
-      return new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
+    RawPreview rawPreview;
+    try(BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead)) {
+      rawPreview = new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
     } catch (IOException ex) {
       throw new PipelineRuntimeException(PreviewError.PREVIEW_0003, ex.toString(), ex);
     }
+    changeState(PreviewStatus.FINISHED, null);
+    return rawPreview;
   }
 
   @Override
