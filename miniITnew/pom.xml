@@ -15,10 +15,10 @@
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-miniIT</artifactId>
+  <artifactId>streamsets-datacollector-miniITnew</artifactId>
   <version>1.0.0RC1</version>
   <description>StreamSets Data Collector Mini Integration Test</description>
-  <name>StreamSets Data Collector Mini Integration Test</name>
+  <name>StreamSets Data Collector Mini Integration Test New</name>
   <packaging>jar</packaging>
 
   <properties>
