@@ -204,18 +204,16 @@
           tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER"
-          ng-show="isPipelineRunning && !snapshotMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER && isPipelineRunning && !snapshotMode"
           ng-click="viewSnapshots()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
 
-      <a class="btn btn-danger btn-link icon-button"
+      <a class="btn btn-link icon-button-danger"
           tooltip-placement="bottom" tooltip="{{'home.header.closeSnapshot' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-          ng-show="snapshotMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && snapshotMode"
           ng-click="closeSnapshot()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>
@@ -224,19 +222,17 @@
           tooltip-placement="bottom" tooltip="{{'home.header.preview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-hide="isPipelineRunning || previewMode || snapshotMode"
-          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && !(isPipelineRunning || previewMode || snapshotMode)"
           ng-disabled="!pipelineConfig.previewable"
           ng-click="!pipelineConfig.previewable || previewPipeline()">
         <span class="glyphicon glyphicon-eye-open fa-14x"></span>
       </a>
 
-      <a class="btn btn-danger btn-link icon-button"
+      <a class="btn btn-link icon-button-danger"
           tooltip-placement="bottom" tooltip="{{'home.header.closePreview' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-show="previewMode"
-          ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
+          ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && previewMode"
           ng-click="closePreview()">
         <span class="glyphicon glyphicon-eye-close fa-14x"></span>
       </a>
@@ -257,14 +253,13 @@
           tooltip-placement="bottom" tooltip="{{'home.header.start' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-hide="isPipelineRunning || previewMode || snapshotMode"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && !(isPipelineRunning || previewMode || snapshotMode)"
           ng-disabled="!pipelineConfig.valid"
-          ng-click="!pipelineConfig.valid || startPipeline()">
+          ng-click="!pipelineConfig.valid || startPipeline(); ">
         <span class="glyphicon glyphicon-play fa-14x"></span>
       </a>
 
-      <a class="btn btn-danger btn-link icon-button"
+      <a class="btn btn-link icon-button-danger"
           tooltip-placement="bottom" tooltip="{{'home.header.stop' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
