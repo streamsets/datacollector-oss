@@ -13,7 +13,6 @@ import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
-import com.streamsets.datacollector.definition.ConfigDefinitionExtractor;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
@@ -451,31 +450,40 @@ public abstract class PipelineBeanCreator {
     } else {
       boolean error = false;
       List<Object> list = new ArrayList<>();
-      Class klass = configDef.getModel().getComplexFieldClass();
-      List listValue = (List) value;
-      for (int i = 0; i < listValue.size(); i++) {
-        Map<String, Object> configElement;
-        try {
-          configElement = (Map<String, Object>) listValue.get(i);
+      try {
+        // we need to use the classloader fo the stage to instatiate the ComplexField so if the stage has a private
+        // classloader we use the same one.
+        Class klass = Thread.currentThread().getContextClassLoader()
+                            .loadClass(configDef.getModel().getComplexFieldClass().getName());
+        List listValue = (List) value;
+        for (int i = 0; i < listValue.size(); i++) {
+          Map<String, Object> configElement;
           try {
-            Object element = klass.newInstance();
-            if (createConfigBeans(element, configDef.getName() + ".", stageDef, stageConf.getInstanceName(), errors)) {
-              injectConfigs(element, configElement, "", configDef.getModel().getConfigDefinitionsAsMap(), stageDef,
-                            stageConf, pipelineConstants, errors);
-              list.add(element);
+            configElement = (Map<String, Object>) listValue.get(i);
+            try {
+              Object element = klass.newInstance();
+              if (createConfigBeans(element, configDef.getName() + ".", stageDef, stageConf.getInstanceName(), errors)) {
+                injectConfigs(element, configElement, "", configDef.getModel().getConfigDefinitionsAsMap(), stageDef,
+                              stageConf, pipelineConstants, errors);
+                list.add(element);
+              }
+            } catch (InstantiationException | IllegalAccessException ex) {
+              errors.add(issueCreator.create(configDef.getGroup(), Utils.format("{}[{}]", configConf.getName(), i),
+                                             CreationError.CREATION_041, klass.getSimpleName(), ex.toString()));
+              error = true;
+              break;
             }
-          } catch (InstantiationException | IllegalAccessException ex) {
+          } catch (ClassCastException ex) {
             errors.add(issueCreator.create(configDef.getGroup(), Utils.format("{}[{}]", configConf.getName(), i),
-                                 CreationError.CREATION_041, klass.getSimpleName(), ex.toString()));
-            error = true;
-            break;
+                                           CreationError.CREATION_042, ex.toString()));
           }
-        } catch (ClassCastException ex) {
-          errors.add(issueCreator.create(configDef.getGroup(), Utils.format("{}[{}]", configConf.getName(), i),
-                               CreationError.CREATION_042, ex.toString()));
         }
+        value = (error) ? null : list;
+      } catch (ClassNotFoundException ex) {
+        value = null;
+        errors.add(issueCreator.create(configDef.getGroup(), configConf.getName(), CreationError.CREATION_043,
+                                       ex.toString()));
       }
-      value = (error) ? null : list;
     }
     return value;
   }

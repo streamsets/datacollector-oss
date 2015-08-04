@@ -20,7 +20,7 @@ public class TestBlackListURLClassLoader {
   public void testToStringAndName() {
     BlackListURLClassLoader cl = new BlackListURLClassLoader("test", "foo", Collections.EMPTY_LIST, getClass().getClassLoader(),
                                                              null);
-    Assert.assertTrue(cl.toString().startsWith("BlackListURLClassLoader test 'foo' :"));
+    Assert.assertEquals("BlackListURLClassLoader[type=test name=foo]", cl.toString());
     Assert.assertEquals("foo", cl.getName());
   }
 

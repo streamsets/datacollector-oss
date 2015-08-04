@@ -121,11 +121,6 @@ public class SyncPreviewer implements Previewer {
     } catch (StageException e) {
       //Wrap stage exception in PipelineException
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
-    }  finally {
-      if(previewPipeline != null) {
-        previewPipeline.destroy();
-        previewPipeline = null;
-      }
     }
   }
 

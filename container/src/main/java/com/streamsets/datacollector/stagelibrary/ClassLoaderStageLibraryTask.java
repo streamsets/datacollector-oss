@@ -353,9 +353,11 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         LOG.debug("Got a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
                   key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
       } catch (Exception ex) {
-        LOG.warn("Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}'",
-                 key, stageDefinition.getName(), privateClassLoaderPool.getNumActive());
-        throw new RuntimeException(ex);
+        String msg = Utils.format(
+            "Could not get a private ClassLoader for '{}', for stage '{}', active private ClassLoaders='{}': {}",
+            key, stageDefinition.getName(), privateClassLoaderPool.getNumActive(), ex.toString());
+        LOG.warn(msg, ex);
+        throw new RuntimeException(msg, ex);
       }
     }
     return cl;

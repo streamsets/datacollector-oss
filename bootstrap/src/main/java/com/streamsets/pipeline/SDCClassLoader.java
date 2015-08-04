@@ -423,4 +423,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     return isPrivate;
   }
 
+  public String toString() {
+    return String.format("SDCClassLoader[type=%s name=%s private=%b]", getType(), getName(), isPrivate);
+  }
+
 }

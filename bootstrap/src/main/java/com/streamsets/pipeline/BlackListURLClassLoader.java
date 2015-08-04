@@ -73,7 +73,7 @@ public class BlackListURLClassLoader extends URLClassLoader {
   }
 
   public String toString() {
-    return String.format("BlackListURLClassLoader %s '%s' : %s", type, name, super.toString());
+    return String.format("BlackListURLClassLoader[type=%s name=%s]", type, name);
   }
 
   public String getName() {
