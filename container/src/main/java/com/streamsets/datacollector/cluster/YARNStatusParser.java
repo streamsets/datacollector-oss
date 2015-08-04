@@ -24,20 +24,24 @@ public class YARNStatusParser {
   private static final String RUNNING = "RUNNING";
   private static final String SUCCEEDED = "SUCCEEDED";
   private static final String FAILED = "FAILED";
+  private static final String KILLED = "KILLED";
   private static final Pattern ACCEPTED_PATTERN = Pattern.compile("^\\s+State : (ACCEPTED).*$");
   private static final Pattern RUNNING_PATTERN = Pattern.compile("^\\s+State : (RUNNING).*$");
   private static final Pattern SUCCEEDED_PATTERN = Pattern.compile("^\\s+Final-State : (SUCCEEDED).*$");
   private static final Pattern FAILED_PATTERN = Pattern.compile("^\\s+Final-State : (FAILED).*$");
+  private static final Pattern KILLED_PATTERN = Pattern.compile("^\\s+Final-State : (KILLED).*$");
+
 
   private static final ImmutableMap<String, String> STATE_MAP = ImmutableMap.of(
     ACCEPTED, RUNNING,
     RUNNING, RUNNING,
     SUCCEEDED, SUCCEEDED,
-    FAILED, FAILED
+    FAILED, FAILED,
+    KILLED, KILLED
   );
 
   private static final List<Pattern> PATTERNS = Arrays.asList(RUNNING_PATTERN, ACCEPTED_PATTERN, SUCCEEDED_PATTERN,
-    FAILED_PATTERN);
+    FAILED_PATTERN, KILLED_PATTERN);
 
   public String parseStatus(Collection<String> lines) {
     for (String line : lines) {

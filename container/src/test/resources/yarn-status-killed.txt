@@ -1,0 +1,16 @@
+exec /usr/bin/yarn application -status application_1438121367055_0042
+15/08/04 21:00:17 INFO client.RMProxy: Connecting to ResourceManager at node00.local/172.17.0.1:8032
+Application Report :
+	Application-Id : application_1438121367055_0042
+	Application-Name : com.streamsets.pipeline.BootstrapClusterStreaming
+	Application-Type : SPARK
+	User : ec2-user
+	Queue : root.ec2-user
+	Start-Time : 1438721686311
+	Finish-Time : 1438721812457
+	Progress : 100%
+	State : KILLED
+	Final-State : KILLED
+	Tracking-URL : http://node00.local:8088/cluster/app/application_1438121367055_0042
+	RPC Port : -1
+	AM Host : N/A

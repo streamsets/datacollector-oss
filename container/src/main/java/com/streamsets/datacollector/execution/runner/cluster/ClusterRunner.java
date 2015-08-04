@@ -610,6 +610,10 @@ public class ClusterRunner extends AbstractRunner {
         msg = "Pipeline failed in cluster";
         LOG.debug(msg);
         validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg);
+      } else if (clusterPipelineState == ClusterPipelineStatus.KILLED) {
+        msg = "Pipeline killed in cluster";
+        LOG.debug(msg);
+        validateAndSetStateTransition(PipelineStatus.KILLED, msg);
       } else if (clusterPipelineState == ClusterPipelineStatus.SUCCEEDED) {
         msg = "Pipeline succeeded in cluster";
         LOG.debug(msg);

@@ -28,6 +28,11 @@ public class TestYARNStatusParser {
     Assert.assertEquals("RUNNING", parser.parseStatus(Arrays.asList(MiniSDCSystemProcessImpl.YARN_STATUS_SUCCESS)));
   }
 
+  @Test
+  public void testKilledOutput() throws Exception {
+    assertValidOutput("/yarn-status-killed.txt", "KILLED");
+  }
+
   private static void assertValidOutput(String name, String output) throws Exception {
     YARNStatusParser parser = new YARNStatusParser();
     Assert.assertEquals(output, parser.parseStatus(readFile(name)));
