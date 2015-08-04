@@ -17,7 +17,6 @@ import com.streamsets.pipeline.lib.parser.ParserConfig;
 import com.streamsets.pipeline.lib.parser.collectd.CollectdParser;
 import com.streamsets.pipeline.lib.parser.netflow.NetflowParser;
 import com.streamsets.pipeline.lib.parser.syslog.SyslogParser;
-import io.netty.channel.socket.DatagramPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +55,7 @@ public class UDPSource extends BaseSource {
   private long recordCount;
   private UDPConsumingServer udpServer;
   private AbstractParser parser;
-  private BlockingQueue<DatagramPacket> incomingQueue;
+  private BlockingQueue<ParseResult> incomingQueue;
 
   public UDPSource(
       List<String> ports,
@@ -132,7 +131,7 @@ public class UDPSource extends BaseSource {
     }
     if (issues.isEmpty()) {
       if (!addresses.isEmpty()) {
-        QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(incomingQueue);
+        QueuingUDPConsumer udpConsumer = new QueuingUDPConsumer(parser, incomingQueue);
         udpServer = new UDPConsumingServer(addresses, udpConsumer);
         try {
           udpServer.listen();
@@ -189,19 +188,18 @@ public class UDPSource extends BaseSource {
       if (overrunQueue.isEmpty()) {
         try {
           long start = System.currentTimeMillis();
-          DatagramPacket packet = incomingQueue.poll(remainingTime, TimeUnit.MILLISECONDS);
+          ParseResult result = incomingQueue.poll(remainingTime, TimeUnit.MILLISECONDS);
           long elapsedTime = System.currentTimeMillis() - start;
           if (elapsedTime > 0) {
             remainingTime -= elapsedTime;
           }
-          if (packet != null) {
+          if (result != null) {
             try {
-              List<Record> records = parser.parse(packet.content(), packet.recipient(), packet.sender());
+              List<Record> records = result.getRecords();
               if (IS_TRACE_ENABLED) {
                 LOG.trace("Found {} records", records.size());
               }
               overrunQueue.addAll(records);
-              packet.release();
             } catch (OnRecordErrorException ex) {
               switch (getContext().getOnErrorRecord()) {
                 case DISCARD:
