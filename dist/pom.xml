@@ -25,6 +25,8 @@
     <!-- trick to avoid pulling files from 'ui' & 'docs' if their profiles are not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
     <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
+
+    <snappy.version>1.0.5</snappy.version>
   </properties>
 
   <dependencies>
@@ -107,6 +109,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-aws-lib</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xerial.snappy</groupId>
+      <artifactId>snappy-java</artifactId>
+      <version>${snappy.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

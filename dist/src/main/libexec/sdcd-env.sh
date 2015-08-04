@@ -34,6 +34,11 @@ export SDC_LOG=/var/log/sdc
 #
 export SDC_CONF=/etc/sdc
 
+# Includes the JARs in extra lib in the root classloader, this is required to support
+# Snappy compression in Cassandra
+#
+export SDC_ROOT_CLASSPATH=${SDC_DIST}/root-lib/'*'
+
 # JVM options for the data collector process
 #
 export SDC_JAVA_OPTS="-Xmx1024m -XX:PermSize=128M -XX:MaxPermSize=256M -server ${SDC_JAVA_OPTS}"

@@ -272,6 +272,17 @@
       </includes>
     </dependencySet>
 
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <outputDirectory>/root-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>org.xerial.snappy:snappy-java</include>
+      </includes>
+    </dependencySet>
+
   </dependencySets>
 
 </assembly>

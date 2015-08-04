@@ -10,6 +10,9 @@
 grant codebase "file://${sdc.dist.dir}/libexec/bootstrap-libs/-" {
   permission java.security.AllPermission;
 };
+grant codebase "file://${sdc.dist.dir}/root-lib/*" {
+  permission java.security.AllPermission;
+};
 grant codebase "file://${sdc.dist.dir}/api-lib/*" {
   permission java.security.AllPermission;
 };
