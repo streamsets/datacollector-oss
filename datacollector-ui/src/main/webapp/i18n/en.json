@@ -3,8 +3,11 @@
     "title": "Pipeline Agent",
     "menu": {
       "account": {
-        "main": "Account",
-        "logout": "Logout"
+        "title": "User",
+        "assignedRoles": "Assigned Roles",
+        "loggedInUser": "Logged In User",
+        "logout": "Logout",
+        "main": "Account"
       },
       "admin": {
         "configuration": "Configuration",

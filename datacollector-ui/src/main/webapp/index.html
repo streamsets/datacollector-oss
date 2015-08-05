@@ -34,7 +34,6 @@
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
             <i class="fa fa-home fa-lg"></i>
-            <!--span translate="global.menu.home">Home</span-->
           </a>
         </li>
 
@@ -45,7 +44,6 @@
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
             <i class="fa fa-cloud fa-lg"></i>
-            <!--span translate="global.menu.clusterManager">Cluster Manager</span-->
           </a>
         </li>
 
@@ -62,8 +60,6 @@
                   ng-show="common.alertsTotalCount > 0"
                   ng-bind="common.alertsTotalCount"></span>
 
-            <!--span class="hidden-tablet" translate="global.menu.admin.main">Alerts</span>
-            <b class="caret"></b-->
           </a>
           <ul class="dropdown-menu pull-right scrollable-menu" role="menu" aria-labelledby="dropdownMenu1">
 
@@ -106,8 +102,6 @@
              tooltip-popup-delay="500">
             <span>
                 <i class="fa fa-cogs fa-lg"></i>
-                <!--span class="hidden-tablet" translate="global.menu.admin.main">Administration</span>
-                <b class="caret"></b-->
             </span>
           </a>
           <ul class="dropdown-menu">
@@ -149,16 +143,22 @@
         <li class="dropdown pointer" ng-if="common.authenticationType != 'none'">
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
              tooltip-placement="bottom"
-             tooltip="{{common.userName}}"
+             tooltip="{{'global.menu.account.title' | translate}}"
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
               <i class="fa fa-user fa-lg"></i>
-              <!--span class="hidden-tablet">{{common.userName}}</span>
-              <b class="caret"></b-->
           </a>
           <ul class="dropdown-menu">
 
-            <li role="presentation" class="dropdown-header">Assigned Roles</li>
+            <li role="presentation" class="dropdown-header" translate="global.menu.account.loggedInUser">Logged In User</li>
+
+            <li class="disabled">
+              <a href="">
+                <span>{{common.userName}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="dropdown-header" translate="global.menu.account.assignedRoles">Assigned Roles</li>
 
             <li class="disabled">
               <a href="">
@@ -185,8 +185,6 @@
              tooltip-trigger="mouseenter"
              tooltip-popup-delay="500">
               <i class="fa fa-question-circle fa-15x"></i>
-              <!--span class="hidden-tablet" translate="global.menu.help.main">Help</span>
-              <b class="caret"></b-->
           </a>
           <ul class="dropdown-menu">
 

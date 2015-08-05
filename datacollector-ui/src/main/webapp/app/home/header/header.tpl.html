@@ -1,7 +1,7 @@
 <div class="panel panel-default header-pane"
      ng-controller="HeaderController">
 
-  <div class="panel-heading clearfix">
+  <div class="panel-heading clearfix" ng-show="pipelineConfig">
 
     <div class="pull-left" ng-switch="activeConfigStatus.status">
       <button type="button" class="navbar-toggle collapsed"

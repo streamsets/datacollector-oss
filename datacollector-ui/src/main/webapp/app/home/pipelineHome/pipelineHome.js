@@ -54,6 +54,7 @@ angular
 
     angular.extend($scope, {
       _: _,
+      showLoading: true,
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
       isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
       selectedType: pipelineConstant.PIPELINE,
@@ -663,9 +664,11 @@ angular
         }
 
       },function(resp) {
-          $rootScope.common.errors = [resp.data];
+        $scope.showLoading = false;
+        $rootScope.common.errors = [resp.data];
       })
       .then(function(results) {
+        $scope.showLoading = false;
         //Pipeline Configuration, Rules & Metrics
         if(results && results.length > 1) {
           var config = results[0].data,
@@ -685,6 +688,7 @@ angular
         $scope.loaded = true;
       },function(resp) {
         $scope.pipelineConfig = undefined;
+        $scope.showLoading = false;
         $rootScope.common.errors = [resp.data];
       });
 
