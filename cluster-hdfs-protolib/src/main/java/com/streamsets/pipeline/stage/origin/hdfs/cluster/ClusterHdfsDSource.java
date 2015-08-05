@@ -5,9 +5,6 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
-import java.util.List;
-import java.util.Map;
-
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -22,6 +19,9 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+
+import java.util.List;
+import java.util.Map;
 
 
 @StageDef(
@@ -48,7 +48,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   public String hdfsUri;
 
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.LIST,
     defaultValue = "[]",
     label = "Directory Path",

@@ -37,7 +37,7 @@ public class GeolocationDProcessor extends DProcessor {
   public String geoIP2DBFile;
 
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue="",
     label = "",

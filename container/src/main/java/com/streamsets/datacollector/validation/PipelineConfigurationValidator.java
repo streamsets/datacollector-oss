@@ -379,7 +379,7 @@ public class PipelineConfigurationValidator {
       }
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         Config config = stageConf.getConfig(confDef.getName());
-        if (confDef.isRequired() && (config == null || isNullOrEmptyString(confDef, config))) {
+        if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {
           preview &= validateRequiredField(confDef, stageConf, issueCreator);
         }
       }
@@ -394,12 +394,20 @@ public class PipelineConfigurationValidator {
     return preview;
   }
 
-  private boolean isNullOrEmptyString(ConfigDefinition confDef, Config config) {
+  private boolean isNullOrEmpty(ConfigDefinition confDef, Config config) {
     boolean isNullOrEmptyString = false;
     if(config.getValue() == null) {
       isNullOrEmptyString = true;
     } else if (confDef.getType() == ConfigDef.Type.STRING) {
       if(((String) config.getValue()).isEmpty()) {
+        isNullOrEmptyString = true;
+      }
+    } else if (confDef.getType() == ConfigDef.Type.LIST) {
+      if(((List<?>) config.getValue()).isEmpty()) {
+        isNullOrEmptyString = true;
+      }
+    } else if (confDef.getType() == ConfigDef.Type.MAP) {
+      if(((Map<?,?>) config.getValue()).isEmpty()) {
         isNullOrEmptyString = true;
       }
     }
