@@ -92,15 +92,12 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cluster-common</artifactId>
-      <version>1.0.0b3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
       <scope>provided</scope>
-      <version>1.0.0b3-SNAPSHOT</version> <!-- required because we don't inherit from root and root-lib
-                                               does not define dep spark-bootstrap -->
     </dependency>
 
 
