@@ -111,7 +111,7 @@
 
     <section class="tile-list ">
 
-      <section class="pipeline-container new-pipeline" ng-if="!common.isSlaveNode">
+      <section class="pipeline-container new-pipeline" ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin, userRoles.creator])">
         <div class="centering-container">
           <a href="" class="btn btn-primary create-pipeline-btn-link" ng-click="addPipelineConfig()">
             <span class="fa fa-plus"></span>
@@ -175,16 +175,16 @@
             <span ng-bind="common.alertsMap[pipeline.name].length"></span>
           </section>
 
-          <section class="pipeline-menu" ng-if="!common.isSlaveNode">
+          <section class="pipeline-menu" ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
             <span class="split-bar"></span>
-            <div class="action-menu" dropdown
-                 ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
+            <div class="action-menu" dropdown>
               <span class="dropdown-toggle" dropdown-toggle
                     ng-click="$event.stopPropagation();">
                 <i class="fa fa-ellipsis-h"></i>
               </span>
               <ul class="dropdown-menu" role="menu">
                 <li role="presentation"
+                    ng-if="isAuthorized([userRoles.admin, userRoles.creator])"
                     ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
                   <a href="#" dropdown-toggle ng-click="deletePipelineConfig(pipeline, $event)">
                     <i class="fa fa-trash-o"></i>
@@ -192,30 +192,33 @@
                   </a>
                 </li>
 
-                <li role="presentation">
+                <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
                   <a href="#" dropdown-toggle ng-click="duplicatePipelineConfig(pipeline, $event)">
                     <i class="fa fa-files-o"></i>
                     <span>{{'global.form.duplicate' | translate}}</span>
                   </a>
                 </li>
 
-                <li role="presentation">
+                <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator])">
                   <a href="#" dropdown-toggle ng-click="importPipelineConfig(pipeline, $event)">
                     <i class="glyphicon glyphicon-import"></i>
                     <span>{{'global.form.import' | translate}}</span>
                   </a>
                 </li>
 
-                <li role="presentation">
+                <li role="presentation" ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])">
                   <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, $event)">
                     <i class="glyphicon glyphicon-export"></i>
                     <span>{{'global.form.export' | translate}}</span>
                   </a>
                 </li>
 
-                <li ng-repeat-end role="presentation" class="divider" ng-show="pipeline.valid"></li>
+                <li ng-repeat-end role="presentation" class="divider"
+                    ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
+                    ng-show="pipeline.valid"></li>
 
                 <li role="presentation"
+                    ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
                     ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || !pipeline.valid">
                   <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                     <i class="glyphicon glyphicon-play"></i>
@@ -224,6 +227,7 @@
                 </li>
 
                 <li role="presentation"
+                    ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
                     ng-show="common.pipelineStatusMap[pipeline.name].status === 'RUNNING'">
                   <a href="#" dropdown-toggle ng-click="stopPipeline(pipeline, $event)">
                     <i class="glyphicon glyphicon-stop"></i>
