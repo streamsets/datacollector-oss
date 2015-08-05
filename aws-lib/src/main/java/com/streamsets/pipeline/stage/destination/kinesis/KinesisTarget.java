@@ -186,19 +186,23 @@ public class KinesisTarget extends BaseTarget {
       i = 0;
       for (PutRecordsResultEntry resultEntry : resultEntries) {
         final String errorCode = resultEntry.getErrorCode();
-        switch (errorCode) {
-          case "ProvisionedThroughputExceededException":
-          case "InternalFailure":
-            // Records are processed in the order you submit them,
-            // so this will align with the initial record batch
-            handleFailedRecord(records.get(i), errorCode);
-            break;
-          default:
-            if (resultEntry.getSequenceNumber().isEmpty() || !resultEntry.getShardId().isEmpty()) {
-              // Some kind of other error, handle it.
-              handleFailedRecord(records.get(i), "Missing SequenceId or ShardId.");
-            }
-            break;
+        if (errorCode == null) {
+          handleFailedRecord(records.get(i), Utils.format("No error code: {}", resultEntry.getErrorMessage()));
+        } else {
+          switch (errorCode) {
+            case "ProvisionedThroughputExceededException":
+            case "InternalFailure":
+              // Records are processed in the order you submit them,
+              // so this will align with the initial record batch
+              handleFailedRecord(records.get(i),  Utils.format("{}: {}", errorCode, resultEntry.getErrorMessage()));
+              break;
+            default:
+              if (resultEntry.getSequenceNumber().isEmpty() || !resultEntry.getShardId().isEmpty()) {
+                // Some kind of other error, handle it.
+                handleFailedRecord(records.get(i), "Missing SequenceId or ShardId.");
+              }
+              break;
+          }
         }
         ++i;
       }
