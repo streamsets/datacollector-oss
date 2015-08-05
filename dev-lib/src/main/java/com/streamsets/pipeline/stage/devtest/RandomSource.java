@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.devtest;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
@@ -25,8 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @GenerateResourceBundle
-@StageDef(version=1, label="Dev Random Record Source",
-          icon="random.png")
+@StageDef(version = 1,
+  label = "Dev Random Record Source",
+  execution = ExecutionMode.STANDALONE,
+  icon = "random.png")
 public class RandomSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,
