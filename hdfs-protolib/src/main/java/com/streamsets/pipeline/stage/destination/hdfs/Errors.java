@@ -64,6 +64,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_44("Could verify the base directory: '{}'"),
   HADOOPFS_45("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
 
+  HADOOPFS_46("The compression codec '{}' requires native libraries to be installed: {}"),
   ;
   private final String msg;
 
