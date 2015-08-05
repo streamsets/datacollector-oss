@@ -224,10 +224,12 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     if (debug) {
       System.err.println("  Delegating to parent classloader unconditionally " + parent);
     }
-    result = super.getResources(name);
+    result = parent.getResources(name);
     if (result != null && result.hasMoreElements()) {
       if (debug) {
-        System.err.println("  --> Returning result from parent");
+        List<URL> resultList = Collections.list(result);
+        result = Collections.enumeration(resultList);
+        System.err.println("  --> Returning result from parent: " + resultList);
       }
       return result;
     }
@@ -348,13 +350,10 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   public static boolean isClassInList(String name, List<String> classList) {
     boolean result = false;
     if (classList != null) {
-      String canonicalName = name;
-      if (canonicalName.startsWith(SERVICES_PREFIX)) {
-        canonicalName = canonicalName.substring(SERVICES_PREFIX.length());
-      }
-      canonicalName = canonicalName.replace('/', '.');
-      while (canonicalName.startsWith(".")) {
-        canonicalName = canonicalName.substring(1);
+      String canonicalName = canonicalize(name);
+      String canonicalPrefix = canonicalize(SERVICES_PREFIX);
+      if (canonicalName.startsWith(canonicalPrefix)) {
+        canonicalName = canonicalName.substring(canonicalPrefix.length());
       }
       for (String c : classList) {
         boolean shouldInclude = true;
@@ -377,6 +376,14 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       }
     }
     return result;
+  }
+
+  private static String canonicalize(String canonicalName) {
+    canonicalName = canonicalName.replace('/', '.');
+    while (canonicalName.startsWith(".")) {
+      canonicalName = canonicalName.substring(1);
+    }
+    return canonicalName;
   }
 
   private static <T> T checkNotNull(T value, String name) {

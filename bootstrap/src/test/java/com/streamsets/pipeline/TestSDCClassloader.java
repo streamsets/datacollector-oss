@@ -72,10 +72,10 @@ public class TestSDCClassloader {
       "findResource META-INF/services/other.Dummy"), stage, SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
     doGetResource(Arrays.<String>asList(), stage, SDCClassLoader.SERVICES_PREFIX + "app.Dummy");
 
-    doGetResources(Arrays.<String>asList("findResources /META-INF/services/sys.Dummy",
-        "findResources /META-INF/services/sys.Dummy"), stage, SDCClassLoader.SERVICES_PREFIX + "sys.Dummy");
-    doGetResources(Arrays.<String>asList("findResources /META-INF/services/other.Dummy",
-      "findResources /META-INF/services/other.Dummy"), stage, SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
+    doGetResources(Arrays.<String>asList("findResources /META-INF/services/sys.Dummy"),
+      stage, SDCClassLoader.SERVICES_PREFIX + "sys.Dummy");
+    doGetResources(Arrays.<String>asList("findResources /META-INF/services/other.Dummy"),
+      stage, SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
     doGetResources(Arrays.<String>asList(), stage, SDCClassLoader.SERVICES_PREFIX + "app.Dummy");
 
     doGetResourceAsStream(Arrays.<String>asList("findResource /META-INF/services/sys.Dummy"), stage,
@@ -89,8 +89,8 @@ public class TestSDCClassloader {
     doGetResource(Arrays.<String>asList("findResource other.Dummy"), stage, "other.Dummy");
     doGetResource(Arrays.<String>asList(), stage, "app.Dummy");
 
-    doGetResources(Arrays.<String>asList("findResources sys.Dummy", "findResources sys.Dummy"), stage, "sys.Dummy");
-    doGetResources(Arrays.<String>asList("findResources other.Dummy", "findResources other.Dummy"), stage, "other.Dummy");
+    doGetResources(Arrays.<String>asList("findResources sys.Dummy"), stage, "sys.Dummy");
+    doGetResources(Arrays.<String>asList("findResources other.Dummy"), stage, "other.Dummy");
     doGetResources(Arrays.<String>asList(), stage, "app.Dummy");
 
     doGetResourceAsStream(Arrays.<String>asList(
