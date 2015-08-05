@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.streamsets.pipeline.api.ExecutionMode;
 
@@ -16,7 +17,8 @@ import java.util.Map;
 import java.util.Properties;
 
 public class StageLibraryDefinition {
-  private static final String EXECUTION_MODE_PREFIX = "execution.mode_";
+  @VisibleForTesting
+  public static final String EXECUTION_MODE_PREFIX = "execution.mode_";
 
   private ClassLoader classLoader;
   private String name;

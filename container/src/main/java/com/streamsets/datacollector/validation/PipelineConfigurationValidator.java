@@ -28,6 +28,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
@@ -38,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -118,7 +118,7 @@ public class PipelineConfigurationValidator {
       canPreview &= validatePipelineConfiguration();
       canPreview &= validatePipelineLanes();
       canPreview &= validateErrorStage();
-      canPreview &= validateStagesExecutionMode(pipelineConfiguration.getStages(), false);
+      canPreview &= validateStagesExecutionMode(pipelineConfiguration);
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
         for (Issue issue : issues.getPipelineIssues()) {
@@ -178,39 +178,41 @@ public class PipelineConfigurationValidator {
     return upgradeIssues.isEmpty();
   }
 
-  private boolean validateStagesExecutionMode(List<StageConfiguration> stageConfigs, boolean errorStage) {
+  private boolean validateStageExecutionMode(StageConfiguration stageConf, ExecutionMode executionMode,
+      List<Issue> issues) {
     boolean canPreview = true;
-    if (pipelineBean != null) {
-      PipelineConfigBean configs = pipelineBean.getConfig();
-      for (StageConfiguration stageConf : stageConfigs) {
-        IssueCreator issueCreator = (errorStage) ? IssueCreator.getStage(stageConf.getInstanceName())
-                                                 : IssueCreator.getStage(stageConf.getInstanceName());
-        StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                         false);
-        if (stageDef != null) {
-          if (!stageDef.getExecutionModes().contains(configs.executionMode)) {
-            issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
-                                           configs.executionMode.getLabel()));
-            canPreview = false;
-          } else if (!stageDef.getLibraryExecutionModes().contains(configs.executionMode)) {
-            String type;
-            if (stageDef.getType() == StageType.SOURCE) {
-              type = "Origin";
-            } else if (stageDef.getType() == StageType.TARGET) {
-              type = "Destination";
-            } else {
-              type = "Processor";
-            }
-            issues.add(issueCreator.create(ValidationError.VALIDATION_0074, stageDef.getLibraryLabel(),
-                                           configs.executionMode.getLabel(), type));
-            canPreview = false;
-          }
-        } else {
-          issues.add(issueCreator.create(ValidationError.VALIDATION_0006, stageConf.getLibrary(),
-                                         stageConf.getStageName(), stageConf.getStageVersion()));
-        }
+    IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
+    StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
+    if (stageDef != null) {
+      if (!stageDef.getExecutionModes().contains(executionMode)) {
+        canPreview = false;
+        issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
+                                       stageConf.getLibrary(), executionMode.getLabel()));
       }
+    } else {
+      canPreview = false;
+      issues.add(issueCreator.create(ValidationError.VALIDATION_0006, stageConf.getLibrary(), stageConf.getStageName(),
+                                     stageConf.getStageVersion()));
     }
+    return canPreview;
+  }
+
+  private boolean validateStagesExecutionMode(PipelineConfiguration pipelineConf) {
+    boolean canPreview = true;
+    List<Issue> errors = new ArrayList<>();
+    ExecutionMode pipelineExecutionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConf, errors);
+    if (errors.isEmpty()) {
+      StageConfiguration errorStage = pipelineConf.getErrorStage();
+      if (errorStage != null) {
+        canPreview &= validateStageExecutionMode(errorStage, pipelineExecutionMode, errors);
+      }
+      for (StageConfiguration stageConf : pipelineConf.getStages()) {
+        canPreview &= validateStageExecutionMode(stageConf, pipelineExecutionMode, errors);
+      }
+    } else {
+      canPreview = false;
+    }
+    issues.addAll(errors);
     return canPreview;
   }
 
@@ -714,7 +716,6 @@ public class PipelineConfigurationValidator {
     if (errorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
       preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
-      preview &= validateStagesExecutionMode(Arrays.asList(errorStage), true);
     }
     return preview;
   }

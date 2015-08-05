@@ -5,7 +5,6 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
@@ -53,6 +52,8 @@ public enum CreationError implements ErrorCode {
 
   CREATION_060("Could not set configuration value '{}' [ERROR]: {}"),
 
+  CREATION_070("Invalid execution mode '{}'"),
+  CREATION_071("Execution mode not set"),
   ;
 
   private final String msg;

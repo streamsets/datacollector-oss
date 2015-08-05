@@ -176,6 +176,11 @@ public abstract class StageDefinitionExtractor {
                           ? 0 : sDef.outputStreams().getEnumConstants().length;
       List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
 
+      List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
+      if (executionModesLibraryOverride != null) {
+        executionModes = executionModesLibraryOverride;
+      }
+
       boolean recordsByRef = sDef.recordsByRef();
 
       if (preconditions) {

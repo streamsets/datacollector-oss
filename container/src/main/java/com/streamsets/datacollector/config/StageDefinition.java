@@ -167,10 +167,6 @@ public class StageDefinition {
     this.upgrader = upgrader;
   }
 
-  public void setLibraryExecutionModes(List<ExecutionMode> executionModes) {
-    this.executionModes = executionModes;
-  }
-
   public List<ExecutionMode> getLibraryExecutionModes() {
     return executionModes;
   }

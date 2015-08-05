@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -278,6 +279,17 @@ public class TestStageDefinitionExtractor {
   @Test(expected = IllegalArgumentException.class)
   public void testExtractMissingIcon() {
     StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, MissingIcon.class, "x");
+  }
+
+  @Test
+  public void testLibraryExecutionOverride() {
+    Properties props = new Properties();
+    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + Source1.class.getName(), "CLUSTER");
+    StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
+                                                               "mock", "MOCK", props);
+
+    StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
+    Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER),def.getExecutionModes());
   }
 
 }

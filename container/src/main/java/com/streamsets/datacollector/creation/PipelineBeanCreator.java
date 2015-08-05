@@ -22,6 +22,7 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -86,6 +87,26 @@ public abstract class PipelineBeanCreator {
       }
     }
     return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
+  }
+
+  public ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf, List<Issue> errors) {
+    ExecutionMode mode = null;
+    String value = null;
+    if (pipelineConf.getConfiguration("executionMode") != null) {
+      if (pipelineConf.getConfiguration("executionMode").getValue() != null) {
+        value = pipelineConf.getConfiguration("executionMode").getValue().toString();
+      }
+    }
+    if (value != null) {
+      try {
+        mode = ExecutionMode.valueOf(value);
+      } catch (IllegalArgumentException ex) {
+        errors.add(IssueCreator.getPipeline().create("", "executionMode", CreationError.CREATION_070, value));
+      }
+    } else {
+      errors.add(IssueCreator.getPipeline().create("", "executionMode", CreationError.CREATION_071));
+    }
+    return mode;
   }
 
   StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,

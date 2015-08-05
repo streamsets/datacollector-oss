@@ -98,26 +98,6 @@ public class TestPipelineConfigurationValidator {
     Assert.assertFalse(validator.getIssues().hasIssues());
   }
 
-  //@Test
-  public void testLibraryExecutionModes() {
-    StageLibraryTask lib = MockStages.createStageLibrary();
-
-    PipelineConfiguration conf =
-      MockStages.createPipelineConfigurationWithExecutionClusterOnlyStageLibrary("s", ExecutionMode.CLUSTER);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
-    Assert.assertTrue(validator.validate().getIssues().hasIssues());
-    Assert.assertFalse(validator.canPreview());
-    Assert.assertTrue(validator.getIssues().hasIssues());
-    Assert.assertEquals(1, validator.getIssues().getIssueCount());
-    Assert.assertEquals("VALIDATION_0074", validator.getIssues().getStageIssues().get("s").get(0).getErrorCode());
-
-    conf = MockStages.createPipelineConfigurationWithBothExecutionModeStageLibrary(ExecutionMode.CLUSTER);
-    validator = new PipelineConfigurationValidator(lib, "name", conf);
-    Assert.assertFalse(validator.validate().getIssues().hasIssues());
-    Assert.assertTrue(validator.canPreview());
-    Assert.assertFalse(validator.getIssues().hasIssues());
-  }
-
   @Test
   public void testUpgradeIssues() {
     StageLibraryTask lib = MockStages.createStageLibrary();
