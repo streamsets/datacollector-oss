@@ -32,11 +32,11 @@ git show
 /opt/scripts/docker-delete-stopped-containers.sh || true
 /opt/scripts/docker-delete-local-images.sh || true
 # compile and install
-mvn clean install -Pdist,all-libs,ui,rpm,miniIT,miniITnew -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
+mvn clean install -Pdist,all-libs,ui,rpm,miniIT -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
 # package and run tests (if appropiate)
 set +e
 export JAVA_HOME=${TEST_JVM}
-mvn package -fae -Pdist,ui,rpm,miniIT,miniITnew -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${TEST_OPTS[@]}
+mvn package -fae -Pdist,ui,rpm,miniIT -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${TEST_OPTS[@]}
 exitCode=$?
 if [[ -n $PUBLISH_SDC_TAR ]] && [[ $exitCode -eq 0 ]]
 then
