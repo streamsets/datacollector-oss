@@ -409,7 +409,7 @@ public class ManagerResource {
   @GET
   @ApiOperation(value = "Returns alerts triggered for all pipelines", response = AlertInfoJson.class,
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @PermitAll
   public Response getAllAlerts()
     throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
