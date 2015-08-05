@@ -102,14 +102,19 @@
                 <stepresult>The Preview panel highlights the origin stage and displays preview data
                     in table view. Since this is the origin of the pipeline, no input data displays.
                         <p>To view preview data in list view, click the <uicontrol>List
-                            View</uicontrol> icon. </p></stepresult>
+                            View</uicontrol> icon: <image href="../Graphics/icon_PrevListView.png"
+                            id="image_ids_rc4_xs" scale="80"/>.</p></stepresult>
             </step>
             <step id="DeletePreviewRecord">
                 <cmd>To delete a record that you do not want to use, click the
                         <uicontrol>Delete</uicontrol> icon.</cmd>
             </step>
             <step id="RefreshPreview">
-                <cmd>To preview another set of data, click <uicontrol>Refresh Preview</uicontrol>. </cmd>
+                <cmd>To refresh the preview, click the <uicontrol>Refresh Preview</uicontrol> icon:
+                        <image href="../Graphics/icon_PrevRefresh.png" id="image_nys_3ff_vs"
+                        scale="90"/>.</cmd>
+                <info>Based on the origin, refreshing the preview either provides a new set of data
+                    or reverts any changes to the existing data.</info>
             </step>
             <step id="RevertRefreshClose2">
                 <cmd>To exit data preview and return to pipeline configuration, click
@@ -140,8 +145,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use this step for origins that have error
-                        handling</draft-comment>
+                    <draft-comment author="Loretta">Use this step for origins that are not cluster
+                        origins. Standalone only</draft-comment>
                 </cmd>
             </step>
             <step id="1stStepErrorHandling">
@@ -171,6 +176,50 @@
                                     <entry>On Record Error</entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_mmh_bgh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Use for origins that ARE cluster
+                        origins:</draft-comment>
+                </cmd>
+            </step>
+            <step id="1stStep-ClusterOrigin">
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_u44_lsn_xs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_mp4_lsn_xs">
                                             <li>Discard - Discards the record.</li>
                                             <li>Send to Error - Sends the record to the pipeline for
                                                 error handling.</li>

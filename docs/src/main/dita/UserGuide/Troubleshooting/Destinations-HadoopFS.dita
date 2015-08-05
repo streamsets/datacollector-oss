@@ -12,6 +12,17 @@
      <dd>The pipeline should collapse all data to a single field. And the Hadoop FS destination must
       be configured to use that field. By default, Hadoop FS uses a field named /text. </dd>
     </dlentry>
+    <dlentry>
+     <dt>My pipeline fails with the following error:</dt>
+     <dd>
+      <codeblock>RUN_ERROR: java.lang.UnsatisfiedLinkError:
+ org.apache.hadoop.util.NativeCodeLoader.buildSupportsSnappy()Z</codeblock>
+     </dd>
+     <dd>This occurs when you configure the destination to use Snappy but have not performed the
+      required <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration. For more information, see <xref
+       href="../Destinations/Compression-Overview.dita#concept_h4y_ycm_xs"/>.</dd>
+    </dlentry>
    </dl>
   </p>
  </conbody>

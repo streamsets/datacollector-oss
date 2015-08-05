@@ -14,7 +14,7 @@
         <p>In preview mode, you cannot add or delete stages, but you can edit stage properties and
             run the preview again to see how your changes affect preview data. Similarly, you can
             edit preview data to test and tune pipeline configuration. </p>
-        <p>You can view preview data in list or table view, and for one stage at a time or for a
-            group of stages. You can also refresh the preview data.</p>
+        <p>You can preview data for one stage at a time or for a group of stages. You can view the
+            data in list or table view. You can also refresh the preview data.</p>
   </conbody>
 </concept>

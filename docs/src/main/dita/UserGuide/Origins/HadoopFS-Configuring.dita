@@ -7,7 +7,7 @@
         <context/>
         <steps id="steps_v51_1hn_vs">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ClusterOrigin">
                 <cmd/>
             </step>
             <step>

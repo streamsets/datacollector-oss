@@ -59,7 +59,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1795665801">
+<div class="topic concept nested1" id="unique_1444329134">
  <h2 class="title topictitle2">Hadoop FS</h2>
 
  <div class="body conbody">
@@ -74,6 +74,21 @@ Integer provided`</pre>
 
      <dd class="dd">The pipeline should collapse all data to a single field. And the Hadoop FS destination must
       be configured to use that field. By default, Hadoop FS uses a field named /text. </dd>
+
+    
+    
+     <dt class="dt dlterm">My pipeline fails with the following error:</dt>
+
+     <dd class="dd">
+      <pre class="pre codeblock">RUN_ERROR: java.lang.UnsatisfiedLinkError:
+ org.apache.hadoop.util.NativeCodeLoader.buildSupportsSnappy()Z</pre>
+
+     </dd>
+
+     <dd class="dd">This occurs when you configure the destination to use Snappy but have not performed the
+      required <span class="ph">Data
+                  Collector</span>
+      configuration. For more information, see <a class="xref" href="../Destinations/Destinations_overview.html#concept_h4y_ycm_xs" title="You can use LZO or Snappy compression for Hadoop FS and HBase destinations. Or you can use Snappy compression for Cassandra.">LZO and Snappy Compression</a>.</dd>
 
     
    </dl>

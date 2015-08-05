@@ -6,8 +6,7 @@
         <context>
             <p><indexterm>data preview<indexterm>previewing a stage</indexterm></indexterm>You can
                 preview data for a single stage. In the Preview panel, you can review the values for
-                each record to determine if the stage transforms data as expected. You can also edit
-                the preview data to see how the stage processes your changes.</p>
+                each record to determine if the stage transforms data as expected. </p>
         </context>
         <steps id="steps_gqh_zf5_qq">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/StartPreview">
@@ -21,6 +20,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/NextStage">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RefreshPreview">
                 <cmd/>
             </step>
             <step>

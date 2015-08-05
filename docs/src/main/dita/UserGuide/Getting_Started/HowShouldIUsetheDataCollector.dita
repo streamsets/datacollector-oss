@@ -14,9 +14,5 @@
       or more pipelines. Or you might install a series of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s to stream
       data across your enterprise data topology. </p>
-    <p>And you can use the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to run as
-      a single process in standalone mode or in cluster mode to read large volumes of data from a
-      Kafka CDH cluster. </p>
  </conbody>
 </concept>

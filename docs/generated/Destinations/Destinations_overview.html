@@ -57,10 +57,9 @@
 
   <p class="p">In addition, JVM limitations allow you to use LZO or Snappy compression with only one version
    of Hadoop FS and HBase. The Hadoop FS and HBase destinations are installed together in a library
-   version. If you installed multiple libraries, resulting in multiple versions of the destinations,
-   make sure to configure the <span class="ph">Data
+   version. If you installed multiple library versions, make sure to configure the <span class="ph">Data
                   Collector</span> to use
-   compression with the library that you want to use. </p>
+   compression with the version that you want to use. </p>
 
  </div>
 
@@ -94,8 +93,12 @@ If you have two versions of Hadoop
               <li class="li">In the <span class="ph">Data
                   Collector</span>
                 environment file, add the libsnappy.so directory to the SDC_JAVA_OPTS environment
-                variable. <p class="p">For information about the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.">Java Configuration Options</a>.</p>
+                variable. <p class="p">For information about configuring the SDC_JAVA_OPTS environment
+                  variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.">Java Configuration Options</a>.</p>
 </li>
+
+              <li class="li">In the Hadoop FS destination, select the Snappy compression codec. In the HBase
+                destination no additional configuration is necessary.</li>
 
             </ol>
 
@@ -116,10 +119,15 @@ If you have two versions of Hadoop
               <li class="li">In the <span class="ph">Data
                   Collector</span>
                 environment file, add the Hadoop LZO directory to the SDC_JAVA_OPTS environment
-                variable.</li>
+                  variable.<p class="p">For information about configuring the SDC_JAVA_OPTS environment
+                  variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.">Java Configuration Options</a>.</p>
+</li>
+
+              <li class="li">In the Hadoop FS destination, select the Other compression codec and enter the
+                full LZO class name. In the HBase destination no additional configuration is
+                necessary.</li>
 
             </ol>
-<p class="p">For information about the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.">Java Configuration Options</a>.</p>
 </dd>
 
         

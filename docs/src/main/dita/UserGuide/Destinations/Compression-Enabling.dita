@@ -23,8 +23,11 @@
               <li>In the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 environment file, add the libsnappy.so directory to the SDC_JAVA_OPTS environment
-                variable. <p>For information about the SDC_JAVA_OPTS environment variable, see <xref
+                variable. <p>For information about configuring the SDC_JAVA_OPTS environment
+                  variable, see <xref
                     href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
+              <li>In the Hadoop FS destination, select the Snappy compression codec. In the HBase
+                destination no additional configuration is necessary.</li>
             </ol>
           </dd>
         </dlentry>
@@ -39,9 +42,13 @@
               <li>In the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 environment file, add the Hadoop LZO directory to the SDC_JAVA_OPTS environment
-                variable.</li>
-            </ol><p>For information about the SDC_JAVA_OPTS environment variable, see <xref
-                href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></dd>
+                  variable.<p>For information about configuring the SDC_JAVA_OPTS environment
+                  variable, see <xref
+                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
+              <li>In the Hadoop FS destination, select the Other compression codec and enter the
+                full LZO class name. In the HBase destination no additional configuration is
+                necessary.</li>
+            </ol></dd>
         </dlentry>
         <dlentry>
           <dt>Using Snappy with the Cassandra destination</dt>

@@ -3,8 +3,8 @@
 <task id="task_nyy_13l_5s">
     <title>Editing Preview Data</title>
     <shortdesc>You can edit preview data to view how a stage or group of stages processes the
-        changed data. Edit preview data to test for data conditions that might not appear in data
-        preview.</shortdesc>
+        changed data. Edit preview data to test for data conditions that might not appear in preview
+        data set.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>data preview<indexterm>editing data</indexterm></indexterm>For example,
@@ -27,7 +27,8 @@
             </step>
             <step>
                 <cmd>To process changed data, click the <uicontrol>Run With Changes</uicontrol>
-                    icon.</cmd>
+                    icon: <image href="../Graphics/icon_PreviewRerun.png" id="image_zrd_rct_xs"
+                    />.</cmd>
                 <info>This runs the data preview with the current set of data and stage
                     configuration.</info>
                 <stepresult>In the Input Data column, records with changed values display with an
@@ -35,15 +36,13 @@
                     the results of processing. You can change and process preview data as often as
                     necessary. </stepresult>
             </step>
-            <step>
-                <cmd>To refresh the preview, click the <uicontrol>Refresh Preview</uicontrol>
-                    icon.</cmd>
-                <info>Based on the origin, Refresh Preview either runs the same or a new set of data
-                    through the pipeline.</info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RefreshPreview">
+                <cmd/>
             </step>
             <step>
                 <cmd>To revert changes to data, click the <uicontrol>Revert Data Changes</uicontrol>
-                    icon.</cmd>
+                    icon: <image href="../Graphics/icon_PrevRevertChanges.png" id="image_rzx_sct_xs"
+                    />.</cmd>
             </step>
         </steps>
     </taskbody>

@@ -188,6 +188,13 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Compression Codec Class Name</entry>
+                                    <entry>Full class name of the other compression codec that you
+                                        want to use. <draft-comment author="Loretta">Tucu to change
+                                            label - verify name after
+                                        SDC-1312.</draft-comment></entry>
+                                </row>
+                                <row>
                                     <entry>Sequence File Key</entry>
                                     <entry>Record key for creating Hadoop sequence files. Use one of
                                         the following options:<ul id="ul_xzr_vkg_br">

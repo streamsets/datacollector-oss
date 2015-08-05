@@ -51,16 +51,14 @@
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"
                                         id="image_zfp_n5g_cs"/>
                                 </xref></stentry>
-                            <stentry>Execution mode of the pipeline:<draft-comment author="Loretta"
-                                    >come back to this after updating cluster
-                                    info</draft-comment><ul id="ul_bn5_jsz_zr">
+                            <stentry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
                                     <li>Standalone - A single <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> process runs the pipeline.</li>
-                                    <li>Cluster - <ph
+                                    <li>Cluster - Additional <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> spawns additional workers as needed to process data.
-                                        Limits the origins that you can use in the pipeline.</li>
+                                        /> workers are spawned as needed to process data. Limits the
+                                        origins that you can use in the pipeline.</li>
                                 </ul></stentry>
                         </strow>
                         <strow>

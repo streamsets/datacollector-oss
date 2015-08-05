@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zjl_nnl_2s">
- <title>Cluster Mode </title>
+ <title>Cluster Execution Mode </title>
  <conbody>
   <p><indexterm>troubleshooting<indexterm>cluster mode</indexterm></indexterm>Use the following tips
-      for help with cluster mode:<draft-comment author="Loretta">review all these, see if they are
-        Kafka only and reword if necessary.</draft-comment><dl>
+      for help with pipelines in cluster mode:<dl>
+        <dlentry>
+          <dt>Why do I keep getting the following validation error when configuring my cluster
+            pipeline?</dt>
+          <dd>
+            <codeblock>Validation_0071 - Stage '&lt;stage id>' does not support 'Standalone' execution mode</codeblock>
+          </dd>
+          <dd>This message can appear when you include a non-cluster origin in a cluster pipeline.
+            You can use the cluster version of the Kafka Consumer and the Hadoop FS origin in a
+            cluster pipeline. </dd>
+          <dd>The message can also appear if you choose the Write to File option for  pipeline error
+            handling. Write to File is not supported for cluster mode. </dd>
+        </dlentry>
         <dlentry>
           <dt>Why isn't the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -18,10 +29,10 @@
           <dt>My pipeline fails to start with the following error: </dt>
           <dd><codeblock>Pipeline Status: START_ERROR: Unexpected error starting pipeline:java.lang.IllegalStateException: 
 Timed out after waiting 121 seconds for for cluster application to start. Submit command is not alive.</codeblock>Check
-              <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            log for more information. It's possible that the Spark on YARN client configuration is
-            not in place, the installation is out of date, or the node being used is not a gateway
-            node.</dd>
+            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> log for more information. It's possible that the Spark on YARN client configuration
+            is not in place, the installation is out of date, or the node being used is not a
+            gateway node.</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline fails to start with the following error: </dt>
@@ -31,7 +42,8 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
           </dd>
           <dd>It's likely that the cluster is configured to use Kerberos, but the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is
-            not configured to use Kerberos.</dd>
+            not configured to use Kerberos. For more information see <xref
+              href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>.</dd>
         </dlentry>
         <dlentry>
           <dt>My pipeline stopped unexpectedly.</dt>

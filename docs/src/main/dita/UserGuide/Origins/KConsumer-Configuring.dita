@@ -16,7 +16,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.04*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>

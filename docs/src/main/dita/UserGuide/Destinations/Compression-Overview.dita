@@ -9,9 +9,8 @@
    destinations - you can use Snappy with Cassandra or with Hadoop FS and HBase. </p>
   <p>In addition, JVM limitations allow you to use LZO or Snappy compression with only one version
    of Hadoop FS and HBase. The Hadoop FS and HBase destinations are installed together in a library
-   version. If you installed multiple libraries, resulting in multiple versions of the destinations,
-   make sure to configure the <ph
+   version. If you installed multiple library versions, make sure to configure the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-   compression with the library that you want to use. </p>
+   compression with the version that you want to use. </p>
  </conbody>
 </concept>

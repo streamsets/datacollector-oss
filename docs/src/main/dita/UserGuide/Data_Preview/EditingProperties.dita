@@ -32,16 +32,12 @@
                         id="image_nys_3ff_vs" scale="90"/>.</cmd>
                 <info>This refreshes the preview data. Based on the origin type, it might use the
                     same data or a new set of data with the updated origin properties.</info>
+                <info>To test properties in any non-origin stage using the same set of data, click
+                    the <uicontrol>Run With Changes</uicontrol> icon: <image
+                        href="../Graphics/icon_PreviewRerun.png" id="image_udq_5ct_xs"/>. </info>
             </step>
             <step>
-                <cmd>To test properties in any non-origin stage using the same set of data, click
-                    the <uicontrol>Run With Changes</uicontrol> icon: <image
-                        href="../Graphics/icon_PrevRevertChanges.png" id="image_ms1_whf_vs"/>. To
-                    use a new set of data or refresh the existing set of data, click
-                        <uicontrol>Refresh Preview</uicontrol>.</cmd>
-                <info>This runs the data preview with the current set of data and stage
-                    configuration. Based on the origin type, it either uses the same set of data or
-                    a new set of data.</info>
+                <cmd>If you want to revert your change, manually change the property back.</cmd>
             </step>
         </steps>
     </taskbody>

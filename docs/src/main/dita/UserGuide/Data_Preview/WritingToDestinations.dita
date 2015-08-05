@@ -4,7 +4,8 @@
  <title>Writing to Destinations</title>
  <conbody>
   <p><indexterm>data preview<indexterm>writing to destinations</indexterm></indexterm>As a tool for
-   development, data preview does not write data to destinations by default. If necessary, you can
-   configure the preview to write data to destinations.</p>
+      development, data preview does not write data to destinations by default. </p>
+    <p>If you like, you can configure the preview to write data to destinations. We advise against
+      writing preview data to production destinations.</p>
  </conbody>
 </concept>

@@ -2,9 +2,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_svd_dvz_sq">
     <title>Previewing Multiple Stages</title>
-    <shortdesc>You can preview data for a group of linked stages within a pipeline. You can also
-        edit the preview data to see how the group processes your changes. Preview multiple stages
-        to verify that the group processes data as expected. </shortdesc>
+    <shortdesc>You can preview data for a group of linked stages within a pipeline.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>data preview<indexterm>previewing multiple
