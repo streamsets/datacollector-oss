@@ -3,7 +3,6 @@ package com.streamsets.pipeline.stage.processor.fuzzy;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
@@ -17,7 +16,7 @@ import java.util.List;
 //    icon = "replacer.png"
 //)
 @ConfigGroups(Groups.class)
-@GenerateResourceBundle
+//@GenerateResourceBundle
 public class FuzzyFieldDProcessor extends DProcessor {
   @ConfigDef(
       required = true,
