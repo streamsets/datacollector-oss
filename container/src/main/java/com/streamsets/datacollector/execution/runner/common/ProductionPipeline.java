@@ -38,8 +38,13 @@ public class ProductionPipeline {
   private final ProductionPipelineRunner pipelineRunner;
   private StateListener stateListener;
   private volatile PipelineStatus pipelineStatus;
+  private final String name;
+  private final String rev;
 
-  public ProductionPipeline(RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf, Pipeline pipeline) {
+  public ProductionPipeline(String name, String rev, RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf,
+                            Pipeline pipeline) {
+    this.name = name;
+    this.rev = rev;
     this.runtimeInfo = runtimeInfo;
     this.pipelineConf = pipelineConf;
     this.pipeline = pipeline;
@@ -63,7 +68,7 @@ public class ProductionPipeline {
   }
 
   public void run() throws StageException, PipelineRuntimeException {
-    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
+    MetricsConfigurator.registerPipeline(name, rev);
     boolean finishing = false;
     boolean errorWhileRunning = false;
     String runningErrorMsg = "";
@@ -120,7 +125,7 @@ public class ProductionPipeline {
         }
       }
     } finally {
-      MetricsConfigurator.cleanUpJmxMetrics();
+      MetricsConfigurator.cleanUpJmxMetrics(name, rev);
     }
   }
 

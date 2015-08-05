@@ -64,7 +64,7 @@ public class ProductionPipelineBuilder {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));
     }
-    return new ProductionPipeline(runtimeInfo, pipelineConf, pipeline);
+    return new ProductionPipeline(name, rev, runtimeInfo, pipelineConf, pipeline);
   }
 
 }

@@ -17,10 +17,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class PreviewPipeline {
+  private final String name;
+  private final String rev;
   private final Pipeline pipeline;
   private final Issues issues;
 
-  public PreviewPipeline(Pipeline pipeline, Issues issues) {
+  public PreviewPipeline(String name, String rev, Pipeline pipeline, Issues issues) {
+    this.name = name;
+    this.rev = rev;
     this.issues = issues;
     this.pipeline = pipeline;
   }
@@ -32,7 +36,6 @@ public class PreviewPipeline {
 
   public PreviewPipelineOutput run(List<StageOutput> stageOutputsToOverride)
       throws StageException, PipelineRuntimeException{
-    MetricsConfigurator.registerJmxMetrics(null);
     try {
       List<Issue> initIssues = pipeline.init();
       if (initIssues.isEmpty()) {

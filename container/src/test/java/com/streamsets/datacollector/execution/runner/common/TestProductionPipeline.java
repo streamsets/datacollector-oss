@@ -81,6 +81,7 @@ public class TestProductionPipeline {
                                   Arrays.asList(getClass().getClassLoader()));
     runtimeInfo.init();
     memoryLimit = new MemoryLimitConfiguration();
+    MetricsConfigurator.registerJmxMetrics(runtimeInfoMetrics);
   }
 
   @Test
@@ -203,12 +204,12 @@ public class TestProductionPipeline {
   public void testPipelineMetricsInRuntimeMetrics() throws Exception {
     Source capture = new RuntimeInfoMetricCheckSource();
     MockStages.setSourceCapture(capture);
-    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
     for (String name : runtimeInfoMetrics.getNames()) {
       if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
         Assert.fail();
       }
     }
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
     pipeline.run();
     for (String name : runtimeInfoMetrics.getNames()) {
       if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {

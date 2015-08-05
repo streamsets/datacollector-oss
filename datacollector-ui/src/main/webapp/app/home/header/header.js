@@ -77,7 +77,11 @@ angular
                   message: pipelineValidationSuccess
                 });
               } else {
-                $rootScope.common.errors = [previewData.issues];
+                if(previewData.issues) {
+                  $rootScope.common.errors = [previewData.issues];
+                } else if(previewData.message) {
+                  $rootScope.common.errors = [previewData.message];
+                }
               }
             });
 
@@ -294,7 +298,7 @@ angular
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
-              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'VALID'], data.status)) {
+              if(data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
               } else {
                 checkForValidateConfigStatus(previewerId, defer);

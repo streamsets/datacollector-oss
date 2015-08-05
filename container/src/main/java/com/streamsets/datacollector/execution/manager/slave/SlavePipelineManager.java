@@ -14,6 +14,7 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -46,6 +47,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
     super(SLAVE_MANAGER);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
+    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
   }
 
   @Override

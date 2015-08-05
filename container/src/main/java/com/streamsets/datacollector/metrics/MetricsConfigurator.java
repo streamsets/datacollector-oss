@@ -16,6 +16,8 @@ import com.codahale.metrics.Timer;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MetricsConfigurator {
@@ -28,6 +30,7 @@ public class MetricsConfigurator {
   private static final String GAUGE_SUFFIX = ".gauge";
 
   private static MetricRegistry sdcMetrics;
+  private static List<String> runningPipelines = new ArrayList<>();
 
   private static String metricName(String name, String type) {
     if (name.endsWith(type)) {
@@ -36,18 +39,26 @@ public class MetricsConfigurator {
     return name + type;
   }
 
+  private static String jmxNamePrefix(String pipelineName, String pipelineRev) {
+    return JMX_PREFIX + pipelineName + "." + pipelineRev + ".";
+  }
+
   //we need to use the AccessController.doPrivilege for sdcMetric calls because there are calls to JMX MBs
   //and user-libs stages fail otherwise due to lesser privileges
   public static Timer createTimer(MetricRegistry metrics, String name, final String pipelineName,
                                   final String pipelineRev) {
     final String timerName = metricName(name, TIMER_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final Timer timer = new Timer(new SlidingTimeWindowReservoir(60, TimeUnit.SECONDS));
     final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
+    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.register(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + timerName, timer);
+          String metricName = jmxNamePrefix + timerName;
+          if(!metricRegistry.getNames().contains(metricName)) {
+            metricRegistry.register(metricName, timer);
+          }
           return null;
         }
       });
@@ -58,13 +69,18 @@ public class MetricsConfigurator {
   public static Meter createMeter(MetricRegistry metrics, String name, final String pipelineName,
                                   final String pipelineRev) {
     final String meterName = metricName(name, METER_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final ExtendedMeter meter = new ExtendedMeter();
     final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
+    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.register(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + meterName, meter);
+          String metricName = jmxNamePrefix  + meterName;
+          if(!metricRegistry.getNames().contains(metricName)) {
+            metricRegistry.register(metricName, meter);
+          }
+
           return null;
         }
       });
@@ -75,13 +91,17 @@ public class MetricsConfigurator {
   public static Counter createCounter(MetricRegistry metrics, String name, final String pipelineName,
                                       final String pipelineRev) {
     final String counterName = metricName(name, COUNTER_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final Counter counter = new Counter();
     final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
+    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.register(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + counterName, counter);
+          String metricName = jmxNamePrefix  + counterName;
+          if(!metricRegistry.getNames().contains(metricName)) {
+            metricRegistry.register(metricName, counter);
+          }
           return null;
         }
       });
@@ -92,13 +112,17 @@ public class MetricsConfigurator {
   public static Histogram createHistogram5Min(MetricRegistry metrics, String name, final String pipelineName,
                                               final String pipelineRev) {
     final String histogramName = metricName(name, HISTOGRAM_M5_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final Histogram histogram = new Histogram(new ExponentiallyDecayingReservoir());
     final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
+    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.register(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + histogramName, histogram);
+          String metricName = jmxNamePrefix  + histogramName;
+          if(!metricRegistry.getNames().contains(metricName)) {
+            metricRegistry.register(metricName, histogram);
+          }
           return null;
         }
       });
@@ -109,12 +133,16 @@ public class MetricsConfigurator {
   public static Gauge createGauge(MetricRegistry metrics, String name, final Gauge guage, final String pipelineName,
                                   final String pipelineRev) {
     final String gaugeName = metricName(name, GAUGE_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
-    if (metricRegistry != null) {
+    if (metricRegistry != null && runningPipelines.contains(jmxNamePrefix)) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.register(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + gaugeName, guage);
+          String metricName = jmxNamePrefix  + gaugeName;
+          if(!metricRegistry.getNames().contains(metricName)) {
+            metricRegistry.register(metricName, guage);
+          }
           return null;
         }
       });
@@ -145,12 +173,13 @@ public class MetricsConfigurator {
   public static boolean removeGauge(MetricRegistry metrics, String name, final String pipelineName,
                                     final String pipelineRev) {
     final String gaugeName = metricName(name, GAUGE_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.remove(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + gaugeName);
+          metricRegistry.remove(jmxNamePrefix  + gaugeName);
           return null;
         }
       });
@@ -161,12 +190,13 @@ public class MetricsConfigurator {
   public static boolean removeMeter(MetricRegistry metrics, String name, final String pipelineName,
                                     final String pipelineRev) {
     final String meterName = metricName(name, METER_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.remove(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + meterName);
+          metricRegistry.remove(jmxNamePrefix  + meterName);
           return null;
         }
       });
@@ -177,12 +207,13 @@ public class MetricsConfigurator {
   public static boolean removeCounter(MetricRegistry metrics, String name, final String pipelineName,
                                       final String pipelineRev) {
     final String counterName = metricName(name, COUNTER_SUFFIX);
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
     final MetricRegistry metricRegistry = sdcMetrics;
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
-          metricRegistry.remove(JMX_PREFIX + pipelineName + "." + pipelineRev + "."  + counterName);
+          metricRegistry.remove(jmxNamePrefix  + counterName);
           return null;
         }
       });
@@ -191,19 +222,23 @@ public class MetricsConfigurator {
   }
 
   public static synchronized void registerJmxMetrics(MetricRegistry metrics) {
-    cleanUpJmxMetrics();
     sdcMetrics = metrics;
   }
 
-  public static synchronized void cleanUpJmxMetrics() {
+  public static synchronized void registerPipeline(String pipelineName, String pipelineRev) {
+    runningPipelines.add(jmxNamePrefix(pipelineName, pipelineRev));
+  }
+
+  public static synchronized void cleanUpJmxMetrics(final String pipelineName, final String pipelineRev) {
     final MetricRegistry metricRegistry = sdcMetrics;
-    sdcMetrics = null;
+    final String jmxNamePrefix = jmxNamePrefix(pipelineName, pipelineRev);
+    runningPipelines.remove(jmxNamePrefix);
     if (metricRegistry != null) {
       AccessController.doPrivileged(new PrivilegedAction<Void>() {
         @Override
         public Void run() {
           for (String name : metricRegistry.getNames()) {
-            if (name.startsWith(JMX_PREFIX)) {
+            if (name.startsWith(jmxNamePrefix)) {
               metricRegistry.remove(name);
             }
           }

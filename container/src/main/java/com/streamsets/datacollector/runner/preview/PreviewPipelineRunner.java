@@ -45,10 +45,9 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private String sourceOffset;
   private String newSourceOffset;
   private Timer processingTimer;
-  private List<BatchListener> batchListenerList = new ArrayList<BatchListener>();
 
-  public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker, int batchSize, int batches,
-      boolean skipTargets) {
+  public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker,
+                               int batchSize, int batches, boolean skipTargets) {
     this.name = name;
     this.rev = rev;
     this.runtimeInfo = runtimeInfo;

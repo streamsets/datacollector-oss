@@ -110,7 +110,7 @@ public class PreviewPipelineBuilder {
      Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", name, rev, pipelineConf);
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {
-       return new PreviewPipeline(pipeline, validator.getIssues());
+       return new PreviewPipeline(name, rev, pipeline, validator.getIssues());
      } else {
        Issues issues = new Issues(builder.getIssues());
        throw new PipelineRuntimeException(issues);

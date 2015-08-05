@@ -9,6 +9,7 @@ public enum PreviewStatus {
   VALIDATING(true),     // validating the configuration, during preview
   VALID(false),          // configuration is valid, during preview
   INVALID(false),        // configuration is invalid, during preview
+  VALIDATION_ERROR(false),   // validation failed with an exception, during validation
 
   STARTING(true),       // preview starting (initialization)
   START_ERROR(false),    // preview failed while start (during initialization)

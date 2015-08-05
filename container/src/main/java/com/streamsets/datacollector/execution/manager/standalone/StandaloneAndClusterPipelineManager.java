@@ -23,6 +23,7 @@ import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.RunnerProvider;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -82,6 +83,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     this.objectGraph.inject(this);
     runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
     eventListenerManager.addStateEventListener(resourceManager);
+    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
   }
 
   @Override

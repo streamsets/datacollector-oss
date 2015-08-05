@@ -112,14 +112,18 @@ public class SyncPreviewer implements Previewer {
         changeState(PreviewStatus.INVALID, new PreviewOutputImpl(PreviewStatus.INVALID, e.getIssues(), null,
           e.toString()));
       } else {
-        //Leave the state as is.
+        changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
+          e.toString()));
         throw e;
       }
     } catch (PipelineStoreException e) {
-      //Leave the state as is.
+      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
+        e.toString()));
       throw e;
-    } catch (StageException e) {
+    } catch (Exception e) {
       //Wrap stage exception in PipelineException
+      changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
+        e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e) ;
     }
   }
