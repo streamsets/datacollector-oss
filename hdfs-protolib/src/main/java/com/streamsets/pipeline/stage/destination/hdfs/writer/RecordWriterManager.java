@@ -157,7 +157,12 @@ public class RecordWriterManager {
       case TEXT:
         OutputStream os = fs.create(path, false);
         if (compressionCodec != null) {
-          os = compressionCodec.createOutputStream(os);
+          try {
+            os = compressionCodec.createOutputStream(os);
+          } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+            throw new StageException(Errors.HADOOPFS_46, compressionType.name(), unsatisfiedLinkError,
+              unsatisfiedLinkError);
+          }
         }
         return new RecordWriter(path, timeToLiveMillis, os, generatorFactory);
       case SEQUENCE_FILE:
@@ -165,9 +170,14 @@ public class RecordWriterManager {
         Utils.checkNotNull(keyEL, "keyEL");
         Utils.checkArgument(compressionCodec == null || compressionType != SequenceFile.CompressionType.NONE,
                             "if using a compressionCodec, compressionType cannot be NULL");
-        SequenceFile.Writer writer = SequenceFile.createWriter(fs, hdfsConf, path, Text.class, Text.class,
-                                                               compressionType, compressionCodec);
-        return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory, context);
+        try {
+          SequenceFile.Writer writer = SequenceFile.createWriter(fs, hdfsConf, path, Text.class, Text.class,
+                                                                 compressionType, compressionCodec);
+          return new RecordWriter(path, timeToLiveMillis, writer, keyEL, generatorFactory, context);
+        } catch (UnsatisfiedLinkError unsatisfiedLinkError) {
+          throw new StageException(Errors.HADOOPFS_46, compressionType.name(), unsatisfiedLinkError,
+            unsatisfiedLinkError);
+        }
       default:
         throw new UnsupportedOperationException(Utils.format("Unsupported file Type '{}'", fileType));
     }
