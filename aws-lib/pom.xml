@@ -22,7 +22,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <kinesis.version>1.2.1</kinesis.version>
+    <kinesis.version>1.6.0</kinesis.version>
     <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 

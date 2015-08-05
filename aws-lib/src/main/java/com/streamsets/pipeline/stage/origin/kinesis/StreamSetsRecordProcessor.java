@@ -1,8 +1,10 @@
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessor;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
-import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownReason;
+import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
+import com.amazonaws.services.kinesis.clientlibrary.types.InitializationInput;
+import com.amazonaws.services.kinesis.clientlibrary.types.ProcessRecordsInput;
+import com.amazonaws.services.kinesis.clientlibrary.types.ShutdownInput;
 import com.amazonaws.services.kinesis.model.Record;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -27,8 +29,9 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
    * {@inheritDoc}
    */
   @Override
-  public void initialize(String shardId) {
-    LOG.info("Initializing record processor for shard: " + shardId);
+  public void initialize(InitializationInput initializationInput) {
+    final String shardId = initializationInput.getShardId();
+    LOG.debug("Initializing record processor for shard: " + shardId);
     this.shardId = shardId;
   }
 
@@ -36,21 +39,23 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
    * {@inheritDoc}
    */
   @Override
-  public void processRecords(List<Record> records, IRecordProcessorCheckpointer checkpointer) {
+  public void processRecords(ProcessRecordsInput processRecordsInput) {
+    List<Record> records = processRecordsInput.getRecords();
+    IRecordProcessorCheckpointer checkpointer = processRecordsInput.getCheckpointer();
     try {
       recordQueue.transfer(Pair.of(records, checkpointer));
+      lastRecordOffset = records.get(records.size() - 1).getSequenceNumber();
+      LOG.debug("Placed {} records into the queue.", records.size());
     } catch (InterruptedException e) {
       LOG.error("Failed to place batch in queue for shardId {}", shardId);
     }
-    lastRecordOffset = records.get(records.size() - 1).getSequenceNumber();
-    LOG.info("Placed {} records into the queue.", records.size());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void shutdown(IRecordProcessorCheckpointer checkpointer, ShutdownReason reason) {
+  public void shutdown(ShutdownInput shutdownInput) {
     LOG.info("Shutting down record processor for shard: {}", shardId);
     LOG.info("Last record processed: {}", lastRecordOffset);
   }

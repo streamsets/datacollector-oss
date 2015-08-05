@@ -42,8 +42,18 @@ public class KinesisDSource extends DSourceOffsetCommitter {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Stream Name",
+      label = "Application Name",
+      description = "Kinesis equivalent of a Kafka Consumer Group",
       displayPosition = 20,
+      group = "KINESIS"
+  )
+  public String applicationName;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Stream Name",
+      displayPosition = 30,
       group = "KINESIS"
   )
   public String streamName;
@@ -54,7 +64,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       defaultValue = "SDC_JSON",
       label = "Data Format",
       description = "Data format to use when receiving records from Kinesis",
-      displayPosition = 30,
+      displayPosition = 40,
       group = "KINESIS"
   )
   @ValueChooser(InputRecordFormatChooserValues.class)
@@ -66,7 +76,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       defaultValue = "500",
       label = "Max Batch Size (messages)",
       description = "Max number of records per batch. Kinesis will not return more than 2MB/s/shard.",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "KINESIS",
       min = 1,
       max = Integer.MAX_VALUE
@@ -79,7 +89,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       defaultValue = "1000",
       label = "Read Interval (ms)",
       description = "Time KCL should wait between requests per shard. Cannot be set below 200ms. >250ms recommended.",
-      displayPosition = 50,
+      displayPosition = 60,
       group = "KINESIS",
       min = 200,
       max = Integer.MAX_VALUE
@@ -92,7 +102,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       defaultValue = "1000",
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a batch",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "KINESIS",
       min = 1,
       max = Integer.MAX_VALUE
@@ -105,7 +115,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       defaultValue = "60000",
       label = "Preview Batch Wait Time (ms)",
       description = "Max time to wait for data for preview mode. This should be at least several seconds for Kinesis.",
-      displayPosition = 60,
+      displayPosition = 80,
       group = "KINESIS",
       min = 1,
       max = Integer.MAX_VALUE
@@ -118,7 +128,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Access Key ID",
-      displayPosition = 70,
+      displayPosition = 90,
       group = "KINESIS"
   )
   public String awsAccessKeyId;
@@ -127,7 +137,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS Secret Access Key",
-      displayPosition = 80,
+      displayPosition = 100,
       group = "KINESIS"
   )
   public String awsSecretAccessKey;
@@ -136,6 +146,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
   protected Source createSource() {
     return new KinesisSource(
         region,
+        applicationName,
         streamName,
         dataFormat,
         maxBatchSize,
