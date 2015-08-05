@@ -7,9 +7,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Destinations/Compression-Overview.dita">
-    <topicref href="../Destinations/Compression-Enabling.dita"/>
-   </topicref>
   </topicref>
   <topicref href="../Destinations/Cassandra.dita" chunk="to-content">
    <topicmeta>
@@ -37,6 +34,9 @@
    </topicmeta>
    <topicref href="../Destinations/HadoopFS-Kerberos.dita"/>
    <topicref href="../Destinations/HadoopFS-HDFSUser-dest.dita"/>
+   <topicref href="../Destinations/Compression-Overview.dita">
+    <topicref href="../Destinations/Compression-Enabling.dita"/>
+   </topicref>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
    <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>

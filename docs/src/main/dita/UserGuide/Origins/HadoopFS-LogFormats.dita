@@ -50,7 +50,7 @@
       default format or specify a custom format. Use the Apache Log4j version 1.2 syntax to define
       the format of the log file.</dd>
      <dd>
-      <note>Unlike other origins that read log data, Hadoop FS origin does not support log lines
+      <note>Unlike other origins that read log data, the Hadoop FS origin does not support log lines
        with stack traces. Log lines with stack traces are treated as error records.</note>
      </dd>
     </dlentry>

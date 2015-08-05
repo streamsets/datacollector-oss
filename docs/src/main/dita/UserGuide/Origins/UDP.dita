@@ -3,8 +3,8 @@
 <concept id="concept_rst_2y5_1s">
  <title>UDP Source</title>
  <shortdesc>The UDP Source origin reads messages from one or more UDP ports. UDP Source generates a
-    record for every message. UDP Source can read syslog messages and Netflow messages from NetFlow
-    Version 5.</shortdesc>
+    record for every message. UDP Source can read syslog messages, Netflow messages from NetFlow
+    Version 5, and collectd messages.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>UDP Source</indexterm></indexterm><indexterm>UDP Source
      origin<indexterm>overview</indexterm></indexterm>When you configure UDP Source, you specify the

@@ -68,8 +68,8 @@
      When the field is null, the function returns no value. </dd>
     <dd>
      <p>Nulls are coerced based on the expected return type of the function. For example, if an EL
-      is expected to return a string, null will be coerced to an empty string. However, a null
-      integer is coerced to 0.</p>
+      is expected to return a string, null is coerced to an empty string. However, a null integer is
+      coerced to 0.</p>
     </dd>
    </dlentry>
    <dlentry>

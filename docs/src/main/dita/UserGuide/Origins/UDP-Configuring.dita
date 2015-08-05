@@ -36,6 +36,7 @@
                                     <entry>Data format passed by UDP:<ul id="ul_dfw_dqj_ks">
                                             <li>NetFlow</li>
                                             <li>Syslog </li>
+                                            <li>collectd</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -63,9 +64,52 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Syslog</wintitle> tab, define the character set for the data.
-                        <draft-comment author="Loretta">Sent Brock a note 6/18 about whether it
-                        should be moved to main tab.</draft-comment></cmd>
+                <cmd>On the <wintitle>Syslog</wintitle> tab, define the character set for the data. </cmd>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>collectd</uicontrol> tab, define the following collectd
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_u54_w25_xs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.26*"/>
+                            <thead>
+                                <row>
+                                    <entry>collectd</entry>
+                                    <entry>Properties</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>TypesDB File Path</entry>
+                                    <entry>Path to a user-provided types.db file. Overrides the
+                                        default types.db file. </entry>
+                                </row>
+                                <row>
+                                    <entry>Convert Hi-res Time &amp; Interval</entry>
+                                    <entry>Converts the collectd high resolution time format
+                                        interval and timestamp to UNIX time, in
+                                        milliseconds.</entry>
+                                </row>
+                                <row>
+                                    <entry>Exclude Interval</entry>
+                                    <entry>Excludes the interval field from output record.</entry>
+                                </row>
+                                <row>
+                                    <entry>Auth File</entry>
+                                    <entry>Path to an optional authentication file. Use an
+                                        authentication file to accept signed and encrypted data.
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Charset</entry>
+                                    <entry>Character set of the data.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

@@ -21,8 +21,7 @@
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">
         <li>Hadoop FS - Reads data from the Hadoop Distributed File System (HDFS). </li>
-        <li>Kafka Consumer - Reads messages from Kafka. Use the Kafka CDH version of the
-            origin.<draft-comment author="Loretta">check version description.</draft-comment></li>
+        <li>Kafka Consumer - Reads messages from Kafka. Use the cluster version of the origin.</li>
       </ul></p>
  </conbody>
 </concept>
