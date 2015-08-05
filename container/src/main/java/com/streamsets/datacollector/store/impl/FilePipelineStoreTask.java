@@ -179,14 +179,14 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (!hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      if (!cleanUp(name)) {
-        throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
-      }
       if (pipelineStateStore != null) {
         // For now, passing rev 0 - make delete take tag/rev as a parameter
         PipelineStatus pipelineStatus = pipelineStateStore.getState(name, REV).getStatus();
         if (pipelineStatus.isActive()) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0208, pipelineStatus);
+        }
+        if (!cleanUp(name)) {
+          throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
         }
         pipelineStateStore.delete(name, REV);
       }
