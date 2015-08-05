@@ -7,13 +7,14 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.InvalidStateException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ShutdownException;
 import com.amazonaws.services.kinesis.clientlibrary.exceptions.ThrottlingException;
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorCheckpointer;
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorFactory;
+import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration;
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.Worker;
@@ -54,6 +55,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   private final long idleTimeBetweenReads;
   private final long maxWaitTime;
   private final long previewWaitTime;
+  private final String applicationName;
 
   private ExecutorService executorService;
   private Worker worker;
@@ -64,6 +66,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
 
   public KinesisSource(
       final Regions region,
+      final String applicationName,
       final String streamName,
       final DataFormat dataFormat,
       final int maxBatchSize,
@@ -74,6 +77,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       final String awsSecretAccessKey
   ) {
     this.region = region;
+    this.applicationName = applicationName;
     this.streamName = streamName;
     this.dataFormat = dataFormat;
     this.maxBatchSize = maxBatchSize;
@@ -114,7 +118,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       // Create the KCL worker with the StreamSets record processor factory
       KinesisClientLibConfiguration kclConfig =
           new KinesisClientLibConfiguration(
-              "sdc",
+              applicationName,
               streamName,
               new DefaultAWSCredentialsProviderChain(),
               UUID.randomUUID().toString()
@@ -125,9 +129,11 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
           .withIdleTimeBetweenReadsInMillis(idleTimeBetweenReads)
           .withInitialPositionInStream(InitialPositionInStream.TRIM_HORIZON); // Configurable?
 
-      worker = new Worker(recordProcessorFactory, kclConfig);
+      worker = new Worker.Builder()
+          .recordProcessorFactory(recordProcessorFactory)
+          .config(kclConfig)
+          .build();
 
-      // Launch our worker thread
       executorService.execute(worker);
       LOG.info("Launched KCL Worker");
     }
@@ -137,7 +143,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   private void checkStreamExists(List<ConfigIssue> issues) {
     ClientConfiguration kinesisConfiguration = new ClientConfiguration();
     AmazonKinesisClient kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
-    kinesisClient.setRegion(region);
+    kinesisClient.setRegion(Region.getRegion(region));
 
     try {
       DescribeStreamResult result = kinesisClient.describeStream(streamName);
@@ -159,8 +165,12 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     }
     if (executorService != null) {
       try {
-        executorService.awaitTermination(maxWaitTime, TimeUnit.MILLISECONDS);
-      } catch (InterruptedException ignored) {
+        executorService.shutdown();
+        if (!executorService.awaitTermination(maxWaitTime, TimeUnit.MILLISECONDS)) {
+          executorService.shutdownNow();
+        }
+      } catch (InterruptedException e) {
+        LOG.warn("Interrupted while terminating executor service.", e);
       }
       if (!batchQueue.isEmpty()) {
         LOG.error("Queue still had {} batches at shutdown.", batchQueue.size());
@@ -221,7 +231,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
     final boolean isPreview = getContext().isPreview();
     if (null != checkpointer && !isPreview && !offset.isEmpty()) {
       try {
-        LOG.info("Checkpointing batch at offset {}", offset);
+        LOG.debug("Checkpointing batch at offset {}", offset);
         checkpointer.checkpoint(offset);
       } catch (ShutdownException se) {
         // Ignore checkpoint if the processor instance has been shutdown (fail over).
@@ -234,7 +244,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         LOG.error("Cannot save checkpoint to the DynamoDB table used by the Amazon Kinesis Client Library.", e);
       }
     } else if(isPreview) {
-      LOG.info("Not checkpointing because this origin is in preview mode.");
+      LOG.debug("Not checkpointing because this origin is in preview mode.");
     }
   }
 

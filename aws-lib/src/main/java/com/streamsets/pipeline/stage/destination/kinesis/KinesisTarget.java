@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
 import com.amazonaws.services.kinesis.model.DescribeStreamResult;
@@ -94,7 +95,7 @@ public class KinesisTarget extends BaseTarget {
   private void checkStreamExists(List<ConfigIssue> issues) {
     ClientConfiguration kinesisConfiguration = new ClientConfiguration();
     AmazonKinesisClient kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
-    kinesisClient.setRegion(region);
+    kinesisClient.setRegion(Region.getRegion(region));
 
     try {
       DescribeStreamResult result = kinesisClient.describeStream(streamName);
@@ -120,7 +121,7 @@ public class KinesisTarget extends BaseTarget {
 
   private void createKinesisClient() {
     kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
-    kinesisClient.setRegion(region);
+    kinesisClient.setRegion(Region.getRegion(region));
   }
 
   private DataGeneratorFactory createDataGeneratorFactory() {
