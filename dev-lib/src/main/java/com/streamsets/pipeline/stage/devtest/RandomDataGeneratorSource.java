@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.devtest;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
@@ -27,10 +28,11 @@ import java.util.UUID;
 
 @GenerateResourceBundle
 @StageDef(version=1, label="Dev Data Generator",
+  execution = ExecutionMode.STANDALONE,
   icon="random.png")
 public class RandomDataGeneratorSource extends BaseSource {
 
-  private Random random = new Random();
+  private final Random random = new Random();
 
   @ConfigDef(label = "Fields to generate", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
     description="Fields to generate of the indicated type")

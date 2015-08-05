@@ -51,7 +51,7 @@ public class TestKafkaOriginMultiPartitionPipelineOperations extends TestPipelin
   }
 
   private static String getPipelineJson() throws Exception {
-    URI uri = Resources.getResource("kafka_origin_pipeline.json").toURI();
+    URI uri = Resources.getResource("kafka_origin_pipeline_standalone.json").toURI();
     String pipelineJson =  new String(Files.readAllBytes(Paths.get(uri)), StandardCharsets.UTF_8);
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
