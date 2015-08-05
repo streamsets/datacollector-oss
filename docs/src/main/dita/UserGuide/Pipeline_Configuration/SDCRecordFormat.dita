@@ -15,11 +15,13 @@
   <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
     <li>Directory</li>
     <li>Kafka Consumer</li>
+        <li>Kinesis Consumer</li>
    </ul></p>
   <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
         <li>Flume</li>
     <li>Hadoop FS</li>
     <li>Kafka Producer</li>
+        <li>Kinesis Producer</li>
    </ul></p>
  </conbody>
 </concept>

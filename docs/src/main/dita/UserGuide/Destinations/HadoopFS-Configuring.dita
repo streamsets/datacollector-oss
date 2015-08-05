@@ -188,11 +188,9 @@
                                             />.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Compression Codec Class Name</entry>
+                                    <entry>Compression Codec Class</entry>
                                     <entry>Full class name of the other compression codec that you
-                                        want to use. <draft-comment author="Loretta">Tucu to change
-                                            label - verify name after
-                                        SDC-1312.</draft-comment></entry>
+                                        want to use. </entry>
                                 </row>
                                 <row>
                                     <entry>Sequence File Key</entry>

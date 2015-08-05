@@ -18,8 +18,8 @@
    </dlentry>
       <dlentry>
         <dt>every( &lt;interval>, &lt; mm() | ss() > )</dt>
-        <dd>Represents the interval of minutes or seconds for generating Hadoop FS output
-          directories. You can use the function once in the Hadoop FS Directory Template property in
+        <dd>Represents the interval of minutes or seconds for generating output directories for the
+          Hadoop FS destination. You can use the function once in the Directory Template property in
           place of the minutes or seconds datetime variables. Use the function to replace the
           smallest time interval in the directory template.</dd>
         <dd>For example, the following usage in the Directory Template property generates a new
