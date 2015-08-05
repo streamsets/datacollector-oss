@@ -9,7 +9,7 @@
   <p><indexterm>MongoDB origin<indexterm>offset field</indexterm></indexterm>You can use any Object
    ID field as the offset field, but the results for other fields are not guaranteed. </p>
   <p>Object ID fields include an embedded timestamp. The origin uses the embedded timestamp to
-   determine where in the collection to begin reading based on the start timestamp that you
-   preovide. </p>
+      determine where in the collection to begin reading based on the start timestamp that you
+      provide. </p>
  </conbody>
 </concept>

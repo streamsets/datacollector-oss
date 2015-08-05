@@ -8,11 +8,10 @@
   Kerberos principal and keytab to connect to HDFS.  </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS origin<indexterm>Kerberos
-    authentication</indexterm></indexterm><indexterm>Hadoop FS destination<indexterm>Kerberos
-     authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
-     HDFS</indexterm></indexterm>The Kerberos principal and keytab are defined in the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
-   file. To use Kerberos authentication, configure all Kerberos properties in the <ph
+    authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
+     Hadoop FS origin</indexterm></indexterm>The Kerberos principal and keytab are defined in the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   configuration file. To use Kerberos authentication, configure all Kerberos properties in the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
    file. </p>
  </conbody>

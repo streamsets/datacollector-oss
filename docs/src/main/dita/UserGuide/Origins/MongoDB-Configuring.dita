@@ -41,9 +41,8 @@
                                 </row>
                                 <row>
                                     <entry>Capped Collection</entry>
-                                    <entry>The collection is capped. <draft-comment author="Loretta"
-                                            >what's the difference in behavior if this is
-                                            selected?</draft-comment></entry>
+                                    <entry>The collection is capped. Clear this option to read an
+                                        uncapped collection.</entry>
                                 </row>
                                 <row>
                                     <entry>Start Timestamp</entry>

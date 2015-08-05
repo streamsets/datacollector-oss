@@ -6,8 +6,8 @@
   <p><indexterm>troubleshooting<indexterm>cluster mode</indexterm></indexterm>Use the following tips
       for help with pipelines in cluster mode:<dl>
         <dlentry>
-          <dt>Why do I keep getting the following validation error when configuring my cluster
-            pipeline?</dt>
+          <dt>I got the following validation error when configuring a cluster pipeline. What does it
+            mean?</dt>
           <dd>
             <codeblock>Validation_0071 - Stage '&lt;stage id>' does not support 'Standalone' execution mode</codeblock>
           </dd>

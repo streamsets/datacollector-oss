@@ -8,8 +8,8 @@
     frame="all" rowsep="1" colsep="1" id="table_d3t_sh5_js">
     <tgroup cols="3">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
-     <colspec colname="c2" colnum="2" colwidth="3.01*"/>
-     <colspec colname="c3" colnum="3" colwidth="1.99*"/>
+     <colspec colname="c2" colnum="2" colwidth="2.8*"/>
+     <colspec colname="c3" colnum="3" colwidth="2.62*"/>
      <thead>
       <row>
        <entry>Character</entry>
@@ -67,15 +67,14 @@
       </row>
       <row>
        <entry>? </entry>
-       <entry>A quantifier that represents zero or one instance of the preceding character or group.
-         <draft-comment author="Loretta">group? or no group?</draft-comment></entry>
+       <entry>A quantifier that represents zero or one instance of the preceding character or group. </entry>
        <entry>B-?7 represents B7 or B-7.</entry>
       </row>
       <row>
        <entry>+</entry>
        <entry>A quantifier that represents one or more instances of the preceding character or
         group.</entry>
-       <entry>([0-9][0-9][0-9])-+([0-9][0-9][0-9][0-9]) represents phone numbers that  area codes:
+       <entry>([0-9][0-9][0-9])-+([0-9][0-9][0-9][0-9]) represents phone numbers that area codes:
         415-555-5555 and 555-5555. </entry>
       </row>
       <row>

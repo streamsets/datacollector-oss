@@ -32,8 +32,7 @@
    </dlentry>
    <dlentry>
     <dt>QS</dt>
-    <dd>%{QUOTEDSTRING}<draft-comment author="Loretta">this was a standalone item under "shortcuts"
-      -- does it belong here or in the general list?</draft-comment></dd>
+    <dd>%{QUOTEDSTRING}</dd>
    </dlentry>
    <dlentry>
     <dt>COMMONAPACHELOG</dt>

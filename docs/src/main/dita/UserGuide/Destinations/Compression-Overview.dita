@@ -2,14 +2,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h4y_ycm_xs">
  <title>LZO and Snappy Compression</title>
- <shortdesc>You can use LZO or Snappy compression for Hadoop FS and HBase destinations. Or you can
-  use Snappy compression for Cassandra. </shortdesc>
+ <shortdesc>You can use LZO or Snappy compression with the Hadoop FS and HBase destinations. You can
+  use Snappy compression with the Cassandra destination. </shortdesc>
  <conbody>
-  <p>Note that due to JVM limitations, you cannot use Snappy for Cassandra and the Hadoop
-   destinations - you can use Snappy with Cassandra or with Hadoop FS and HBase. </p>
-  <p>In addition, JVM limitations allow you to use LZO or Snappy compression with only one version
-   of Hadoop FS and HBase. The Hadoop FS and HBase destinations are installed together in a library
-   version. If you installed multiple library versions, make sure to configure the <ph
+  <p><indexterm>destinations<indexterm>LZO and Snappy
+    compression</indexterm></indexterm><indexterm>LZO compression<indexterm>for some
+     destinations</indexterm></indexterm><indexterm>Snappy compression<indexterm>for some
+     destinations</indexterm></indexterm>To use LZO or Snappy compression with Hadoop FS or HBase,
+   you need to configure the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to enable LZO
+   or Snappy compression.</p>
+  <p>You can use Snappy compression with Cassandra without any additional <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration. </p>
+  <p>Due to JVM limitations, you can use LZO or Snappy compression with only one version of Hadoop
+   FS and HBase. The Hadoop FS and HBase destinations are installed together in a library version.
+   If you installed multiple library versions, make sure to configure the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
    compression with the version that you want to use. </p>
  </conbody>

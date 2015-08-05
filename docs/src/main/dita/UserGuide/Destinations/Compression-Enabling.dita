@@ -2,13 +2,22 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_a15_fcm_xs">
  <title>Enabling LZO and Snappy Compression</title>
+  <shortdesc>To use LZO or Snappy compression with Hadoop FS or HBase, you need to enable the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use the
+    compression type. You do not need to  enable the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+    Snappy compression with Cassandra.</shortdesc>
  <conbody>
-  <p>The steps to enable compression differ based on the compression type and destinations that you
-      want to use them with:<dl>
+  <p><indexterm>LZO compression<indexterm>enabling for Hadoop FS and
+        HBase</indexterm></indexterm><indexterm>Snappy compression<indexterm>enabling for Hadoop FS
+          and HBase</indexterm></indexterm><indexterm>Hadoop FS destination<indexterm>enabling LZO
+          or Snappy compression</indexterm></indexterm><indexterm>HBase
+          destination<indexterm>enabling LZO or Snappy compression</indexterm></indexterm>The steps
+      to enable compression differ based on the compression type and destinations that you want to
+      use them with:<dl>
         <dlentry>
           <dt>Using Snappy with the Hadoop FS or HBase destinations</dt>
-          <dd>You can use Snappy with one version of Hadoop FS or HBase. If you enable Snappy for
-            Hadoop FS and HBase, do not enable it for Cassandra. </dd>
+          <dd>You can use Snappy with one version of Hadoop FS or HBase. </dd>
           <dd>To enable Snappy for Hadoop FS and HBase, perform the following steps:</dd>
           <dd>
             <ol id="ol_ufy_42m_xs">
@@ -49,12 +58,6 @@
                 full LZO class name. In the HBase destination no additional configuration is
                 necessary.</li>
             </ol></dd>
-        </dlentry>
-        <dlentry>
-          <dt>Using Snappy with the Cassandra destination</dt>
-          <dd>
-            <draft-comment author="Loretta">come back to this. </draft-comment>
-          </dd>
         </dlentry>
       </dl></p>
  </conbody>

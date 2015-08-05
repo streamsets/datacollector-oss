@@ -49,15 +49,20 @@
  <h2 class="title topictitle2">LZO and Snappy Compression</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can use LZO or Snappy compression for Hadoop FS and HBase destinations. Or you can
-  use Snappy compression for Cassandra. </p>
+ <div class="body conbody"><p class="shortdesc">You can use LZO or Snappy compression with the Hadoop FS and HBase destinations. You can
+  use Snappy compression with the Cassandra destination. </p>
 
-  <p class="p">Note that due to JVM limitations, you cannot use Snappy for Cassandra and the Hadoop
-   destinations - you can use Snappy with Cassandra or with Hadoop FS and HBase. </p>
+  <p class="p">To use LZO or Snappy compression with Hadoop FS or HBase,
+   you need to configure the <span class="ph">Data
+                  Collector</span> to enable LZO
+   or Snappy compression.</p>
 
-  <p class="p">In addition, JVM limitations allow you to use LZO or Snappy compression with only one version
-   of Hadoop FS and HBase. The Hadoop FS and HBase destinations are installed together in a library
-   version. If you installed multiple library versions, make sure to configure the <span class="ph">Data
+  <p class="p">You can use Snappy compression with Cassandra without any additional <span class="ph">Data
+                  Collector</span> configuration. </p>
+
+  <p class="p">Due to JVM limitations, you can use LZO or Snappy compression with only one version of Hadoop
+   FS and HBase. The Hadoop FS and HBase destinations are installed together in a library version.
+   If you installed multiple library versions, make sure to configure the <span class="ph">Data
                   Collector</span> to use
    compression with the version that you want to use. </p>
 
@@ -66,14 +71,20 @@
 <div class="topic concept nested2" id="concept_a15_fcm_xs">
  <h3 class="title topictitle3">Enabling LZO and Snappy Compression</h3>
 
- <div class="body conbody">
-  <div class="p">The steps to enable compression differ based on the compression type and destinations that you
-      want to use them with:<dl class="dl">
+  
+ <div class="body conbody"><p class="shortdesc">To use LZO or Snappy compression with Hadoop FS or HBase, you need to enable the <span class="ph">Data
+                  Collector</span> to use the
+    compression type. You do not need to  enable the <span class="ph">Data
+                  Collector</span> to use
+    Snappy compression with Cassandra.</p>
+
+  <div class="p">The steps
+      to enable compression differ based on the compression type and destinations that you want to
+      use them with:<dl class="dl">
         
           <dt class="dt dlterm">Using Snappy with the Hadoop FS or HBase destinations</dt>
 
-          <dd class="dd">You can use Snappy with one version of Hadoop FS or HBase. If you enable Snappy for
-            Hadoop FS and HBase, do not enable it for Cassandra. </dd>
+          <dd class="dd">You can use Snappy with one version of Hadoop FS or HBase. </dd>
 
           <dd class="dd">To enable Snappy for Hadoop FS and HBase, perform the following steps:</dd>
 
@@ -129,14 +140,6 @@ If you have two versions of Hadoop
 
             </ol>
 </dd>
-
-        
-        
-          <dt class="dt dlterm">Using Snappy with the Cassandra destination</dt>
-
-          <dd class="dd">
-            
-          </dd>
 
         
       </dl>

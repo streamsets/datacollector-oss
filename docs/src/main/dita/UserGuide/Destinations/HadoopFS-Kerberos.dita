@@ -3,18 +3,17 @@
 <concept id="concept_xy5_4tm_vs">
  <title>Kerberos Authentication</title>
  <shortdesc>You can use Kerberos authentication to connect to HDFS. When you use Kerberos
-  authentication the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-  Kerberos principal and keytab to connect to HDFS.  </shortdesc>
+    authentication, the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
+    Kerberos principal and keytab to connect to HDFS. </shortdesc>
  <conbody>
-  <p><indexterm>Hadoop FS origin<indexterm>Kerberos
-    authentication</indexterm></indexterm><indexterm>Hadoop FS destination<indexterm>Kerberos
-     authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
-     HDFS</indexterm></indexterm>The Kerberos principal and keytab are defined in the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
-   file. To use Kerberos authentication, configure all Kerberos properties in the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> configuration
-   file. </p>
+  <p><indexterm>Hadoop FS destination<indexterm>Kerberos
+        authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using for
+          Hadoop FS destination</indexterm></indexterm>The Kerberos principal and keytab are defined
+      in the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file. To use Kerberos authentication, configure all Kerberos properties in the
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file. </p>
  </conbody>
  <related-links>
   <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>
