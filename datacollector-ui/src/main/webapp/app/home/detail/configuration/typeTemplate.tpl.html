@@ -42,7 +42,7 @@
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning,
+                readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 autofocus: autoFocusConfigName === configDefinition.name,
                 extraKeys: {
                   'Tab': false,
@@ -139,7 +139,7 @@
              ng-model="listValue[$index]"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning,
+                readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 extraKeys: {
                   'Tab': false,
                   'Ctrl-Space': 'autocomplete'
@@ -201,7 +201,7 @@
              ng-model="mapObject.value"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning,
+                readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 extraKeys: {
                   'Tab': false,
                   'Ctrl-Space': 'autocomplete'
@@ -330,7 +330,7 @@
              ng-model="lanePredicateMapping.predicate"
              ui-refresh="refreshCodemirror"
              ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default',
+                readOnly: (isPipelineReadOnly || isPipelineRunning || lanePredicateMapping.predicate === 'default') ? 'nocursor' : false,
                 extraKeys: {
                   'Tab': false,
                   'Ctrl-Space': 'autocomplete'
@@ -380,7 +380,7 @@
        ng-model="customFieldValue[customFieldConfigDefinition.name]"
        ui-refresh="refreshCodemirror"
        ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning,
+                readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 extraKeys: {
                   'Tab': false,
                   'Ctrl-Space': 'autocomplete'
@@ -403,7 +403,7 @@
          ng-model="detailPaneConfig.configuration[configIndex].value"
          ui-refresh="refreshCodemirror"
          ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: isPipelineReadOnly || isPipelineRunning,
+                readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 mode: {
                   name: configDefinition.mode
                 },
