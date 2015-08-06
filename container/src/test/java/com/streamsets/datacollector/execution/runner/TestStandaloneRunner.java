@@ -354,6 +354,9 @@ public class TestStandaloneRunner {
     } catch (PipelineRunnerException e) {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
+
+    runner2.stop();
+    waitAndAssertState(runner2, PipelineStatus.STOPPED);
   }
 
   @Module(overrides = true, library = true)
