@@ -6,6 +6,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Throwables;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -85,6 +86,9 @@ public class Pipeline {
   public List<Issue> validateConfigs() throws StageException {
     try {
       return init();
+    } catch (Throwable throwable) {
+      LOG.error("Uncaught error in init: " + throwable, throwable);
+      throw Throwables.propagate(throwable);
     } finally {
       destroy();
     }
