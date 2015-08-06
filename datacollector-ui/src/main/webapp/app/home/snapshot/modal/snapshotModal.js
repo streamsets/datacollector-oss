@@ -98,7 +98,7 @@ angular
             .filter(function(snapshotInfo) {
               return snapshotInfo.name === pipelineConfig.info.name;
             })
-            .sortBy('id')
+            .sortBy('timeStamp')
             .value();
 
           var snapshotInfoInProgress = _.find($scope.snapshotsInfo, function(snapshotInfo) {
