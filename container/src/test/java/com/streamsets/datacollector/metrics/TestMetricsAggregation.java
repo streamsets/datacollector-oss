@@ -81,7 +81,17 @@ public class TestMetricsAggregation {
       , Mockito.mock(ThreadHealthReporter.class), new EventListenerManager(),
       null, slaveCallbackManager);
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
+    validateAggregatedResults(aggregatedMetrics);
 
+    //Calling twice should not cause issue
+    aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
+    validateAggregatedResults(aggregatedMetrics);
+
+    aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
+    validateAggregatedResults(aggregatedMetrics);
+  }
+
+  private void validateAggregatedResults(MetricRegistryJson aggregatedMetrics) {
     Map<String, CounterJson> counters = aggregatedMetrics.getCounters();
     CounterJson randomSourceOutputCounter =
       counters.get("stage.com_streamsets_pipeline_stage_devtest_RandomSource1432492071220.outputRecords.counter");

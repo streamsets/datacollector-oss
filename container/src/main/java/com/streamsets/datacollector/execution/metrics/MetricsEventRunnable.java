@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -118,13 +119,41 @@ public class MetricsEventRunnable implements Runnable {
 
     for(String slaveSdcToken: slaveMetrics.keySet()) {
       MetricRegistryJson metrics = slaveMetrics.get(slaveSdcToken);
+
+      Map<String, CounterJson> slaveCounters = metrics.getCounters();
+      Map<String, MeterJson> slaveMeters = metrics.getMeters();
+
       if(aggregatedCounters == null) {
         //First Slave Metrics
-        aggregatedCounters = metrics.getCounters();
-        aggregatedMeters = metrics.getMeters();
+
+        aggregatedCounters = new HashMap<>();
+        aggregatedMeters = new HashMap<>();
+
+        for(String meterName: slaveCounters.keySet()) {
+          CounterJson slaveCounter = slaveCounters.get(meterName);
+          CounterJson aggregatedCounter = new CounterJson();
+          aggregatedCounter.setCount(slaveCounter.getCount());
+          aggregatedCounters.put(meterName, aggregatedCounter);
+        }
+
+        for(String meterName: slaveMeters.keySet()) {
+          MeterJson slaveMeter = slaveMeters.get(meterName);
+          MeterJson aggregatedMeter = new MeterJson();
+          aggregatedMeter.setCount( slaveMeter.getCount());
+          aggregatedMeter.setM1_rate(slaveMeter.getM1_rate());
+          aggregatedMeter.setM5_rate(slaveMeter.getM5_rate());
+          aggregatedMeter.setM15_rate(slaveMeter.getM15_rate());
+          aggregatedMeter.setM30_rate(slaveMeter.getM30_rate());
+          aggregatedMeter.setH1_rate(slaveMeter.getH1_rate());
+          aggregatedMeter.setH6_rate(slaveMeter.getH6_rate());
+          aggregatedMeter.setH12_rate(slaveMeter.getH12_rate());
+          aggregatedMeter.setH24_rate(slaveMeter.getH24_rate());
+          aggregatedMeter.setMean_rate(slaveMeter.getMean_rate());
+          aggregatedMeters.put(meterName, aggregatedMeter);
+        }
+
       } else {
         //Otherwise add to the aggregated Metrics
-        Map<String, CounterJson> slaveCounters = metrics.getCounters();
         for(String meterName: aggregatedCounters.keySet()) {
           CounterJson aggregatedCounter = aggregatedCounters.get(meterName);
           CounterJson slaveCounter = slaveCounters.get(meterName);
@@ -134,7 +163,6 @@ public class MetricsEventRunnable implements Runnable {
           }
         }
 
-        Map<String, MeterJson> slaveMeters = metrics.getMeters();
         for(String meterName: aggregatedMeters.keySet()) {
           MeterJson aggregatedMeter = aggregatedMeters.get(meterName);
           MeterJson slaveMeter = slaveMeters.get(meterName);
