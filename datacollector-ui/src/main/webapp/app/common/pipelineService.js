@@ -53,7 +53,8 @@ angular.module('dataCollectorApp.common')
 
             self.rulesElMetadata = {
               elFunctionDefinitions: elFunctionDefinitions,
-              elConstantDefinitions: elConstantDefinitions
+              elConstantDefinitions: elConstantDefinitions,
+              regex: 'wordColonSlash'
             };
 
             self.metricRulesELMetadata = angular.copy(self.rulesElMetadata);

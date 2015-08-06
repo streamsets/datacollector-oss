@@ -195,7 +195,8 @@ angular
        * On focus callback for field selector configuration.
        */
       onFieldSelectorFocus: function(stageInstance) {
-        if(!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) {
+        if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && !$scope.isPipelineReadOnly &&
+          !$scope.isPipelineRunning) {
           updateFieldDataForStage(stageInstance);
         }
       },
@@ -583,8 +584,6 @@ angular
             // Ignore Error
             //$rootScope.common.errors = [res.data];
           });
-      } else {
-
       }
     };
 
