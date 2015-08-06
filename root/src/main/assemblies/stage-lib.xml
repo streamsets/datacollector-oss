@@ -29,10 +29,6 @@
       <!-- Jython must be packaged differently. -->
       <excludes>
         <exclude>org.python:jython-standalone</exclude>
-
-        <!-- Excluding Xerces and XML-APIs from all stages ot avoid classloader issues, the one from the JDK works -->
-        <exclude>xerces:xercesImpl</exclude>
-        <exclude>xml-apis:xml-apis</exclude>
       </excludes>
     </dependencySet>
 
