@@ -25,7 +25,7 @@ angular
        */
       createDataRule: function() {
         if((!$scope.fieldPaths || $scope.fieldPaths.length === 0 ) && $scope.selectedType === pipelineConstant.LINK &&
-          !$rootScope.common.isSlaveNode) {
+          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -77,7 +77,7 @@ angular
         }
 
         if((!$scope.fieldPaths || $scope.fieldPaths.length === 0) && $scope.selectedType === pipelineConstant.LINK &&
-          !$rootScope.common.isSlaveNode) {
+          !$rootScope.common.isSlaveNode && !$scope.isPipelineRunning) {
           updateFieldDataForStage($scope.selectedObject);
         }
 
@@ -159,7 +159,7 @@ angular
     var updateFieldDataForStage = function(edge) {
       if(edge) {
 
-        previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 10).
+        previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 1).
           then(function (inputRecords) {
             if(_.isArray(inputRecords) && inputRecords.length) {
               var fieldPaths = [];
