@@ -26,9 +26,15 @@
       <outputDirectory>/${project.artifactId}/lib</outputDirectory>
       <unpack>false</unpack>
       <scope>runtime</scope>
-      <!-- Jython must be packaged differently. -->
       <excludes>
+        <!-- Jython must be packaged differently. -->
         <exclude>org.python:jython-standalone</exclude>
+
+        <!--
+             Excluding Snappy from all stage libs as it must be in the root ClassLoader,
+             avail in SDC distro at SDC/root-lib/
+        -->
+        <exclude>org.xerial.snappy:snappy-java</exclude>
       </excludes>
     </dependencySet>
 
