@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>1.0.0RC1</version>
+    <version>1.0.0RC2</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
-  <version>1.0.0RC1</version>
+  <version>1.0.0RC2</version>
   <description>StreamSets Data Collector Spark Bootstrap</description>
   <name>StreamSets Data Collector Spark Bootstrap</name>
   <packaging>jar</packaging>
