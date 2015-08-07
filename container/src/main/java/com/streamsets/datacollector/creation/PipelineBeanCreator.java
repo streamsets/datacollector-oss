@@ -554,24 +554,26 @@ public abstract class PipelineBeanCreator {
         value = toMap(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
       } else {
         value = resolveIfImplicitEL(value, stageDef, configDef, pipelineConstants, stageName, errors);
-        if (field.getType().isEnum()) {
-          value = toEnum(field.getType(), value, stageDef, stageName, groupName, configName, errors);
-        } else if (field.getType() == String.class) {
-          value = toString(value, stageDef, stageName, groupName, configName, errors);
-        } else if (List.class.isAssignableFrom(field.getType())) {
-          value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
-        } else if (Map.class.isAssignableFrom(field.getType())) {
-          value = toMap(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
-        } else if (ConfigValueExtractor.CHARACTER_TYPES.contains(field.getType())) {
-          value = toChar(value, stageDef, stageName, groupName, configName, errors);
-        } else if (ConfigValueExtractor.BOOLEAN_TYPES.contains(field.getType())) {
-          value = toBoolean(value, stageDef, stageName, groupName, configName, errors);
-        } else if (ConfigValueExtractor.NUMBER_TYPES.contains(field.getType())) {
-          value = toNumber(field.getType(), value, stageDef, stageName, groupName, configName, errors);
-        } else {
-          errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_051,
-                                         field.getType().getSimpleName()));
-          value = null;
+        if (value != null) {
+          if (field.getType().isEnum()) {
+            value = toEnum(field.getType(), value, stageDef, stageName, groupName, configName, errors);
+          } else if (field.getType() == String.class) {
+            value = toString(value, stageDef, stageName, groupName, configName, errors);
+          } else if (List.class.isAssignableFrom(field.getType())) {
+            value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
+          } else if (Map.class.isAssignableFrom(field.getType())) {
+            value = toMap(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
+          } else if (ConfigValueExtractor.CHARACTER_TYPES.contains(field.getType())) {
+            value = toChar(value, stageDef, stageName, groupName, configName, errors);
+          } else if (ConfigValueExtractor.BOOLEAN_TYPES.contains(field.getType())) {
+            value = toBoolean(value, stageDef, stageName, groupName, configName, errors);
+          } else if (ConfigValueExtractor.NUMBER_TYPES.contains(field.getType())) {
+            value = toNumber(field.getType(), value, stageDef, stageName, groupName, configName, errors);
+          } else {
+            errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_051,
+                                           field.getType().getSimpleName()));
+            value = null;
+          }
         }
       }
       if (value != null) {
