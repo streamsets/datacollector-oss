@@ -18,6 +18,7 @@ import com.streamsets.pipeline.lib.el.StringEL;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,15 +62,10 @@ public class ElUtil {
 
   public static Class<?>[] getElDefs(StageDefinition stageDef, ConfigDefinition configDefinition) {
     ClassLoader cl = stageDef.getStageClassLoader();
-    List<Class> elDefs = configDefinition.getElDefs();
-    if(elDefs != null && elDefs.size() > 0) {
-      return elDefs.toArray(new Class[elDefs.size()]);
-    }
-    Class<?>[] elDefClasses = new Class[2];
-    //inject RuntimeEL.class & StringEL.class into the evaluator
-    elDefClasses[0] = RuntimeEL.class;
-    elDefClasses[1] = StringEL.class;
-    return elDefClasses;
+    List<Class> elDefs = new ArrayList<>(configDefinition.getElDefs());
+    elDefs.add(RuntimeEL.class);
+    elDefs.add(StringEL.class);
+    return elDefs.toArray(new Class[elDefs.size()]);
   }
 
   public static Class<?>[] getElDefClassArray(List<Class> elDefs) {
