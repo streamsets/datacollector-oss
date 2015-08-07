@@ -1,2 +1,2 @@
 LOG4JLOG ^%{TIMESTAMP_ISO8601:timestamp} ( *)%{LOGLEVEL:severity}( *) %{JAVACLASS:category} - %{GREEDYDATA:message}
-TTCC ^%{INT:relativetime} [%{PROG:thread}] %{LOGLEVEL:loglevel} %{JAVACLASS:logger} %{WORD:ndc}? - %{GREEDYDATA:message}
+TTCC ^%{INT:relativetime} [%{DATA:thread}] %{LOGLEVEL:loglevel} %{JAVACLASS:logger} %{DATA:ndc}? - %{GREEDYDATA:message}

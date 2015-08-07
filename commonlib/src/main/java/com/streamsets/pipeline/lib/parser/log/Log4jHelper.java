@@ -135,11 +135,11 @@ public class Log4jHelper {
             break;
           case 't' :
             index += ignoreArgument(patternLayout, index);
-            state = checkStateAndAppend(partialRegex, state, "%{PROG:thread}", c, rightPadWithSpace);
+            state = checkStateAndAppend(partialRegex, state, "%{DATA:thread}", c, rightPadWithSpace);
             break;
           case 'x' :
             index += ignoreArgument(patternLayout, index);
-            state = checkStateAndAppend(partialRegex, state, "%{WORD:ndc}?", c, rightPadWithSpace);
+            state = checkStateAndAppend(partialRegex, state, "%{DATA:ndc}?", c, rightPadWithSpace);
             break;
           case 'X' :
             argument = getArgument(patternLayout, ++index);
@@ -147,7 +147,7 @@ public class Log4jHelper {
               state = checkStateAndAppend(partialRegex, state, getDefaultMDCPattern(), c, rightPadWithSpace);
             } else {
               index += argument.length() + 1 /* +1 for '}'*/;
-              state = checkStateAndAppend(partialRegex, state, "${WORD:" + argument + "}?", c, rightPadWithSpace);
+              state = checkStateAndAppend(partialRegex, state, "%{DATA:" + argument + "}?", c, rightPadWithSpace);
             }
             break;
           case 'd' :
