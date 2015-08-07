@@ -24,12 +24,12 @@ public class TestLog4jHelper {
   public void testLog4jConversion() throws DataParserException {
 
     Assert.assertEquals(
-      "^%{INT:relativetime} \\[%{PROG:thread}\\] %{LOGLEVEL:severity}(?:\\s*) %{JAVACLASS:category} %{WORD:ndc}? " +
+      "^%{INT:relativetime} \\[%{DATA:thread}\\] %{LOGLEVEL:severity}(?:\\s*) %{JAVACLASS:category} %{DATA:ndc}? " +
       "- %{GREEDYDATA:message}",
       Log4jHelper.translateLog4jLayoutToGrok(TTCC_LAYOUT));
 
     Assert.assertEquals(
-      "^%{INT:relativetime}(?:\\s*) \\[(?:\\s*)%{PROG:thread}\\] %{LOGLEVEL:severity}(?:\\s*) (?:\\s*)%{JAVACLASS:category} %{WORD:ndc}? " +
+      "^%{INT:relativetime}(?:\\s*) \\[(?:\\s*)%{DATA:thread}\\] %{LOGLEVEL:severity}(?:\\s*) (?:\\s*)%{JAVACLASS:category} %{DATA:ndc}? " +
       "- %{GREEDYDATA:message}",
       Log4jHelper.translateLog4jLayoutToGrok(TTCC_LAYOUT1));
 
@@ -38,7 +38,7 @@ public class TestLog4jHelper {
       "- %{GREEDYDATA:message}",
       Log4jHelper.translateLog4jLayoutToGrok(DEFAULT_LOG4J));
 
-    Assert.assertEquals("^%{LOGLEVEL:severity}(?:\\s*) \\[%{PROG:thread}\\]: %{GREEDYDATA:message}",
+    Assert.assertEquals("^%{LOGLEVEL:severity}(?:\\s*) \\[%{DATA:thread}\\]: %{GREEDYDATA:message}",
       Log4jHelper.translateLog4jLayoutToGrok(CUSTOM_LAYOUT));
   }
 
@@ -182,6 +182,65 @@ public class TestLog4jHelper {
     Assert.assertEquals("foo", namedGroupToValuesMap.get("method"));
     Assert.assertTrue(namedGroupToValuesMap.containsKey("message"));
     Assert.assertEquals("this is a log message", namedGroupToValuesMap.get("message"));
+  }
+
+  @Test
+  public void testLogWithMDC() throws DataParserException {
+    GrokDictionary grokDictionary = createGrokDictionary();
+    String s = Log4jHelper.translateLog4jLayoutToGrok(
+      "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [thread:%t]  %-5p %c{1} - %m%n");
+    Grok grok = grokDictionary.compileExpression(s);
+
+    Map<String, String> namedGroupToValuesMap = grok.extractNamedGroups(
+      "2015-08-07 06:14:18,029 [user:*admin] [pipeline:hari_test_geoIP_proc] [thread:preview-pool-1-thread-1]  DEBUG DirectorySpooler - Last file found 'common_log_format.log' on startup"
+    );
+
+    Assert.assertEquals(7, namedGroupToValuesMap.size());
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("timestamp"));
+    Assert.assertEquals("2015-08-07 06:14:18,029", namedGroupToValuesMap.get("timestamp"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("s-user"));
+    Assert.assertEquals("*admin", namedGroupToValuesMap.get("s-user"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("s-entity"));
+    Assert.assertEquals("hari_test_geoIP_proc", namedGroupToValuesMap.get("s-entity"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("thread"));
+    Assert.assertEquals("preview-pool-1-thread-1", namedGroupToValuesMap.get("thread"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("severity"));
+    Assert.assertEquals("DEBUG", namedGroupToValuesMap.get("severity"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("category"));
+    Assert.assertEquals("DirectorySpooler", namedGroupToValuesMap.get("category"));
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("message"));
+    Assert.assertEquals("Last file found 'common_log_format.log' on startup", namedGroupToValuesMap.get("message"));
+  }
+
+  @Test
+  public void testLogWithNDC() throws DataParserException {
+    GrokDictionary grokDictionary = createGrokDictionary();
+    String s = Log4jHelper.translateLog4jLayoutToGrok("%d{ISO8601} %-5p [%t %x] [%c{1}] – %m%n");
+
+    Grok grok = grokDictionary.compileExpression(s);
+
+    Map<String, String> namedGroupToValuesMap = grok.extractNamedGroups(
+      "2009-12-02 11:00:50,806 INFO  [15554445@qtp-10481519-2 PUT /member/03003522/foostrategy] [FooController] – Updating FooStrategy[memberNumber=1234");
+
+    Assert.assertEquals(6, namedGroupToValuesMap.size());
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("timestamp"));
+    Assert.assertEquals("2009-12-02 11:00:50,806", namedGroupToValuesMap.get("timestamp"));
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("severity"));
+    Assert.assertEquals("INFO", namedGroupToValuesMap.get("severity"));
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("thread"));
+    Assert.assertEquals("15554445@qtp-10481519-2", namedGroupToValuesMap.get("thread"));
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("ndc"));
+    Assert.assertEquals("PUT /member/03003522/foostrategy", namedGroupToValuesMap.get("ndc"));
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("category"));
+    Assert.assertEquals("FooController", namedGroupToValuesMap.get("category"));
+
+    Assert.assertTrue(namedGroupToValuesMap.containsKey("message"));
+    Assert.assertEquals("Updating FooStrategy[memberNumber=1234", namedGroupToValuesMap.get("message"));
   }
 
   private GrokDictionary createGrokDictionary() {
