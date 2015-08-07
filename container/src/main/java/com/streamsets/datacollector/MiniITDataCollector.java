@@ -198,7 +198,9 @@ public class MiniITDataCollector implements DataCollector {
 
   @Override
   public void destroy() {
-    task.stop();
+    if (task != null) {
+      task.stop();
+    }
   }
 
   @Override

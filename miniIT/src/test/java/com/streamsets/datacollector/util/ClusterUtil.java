@@ -39,6 +39,7 @@ public class ClusterUtil {
   public static void setupCluster(String testName, String pipelineJson, YarnConfiguration yarnConfiguration) throws Exception {
     System.setProperty("sdc.testing-mode", "true");
     System.setProperty(MiniSDCTestingUtility.PRESERVE_TEST_DIR, "true");
+    yarnConfiguration.set("yarn.nodemanager.delete.debug-delay-sec", "600");
     miniSDCTestingUtility = new MiniSDCTestingUtility();
     File dataTestDir = miniSDCTestingUtility.getDataTestDir();
 

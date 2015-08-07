@@ -37,8 +37,8 @@ public class BlackListURLClassLoader extends URLClassLoader {
     if (!(name.endsWith("__"))) {
       for (String blacklistedPackage : blacklistedPackages) {
         if (name.startsWith(blacklistedPackage)) {
-          throw new IllegalArgumentException(
-              String.format("Class '%s' cannot be present in current ClassLoader", name));
+          throw new IllegalArgumentException(String.format("Class '%s' cannot be present in %s",
+            name, toString()));
         }
       }
     }
@@ -48,8 +48,8 @@ public class BlackListURLClassLoader extends URLClassLoader {
   void validateResource(String name) {
     for (String blacklistedPackage : blacklistedDirs) {
       if (name.startsWith(blacklistedPackage)) {
-        throw new IllegalArgumentException(String.format("Resource '%s' cannot be present in current ClassLoader",
-                                                         name));
+        throw new IllegalArgumentException(String.format("Resource '%s' cannot be present in %s",
+                                                         name, toString()));
       }
     }
   }

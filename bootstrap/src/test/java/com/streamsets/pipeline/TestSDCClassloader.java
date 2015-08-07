@@ -16,14 +16,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.TreeSet;
 
 public class TestSDCClassloader {
 
   @Test
   @SuppressWarnings("unchecked")
   public void testServices() throws Exception {
-    Assert.assertTrue(SDCClassLoader.isClassInList(SDCClassLoader.SERVICES_PREFIX +
-      "org.apache.hadoop.fs.FileSystem", Arrays.asList("org.apache.hadoop.fs.")));
+    SystemPackage systemPackage = new SystemPackage(Arrays.asList("org.apache.hadoop.fs."));
+    Assert.assertTrue(systemPackage.isSystem(ClassLoaderUtil.SERVICES_PREFIX +
+      "org.apache.hadoop.fs.FileSystem"));
   }
 
   private static class CallStoringURLClassLoader extends SDCClassLoader {
@@ -31,7 +33,8 @@ public class TestSDCClassloader {
 
     public CallStoringURLClassLoader(ClassLoader parent, String systemClasses, String appClasses) {
       super("test", "somecl", Arrays.<URL>asList(), parent,
-        new String[0], systemClasses, appClasses, false);
+        new String[0], new SystemPackage(ClassLoaderUtil.getTrimmedStrings(systemClasses)),
+        new ApplicationPackage(new TreeSet<String>(Arrays.asList(ClassLoaderUtil.getTrimmedStrings(appClasses)))), false, false);
     }
 
     @Override
@@ -67,22 +70,22 @@ public class TestSDCClassloader {
     doLoadClass(Arrays.<String>asList(), stage, "app.Dummy");
 
     doGetResource(Arrays.<String>asList("findResource /META-INF/services/sys.Dummy",
-      "findResource META-INF/services/sys.Dummy"), stage, SDCClassLoader.SERVICES_PREFIX + "sys.Dummy");
+      "findResource META-INF/services/sys.Dummy"), stage, ClassLoaderUtil.SERVICES_PREFIX + "sys.Dummy");
     doGetResource(Arrays.<String>asList("findResource /META-INF/services/other.Dummy",
-      "findResource META-INF/services/other.Dummy"), stage, SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
-    doGetResource(Arrays.<String>asList(), stage, SDCClassLoader.SERVICES_PREFIX + "app.Dummy");
+      "findResource META-INF/services/other.Dummy"), stage, ClassLoaderUtil.SERVICES_PREFIX + "other.Dummy");
+    doGetResource(Arrays.<String>asList(), stage, ClassLoaderUtil.SERVICES_PREFIX + "app.Dummy");
 
     doGetResources(Arrays.<String>asList("findResources /META-INF/services/sys.Dummy"),
-      stage, SDCClassLoader.SERVICES_PREFIX + "sys.Dummy");
+      stage, ClassLoaderUtil.SERVICES_PREFIX + "sys.Dummy");
     doGetResources(Arrays.<String>asList("findResources /META-INF/services/other.Dummy"),
-      stage, SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
-    doGetResources(Arrays.<String>asList(), stage, SDCClassLoader.SERVICES_PREFIX + "app.Dummy");
+      stage, ClassLoaderUtil.SERVICES_PREFIX + "other.Dummy");
+    doGetResources(Arrays.<String>asList(), stage, ClassLoaderUtil.SERVICES_PREFIX + "app.Dummy");
 
     doGetResourceAsStream(Arrays.<String>asList("findResource /META-INF/services/sys.Dummy"), stage,
-      SDCClassLoader.SERVICES_PREFIX + "sys.Dummy");
+      ClassLoaderUtil.SERVICES_PREFIX + "sys.Dummy");
     doGetResourceAsStream(Arrays.<String>asList("findResource /META-INF/services/other.Dummy"), stage,
-      SDCClassLoader.SERVICES_PREFIX + "other.Dummy");
-    doGetResourceAsStream(Arrays.<String>asList(), stage, SDCClassLoader.SERVICES_PREFIX +
+      ClassLoaderUtil.SERVICES_PREFIX + "other.Dummy");
+    doGetResourceAsStream(Arrays.<String>asList(), stage, ClassLoaderUtil.SERVICES_PREFIX +
       "app.Dummy");
 
     doGetResource(Arrays.<String>asList("findResource sys.Dummy"), stage, "sys.Dummy");

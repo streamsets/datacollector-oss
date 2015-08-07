@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -42,11 +43,11 @@ public class SDCClassLoader extends BlackListURLClassLoader {
 
   /*
    * Note:
-   * if you update this, you must also update stage-classloader.properties
+   * if you update this, you must also update api-children-classloader.properties
    */
   private static final String[] PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES = {
       "com.streamsets.pipeline.api.",
-      "com.streamsets.pipeline.container",
+      "com.streamsets.pipeline.container.",
       "com.codehale.metrics.",
       "org.slf4j.",
       "org.apache.log4j."
@@ -58,29 +59,16 @@ public class SDCClassLoader extends BlackListURLClassLoader {
    * classes are considered system classes, and are not loaded by the
    * application classloader.
    */
-  private static final String SYSTEM_API_CLASSES_DEFAULT;
-  private static final String SYSTEM_CONTAINER_CLASSES_DEFAULT;
-  private static final String SYSTEM_STAGE_CLASSES_DEFAULT;
-  private static final String SYSTEM_BASE_CLASSES_DEFAULT;
-  private static final String APPLICATION_API_CLASSES_DEFAULT;
-  private static final String APPLICATION_CONTAINER_CLASSES_DEFAULT;
-  private static final String APPLICATION_STAGE_CLASSES_DEFAULT;
-  private static final String APPLICATION_BASE_CLASSES_DEFAULT;
+  static final List<String> SYSTEM_API_CLASSES;
+  static final List<String> SYSTEM_API_CHILDREN_CLASSES;
   private static String API = "api";
-  private static String BASE = "base";
-  private static String CONTAINER = "container";
-  private static String STAGE = "stage";
+  private static String API_CHILDREN = "api-children";
   private static final String[] CLASSLOADER_TYPES = new String[] {
-    API, BASE, CONTAINER, STAGE
+    API, API_CHILDREN
   };
-  private static final String CLASS_FILE_SUFFIX = ".class";
-  static final String SERVICES_PREFIX = "/META-INF/services/";
 
   private static final String SYSTEM_CLASSES_DEFAULT_KEY =
     "system.classes.default";
-
-  private static final String APPLICATION_CLASSES_DEFAULT_KEY =
-    "application.classes.default";
 
   private static boolean debug = false;
 
@@ -88,9 +76,12 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     SDCClassLoader.debug = debug;
   }
 
+  public static boolean isDebug() {
+    return debug;
+  }
+
   static {
     Map<String, String> systemClassesDefaultsMap = new HashMap<>();
-    Map<String, String> applicationClassesDefaultsMap = new HashMap<>();
     for (String classLoaderType : CLASSLOADER_TYPES) {
       String propertiesFile = classLoaderType + "-classloader.properties";
       try (InputStream is = SDCClassLoader.class.getClassLoader()
@@ -109,70 +100,69 @@ public class SDCClassLoader extends BlackListURLClassLoader {
             SYSTEM_CLASSES_DEFAULT_KEY + " is not found");
         }
         systemClassesDefaultsMap.put(classLoaderType, systemClassesDefault);
-        applicationClassesDefaultsMap.put(classLoaderType, props.
-          getProperty(APPLICATION_CLASSES_DEFAULT_KEY, "").trim());
       } catch (IOException e) {
         throw new ExceptionInInitializerError(e);
       }
     }
-    SYSTEM_BASE_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(BASE), BASE);
-    SYSTEM_API_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(API), API) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
-    SYSTEM_CONTAINER_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(CONTAINER), CONTAINER) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
-    SYSTEM_STAGE_CLASSES_DEFAULT = checkNotNull(systemClassesDefaultsMap.get(STAGE), STAGE) + "," + SYSTEM_BASE_CLASSES_DEFAULT;
-    APPLICATION_BASE_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(BASE), BASE);
-    APPLICATION_API_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(API), API) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
-    APPLICATION_CONTAINER_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(CONTAINER), CONTAINER) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
-    APPLICATION_STAGE_CLASSES_DEFAULT = checkNotNull(applicationClassesDefaultsMap.get(STAGE), STAGE) + "," + APPLICATION_BASE_CLASSES_DEFAULT;
+    SYSTEM_API_CLASSES = Collections.unmodifiableList(Arrays.asList(ClassLoaderUtil.getTrimmedStrings(
+      ClassLoaderUtil.checkNotNull(systemClassesDefaultsMap.get(API), API))));
+    List<String> apiChildren = new ArrayList<>(Arrays.asList(ClassLoaderUtil.getTrimmedStrings(
+      ClassLoaderUtil.checkNotNull(systemClassesDefaultsMap.get(API_CHILDREN), API_CHILDREN))));
+    apiChildren.addAll(SYSTEM_API_CLASSES);
+    SYSTEM_API_CHILDREN_CLASSES = Collections.unmodifiableList(apiChildren);
   }
 
   private final List<URL> urls;
   private final ClassLoader parent;
-  private final List<String> systemClasses;
-  private final List<String> applicationClasses;
+  private final boolean parentIsAPIClassLoader;
+  private final SystemPackage systemPackage;
   private final boolean isPrivate;
+  private final ApplicationPackage applicationPackage;
 
   private SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                         List<String> systemClasses, List<String> applicationClasses, String[] blacklistedPackages,
-      boolean isPrivate) {
+      SystemPackage systemPackage, ApplicationPackage applicationPackage, String[] blacklistedPackages,
+      boolean isPrivate, boolean parentIsAPIClassLoader) {
     super(type, name, urls, parent, blacklistedPackages);
     this.urls = urls;
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
-      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemClasses);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemPackage);
     }
     this.parent = parent;
+    this.parentIsAPIClassLoader = parentIsAPIClassLoader;
     if (parent == null) {
       throw new IllegalArgumentException("No parent classloader!");
     }
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": parent classloader: " + parent);
     }
-    if (systemClasses == null) {
+    if (systemPackage == null) {
       throw new IllegalArgumentException("System classes cannot be null");
     }
     // if the caller-specified system classes are null or empty, use the default
-    this.systemClasses = systemClasses;
+    this.systemPackage = systemPackage;
     if(debug) {
-      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + this.systemClasses);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + this.systemPackage);
     }
-    this.applicationClasses = applicationClasses;
+    this.applicationPackage = applicationPackage;
     this.isPrivate = isPrivate;
     if(debug) {
-      System.err.println(getClass().getSimpleName() + " " + getName() + ": application classes: " + this.applicationClasses);
+      System.err.println(getClass().getSimpleName() + " " + getName() + ": application packages: " + this.applicationPackage);
     }
   }
 
   public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,
-                        String[] blacklistedPackages, String systemClasses, String applicationClasses, boolean isPrivate) {
-    this(type, name, urls, parent, Arrays.asList(getTrimmedStrings(systemClasses)),
-      Arrays.asList(getTrimmedStrings(applicationClasses)), blacklistedPackages, isPrivate);
+                        String[] blacklistedPackages, SystemPackage systemPackage,
+                        ApplicationPackage applicationPackage, boolean isPrivate, boolean parentIsAPIClassLoader) {
+    this(type, name, urls, parent, systemPackage, applicationPackage, blacklistedPackages, isPrivate,
+      parentIsAPIClassLoader);
   }
 
   @Override
   public URL getResource(String name) {
     URL url = null;
-
-    if (!isClassInList(name, systemClasses)) {
+    boolean isSystemPackage = systemPackage.isSystem(name);
+    if (!isSystemPackage) {
       url = findResource(name);
       if (url == null && name.startsWith("/")) {
         if (debug) {
@@ -182,7 +172,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       }
     }
 
-    if (url == null && !isClassInList(name, applicationClasses)) {
+    if (url == null && (isSystemPackage || !applicationPackage.isApplication(name))) {
       url = parent.getResource(name);
     }
 
@@ -201,7 +191,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       System.err.println("getResources(" + name + ")");
     }
     Enumeration<URL> result = null;
-    if (!isClassInList(name, systemClasses)) {
+    if (!systemPackage.isSystem(name)) {
       // Search local repositories
       if (debug) {
         System.err.println("  Searching local repositories");
@@ -213,7 +203,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
         }
         return result;
       }
-      if (isClassInList(name, applicationClasses)) {
+      if (applicationPackage.isApplication(name)) {
         if (debug) {
           System.err.println("  --> application class, returning empty enumeration");
         }
@@ -246,7 +236,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       System.err.println("getResourceAsStream(" + name + ")");
     }
     InputStream stream = null;
-    if (!isClassInList(name, systemClasses)) {
+    if (!systemPackage.isSystem(name)) {
       // Search local repositories
       if (debug) {
         System.err.println("  Searching local repositories");
@@ -262,7 +252,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
           // Ignore
         }
       }
-      if (isClassInList(name, applicationClasses)) {
+      if (applicationPackage.isApplication(name)) {
         if (debug) {
           System.err.println("  --> application class, returning null");
         }
@@ -301,8 +291,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
 
     Class<?> c = findLoadedClass(name);
     ClassNotFoundException ex = null;
-
-    if (c == null && !isClassInList(name, systemClasses)) {
+    boolean isSystemPackage = systemPackage.isSystem(name);
+    if (c == null && !isSystemPackage) {
       // Try to load class from this classloader's URLs. Note that this is like
       // the servlet spec, not the usual Java 2 behaviour where we ask the
       // parent to attempt to load first.
@@ -318,8 +308,14 @@ public class SDCClassLoader extends BlackListURLClassLoader {
         ex = e;
       }
     }
-
-    if (c == null && !isClassInList(name, applicationClasses)) { // try parent
+    // try parent classloader in the following situations:
+    // 1. Package has been marked system
+    // 2. parent is the API classloader
+    // under most circumstances we do not want to try the parent classloader
+    // for application classes, however this is not true if the parent is the api
+    // classloader since we load the api and codahale/dropwizard metrics from there
+    // 3. Class is not an application class
+    if (c == null && (isSystemPackage || parentIsAPIClassLoader || !applicationPackage.isApplication(name))) {
       c = parent.loadClass(name);
       if (debug && c != null) {
         System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class from parent: " + name + " ");
@@ -337,77 +333,15 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     return c;
   }
 
-  /**
-   * Checks if a class should be included as a system class.
-   *
-   * A class is a system class if and only if it matches one of the positive
-   * patterns and none of the negative ones.
-   *
-   * @param name the class name to check
-   * @param classList a list of system class configurations.
-   * @return true if the class is a system class
-   */
-  public static boolean isClassInList(String name, List<String> classList) {
-    boolean result = false;
-    if (classList != null) {
-      String canonicalName = canonicalize(name);
-      String canonicalPrefix = canonicalize(SERVICES_PREFIX);
-      if (canonicalName.startsWith(canonicalPrefix)) {
-        canonicalName = canonicalName.substring(canonicalPrefix.length());
-      }
-      for (String c : classList) {
-        boolean shouldInclude = true;
-        if (c.startsWith("-")) {
-          c = c.substring(1);
-          shouldInclude = false;
-        }
-        if (canonicalName.startsWith(c)) {
-          if (   c.endsWith(".")                                   // package
-            || canonicalName.length() == c.length()              // class
-            ||    canonicalName.length() > c.length()            // nested
-            && canonicalName.charAt(c.length()) == '$' ) {
-            if (shouldInclude) {
-              result = true;
-            } else {
-              return false;
-            }
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  private static String canonicalize(String canonicalName) {
-    canonicalName = canonicalName.replace('/', '.');
-    while (canonicalName.startsWith(".")) {
-      canonicalName = canonicalName.substring(1);
-    }
-    return canonicalName;
-  }
-
-  private static <T> T checkNotNull(T value, String name) {
-    if (value == null) {
-      throw new NullPointerException("Value " + name + " is null");
-    }
-    return value;
-  }
-
-  private static String[] getTrimmedStrings(String str){
-    if (null == str || str.trim().isEmpty()) {
-      return new String[0];
-    }
-    return str.trim().split("\\s*,\\s*");
-  }
-
   public static SDCClassLoader getAPIClassLoader(List<URL> apiURLs, ClassLoader parent) {
     return new SDCClassLoader("api-lib", "API", apiURLs, parent, null,
-      SDCClassLoader.SYSTEM_API_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_API_CLASSES_DEFAULT, false);
+      new SystemPackage(SYSTEM_API_CLASSES), ApplicationPackage.get(parent), false, false);
   }
 
   public static SDCClassLoader getContainerCLassLoader(List<URL> containerURLs, ClassLoader apiCL) {
-    return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL, null,
-      SDCClassLoader.SYSTEM_CONTAINER_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_CONTAINER_CLASSES_DEFAULT, false);
+    return new SDCClassLoader("container-lib", "Container", containerURLs, apiCL,
+      null, new SystemPackage(SYSTEM_API_CHILDREN_CLASSES),
+      ApplicationPackage.get(apiCL.getParent()), false, true);
 
   }
 
@@ -418,8 +352,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   public static SDCClassLoader getStageClassLoader(String type, String name, List<URL> libURLs, ClassLoader apiCL,
       boolean isPrivate) {
     return new SDCClassLoader(type, name, libURLs, apiCL, PACKAGES_BLACKLIST_FOR_STAGE_LIBRARIES,
-      SDCClassLoader.SYSTEM_STAGE_CLASSES_DEFAULT, SDCClassLoader.APPLICATION_STAGE_CLASSES_DEFAULT, isPrivate);
-
+      new SystemPackage(SYSTEM_API_CHILDREN_CLASSES), ApplicationPackage.get(apiCL.getParent()),
+      isPrivate, true);
   }
 
   public SDCClassLoader duplicateStageClassLoader() {
@@ -433,5 +367,4 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   public String toString() {
     return String.format("SDCClassLoader[type=%s name=%s private=%b]", getType(), getName(), isPrivate);
   }
-
 }

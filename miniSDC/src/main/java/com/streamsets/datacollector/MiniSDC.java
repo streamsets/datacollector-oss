@@ -133,7 +133,9 @@ public class MiniSDC {
   }
 
   public void stop() {
-    dataCollector.destroy();
+    if (dataCollector != null) {
+      dataCollector.destroy();
+    }
   }
 
   public List<URI> getListOfSlaveSDCURI() throws URISyntaxException {
