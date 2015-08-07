@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.destination.kinesis;
 
 
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -179,33 +180,38 @@ public class KinesisTarget extends BaseTarget {
     }
 
     request.setRecords(requestEntries);
-    PutRecordsResult result = kinesisClient.putRecords(request);
+    try {
+      PutRecordsResult result = kinesisClient.putRecords(request);
 
-    final Integer failedRecordCount = result.getFailedRecordCount();
-    if (failedRecordCount > 0) {
-      List<PutRecordsResultEntry> resultEntries = result.getRecords();
-      i = 0;
-      for (PutRecordsResultEntry resultEntry : resultEntries) {
-        final String errorCode = resultEntry.getErrorCode();
-        if (errorCode == null) {
-          handleFailedRecord(records.get(i), Utils.format("No error code: {}", resultEntry.getErrorMessage()));
-        } else {
-          switch (errorCode) {
-            case "ProvisionedThroughputExceededException":
-            case "InternalFailure":
-              // Records are processed in the order you submit them,
-              // so this will align with the initial record batch
-              handleFailedRecord(records.get(i),  Utils.format("{}: {}", errorCode, resultEntry.getErrorMessage()));
-              break;
-            default:
-              if (resultEntry.getSequenceNumber().isEmpty() || !resultEntry.getShardId().isEmpty()) {
-                // Some kind of other error, handle it.
-                handleFailedRecord(records.get(i), "Missing SequenceId or ShardId.");
-              }
-              break;
+      final Integer failedRecordCount = result.getFailedRecordCount();
+      if (failedRecordCount > 0) {
+        List<PutRecordsResultEntry> resultEntries = result.getRecords();
+        i = 0;
+        for (PutRecordsResultEntry resultEntry : resultEntries) {
+          final String errorCode = resultEntry.getErrorCode();
+          if (null != errorCode) {
+            switch (errorCode) {
+              case "ProvisionedThroughputExceededException":
+              case "InternalFailure":
+                // Records are processed in the order you submit them,
+                // so this will align with the initial record batch
+                handleFailedRecord(records.get(i), errorCode + ":" + resultEntry.getErrorMessage());
+                break;
+              default:
+                validateSuccessfulRecord(records.get(i), resultEntry);
+                break;
+            }
+          } else {
+            validateSuccessfulRecord(records.get(i), resultEntry);
           }
+          ++i;
         }
-        ++i;
+      }
+    } catch (AmazonClientException e) {
+      // Unrecoverable exception -- invalidate the entire batch
+      LOG.debug("Exception while putting records", e);
+      for (Record record : records) {
+        handleFailedRecord(record, "Batch failed due to Amazon service exception: " + e.getMessage());
       }
     }
   }
@@ -237,5 +243,13 @@ public class KinesisTarget extends BaseTarget {
         throw new StageException(Errors.KINESIS_02, partitionStrategy);
     }
     return partitionKey;
+  }
+
+  private void validateSuccessfulRecord(Record record, PutRecordsResultEntry resultEntry) throws StageException {
+    if (null == resultEntry.getSequenceNumber() || null == resultEntry.getShardId() ||
+        resultEntry.getSequenceNumber().isEmpty() || resultEntry.getShardId().isEmpty()) {
+      // Some kind of other error, handle it.
+      handleFailedRecord(record, "Missing SequenceId or ShardId.");
+    }
   }
 }
