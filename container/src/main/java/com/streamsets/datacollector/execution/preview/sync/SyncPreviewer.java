@@ -120,7 +120,7 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
         e.toString()));
       throw e;
-    } catch (Exception e) {
+    } catch (Throwable e) {
       //Wrap stage exception in PipelineException
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
         e.toString()));
@@ -169,7 +169,7 @@ public class SyncPreviewer implements Previewer {
     } catch (PipelineStoreException e) {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw e;
-    } catch (Exception e) {
+    } catch (Throwable e) {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
