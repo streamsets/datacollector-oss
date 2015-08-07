@@ -265,10 +265,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
           PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipeline, errors);
-          if (pipelineConfigBean == null) {
-            throw new PipelineStoreException(ContainerError.CONTAINER_0116, errors);
-          }
-          pipelineStateStore.edited(user, name, tag, pipelineConfigBean.executionMode);
+          pipelineStateStore.edited(user, name, tag,  PipelineBeanCreator.get().getExecutionMode(pipeline, errors));
+          pipeline.getIssues().addAll(errors);
         }
 
         Map uiInfo = extractUiInfo(pipeline);
