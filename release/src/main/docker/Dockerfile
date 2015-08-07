@@ -3,6 +3,9 @@ FROM jeanblanchard/java:serverjre-8
 MAINTAINER Adam Kunicki <adam@streamsets.com>
 EXPOSE 18630
 
+RUN echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories
+RUN apk update && apk add bash && apk add snappy
+
 # Default user, overridable via -e option when executing docker run.
 ENV SDC_USER=sdc
 RUN addgroup -S ${SDC_USER} && adduser -S ${SDC_USER} ${SDC_USER}
