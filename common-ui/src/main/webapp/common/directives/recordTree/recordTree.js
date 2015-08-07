@@ -120,6 +120,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         diffRecordValue: '=',
         fieldName: '=',
         isRoot: '=',
+        isError: '=',
         editable: '=',
         selectable: '=',
         selectedPath: '='

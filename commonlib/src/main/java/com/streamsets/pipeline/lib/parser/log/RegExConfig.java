@@ -14,7 +14,7 @@ public class RegExConfig {
     type = ConfigDef.Type.STRING,
     defaultValue="/",
     label = "Field Path",
-    description = "Hash string fields. You can enter multiple fields for the same hash type.",
+    description = "",
     displayPosition = 10
   )
   public String fieldPath;
