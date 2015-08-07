@@ -25,7 +25,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_13("Authority of URI cannot be null"),
   HADOOPFS_14("Invalid URI authority '{}', authority should only consist of host and port"),
   HADOOPFS_15("HDFS location is not a directory: '{}'"),
-  HADOOPFS_16("Cannot generate splits, directory '{}'" + " might not have any files" ),
+  HADOOPFS_16("Cannot generate splits, directory '{}' might not have any files" ),
   HADOOPFS_17("Cannot validate kerberos configuration: {}"),
   HADOOPFS_18("No directories specified"),
   HADOOPFS_22("Invalid URI '{}': {}"),

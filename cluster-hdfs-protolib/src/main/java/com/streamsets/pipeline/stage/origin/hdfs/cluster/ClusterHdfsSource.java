@@ -5,8 +5,11 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -17,17 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.base.Throwables;
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
+import com.streamsets.pipeline.impl.Pair;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.RawLocalFileSystem;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -61,6 +65,7 @@ import javax.security.auth.Subject;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
+  private static final int PREVIEW_SIZE = 100;
   private String hdfsUri;
   private List<String> hdfsDirLocations;
   private Configuration hadoopConf;
@@ -91,6 +96,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private UserGroupInformation loginUgi;
   private final boolean recursive;
   private long recordsProduced;
+  private List<String> previewBuffer;
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
@@ -123,6 +129,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.hdfsUser = hdfsUser;
     this.hadoopConfDir = hadoopConfDir;
     this.recordsProduced = 0;
+    this.previewBuffer = new ArrayList<>();
   }
   @Override
   public List<ConfigIssue> init() {
@@ -151,10 +158,33 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
               hdfsDirLocation));
           } else {
             try {
-              Object[] files = fs.listStatus(ph);
+              FileStatus[] files = fs.listStatus(ph);
               if (files == null || files.length == 0) {
                 issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_16,
                   hdfsDirLocation));
+              } else if (getContext().isPreview() && previewBuffer.size() < PREVIEW_SIZE) {
+                for (FileStatus fileStatus : files) {
+                  if (fileStatus.isFile()) {
+                    InputStream in = null;
+                    BufferedReader reader = null;
+                    try {
+                      in =  fs.open(fileStatus.getPath());
+                      reader = new BufferedReader(new InputStreamReader(in));
+                      String line;
+                      while ((line = reader.readLine()) != null && previewBuffer.size() < PREVIEW_SIZE) {
+                        previewBuffer.add(line);
+                      }
+                    } catch (IOException ex) {
+                      String msg = "Error opening " + fileStatus.getPath() + ": " + ex;
+                      LOG.info(msg, ex);
+                      issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_16,
+                        fileStatus.getPath()));
+                    } finally {
+                      IOUtils.closeQuietly(in);
+                      IOUtils.closeQuietly(reader);
+                    }
+                  }
+                }
               }
             } catch (IOException ex) {
               issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_09,
@@ -385,8 +415,18 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    // Ignore the batch size -- TODO why?
-    OffsetAndResult<Map.Entry> offsetAndResult = consumer.take();
+    OffsetAndResult<Map.Entry> offsetAndResult;
+    if (getContext().isPreview()) {
+      offsetAndResult = null;
+      // we only support text today
+      List<Map.Entry> records = new ArrayList<>();
+      for (int i = 0; i < maxBatchSize && i < previewBuffer.size(); i++) {
+        records.add(new Pair("preview", previewBuffer.get(i)));
+      }
+      offsetAndResult = new OffsetAndResult<>(recordsProduced, records);
+    } else {
+      offsetAndResult = consumer.take();
+    }
     if (offsetAndResult == null) {
       LOG.info("Received null batch, returning null");
       return null;
@@ -407,6 +447,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
     return Utils.checkNotNull(messageId, "Log error, message ID cannot be null at this point.");
   }
+
 
   protected List<Record> processMessage(String messageId, String message) throws StageException {
     List<Record> records = new ArrayList<>();
