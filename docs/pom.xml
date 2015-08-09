@@ -10,14 +10,14 @@
   <parent>
     <artifactId>streamsets-datacollector-root</artifactId>
     <groupId>com.streamsets</groupId>
-    <version>1.0.0RC2</version>
+    <version>1.0.0RC3</version>
     <relativePath>../root</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-docs</artifactId>
-  <version>1.0.0RC2</version>
+  <version>1.0.0RC3</version>
   <description>StreamSets Data Collector Docs</description>
   <name>StreamSets Data Collector Docs</name>
   <packaging>jar</packaging>
