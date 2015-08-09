@@ -17,6 +17,8 @@ import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +98,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private UserGroupInformation loginUgi;
   private final boolean recursive;
   private long recordsProduced;
-  private List<String> previewBuffer;
+  private Map<String, String> previewBuffer;
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
@@ -129,7 +131,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.hdfsUser = hdfsUser;
     this.hadoopConfDir = hadoopConfDir;
     this.recordsProduced = 0;
-    this.previewBuffer = new ArrayList<>();
+    this.previewBuffer = new LinkedHashMap<>();
   }
   @Override
   public List<ConfigIssue> init() {
@@ -167,15 +169,18 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                   if (fileStatus.isFile()) {
                     InputStream in = null;
                     BufferedReader reader = null;
+                    String path = fileStatus.getPath().toString();
                     try {
                       in =  fs.open(fileStatus.getPath());
                       reader = new BufferedReader(new InputStreamReader(in));
                       String line;
+                      int offset = 0;
                       while ((line = reader.readLine()) != null && previewBuffer.size() < PREVIEW_SIZE) {
-                        previewBuffer.add(line);
+                        previewBuffer.put(path + "::" + offset, line);
+                        offset += line.getBytes(StandardCharsets.UTF_8).length + 1; // byte length and newline
                       }
                     } catch (IOException ex) {
-                      String msg = "Error opening " + fileStatus.getPath() + ": " + ex;
+                      String msg = "Error opening " + path + ": " + ex;
                       LOG.info(msg, ex);
                       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_16,
                         fileStatus.getPath()));
@@ -417,11 +422,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     OffsetAndResult<Map.Entry> offsetAndResult;
     if (getContext().isPreview()) {
-      offsetAndResult = null;
       // we only support text today
       List<Map.Entry> records = new ArrayList<>();
-      for (int i = 0; i < maxBatchSize && i < previewBuffer.size(); i++) {
-        records.add(new Pair("preview", previewBuffer.get(i)));
+      int count = 0;
+      Iterator<String> keys = previewBuffer.keySet().iterator();
+      while (count < maxBatchSize && count < previewBuffer.size() && keys.hasNext()) {
+        String key =  keys.next();
+        records.add(new Pair(key, previewBuffer.get(key)));
+        count++;
       }
       offsetAndResult = new OffsetAndResult<>(recordsProduced, records);
     } else {
