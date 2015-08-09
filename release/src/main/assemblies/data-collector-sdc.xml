@@ -16,7 +16,7 @@
     <!-- LICENSE, NOTICE, README, etc -->
     <fileSet>
       <directory>src/main/release-files</directory>
-      <outputDirectory>/</outputDirectory>
+      <outputDirectory>/streamsets-datacollector-${project.version}</outputDirectory>
     </fileSet>
 
     <!-- SDC -->
