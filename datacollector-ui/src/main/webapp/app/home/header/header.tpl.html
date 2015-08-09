@@ -265,7 +265,7 @@
           tooltip-popup-delay="500"
           ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
           ng-click="stopPipeline()"
-          ng-show="isPipelineRunning && !snapshotMode">
+          ng-show="isPipelineRunning && !snapshotMode && activeConfigStatus.status != 'STARTING'">
         <span class="glyphicon glyphicon-stop fa-14x"></span>
       </a>
 

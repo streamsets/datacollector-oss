@@ -1,5 +1,5 @@
 /**
- * Controller for Snapshots Modal Dialog.
+ * Controller for History Summary Modal Dialog.
  */
 
 angular
@@ -7,8 +7,7 @@ angular
   .controller('SummaryModalInstanceController', function ($scope, $modalInstance, pipelineConfig, history, prevHistory,
                                                           pipelineConstant) {
 
-    var isStageSelected = false,
-      pipelineMetrics = JSON.parse(history.metrics),
+    var pipelineMetrics = JSON.parse(history.metrics),
       startTime = (prevHistory && prevHistory.status === 'STARTING') ? prevHistory.timeStamp : undefined;
 
     angular.extend($scope, {
@@ -105,8 +104,7 @@ angular
     });
 
     var updateSummary = function() {
-      var timerProperty,
-        currentSelection = $scope.selectedObject,
+      var currentSelection = $scope.selectedObject,
         isStageSelected = ($scope.selectedType === pipelineConstant.STAGE_INSTANCE);
 
       if(isStageSelected) {
@@ -142,6 +140,7 @@ angular
     };
 
 
-    updateSummary();
-
+    if(pipelineMetrics && pipelineMetrics.meters) {
+      updateSummary();
+    }
   });
