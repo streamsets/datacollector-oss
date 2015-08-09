@@ -675,7 +675,7 @@ angular
             rules = results[1].data;
 
           $rootScope.common.pipelineMetrics = results[2].data;
-          if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RUNNING') {
+          if(_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
             refreshPipelineMetrics();
           }
 
@@ -1536,7 +1536,7 @@ angular
         }
         pageHidden = true;
       } else {
-        if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RUNNING') {
+        if(_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
           refreshPipelineMetrics();
         }
         pageHidden = false;
