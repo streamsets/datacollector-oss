@@ -57,6 +57,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
@@ -164,8 +165,8 @@ public class ClusterRunner extends AbstractRunner {
     this.user = user;
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), Utils.format("pipeline-{}-{}-{}", user, name,
-      rev));
+    this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), PipelineUtils.
+      escapedPipelineName(Utils.format("pipeline-{}-{}-{}", user, name, rev)));
     this.tempDir.mkdirs();
     if (!this.tempDir.isDirectory()) {
       throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));

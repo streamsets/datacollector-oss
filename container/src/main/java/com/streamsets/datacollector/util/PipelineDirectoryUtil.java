@@ -6,6 +6,7 @@
 package com.streamsets.datacollector.util;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public class PipelineDirectoryUtil {
 
   public static File getPipelineDir(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     File pipelineDir = new File(new File(new File(runtimeInfo.getDataDir(), PIPELINE_BASE_DIR),
-      getEscapedPipelineName(pipelineName)), rev);
+      PipelineUtils.escapedPipelineName(pipelineName)), rev);
     if(!pipelineDir.exists()) {
       if(!pipelineDir.mkdirs()) {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", pipelineDir.getAbsolutePath()));
@@ -60,10 +61,6 @@ public class PipelineDirectoryUtil {
         throw new RuntimeException(Utils.format("Could not create directory '{}'", snapshotDir.getAbsolutePath()));
       }
     }
-  }
-
-  public static String getEscapedPipelineName(String pipelineName) {
-    return pipelineName.replaceAll(" ", ".");
   }
 
   public static boolean deleteAll(File path) {

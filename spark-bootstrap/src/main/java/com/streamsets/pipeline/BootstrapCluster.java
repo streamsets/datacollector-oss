@@ -81,21 +81,8 @@ public class BootstrapCluster {
     if (pipelineName == null) {
       throw new IllegalStateException("Pipeline to be run cannot be null");
     }
-    File pipelineDir = new File(basePipelineDir, pipelineName);
-    File pipelineJsonFile = new File(pipelineDir, "pipeline.json");
     SDCClassLoader.setDebug(Boolean.getBoolean(BootstrapMain.PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP));
 
-    if (!pipelineJsonFile.isFile()) {
-      String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
-      throw new IllegalStateException(msg);
-    }
-    String pipelineJson;
-    try {
-      pipelineJson = new String(Files.readAllBytes(Paths.get(pipelineJsonFile.toURI())), StandardCharsets.UTF_8);
-    } catch (Exception ex) {
-      String msg = "Error reading Pipeline JSON File at: " + pipelineJsonFile;
-      throw new IllegalStateException(msg, ex);
-    }
     List<URL> apiUrls;
     List<URL> containerUrls;
     Map<String, List<URL>> streamsetsLibsUrls;
@@ -122,11 +109,23 @@ public class BootstrapCluster {
     if (parent == null) {
       parent = ClassLoader.getSystemClassLoader();
     }
-
     apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, parent);
     containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
-
     stageLibrariesCLs = new ArrayList<>();
+    File pipelineDir = new File(basePipelineDir, escapedPipelineName(apiCL, pipelineName));
+    File pipelineJsonFile = new File(pipelineDir, "pipeline.json");
+    if (!pipelineJsonFile.isFile()) {
+      String msg = "Pipeline JSON file does not exist at expected location: " + pipelineJsonFile;
+      throw new IllegalStateException(msg);
+    }
+    String pipelineJson;
+    try {
+      pipelineJson = new String(Files.readAllBytes(Paths.get(pipelineJsonFile.toURI())), StandardCharsets.UTF_8);
+    } catch (Exception ex) {
+      String msg = "Error reading Pipeline JSON File at: " + pipelineJsonFile;
+      throw new IllegalStateException(msg, ex);
+    }
+
     String sparkLib = getSourceLibraryName(pipelineJson);
     if (sparkLib == null) {
       throw new IllegalStateException("Couldn't find the source library in pipeline file");
@@ -172,6 +171,16 @@ public class BootstrapCluster {
     } catch (Exception ex) {
       String msg = "Error trying to bookstrap Spark while setting stage classloaders: " + ex;
       throw new IllegalStateException(msg, ex);
+    }
+  }
+
+  private static String escapedPipelineName(ClassLoader apiCL, String name) {
+    try {
+      Class pipelineUtils = apiCL.loadClass("com.streamsets.pipeline.api.impl.PipelineUtils");
+      Method escapedPipelineName = pipelineUtils.getMethod("escapedPipelineName", String.class);
+      return (String) escapedPipelineName.invoke(null, name);
+    } catch (Exception ex) {
+      throw new RuntimeException("Error escaping pipeline name '" + name + "': " + ex, ex);
     }
   }
 

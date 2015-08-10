@@ -10,6 +10,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -111,7 +112,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   public File getPipelineDir(String name) {
-    return new File(storeDir, PipelineDirectoryUtil.getEscapedPipelineName(name));
+    return new File(storeDir, PipelineUtils.escapedPipelineName(name));
   }
 
   @VisibleForTesting
