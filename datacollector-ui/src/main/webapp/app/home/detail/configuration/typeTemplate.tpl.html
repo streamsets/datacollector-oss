@@ -46,6 +46,7 @@
                 autofocus: autoFocusConfigName === configDefinition.name,
                 extraKeys: {
                   'Tab': false,
+                  'Enter': common.ignoreCodeMirrorEnterKey,
                   'Ctrl-Space': 'autocomplete'
                 }
               }, configDefinition)"
@@ -383,6 +384,7 @@
                 readOnly: (isPipelineReadOnly || isPipelineRunning) ? 'nocursor' : false,
                 extraKeys: {
                   'Tab': false,
+                  'Enter': common.ignoreCodeMirrorEnterKey,
                   'Ctrl-Space': 'autocomplete'
                 }
               }, customFieldConfigDefinition)"

@@ -645,6 +645,11 @@ angular
         //Pipelines
         $scope.pipelines = pipelineService.getPipelines();
 
+        if($scope.pipelines && $scope.pipelines.length) {
+          $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
+            '/collector/pipeline/' + $scope.pipelines[0].name;
+        }
+
         $rootScope.common.pipelineStatusMap = pipelineStatusMap;
 
         $scope.activeConfigInfo = _.find($scope.pipelines, function(pipelineDefn) {
