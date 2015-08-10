@@ -302,7 +302,7 @@ public class TestProductionPipeline {
         : MockStages.createPipelineConfigurationSourceProcessorTarget();
 
     ProductionPipeline pipeline =
-      new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, runtimeInfo, MockStages.createStageLibrary(), runner, null)
+      new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
         .build(pConf);
 
     if (captureNextBatch) {

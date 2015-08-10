@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class BootstrapMain {
   private static final String PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP = "streamsets.bootstrap.debug";
-  private static final String PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP = "streamsets.classloader.debug";
+  public static final String PIPELINE_BOOTSTRAP_CLASSLOADER_SYS_PROP = "streamsets.classloader.debug";
 
   private static final String MAIN_CLASS_OPTION = "-mainClass";
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";

@@ -10,12 +10,14 @@ import com.streamsets.datacollector.runner.StageRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.Subject;
 import java.lang.instrument.Instrumentation;
 import java.lang.ref.PhantomReference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.AccessController;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -286,10 +288,24 @@ public class MemoryUsageCollector {
       return result;
     }
     try {
-      result = clz.getDeclaredFields();
-      for (Field field : result) {
-        if (!field.isAccessible()) {
-          field.setAccessible(true);
+      // Per SDC-1395 this code is to work around a deadlock
+      // in the security manager. Needs to go around any code
+      // in the this class which invokes the security manager
+      Object lock;
+      Subject activeSubject = Subject.getSubject(AccessController.getContext());
+      // default to no-op lock if subject is null
+      if (activeSubject == null) {
+        lock = new Object();
+      } else {
+        lock = activeSubject.getPrincipals();
+      }
+      synchronized (lock) {
+        result = clz.getDeclaredFields();
+        for (Field field : result) {
+          if (!field.isAccessible()) {
+
+            field.setAccessible(true);
+          }
         }
       }
       classToFieldCache.putIfAbsent(clz, result);

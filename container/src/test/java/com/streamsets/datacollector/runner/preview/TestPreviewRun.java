@@ -17,6 +17,7 @@ import com.streamsets.datacollector.runner.preview.PreviewPipeline;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineBuilder;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineOutput;
 import com.streamsets.datacollector.runner.preview.PreviewPipelineRunner;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -38,11 +39,13 @@ import java.util.List;
 
 
 public class TestPreviewRun {
+  private Configuration configuration;
   private RuntimeInfo runtimeInfo;
 
   @Before
   public void setUp() {
     MockStages.resetStageCaptures();
+    configuration = new Configuration();
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
   }
 
@@ -71,7 +74,7 @@ public class TestPreviewRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner( "name", "0", runtimeInfo, tracker, -1, 1, true);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", "name", "0",
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), configuration, "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
     pipeline.init();
     pipeline.run();
@@ -104,7 +107,7 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
       pipelineConfiguration, null).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
@@ -137,7 +140,7 @@ public class TestPreviewRun {
     PreviewPipelineRunner runner = new PreviewPipelineRunner( "name", "0",runtimeInfo, tracker, -1, 1, true);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
 
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
       pipelineConfiguration, "p").build(runner);
 
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -149,7 +152,7 @@ public class TestPreviewRun {
     //Complex graph
     runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
-    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name",  "0",
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name",  "0",
       pipelineConfiguration, "p1").build(runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -159,7 +162,7 @@ public class TestPreviewRun {
 
     runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
-    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
       pipelineConfiguration, "p5").build(runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -169,7 +172,7 @@ public class TestPreviewRun {
 
     runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
-    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name1", "0",
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name1", "0",
       pipelineConfiguration, "p6").build(runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -177,7 +180,7 @@ public class TestPreviewRun {
 
     runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
-    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name1", "0",
+    pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name1", "0",
       pipelineConfiguration, "t").build(runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -208,7 +211,7 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
 
-    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+    PreviewPipeline pipeline = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
                                                           pipelineConfiguration, null).build(runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     Mockito.verify(tracker).setOffset(Mockito.eq("X"));
@@ -242,7 +245,7 @@ public class TestPreviewRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
-    PreviewPipeline pp = new PreviewPipelineBuilder(MockStages.createStageLibrary(), "name", "0",
+    PreviewPipeline pp = new PreviewPipelineBuilder(MockStages.createStageLibrary(), configuration, "name", "0",
                                                     MockStages.createPipelineConfigurationSourceProcessorTarget(), null).build(runner);
     Assert.assertFalse(pp.validateConfigs().isEmpty());
   }
@@ -275,7 +278,7 @@ public class TestPreviewRun {
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     PipelineRunner runner = new PreviewPipelineRunner("name", "0", runtimeInfo, tracker, -1, 1, true);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", "name", "0", pipelineConf).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), configuration, "name", "name", "0", pipelineConf).build(runner);
     pipeline.init();
     pipeline.run();
     pipeline.destroy();
@@ -292,7 +295,7 @@ public class TestPreviewRun {
     sourceOutput.getOutput().get(pipelineConf.getStages().get(0).getOutputLanes().get(0)).set(0, modRecord);
 
     runner = new PreviewPipelineRunner("name", "0",runtimeInfo, tracker, -1, 1, true);
-    pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", "name", "0",
+    pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), configuration, "name", "name", "0",
                                     MockStages.createPipelineConfigurationSourceProcessorTarget()).build(runner);
 
     pipeline.init();

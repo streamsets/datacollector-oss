@@ -11,6 +11,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.Issues;
@@ -38,6 +39,7 @@ public class PreviewPipelineBuilder {
   }
 
   private final StageLibraryTask stageLib;
+  private final Configuration configuration;
   private final String name;
   private final String rev;
   private PipelineConfiguration pipelineConf;
@@ -52,9 +54,10 @@ public class PreviewPipelineBuilder {
    * @param endStageInstanceName Optional parameter, if passed builder will generate a partial pipeline and
    *                             endStage is exclusive
    */
-  public PreviewPipelineBuilder(StageLibraryTask stageLib, String name, String rev, PipelineConfiguration pipelineConf,
-                                String endStageInstanceName) {
+  public PreviewPipelineBuilder(StageLibraryTask stageLib, Configuration configuration, String name, String rev,
+                                PipelineConfiguration pipelineConf, String endStageInstanceName) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
+    this.configuration = configuration;
     this.name = name;
     this.rev = rev;
     this.pipelineConf = pipelineConf;
@@ -107,7 +110,7 @@ public class PreviewPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0154, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-     Pipeline.Builder builder = new Pipeline.Builder(stageLib, name + ":preview", name, rev, pipelineConf);
+     Pipeline.Builder builder = new Pipeline.Builder(stageLib, configuration, name + ":preview", name, rev, pipelineConf);
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {
        return new PreviewPipeline(name, rev, pipeline, validator.getIssues());

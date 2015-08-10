@@ -12,6 +12,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetCommitterOffsetTracker;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.Issue;
@@ -34,15 +35,18 @@ public class ProductionPipelineBuilder {
   private final StageLibraryTask stageLib;
   private final String name;
   private final String rev;
+  private final Configuration configuration;
   private final RuntimeInfo runtimeInfo;
 
   private ProductionPipelineRunner runner;
   private Observer observer;
 
-  public ProductionPipelineBuilder(@Named("name") String name, @Named("rev") String rev, RuntimeInfo runtimeInfo,
+  public ProductionPipelineBuilder(@Named("name") String name, @Named("rev") String rev,
+                                   Configuration configuration, RuntimeInfo runtimeInfo,
                                    StageLibraryTask stageLib, ProductionPipelineRunner runner, Observer observer) {
     this.name = name;
     this.rev = rev;
+    this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
     this.stageLib = stageLib;
     this.runner = runner;
@@ -57,8 +61,8 @@ public class ProductionPipelineBuilder {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, ValidationUtil.getFirstIssueAsString(name,
         validator.getIssues()));
     }
-    Pipeline pipeline = new Pipeline.Builder(stageLib, name + PRODUCTION_PIPELINE_SUFFIX, name, rev, pipelineConf)
-      .setObserver(observer).build(runner);
+    Pipeline pipeline = new Pipeline.Builder(stageLib, configuration, name + PRODUCTION_PIPELINE_SUFFIX, name, rev,
+      pipelineConf).setObserver(observer).build(runner);
 
     if (pipeline.getSource() instanceof OffsetCommitter) {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,

@@ -146,16 +146,17 @@ public class TestProdPipelineRunnable {
     Mockito.when(snapshotStore.getInfo(TestUtil.MY_PIPELINE, "0", SNAPSHOT_NAME)).
       thenReturn(new SnapshotInfoImpl("user", SNAPSHOT_NAME, TestUtil.MY_PIPELINE, "0", System.currentTimeMillis(), false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
+    Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", new Configuration(), runtimeInfo, new MetricRegistry(), snapshotStore,
+      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo, new MetricRegistry(), snapshotStore,
         null, null);
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
 
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", runtimeInfo, MockStages.createStageLibrary(),
-      runner, null).build(MockStages.createPipelineConfigurationSourceProcessorTarget());
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo,
+      MockStages.createStageLibrary(), runner, null).build(MockStages.createPipelineConfigurationSourceProcessorTarget());
 
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null);
 

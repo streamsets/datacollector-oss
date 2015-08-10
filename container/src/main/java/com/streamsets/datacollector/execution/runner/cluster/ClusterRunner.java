@@ -544,7 +544,7 @@ public class ClusterRunner extends AbstractRunner {
       new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, new MetricRegistry(),
         null, null, null);
     ProductionPipelineBuilder builder =
-      new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLibrary,  runner, null);
+      new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLibrary,  runner, null);
     return builder.build(pipelineConfiguration);
   }
 

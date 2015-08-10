@@ -18,6 +18,7 @@ import com.streamsets.datacollector.memory.MemoryMonitor;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
@@ -56,19 +57,21 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private final MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle;
   private final String name;
   private final String rev;
+  private final Configuration configuration;
 
   @VisibleForTesting
   StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
-    this("myPipeline", "0", stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
+    this("myPipeline", "0", new Configuration(), stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
       new MemoryUsageCollectorResourceBundle());
   }
 
-  public StagePipe(String name, String rev, StageRuntime stage, List<String> inputLanes, List<String> outputLanes,
-                   ResourceControlledScheduledExecutor scheduledExecutorService,
+  public StagePipe(String name, String rev, Configuration configuration, StageRuntime stage, List<String> inputLanes,
+                   List<String> outputLanes, ResourceControlledScheduledExecutor scheduledExecutorService,
                    MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle) {
     super(stage, inputLanes, outputLanes);
     this.name = name;
     this.rev = rev;
+    this.configuration = configuration;
     this.scheduledExecutorService = scheduledExecutorService;
     this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
   }
@@ -104,16 +107,18 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         }
       }
       this.context = pipeContext;
-      scheduledExecutorService.submit(
+      if (configuration.get("monitor.memory", true)) {
+        scheduledExecutorService.submit(
           new MemoryMonitor(memoryConsumedCounter,
-                            new Supplier<MemoryUsageCollector>() {
-                              @Override
-                              public MemoryUsageCollector get() {
-                                return new MemoryUsageCollector.Builder()
-                                    .setMemoryUsageCollectorResourceBundle(memoryUsageCollectorResourceBundle)
-                                    .setStageRuntime(getStage()).build();
-                              }
-                            }));
+            new Supplier<MemoryUsageCollector>() {
+              @Override
+              public MemoryUsageCollector get() {
+                return new MemoryUsageCollector.Builder()
+                  .setMemoryUsageCollectorResourceBundle(memoryUsageCollectorResourceBundle)
+                  .setStageRuntime(getStage()).build();
+              }
+            }));
+      }
       createRuntimeStatsGauge(metrics);
     }
     return issues;

@@ -136,9 +136,11 @@ public class PipelineProviderModule {
   @Provides @Singleton
   public ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
                                                                     @Named("rev") String rev,
+                                                                    Configuration configuration,
                                                                     RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
                                                                     PipelineRunner runner, Observer observer) {
-    return new ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib, (ProductionPipelineRunner)runner, observer);
+    return new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLib,
+      (ProductionPipelineRunner)runner, observer);
   }
 
   @Provides @Singleton
