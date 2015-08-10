@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -41,6 +42,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.BindException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -162,7 +164,12 @@ public class KafkaTestUtil {
 
   public static void startZookeeper() {
     zkConnect = TestZKUtils.zookeeperConnect();
-    zkServer = new EmbeddedZookeeper(zkConnect);
+    try {
+      zkServer = new EmbeddedZookeeper(zkConnect);
+    } catch (Exception ex) {
+      String msg = Utils.format("Error starting zookeeper {}: {}", zkConnect, ex);
+      throw new RuntimeException(msg, ex);
+    }
     zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
   }
 

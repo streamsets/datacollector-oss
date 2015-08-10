@@ -102,8 +102,12 @@ public class TestKafkaToFlume {
   @AfterClass
   public static void afterClass() throws Exception {
     KafkaTestUtil.shutdown();
-    source.stop();
-    ch.stop();
+    if (source != null) {
+      source.stop();
+    }
+    if (ch != null) {
+      ch.stop();
+    }
     ClusterUtil.tearDownCluster(TEST_NAME);
   }
 
