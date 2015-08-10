@@ -45,7 +45,7 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
-      label = "Cluster URI(s)",
+      label = "Cluster URIs",
       defaultValue = "[\"localhost:9300\"]",
       description = "Elasticsearch Node URIs",
       displayPosition = 20,
