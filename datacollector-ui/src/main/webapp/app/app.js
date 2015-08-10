@@ -289,6 +289,10 @@ angular.module('dataCollectorApp')
             .error(function(data, status, headers, config) {
               $rootScope.common.errors = [data];
             });
+        },
+
+        ignoreCodeMirrorEnterKey: function() {
+          //console.log('onCodeMirrorEnterKey');
         }
       };
 
