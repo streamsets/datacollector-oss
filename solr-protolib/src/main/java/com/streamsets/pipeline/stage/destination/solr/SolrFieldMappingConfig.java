@@ -31,7 +31,7 @@ public class SolrFieldMappingConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue="/",
-      label = "Field-path",
+      label = "Field Path",
       description = "The field-path in the incoming record to output.",
       displayPosition = 10
   )

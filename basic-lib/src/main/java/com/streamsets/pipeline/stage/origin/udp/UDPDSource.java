@@ -115,7 +115,7 @@ public class UDPDSource extends DSource {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Convert Hi-res Time & Interval",
+      label = "Convert Hi-Res Time & Interval",
       description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
       displayPosition = 20,
       group = "COLLECTD",

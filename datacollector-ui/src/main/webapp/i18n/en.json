@@ -553,7 +553,7 @@
   },
   "sdcConfiguration": {
     "configuration": "Configuration",
-    "infoMessage": "These configurations are defined in etc/sdc.properties. To change these you currently need to restart Data Collector.",
+    "infoMessage": "These configuration properties are defined in the Data Collector 'sdc.properties' file. Restart the Data Collector for any changes to take effect.",
     "title": "Data Collector Configuration",
     "value": "Value"
   },
