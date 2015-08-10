@@ -66,14 +66,15 @@ public class TestFailedProdRun {
     });
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, new Configuration(), runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
-      null, null);
+    Configuration conf = new Configuration();
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo,
+      new MetricRegistry(), Mockito.mock(FileSnapshotStore.class), null, null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
     pipelineConfiguration.getStages().remove(2);
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, runtimeInfo,
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
 
   }
@@ -112,13 +113,14 @@ public class TestFailedProdRun {
     MockStages.setSourceCapture(new ErrorListeningSource());
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
-    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, new Configuration(), runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
+    Configuration conf = new Configuration();
+    ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
       null, null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
     PipelineConfiguration pipelineConfiguration = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, runtimeInfo,
+    ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
     try {
       pipeline.run();

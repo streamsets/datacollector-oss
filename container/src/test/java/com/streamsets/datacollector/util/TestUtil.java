@@ -482,8 +482,8 @@ public class TestUtil {
                                                                       @Named("rev") String rev,
                                                                       RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
                                                                       PipelineRunner runner, Observer observer) {
-      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder(name, rev, runtimeInfo, stageLib,
-        (ProductionPipelineRunner)runner, observer);
+      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder(name, rev,
+        new Configuration(), runtimeInfo, stageLib, (ProductionPipelineRunner)runner, observer);
     }
   }
 

@@ -13,6 +13,7 @@ import com.streamsets.datacollector.runner.PipeBatch;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 
+import com.streamsets.datacollector.util.Configuration;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -25,7 +26,7 @@ public class TestObserverPipe {
   public void testNullObserver() throws Exception {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", "name", "0",
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceTarget()).build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
@@ -40,7 +41,7 @@ public class TestObserverPipe {
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Observer observer = Mockito.mock(Observer.class);
     Mockito.when(observer.isObserving(Mockito.any(List.class))).thenReturn(observing);
-    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), "name", "name", "0",
+    Pipeline pipeline = new Pipeline.Builder(MockStages.createStageLibrary(), new Configuration(), "name", "name", "0",
                                              MockStages.createPipelineConfigurationSourceTarget()).setObserver(observer)
                                              .build(pipelineRunner);
     ObserverPipe pipe = (ObserverPipe) pipeline.getPipes()[1];

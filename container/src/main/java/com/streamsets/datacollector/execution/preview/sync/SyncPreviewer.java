@@ -242,7 +242,7 @@ public class SyncPreviewer implements Previewer {
     SourceOffsetTracker tracker = new PreviewSourceOffsetTracker(null);
     PreviewPipelineRunner runner = new PreviewPipelineRunner(name, rev, runtimeInfo, tracker, batchSize, batches,
       skipTargets);
-    return new PreviewPipelineBuilder(stageLibrary, name, rev, pipelineConf, endStageInstanceName)
+    return new PreviewPipelineBuilder(stageLibrary, configuration, name, rev, pipelineConf, endStageInstanceName)
       .build(runner);
   }
 

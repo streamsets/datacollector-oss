@@ -19,6 +19,7 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Processor;
@@ -69,7 +70,7 @@ public class TestMemoryIsolation {
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION, UUID.randomUUID(),
       null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig());
-    Pipeline.Builder builder = new Pipeline.Builder(lib, "name",  "name", "0", pipelineConf);
+    Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name",  "name", "0", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     MetricRegistry metrics = Mockito.mock(MetricRegistry.class);
