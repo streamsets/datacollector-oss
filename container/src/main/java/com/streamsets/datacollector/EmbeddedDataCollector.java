@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.PrivilegedExceptionAction;
@@ -50,20 +51,29 @@ public class EmbeddedDataCollector implements DataCollector {
   private RuntimeInfo runtimeInfo;
   private Runner runner;
   private PipelineTask pipelineTask;
+  private SecurityContext securityContext;
 
 
   @Override
   public void startPipeline() throws Exception {
-    File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
-    Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
-      sdcProperties.getAbsolutePath()));
-    Properties properties = new Properties();
-    properties.load(new FileInputStream(sdcProperties));
-    String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
-    String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
-    String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
-    runner = pipelineManager.getRunner(pipelineUser, pipelineName, pipelineRev);
-    runner.start();
+    Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
+      @Override
+      public Void run() throws Exception {
+      File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
+        Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
+          sdcProperties.getAbsolutePath()));
+        Properties properties = new Properties();
+        InputStream is  = new FileInputStream(sdcProperties);
+        properties.load(is);
+        is.close();
+        String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
+        String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
+        String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");
+        runner = pipelineManager.getRunner(pipelineUser, pipelineName, pipelineRev);
+        runner.start();
+        return null;
+      }
+    });
   }
 
   @Override
@@ -105,7 +115,7 @@ public class EmbeddedDataCollector implements DataCollector {
     LOG.info("-----------------------------------------------------------------");
     LOG.info("Starting ...");
 
-    SecurityContext securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
+    securityContext = new SecurityContext(dagger.get(RuntimeInfo.class), dagger.get(Configuration.class));
     securityContext.login();
 
     LOG.info("-----------------------------------------------------------------");
