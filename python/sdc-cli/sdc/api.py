@@ -92,7 +92,7 @@ class DataCollector:
         pipeline_url = urlparse.urljoin(self._pipeline_store, pipeline_name)
 
         # Create the new Pipeline
-        response = requests.put(
+        response = self._session.put(
             pipeline_url,
         )
 
@@ -104,7 +104,7 @@ class DataCollector:
     def update_pipeline(self, pipeline_config):
         """Updates a pipeline definition for an existing pipeline."""
         assert pipeline_config['info']['name'] is not None, 'Pipeline must have a name! [%s]' % pipeline_config['info']
-        response = requests.post(
+        response = self._session.post(
             urlparse.urljoin(self._pipeline_store, pipeline_config['info']['name']),
             data=json.dumps(pipeline_config),
             headers=self._json_headers,
@@ -130,7 +130,7 @@ class DataCollector:
     def update_rules(self, pipeline_rules, pipeline_name):
         """Update rules for the given pipeline."""
         pipeline_url = urlparse.urljoin(self._pipeline_store, pipeline_name)
-        response = requests.post(
+        response = self._session.post(
             # Trailing slash needed to continue appending to pipeline name.
             urlparse.urljoin(pipeline_url + '/', 'rules'),
             data=json.dumps(pipeline_rules),
@@ -175,7 +175,7 @@ class DataCollector:
 
     def delete_pipeline(self, name):
         """Deletes the pipeline of the specified name."""
-        response = requests.delete(
+        response = self._session.delete(
             urlparse.urljoin(self._pipeline_store, name)
         )
         return response
@@ -204,7 +204,7 @@ class DataCollector:
         if rev is not None:
             query['rev'] = rev
 
-        response = requests.post(
+        response = self._session.post(
             urlparse.urljoin(self._pipeline, 'start'),
             params=query
         )
@@ -215,7 +215,7 @@ class DataCollector:
         The response code should be checked for errors. If a pipeline was not
         running when stop was called it will result in a 500.
         """
-        response = requests.post(
+        response = self._session.post(
             urlparse.urljoin(self._pipeline, 'stop')
         )
         return response
