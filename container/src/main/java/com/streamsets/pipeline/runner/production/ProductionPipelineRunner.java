@@ -122,6 +122,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.observeRequests = observeRequests;
     this.memoryLimitConfiguration = memoryLimitConfiguration;
 
+    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing");
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount");
     batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch");

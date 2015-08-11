@@ -30,7 +30,6 @@ public class ProductionPipeline {
   }
 
   public void run() throws StageException, PipelineRuntimeException{
-    MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     try {
       pipeline.init();
       try {
