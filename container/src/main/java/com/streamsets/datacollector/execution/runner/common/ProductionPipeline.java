@@ -69,7 +69,6 @@ public class ProductionPipeline {
   }
 
   public void run() throws StageException, PipelineRuntimeException {
-    MetricsConfigurator.registerPipeline(name, rev);
     boolean finishing = false;
     boolean errorWhileRunning = false;
     String runningErrorMsg = "";

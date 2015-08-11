@@ -129,6 +129,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     stageToErrorMessagesMap = new HashMap<>();
     errorRecordsMutex = new Object();
 
+    MetricsConfigurator.registerPipeline(pipelineName, revision);
     batchProcessingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", pipelineName, revision);
     batchCountMeter = MetricsConfigurator.createMeter(metrics, "pipeline.batchCount", pipelineName, revision);
     batchInputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, "pipeline.inputRecordsPerBatch",
