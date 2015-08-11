@@ -467,7 +467,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       etcDir = createDirectoryClone(etcDir, stagingDir);
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getName();
-      File pipelineBaseDir = new File(etcDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      File rootDataDir = new File(etcDir, "data");
+      File pipelineBaseDir = new File(rootDataDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
       File pipelineDir = new File(pipelineBaseDir, PipelineDirectoryUtil.getEscapedPipelineName(pipelineName));
       if (!pipelineDir.exists()) {
         pipelineDir.mkdirs();

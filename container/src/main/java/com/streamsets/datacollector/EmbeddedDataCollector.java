@@ -54,7 +54,7 @@ public class EmbeddedDataCollector implements DataCollector {
 
   @Override
   public void startPipeline() throws Exception {
-    File sdcProperties = new File(runtimeInfo.getDataDir(), "sdc.properties");
+    File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
     Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
       sdcProperties.getAbsolutePath()));
     Properties properties = new Properties();

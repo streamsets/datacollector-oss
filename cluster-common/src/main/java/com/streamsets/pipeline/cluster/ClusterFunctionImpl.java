@@ -9,9 +9,12 @@ import com.streamsets.pipeline.EmbeddedSDC;
 import com.streamsets.pipeline.EmbeddedSDCPool;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.api.impl.Utils;
+
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -26,10 +29,13 @@ public class ClusterFunctionImpl implements ClusterFunction  {
   private static volatile boolean initialized = false;
   private Throwable error;
 
-  private static synchronized void initialize(Properties properties, Integer id) throws Exception {
+  private static synchronized void initialize(Properties properties, Integer id, String rootDataDir) throws Exception {
     if (initialized) {
       return;
     }
+    File dataDir = new File(System.getProperty("user.dir"), "data");
+    FileUtils.copyDirectory(new File(rootDataDir), dataDir);
+    System.setProperty("sdc.data.dir", dataDir.getAbsolutePath());
     // must occur before creating the EmbeddedSDCPool as
     // the hdfs target validation evaluates the sdc:id EL
     NumberFormat numberFormat = NumberFormat.getInstance();
@@ -46,8 +52,8 @@ public class ClusterFunctionImpl implements ClusterFunction  {
     initialized = true;
   }
 
-  public static ClusterFunction create(Properties properties, Integer id) throws Exception {
-    initialize(Utils.checkNotNull(properties, "Properties"), id);
+  public static ClusterFunction create(Properties properties, Integer id, String rootDataDir) throws Exception {
+    initialize(Utils.checkNotNull(properties, "Properties"), id, rootDataDir);
     return new ClusterFunctionImpl();
   }
 
