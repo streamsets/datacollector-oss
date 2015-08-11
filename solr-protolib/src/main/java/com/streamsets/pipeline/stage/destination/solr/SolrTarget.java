@@ -70,7 +70,11 @@ public class SolrTarget extends BaseTarget {
         solrClient = getSolrClient();
         solrClient.ping();
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.SOLR.name(), null, Errors.SOLR_03, ex.toString(), ex));
+        String configName = "solrURI";
+        if(SolrInstanceType.SOLR_CLOUD.equals(instanceType.getInstanceType())) {
+          configName = "zookeeperConnect";
+        }
+        issues.add(getContext().createConfigIssue(Groups.SOLR.name(), configName, Errors.SOLR_03, ex.toString(), ex));
       }
     }
 
