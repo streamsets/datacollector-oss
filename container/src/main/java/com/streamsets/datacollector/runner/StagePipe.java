@@ -107,7 +107,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         }
       }
       this.context = pipeContext;
-      if (configuration.get("monitor.memory", true)) {
+      if (configuration.get("monitor.memory", false)) {
         scheduledExecutorService.submit(
           new MemoryMonitor(memoryConsumedCounter,
             new Supplier<MemoryUsageCollector>() {
