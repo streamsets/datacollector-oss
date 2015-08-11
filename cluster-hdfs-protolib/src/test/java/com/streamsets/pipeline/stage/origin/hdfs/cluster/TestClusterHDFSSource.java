@@ -9,12 +9,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -49,14 +51,13 @@ public class TestClusterHDFSSource {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private static MiniDFSCluster miniDFS;
   private static Path dir;
+  private static File dummyEtc;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-
-    File minidfsDir = new File("target/minidfs").getAbsoluteFile();
-    if (!minidfsDir.exists()) {
-      Assert.assertTrue(minidfsDir.mkdirs());
-    }
+    File minidfsDir = new File("target/minidfs-" + UUID.randomUUID()).getAbsoluteFile();
+    minidfsDir.mkdirs();
+    Assert.assertTrue(minidfsDir.exists());
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
     Configuration conf = new HdfsConfiguration();
     conf.set("dfs.namenode.fs-limits.min-block-size", String.valueOf(32));
@@ -65,7 +66,17 @@ public class TestClusterHDFSSource {
     dir = new Path(miniDFS.getURI()+"/dir");
     FileSystem fs = miniDFS.getFileSystem();
     fs.mkdirs(dir);
-    writeFile(fs, new Path(dir+"/forAllTests/"+"path"), 1000);
+    writeFile(fs, new Path(dir + "/forAllTests/" + "path"), 1000);
+    dummyEtc = new File(minidfsDir, "dummy-etc");
+    dummyEtc.mkdirs();
+    Assert.assertTrue(dummyEtc.exists());
+    Configuration dummyConf = new Configuration(false);
+    for (String file : new String[]{"core", "hdfs", "mapred", "yarn"}) {
+      File siteXml = new File(dummyEtc, file + "-site.xml");
+      FileOutputStream out = new FileOutputStream(siteXml);
+      dummyConf.writeXml(out);
+      out.close();
+    }
   }
 
   @AfterClass
@@ -221,6 +232,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
       .build();
       sourceRunner.runInit();
 

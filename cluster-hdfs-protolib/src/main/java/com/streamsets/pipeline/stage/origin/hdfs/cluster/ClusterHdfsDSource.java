@@ -274,12 +274,12 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   public boolean hdfsKerberos;
 
   @ConfigDef(
-    required = false,
+    required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "",
-    label = "Hadoop FS Configuration Directory",
-    description = "An absolute path or a directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
-      "to configure the Hadoop FileSystem.",
+    label = "Hadoop Configuration Directory",
+    description = "A directory (or symlink) under SDC resources directory to load core-site.xml, hdfs-site.xml, " +
+      "yarn-site.xml, and mapred-site.xml files to configure Hadoop.",
     displayPosition = 180,
     group = "HADOOP_FS"
   )
