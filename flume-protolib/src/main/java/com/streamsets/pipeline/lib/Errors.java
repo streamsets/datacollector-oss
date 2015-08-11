@@ -15,6 +15,7 @@ public enum Errors implements ErrorCode {
   //Flume target messages
   FLUME_50("Error serializing record '{}': {}"),
   FLUME_51("Unable to send data to flume, reason : {}"),
+  FLUME_52("Unable to send data to flume because the pipeline was stopped."),
 
   //Flume ValidationValidation
   FLUME_101("Flume Host Configuration cannot be empty"),
