@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class TestFieldTypeConverterProcessor {
 
@@ -225,7 +226,7 @@ public class TestFieldTypeConverterProcessor {
       Map<String, Field> result = field.getValueAsMap();
       Assert.assertTrue(result.size() == 3);
       Assert.assertTrue(result.containsKey("beginner"));
-      Assert.assertTrue(Arrays.equals("abc".getBytes(), (byte[])result.get("beginner").getValue()));
+      Assert.assertTrue(Arrays.equals("abc".getBytes(), (byte[]) result.get("beginner").getValue()));
       Assert.assertTrue(result.containsKey("intermediate"));
       Assert.assertTrue(Arrays.equals("yes".getBytes(), (byte[]) result.get("intermediate").getValue()));
       Assert.assertTrue(result.containsKey("null"));
@@ -371,7 +372,7 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertEquals(null, result.get("null").getValue());
       Assert.assertEquals(1.234, result.get("expert").getValue());
       Assert.assertTrue(result.containsKey("expert"));
-      Assert.assertEquals((double)1234, result.get("advanced").getValue());
+      Assert.assertEquals((double) 1234, result.get("advanced").getValue());
       Assert.assertTrue(result.containsKey("advanced"));
       Assert.assertTrue(result.containsKey("skilled"));
       Assert.assertEquals(-1.23E-12, result.get("skilled").getValue());
@@ -1267,6 +1268,117 @@ public class TestFieldTypeConverterProcessor {
 
       Assert.assertEquals(resultRecord.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(), "5");
       Assert.assertEquals(resultRecord.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(), "6");
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDateConversion() throws StageException {
+
+    FieldTypeConverterConfig date7 = new FieldTypeConverterConfig();
+    date7.fields = ImmutableList.of("/date7");
+    date7.targetType = Field.Type.DATE;
+    date7.dateFormat = DateFormat.YYYY_MM_DD_T_HH_MM_SS_SSS_Z;
+    date7.dataLocale = "en";
+
+    FieldTypeConverterConfig date6 = new FieldTypeConverterConfig();
+    date6.fields = ImmutableList.of("/date6");
+    date6.targetType = Field.Type.DATE;
+    date6.dateFormat = DateFormat.YYYY_MM_DD_T_HH_MM_Z;
+    date6.dataLocale = "en";
+
+    FieldTypeConverterConfig date5 = new FieldTypeConverterConfig();
+    date5.fields = ImmutableList.of("/date5");
+    date5.targetType = Field.Type.DATE;
+    date5.dateFormat = DateFormat.YYYY_MM_DD_HH_MM_SS_SSS_Z;
+    date5.dataLocale = "en";
+
+    FieldTypeConverterConfig date4 = new FieldTypeConverterConfig();
+    date4.fields = ImmutableList.of("/date4");
+    date4.targetType = Field.Type.DATE;
+    date4.dateFormat = DateFormat.YYYY_MM_DD_HH_MM_SS_SSS;
+    date4.dataLocale = "en";
+
+    FieldTypeConverterConfig date3 = new FieldTypeConverterConfig();
+    date3.fields = ImmutableList.of("/date3");
+    date3.targetType = Field.Type.DATE;
+    date3.dateFormat = DateFormat.YYYY_MM_DD_HH_MM_SS;
+    date3.dataLocale = "en";
+
+    FieldTypeConverterConfig date2 = new FieldTypeConverterConfig();
+    date2.fields = ImmutableList.of("/date2");
+    date2.targetType = Field.Type.DATE;
+    date2.dateFormat = DateFormat.DD_MM_YYYY;
+    date2.dataLocale = "en";
+
+    FieldTypeConverterConfig date1 = new FieldTypeConverterConfig();
+    date1.fields = ImmutableList.of("/date1");
+    date1.targetType = Field.Type.DATE;
+    date1.dateFormat = DateFormat.YYYY_MM_DD;
+    date1.dataLocale = "en";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(date1, date2, date3, date4, date5, date6, date7))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("date1", Field.create(Field.Type.STRING, "2016-08-12"));
+      map.put("date2", Field.create(Field.Type.STRING, "12-AUG-2016"));
+      map.put("date3", Field.create(Field.Type.STRING, "2016-08-12 16:08:12"));
+      map.put("date4", Field.create(Field.Type.STRING, "2016-08-12 16:08:12.777"));
+      map.put("date5", Field.create(Field.Type.STRING, "2016-08-12 16:08:12.777 -0700"));
+      map.put("date6", Field.create(Field.Type.STRING, "2015-08-11T18:32Z"));
+      map.put("date7", Field.create(Field.Type.STRING, "2016-08-15T18:32:12.777Z"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 7);
+
+      Assert.assertTrue(result.containsKey("date1"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date1").getType());
+      SimpleDateFormat date1DateFormat = new SimpleDateFormat(date1.dateFormat.getFormat());
+      Assert.assertEquals("2016-08-12", date1DateFormat.format(result.get("date1").getValue()));
+
+      Assert.assertTrue(result.containsKey("date2"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date2").getType());
+      SimpleDateFormat date2DateFormat = new SimpleDateFormat(date2.dateFormat.getFormat());
+      Assert.assertEquals("12-Aug-2016", date2DateFormat.format(result.get("date2").getValue()));
+
+      Assert.assertTrue(result.containsKey("date3"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date3").getType());
+      SimpleDateFormat date3DateFormat = new SimpleDateFormat(date3.dateFormat.getFormat());
+      Assert.assertEquals("2016-08-12 16:08:12", date3DateFormat.format(result.get("date3").getValue()));
+
+      Assert.assertTrue(result.containsKey("date4"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date4").getType());
+      SimpleDateFormat date4DateFormat = new SimpleDateFormat(date4.dateFormat.getFormat());
+      Assert.assertEquals("2016-08-12 16:08:12.777", date4DateFormat.format(result.get("date4").getValue()));
+
+      Assert.assertTrue(result.containsKey("date5"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date5").getType());
+      SimpleDateFormat date5DateFormat = new SimpleDateFormat(date5.dateFormat.getFormat());
+      date5DateFormat.setTimeZone(TimeZone.getTimeZone("MST"));
+      Assert.assertEquals("2016-08-12 16:08:12.777 -0700", date5DateFormat.format(result.get("date5").getValue()));
+
+      Assert.assertTrue(result.containsKey("date6"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date6").getType());
+      SimpleDateFormat date6DateFormat = new SimpleDateFormat(date6.dateFormat.getFormat());
+      Assert.assertEquals("2015-08-11T18:32Z", date6DateFormat.format(result.get("date6").getValue()));
+
+      Assert.assertTrue(result.containsKey("date7"));
+      Assert.assertEquals(Field.Type.DATE, result.get("date7").getType());
+      SimpleDateFormat date7DateFormat = new SimpleDateFormat(date7.dateFormat.getFormat());
+      Assert.assertEquals("2016-08-15T18:32:12.777Z", date7DateFormat.format(result.get("date7").getValue()));
 
     } finally {
       runner.runDestroy();

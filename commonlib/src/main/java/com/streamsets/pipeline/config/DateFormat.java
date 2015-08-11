@@ -11,12 +11,13 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum DateFormat implements Label {
 
-  YYYY_MM_DD("yyyy-MM-dd", "YYYY-MM-DD"),
-  DD_MM_YYYY("dd-MMM-YYYY", "DD-MMM-YYYY"),
-  YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss", "YYYY-MM-DD hh:mm:ss"),
-  YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS", "YYYY-MM-DD hh:mm:ss.sss"),
-  YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z", "YYYY-MM-DD hh:mm:ss.sss Z"),
-  YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'", "YYYY-MM-DD'T'hh:mm'Z'"),
+  YYYY_MM_DD("yyyy-MM-dd", "yyyy-MM-dd"),
+  DD_MM_YYYY("dd-MMM-yyyy", "dd-MMM-yyyy"),
+  YYYY_MM_DD_HH_MM_SS("yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss"),
+  YYYY_MM_DD_HH_MM_SS_SSS("yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss.SSS"),
+  YYYY_MM_DD_HH_MM_SS_SSS_Z("yyyy-MM-dd HH:mm:ss.SSS Z", "yyyy-MM-dd HH:mm:ss.SSS Z"),
+  YYYY_MM_DD_T_HH_MM_Z("yyyy-MM-dd'T'HH:mm'Z'", "yyyy-MM-dd'T'HH:mm'Z'"),
+  YYYY_MM_DD_T_HH_MM_SS_SSS_Z("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"),
   OTHER(null, "Other ...");
 
   private final String format;
