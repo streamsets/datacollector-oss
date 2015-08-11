@@ -39,6 +39,7 @@ public class BootstrapCluster {
   private static ClassLoader containerCL;
   private static ClassLoader sparkCL;
   private static List<ClassLoader> stageLibrariesCLs;
+  private static String dataDir;
 
   public static synchronized Properties getProperties() throws Exception {
     initialize();
@@ -74,9 +75,9 @@ public class BootstrapCluster {
     }
     properties = new Properties();
     properties.load(new FileInputStream(sdcProperties));
-
-    System.setProperty("sdc.data.dir", etcRoot);
-    File basePipelineDir = new File(etcRoot, "pipelines");
+    File rootDataDir = new File(etcRoot, "data");
+    dataDir = rootDataDir.getAbsolutePath();
+    File basePipelineDir = new File(rootDataDir, "pipelines");
     String pipelineName = properties.getProperty("cluster.pipeline.name");
     if (pipelineName == null) {
       throw new IllegalStateException("Pipeline to be run cannot be null");
@@ -231,7 +232,7 @@ public class BootstrapCluster {
     try {
       Thread.currentThread().setContextClassLoader(sparkCL);
       return Class.forName("com.streamsets.pipeline.cluster.ClusterFunctionImpl", true,
-        sparkCL).getMethod("create", Properties.class, Integer.class).invoke(null, properties, id);
+        sparkCL).getMethod("create", Properties.class, Integer.class, String.class).invoke(null, properties, id, dataDir);
     } catch (Exception ex) {
       String msg = "Error trying to obtain ClusterFunction Class: " + ex;
       throw new IllegalStateException(msg, ex);
