@@ -568,13 +568,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   @Override
   public Map<String, String> getConfigsToShip() {
     Map<String, String> configsToShip = new HashMap<String, String>();
-    // results in the settings in an absolute resources directory such
-    // as /etc/hadoop/conf/ getting shipped to the cluster
     for (Map.Entry<String, String> entry : hadoopConf) {
-      configsToShip.put(entry.getKey(), entry.getValue());
+      // hadoopConf.get() is required since entry.getValue()
+      // does not have variables expanded
+      configsToShip.put(entry.getKey(), hadoopConf.get(entry.getKey()));
     }
     return configsToShip;
   }
-
-
 }
