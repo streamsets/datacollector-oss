@@ -186,8 +186,8 @@ public class PipelineConfigurationValidator {
     if (stageDef != null) {
       if (!stageDef.getExecutionModes().contains(executionMode)) {
         canPreview = false;
-        issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageConf.getStageName(),
-                                       stageConf.getLibrary(), executionMode.getLabel()));
+        issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageDef.getLabel(),
+          stageDef.getLibraryLabel(), executionMode.getLabel()));
       }
     } else {
       canPreview = false;
