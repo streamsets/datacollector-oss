@@ -290,6 +290,7 @@ public class TestProductionPipeline {
       new SnapshotInfoImpl("user", "SNAPSHOT_NAME", PIPELINE_NAME, REVISION, System.currentTimeMillis(), false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
+    config.set("monitor.memory", true);
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(PIPELINE_NAME, REVISION, config, runtimeInfo, new MetricRegistry(), snapshotStore,
         null, null);
