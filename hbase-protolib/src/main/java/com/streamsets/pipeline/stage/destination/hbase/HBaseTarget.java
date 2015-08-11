@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
@@ -192,12 +193,15 @@ public class HBaseTarget extends BaseTarget {
 
       UserGroupInformation.setConfiguration(hbaseConf);
       // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
-      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
+      Subject subject = Subject.getSubject(AccessController.getContext());
+      UserGroupInformation.loginUserFromSubject(subject);
       // we now extract the UGI we just logged in as.
       loginUgi = UserGroupInformation.getLoginUser();
+      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject, 
+        subject == null ? "null" : subject.getPrincipals(), loginUgi);
       StringBuilder logMessage = new StringBuilder();
       if (kerberosAuth) {
-        logMessage.append("Using Kerberos: ");
+        logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
           issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "kerberosAuth", Errors.HBASE_16,
             loginUgi.getAuthenticationMethod()));
@@ -209,6 +213,7 @@ public class HBaseTarget extends BaseTarget {
       }
       LOG.info("Authentication Config: " + logMessage);
     } catch (Exception ex) {
+      LOG.info("Error validating security configuration: " + ex, ex);
       issues.add(getContext().createConfigIssue(Groups.HBASE.name(), null, Errors.HBASE_17, ex.toString(), ex));
     }
   }
