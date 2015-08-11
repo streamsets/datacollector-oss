@@ -83,7 +83,9 @@ public class PipelineMapper extends Mapper {
       }
       errorOccurred = false;
     } catch (Exception ex) {
-      throw new RuntimeException("Error invoking map function: " + ex, ex);
+      String msg = "Error invoking map function: " + ex;
+      LOG.error(msg, ex);
+      throw new RuntimeException(msg, ex);
     } finally {
       try {
         clusterFunction.shutdown();

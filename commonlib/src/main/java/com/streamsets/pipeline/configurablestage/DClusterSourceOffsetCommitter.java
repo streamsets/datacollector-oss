@@ -12,46 +12,35 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitter implements ClusterSource {
+  private static final Logger LOG = LoggerFactory.getLogger(DClusterSourceOffsetCommitter.class);
   private ClusterSource clusterSource;
 
   @Override
   Stage<Source.Context> createStage() {
     Stage<Source.Context> result = super.createStage();
+    LOG.info("Created source of type: {}", source);
     if (source instanceof ClusterSource) {
       clusterSource = (ClusterSource) source;
+    } else if (source == null) {
+      throw new NullPointerException("Source cannot be null");
     }
     return result;
   }
 
   @Override
   public String getName() {
-    if (clusterSource == null) {
-      // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-        throw new RuntimeException(Utils.format(
-          "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-          ClusterSource.class.getName()));
-      }
-    }
+    initializeClusterSource();
     return clusterSource.getName();
   }
 
   @Override
   public boolean isInBatchMode() {
-    if (clusterSource == null) {
-      // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-      throw new RuntimeException(Utils.format(
-        "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-        ClusterSource.class.getName()));
-      }
-    }
+    initializeClusterSource();
     return clusterSource.isInBatchMode();
   }
 
@@ -62,17 +51,27 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public void put(List<Map.Entry> batch) throws InterruptedException {
-    if (clusterSource == null) {
+    initializeClusterSource();
+    clusterSource.put(batch);
+  }
+
+  private void initializeClusterSource() {
+    // TODO fix this hack and ensure initialization is synchronous
+    long start = System.currentTimeMillis();
+    while (clusterSource == null && ThreadUtil.sleep(1) && (System.currentTimeMillis() - start) < 60L * 1000L) {
       // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-      throw new RuntimeException(Utils.format(
-        "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-        ClusterSource.class.getName()));
+      Source source = getSource();
+      if (source instanceof ClusterSource) {
+        clusterSource = (ClusterSource) source;
+      } else if (source != null) {
+        throw new RuntimeException(Utils.format(
+          "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
+          ClusterSource.class.getName()));
       }
     }
-    clusterSource.put(batch);
+    if (clusterSource == null) {
+      throw new RuntimeException("Could not obtain cluster source");
+    }
   }
 
   /**
@@ -81,16 +80,7 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public long getRecordsProduced() {
-    if (clusterSource == null) {
-      // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-      throw new RuntimeException(Utils.format(
-        "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-        ClusterSource.class.getName()));
-      }
-    }
+    initializeClusterSource();
     return clusterSource.getRecordsProduced();
   }
 
@@ -100,31 +90,13 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public boolean inErrorState() {
-    if (clusterSource == null) {
-      // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-      throw new RuntimeException(Utils.format(
-        "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-        ClusterSource.class.getName()));
-      }
-    }
+    initializeClusterSource();
     return clusterSource.inErrorState();
   }
 
   @Override
   public Map<String, String> getConfigsToShip() {
-    if (clusterSource == null) {
-      // Get actual source in case of source being a delegating source (DelegatingKafkaSource)
-      if (getSource() instanceof ClusterSource) {
-        clusterSource = (ClusterSource) getSource();
-      } else {
-      throw new RuntimeException(Utils.format(
-        "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
-        ClusterSource.class.getName()));
-      }
-    }
+    initializeClusterSource();
     return clusterSource.getConfigsToShip();
   }
 
