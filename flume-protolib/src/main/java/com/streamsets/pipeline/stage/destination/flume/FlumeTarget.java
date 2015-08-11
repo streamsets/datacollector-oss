@@ -16,14 +16,13 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.Errors;
 import com.streamsets.pipeline.lib.FlumeUtil;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import org.apache.commons.io.IOUtils;
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.api.RpcClient;
@@ -320,6 +319,11 @@ public class FlumeTarget extends BaseTarget {
     Exception ex = null;
     while (retries <= maxRetryAttempts) {
       if(retries != 0) {
+        LOG.info("Wait for {} ms before retry", waitBetweenRetries);
+        if (!ThreadUtil.sleep(waitBetweenRetries)) {
+          break;
+        }
+        reconnect();
         LOG.info("Retry attempt number {}", retries);
       }
       try {
@@ -328,12 +332,14 @@ public class FlumeTarget extends BaseTarget {
         return;
       } catch (EventDeliveryException e) {
         ex = e;
-        retries++;
-        LOG.info("Encountered exception while sending data to flume : {}", e.toString(), e);
-        if(!ThreadUtil.sleep(waitBetweenRetries)) {
-          break;
+        if(!Thread.interrupted()) {
+          LOG.info("Encountered exception while sending data to flume : {}", e.toString(), e);
+          retries++;
+        } else {
+          //The thread was interrupted which means it was stopped. The data might not have been delivered.
+          //So throw an exception to prevent committing the batch.
+          throw new StageException(Errors.FLUME_52);
         }
-        reconnect();
       }
     }
     throw new StageException(Errors.FLUME_51, ex.toString(), ex);
