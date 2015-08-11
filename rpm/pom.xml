@@ -82,6 +82,7 @@
                         <exclude>streamsets-datacollector-${project.version}/user-libs/**</exclude>
                         <exclude>streamsets-datacollector-${project.version}/etc/**</exclude>
                         <exclude>streamsets-datacollector-${project.version}/bin/**</exclude>
+                        <exclude>streamsets-datacollector-${project.version}/libexec/*</exclude>
                         <exclude>streamsets-datacollector-${project.version}/initd/sdcd</exclude>
                       </excludes>
                     </source>
@@ -116,6 +117,17 @@
                   <sources>
                     <source>
                       <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/libexec</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/libexec</location>
                     </source>
                   </sources>
                 </mapping>
