@@ -96,7 +96,7 @@ def list_pipelines(sdc_api, full, pretty):
 @click.option('--pretty', is_flag=True, help='Pretty prints JSON when specified.')
 @pass_api
 def import_pipeline(sdc_api, json_file, pretty):
-    """Imports a pipeline specified from a JSON file."""
+    """Imports a new pipeline or updates an existing pipeline specified from a JSON file."""
     p = json.loads(json_file.read())
     imported = sdc_api.import_pipeline(p)
     _print_json(imported, pretty)
@@ -144,6 +144,14 @@ def stop_pipeline(sdc_api):
     """Stop the currently running pipeline."""
     sdc_api.stop_pipeline()
     click.echo('Stopping...')
+
+
+@pipeline.command('reset-origin')
+@click.argument('pipeline_name')
+@pass_api
+def reset_origin(sdc_api, pipeline_name):
+    """Reset the origin of the specified pipeline."""
+    click.echo(sdc_api.reset_offset(pipeline_name))
 
 
 @pipeline.command('status')

@@ -101,7 +101,7 @@ class DataCollector:
 
         return response.json()
 
-    def update_pipeline(self, pipeline_config):
+    def update_pipeline_config(self, pipeline_config):
         """Updates a pipeline definition for an existing pipeline."""
         assert pipeline_config['info']['name'] is not None, 'Pipeline must have a name! [%s]' % pipeline_config['info']
         response = self._session.post(
@@ -156,13 +156,19 @@ class DataCollector:
 
         pipeline_name = pipeline_config['info']['name']
 
-        pipeline_uuid = self.create_pipeline(pipeline_name)['uuid']
+        existing_pipeline = self.get_pipeline(pipeline_name)
+
+        if 'RemoteException' in existing_pipeline:
+            # Pipeline doesn't yet exist
+            pipeline_uuid = self.create_pipeline(pipeline_name)['uuid']
+        else:
+            pipeline_uuid = existing_pipeline['info']['uuid']
 
         # Replace the pipeline configuration's UUID with the one on the server.
         pipeline_config['uuid'] = pipeline_uuid
         pipeline_config['info']['uuid'] = pipeline_uuid
 
-        self.update_pipeline(pipeline_config)
+        self.update_pipeline_config(pipeline_config)
 
         # Import rules
         rules_uuid = self.get_rules(pipeline_name)['uuid']
@@ -219,3 +225,15 @@ class DataCollector:
             urlparse.urljoin(self._pipeline, 'stop')
         )
         return response
+
+    def reset_offset(self, name):
+        """Resets the origin for the specified pipeline.
+        """
+        assert name is not None, 'Pipeline name must be provided!'
+
+        response = self._session.post(
+            urlparse.urljoin(self._pipeline, 'resetOffset/' + name)
+        )
+        if response.status_code != requests.codes.ok:
+            raise Exception('Failed reset offset. Status code: [%s]' % response.status_code)
+        return "OK"
