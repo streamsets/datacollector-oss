@@ -22,7 +22,7 @@ export SDC_GROUP=sdc
 #
 export SDC_DATA=/var/lib/sdc
 
- directory where the data collector will read pipeline resource files from
+# directory where the data collector will read pipeline resource files from
 #
 export SDC_RESOURCES=/var/lib/sdc-resources
 
