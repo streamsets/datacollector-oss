@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -31,7 +32,6 @@ import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import org.apache.commons.io.IOUtils;
-import org.apache.xerces.util.XMLChar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
