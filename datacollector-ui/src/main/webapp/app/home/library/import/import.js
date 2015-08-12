@@ -48,6 +48,10 @@ angular
               jsonConfigObj = parsedObj;
             }
 
+            if(!jsonConfigObj.version) {
+              jsonConfigObj.version = 1;
+            }
+
             if(jsonConfigObj.uuid) {
               if(pipelineInfo && !$scope.createNewPipeline) { //If pipeline config already exists
                 jsonConfigObj.uuid = pipelineInfo.uuid;
@@ -94,6 +98,7 @@ angular
                     newPipelineObject.errorStage = jsonConfigObj.errorStage;
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
                     newPipelineObject.stages = jsonConfigObj.stages;
+                    newPipelineObject.version = jsonConfigObj.version;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {

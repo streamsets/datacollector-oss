@@ -280,6 +280,9 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   private Runner getRunner(String user, String name, String rev, ExecutionMode executionMode) throws PipelineStoreException {
+    if(executionMode == null) {
+      executionMode = ExecutionMode.STANDALONE;
+    }
     Runner runner = runnerProvider.createRunner(user, name, rev, objectGraph, executionMode);
     return runner;
   }
