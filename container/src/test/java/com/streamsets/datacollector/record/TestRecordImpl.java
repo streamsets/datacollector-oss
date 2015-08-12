@@ -425,18 +425,19 @@ public class TestRecordImpl {
     }
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testAddAPINonListNonMapParent() {
     //record with boolean field at the root
     RecordImpl r = new RecordImpl("stage", "source", null, null);
     r.set(Field.create(true));
+    r.set("/a", Field.create(false));
+  }
 
-    try {
-      r.set("/a", Field.create(false));
-      Assert.fail("Expected IllegalArgumentException as the root field is not map or list");
-    } catch (IllegalArgumentException e) {
-
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void testFieldPathNotReachable() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    r.set(Field.create(new HashMap<String, Field>()));
+    r.set("/a[1]", Field.create(false));
   }
 
 }

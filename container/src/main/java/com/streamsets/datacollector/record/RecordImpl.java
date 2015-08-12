@@ -365,6 +365,8 @@ public class RecordImpl implements Record {
     } else if (elements.size() -1 == fieldPos) {
       //The number of elements in the path is on more than the number of fields => add use case
       fieldToReplace = doSet(fieldPos, newField, elements, fields);
+    } else {
+      throw new IllegalArgumentException(Utils.format("Field-path '{}' not reachable", fieldPath));
     }
     return fieldToReplace;
   }
