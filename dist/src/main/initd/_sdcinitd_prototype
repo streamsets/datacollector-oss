@@ -127,6 +127,7 @@ is_sdc_alive() {
 start_sdc() {
   install -d -o $SDC_USER -g $SDC_GROUP $SDC_DATA
   install -d -o $SDC_USER -g $SDC_GROUP $SDC_LOG
+  install -d -o $SDC_USER -g $SDC_GROUP $SDC_RESOURCES
   su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd start"
   exit $?
 }
