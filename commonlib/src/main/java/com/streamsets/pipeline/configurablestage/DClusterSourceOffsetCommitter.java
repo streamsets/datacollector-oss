@@ -100,4 +100,10 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
     return clusterSource.getConfigsToShip();
   }
 
+  @Override
+  public void setDoneFlag() {
+    initializeClusterSource();
+    clusterSource.setDoneFlag();
+  }
+
 }
