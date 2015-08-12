@@ -278,7 +278,7 @@ public class TestExpressionProcessor {
     }
   }
 
-  @Test
+  @Test(expected = IllegalArgumentException.class)
   public void testFailingFieldSet() throws StageException {
 
     ExpressionProcessorConfig complexExpressionConfig = new ExpressionProcessorConfig();
@@ -296,10 +296,7 @@ public class TestExpressionProcessor {
       Record record = RecordCreator.create("s", "s:1");
       record.set(Field.create(map));
 
-      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
-      Assert.assertEquals(0, output.getRecords().get("a").size());
-      Assert.assertEquals(1, runner.getErrorRecords().size());
-      Assert.assertEquals("s:1", runner.getErrorRecords().get(0).getHeader().getSourceId());
+      runner.runProcess(ImmutableList.of(record));
     } finally {
       runner.runDestroy();
     }
