@@ -409,7 +409,7 @@ angular
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
-              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'FINISHED'], data.status)) {
+              if(data && _.contains(['INVALID', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'FINISHED'], data.status)) {
                 fetchPreviewData(previewerId, defer);
                 currentPreviewerId = null;
               } else {

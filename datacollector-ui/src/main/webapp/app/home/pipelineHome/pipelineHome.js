@@ -1469,7 +1469,7 @@ angular
       $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
 
       if(oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
-        _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR'], $scope.activeConfigStatus.status)) {
+        _.contains(['START_ERROR', 'RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR'], $scope.activeConfigStatus.status)) {
 
         var status = $scope.activeConfigStatus;
 
