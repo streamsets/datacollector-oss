@@ -356,6 +356,11 @@ angular
       });
     });
 
+    if($scope.isPipelineRunning &&
+      $rootScope.common.pipelineMetrics) {
+      updateSummaryData();
+    }
+
   })
 
   .controller('SummarySettingsModalInstanceController', function ($scope, $modalInstance, availableCharts, selectedCharts) {
