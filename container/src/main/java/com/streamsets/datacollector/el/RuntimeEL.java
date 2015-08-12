@@ -119,10 +119,11 @@ public class RuntimeEL {
         }
       }
     } else {
-      try (FileInputStream fileInputStream = new FileInputStream(runtimeConfLocation)) {
+      File runtimeConfFile = new File(runtimeInfo.getConfigDir(), runtimeConfLocation);
+      try (FileInputStream fileInputStream = new FileInputStream(runtimeConfFile)) {
         RUNTIME_CONF_PROPS.load(fileInputStream);
       } catch (IOException e) {
-        LOG.error("Could not read '{}'", runtimeConfLocation, e.toString(), e);
+        LOG.error("Could not read '{}': {}", runtimeConfFile.getAbsolutePath(), e.toString(), e);
         throw e;
       }
     }
