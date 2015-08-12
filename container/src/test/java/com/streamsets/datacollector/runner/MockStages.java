@@ -286,6 +286,10 @@ public class MockStages {
 
     }
 
+    @Override
+    public void setDoneFlag() {
+    }
+
   }
 
   public static class MSourceOffsetCommitter extends MSource implements OffsetCommitter {

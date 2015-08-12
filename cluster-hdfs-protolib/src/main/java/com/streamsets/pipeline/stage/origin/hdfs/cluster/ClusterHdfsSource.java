@@ -21,12 +21,15 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.impl.Pair;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -99,6 +102,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private final boolean recursive;
   private long recordsProduced;
   private final Map<String, String> previewBuffer;
+  private final CountDownLatch countDownLatch;
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
@@ -132,6 +136,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.hadoopConfDir = hadoopConfDir;
     this.recordsProduced = 0;
     this.previewBuffer = new LinkedHashMap<>();
+    this.countDownLatch = new CountDownLatch(1);
   }
   @Override
   public List<ConfigIssue> init() {
@@ -512,13 +517,23 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   @Override
   public void destroy() {
-    shutdown();
+    producer.complete();
     super.destroy();
   }
 
   @Override
   public void shutdown() {
     producer.complete();
+    try {
+      boolean isDone = countDownLatch.await(5, TimeUnit.MINUTES);
+      if (!isDone) {
+        LOG.warn("Pipeline is still in active state: {} after 5 minutes");
+      } else {
+        LOG.info("Destroy() on stages is complete");
+      }
+    } catch (InterruptedException e) {
+      LOG.warn("Thread interrupted while waiting on receving the done flag" + e, e);
+    }
   }
 
 
@@ -577,5 +592,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       configsToShip.put(entry.getKey(), hadoopConf.get(entry.getKey()));
     }
     return configsToShip;
+  }
+  @Override
+  public void setDoneFlag() {
+    countDownLatch.countDown();
   }
 }

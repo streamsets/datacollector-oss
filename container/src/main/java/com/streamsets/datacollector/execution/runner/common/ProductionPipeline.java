@@ -21,7 +21,9 @@ import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,6 +118,10 @@ public class ProductionPipeline {
       } finally {
         LOG.debug("Destroying");
         pipeline.destroy();
+        if (pipeline.getSource() instanceof ClusterSource) {
+          LOG.debug("Setting done flag for cluster source");
+          ((ClusterSource) pipeline.getSource()).setDoneFlag();
+        }
         if (finishing) {
           LOG.debug("Finished");
           stateChanged(PipelineStatus.FINISHED, null, null);

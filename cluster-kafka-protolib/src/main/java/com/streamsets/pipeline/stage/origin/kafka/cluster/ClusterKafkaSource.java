@@ -30,10 +30,10 @@ import java.util.Map;
  */
 public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitter, ClusterSource, ErrorListener {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterKafkaSource.class);
-  private ControlChannel controlChannel;
-  private DataChannel dataChannel;
-  private Producer producer;
-  private Consumer consumer;
+  private final ControlChannel controlChannel;
+  private final DataChannel dataChannel;
+  private final Producer producer;
+  private final Consumer consumer;
   private long recordsProduced;
 
   public ClusterKafkaSource(SourceArguments args) {
@@ -120,6 +120,11 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   @Override
   public void shutdown() {
     producer.complete();
+  }
+
+  @Override
+  public void setDoneFlag() {
+    //don't do anything
   }
 
 }
