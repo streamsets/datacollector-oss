@@ -10,7 +10,6 @@ import com.streamsets.pipeline.Utils;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -66,6 +65,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
         String value = getProperty(realKey);
         conf.set(realKey, value, source);
       }
+      // TODO can this be deleted as all properties are copied to conf above?
       conf.set(FileInputFormat.INPUT_DIR_RECURSIVE, getProperty(FileInputFormat.INPUT_DIR_RECURSIVE));
       conf.set(FileInputFormat.SPLIT_MAXSIZE, getProperty(FileInputFormat.SPLIT_MAXSIZE));
       conf.set("mapreduce.input.fileinputformat.list-status.num-threads",
@@ -80,12 +80,6 @@ public class HadoopMapReduceBinding implements ClusterBinding {
       job.setOutputKeyClass(NullWritable.class);
       job.setOutputValueClass(NullWritable.class);
       job.setOutputFormatClass(NullOutputFormat.class);
-      Path fsRoot = new Path(hdfsUri);
-      for (String hdfsDirLocation : getProperty("hdfsDirLocations").split(",")) {
-        Path path = new Path(fsRoot, hdfsDirLocation);
-        FileInputFormat.addInputPath(job, path);
-        LOG.info("Input path: " + path);
-      }
     }
   }
 
