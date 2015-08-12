@@ -7,7 +7,9 @@ package com.streamsets.pipeline.hadoop;
 
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
+
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -57,7 +59,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
-      String hdfsUri = getProperty("hdfsUri");
+      String hdfsUri = getProperty(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
