@@ -8,7 +8,9 @@ angular
     angular.extend($scope, {
       showLoading: false,
       isOffsetResetSucceed: false,
-      issues: [],
+      common: {
+        errors: []
+      },
       pipelineInfo: pipelineInfo,
 
       /**
@@ -23,7 +25,7 @@ angular
           }).
           error(function(data) {
             $scope.showLoading = false;
-            $scope.issues = [data];
+            $scope.common.errors = [data];
           });
       },
 
