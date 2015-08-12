@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -44,7 +45,7 @@ public class TestSplitterProcessor {
     Assert.assertTrue(runner.runValidateConfigs().get(0).toString().contains("SPLITTER_00"));
   }
 
-    @Test
+  @Test
   public void testSplitting() throws Exception {
     ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
         .addConfiguration("fieldPath", "/line")
@@ -168,6 +169,27 @@ public class TestSplitterProcessor {
       runner.runDestroy();
     }
 
+  }
+
+  @Test(expected = OnRecordErrorException.class)
+  public void testSplittingNonStringField() throws Exception {
+    ProcessorRunner runner = new ProcessorRunner.Builder(SplitterDProcessor.class)
+      .addConfiguration("fieldPath", "/")
+      .addConfiguration("separator", '^')
+      .addConfiguration("fieldPathsForSplits", ImmutableList.of("/a", "/b"))
+      .addConfiguration("onStagePreConditionFailure", OnStagePreConditionFailure.CONTINUE)
+      .addConfiguration("originalFieldAction", OriginalFieldAction.KEEP)
+      .addOutputLane("out")
+      .build();
+    runner.runInit();
+    try {
+
+      Record r0 = createRecordWithLine("a b");
+      List<Record> input = ImmutableList.of(r0);
+      runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
   }
 
 }

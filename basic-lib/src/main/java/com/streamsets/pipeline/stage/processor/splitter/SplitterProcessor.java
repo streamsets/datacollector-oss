@@ -74,7 +74,12 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     if (field == null || field.getValue() == null) {
       error = Errors.SPLITTER_01;
     } else {
-      String str = field.getValueAsString();
+      String str;
+      try {
+        str = field.getValueAsString();
+      } catch (IllegalArgumentException e) {
+        throw new OnRecordErrorException(Errors.SPLITTER_04, fieldPath, field.getType().name());
+      }
       splits = str.split(separatorStr, fieldPaths.length);
       if (splits.length < fieldPaths.length) {
         error = Errors.SPLITTER_02;
@@ -82,10 +87,15 @@ public class SplitterProcessor extends SingleLaneRecordProcessor {
     }
     if (error == null || onStagePreConditionFailure == OnStagePreConditionFailure.CONTINUE) {
       for (int i = 0; i < fieldPaths.length; i++) {
-        if (splits != null && splits.length > i) {
-          record.set(fieldPaths[i], Field.create(splits[i]));
-        } else {
-          record.set(fieldPaths[i], Field.create(Field.Type.STRING, null));
+        try {
+          if (splits != null && splits.length > i) {
+            record.set(fieldPaths[i], Field.create(splits[i]));
+          } else {
+            record.set(fieldPaths[i], Field.create(Field.Type.STRING, null));
+          }
+        } catch (IllegalArgumentException e) {
+          throw new OnRecordErrorException(Errors.SPLITTER_05, fieldPath, record.getHeader().getSourceId(),
+            e.toString());
         }
       }
       if (removeUnsplitValue) {
