@@ -18,10 +18,12 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Cassandra",
     description = "Writes data to Cassandra",
-    icon = "cassandra.png")
+    icon = "cassandra.png",
+    upgrader = CassandraTargetUpgrader.class
+)
 @ConfigGroups(value = Groups.class)
 public class CassandraDTarget extends DTarget {
 
