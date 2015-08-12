@@ -121,7 +121,12 @@ angular
 
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
-          $scope.snapshotsInfo = _.sortBy(res.data, 'id');
+          $scope.snapshotsInfo = _.chain(res.data)
+            .filter(function(snapshotInfo) {
+              return snapshotInfo.name === $scope.activeConfigInfo.name && !snapshotInfo.inProgress;
+            })
+            .sortBy('timeStamp')
+            .value();
         }
       }, function(res) {
         $scope.common.errors = [res.data];
