@@ -19,7 +19,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ht4_x5v_4r">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Elasticsearch Property</entry>
@@ -37,15 +37,26 @@
                                             connection, enter additional URIs.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Additional Configuration</entry>
+                                    <entry>Additional Elasticsearch properties that you want to use.
+                                        Enter the exact property name and value expected by
+                                            Elasticsearch.<p>By default, the client.transport.sniff
+                                            property is set to True. This allows the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> to write to nodes in the cluster that are not listed
+                                            in the stage.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Index</entry>
                                     <entry>Index information for the generated documents. You can
                                         use a constant or a field that includes the index
                                         information. </entry>
                                 </row>
                                 <row>
-                                    <entry>Type</entry>
-                                    <entry>Type information for the generated documents. Field that
-                                        contains type information for the record. </entry>
+                                    <entry>Mapping</entry>
+                                    <entry>Mapping information for the generated documents. You can
+                                        use a constant or a field that includes the mapping
+                                        information. </entry>
                                 </row>
                                 <row>
                                     <entry>Document ID</entry>
@@ -56,14 +67,10 @@
                                             ID.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Additional Configuration</entry>
-                                    <entry>Additional Elasticsearch properties that you want to use.
-                                        Enter the exact property name and value expected by
-                                            Elasticsearch.<p>By default, the client.transport.sniff
-                                            property is set to True. This allows the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> to write to nodes in the cluster that are not listed
-                                            in the stage.</p></entry>
+                                    <entry>Data Charset</entry>
+                                    <entry>
+                                        <p>Character encoding of the data to be processed. </p>
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

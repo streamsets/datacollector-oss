@@ -9,11 +9,11 @@
         <context><p>When you defined a required field, a record must include data for the specified
                 field to enter the stage. Records that don't meet the requirement are sent to the
                 pipeline for error handling. If you configured the pipeline to write to file, that's
-                where the error records go. </p><p>The Stream Selector uses user-defined conditions
-                to route data. Any data not captured by a user-defined condition routes to the
-                default stream. </p>Because the data is delimited, we'll use a delimited data record
-            function for the condition. The <codeph>record:dValue</codeph> function returns the
-            value associated with the specified header so you don't need to know the exact index
+                where the error records will go. </p><p>The Stream Selector uses user-defined
+                conditions to route data. Any data not captured by a user-defined condition routes
+                to the default stream. </p>Because the data is delimited, we'll use a delimited data
+            record function for the condition. The <codeph>record:dValue</codeph> function returns
+            the value associated with the specified header so you don't need to know the exact index
             position of the header in the record. <p>To capture records with credit card payments,
                 use the following condition:
                 <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p><p>From this,
@@ -68,7 +68,7 @@
             </step>
         </steps>
         <result>The Stream Selector should look like this:<p><image
-                    href="../Graphics/Tutorial-StreamSelector.png" id="image_t1s_png_4s" scale="80"
+                    href="../Graphics/Tutorial-StreamSelector.png" id="image_t1s_png_4s" scale="70"
                 /></p></result>
     </taskbody>
 </task>

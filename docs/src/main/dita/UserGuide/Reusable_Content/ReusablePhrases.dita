@@ -12,7 +12,7 @@
                   Collector</ph></p>
             <draft-comment author="Loretta">Using this in all DC Console topics:</draft-comment>
             <p>
-                  <note id="Note-OptionDispay">Some buttons and options might not display in the
+                  <note id="Note-OptionDispay">Some icons and options might not display in the
                         console. The items that display are based on the task that you are
                         performing and roles assigned to your user account. </note>
             </p>
@@ -74,8 +74,9 @@
             </p>
             <p>
                   <draft-comment author="Loretta">The following list is destination data formats.
-                        Used by Kafka, Hadoop FS, and Flume. All 3 also have an individual Avro
-                        description added to their list in the local file. </draft-comment>
+                        Used by Kafka and Flume. They also have an individual Avro description added
+                        to their list in the local file. Copying all but SDC Record to Hadoop FS
+                        destination.</draft-comment>
                   <dl id="DataFormats-dest">
                         <dlentry>
                               <dt>Text</dt>
@@ -127,7 +128,6 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion determine where you can use an expression and the expression
                   elements that you can use in that location. </p>
-            <p>Properties that allow the use of expressions are outline in green</p>
             <p id="EXP-p3">You can use the following elements in an expression:<ul
                         id="ul_w34_vxl_2s">
                         <li>Constants</li>
@@ -138,13 +138,6 @@
                         <li>Runtime properties</li>
                         <li>Runtime resources</li>
                   </ul></p>
-            <draft-comment author="Loretta">The following note is used on both Jython topics in the
-                  Tutorial:</draft-comment>
-            <note outputclass="" type="note" id="Note-JythonScript">Incorrect indentation can cause
-                  Jython validation errors. For best results, copy the script from the online help:
-                  online help > Data Collector Tutorial > Extended Tutorial > Flatten Data with a
-                  Jython Evaluator. Copying the script from the PDF can result in incorrect
-                  indentation. </note>
             <draft-comment author="Loretta">The following bullets are used in Troubleshooting >
                   Accessing Error Message and Tutorial > Run the Extended Pipeline</draft-comment>
             <ul id="ul_ErrorInformation">

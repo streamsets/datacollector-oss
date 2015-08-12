@@ -6,7 +6,7 @@
   well as YARN clusters. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
-     authenticaion</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>enabling for
+     authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>enabling for
      the Data Collector</indexterm></indexterm>By default, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the user
    account who started it to connect to external systems. When you enable Kerberos, it can use the
@@ -14,18 +14,18 @@
   <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
     <li>Configure the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-     Kerberos - In the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-     configuration file, configure the Kerberos properties to enable Kerberos and define the
-     principal and keytab.</li>
-    <li>Configure the origin or destination stage to use Kerberos - In the pipeline, you can
-     configure Kerberos authentication for the following stages:</li>
-   </ol><ul id="ul_mwv_prl_xs">
-    <li>Hadoop FS origin</li>
-    <li>Hadoop FS destination</li>
-    <li>HBase destination</li>
-   </ul><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
-    requires it, and if and Kerberos is enabled for the <ph
+     Kerberos. <p>In the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file, configure the Kerberos properties to enable Kerberos and define the
+      principal and keytab.</p></li>
+    <li>Configure the origin or destination stage to use Kerberos. <p>In the pipeline, you can
+      configure Kerberos authentication for the following stages:<ul id="ul_mwv_prl_xs">
+       <li>Hadoop FS origin</li>
+       <li>Hadoop FS destination</li>
+       <li>HBase destination</li>
+      </ul></p></li>
+   </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
+    requires it, and if Kerberos is enabled for the <ph
      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </note></p>
  </conbody>
 </concept>

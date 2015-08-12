@@ -60,10 +60,14 @@
         </div>
 
         <ol class="ol steps" id="task_cn5_w3k_ps__steps_s4j_x3k_ps"><li class="li step stepexpand">
-                <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> to the canvas. To route all data
-                    from the pipeline through the new stage, connect the Field Masker and the
-                    Expression Evaluator to it as shown:</span>
-                <div class="itemgroup info"><img class="image" id="task_cn5_w3k_ps__image_fsy_3nk_ps" src="../Graphics/Tutorial-Jython2pipeline.png" height="137" width="530"></img></div>
+                <span class="ph cmd">Add a <span class="ph uicontrol">Jython Evaluator</span> to the canvas. </span>
+                <div class="itemgroup info">If you haven't already, you might need to change the stage library menu to
+                    display processors or all stages to add the Jython Evaluator.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To route all data from the pipeline through the new stage, connect the Field
+                    Masker and the Expression Evaluator to it as shown:</span>
+                <div class="itemgroup info"><img class="image" id="task_cn5_w3k_ps__image_fsy_3nk_ps" src="../Graphics/Tutorial-Jython2pipeline.png" height="156" width="606"></img></div>
                 <div class="itemgroup info"></div>
             </li>
 <li class="li step stepexpand">
@@ -78,11 +82,16 @@
 except Exception as e:
   err.write(record, e.message)  </pre>
 
-                    <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause
-                  Jython validation errors. For best results, copy the script from the online help:
-                  online help &gt; Data Collector Tutorial &gt; Extended Tutorial &gt; Flatten Data with a
-                  Jython Evaluator. Copying the script from the PDF can result in incorrect
-                  indentation. </div>
+                </div>
+                <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> Incorrect indentation can cause Jython validation errors. For best
+                        results, copy the script from the online help. Copying the script from the
+                        PDF can result in incorrect indentation. <p class="p">To launch context-sensitive
+                            help, click the <span class="ph uicontrol">Help</span> icon in the Properties
+                            panel.  Then in the table of contents, scroll down to find the Data
+                            Collector Tutorial chapter &gt; Extended Tutorial &gt; Flatten Data with a
+                            Jython Evaluator.</p>
+</div>
 
                 </div>
             </li>
@@ -118,9 +127,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.49002849002849%" id="d51406e176">Field Converter Property</th>
+                                    <th class="entry" valign="top" width="28.49002849002849%" id="d51564e193">Field Converter Property</th>
 
-                                    <th class="entry" valign="top" width="71.5099715099715%" id="d51406e179">Datetime Conversion</th>
+                                    <th class="entry" valign="top" width="71.5099715099715%" id="d51564e196">Datetime Conversion</th>
 
                                 </tr>
 
@@ -128,9 +137,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51406e176 ">Fields to Convert</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51564e193 ">Fields to Convert</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51406e179 ">Click in the field. From the list of fields, select the
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51564e196 ">Click in the field. From the list of fields, select the
                                         following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_v3g_23z_ps">
                                             <li class="li">/dropoff_datetime</li>
 
@@ -142,16 +151,16 @@ except Exception as e:
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51406e176 ">Convert to Type</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51564e193 ">Convert to Type</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51406e179 ">Datetime</td>
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51564e196 ">Datetime</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51406e176 ">Date Format</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d51564e193 ">Date Format</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51406e179 ">Date format used by the data. <p class="p">Select the following
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d51564e196 ">Date format used by the data. <p class="p">Select the following
                                             format: <span class="ph uicontrol">YYYY-MM-DD
                                         hh:mm:ss</span>.</p>
 </td>
@@ -176,9 +185,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.545741324921135%" id="d51406e253">Field Converter Property</th>
+                                    <th class="entry" valign="top" width="31.545741324921135%" id="d51564e270">Field Converter Property</th>
 
-                                    <th class="entry" valign="top" width="68.45425867507886%" id="d51406e256">Double Conversion</th>
+                                    <th class="entry" valign="top" width="68.45425867507886%" id="d51564e273">Double Conversion</th>
 
                                 </tr>
 
@@ -186,9 +195,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d51406e253 ">Fields to Convert</td>
+                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d51564e270 ">Fields to Convert</td>
 
-                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d51406e256 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
+                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d51564e273 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
                                             <li class="li">/fare_amount</li>
 
                                             <li class="li">/dropoff_latitude</li>
@@ -215,9 +224,9 @@ except Exception as e:
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d51406e253 ">Convert to Type</td>
+                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d51564e270 ">Convert to Type</td>
 
-                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d51406e256 ">Double</td>
+                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d51564e273 ">Double</td>
 
                                 </tr>
 
@@ -259,9 +268,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.98850574712644%" id="d51406e372">Output Field</th>
+                                    <th class="entry" valign="top" width="20%" id="d51564e389">Output Field</th>
 
-                                    <th class="entry" valign="top" width="77.01149425287358%" id="d51406e375">Expression</th>
+                                    <th class="entry" valign="top" width="80%" id="d51564e392">Expression</th>
 
                                 </tr>
 
@@ -269,17 +278,17 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.98850574712644%" headers="d51406e372 ">/pickup_location</td>
+                                    <td class="entry" valign="top" width="20%" headers="d51564e389 ">/pickup_location</td>
 
-                                    <td class="entry" valign="top" width="77.01149425287358%" headers="d51406e375 ">${record:value('/pickup_latitude')},
+                                    <td class="entry" valign="top" width="80%" headers="d51564e392 ">${record:value('/pickup_latitude')},
                                         ${record:value('/pickup_longitude')}</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.98850574712644%" headers="d51406e372 ">/dropoff_location</td>
+                                    <td class="entry" valign="top" width="20%" headers="d51564e389 ">/dropoff_location</td>
 
-                                    <td class="entry" valign="top" width="77.01149425287358%" headers="d51406e375 ">${record:value('/dropoff_latitude')},
+                                    <td class="entry" valign="top" width="80%" headers="d51564e392 ">${record:value('/dropoff_latitude')},
                                         ${record:value('/dropoff_longitude')}</td>
 
                                 </tr>
@@ -304,9 +313,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="21.50537634408602%" id="d51406e433">Output Field</th>
+                                    <th class="entry" valign="top" width="18.181818181818183%" id="d51564e450">Output Field</th>
 
-                                    <th class="entry" valign="top" width="78.49462365591397%" id="d51406e436">Expression</th>
+                                    <th class="entry" valign="top" width="81.81818181818183%" id="d51564e453">Expression</th>
 
                                 </tr>
 
@@ -314,9 +323,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="21.50537634408602%" headers="d51406e433 ">/trip_revenue</td>
+                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d51564e450 ">/trip_revenue</td>
 
-                                    <td class="entry" valign="top" width="78.49462365591397%" headers="d51406e436 ">${record:value('/total_amount') -
+                                    <td class="entry" valign="top" width="81.81818181818183%" headers="d51564e453 ">${record:value('/total_amount') -
                                             record:value('/tip_amount')}<p class="p">This expression subtracts
                                             the tip from the total fare.</p>
 </td>
@@ -347,13 +356,13 @@ except Exception as e:
 
  
  <div class="body conbody"><p class="shortdesc">The extended tutorial is almost done, so let's use data preview to see how stages
-    transform data. While in data preview, we'll make some configuration changes and edit preview
-    data for testing. </p>
+    transform data. In data preview, we'll make some configuration changes and do some testing by
+    editing preview data.</p>
 
-  <p class="p">To preview the pipeline, click the preview icon: <img class="image" id="concept_u4h_mwf_qs__image_wvk_tpd_5s" src="../Graphics/icon_Preview.png" height="15" width="20"></img>.</p>
+  <p class="p">To preview the pipeline, click the <span class="ph uicontrol">Preview</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_wvk_tpd_5s" src="../Graphics/icon_Preview.png" height="15" width="20"></img>.</p>
 
   <div class="p">You can explore how each stage transforms data by selecting the stage and reviewing the input
-      and output records in the Preview panel. Here are some details to note:<dl class="dl">
+      and output records in the Preview panel. Let's focus on the following stages:<dl class="dl">
         
           <dt class="dt dlterm">Field Masker</dt>
 
@@ -368,19 +377,18 @@ except Exception as e:
                 changed data in the field.</li>
 
               <li class="li"> Expand index 20 for both the input and output data. Notice how all digits except
-                the last four are masked. </li>
+                the last four are masked. We did this by using the Regular Expression mask type and
+                revealing the second group in the regex.</li>
 
             </ol>
 </dd>
 
           <dd class="dd"><img class="image" id="concept_u4h_mwf_qs__image_u3z_gdl_5s" src="../Graphics/Tutorial-PreviewFMasker.png" height="172" width="686"></img></dd>
 
-          <dd class="dd">Say we want to change the mask type to mask the whole credit card number. To review
-            the stage configuration and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
-              <li class="li">On the left side of the Preview panel, select the <span class="ph uicontrol">Stage
-                  Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="13" width="16"></img>.<p class="p">You might need to scroll up to the top of
-                  the panel.</p>
-</li>
+          <dd class="dd">Say we want to mask the whole credit card number. To review the stage configuration
+            and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
+              <li class="li">Scroll up to the top of the Preview panel. Then, on the left, select the
+                  <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="13" width="16"></img>.</li>
 
               <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
 
@@ -388,12 +396,11 @@ except Exception as e:
                   Length</span> to mask all numbers while showing how many numbers there are in
                 the data. </li>
 
-              <li class="li">To view the data with this change, click the <span class="ph uicontrol">Run with
-                  Changes</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_apd_ztd_5s" src="../Graphics/icon_PreviewRerun.png" height="12" width="19"></img>.</li>
+              <li class="li">To view the results of this change, click the <span class="ph uicontrol">Run with
+                  Changes</span> tab: <img class="image" id="concept_u4h_mwf_qs__image_apd_ztd_5s" src="../Graphics/icon_PreviewRerun.png" height="12" width="19"></img>.</li>
 
-              <li class="li">In the canvas, select the <span class="ph uicontrol">Field Masker</span> processor and if the
-                Preview panel displays the stage configuration, select the
-                  <span class="ph uicontrol">Records</span> tab to view the preview records: <img class="image" id="concept_u4h_mwf_qs__image_m3w_sdl_5s" src="../Graphics/icon_PrevRecords.png" height="17" width="21"></img>.</li>
+              <li class="li">In the Preview panel, select the <span class="ph uicontrol">Records</span> tab to view the
+                preview records: <img class="image" id="concept_u4h_mwf_qs__image_m3w_sdl_5s" src="../Graphics/icon_PrevRecords.png" height="15" width="18"></img>.</li>
 
               <li class="li"> Expand an output record, expand index 20, and notice how the entire number is now
                     masked:<p class="p"><img class="image" id="concept_u4h_mwf_qs__image_chj_c2l_5s" src="../Graphics/Tutorial-PreviewFMasker2.png" height="164" width="679"></img></p>
@@ -407,10 +414,10 @@ except Exception as e:
           <dt class="dt dlterm">Second Jython Evaluator</dt>
 
           <dd class="dd">The second Jython Evaluator flattens the delimited data. Let's take a look:<ul class="ul" id="concept_u4h_mwf_qs__ul_qvt_lmm_qs">
-              <li class="li">Select the <span class="ph uicontrol">second Jython Evaluator</span> and expand the first
-                input and output record. <p class="p">Notice how the input record is a list of maps and the
-                  output record has been flattened to the following structure: &lt;field name&gt;:
-                  &lt;value&gt;. Isn't that great? </p>
+              <li class="li">Select the <span class="ph uicontrol">second Jython Evaluator</span>. If necessary, expand
+                the first input and output record. <p class="p">Notice how the input record is a list of maps
+                  and the output record has been flattened to the following structure: &lt;field
+                  name&gt;: &lt;value&gt;. Isn't that great? </p>
 </li>
 
             </ul>
@@ -422,14 +429,13 @@ except Exception as e:
 
           <dd class="dd">The Field Converter changes the data type of a few fields. We'll take a look at that
             stage and try changing stage configuration. <ol class="ol" id="concept_u4h_mwf_qs__ol_ajx_pmm_qs">
-              <li class="li">To move the preview focus to the Field Converter, you can click the
-                  <span class="ph uicontrol">Next Stage</span> icon instead of selecting the stage in the
-                pipeline: <img class="image" id="concept_u4h_mwf_qs__image_i41_ssd_5s" src="../Graphics/icon_PrevNextStage.png"></img>.<p class="p">You might notice a red message that indicates the first record has an
-                  unparsable date - it shows that the date data includes invalid characters at the
-                  end. </p>
-<p class="p">So what happens to this bad record? It depends on how the stage is
-                  configured. We used the default configuration, but let's see what that
-                is.</p>
+              <li class="li">Instead of selecting the Field Converter in the pipeline, click the
+                  <span class="ph uicontrol">Next Stage</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_i41_ssd_5s" src="../Graphics/icon_PrevNextStage.png"></img>.<p class="p">You might
+                  notice a red message that indicates the first record has an unparsable date - it
+                  shows that the date data includes invalid characters at the end. </p>
+<p class="p">So what
+                  happens to this bad record? It depends on how the stage is configured. We used the
+                  default configuration, but let's see what that is.</p>
 </li>
 
               <li class="li">Click the <span class="ph uicontrol">Stage Configuration</span> icon. Notice the
@@ -443,12 +449,12 @@ except Exception as e:
 </li>
 
               <li class="li">To see how it looks when you discard errors, set <span class="ph uicontrol">On Record
-                  Error</span> to <span class="ph uicontrol">Discard</span>. And then, click the
-                  <span class="ph uicontrol">Refresh Preview</span> icon.</li>
+                  Error</span> to <span class="ph uicontrol">Discard</span>, and then click the
+                  <span class="ph uicontrol">Run with Changes</span> icon.</li>
 
-              <li class="li">On the canvas, select the <span class="ph uicontrol">Field Converter </span>stage, and then
-                click the <span class="ph uicontrol">Records</span> icon in the Preview panel. Notice the first
-                record is discarded without notice of the error that occurred. </li>
+              <li class="li">In the Preview panel, click the <span class="ph uicontrol">Records</span> icon. <p class="p">Notice the
+                  first record is discarded without notice of the error that occurred. </p>
+</li>
 
               <li class="li">We prefer to keep error records, so go back to the Stage Configuration tab and
                 change <span class="ph uicontrol">On Record Error</span> back to <span class="ph uicontrol">Send to
@@ -466,16 +472,17 @@ except Exception as e:
               <li class="li">Click the <span class="ph uicontrol">Next Stage</span> icon or select the Expression
                 Evaluator.</li>
 
-              <li class="li">If necessary, expand a couple input and output records. <p class="p">Notice the fields
-                  created by the stage, pickup_location and trip_location, are highlighted in
-                  green.</p>
-<p class="p">Though it isn't necessary for these calculations, let's see how you
-                  can edit preview data to test stage configuration.</p>
+              <li class="li">Click the <span class="ph uicontrol">Records</span> icon and expand the first input and
+                output record. <p class="p">Notice the fields created by the stage - dropoff_location,
+                  pickup_location and trip_location - are highlighted in green.</p>
+<p class="p">Though it
+                  isn't necessary for these calculations, let's see how you can edit preview data to
+                  test stage configuration:</p>
 </li>
 
-              <li class="li">In the first input record - in the Input Data column, click on the Pickup Latitude
-                  data,<span class="ph uicontrol"> 40.730068</span>, add a negative sign before the data, and
-                hit <span class="ph uicontrol">Enter</span> or click outside the data.<p class="p">The edited input data
+              <li class="li">In the first input record, in the Input Data column, click on the Pickup Latitude
+                  data,<span class="ph uicontrol"> 40.730068</span>, add a negative sign before the data. Hit
+                  <span class="ph uicontrol">Enter</span> or click outside the data.<p class="p">The edited input data
                   becomes red to indicate a change. </p>
 </li>
 
@@ -489,8 +496,9 @@ except Exception as e:
 </li>
 
               <li class="li">To revert that change, click the <span class="ph uicontrol">Revert Data Changes</span> icon:
-                  <img class="image" id="concept_u4h_mwf_qs__image_pnr_bfp_rs" src="../Graphics/icon_PrevRevertChanges.png" height="11" width="12"></img>.<p class="p">Note that changes to stage or pipeline configuration do not
-                  revert, just changes to preview data.</p>
+                  <img class="image" id="concept_u4h_mwf_qs__image_pnr_bfp_rs" src="../Graphics/icon_PrevRevertChanges.png" height="11" width="12"></img>.<p class="p">This icon reverts changes to preview data. It does not revert
+                  changes to stage or pipeline configuration. Manually revert configuration changes
+                  that you don't want to keep, as we did earlier in the tutorial. </p>
 </li>
 
             </ol>
@@ -509,13 +517,12 @@ except Exception as e:
     <h2 class="title topictitle2">Write to Trash</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">To wrap up the extended tutorial, let's use the Trash destination as a placeholder
-        for a destination system to be determined later. </p>
+    <div class="body taskbody"><p class="shortdesc">To wrap up the extended tutorial, let's use the Trash destination as a temporary
+        placeholder.</p>
 
         <div class="section context">
-            <p class="p">The Trash destination deletes any records that pass to it. This allows you to
-                complete a pipeline in development so you can test the pipeline without writing data
-                to to a production system. </p>
+            <p class="p">The Trash destination deletes any records that pass to it. This allows you to test a
+                pipeline without writing data to a production system. </p>
 
             <p class="p">If you prefer, you can use the Hadoop FS destination to write to file as we did
                 earlier in the tutorial, or you can use another destination to write to a
@@ -546,28 +553,28 @@ except Exception as e:
         </div>
 
         <ol class="ol steps" id="task_fsb_1my_ps__steps_qhq_bwj_rs"><li class="li step">
-                <span class="ph cmd">In the console menu bar, click the <span class="ph uicontrol">More</span> icon, and then
-                    click <span class="ph uicontrol">Reset Origin</span>.</span>
+                <span class="ph cmd">In the console menu bar, click the <span class="ph uicontrol">More</span> icon: <img class="image" id="task_fsb_1my_ps__image_c5c_pkk_zs" src="../Graphics/icon_ConfigMore.png" height="9" width="13"></img>.
+                    Then, click <span class="ph uicontrol">Reset Origin</span>.</span>
             </li>
 <li class="li step">
-                <span class="ph cmd">When the confirmation dialog box displays, click
-                    <span class="ph uicontrol">Yes</span>.</span>
+                <span class="ph cmd">When the confirmation dialog box displays, click <span class="ph uicontrol">Yes</span>,
+                    then close the dialog box.</span>
             </li>
 <li class="li step">
                 <span class="ph cmd">To start the pipeline, click the <span class="ph uicontrol">Start</span> icon.</span>
             </li>
 </ol>
 
-        <div class="section result">The console goes into monitor mode and the data alert triggers again. Before long, you'll see some
-            error records in the Jython Evaluator and the Field Converter. <p class="p">For each stage, you
-                can see the error messages for latest error records. </p>
-<p class="p">To look at all the error
-                records, you can review the error record files in the directory that you specified.
-                Error records are written in the SDC Record data format so you can create an error
-                pipeline to process error records. We'll show you how to create an error pipeline to
-                process these error records in a future tutorial.</p>
-<p class="p">That's it for this tutorial.
-                Hope you found it helpful. </p>
+        <div class="section result">The console goes into monitor mode and the data alert triggers again. Before long,
+            you'll see some error records in the Jython Evaluator and the Field Converter. <p class="p">For
+                each stage, you can see the error messages for latest error records. </p>
+<p class="p">To look
+                at all the error records, you can review the error record files in the directory
+                that you specified. Error records are written in the SDC Record data format so you
+                can create an error pipeline to process error records. We'll show you how to create
+                an error pipeline to process these error records in a future tutorial.</p>
+<p class="p">That's
+                it for this tutorial. Hope you found it helpful! </p>
 </div>
 
     </div>

@@ -20,8 +20,7 @@
    records.</p>
   <p>The following image shows the Stream Selector in the pipeline: </p>
   <p>
-  <image href="../Graphics/StreamSelector-Pipeline.png" id="image_gyn_nps_gr"
-  /></p>
+   <image href="../Graphics/StreamSelector-Pipeline.png" id="image_gyn_nps_gr" scale="90"/></p>
   <p>The first stream passes deleted tweets to the Deleted Tweets destination. The second stream
    passes new tweets with sensitive language to a Field Masker to mask the inappropriate text. The
    third stream, the default stream, passes all remaining tweets directly to the New Tweets

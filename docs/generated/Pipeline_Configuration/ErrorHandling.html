@@ -26,7 +26,7 @@
 
     <p class="p">When you configure a pipeline, be aware that stage error handling takes precedence over
       pipeline error handling. That is, a pipeline might be configured to write error records to
-      file, but if a stage is configured to discard error records, those records are discarded. You
+      file, but if a stage is configured to discard error records those records are discarded. You
       might use this functionality to reduce the types of error records that are saved for review
       and reprocessing. </p>
 
@@ -67,6 +67,8 @@
 
           <dd class="dd">You define the directory to use and the maximum file size. Error files are named based
             on the File Prefix pipeline property. </dd>
+
+          <dd class="dd">Write to file is not supported for cluster mode pipelines at this time.</dd>
 
         
         
@@ -129,6 +131,8 @@
             stops the pipeline and logs information about the error. The error that stopped the
             pipeline displays as an alert in Monitor mode and as an error in the pipeline history.
           </dd>
+
+          <dd class="dd">Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
 
         
       </dl>

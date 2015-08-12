@@ -3,14 +3,14 @@
 <concept id="concept_lw2_tnm_vs">
  <title>Hadoop FS</title>
  <shortdesc>The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can
-    read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines
+    read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines
     configured for cluster execution mode.</shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
-     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Hadoop
-     FS</indexterm></indexterm>When you configure Hadoop FS, you specify the directory path and data
-   format for the data. You can configure the origin to read from all subdirectories and to generate
-   a single record for records that include multiple objects. </p>
+          origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Hadoop
+          FS</indexterm></indexterm>When you configure the Hadoop FS origin, you specify the
+      directory path and data format for the data. You can configure the origin to read from all
+      subdirectories and to generate a single record for records that include multiple objects. </p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
  </conbody>
   <related-links>

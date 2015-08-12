@@ -6,7 +6,7 @@
     stage. You can also view a sampling of the error records. </shortdesc>
   <conbody>
     <p>The <uicontrol>Errors</uicontrol> tab in the <wintitle>Monitor</wintitle> panel displays
-      pipeline errors by default: <image href="../Graphics/Mon-PipelineErrors.png"
-        id="image_z1g_pvv_yr"/></p>
+      pipeline errors by default: </p>
+    <p><image href="../Graphics/Mon-PipelineErrors.png" id="image_z1g_pvv_yr" scale="80"/></p>
   </conbody>
 </concept>

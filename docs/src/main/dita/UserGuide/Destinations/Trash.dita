@@ -16,7 +16,7 @@
       Producer and Hadoop FS targets based on different conditions. The Stream Selector routes all
       records that are not included in either of the other conditions to the Trash destination. </p>
   <p>
-   <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq"/></p>
+   <image href="../Graphics/TrashPipeline.png" id="image_djp_2fj_wq" scale="80"/></p>
   <p>The Trash destination has no configuration options. To use the Trash destination in a pipeline,
    simply add the stage and connect the pipeline to the stage. </p>
  </conbody>

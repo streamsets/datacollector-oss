@@ -27,8 +27,8 @@
             </step>
             <step>
                 <cmd>To exit data preview, click the <uicontrol>Close Preview</uicontrol> icon:
-                        <image href="../Graphics/icon_PrevClose.png" id="image_hdl_qfg_vs" 
-                        scale="80"/>.</cmd>
+                        <image href="../Graphics/icon_PrevClose.png" id="image_hdl_qfg_vs"
+                        scale="70"/>.</cmd>
             </step>
         </steps>
     </taskbody>

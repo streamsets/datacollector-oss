@@ -4,8 +4,7 @@
     <title>Configuring a File Tail Origin</title>
     <taskbody>
         <context><indexterm>File Tail origin<indexterm>configuring</indexterm></indexterm>Configure
-            a File Tail origin to read data as it is written to a file. You can read text or JSON
-            data.</context>
+            a File Tail origin to read data as it is written to a file. </context>
         <steps id="steps_cfd_j2w_yq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
@@ -17,8 +16,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ld1_5fr_5q">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.83*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>File Property</entry>
@@ -86,9 +85,7 @@
                                 <row>
                                     <entry>Path</entry>
                                     <entry>Full path to the active file to tail. <p>You can use
-                                            wildcards to define glob patterns. </p><draft-comment
-                                            author="Loretta">Figure out what else needs to be added
-                                            here.</draft-comment></entry>
+                                            wildcards to define glob patterns. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Naming <xref
@@ -138,7 +135,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_rtj_kfp_1s">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.78*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Post Processing Property</entry>

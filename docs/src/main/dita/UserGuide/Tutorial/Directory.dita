@@ -18,13 +18,12 @@
                         <uicontrol>Select Origin</uicontrol>
                         <uicontrol>Directory</uicontrol>
                     </menucascade>.</cmd>
-                <info><draft-comment author="Loretta">Do I need a screenshot here to show the two
-                        options? </draft-comment>The origin displays in the canvas and the
-                    Properties panel displays the stage properties. </info>
+                <info>The origin displays in the canvas and the Properties panel displays the stage
+                    properties. </info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Files</wintitle> tab and configure
-                    the following properties - use defaults for all other properties:</cmd>
+                    the following properties. Use defaults for all other properties.</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_w5c_jyq_ks">
                         <tgroup cols="2">
@@ -54,16 +53,17 @@
                                             If the file is the only file in the directory, you can
                                             use the asterisk wild card (*) or something similarly
                                             generic, like *.csv.</p><p>If you had other .csv files
-                                            in the directory, you might be more specific, like this:
+                                            in the directory that you don't want to process, you
+                                            might be more specific, like this:
                                                 <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you
-                                            knew that you'd be processing files from other cities,
+                                            want to process files with prefixes for  other cities,
                                             you might use <codeph>*taxi*.csv</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process</entry>
                                     <entry>When processing a set of files with the same file name
                                         pattern, Directory normally starts with the first file and
-                                        continues in naturally ascending order, e.g.
+                                        continues in lexicographically ascending order, e.g.
                                         nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. <p>If you
                                             wanted to skip some files, you would enter the file to
                                             start with. In this case, we're processing a single
@@ -79,15 +79,15 @@
                         <wintitle>Delimited</wintitle> tab. </cmd>
             </step>
             <step>
-                <cmd>The sample data includes a header row, so set the <uicontrol>Header
-                        Line</uicontrol> property to <uicontrol>With Header Line</uicontrol>.</cmd>
+                <cmd>The sample data includes a header row, so for the <uicontrol>Header
+                        Line</uicontrol> property, use <uicontrol>With Header
+                    Line</uicontrol>.</cmd>
             </step>
         </steps>
         <result>This is how the stage and pipeline should look at this point:<p><image
-                    href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="80"
-                    /></p><p><draft-comment author="Loretta">retake or trim this for
-                    icons.</draft-comment>Notice the error icons on the page. If you click the
-                Issues icon or hover over the Directory error icon, you see a warning that the
-                origin isn't connected to anything yet. We'll take care of that next.</p></result>
+                    href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="70"
+                /></p><p>Notice the error icons on the page. If you click the Issues icon or hover
+                over the Directory error icon, you see a warning that the origin isn't connected to
+                anything yet. We'll take care of that next.</p></result>
     </taskbody>
 </task>

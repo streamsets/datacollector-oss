@@ -2,7 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xh5_y4d_br">
  <title>Hadoop Properties and Configuration Files</title>
-    <shortdesc>You can configure the Hadoop origin to use HDFS properties. </shortdesc>
+    <shortdesc>You can configure the Hadoop FS origin to use HDFS properties. </shortdesc>
     <conbody>
         <p><indexterm>Hadoop FS origin<indexterm>using or adding HDFS
                 properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop FS

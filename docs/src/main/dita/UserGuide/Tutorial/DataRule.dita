@@ -20,7 +20,7 @@
             <step>
                 <cmd>Between the <uicontrol>Stream Selector</uicontrol> and the <uicontrol>Jython
                         Evaluator</uicontrol>, select the link or Data Inspection icon: <image
-                        href="../Graphics/icon_ConfigLink.png" id="image_qfg_txj_5s" scale="60"
+                        href="../Graphics/icon_ConfigLink.png" id="image_qfg_txj_5s" scale="55"
                     />.</cmd>
                 <info>The <wintitle>Data Rules</wintitle> tab displays in the Preview panel. </info>
             </step>
@@ -31,7 +31,7 @@
                 <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
                     properties:</cmd>
                 <info>
-                    <simpletable frame="all" id="simpletable_z34_ctj_ps">
+                    <simpletable frame="all" id="simpletable_z34_ctj_ps" relcolwidth="1.0* 2.29*">
                         <sthead>
                             <stentry>Data Rule Property</stentry>
                             <stentry>Description</stentry>

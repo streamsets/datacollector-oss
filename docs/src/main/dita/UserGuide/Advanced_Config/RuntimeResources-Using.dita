@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_aky_bwm_2s">
  <title>Using Runtime Resources</title>
- <shortdesc>Use the <uicontrol>runtime:loadResource</uicontrol> function to call a runtime resource.
-  You can use runtime resources to represent sensitive information in any stage or pipeline property
+ <shortdesc>Use the <codeph>runtime:loadResource</codeph> function to call a runtime resource. You
+  can use runtime resources to represent sensitive information in any stage or pipeline property
   that allows the use of the expression language. </shortdesc>
  <conbody>
   <p><indexterm>runtime resources<indexterm>using in a pipeline</indexterm></indexterm>To call a

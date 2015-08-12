@@ -75,7 +75,8 @@
  <h2 class="title topictitle2">Jython Scripting Objects</h2>
 
  <div class="body conbody">
-  <div class="p">You can use the following scripting objects in the Jython Evaluator:<dl class="dl">
+  <div class="p">You can use the following scripting objects in the Jython
+        Evaluator:<dl class="dl">
         
           <dt class="dt dlterm">records array</dt>
 
@@ -103,17 +104,32 @@
 
         
         
+          <dt class="dt dlterm">log</dt>
+
+          <dd class="dd">An object to write messages to the log. Includes four methods:
+            <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>, <samp class="ph codeph">debug()</samp>, and
+              <samp class="ph codeph">trace()</samp>. </dd>
+
+          <dd class="dd">The signature of the 4 methods is as follows:
+            <pre class="pre codeblock">(message-template, arguments…) </pre>
+The message template can have
+            positional variables denoted by curly brackets: { }. The arguments are replaced in the
+            message template curly brackets in positional manner, i.e., this is the first argument
+            in the first { } occurrence, and so on.</dd>
+
+        
+        
           <dt class="dt dlterm">out</dt>
 
           <dd class="dd">An object that writes the record to the output batch. Includes a
-              <samp class="ph codeph">write(records)</samp> element.</dd>
+              <samp class="ph codeph">write(Record)</samp> method.</dd>
 
         
         
           <dt class="dt dlterm">err</dt>
 
           <dd class="dd">An object that passes error records to the processor for error handling. Includes a
-              <samp class="ph codeph">write(records)</samp> element with an error message parameter.</dd>
+              <samp class="ph codeph">write(Record, message)</samp> method.</dd>
 
         
       </dl>
@@ -165,14 +181,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d4254e466" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d4196e471" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d44600e273">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44532e302">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d44600e276">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44532e305">Description</th>
 
                                 </tr>
 
@@ -180,24 +196,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d44600e273 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e302 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d44600e276 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d44600e273 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d44600e276 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e305 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d44600e273 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d4254e512" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e302 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d44600e276 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e305 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e302 ">Required Fields <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d4196e517" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e305 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -205,10 +221,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d44600e273 ">Preconditions <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_fty_jwx_nr__d4254e526" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e302 ">Preconditions <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d4196e531" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d44600e276 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e305 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -216,9 +232,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d44600e273 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e302 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d44600e276 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d4254e542">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e305 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d4196e547">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -249,9 +265,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="25.97402597402597%" id="d44600e385">Jython Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44532e414">Jython Evaluator Property</th>
 
-                                    <th class="entry" valign="top" width="74.02597402597402%" id="d44600e388">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44532e417">Description</th>
 
                                 </tr>
 
@@ -259,9 +275,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d44600e385 ">Record Processing Mode</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e414 ">Record Processing Mode</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d44600e388 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e417 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
                                             <li class="li">Record by Record - Processes records individually.
                                                 Performs error handling.</li>
 
@@ -275,9 +291,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="25.97402597402597%" headers="d44600e385 ">Script</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44532e414 ">Script</td>
 
-                                    <td class="entry" valign="top" width="74.02597402597402%" headers="d44600e388 ">Jython code to use in the processor.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44532e417 ">Jython code to use in the processor.</td>
 
                                 </tr>
 

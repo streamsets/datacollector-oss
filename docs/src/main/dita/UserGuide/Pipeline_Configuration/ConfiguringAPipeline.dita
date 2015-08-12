@@ -7,7 +7,7 @@
     <taskbody>
         <context>
             <p><indexterm>pipelines<indexterm>configuring</indexterm></indexterm>A pipeline can
-                include the following components:<ul id="ul_eyy_b2w_kq">
+                include the following stages:<ul id="ul_eyy_b2w_kq">
                     <li>A single origin stage</li>
                     <li>Multiple processor stages</li>
                     <li>Multiple destination stages</li>
@@ -18,98 +18,93 @@
                 conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline2">
                 <cmd/>
             </step>
-            <step>
-                <cmd>If this is the first pipeline for the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, click <uicontrol>Create Pipeline</uicontrol>. </cmd>
-                <info>If you have created other pipelines, if necessary, use the <uicontrol>Toggle
-                        Library</uicontrol> icon to display the pipeline library, and click the
-                        <uicontrol>Create New Pipeline</uicontrol> icon.</info>
-            </step>
-            <step>
-                <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
-                    optional description, and click <uicontrol>Save</uicontrol>.</cmd>
-                <stepresult>The pipeline canvas displays the new name. The Properties panel displays
-                    the pipeline properties. </stepresult>
-            </step>
             <step id="pipeProperties">
                 <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
-                    <simpletable frame="all" relcolwidth="1.0* 3.17*" id="simpletable_m1s_q1m_sq">
-                        <sthead>
-                            <stentry>Pipeline Property</stentry>
-                            <stentry>Description</stentry>
-                        </sthead>
-                        <strow>
-                            <stentry>Description</stentry>
-                            <stentry>Optional description of the pipeline.</stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Execution Mode  <xref
-                                    href="../Cluster_Mode/Overview.dita"
-                                        ><image href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_zfp_n5g_cs"/>
-                                </xref></stentry>
-                            <stentry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
-                                    <li>Standalone - A single <ph
+                    <table frame="all" rowsep="1" colsep="1" id="table_ryh_vfm_zs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Pipeline Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description of the pipeline.</entry>
+                                </row>
+                                <row>
+                                    <entry>Execution Mode <xref href="../Cluster_Mode/Overview.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_zfp_n5g_cs"/>
+                                        </xref></entry>
+                                    <entry>Execution mode of the pipeline:<ul id="ul_bn5_jsz_zr">
+                                            <li>Standalone - A single <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> process runs the pipeline.</li>
+                                            <li>Cluster - Additional <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> workers are spawned as needed to process data.
+                                                Limits the origins that you can use in the
+                                                pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Delivery Guarantee <xref
+                                            href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_rtg_yfm_zs"/></xref></entry>
+                                    <entry>Determines how the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> process runs the pipeline.</li>
-                                    <li>Cluster - Additional <ph
+                                        /> handles data after an unexpected event causes the
+                                        pipeline to stop running:<ul id="ul_b4v_51m_sq">
+                                            <li>At Least Once - Ensures all data is processed and
+                                                written to the destination. Might result in
+                                                duplicate rows.</li>
+                                            <li>At Most Once - Ensures that data is not reprocessed
+                                                to prevent writing duplicate data to the
+                                                destination. Might result in missing rows.</li>
+                                        </ul><p>Default is At Least Once.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Memory Limit <xref
+                                            href="../Pipeline_Configuration/PipelineMemory.dita"
+                                                ><image href="../Graphics/icon_moreInfo.png"
+                                                scale="10" id="image_ldk_s5g_cs"/>
+                                        </xref></entry>
+                                    <entry>Maximum amount of memory for the pipeline to use. You can
+                                        enter a numeric value or edit the default expression to use
+                                        a percentage of the Java heap size defined for the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> workers are spawned as needed to process data. Limits the
-                                        origins that you can use in the pipeline.</li>
-                                </ul></stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Delivery Guarantee <xref
-                                    href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
-                                    <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                       /></xref></stentry>
-                            <stentry>Determines how the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> handles data after an unexpected event causes the pipeline to
-                                stop running:<ul id="ul_b4v_51m_sq">
-                                    <li>At Least Once - Ensures all data is processed and written to
-                                        the destination. Might result in duplicate rows.</li>
-                                    <li>At Most Once - Ensures that data is not reprocessed to
-                                        prevent writing duplicate data to the destination. Might
-                                        result in missing rows.</li>
-                                </ul><p>Default is At Least Once.</p></stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Memory Limit  <xref
-                                    href="../Pipeline_Configuration/PipelineMemory.dita"><image
-                                        href="../Graphics/icon_moreInfo.png" scale="10"
-                                        id="image_ldk_s5g_cs"/>
-                                </xref></stentry>
-                            <stentry>Maximum amount of memory for the pipeline to use. You can enter
-                                a numeric value or edit the default expression to use a percentage
-                                of the Java heap size defined for the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                />. <p>Default is 65% of the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> Java heap
-                                    size:<codeblock> ${jvm:maxMemoryMB() * 0.65}</codeblock></p></stentry>
-                        </strow>
-                        <strow>
-                            <stentry>Memory Exceeded</stentry>
-                            <stentry>Action to take when the pipeline memory reaches the memory
-                                    limit:<ul id="ul_vsf_3k4_1s">
-                                    <li>Log - Logs a message in the pipeline history.</li>
-                                    <li>Log and Alert - Logs a message and triggers an alert that
-                                        displays in monitor mode and sends an alert email to any
-                                        provided email addresses.</li>
-                                </ul><ul id="ul_mtf_3k4_1s">
-                                    <li>Log, Alert and Stop Pipeline - Logs a message, triggers an
-                                        alert that displays in monitor mode and sends an alert email
-                                        to any provided email addresses. Stops the pipeline. This
-                                        option is not supported for cluster mode at this time.
-                                            <draft-comment author="Loretta">remove after
-                                            fixed.</draft-comment></li>
-                                </ul></stentry>
-                        </strow>
-                    </simpletable>
+                                        />. <p>Default is 65% of the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> Java heap
+                                            size:<codeblock> ${jvm:maxMemoryMB() * 0.65}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Memory Exceeded</entry>
+                                    <entry>Action to take when the pipeline memory reaches the
+                                        memory limit:<ul id="ul_vsf_3k4_1s">
+                                            <li>Log - Logs a message in the pipeline history.</li>
+                                            <li>Log and Alert - Logs a message and triggers an alert
+                                                that displays in monitor mode and sends an alert
+                                                email to any provided email addresses.</li>
+                                        </ul><ul id="ul_mtf_3k4_1s">
+                                            <li>Log, Alert and Stop Pipeline - Logs a message,
+                                                triggers an alert that displays in monitor mode and
+                                                sends an alert email to any provided email
+                                                addresses. Stops the pipeline. This option is not
+                                                supported for cluster mode pipelines at this time.
+                                            </li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
                 </info>
             </step>
             <step>
@@ -123,8 +118,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ghf_x22_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>Error Records Property</entry>
@@ -161,7 +156,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_gy3_1y4_1r">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.15*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Write to File Property</entry>
@@ -212,12 +207,12 @@
                 <cmd>When writing error records to Kafka, click the <wintitle>Error Records - Write
                         to Kafka</wintitle> tab and configure the following properties:</cmd>
                 <info>
-                    <draft-comment author="Loretta">Table rows from Kakfa Producer Kafka tab of
+                    <draft-comment author="Loretta">Table rows from Kafka Producer, Kafka tab of
                         reusablesteps.dita - no data format &amp; charset.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_lb5_svh_ms">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>Write to Kafka Property</entry>
@@ -270,12 +265,10 @@
                 <cmd>When using the cluster execution mode, click the <uicontrol>Cluster</uicontrol>
                     tab and configure the following properties:</cmd>
                 <info>
-                    <draft-comment author="Loretta">return to these - a few new
-                        options.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_mkj_kdr_wr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Cluster Property</entry>
@@ -304,16 +297,6 @@
                                         </p><p>Changing the default properties is not
                                             recommended.</p><p>You can add any valid Java property.
                                         </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Kerberos Authentication</entry>
-                                    <entry>
-                                        <p>Uses Kerberos credentials to connect to the YARN cluster. </p>
-                                        <p>When selected, uses the Kerberos principal and keytab
-                                            defined in the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> configuration file. </p>
-                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Launcher Env Configuration</entry>

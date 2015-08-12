@@ -25,9 +25,9 @@
 .</codeblock></p>
   <p>For example, the following delimited rows:</p>
   <p>
-   <codeblock><b>TransactionID,Type,UserID
-0003420303,04,362
-0003420304,08,1008</b></codeblock>
+   <codeblock><uicontrol>TransactionID,Type,UserID
+</uicontrol>0003420303,04,362
+0003420304,08,1008</codeblock>
   </p>
   <p>are converted to records as
             follows:<codeblock>[0]/header = TransactionID

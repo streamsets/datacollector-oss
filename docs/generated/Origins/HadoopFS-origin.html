@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines configured for cluster ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Hadoop FS"></meta><meta name="abstract" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines configured for cluster execution mode."></meta><meta name="description" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines configured for cluster execution mode."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/Overview.html#concept_hmh_kfn_1s"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lw2_tnm_vs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Hadoop FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines configured for cluster ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Hadoop FS"></meta><meta name="abstract" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines configured for cluster execution mode."></meta><meta name="description" content="The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines configured for cluster execution mode."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/Overview.html#concept_hmh_kfn_1s"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lw2_tnm_vs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Hadoop FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,12 +15,12 @@
 
  
  <div class="body conbody"><p class="shortdesc">The Hadoop FS origin reads data from the Hadoop Distributed File System (HDFS). You can
-    read log, JSON, or text data with the Hadoop FS origin. Use Hadoop FS only in pipelines
+    read log, JSON, or text data with the Hadoop FS origin. Use this origin only in pipelines
     configured for cluster execution mode.</p>
 
-  <p class="p">When you configure Hadoop FS, you specify the directory path and data
-   format for the data. You can configure the origin to read from all subdirectories and to generate
-   a single record for records that include multiple objects. </p>
+  <p class="p">When you configure the Hadoop FS origin, you specify the
+      directory path and data format for the data. You can configure the origin to read from all
+      subdirectories and to generate a single record for records that include multiple objects. </p>
 
     <p class="p">When necessary, you can enable Kerberos authentication or use an
                   HDFS user to connect to HDFS. You can also use HDFS properties files and add other
@@ -59,29 +59,26 @@
  <h2 class="title topictitle2">Using an HDFS User</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can configure the origin to use an HDFS user to write data to HDFS. By default,
-    Hadoop FS uses the <span class="ph">Data
-                  Collector</span> user. </p>
+ <div class="body conbody"><p class="shortdesc">You can configure the Hadoop FS origin to use an HDFS user to read data from HDFS. </p>
 
-  <p class="p">The <span class="ph">Data
-                  Collector</span> user is
-      the user who started the <span class="ph">Data
-                  Collector</span>. Or, when
-      using Kerberos, the <span class="ph">Data
-                  Collector</span> user is
-      the Kerberos principal. </p>
+  <p class="p">By default, the <span class="ph">Data
+                  Collector</span> uses the
+      user account who started it to connect to external systems. When using Kerberos, the <span class="ph">Data
+                  Collector</span> uses the
+      Kerberos principal. </p>
 
-  <div class="p">To use an HDFS user, perform the following tasks:<ol class="ol" id="concept_u4h_lwt_ls__ul_mb1_xpt_ls">
-    <li class="li">On HDFS, configure the <span class="ph">Data
-                  Collector</span> user as a
-     proxy user and authorize the <span class="ph">Data
-                  Collector</span> user to
-     impersonate the HDFS user. <p class="p">For more information, see the HDFS documentation. </p>
+  <div class="p">To use an HDFS user to connect to HDFS, perform the following tasks:<ol class="ol" id="concept_u4h_lwt_ls__ul_mb1_xpt_ls">
+        <li class="li">On HDFS, configure the <span class="ph">Data
+                  Collector</span> user
+          as a proxy user and authorize the <span class="ph">Data
+                  Collector</span> user
+          to impersonate the HDFS user. <p class="p">For more information, see the HDFS documentation.
+          </p>
 </li>
 
-    <li class="li">In the Hadoop FS origin, enter the HDFS user name.</li>
+        <li class="li">In the Hadoop FS origin, enter the HDFS user name.</li>
 
-   </ol>
+      </ol>
 </div>
 
  </div>
@@ -91,7 +88,7 @@
  <h2 class="title topictitle2">Hadoop Properties and Configuration Files</h2>
 
     
-    <div class="body conbody"><p class="shortdesc">You can configure the Hadoop origin to use HDFS properties. </p>
+    <div class="body conbody"><p class="shortdesc">You can configure the Hadoop FS origin to use HDFS properties. </p>
 
         <div class="p">The Hadoop FS origin provides the following
             options for using HDFS properties:<dl class="dl">
@@ -125,7 +122,7 @@
 
  <div class="body conbody">
   <div class="p">The Hadoop FS origin processes data
-   differently based on the data format that you select. Hadoop FS processes the following types of
+   differently based on the data format that you select. The origin processes the following types of
     data:<dl class="dl">
     
      <dt class="dt dlterm">Text</dt>
@@ -260,14 +257,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d2791e381" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hgl_vgn_vs__d2803e386" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="24.509803921568626%" id="d27675e421">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d27665e415">General Property</th>
 
-                                    <th class="entry" valign="top" width="75.49019607843137%" id="d27675e424">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d27665e418">Description</th>
 
                                 </tr>
 
@@ -275,23 +272,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27675e421 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d27665e415 ">Name</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27675e424 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27675e421 ">Description</td>
-
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27675e424 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d27665e418 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="24.509803921568626%" headers="d27675e421 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d27665e415 ">Description</td>
 
-                                    <td class="entry" valign="top" width="75.49019607843137%" headers="d27675e424 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d2791e428">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d27665e418 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d27665e415 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d27665e418 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d2803e433">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -322,9 +319,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="34.96503496503497%" id="d27675e496">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d27665e490">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="65.03496503496503%" id="d27675e499">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d27665e493">Description</th>
 
                                 </tr>
 
@@ -332,36 +329,36 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">HDFS URI. Include the HDFS scheme and authority as
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">HDFS URI. Include the HDFS scheme and authority as
                                         follows:
                                         <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Directory Path</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Directory Path</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">Directory for the data to be read. Include the HDFS
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">Directory for the data to be read. Include the HDFS
                                         scheme and authority in the path as follows:
                                             <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;/path</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Include All Subdirectories</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Include All Subdirectories</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">Reads from all directories within the specified directory
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">Reads from all directories within the specified directory
                                         path.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_hgl_vgn_vs__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">
                                         <div class="p">Type of data to be read. Use one of the following
                                             options: <ul class="ul" id="task_hgl_vgn_vs__ul_czf_y14_vs">
                                                 <li class="li">Text</li>
@@ -378,18 +375,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">Generates a single record when a record includes multiple
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">Generates a single record when a record includes multiple
                                         objects. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
                                             <img class="image" id="task_hgl_vgn_vs__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file. </p>
@@ -398,10 +395,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop origin to use HDFS properties.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop FS origin to use HDFS properties.">
                                             <img class="image" id="task_hgl_vgn_vs__image_ocv_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">
                                         <p class="p">Directory for a local HDFS configuration files. To use
                                             properties defined in the
                                                 <span class="ph filepath">core-site.xml</span> and
@@ -420,10 +417,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">HDFS User  <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls" title="You can configure the origin to use an HDFS user to write data to HDFS. By default, Hadoop FS uses the Data Collector user.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">HDFS User  <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls" title="You can configure the Hadoop FS origin to use an HDFS user to read data from HDFS.">
                                             <img class="image" id="task_hgl_vgn_vs__image_t3x_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">The HDFS user to use to connect to HDFS. When using this
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">The HDFS user to use to connect to HDFS. When using this
                                         property, make sure HDFS is configured appropriately.<p class="p">By
                                             default, the pipeline uses the <span class="ph">Data
                   Collector</span> user to connect to HDFS.</p>
@@ -432,10 +429,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="34.96503496503497%" headers="d27675e496 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop origin to use HDFS properties.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d27665e490 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br" title="You can configure the Hadoop FS origin to use HDFS properties.">
                                             <img class="image" id="task_hgl_vgn_vs__image_if3_4hl_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="65.03496503496503%" headers="d27675e499 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d27665e493 ">
                                         <p class="p">Additional Hadoop configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the property name and value. </p>

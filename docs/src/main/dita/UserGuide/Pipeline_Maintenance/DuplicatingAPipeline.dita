@@ -12,8 +12,9 @@
         </context>
         <steps id="steps_lgz_fvr_5q">
             <step>
-                <cmd>In the <wintitle>Pipeline</wintitle> library, click the
-                        <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
+                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
+                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Duplicate</uicontrol>.</cmd>
@@ -22,7 +23,7 @@
                 <cmd>In the <uicontrol>Duplicate Pipeline Definition</uicontrol> dialog box, enter a
                     name for the duplicate pipeline and click
                     <uicontrol>Duplicate</uicontrol>.</cmd>
-                <stepresult>The pipeline displays in the canvas.</stepresult>
+                <stepresult>The duplicate pipeline displays.</stepresult>
             </step>
         </steps>
     </taskbody>

@@ -23,29 +23,23 @@
                 the following
                 location:<codeblock>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeblock>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> environment configuration file includes the following properties:<table
-                    frame="all" rowsep="1" colsep="1" id="table_hby_1bn_qr">
+                /> environment configuration file includes the following environment
+                    variables:<table frame="all" rowsep="1" colsep="1" id="table_hby_1bn_qr">
                     <tgroup cols="2">
-                        <colspec colname="c1" colnum="1" colwidth="1*"/>
-                        <colspec colname="c2" colnum="2" colwidth="1.64*"/>
+                        <colspec colname="c1" colnum="1" colwidth="1.75*"/>
+                        <colspec colname="c2" colnum="2" colwidth="2.25*"/>
                         <thead>
                             <row>
-                                <entry>Environment Configuration Property</entry>
+                                <entry>Environment Variables</entry>
                                 <entry>Description</entry>
                             </row>
                         </thead>
                         <tbody>
                             <row>
-                                <entry>SDC_PRE_CLASSPATH</entry>
-                                <entry>Path to a directory of Java classes that can be called by
-                                    custom stages. Classes in this list load before the
-                                    post-classpath list.</entry>
-                            </row>
-                            <row>
-                                <entry>SDC_POST_CLASSPATH</entry>
-                                <entry>Path to a directory of Java classes that can be called by
-                                    custom stages. Classes in this list load after the pre-classpath
-                                    list.</entry>
+                                <entry>SDC_ROOT_CLASSPATH</entry>
+                                <entry>Defines the path to jar files to be added to the Data
+                                    Collector root classloader. Use for components that must be in
+                                    the root classloader, such as Snappy. </entry>
                             </row>
                             <row>
                                 <entry>SDC_JAVA_OPTS</entry>

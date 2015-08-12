@@ -18,15 +18,15 @@
                 <cmd>On the <wintitle>Kinesis</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <draft-comment author="Loretta">A lot of these are the same as Consumer - make
-                        sure changes are propagated</draft-comment>
+                    <draft-comment author="Loretta">Doc note: A lot of these are the same as
+                        Consumer - make sure changes are propagated</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_cgq_yn4_yr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Kinesis Producer Property</entry>
+                                    <entry>Kinesis Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
@@ -41,8 +41,7 @@
                                     <entry>Kinesis stream name.</entry>
                                 </row>
                                 <row>
-                                    <entry>Output Record Format<draft-comment author="Loretta">Can
-                                            we call this Data Format?</draft-comment></entry>
+                                    <entry>Data Format</entry>
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
                                             <li>JSON</li>
@@ -50,9 +49,9 @@
                                                   href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
-                                        </ul><draft-comment author="Loretta">Can we call it JSON
-                                            Object? Just to be clear, in case no one reads the doc?
-                                            Logging a bug.</draft-comment></entry>
+                                        </ul><draft-comment author="Loretta">Adam: Can we call it
+                                            JSON Object? Just to be clear, in case no one reads the
+                                            doc? </draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Strategy</entry>

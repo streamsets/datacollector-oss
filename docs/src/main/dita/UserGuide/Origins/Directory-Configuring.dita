@@ -20,8 +20,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tm4_vck_5q">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.9*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>File Property</entry>
@@ -124,12 +124,14 @@
                                 <row>
                                     <entry>File Compression</entry>
                                     <entry>The compression type of the files:<ul id="ul_vph_jp2_qs">
-                                            <li>Uncompressed</li>
-                                            <li>Zip</li>
-                                            <li>GZip</li>
-                                            <li>Any By Extension<draft-comment author="Loretta">chew
-                                                  on this, log bug for label and option
-                                                  name</draft-comment></li>
+                                            <li>Uncompressed - Processes only uncompressed
+                                                files.</li>
+                                            <li>Zip - Processes only Zip compressed files.</li>
+                                            <li>GZip - Processes only GZip compressed files.</li>
+                                            <li>By Extension - Processes uncompressed, Zip and GZip
+                                                compressed files. <draft-comment author="Loretta"
+                                                  >Tucu: would this option be better if called: Any,
+                                                  By Extension?  </draft-comment></li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -144,7 +146,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_sgn_dvv_yq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.57*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Post Processing Property</entry>
@@ -195,7 +197,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_LogData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.52*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Text Property</entry>
@@ -241,8 +243,6 @@
                 <cmd>For delimited data, on the <uicontrol>Delimited</uicontrol> tab, configure the
                     following properties:</cmd>
                 <info>
-                    <draft-comment author="Loretta">After delimiter changes go in for Kafka
-                        Consumer, make this table reusable and share?</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -273,7 +273,7 @@
                                         are not read. </entry>
                                 </row>
                                 <row>
-                                    <entry>Delimeter Character</entry>
+                                    <entry>Delimiter Character</entry>
                                     <entry>Delimiter character for a custom file type.</entry>
                                 </row>
                                 <row>
@@ -295,8 +295,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_b5x_nbw_yq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>XML Property</entry>

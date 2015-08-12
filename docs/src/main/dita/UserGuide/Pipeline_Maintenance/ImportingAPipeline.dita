@@ -2,33 +2,23 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_fdf_hrr_5q">
     <title>Importing a Pipeline</title>
-    <shortdesc>Import a pipeline to use a pipeline developed on a different <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or to
-        restore a backup file. Import a pipeline from a pipeline file. Pipeline files are JSON files
-        exported from a <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        instance.</shortdesc>
     <taskbody>
-        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>You can import a
-            pipeline to the current canvas, overwriting the existing pipeline. Or you can create a
-            new pipeline as you import the pipeline. </context>
+        <context><indexterm>pipelines<indexterm>importing</indexterm></indexterm>Import a pipeline
+            to use a pipeline developed on a different <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> or
+            to restore a backup file. Import a pipeline from a pipeline file. Pipeline files are
+            JSON files exported from a <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            instance.</context>
         <steps id="steps_slv_nrr_5q">
             <step>
-                <cmd>In the Pipeline library, click the <uicontrol>Actions</uicontrol> icon for the
-                    pipeline, and then click <uicontrol>Import</uicontrol>.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
+                    page, click <uicontrol>Import Pipeline</uicontrol>. </cmd>
             </step>
             <step>
-                <cmd>To import the pipeline in the current canvas and overwrite the existing
-                    pipeline, in the <wintitle>Import Pipeline</wintitle> window, click
-                        <uicontrol>Overwrite Pipeline</uicontrol>. Browse to the pipeline file and
-                    click <uicontrol>Import</uicontrol>. </cmd>
-            </step>
-            <step>
-                <cmd>To create a new pipeline as you import the pipeline, click <uicontrol>Create
-                        New Pipeline and Import</uicontrol>. In the <wintitle>New
-                        Pipeline</wintitle> dialog box, enter a pipeline name and optional
-                    description. Browse to the pipeline file and click
-                    <uicontrol>Import</uicontrol>. </cmd>
+                <cmd>In the <wintitle>Import Pipeline</wintitle> dialog box, enter a pipeline name
+                    and optional description. Browse and select the pipeline file and click
+                        <uicontrol>Import</uicontrol>. </cmd>
             </step>
         </steps>
     </taskbody>

@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zvt_f4f_cr">
-    <title>Installing a Stage Library (Download-Untar)</title>
-    <shortdesc>You can install a stage library by downloading the library to the appropriate
-        directory and untarring it. </shortdesc>
+    <title>Installing a Stage Library</title>
+    <shortdesc>You can install a stage library by downloading the library and untarring it into the
+            <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        installation directory.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_bsl_5tf_cr">
             <step>
-                <cmd>Download the stage library to the parent directory of the <ph
+                <cmd>Download the stage library tar file to a directory in the machine where the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> installation directory. </cmd>
-                <info>For example, if the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> is installed in the /opt directory, you would download the stage library to
-                    /opt.</info>
+                    /> is installed. </cmd>
             </step>
             <step>
-                <cmd>Untar the file.</cmd>
-                <info>For
-                    example:<codeblock>tar xvf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
+                <cmd>Untar the file to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> installation directory. </cmd>
+                <info>For example, if you downloaded the stage library to your home directory and
+                    installed the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> in the <filepath>opt/local</filepath> directory, you might use the following
+                    commands to untar a stage
+                    library:<codeblock>$ cd /opt/local
+$ tar xvf ~/streamsets-datacollector-&lt;stage_library>.tar.gz</codeblock></info>
             </step>
             <step>
                 <cmd>Stop and restart the <ph
@@ -27,5 +31,8 @@
                     />.</cmd>
             </step>
         </steps>
+        <result>The stages from the stage library are now available in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</result>
     </taskbody>
 </task>

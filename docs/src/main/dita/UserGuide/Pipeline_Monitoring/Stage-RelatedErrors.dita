@@ -8,7 +8,7 @@
   <p>To view stage-related errors, select the stage from the stage list. Or, click the stage in the
    canvas. The <uicontrol>Errors</uicontrol> tab of the <wintitle>Monitor</wintitle> panel displays
    the following tabs:</p>
-  <p><image href="../Graphics/mon-StageErrors.png" id="image_avz_bts_zr"/><dl>
+  <p><image href="../Graphics/mon-StageErrors.png" id="image_avz_bts_zr" scale="70"/><dl>
     <dlentry>
      <dt>Error Records</dt>
      <dd>
@@ -17,15 +17,14 @@
      </dd>
      <dd>You can expand and review the data in each error record. The number of error records saved
       in memory is defined in the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties
-      file.</dd>
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      configuration file.</dd>
     </dlentry>
     <dlentry>
      <dt>Stage Errors</dt>
      <dd>Displays a list of stage errors as well as the count and an error histogram. Stage errors
       are operational errors, such as an origin being unable to create a record because of invalid
-      source data.<draft-comment author="Loretta">DEV: is this right? I have not generated stage
-       errors, so don't know what they will see...</draft-comment></dd>
+      source data.</dd>
     </dlentry>
    </dl></p>
  </conbody>

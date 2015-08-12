@@ -26,23 +26,23 @@
 
   <p class="p">The sample data is a file of delimited data that we'll flatten along the way. The <span class="ph">Data
                   Collector</span> uses a special
-   record format for delimited data. So, in addition to learning some basic <span class="ph">Data
+   record format for delimited data. So in addition to learning some basic <span class="ph">Data
                   Collector</span> and pipeline
    configuration concepts, you'll see how to manipulate both delimited and flattened data.</p>
 
   <p class="p">For sample data, the tutorial uses fare payment information from a taxi company. The basic
-   pipeline assesses the credit card vendors that customers use so you can decide later if you want
-   to end contracts with low volume vendors. The pipeline then masks the credit card numbers before
-   writing the results to file. A secondary branch standardizes the record format for non-credit
-   card data. </p>
+   pipeline assesses the credit card vendors that customers use. (You could use this information
+   later to end contracts with low volume vendors.) The pipeline then masks the credit card numbers
+   before writing the results to file. A secondary branch standardizes the record format for
+   non-credit card data. </p>
 
-  <p class="p">Here's what we'll create with the basic tutorial:</p>
+  <p class="p">Here's the pipeline the basic tutorial creates:</p>
 
   <p class="p"><img class="image" id="concept_is5_lrq_ks__image_c1c_wj4_ms" src="../Graphics/Tutorial-BasicPipe.png" height="182" width="736"></img></p>
 
   <p class="p">The extended pipeline adds an additional branch to flatten the data, convert some field types
-   and then write the data to the Trash destination. We'll use data preview to test stage
-   configuration and changes in data before we complete the extended pipeline:</p>
+   and write to the Trash destination. We'll use data preview to test stage configuration and
+   changes in data before we complete the extended pipeline:</p>
 
   <p class="p"><img class="image" id="concept_is5_lrq_ks__image_k3b_dr4_ms" src="../Graphics/Tutorial-ExtendedPipe.png" height="120" width="766"></img></p>
 

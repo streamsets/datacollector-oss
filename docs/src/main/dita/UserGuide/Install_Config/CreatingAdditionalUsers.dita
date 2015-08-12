@@ -4,8 +4,9 @@
     <title>Configuring Users</title>
     <shortdesc>The <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        includes several default users. You can customize the default users or create additional
-        Data Collector users for increased security.</shortdesc>
+        includes several default users - one for each role. For increased security, you can
+        customize the default users, delete them, or create additional Data Collector
+        users.</shortdesc>
     <taskbody>
         <context>
             <p><indexterm>users<indexterm>creating</indexterm></indexterm>Configure users in the
@@ -13,18 +14,22 @@
                 basic authentication, use the basic-realm.properties file.</p>
             <p>To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
-            <p>For basic and form authentication, you can hash the password alone. For example:
-                <codeblock>echo -n "&lt;password>" | md5</codeblock></p>
-            <p>For digest authentication, you can hash the combination of &lt;user
-                name>:&lt;realm>:&lt;password>. For example:
-                <codeblock>echo -n "&lt;user name>:&lt;realm>:&lt;password>" | md5</codeblock></p>
+            <p>For basic and form authentication, hash the password alone. For example:
+                <codeblock>$ echo -n "&lt;password>" | md5</codeblock></p>
+            <p>For digest authentication, hash the combination of &lt;user
+                name>:&lt;realm>:&lt;password>, where &lt;realm> is the authentication type. </p>
+            <p>For example, you might use the following
+                command:<codeblock>$ echo -n "&lt;user name>:&lt;realm>:&lt;password>" | md5</codeblock></p>
+            <p>as follows:</p>
+            <p>
+                <codeblock>$ echo -n "jdoe:digest-realm:JdoePass" | md5</codeblock>
+            </p>
         </context>
         <steps id="steps_ody_3q4_1r">
             <step>
                 <cmd>To configure a user, modify the properties file for the type of authentication
                     that you use. </cmd>
-                <info>The file name is <filepath>&lt;authentication
-                        type>-realm.properties</filepath>. </info>
+                <info>The file name is <filepath>&lt;realm>.properties</filepath>. </info>
                 <info>The file is located in the following directory:
                         <filepath>&lt;SDCinstalldir>/etc/</filepath>. When the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -34,17 +39,11 @@
             <step>
                 <cmd>For each new user, add a user definition using the following format:</cmd>
                 <info>
-                    <codeblock>&lt;user name>: &lt;password>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
+                    <codeblock>&lt;user name>: MD5:&lt;md5-text>, user, &lt;role> [, &lt;additional role>, &lt;additional role>...]</codeblock>
                 </info>
                 <info>
                     <note>Assign one or more roles for each user. Be sure to include "user" in every
                         user definition.</note>
-                </info>
-            </step>
-            <step>
-                <cmd>To store a hashed password, prefix it with MD5, as follows: </cmd>
-                <info>
-                    <codeblock>MD5:&lt;hashed password></codeblock>
                 </info>
             </step>
             <step>

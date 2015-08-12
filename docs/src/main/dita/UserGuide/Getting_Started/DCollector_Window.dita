@@ -31,38 +31,60 @@
             stage or group of stages.</p><p>When you monitor a running pipeline, the Monitor panel
             displays real-time metrics and statistics. </p><p>
             <note
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"
-            />
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-OptionDispay"/>
           </p></stentry>
       </strow>
       <strow>
         <stentry>3</stentry>
         <stentry>Pipeline library</stentry>
-        <stentry>Library of pipelines available to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-        </stentry>
+        <stentry>Library of pipelines associated with this <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_OverHome.png" id="image_lw2_h23_ts"/></stentry>
         <stentry>Home icon</stentry>
-        <stentry>Icon to display a home page with a list of pipelines and their status.</stentry>
+        <stentry>Displays a home page with a list of pipelines and their statuses.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_MonAlert.png" id="image_mfs_2xd_zs"/></stentry>
+        <stentry>Notifications icon</stentry>
+        <stentry>Displays notifications.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_OverAdministration.png" id="image_gqn_5yd_zs"
+          /></stentry>
+        <stentry>Administration icon</stentry>
+        <stentry>Provides access to <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          configuration properties, directories, and log. Also allows you to shut down the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+          />.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_OverUser.png" id="image_gvc_kzd_zs"/></stentry>
+        <stentry>User icon</stentry>
+        <stentry>Displays the active user and the roles assigned to the user. Also allows you to log
+          out of the console.</stentry>
+      </strow>
+      <strow>
+        <stentry><image href="../Graphics/icon_OverHelp.png" id="image_dtv_2j2_zs"/></stentry>
+        <stentry>Help icon</stentry>
+        <stentry>Provides access to the online help, the REST API, and the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          version. Also allows you to define display settings and the online help version to
+          use.</stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_OverLibraryToggle.png" id="image_kgq_klq_rq"
             scale="70"/></stentry>
-        <stentry>Toggle Library icon</stentry>
-        <stentry>Icon to display or hide the library.</stentry>
+        <stentry>Toggle Library Pane icon</stentry>
+        <stentry>Icon to show or hide the pipeline library.</stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_OverActions.png" id="image_vd2_jpq_rq" scale="70"
           /></stentry>
         <stentry>Actions icon</stentry>
-        <stentry>Allows you to import, export, duplicate, or delete the pipeline.</stentry>
-      </strow>
-      <strow>
-        <stentry><image href="../Graphics/icon_OverCHelp.png" id="image_w3f_spl_br"/></stentry>
-        <stentry>Help icon</stentry>
-        <stentry>Provides context-sensitive help based on the information in the panel. </stentry>
+        <stentry>Allows you to import, export, duplicate, or delete a pipeline.</stentry>
       </strow>
     </simpletable>
   <p>For information about pipeline configuration options, see <xref

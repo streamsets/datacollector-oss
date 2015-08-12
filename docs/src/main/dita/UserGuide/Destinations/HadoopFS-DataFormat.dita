@@ -5,11 +5,32 @@
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
           formats<indexterm>Hadoop FS</indexterm></indexterm>Hadoop FS writes data to HDFS based on
-      the data format that you select. You can use the following data formats: <dl
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-dest">
+      the data format that you select. You can use the following data formats: <draft-comment
+        author="Loretta">copied from Reusable steps - removed SDC Record format.</draft-comment><dl>
         <dlentry>
-          <dt/>
-          <dd/>
+          <dt>Text</dt>
+          <dd>The destination writes a single text field of a record. When you configure the stage,
+            you select the field to use. When necessary, merge record data into the field earlier in
+            the pipeline. </dd>
+        </dlentry>
+        <dlentry>
+          <dt>JSON</dt>
+          <dd>The destination writes records as JSON data. You can use one of the following
+              formats:<ul id="ul_dd1_5y1_wr">
+              <li>Array - Each file includes a single array. In the array, each element is a JSON
+                representation of each record.</li>
+              <li>Multiple objects - Each file includes multiple JSON objects. Each object is a JSON
+                representation of a record. </li>
+            </ul></dd>
+        </dlentry>
+        <dlentry>
+          <dt>Delimited</dt>
+          <dd>The destination writes records as delimited data. When you use this data format, you
+            must ensure that the data uses the following data structure:<ul id="ul_tr1_ms1_wr">
+              <li>A root field that contains an array of maps.</li>
+              <li>Each map includes a <term>value</term> element and an optional <term>header</term>
+                element.</li>
+            </ul></dd>
         </dlentry>
       </dl></p>
     <dl>

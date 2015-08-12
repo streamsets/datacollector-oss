@@ -2,8 +2,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pnf_344_1r">
     <title>Installation and Launch (Service Start)</title>
-    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine that you want to
-        run a pipeline. After installation, you can launch the <ph
+    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine to run pipelines.
+        After installation, you can launch the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
     <taskbody>
@@ -13,10 +13,11 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service requires sudo privileges on the root directory.</p>
             <p>This procedure walks through setting the default directories, but you can
-                alternatively use the<filepath> libexec/sdcd-env.sh</filepath> script.</p></context>
+                alternatively use the <filepath>&lt;SDCinstalldir>/libexec/sdcd-env.sh</filepath>
+                script.</p></context>
         <steps id="steps_wnx_444_1r">
             <step>
-                <cmd> Download the StreamSets SDC tarball and extract it to the desired location,
+                <cmd>Download the StreamSets SDC tarball and extract it to the desired location,
                     typically /opt/local/.</cmd>
             </step>
             <step>
@@ -24,13 +25,13 @@
                         <filepath>/etc/init.d/</filepath> directory as sdc.</cmd>
             </step>
             <step>
-                <cmd>Edit the sdc file and set the SDC_DIST environment variable to the location
-                    where you extracted the SDC tarball.</cmd>
+                <cmd>Edit the sdc file and set the SDC_DIST and SDC_HOME environment variable to the
+                    location where you extracted the SDC tarball.</cmd>
             </step>
             <step>
                 <cmd>Use the following command to make the sdc file executable:</cmd>
                 <info>
-                    <codeblock> sudo chmod 755 /etc/init.d/sdc</codeblock>
+                    <codeblock>$ sudo chmod 755 /etc/init.d/sdc</codeblock>
                 </info>
             </step>
             <step>
@@ -60,11 +61,11 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service, use the following command: </cmd>
                 <info>
-                    <codeblock>service sdc start  </codeblock>
+                    <codeblock>$ service sdc start  </codeblock>
                     <p>For CentOS, use the following
-                        command:<codeblock>chkconfig --add sdc</codeblock></p>
+                        command:<codeblock>$ chkconfig --add sdc</codeblock></p>
                     <p>For Ubuntu, use the following
-                        command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></p>
+                        command:<codeblock>$ update-rc.d sdc defaults 97 03</codeblock></p>
                 </info>
             </step>
         </steps>

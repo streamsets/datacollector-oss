@@ -10,7 +10,7 @@
     Directory</indexterm></indexterm>Configure Directory to indicate the type of files to read and
    define the file name pattern appropriately. For example, when reading compression files, make
    sure to specify the appropriate file extension or use a wildcard for the extension.<note
-    type="tip">When reading a combination of types, use an asterisk to represent the file exension
+    type="tip">When reading a combination of types, use an asterisk to represent the file extension
     to avoid excluding an extension type. </note></p>
  </conbody>
 </concept>

@@ -16,7 +16,6 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Install_Config/InstallStage-DownloadUntar.dita"/>
-   <topicref href="../Install_Config/InstallStage-UntarCopy.dita"/>
   </topicref>
   <topicref href="../Install_Config/UsersandRoles.dita" chunk="to-content">
    <topicmeta>

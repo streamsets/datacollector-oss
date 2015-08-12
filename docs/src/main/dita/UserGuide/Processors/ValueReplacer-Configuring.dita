@@ -6,7 +6,7 @@
         <context>
             <p><indexterm>Value Replacer processor<indexterm>configuring</indexterm></indexterm>Use
                 a Value Replacer to replace null values in a field or to replace values in a field
-                with Nulls. </p>
+                with nulls. </p>
         </context>
         <steps id="steps_as1_cnf_zq">
             <step
@@ -20,8 +20,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_bxr_2nf_zq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Value Replacer Property</entry>

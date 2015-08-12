@@ -8,7 +8,7 @@
     <p><indexterm>origins<indexterm>JDBC Consumer</indexterm></indexterm><indexterm>JDBC Consumer
           origin<indexterm>overview</indexterm></indexterm>When you configure JDBC Consumer, you
       specify connection information, query interval, and custom JDBC configuration properties to
-      determine how JDBC Consumer connects to the database. You configure the query mode, offset
+      determine how the origin connects to the database. You configure the query mode, offset
       column, initial offset value, and SQL query to define the data returned by the database.</p>
     <p>You can also configure add custom properties that your driver requires and configure
       additional properties for JDBC versions older than 4.0.</p>

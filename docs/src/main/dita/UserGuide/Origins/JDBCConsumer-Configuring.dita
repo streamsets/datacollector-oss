@@ -19,7 +19,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_nkm_dlr_bs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.96*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>JDBC Property</entry>
@@ -86,8 +86,6 @@
                             </tbody>
                         </tgroup>
                     </table>
-                    <draft-comment author="Loretta">Check back for any changes in order. Logged a
-                        bug 5/26.</draft-comment>
                 </info>
             </step>
             <step>
@@ -97,7 +95,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_mb1_kfs_bs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.88*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Credentials Property</entry>
@@ -126,7 +124,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.74*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Legacy Driver Property</entry>

@@ -2,7 +2,6 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pyq_qx5_vr">
     <title>Configuring an HBase Destination</title>
-    <shortdesc/>
     <taskbody>
         <context>
             <p><indexterm>HBase destination<indexterm>configuring</indexterm></indexterm>Configure
@@ -16,8 +15,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_l5z_wcv_vr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.86*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
                                     <entry>HBase Property</entry>
@@ -29,8 +28,9 @@
                                     <entry>ZooKeeper Quorum</entry>
                                     <entry>Comma-separated list of servers in the ZooKeeper quorum.
                                         Use the following format:
-                                            <codeph>&lt;host>.&lt;domain>.com</codeph>.<p>To ensure
-                                            a connection, enter additional broker URIs.</p></entry>
+                                            <codeblock>&lt;host>.&lt;domain>.com</codeblock><p>To
+                                            ensure a connection, enter additional broker
+                                        URIs.</p></entry>
                                 </row>
                                 <row>
                                     <entry>ZooKeeper Client Port</entry>

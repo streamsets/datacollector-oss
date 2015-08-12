@@ -36,30 +36,22 @@
                             <tbody>
                                 <row>
                                     <entry>Display Density</entry>
-                                    <entry>Defines the density of the information that displays
-                                        properties, preview, and monitor information in the
-                                            panel:<ul id="ul_jdx_5px_pr">
-                                            <li>Comfortable - Includes extra space to make the
-                                                information easy to read.</li>
-                                            <li>Compact - Includes some additional space to make
-                                                information easier to read.</li>
-                                            <li>Cozy - Includes a minimum amount of additional space
-                                                so you can view more information in the panel.</li>
-                                        </ul></entry>
+                                    <entry>Defines the density of the information that displays in
+                                        the panel.</entry>
                                 </row>
                                 <row>
                                     <entry>Help</entry>
                                     <entry>Defines the help project that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> uses:<ul id="ul_pzd_kqx_pr">
-                                            <li>Local help - Uses the local help project installed
-                                                with the <ph
+                                            <li>Local help - Uses the help project installed with
+                                                the <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 />.</li>
                                             <li>Hosted help - Uses a help project hosted on the
                                                 StreamSets website. Hosted help contains the latest
-                                                available documentation, but requires an internet
-                                                connection for access. </li>
+                                                available documentation. Requires an internet
+                                                connection.</li>
                                         </ul><p>Default is local help. Both help projects provide
                                             context-sensitive help.</p></entry>
                                 </row>

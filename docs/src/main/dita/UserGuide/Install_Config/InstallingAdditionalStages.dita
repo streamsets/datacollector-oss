@@ -3,17 +3,15 @@
 <concept id="concept_zhl_k4f_cr">
  <title>Installing Additional Stage Libraries</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> includes a wide range of stages for pipeline development, but you might find a need for
-    additional functionality. You can install additional stage libraries to provide access to
-    additional stages.</shortdesc>
+    /> includes a wide range of stages for pipeline development, but you might need additional
+    functionality. You can install stage libraries to provide access to additional
+    stages.</shortdesc>
  <conbody>
   <p><indexterm>stage libraries<indexterm>installing
           additional</indexterm></indexterm><indexterm>installation<indexterm>additional stage
           libraries</indexterm></indexterm><indexterm>libraries<indexterm>installing stage
           libraries</indexterm></indexterm>At this time, you can install the following stage
-      libraries: <draft-comment author="Loretta">Tech review: Someone please take a pass on this and
-        help verify the current library versions? </draft-comment><table frame="all" rowsep="1"
-        colsep="1" id="table_izz_npf_cr">
+      libraries: <table frame="all" rowsep="1" colsep="1" id="table_izz_npf_cr">
         <tgroup cols="3">
           <colspec colname="c1" colnum="1" colwidth="1.3*"/>
           <colspec colname="newCol2" colnum="2" colwidth="1*"/>
@@ -28,7 +26,7 @@
           <tbody>
             <row>
               <entry>Apache Kafka</entry>
-              <entry>0.8.1.1<p>0.8.2.x</p></entry>
+              <entry>0.8.1.x<p>0.8.2.x</p></entry>
               <entry>Use to access Kafka. <p>Provides a Kafka Consumer and Kafka
                 Producer.</p></entry>
             </row>
@@ -58,19 +56,19 @@
             </row>
             <row>
               <entry>Cassandra </entry>
-              <entry>2.1.5 </entry>
+              <entry>2.x</entry>
               <entry>Use to write to Apache Cassandra 1.2, 2.0, and 2.1.<p>Provides a Cassandra
                   destination.</p></entry>
             </row>
             <row>
               <entry>Elasticsearch</entry>
-              <entry>1.4.4<p>1.5.0</p></entry>
+              <entry>1.4.x<p>1.5.x</p></entry>
               <entry>Use to write to Elasticsearch.<p>Provides an Elasticsearch destination.
                 </p></entry>
             </row>
             <row>
               <entry>HDP</entry>
-              <entry>2.2.0</entry>
+              <entry>2.2.x<p>2.3.x</p></entry>
               <entry>Use to write to the Hortonworks distribution of Apache Hadoop. <p>Provides the
                   following destinations:<ul id="ul_ffk_y3g_cs">
                     <li>Flume</li>
@@ -80,19 +78,19 @@
             </row>
             <row>
               <entry>Jython</entry>
-              <entry>2.7.0</entry>
+              <entry>2.7.x</entry>
               <entry>Use to process scripts written in Jython.<p>Provides a Jython Evaluator
                   processor. </p></entry>
             </row>
             <row>
               <entry>Kinesis</entry>
-              <entry>1.2.1</entry>
+              <entry>1.x</entry>
               <entry>Use to access Amazon Kinesis.<p>Provides a Kinesis origin and
                 destination.</p></entry>
             </row>
             <row>
               <entry>MongoDB</entry>
-              <entry>3.0.2</entry>
+              <entry>3.x</entry>
               <entry>Use to read from Mongo DB.<p>Provides a MongoDB origin.</p></entry>
             </row>
           </tbody>

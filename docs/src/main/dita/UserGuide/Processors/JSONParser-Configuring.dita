@@ -19,8 +19,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rmn_h52_zq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>JSON Parser Property</entry>

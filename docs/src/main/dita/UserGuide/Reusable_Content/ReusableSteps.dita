@@ -16,10 +16,10 @@
             <step id="CreatePipeline1">
                 <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
                     page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
-                <info>If you are in the <ph
+                <info>If you are working on another pipeline in the <ph
                         conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, use
-                    the <uicontrol>Toggle Library</uicontrol> icon to display the pipeline library,
-                    and click the <uicontrol>Create New Pipeline</uicontrol> icon.</info>
+                    the <uicontrol>Toggle Library Pane</uicontrol> icon to display the pipeline
+                    library, and click the <uicontrol>Create New Pipeline</uicontrol> icon.</info>
             </step>
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
@@ -36,7 +36,9 @@
                 </cmd>
             </step>
             <step id="StartPreview">
-                <cmd>From the pipeline canvas, click <uicontrol>Preview</uicontrol>.</cmd>
+                <cmd>Above the pipeline canvas, click the <uicontrol>Preview</uicontrol> icon:
+                        <image href="../Graphics/icon_Preview.png" id="image_tfg_tf4_zs" scale="70"
+                    />.</cmd>
                 <info>If the Preview icon is disabled, check the Issues list for unconnected stages
                     and required properties that are not defined.</info>
             </step>
@@ -47,7 +49,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_mjq_mfm_cs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.67*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Preview Property</entry>
@@ -141,7 +143,7 @@
             <step id="PickPipeline">
                 <cmd>Verify that the pipeline that you want to use appears in the pipeline canvas. </cmd>
                 <info>If it does not, select the pipeline from the <wintitle>Pipeline</wintitle>
-                    library.</info>
+                    library or the <wintitle>Home</wintitle> page.</info>
             </step>
             <step>
                 <cmd>
@@ -156,7 +158,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_vlh_bgh_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -200,7 +202,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_u44_lsn_xs">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -245,7 +247,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_blh_n2h_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -309,7 +311,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wjk_pfh_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -363,7 +365,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.08*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -441,7 +443,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.82*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Log Property</entry>
@@ -498,7 +500,7 @@
                                 <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
                                     <tgroup cols="2">
                                         <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                        <colspec colname="c2" colnum="2" colwidth="2.23*"/>
+                                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                                         <thead>
                                             <row>
                                                 <entry>Log4j Property</entry>
@@ -553,7 +555,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Text Property</entry>
@@ -567,7 +569,7 @@
                                         must be incorporated into the specified field. </entry>
                                 </row>
                                 <row>
-                                    <entry>Empty Line if No Text</entry>
+                                    <entry>Empty Line If No Text</entry>
                                     <entry>Creates an empty line when a record does not include the
                                         text field specified above. <p>When not selected, records
                                             without the specified text field are
@@ -592,7 +594,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>JSON Property</entry>
@@ -630,7 +632,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.53*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Delimited Property</entry>
@@ -674,7 +676,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Avro Property</entry>
@@ -712,8 +714,8 @@
                     <p>
                         <table frame="all" rowsep="1" colsep="1" id="KafkaTableProperties">
                             <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                <colspec colname="c2" colnum="2" colwidth="3.17*"/>
+                                <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                                 <thead>
                                     <row>
                                         <entry>Kafka Properties</entry>

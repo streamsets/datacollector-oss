@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following tips for help with origin stages and systems. The Hadoop FS origin has an error icon with the following message: Validation_0071 - Stage '&lt;stage id&gt;' does not support 'Standalone' ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following tips for help with origin stages and systems. Why isn't the Directory origin reading all of my files? Directory reads files based on their file name pattern in lexicographic ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="DC.Relation" scheme="URI" content="../Troubleshooting/Troubleshooting_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fwl_5cl_gs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -20,6 +20,36 @@
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_axb_spb_ys">
+ <h2 class="title topictitle2">Directory</h2>
+
+ <div class="body conbody">
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Why isn't the Directory origin reading all of my files?</dt>
+
+     <dd class="dd">Directory reads files based on their file name pattern in lexicographic increasing order.
+      If new files are not named in lexicographically increasing order, they are not read. </dd>
+
+     <dd class="dd">To ensure that newly arrived files are read, make sure the naming convention for the files
+      are lexicographically increasing. For example, filename-1.log, filename-2.log, etc. works fine
+      until filename-10.log. If filename-10.log arrives after Directory completes reading
+      filename-2.log, since it is lexicographically earlier than filename-2.log, it cannot be read
+      unless you reset the origin to read all files in the directory.</dd>
+
+     <dd class="dd">In this example, you could correct the issue by add leading zeros to the naming convention,
+      e.g. filename-00001.log, filename-00002.log,... filename-00009.log, filename-00010.log. This
+      works as long as the zeros allow enough padding for the expected number of files.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_ocw_b3g_vs">
  <h2 class="title topictitle2">Hadoop FS</h2>
 

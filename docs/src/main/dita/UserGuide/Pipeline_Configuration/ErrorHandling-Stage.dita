@@ -32,6 +32,7 @@
             stops the pipeline and logs information about the error. The error that stopped the
             pipeline displays as an alert in Monitor mode and as an error in the pipeline history.
           </dd>
+          <dd>Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
         </dlentry>
       </dl></p>
  </conbody>

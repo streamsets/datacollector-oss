@@ -13,7 +13,6 @@
       the compression type that you want to use them with:<dl>
         <dlentry>
           <dt>Using Snappy with the Hadoop FS destination</dt>
-          <dd>You can use Snappy with one version of Hadoop FS. </dd>
           <dd>To enable Snappy for Hadoop FS, perform the following steps:</dd>
           <dd>
             <ol id="ol_ufy_42m_xs">
@@ -21,14 +20,14 @@
                   libsnappy.so file is generally installed in the following directory: <filepath>
                     /usr/lib/hadoop/lib/native/</filepath>. </p><p>If the file is not installed at
                   this location, see the documentation for your Hadoop distribution for the location
-                  of the file or instructions on how to install the file. For details, see the
-                  documentation for your Hadoop distribution.</p>If you have multiple versions of
-                Hadoop FS installed, make sure to locate the file for the version you want to use. </li>
+                  of the file or instructions on how to install the file. </p>If you have multiple
+                versions of Hadoop FS installed, make sure to locate the file for the version you
+                want to use. </li>
               <li>In the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                environment file, set the Java system property java.library.path to the location of
-                the Snappy native library. Add the property to the SDC_JAVA_OPTS environment
-                variable as
+                environment file, set the Java system property <codeph>java.library.path</codeph> to
+                the location of the Snappy native library. Add the property to the SDC_JAVA_OPTS
+                environment variable as
                   follows:<codeblock>-Djava.library.path=&lt;path to Snappy native library></codeblock><p>For
                   information about configuring the SDC_JAVA_OPTS environment variable, see <xref
                     href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
@@ -38,7 +37,6 @@
         </dlentry>
         <dlentry>
           <dt>Using LZO with the Hadoop FS destination</dt>
-          <dd>You can use LZO with one version of Hadoop FS. </dd>
           <dd>To enable LZO for Hadoop FS, perform the following steps:<ol id="ol_l3s_fjm_xs">
               <li>If necessary, install the Hadoop LZO native library. <p>If you have multiple
                   versions of Hadoop FS installed, make sure you install the version that you want

@@ -9,14 +9,14 @@
    record. </p>
   <section>
    <title>Sample Conditions</title>
-   <p>The following conditions are common scenarios that you might adapt:<dl>
+   <p>The following conditions are common scenarios that you might adapt for your use:<dl>
      <dlentry>
       <dt><codeph>${str:contains(record:value("/line"), "ERROR")}</codeph></dt>
       <dd>Checks the data in the Line field for the text, "ERROR". </dd>
       <dd>If the field contains "ERROR", the record passes to the stream. </dd>
      </dlentry>
      <dlentry>
-      <dt><codeph>${str:contains(str:toLower(record:value("/message")), "fatal")</codeph></dt>
+      <dt><codeph>${str:contains(str:toLower(record:value("/message")), "fatal")}</codeph></dt>
       <dd>Lowercases the string values in the Message field, and then checks the data in the field
        for "fatal". </dd>
       <dd>If the field contains "fatal", the record passes to the stream. </dd>

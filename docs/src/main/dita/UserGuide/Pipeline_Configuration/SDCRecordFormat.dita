@@ -19,7 +19,6 @@
    </ul></p>
   <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
         <li>Flume</li>
-    <li>Hadoop FS</li>
     <li>Kafka Producer</li>
         <li>Kinesis Producer</li>
    </ul></p>

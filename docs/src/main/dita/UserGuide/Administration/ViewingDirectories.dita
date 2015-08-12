@@ -29,35 +29,35 @@
      </thead>
      <tbody>
       <row>
-       <entry>Configuration Directory</entry>
+       <entry>Run Time</entry>
+       <entry>Base directory for <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        executables and related files.</entry>
+       <entry>&lt;SDCinstalldir></entry>
+      </row>
+      <row>
+       <entry>Configuration</entry>
        <entry>The <ph
          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        properties file (sdc.properties), and related help realm properties files and keystore
+        configuration file (sdc.properties), and related help realm properties files and keystore
         files. <p>Also includes the logj4 properties file.</p></entry>
        <entry>&lt;SDCinstalldir>/etc</entry>
       </row>
       <row>
-       <entry>Data Directory</entry>
+       <entry>Data</entry>
        <entry>Pipeline configuration and run details. </entry>
        <entry>&lt;SDCinstalldir>/data</entry>
       </row>
       <row>
-       <entry>Log Directory</entry>
+       <entry>Log</entry>
        <entry><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         log file, sdc.log.</entry>
        <entry>&lt;SDCinstalldir>/log</entry>
       </row>
       <row>
-       <entry>Resources Directory</entry>
+       <entry>Resources</entry>
        <entry>Directory for runtime resource files. </entry>
        <entry>&lt;SDCinstalldir>/resources</entry>
-      </row>
-      <row>
-       <entry>Run Time Directory</entry>
-       <entry>Base directory for <ph
-         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        executables and related files.</entry>
-       <entry>&lt;SDCinstalldir></entry>
       </row>
      </tbody>
     </tgroup>

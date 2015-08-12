@@ -3,7 +3,7 @@
 <concept id="concept_ltv_r3l_5q">
  <title>File Processing</title>
  <shortdesc>The Directory origin processes files in a directory that match the configured file name
-                pattern. </shortdesc>
+                pattern in lexicographically ascending order.</shortdesc>
  <conbody>
   <p><indexterm>file processing<indexterm>Directory</indexterm></indexterm><indexterm>Directory
                                         origin<indexterm>file
@@ -13,14 +13,21 @@
                                         pattern<indexterm>Directory
                         property</indexterm></indexterm>When you define a first file to process, it
                         starts processing with the specified file and continues processing files in
-                        naturally ascending order. When you do not specify a first file, Directory
-                        processes all files in the directory with that match the file name
+                        lexicographically ascending order. When you do not specify a first file,
+                        Directory processes all files in the directory that match the file name
                         pattern.</p>
                 <p>Configure a first file for processing when you want Directory to ignore older
                         files in the directory.</p>
-  <p>For example, the file directory includes the following files: File.log, File1.log, File2.log,
-                        File3.log. If you configure File2.log as the first file, Directory begins
-                        with that file and continues to File3.log. It does not process the earlier
-                        files. </p>
+  <p>For example, a file directory includes the following files: File_001.log, File_002.log,
+                        File_003.log. If you configure File_002.log as the first file, Directory
+                        begins with that file and continues to File_003.log. It does not process
+                        File_001.log. </p>
+                <p>
+                        <note type="tip">Note that lexicographically ascending order reads the
+                                numbers 1 through 12 as follows:
+                                <codeblock>1, 11, 12, 2, 3, 4... 9</codeblock></note>
+                </p>
+                <p>You can add leading zeros to achieve a file naming convention for lexicographical
+                        order: <codeblock>0001, 0002, 0003... 0009, 0010, 0011, 0012</codeblock></p>
  </conbody>
 </concept>

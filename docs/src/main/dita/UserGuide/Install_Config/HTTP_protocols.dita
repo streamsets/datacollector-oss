@@ -17,7 +17,7 @@
       warning for self-signed certificates. </p>
     <p>When you configure the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-      HTTPS, you have the <ph
+      HTTPS, you can have the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> redirect
       HTTP requests to HTTPS or to ignore them.</p>
   <p>When you generate a SSL certificate, use the following files: <dl>

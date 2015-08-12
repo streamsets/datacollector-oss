@@ -19,7 +19,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_dr1_hld_5s">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.35*"/>
+                            <colspec colname="c2" colnum="2" colwidth="4*"/>
                             <thead>
                                 <row>
                                     <entry>Output Field</entry>
@@ -52,7 +52,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_z4k_pld_5s">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.65*"/>
+                            <colspec colname="c2" colnum="2" colwidth="4.5*"/>
                             <thead>
                                 <row>
                                     <entry>Output Field</entry>

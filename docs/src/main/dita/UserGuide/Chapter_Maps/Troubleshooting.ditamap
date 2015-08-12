@@ -18,6 +18,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Troubleshooting/Origins-Directory.dita"/>
    <topicref href="../Troubleshooting/Origins-HadoopFS.dita"/>
    <topicref href="../Troubleshooting/Origins-JDBC.dita"/>
    <topicref href="../Troubleshooting/Origins-KafkaConsumer.dita"/>
@@ -28,6 +29,7 @@
    </topicmeta>
    <topicref href="../Troubleshooting/Destinations-Cassandra.dita"/>
    <topicref href="../Troubleshooting/Destinations-HadoopFS.dita"/>
+   <topicref href="../Troubleshooting/Destinations-HBase.dita"/>
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Performance.dita">
@@ -35,6 +37,9 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Troubleshooting/Monitoring.dita">  <topicmeta>
+   <shortdesc/>
+  </topicmeta></topicref>
   <topicref href="../Troubleshooting/ClusterMode.dita">
    <topicmeta>
     <shortdesc/>

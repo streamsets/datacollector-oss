@@ -6,7 +6,8 @@
   <p><indexterm>JavaScript Evaluator processor<indexterm>scripting
         objects</indexterm></indexterm><indexterm>scripting objects<indexterm>JavaScript
           Evaluator</indexterm></indexterm>You can use the following scripting objects in the
-      JavaScript Evaluator:<dl>
+      JavaScript Evaluator:<draft-comment author="Loretta">port changes over to Jython Scripting
+        Objects</draft-comment><dl>
         <dlentry>
           <dt>records array</dt>
           <dd>An array of records to process. The records object includes different elements based
@@ -19,18 +20,29 @@
           <dt>record</dt>
           <dd>An object that represents a single record. Includes a single <codeph>value</codeph>
             element. The <codeph>value</codeph> element contains the data for the record. </dd>
-          <dd>Map and list record fields are mapped to to JavaScript maps and arrays,
+          <dd>Map and list record fields are mapped to JavaScript maps and arrays,
             respectively.</dd>
+        </dlentry>
+        <dlentry>
+          <dt>log</dt>
+          <dd>An object to write messages to the log. Includes four methods:
+            <codeph>info()</codeph>, <codeph>warn()</codeph>, <codeph>debug()</codeph>, and
+              <codeph>trace()</codeph>. </dd>
+          <dd>The signature of the 4 methods is as follows:
+            <codeblock>(message-template, arguments…) </codeblock>The message template can have
+            positional variables denoted by curly brackets: { }. The arguments are replaced in the
+            message template curly brackets in positional manner, i.e., this is the first argument
+            in the first { } occurrence, and so on.</dd>
         </dlentry>
         <dlentry>
           <dt>out</dt>
           <dd>An object that writes the record to the output batch. Includes a
-              <codeph>write(records)</codeph> element.</dd>
+              <codeph>write(Record)</codeph> method.</dd>
         </dlentry>
         <dlentry>
           <dt>err</dt>
           <dd>An object that passes error records to the processor for error handling. Includes a
-              <codeph>write(records)</codeph> element with an error message parameter.</dd>
+              <codeph>write(Record, message)</codeph> method.</dd>
         </dlentry>
       </dl></p>
  </conbody>

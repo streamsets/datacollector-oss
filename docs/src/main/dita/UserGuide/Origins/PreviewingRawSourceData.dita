@@ -35,7 +35,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_eh1_q2f_xq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.53*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Kafka Raw Preview Property</entry>

@@ -23,12 +23,10 @@
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
                             id="image_jnr_wtk_5s" scale="70"/></p></info>
-                <info><draft-comment author="Loretta">Will retake screenshot - new icons and Tucu
-                        rewrote the Creation_009 error message for me.</draft-comment>At the top of
-                    the canvas, the Pipeline Creation Help Bar indicates that the origin is missing
-                    and offers a list of origins to choose from. On the right, the stage library
-                    displays a list of available origins. You can use the drop-down menu to change
-                    the stages that display.</info>
+                <info>At the top of the canvas, the Pipeline Creation Help Bar indicates that the
+                    origin is missing and offers a list of origins to choose from. On the right, the
+                    stage library displays a list of available origins. You can use the drop-down
+                    menu to change the stages that display.</info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab. And
@@ -64,7 +62,7 @@
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>
-                                    <entry>Let's reduce the files size to something more managable,
+                                    <entry>Let's reduce the files size to something more manageable,
                                         such as 5 or 1 MB.</entry>
                                 </row>
                             </tbody>

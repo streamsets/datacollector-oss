@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, update ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, update the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, update the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -16,15 +16,15 @@
  
  <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span> provides several roles and a default user account based on each role. You can change or
-    remove these accounts. You can also create new user accounts. For increased security, update the
-    passwords for the default accounts.  A production deployment of the <span class="ph">Data
+    remove these accounts. You can also create new user accounts. For increased security, change the
+    passwords for the default accounts. A production deployment of the <span class="ph">Data
                   Collector</span> should
     integrate with intranet authentication.</p>
 
   <p class="p"><span class="ph">Data
                   Collector</span> roles
-      define the tasks that a user can perform. When you configure a user, assign the user one or
-      more roles. Users can perform any task that their roles allow.</p>
+      define the tasks that a user can perform. When you configure a user, assign it one or more
+      roles.  Users can perform any task that their roles allow.</p>
 
   <div class="p">The <span class="ph">Data
                   Collector</span>
@@ -86,8 +86,9 @@
     
     <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span>
-        includes several default users. You can customize the default users or create additional
-        Data Collector users for increased security.</p>
+        includes several default users - one for each role. For increased security, you can
+        customize the default users, delete them, or create additional Data Collector
+        users.</p>
 
         <div class="section context">
             <p class="p">Configure users in the
@@ -97,22 +98,30 @@
             <p class="p">To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
 
-            <div class="p">For basic and form authentication, you can hash the password alone. For example:
-                <pre class="pre codeblock">echo -n "&lt;password&gt;" | md5</pre>
+            <div class="p">For basic and form authentication, hash the password alone. For example:
+                <pre class="pre codeblock">$ echo -n "&lt;password&gt;" | md5</pre>
 </div>
 
-            <div class="p">For digest authentication, you can hash the combination of &lt;user
-                name&gt;:&lt;realm&gt;:&lt;password&gt;. For example:
-                <pre class="pre codeblock">echo -n "&lt;user name&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
+            <p class="p">For digest authentication, hash the combination of &lt;user
+                name&gt;:&lt;realm&gt;:&lt;password&gt;, where &lt;realm&gt; is the authentication type. </p>
+
+            <div class="p">For example, you might use the following
+                command:<pre class="pre codeblock">$ echo -n "&lt;user name&gt;:&lt;realm&gt;:&lt;password&gt;" | md5</pre>
 </div>
+
+            <p class="p">as follows:</p>
+
+            <div class="p">
+                <pre class="pre codeblock">$ echo -n "jdoe:digest-realm:JdoePass" | md5</pre>
+
+            </div>
 
         </div>
 
         <ol class="ol steps" id="task_nsz_lp4_1r__steps_ody_3q4_1r"><li class="li step stepexpand">
                 <span class="ph cmd">To configure a user, modify the properties file for the type of authentication
                     that you use. </span>
-                <div class="itemgroup info">The file name is <span class="ph filepath">&lt;authentication
-                        type&gt;-realm.properties</span>. </div>
+                <div class="itemgroup info">The file name is <span class="ph filepath">&lt;realm&gt;.properties</span>. </div>
                 <div class="itemgroup info">The file is located in the following directory:
                         <span class="ph filepath">&lt;SDCinstalldir&gt;/etc/</span>. When the <span class="ph">Data
                   Collector</span> is installed as a service, the file is located in the following directory:
@@ -121,19 +130,12 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">For each new user, add a user definition using the following format:</span>
                 <div class="itemgroup info">
-                    <pre class="pre codeblock">&lt;user name&gt;: &lt;password&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...]</pre>
+                    <pre class="pre codeblock">&lt;user name&gt;: MD5:&lt;md5-text&gt;, user, &lt;role&gt; [, &lt;additional role&gt;, &lt;additional role&gt;...]</pre>
 
                 </div>
                 <div class="itemgroup info">
                     <div class="note note"><span class="notetitle">Note:</span> Assign one or more roles for each user. Be sure to include "user" in every
                         user definition.</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">To store a hashed password, prefix it with MD5, as follows: </span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">MD5:&lt;hashed password&gt;</pre>
 
                 </div>
             </li>

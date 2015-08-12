@@ -25,7 +25,7 @@
                             <colspec colname="c2" colnum="2" colwidth="2.15*"/>
                             <thead>
                                 <row>
-                                    <entry>Kinesis Consumer Property</entry>
+                                    <entry>Kinesis Property</entry>
                                     <entry/>
                                 </row>
                             </thead>

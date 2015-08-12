@@ -51,8 +51,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
       directories at regular intervals based on minutes or seconds. The intervals should be a
       submultiple or integer factor of 60. For example, you can create directories every 15 minutes
       or 30 seconds. </dd>
-     <dd>Use the every() function to replace the smallest datetime variable used in the
-      template.</dd>
+     <dd>Use the <codeph>every()</codeph> function to replace the smallest datetime variable used in
+      the template.</dd>
      <dd>For example, the following directory template creates directories every 5
       minutes:<codeblock>/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</codeblock></dd>
      <dd>For details about the <codeph>every()</codeph> function, see <xref
@@ -61,8 +61,8 @@ ${YY()}_${MM()}_${DD()}</codeblock>
     <dlentry>
      <dt>record:valueOrDefault function</dt>
      <dd>You can use the following expression to use the value of a field and the specified default
-      value if the field does ont exist: ${record:valueOrDefault("/&lt;field name>", &lt;default
-      value>)}.</dd>
+      value if the field does not exist:
+      <codeblock>${record:valueOrDefault("/&lt;field name>", &lt;default value>)}</codeblock></dd>
      <dd>For example, the following directory template creates a directory based on the product
       field every day, and if the product field is empty, uses Misc in the directory path:
       <codeblock>/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</codeblock></dd>
