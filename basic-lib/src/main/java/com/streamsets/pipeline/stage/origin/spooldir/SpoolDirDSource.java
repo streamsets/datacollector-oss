@@ -139,7 +139,7 @@ public class SpoolDirDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "File Name Pattern",
       description = "A glob or regular expression that defines the pattern of the file names in the directory. " +
-                    "Files are processed in naturally ascending order.",
+                    "Files are processed in lexicographically increasing order.",
       displayPosition = 40,
       group = "FILES"
   )
