@@ -17,6 +17,7 @@ import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
 
+import io.swagger.models.Info;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
@@ -53,6 +54,13 @@ public class RestAPIResourceConfig extends ResourceConfig {
     beanConfig.setBasePath("/rest");
     beanConfig.setResourcePackage(RestAPI.class.getPackage().getName());
     beanConfig.setScan(true);
+    beanConfig.setTitle("Data Collector RESTful API");
+
+    Info info = new Info();
+    info.setTitle("Data Collector RESTful API");
+    info.setDescription("An Enterprise-Grade Approach to Managing Big Data in Motion");
+    info.setVersion("1.0.0");
+    beanConfig.setInfo(info);
   }
 
 }
