@@ -61,15 +61,15 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
       } else if (!record.has(toFieldName)) {
         // Easy case, which is a straight rename
         Field fromField = record.get(fromFieldName);
-        if (!record.has(toFieldName)) {
-          if (isListOrMapField(fromField)) {
-            if (null == record.set(toFieldName, fromField)) {
-              throw new OnRecordErrorException(Errors.FIELD_MERGER_04);
-            }
+        if (isListOrMapField(fromField)) {
+          try {
+            record.set(toFieldName, fromField);
             record.delete(fromFieldName);
-          } else {
-            throw new OnRecordErrorException(Errors.FIELD_MERGER_03);
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(Errors.FIELD_MERGER_04);
           }
+        } else {
+          throw new OnRecordErrorException(Errors.FIELD_MERGER_03);
         }
       } else {
         // Both fields exist, and we can try to merge
@@ -85,14 +85,22 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
             if (record.has(newPath) && !overwriteExisting) {
               fieldsRequiringOverwrite.add(toFieldName);
             } else {
-              record.set(newPath, entry.getValue());
+              try {
+                record.set(newPath, entry.getValue());
+              } catch (IllegalArgumentException e) {
+                throw new OnRecordErrorException(Errors.FIELD_MERGER_04);
+              }
             }
           }
         } else {
           // Type is LIST
           List<Field> list = toField.getValueAsList();
           list.addAll(fromField.getValueAsList());
-          record.set(toFieldName, Field.create(list));
+          try {
+            record.set(toFieldName, Field.create(list));
+          } catch (IllegalArgumentException e) {
+            throw new OnRecordErrorException(Errors.FIELD_MERGER_04);
+          }
         }
 
         record.delete(fromFieldName);
