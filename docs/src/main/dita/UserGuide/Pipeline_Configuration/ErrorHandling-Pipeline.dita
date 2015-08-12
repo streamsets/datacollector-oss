@@ -22,6 +22,7 @@
             includes the records in error record counts and metrics.</dd>
           <dd>You define the directory to use and the maximum file size. Error files are named based
             on the File Prefix pipeline property. </dd>
+          <dd>Write to file is not supported for cluster mode pipelines at this time.</dd>
         </dlentry>
         <dlentry>
           <dt>Write to Kafka</dt>

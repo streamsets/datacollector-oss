@@ -2,9 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tyr_2zx_rr">
  <title>Snapshots</title>
- <shortdesc>A snapshot is a set of data captured as it moves through a running pipeline. The <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can save up
-    to ten snapshots. You can capture snapshots when you monitor a pipeline. </shortdesc>
+ <shortdesc>A snapshot is a set of data captured as it moves through a running pipeline. You can
+    capture snapshots when you monitor a pipeline. </shortdesc>
  <conbody>
   <p><indexterm>snapshots<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>snapshots
           of data</indexterm></indexterm>View a snapshot to verify how the pipeline processes data.

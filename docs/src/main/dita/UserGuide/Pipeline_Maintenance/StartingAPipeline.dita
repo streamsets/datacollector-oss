@@ -15,18 +15,13 @@
                 /> starts the pipeline from where it last stopped by default. You can reset the
                 origin to read all available data.</p>
             <p>A Kafka Consumer origin starts processing data based on the offset passed from the
-                Kafka ZooKeeper. </p>
+                Kafka ZooKeeper. <ol id="ol_xff_cms_zs">
+                    <li>From the <wintitle>Home</wintitle> page, click the
+                            <uicontrol>More</uicontrol> icon for the pipeline and then click
+                            <uicontrol>Start</uicontrol>. Or to start a pipeline in the pipeline
+                        canvas, click the <uicontrol>Start</uicontrol> icon.<p>If the Start icon is
+                            not enabled, the pipeline is not valid.</p></li>
+                </ol></p>
         </context>
-        <steps id="steps_f5j_mzr_5q">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
-                <cmd/>
-            </step>
-            <step>
-                <cmd>To start the pipeline, click the <uicontrol>Start</uicontrol> icon.</cmd>
-                <info>If the Start icon is not enabled, the pipeline is not valid or the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> is running a different pipeline.</info>
-            </step>
-        </steps>
     </taskbody>
 </task>

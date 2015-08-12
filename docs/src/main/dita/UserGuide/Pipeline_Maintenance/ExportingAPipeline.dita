@@ -14,9 +14,9 @@
         </context>
         <steps id="steps_cns_ztr_5q">
             <step>
-                <cmd>In the <wintitle>Pipeline</wintitle> library, click the
-                        <uicontrol>Actions</uicontrol> icon for the pipeline that you want to
-                    export.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
+                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
+                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Export</uicontrol>.</cmd>

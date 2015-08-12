@@ -13,7 +13,7 @@
       the record based on the pipeline error record handling configuration. </p>
     <p>When you configure a pipeline, be aware that stage error handling takes precedence over
       pipeline error handling. That is, a pipeline might be configured to write error records to
-      file, but if a stage is configured to discard error records, those records are discarded. You
+      file, but if a stage is configured to discard error records those records are discarded. You
       might use this functionality to reduce the types of error records that are saved for review
       and reprocessing. </p>
     <p>Note that records missing required fields do not enter the stage. They are passed directly to

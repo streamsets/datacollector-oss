@@ -20,10 +20,10 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wvy_4xx_nr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Jython Property</entry>
+                                    <entry>Jython Evaluator Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

@@ -60,7 +60,7 @@
   <p class="p">For example, in the following pipeline, the Stream Selector
    stage sends data with null values to the Value Replacer stage:</p>
 
-  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png"></img></p>
+  <p class="p"><img class="image" id="concept_w3y_cry_5q__image_kxc_jty_5q" src="../Graphics/MergingStreams.png" height="135" width="702"></img></p>
 
   <p class="p">The data from the Stream Selector default stream and all data from Value Replacer pass to
    Expression Evaluator for further processing, but in no particular order and with no record
@@ -139,8 +139,6 @@
   <div class="p">You can use the following destinations to write SDC Record data:<ul class="ul" id="concept_qkk_mwk_br__ul_l1m_52b_wr">
         <li class="li">Flume</li>
 
-    <li class="li">Hadoop FS</li>
-
     <li class="li">Kafka Producer</li>
 
         <li class="li">Kinesis Producer</li>
@@ -180,9 +178,9 @@
   <p class="p">For example, the following delimited rows:</p>
 
   <div class="p">
-   <pre class="pre codeblock"><strong class="ph b">TransactionID,Type,UserID
-0003420303,04,362
-0003420304,08,1008</strong></pre>
+   <pre class="pre codeblock"><span class="ph uicontrol">TransactionID,Type,UserID
+</span>0003420303,04,362
+0003420304,08,1008</pre>
 
   </div>
 
@@ -223,7 +221,7 @@
 
   <div class="p">With the User ID header index, you can use the <samp class="ph codeph">record:dValueAt(&lt;header
                 index&gt;)</samp> function to return the same information, as
-            follows:<pre class="pre codeblock">${record:dValueAt(2)</pre>
+            follows:<pre class="pre codeblock">${record:dValueAt(2)}</pre>
 </div>
 
   <div class="p">But if you prefer, you can use the field path to the data with the standard record function,
@@ -249,8 +247,9 @@
  <h2 class="title topictitle2">Control Character Removal</h2>
 
  
- <div class="body conbody"><p class="shortdesc">You can use several stages to remove control characters, such as escape or
-    end-of-transmission, from data. Remove control characters to avoid creating invalid records. </p>
+ <div class="body conbody"><p class="shortdesc">You can use several stages to remove control characters - such as escape or
+    end-of-transmission characters - from data. Remove control characters to avoid creating invalid
+    records. </p>
 
   <div class="p">When the <span class="ph">Data
                   Collector</span> removes

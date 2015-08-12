@@ -2,8 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hfs_dkm_js">
  <title>Control Character Removal</title>
- <shortdesc>You can use several stages to remove control characters, such as escape or
-    end-of-transmission, from data. Remove control characters to avoid creating invalid records. </shortdesc>
+ <shortdesc>You can use several stages to remove control characters - such as escape or
+    end-of-transmission characters - from data. Remove control characters to avoid creating invalid
+    records. </shortdesc>
  <conbody>
   <p><indexterm>pipeline design<indexterm>control character
         removal</indexterm></indexterm><indexterm>control characters<indexterm>removing from

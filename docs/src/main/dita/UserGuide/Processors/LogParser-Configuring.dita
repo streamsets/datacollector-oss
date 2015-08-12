@@ -19,11 +19,11 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_egn_2qw_fs">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.7*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
-                                    <entry>Parse Properties</entry>
+                                    <entry>Log Parser Properties</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>

@@ -14,7 +14,7 @@
   <codeblock>${record:dValue('UserID')}</codeblock>
   <p>With the User ID header index, you can use the <codeph>record:dValueAt(&lt;header
                 index>)</codeph> function to return the same information, as
-            follows:<codeblock>${record:dValueAt(2)</codeblock></p>
+            follows:<codeblock>${record:dValueAt(2)}</codeblock></p>
   <p>But if you prefer, you can use the field path to the data with the standard record function,
                 <codeph>record:value('&lt;field
             path>')</codeph>:<codeblock>${record:value('[2]/value')}</codeblock></p>

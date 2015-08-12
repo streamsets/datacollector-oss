@@ -8,8 +8,9 @@
             up, export the pipeline before you delete it. </context>
         <steps id="steps_wdt_twr_5q">
             <step>
-                <cmd>In the <wintitle>Pipeline</wintitle> library, click the
-                        <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
+                    icon for the pipeline. Or, in the <wintitle>Pipeline</wintitle> library, click
+                    the <uicontrol>Actions</uicontrol> icon for the pipeline.</cmd>
             </step>
             <step>
                 <cmd>Click <uicontrol>Delete</uicontrol>.</cmd>

@@ -4,8 +4,8 @@
  <title>Users and Roles</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
     /> provides several roles and a default user account based on each role. You can change or
-    remove these accounts. You can also create new user accounts. For increased security, update the
-    passwords for the default accounts.  A production deployment of the <ph
+    remove these accounts. You can also create new user accounts. For increased security, change the
+    passwords for the default accounts. A production deployment of the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> should
     integrate with intranet authentication.</shortdesc>
  <conbody>
@@ -13,8 +13,8 @@
           roles</indexterm></indexterm><indexterm>roles<indexterm>for
         users</indexterm></indexterm><ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles
-      define the tasks that a user can perform. When you configure a user, assign the user one or
-      more roles. Users can perform any task that their roles allow.</p>
+      define the tasks that a user can perform. When you configure a user, assign it one or more
+      roles.  Users can perform any task that their roles allow.</p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       provides the following roles: <dl>
         <dlentry>

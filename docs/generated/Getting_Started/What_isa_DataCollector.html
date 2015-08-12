@@ -71,8 +71,8 @@
 
   <p class="p">What do you want it to do? Let's say you want to read XML files from a directory and remove the
    newline characters before moving it into Hive. To do this, you start with a Directory origin
-   stage and configure it to point to your source files. (You can also have the stage archive
-   processed files and write files that were not fully processed to a separate directory for
+   stage and configure it to point to the source file directory. (You can also have the stage
+   archive processed files and write files that were not fully processed to a separate directory for
    review.)</p>
 
   <p class="p">To remove the newline characters, connect Directory to an Expression Evaluator processor and
@@ -82,11 +82,11 @@
    destination stage. You configure the stage to write the data as a JSON object (though you can use
    other data formats as well). </p>
 
-  <p class="p">You preview data to view source data move through the pipeline and notice that some fields have
-   missing data. So you add a Value Replacer to replace null values in those fields. </p>
+  <p class="p">You preview data to see how source data moves through the pipeline and notice that some fields
+   have missing data. So you add a Value Replacer to replace null values in those fields. </p>
 
   <p class="p">Now that the data flow is done, you configure the pipeline error record handling to write error
-   records to file, and you configure an email alert to let you know when the pipeline generates
+   records to a file, and you configure an email alert to let you know when the pipeline generates
    more than 100 error records. Then, you start the pipeline and the <span class="ph">Data
                   Collector</span> goes to work. </p>
 
@@ -104,7 +104,7 @@
   <p class="p">The <span class="ph">Data
                   Collector</span> is a
    powerful tool, but we're making it as simple as possible to use. So give it a try, click the Help
-   icon for information, and call us if you need a hand. </p>
+   icon for information, and contact us if you need a hand. </p>
 
  </div>
 

@@ -19,13 +19,14 @@
         <steps id="steps_gsd_wsf_tq">
             <step>
                 <cmd id="AccessDC">To access the <ph>Data Collector</ph> console, enter the
-                    following text in the address bar of your browser: </cmd>
+                    following URL in the address bar of your browser: </cmd>
                 <info>
                     <codeblock>localhost:18630</codeblock>
-                    <p>If you edited the default <ph
+                    <p>If you changed the default <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration, use the following format:
-                        <codeblock>&lt;host name>:&lt;port no></codeblock></p>
+                        /> port number in the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> configuration file, use that number instead. </p>
                 </info>
             </step>
             <step id="LoginDC">
@@ -34,7 +35,7 @@
                 <info>If you created a custom login, feel free to use it.</info>
             </step>
             <step>
-                <cmd>On the <wintitle>Get Started</wintitle> page, click <uicontrol>Create
+                <cmd>On the <wintitle>Get Started</wintitle> page, click <uicontrol>Create New
                         Pipeline</uicontrol>.</cmd>
             </step>
             <step>

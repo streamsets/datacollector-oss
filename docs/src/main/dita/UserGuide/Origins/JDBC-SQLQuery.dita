@@ -12,16 +12,16 @@
             Include both in the WHERE clause of the query. </dd>
         </dlentry>
         <dlentry>
-          <dt>Use ${OFFSET} to represent the offset value</dt>
+          <dt>Use the OFFSET constant to represent the offset value</dt>
           <dd>In the WHERE clause, use ${OFFSET} to represent the offset value. </dd>
           <dd>For example, when you start a pipeline, the following query returns all data from the
-            table where the data in the offset column is greater than the initial offset value.
-              <codeblock>SELECT * FROM &lt;tablename> WHERE &lt;offset column> > ${OFFSET}</codeblock><note
+            table where the data in the offset column is greater than the initial offset
+              value:<codeblock>SELECT * FROM &lt;tablename> WHERE &lt;offset column> > ${OFFSET}</codeblock><note
               type="tip">When the offset values are strings, enclose ${OFFSET} in single quotation
               marks.</note></dd>
         </dlentry>
         <dlentry>
-          <dt>In the ORDER BY clause, include the offset column as the first column.</dt>
+          <dt>In the ORDER BY clause, include the offset column as the first column</dt>
           <dd>To avoid returning duplicate data, use the offset column as the first column in the
             ORDER BY clause.</dd>
           <dd>

@@ -16,7 +16,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.04*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>General Property</entry>
@@ -56,8 +56,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.2*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>Kafka Property</entry>
@@ -169,7 +169,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ppl_dhz_3r">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Text Property</entry>
@@ -194,7 +194,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wsk_ccp_1r">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>JSON Property</entry>
@@ -228,7 +228,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_p3s_l42_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.13*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Delimited Property</entry>
@@ -262,7 +262,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_edn_jsg_hr">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.03*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>XML Property</entry>
@@ -289,7 +289,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_a3f_bk3_ks">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.17*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Avro Property</entry>

@@ -3,13 +3,12 @@
 <concept id="concept_gbn_4lv_1r">
  <title>Installation and Configuration</title>
  <shortdesc>You can install the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to be
-    started manually or to run as a service. </shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and start it
+    manually or run it  as a service. </shortdesc>
   <conbody>
     <p>After installation, you can optionally install additional stages, create additional users,
       customize the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
-      configure the environment. You can also install additional instances of the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</p>
+      configure the environment.</p>
   </conbody>
 </concept>

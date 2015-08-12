@@ -37,7 +37,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When keytool requests additional information about your origanization, enter
+                <cmd>When keytool requests additional information about your organization, enter
                     the information.</cmd>
             </step>
             <step>

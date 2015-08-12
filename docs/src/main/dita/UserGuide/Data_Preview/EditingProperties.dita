@@ -3,19 +3,21 @@
 <task id="task_dyy_k3l_5s">
     <title>Editing Properties</title>
     <shortdesc>In data preview, you can edit stage properties to see how the changes affect preview
-        data. </shortdesc>
+        data. For example, you might edit the expression in an Expression Evaluator to see verify
+        how the expression alters data. </shortdesc>
     <taskbody>
-        <context><p><indexterm>data preview<indexterm>editing properties</indexterm></indexterm>For
-                example, you might edit the expression in an Expression Evaluator to see verify how
-                the expression alters data. </p>When you edit properties, you can test the change
-            with the existing preview data or you can refresh the preview data. <p>When changing
-                properties in the origin, refresh the preview data to test your changes. Refreshing
-                the preview data allows the <ph
+        <context>
+            <p><indexterm>data preview<indexterm>editing properties</indexterm></indexterm>When you
+                edit properties, you can test the change with the existing preview data or you can
+                refresh the preview data. </p>
+            <p>When changing properties in the origin, refresh the preview data to test your
+                changes. Refreshing the preview data allows the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to use the latest origin properties to process preview data instead of using the
                 cached data.<note>Unlike changes to data, you cannot automatically revert property
                     changes. Manually revert any changes that you do not want to
-                preserve.</note></p></context>
+                preserve.</note></p>
+        </context>
         <steps id="steps_sx5_c3l_5s">
             <step>
                 <cmd>To edit stage properties while in data preview, select the stage you want to

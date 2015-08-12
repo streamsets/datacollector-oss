@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_dpv_chb_ys">
+ <title>Monitoring</title>
+ <shortdesc>Use the following tips for help with monitoring the pipeline:</shortdesc>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Why is snapshot not capturing any data?</dt>
+     <dd>When you request a snapshot, the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> tries to
+      capture the next batch of data that moves through the pipeline. It skips any data that might
+      be passing through the pipeline as you submit the request so it can capture a full batch of
+      data. </dd>
+     <dd>But if data is slow to arrive at the origin, and the origin passes an empty batch
+      (triggered by the batch wait time property), the captured batch might be empty. If this
+      occurs, try capturing another snapshot.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

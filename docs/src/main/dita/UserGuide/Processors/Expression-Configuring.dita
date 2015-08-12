@@ -18,7 +18,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_zfp_zy4_yq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.63*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Expression Evaluator Property</entry>

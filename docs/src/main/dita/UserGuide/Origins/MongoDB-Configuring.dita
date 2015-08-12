@@ -18,8 +18,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_mh4_bxs_ns">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.63*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
                                     <entry>MongoDB Property</entry>

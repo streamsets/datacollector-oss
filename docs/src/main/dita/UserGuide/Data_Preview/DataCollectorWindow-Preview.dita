@@ -11,8 +11,8 @@
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
       during data preview mode:</p>
-  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq"/><table frame="all"
-        rowsep="1" colsep="1" id="table_nrm_fvt_sq">
+  <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="85"/><table
+        frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">
           <colspec colname="c1" colnum="1" colwidth="1*"/>
           <colspec colname="c2" colnum="2" colwidth="1.83*"/>
@@ -76,32 +76,30 @@
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevPrevStage.png" id="image_usm_kxn_tq"
-               /></entry>
+                /></entry>
               <entry>Previous Stage icon</entry>
               <entry>Moves the preview to the previous stage. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevNextStage.png" id="image_jf4_3xn_tq"
-               /></entry>
+                /></entry>
               <entry>Next Stage icon</entry>
               <entry>Moves the preview to the next stage.</entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br" 
-                /></entry>
+              <entry><image href="../Graphics/icon_PrevRefresh.png" id="image_cfn_5mr_br"/></entry>
               <entry>Refresh Preview icon</entry>
               <entry>Provides a fresh set of data from the origin.</entry>
             </row>
             <row>
-              <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"
-                  /></entry>
+              <entry><image href="../Graphics/icon_PreviewRerun.png" id="image_nzs_2nr_br"/></entry>
               <entry>Run Preview with Changes icon</entry>
               <entry>Runs the data preview using changed data. Use to see how edited data is
                 processed by the pipeline. </entry>
             </row>
             <row>
               <entry><image href="../Graphics/icon_PrevRevertChanges.png" id="image_xnr_f4r_br"
-              /></entry>
+                /></entry>
               <entry>Revert Changes icon</entry>
               <entry>Reverts all changes to preview data and returns the preview to the origin.
               </entry>

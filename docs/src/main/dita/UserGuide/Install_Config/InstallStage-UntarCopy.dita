@@ -5,20 +5,24 @@
     <shortdesc>You can install a stage library by untarring the library and copying
         files.</shortdesc>
     <taskbody>
-        <context/>
+        <context>
+            <draft-comment author="Loretta">Removing this from the doc as per Tucu 8/10/15. If
+                putting back, clean it up - the examples and steps are a bit muddy.</draft-comment>
+        </context>
         <steps id="steps_dtv_x5f_cr">
             <step>
                 <cmd>Download the stage library and untar the file.</cmd>
                 <info>For
-                    example:<codeblock>tar xvf streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
+                    example<codeblock>$ cd /opt/lib
+$ tar xvf ~/streamsets-datacollector-cdh_5_3_0-lib-1.0.0.tar.gz</codeblock></info>
             </step>
             <step>
-                <cmd>Copy the contents of the stage-libs directory to the Data Collector stage-libs
-                    directory.</cmd>
+                <cmd>Copy the contents of the untarred streamsets-libs directory to the Data
+                    Collector streamsets-libs directory.</cmd>
                 <info>For
                     example:<codeblock>cp -r \
-streamsets-datacollector-1.0.0/stage-libs/streamsets-datacollector-cdh5_3_0-lib/ \
-/tmp/streamsets-datacollector-1.0.0/stage-libs/</codeblock></info>
+/tmp/streamsets-datacollector-1.0.0/streamsets-libs/streamsets-datacollector-&lt;library name> \
+streamsets-datacollector-1.0.0/streamsets-libs/</codeblock></info>
             </step>
             <step>
                 <cmd>Restart the <ph

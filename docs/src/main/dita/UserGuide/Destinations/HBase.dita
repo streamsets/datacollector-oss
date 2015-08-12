@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wsz_5t5_vr">
- <title>HBase</title>
- <shortdesc>The HBase destination writes data to an HBase cluster. The destination writes data to
-    HBase in text, binary, or JSON format. You can define the data format for each column written to
-    HBase.</shortdesc>
- <conbody>
-  <p><indexterm>HBase
+   <title>HBase</title>
+   <shortdesc>The HBase destination writes data to an HBase cluster. The destination writes data to
+      HBase in text, binary, or JSON format. You can define the data format for each column written
+      to HBase.</shortdesc>
+   <conbody>
+      <p><indexterm>HBase
                destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>HBase</indexterm></indexterm>When
          you configure the HBase destination, you specify the HBase configuration properties,
          including the ZooKeeper Quorum, parent znode, and table name. You specify the row key for
          the table, and then map fields from the pipeline to HBase columns. </p>
-  <p>When necessary, you can enable Kerberos authentication and add additional HBase configuration
-      properties.</p>
-      <p>If the table that you want to write to uses Snappy or LZO compression, make sure the
-         configuration requirements are complete. </p>
- </conbody>
-   <related-links>
-      <link href="Compression-Overview.dita#concept_h4y_ycm_xs"/>
-   </related-links>
+      <p>When necessary, you can enable Kerberos authentication and add additional HBase
+         configuration properties.</p>
+   </conbody>
 </concept>

@@ -20,8 +20,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rst_t4d_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
                                     <entry>Hadoop FS Property</entry>
@@ -86,8 +86,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_byd_xpd_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.85*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>Output Files Property</entry>
@@ -102,10 +102,6 @@
                                             <li>Text</li>
                                             <li>JSON</li>
                                             <li>Delimited</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_wjh_ycl_br"/></xref></li>
                                             <li>Avro</li>
                                         </ul></entry>
                                 </row>
@@ -217,12 +213,12 @@
                 <cmd>On the <wintitle>Late Records</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <note>These properties are relevant for a time basis based on the time of a
+                    <note>These properties are only relevant for a time basis based on the time of a
                         record.</note>
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.71*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
                                     <entry>Late Records Property <xref
@@ -283,7 +279,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.7*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Avro Property</entry>

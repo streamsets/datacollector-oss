@@ -8,26 +8,24 @@
         origin when the pipeline is not running. </shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>pipelines<indexterm>resetting the
-                        origin</indexterm></indexterm><indexterm>origins<indexterm>resetting the
-                        origin</indexterm></indexterm>You can reset the origin for the following
-                origin stages:<ul id="ul_k1q_35k_2s">
-                    <li>Directory</li>
-                    <li>File Tail</li>
-                    <li>JDBC Consumer</li>
-                    <li>Kinesis Consumer</li>
-                </ul>For these origins, when you stop the pipeline, the <ph
+            <indexterm>pipelines<indexterm>resetting the
+                    origin</indexterm></indexterm><indexterm>origins<indexterm>resetting the
+                    origin</indexterm></indexterm>You can reset the origin for the following origin
+                stages:<ul id="ul_k1q_35k_2s">
+                <li>Directory</li>
+                <li>File Tail</li>
+                <li>JDBC Consumer</li>
+                <li>Kinesis Consumer</li>
+            </ul><p>For these origins, when you stop the pipeline, the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> notes where it stopped processing data. When you restart the pipeline, it
                 continues from where it left off by default. When you want the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to process all available data instead of continuing from where it stopped, reset
-                the origin.</p>
-            <p>To change the starting point for a Kafka Consumer, update the offset in the Kafka
-                ZooKeeper. For details, see the Kafka documentation. The remaining origin stages
-                process transient data where resetting the origin has no effect.</p>
-            <p>To reset the origin:</p>
-        </context>
+                the origin.</p><p>To change the starting point for a Kafka Consumer, update the
+                offset in the Kafka ZooKeeper. For details, see the Kafka documentation. The
+                remaining origin stages process transient data where resetting the origin has no
+                effect.</p><p>To reset the origin:</p></context>
         <steps id="steps_hvb_y1s_5q">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
                 <cmd/>

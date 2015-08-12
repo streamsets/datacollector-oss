@@ -14,11 +14,11 @@
                 /> console in Monitor mode by default. </p>
         </context>
         <steps id="steps_zjh_4bs_5q">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
-                <cmd/>
-            </step>
             <step>
-                <cmd>To stop the pipeline, click the <uicontrol>Stop</uicontrol> icon.</cmd>
+                <cmd>From the <wintitle>Home</wintitle> page, click the <uicontrol>More</uicontrol>
+                    icon for the pipeline and then click <uicontrol>Stop</uicontrol>. Or to stop a
+                    pipeline in the pipeline canvas, click the <uicontrol>Stop</uicontrol>
+                    icon.</cmd>
                 <info>The <wintitle>Stop Pipeline Confirmation</wintitle> dialog box appears.</info>
             </step>
             <step>

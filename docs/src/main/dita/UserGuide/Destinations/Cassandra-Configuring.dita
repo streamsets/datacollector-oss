@@ -17,8 +17,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_m3b_fkl_sr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.28*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
                             <thead>
                                 <row>
                                     <entry>Cassandra Property</entry>
@@ -35,6 +35,11 @@
                                 <row>
                                     <entry>Cassandra Port</entry>
                                     <entry>The port number for the Cassandra nodes.</entry>
+                                </row>
+                                <row>
+                                    <entry>Compression</entry>
+                                    <entry>Optional compression type for transport-level requests
+                                        and responses.</entry>
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>

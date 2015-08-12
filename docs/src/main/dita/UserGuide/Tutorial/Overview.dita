@@ -12,19 +12,19 @@
    destination system. If you prefer, you can write to any destination that works for you. </p>
   <p>The sample data is a file of delimited data that we'll flatten along the way. The <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a special
-   record format for delimited data. So, in addition to learning some basic <ph
+   record format for delimited data. So in addition to learning some basic <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and pipeline
    configuration concepts, you'll see how to manipulate both delimited and flattened data.</p>
   <p>For sample data, the tutorial uses fare payment information from a taxi company. The basic
-   pipeline assesses the credit card vendors that customers use so you can decide later if you want
-   to end contracts with low volume vendors. The pipeline then masks the credit card numbers before
-   writing the results to file. A secondary branch standardizes the record format for non-credit
-   card data. </p>
-  <p>Here's what we'll create with the basic tutorial:</p>
+   pipeline assesses the credit card vendors that customers use. (You could use this information
+   later to end contracts with low volume vendors.) The pipeline then masks the credit card numbers
+   before writing the results to file. A secondary branch standardizes the record format for
+   non-credit card data. </p>
+  <p>Here's the pipeline the basic tutorial creates:</p>
   <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
   <p>The extended pipeline adds an additional branch to flatten the data, convert some field types
-   and then write the data to the Trash destination. We'll use data preview to test stage
-   configuration and changes in data before we complete the extended pipeline:</p>
+   and write to the Trash destination. We'll use data preview to test stage configuration and
+   changes in data before we complete the extended pipeline:</p>
   <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="75"/></p>
  </conbody>
 </concept>

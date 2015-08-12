@@ -2,30 +2,34 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hg5_j2p_ms">
  <title>Before You Begin</title>
- <shortdesc>Before you start this tutorial, you'll need to do a few things:</shortdesc>
  <conbody>
-  <p>
-   <ol id="ol_xyv_3x4_ms">
-    <li><indexterm>tutorial<indexterm>prerequisites</indexterm></indexterm>Download sample data.
-            <p>You can download sample data from the StreamSets website. You'll need a login to the
+  <p><indexterm>tutorial<indexterm>prerequisites</indexterm></indexterm>Before you start this
+      tutorial, you'll need to do a few things:</p>
+    <p>
+      <ol id="ol_dtv_bzs_zs">
+        <li>Download sample data. <p>You can download sample data from the following location:
+              </p><p><xref
+              href="https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data"
+              format="html" scope="external"
+              >https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data</xref></p><draft-comment
+            author="Loretta">URL not live yet.</draft-comment><p>You'll need a login to the
             password-protected section of the site - it just takes a moment to set up an
-            account.</p><p>Sample data URL: &lt;&lt;add StreamSets download URL>></p><draft-comment
-            author="Loretta">URL </draft-comment></li>
-    <li>Set up a directory local to the <ph
+            account.</p></li>
+        <li>Set up a directory local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
           save the sample data in the directory.<p>Let's use the same directory for the source,
             destination, and error record files. Make sure the user who started the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
             read and write permission for the directory. </p></li>
-    <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          should be installed and running. </li>
-    <li>To create and run the pipeline, you should have a <ph
+        <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+          /> should be installed and running. </li>
+        <li>To create and run the pipeline, you should have a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> login
           with the admin role or both the creator and manager roles. <p>If using the default
             accounts shipped with the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
             can use the admin login: <codeph>admin</codeph> / <codeph>admin</codeph>. </p></li>
-   </ol>
-  </p>
+      </ol>
+    </p>
  </conbody>
 </concept>

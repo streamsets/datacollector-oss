@@ -15,11 +15,15 @@
         </context>
         <steps id="steps_s4j_x3k_ps">
             <step>
-                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> to the canvas. To route all data
-                    from the pipeline through the new stage, connect the Field Masker and the
-                    Expression Evaluator to it as shown:</cmd>
+                <cmd>Add a <uicontrol>Jython Evaluator</uicontrol> to the canvas. </cmd>
+                <info>If you haven't already, you might need to change the stage library menu to
+                    display processors or all stages to add the Jython Evaluator.</info>
+            </step>
+            <step>
+                <cmd>To route all data from the pipeline through the new stage, connect the Field
+                    Masker and the Expression Evaluator to it as shown:</cmd>
                 <info><image href="../Graphics/Tutorial-Jython2pipeline.png" id="image_fsy_3nk_ps"
-                        scale="70"/></info>
+                        scale="80"/></info>
                 <info/>
             </step>
             <step>
@@ -33,9 +37,15 @@
     out.write(record)
 except Exception as e:
   err.write(record, e.message)  </codeblock>
-                    <note
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-JythonScript"
-                    />
+                </info>
+                <info>
+                    <note>Incorrect indentation can cause Jython validation errors. For best
+                        results, copy the script from the online help. Copying the script from the
+                        PDF can result in incorrect indentation. <p>To launch context-sensitive
+                            help, click the <uicontrol>Help</uicontrol> icon in the Properties
+                            panel.  Then in the table of contents, scroll down to find the Data
+                            Collector Tutorial chapter > Extended Tutorial > Flatten Data with a
+                            Jython Evaluator.</p></note>
                 </info>
             </step>
         </steps>

@@ -2,11 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_xjd_dlk_wq">
     <title>Configuring a Field Hasher</title>
-    <shortdesc>Configure a Field Hasher to encode sensitive data.</shortdesc>
     <taskbody>
-        <context><indexterm>Field Hasher processor<indexterm>configuring</indexterm></indexterm>When
-            you configure the Field Hasher, you select the field that you want to encode and the
-            algorithm that you want to use. </context>
+        <context><indexterm>Field Hasher
+            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Hasher to
+            encode sensitive data. When you configure the Field Hasher, you select the field that
+            you want to encode and the algorithm that you want to use. </context>
         <steps id="steps_fsf_flk_wq">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
@@ -18,7 +18,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_ozv_nnk_wq">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.99*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Field Hasher Property</entry>
@@ -28,8 +28,7 @@
                             <tbody>
                                 <row>
                                     <entry>Fields to Hash</entry>
-                                    <entry>One or more String fields to hash with the same
-                                            algorithm.<p
+                                    <entry>One or more fields to hash with the same algorithm.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/wildcard"
                                         /></entry>
                                 </row>

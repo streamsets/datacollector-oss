@@ -59,7 +59,7 @@ Integer provided`</pre>
  </div>
 
 </div>
-<div class="topic concept nested1" id="unique_1406284710">
+<div class="topic concept nested1" id="unique_824656982">
  <h2 class="title topictitle2">Hadoop FS</h2>
 
  <div class="body conbody">
@@ -89,6 +89,38 @@ Integer provided`</pre>
       required <span class="ph">Data
                   Collector</span>
       configuration. For more information, see <a class="xref" href="../Destinations/HadoopFS-destination.html#concept_h4y_ycm_xs" title="You can use LZO or Snappy compression with the Hadoop FS destination.">LZO and Snappy Compression</a>.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rp1_ghd_zs">
+ <h2 class="title topictitle2">HBase</h2>
+
+ <div class="body conbody">
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">I get the following error when validating or starting a pipeline with an HBase
+      destination:</dt>
+
+     <dd class="dd">
+      <pre class="pre codeblock">HBASE_06 - Cannot connect to cluster: org.apache.hadoop.hbase.MasterNotRunningException: 
+com.google.protobuf.ServiceException: org.apache.hadoop.hbase.exceptions.ConnectionClosingException: 
+Call to node00.local/&lt;IP_address&gt;:60000 failed on local exception: 
+org.apache.hadoop.hbase.exceptions.ConnectionClosingException: 
+Connection to node00.local/&lt;IP_address&gt;:60000 is closing. Call id=0, waitTime=58</pre>
+
+     </dd>
+
+     <dd class="dd">Is your HBase master is running? If so, then you might trying to connect to a secure HBase
+      cluster without configuring the HBase destination to use Kerberos authentication. In the HBase
+      destination properties, select <span class="ph uicontrol">Kerberos Authentication</span> and try
+      again.</dd>
 
     
    </dl>

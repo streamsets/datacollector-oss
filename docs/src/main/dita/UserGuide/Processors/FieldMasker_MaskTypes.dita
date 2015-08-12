@@ -88,7 +88,7 @@ L92m1sN3q0jaOmE67Ws</codeblock>
       number:<codeblock>([0-9]{5}) - ([0-9]{3}-[0-9]{2}-[0-9]{4}) </codeblock></dd>
      <dd>The parentheses creates two groups of data. If you configure the stage to reveal the first
       group, then the results of the mask might look as
-      follows:<codeblock><b>Regex Mask</b>
+      follows:<codeblock><uicontrol>Regex Mask</uicontrol>
 30529-xxx-xx-xxxx
 10384-xxx-xx-xxxx
 95833-xxx-xx-xxxx</codeblock></dd>

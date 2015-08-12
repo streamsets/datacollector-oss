@@ -36,8 +36,6 @@
                 <cmd>In the <uicontrol>Script</uicontrol> text box, review the information in the
                     comments, then delete it. Paste in the following script: </cmd>
                 <info>
-                    <note
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Note-JythonScript"/>
                     <codeblock>try: 
   for record in records:
     cc = record.value[20]['value']
@@ -65,6 +63,13 @@
     out.write(record)
 except Exception as e:
   err.write(record, e.message)</codeblock>
+                    <note>Incorrect indentation can cause Jython validation errors. For best
+                        results, copy the script from the online help. Copying the script from the
+                        PDF can result in incorrect indentation.<p>To launch context-sensitive help,
+                            click the <uicontrol>Help</uicontrol> icon in the Properties panel.
+                            Then in the table of contents, scroll down to find the Data Collector
+                            Tutorial chapter > Basic Tutorial > Use Jython for Card Typing.
+                        </p></note>
                 </info>
             </step>
         </steps>

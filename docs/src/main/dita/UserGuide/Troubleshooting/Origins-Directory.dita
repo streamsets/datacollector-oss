@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_axb_spb_ys">
+ <title>Directory</title>
+ <conbody>
+  <p>
+   <dl>
+    <dlentry>
+     <dt>Why isn't the Directory origin reading all of my files?</dt>
+     <dd>Directory reads files based on their file name pattern in lexicographic increasing order.
+      If new files are not named in lexicographically increasing order, they are not read. </dd>
+     <dd>To ensure that newly arrived files are read, make sure the naming convention for the files
+      are lexicographically increasing. For example, filename-1.log, filename-2.log, etc. works fine
+      until filename-10.log. If filename-10.log arrives after Directory completes reading
+      filename-2.log, since it is lexicographically earlier than filename-2.log, it cannot be read
+      unless you reset the origin to read all files in the directory.</dd>
+     <dd>In this example, you could correct the issue by add leading zeros to the naming convention,
+      e.g. filename-00001.log, filename-00002.log,... filename-00009.log, filename-00010.log. This
+      works as long as the zeros allow enough padding for the expected number of files.</dd>
+    </dlentry>
+   </dl>
+  </p>
+ </conbody>
+</concept>

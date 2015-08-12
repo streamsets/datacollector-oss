@@ -6,7 +6,7 @@
   <p><indexterm>troubleshooting<indexterm>data preview</indexterm></indexterm>Use the following tips
    for help with data preview:<dl>
     <dlentry>
-     <dt>Why isn't the Data Preview icon enabled?</dt>
+     <dt>Why isn't the Preview icon enabled?</dt>
      <dd>You can preview data after you connect all stages in the pipeline and configure required
             properties. You can use any valid value as a placeholder for required properties.</dd>
     </dlentry>

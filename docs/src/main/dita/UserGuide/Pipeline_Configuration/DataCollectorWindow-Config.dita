@@ -64,13 +64,13 @@
       <strow>
         <stentry><image href="../Graphics/icon_ConfigUndo.png" id="image_dqr_tl3_ts"/></stentry>
         <stentry>Undo icon</stentry>
-        <stentry>Reverts recent changes. On Mac, you can also use Cmd+Z. On Windows, you can use
+        <stentry>Reverts recent changes. On Mac, you can also use Command+Z. On Windows, you can use
           Ctrl+Z. </stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_ConfigRedo.png" id="image_pzj_vl3_ts"/></stentry>
         <stentry>Redo icon</stentry>
-        <stentry>Restores changes that were reverted. On Mac, you can also use Cmd+Shift+Z. On
+        <stentry>Restores changes that were reverted. On Mac, you can also use Command+Shift+Z. On
           Windows, you can use Ctrl+Y. </stentry>
       </strow>
       <strow>
@@ -83,8 +83,7 @@
         <stentry>Duplicate Stage icon</stentry>
         <stentry>Duplicates the selected stage. You can duplicate processors and destinations.
           Because a pipeline can include only one origin, you cannot duplicate an origin
-            stage.<draft-comment author="Loretta">added a note to SDC-81 to see if we will enable
-            copying between pipelines.</draft-comment></stentry>
+          stage.</stentry>
       </strow>
       <strow>
         <stentry><image href="../Graphics/icon_ConfigArrange.png" id="image_e25_vm3_ts"/></stentry>

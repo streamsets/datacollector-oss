@@ -17,8 +17,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ovk_ndv_1s">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="2.92*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
                                     <entry>UDP Property</entry>
@@ -64,7 +64,7 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Syslog</wintitle> tab, define the character set for the data. </cmd>
+                <cmd>On the <wintitle>syslog</wintitle> tab, define the character set for the data. </cmd>
             </step>
             <step>
                 <cmd>On the <uicontrol>collectd</uicontrol> tab, define the following collectd
@@ -72,11 +72,11 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_u54_w25_xs">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.26*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3*"/>
                             <thead>
                                 <row>
-                                    <entry>collectd</entry>
+                                    <entry>collectd Property</entry>
                                     <entry>Properties</entry>
                                 </row>
                             </thead>

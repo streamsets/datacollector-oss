@@ -5,10 +5,10 @@
     <taskbody>
         <context>
             <p><indexterm>snapshots<indexterm>capturing and viewing</indexterm></indexterm>You can
-                capture a snapshot of data when you monitor a pipeline. After you capture a
-                snapshot, you can view the snapshot data stage by stage or through a group of
-                stages, like data preview. You can also delete snapshot data or use it as source
-                data for data preview.</p>
+                capture a snapshot of data when you monitor a pipeline. </p>
+            <p>After you capture a snapshot, you can view the snapshot data stage by stage or
+                through a group of stages, like data preview. You can also delete snapshot data or
+                use it as source data for data preview.</p>
         </context>
         <steps id="steps_esy_44p_tq">
             <step>
@@ -18,11 +18,12 @@
             <step>
                 <cmd>In the <wintitle>Snapshots</wintitle> dialog box, click <uicontrol>Capture
                         Snapshot</uicontrol> to capture a set of data. </cmd>
-                <stepresult>The <ph
+                <info>The <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> captures the snapshot and displays it in the list. You can take additional
-                    snapshots, view a snapshot, delete a snapshot, or close the dialog box and use
-                    the snapshot later.</stepresult>
+                    /> captures a snapshot of the next batch that passes through the pipeline and
+                    displays it in the list.</info>
+                <stepresult>You can take additional snapshots, view a snapshot, delete a snapshot,
+                    or close the dialog box and use the snapshot later.</stepresult>
             </step>
             <step>
                 <cmd>To view a snapshot, click <uicontrol>View</uicontrol> for the snapshot that you
