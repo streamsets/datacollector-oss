@@ -160,7 +160,7 @@
           </section>
 
           <section class="invalid-status"
-                   ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR'"
+                   ng-if="common.pipelineStatusMap[pipeline.name].status == 'START_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUNNING_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'RUN_ERROR' || common.pipelineStatusMap[pipeline.name].status == 'CONNECT_ERROR'"
                    tooltip-placement="bottom"
                    tooltip="{{'Pipeline Status :' + common.pipelineStatusMap[pipeline.name].status + ': ' + common.pipelineStatusMap[pipeline.name].message}}">
             <i class="fa fa-exclamation-triangle fa-12x"></i>

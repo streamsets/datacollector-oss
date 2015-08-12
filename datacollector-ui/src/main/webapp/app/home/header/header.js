@@ -298,7 +298,7 @@ angular
         function() {
           api.pipelineAgent.getPreviewStatus(previewerId)
             .success(function(data) {
-              if(data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'VALID'], data.status)) {
+              if(data && _.contains(['INVALID', 'VALIDATION_ERROR', 'START_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'VALID'], data.status)) {
                 fetchValidateConfigData(previewerId, defer);
               } else {
                 checkForValidateConfigStatus(previewerId, defer);
