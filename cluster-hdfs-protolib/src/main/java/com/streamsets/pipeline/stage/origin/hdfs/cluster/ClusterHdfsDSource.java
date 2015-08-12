@@ -38,13 +38,13 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   private ClusterHdfsSource clusterHDFSSource;
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     label = "Hadoop FS URI",
-    description = "Include the HDFS scheme and authority: hdfs://<authority>:<port>",
+    description = "Include the HDFS scheme and authority: hdfs://<authority>:<port>. If this is not set, the URI will be set to the value of "
+      + "'fs.defaultFS' configuration",
     displayPosition = 10,
-    group = "HADOOP_FS"
-  )
+    group = "HADOOP_FS")
   public String hdfsUri;
 
   @ConfigDef(

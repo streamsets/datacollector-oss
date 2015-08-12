@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
@@ -39,7 +39,6 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSource;
@@ -125,14 +124,6 @@ public class TestClusterHDFSSource {
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
 
-      dSource.hdfsUri = "hdfs://localhost/invalidauthorityformat";
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
-      issues = clusterHdfsSource.init(null, ContextInfoCreator
-          .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
-                               ImmutableList.of("lane")));
-      assertEquals(String.valueOf(issues), 1, issues.size());
-      assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_14"));
-
       dSource.hdfsUri = "hdfs://localhost:8020";
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator
@@ -154,6 +145,16 @@ public class TestClusterHDFSSource {
       dSource.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
       FileSystem fs = miniDFS.getFileSystem();
       Path someFile = new Path(new Path(dir.toUri()), "/someFile");
+      fs.create(someFile).close();
+      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      issues = clusterHdfsSource.init(null, ContextInfoCreator
+          .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
+                               ImmutableList.of("lane")));
+      assertEquals(String.valueOf(issues), 0, issues.size());
+
+      dSource.hdfsUri = null;
+      dSource.hdfsConfigs.put(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, miniDFS.getURI().toString());
+      someFile = new Path(new Path(dir.toUri()), "/someFile2");
       fs.create(someFile).close();
       clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
       issues = clusterHdfsSource.init(null, ContextInfoCreator

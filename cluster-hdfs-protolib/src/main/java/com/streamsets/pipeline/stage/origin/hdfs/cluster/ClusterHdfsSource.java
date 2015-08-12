@@ -69,12 +69,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private static final int PREVIEW_SIZE = 100;
   private String hdfsUri;
-  private List<String> hdfsDirLocations;
+  private final List<String> hdfsDirLocations;
   private Configuration hadoopConf;
-  private ControlChannel controlChannel;
-  private DataChannel dataChannel;
-  private Producer producer;
-  private Consumer consumer;
+  private final ControlChannel controlChannel;
+  private final DataChannel dataChannel;
+  private final Producer producer;
+  private final Consumer consumer;
   private final DataFormat dataFormat;
   private final int textMaxLineLen;
   private final int jsonMaxObjectLen;
@@ -90,15 +90,15 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private LogDataFormatValidator logDataFormatValidator;
   private final int logMaxObjectLen;
   private DataParserFactory parserFactory;
-  private boolean produceSingleRecordPerMessage;
-  private Map<String, String> hdfsConfigs;
-  private boolean hdfsKerberos;
-  private String hdfsUser;
-  private String hadoopConfDir;
+  private final boolean produceSingleRecordPerMessage;
+  private final Map<String, String> hdfsConfigs;
+  private final boolean hdfsKerberos;
+  private final String hdfsUser;
+  private final String hadoopConfDir;
   private UserGroupInformation loginUgi;
   private final boolean recursive;
   private long recordsProduced;
-  private Map<String, String> previewBuffer;
+  private final Map<String, String> previewBuffer;
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
@@ -306,25 +306,32 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
   private void validateHadoopFS(List<ConfigIssue> issues) {
     boolean validHapoopFsUri = true;
+    hadoopConf = getHadoopConfiguration(issues);
+    String hdfsUriInConf;
+    if (hdfsUri != null && !hdfsUri.isEmpty()) {
+      hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
+    } else {
+      hdfsUriInConf = hadoopConf.get(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
+      if (hdfsUriInConf == null) {
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_19));
+        return;
+      } else {
+        hdfsUri = hdfsUriInConf;
+      }
+    }
     if (hdfsUri.contains("://")) {
       try {
         URI uri = new URI(hdfsUri);
         if (!"hdfs".equals(uri.getScheme())) {
-          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_12, hdfsUri,
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_12, hdfsUri,
             uri.getScheme()));
           validHapoopFsUri = false;
         } else if (uri.getAuthority() == null) {
-          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_13, hdfsUri));
+          issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_13, hdfsUri));
           validHapoopFsUri = false;
-        } else {
-          String authority = uri.getAuthority();
-          String[] hostPort = authority.split(":");
-          if (hostPort.length != 2) {
-            issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_14, authority));
-          }
         }
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_22, hdfsUri,
           ex.getMessage(), ex));
         validHapoopFsUri = false;
       }
@@ -335,10 +342,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     StringBuilder logMessage = new StringBuilder();
     try {
-      hadoopConf = getHadoopConfiguration(issues);
-
-      hadoopConf.set(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, hdfsUri);
-
       // forcing UGI to initialize with the security settings from the stage
       UserGroupInformation.setConfiguration(hadoopConf);
 
