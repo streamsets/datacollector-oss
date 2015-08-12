@@ -285,7 +285,7 @@ public class HdfsDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SDC_JSON",
+      defaultValue = "JSON",
       label = "Data Format",
       description = "Data Format",
       displayPosition = 100,
