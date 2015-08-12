@@ -17,6 +17,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.UUID;
 
 public class TestRuntimeEL {
@@ -69,12 +71,24 @@ public class TestRuntimeEL {
     Assert.assertEquals(EMBEDDED_SDC_HOME_VALUE, RuntimeEL.conf(SDC_HOME_KEY));
   }
 
-  //@Test
-  public void testRuntimeELRemote() throws IOException {
-    createSDCFile("sdc-remote-runtime-conf.properties");
-    createRuntimeConfigFile("sdc-runtime-conf.properties");
+  @Test
+  public void testRuntimeELExternal() throws IOException {
+    File configDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(configDir.mkdirs());
+    try (OutputStream os = new FileOutputStream(new File(configDir, "sdc.properties"))) {
+      Properties props = new Properties();
+      props.setProperty("runtime.conf.location", "foo.properties");
+      props.store(os, "");
+    }
+    try (OutputStream os = new FileOutputStream(new File(configDir, "foo.properties"))) {
+      Properties props = new Properties();
+      props.setProperty("foo", "bar");
+      props.store(os, "");
+    }
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(configDir.getAbsolutePath());
     RuntimeEL.loadRuntimeConfiguration(runtimeInfo);
-    Assert.assertEquals(REMOTE_SDC_HOME_VALUE, RuntimeEL.conf(SDC_HOME_KEY));
+    Assert.assertEquals("bar", RuntimeEL.conf("foo"));
   }
 
   private void createSDCFile(String sdcFileName) throws IOException {
