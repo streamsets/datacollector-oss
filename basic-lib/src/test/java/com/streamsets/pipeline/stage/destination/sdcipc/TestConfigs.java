@@ -1,0 +1,255 @@
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.stage.destination.sdcipc;
+
+import com.google.common.io.Files;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.security.KeyPair;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+public class TestConfigs {
+
+  private void injectConfigsHttp(ForTestConfigs config) {
+    config.appId = "appId";
+    config.connectionTimeOutMs = 100;
+    config.readTimeOutMs = 200;
+    config.hostPorts = Arrays.asList("localhost:10000");
+    config.retriesPerBatch = 2;
+    config.sslEnabled = false;
+    config.trustStoreFile = "";
+    config.trustStorePassword = "";
+    config.hostVerification = true;
+  }
+
+  @Test
+  public void testCreateConnection() throws Exception {
+
+    // HTTP
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    ForTestConfigs config = new ForTestConfigs(conn);
+    injectConfigsHttp(config);
+    config.createConnection("localhost:10000");
+    Mockito.verify(conn).setConnectTimeout(Mockito.eq(config.connectionTimeOutMs));
+    Mockito.verify(conn).setReadTimeout(Mockito.eq(config.readTimeOutMs));
+    Mockito.verify(conn).setRequestProperty(Mockito.eq(Constants.X_SDC_APPLICATION_ID_HEADER),
+                                            Mockito.eq(config.appId));
+
+    // HTTPS
+    HttpsURLConnection sconn = Mockito.mock(MockHttpsURLConnection.class);
+    config = new ForTestConfigs(sconn);
+    injectConfigsHttp(config);
+    config.sslEnabled = true;
+    config.createConnection("localhost:10000");
+    Mockito.verify(sconn).setConnectTimeout(Mockito.eq(config.connectionTimeOutMs));
+    Mockito.verify(sconn).setReadTimeout(Mockito.eq(config.readTimeOutMs));
+    Mockito.verify(sconn).setRequestProperty(Mockito.eq(Constants.X_SDC_APPLICATION_ID_HEADER),
+                                             Mockito.eq(config.appId));
+    Mockito.verify(sconn).setSSLSocketFactory(Mockito.any(SSLSocketFactory.class));
+    Mockito.verify(sconn, Mockito.never()).setHostnameVerifier(Mockito.any(HostnameVerifier.class));
+
+    //HTTPS with no host verification
+    Mockito.reset(sconn);
+    config = new ForTestConfigs(sconn);
+    injectConfigsHttp(config);
+    config.sslEnabled = true;
+    config.hostVerification = false;
+    config.createConnection("localhost:10000");
+    Mockito.verify(sconn).setHostnameVerifier(Mockito.eq(ForTestConfigs.ACCEPT_ALL_HOSTNAME_VERIFIER));
+  }
+
+  private void injectConfigsHttps(ForTestConfigs config, String trustStoreFile, String trustStorePassword,
+      boolean hostnameVerification) {
+    config.appId = "appId";
+    config.connectionTimeOutMs = 100;
+    config.readTimeOutMs = 200;
+    config.hostPorts = Arrays.asList("localhost:10000");
+    config.retriesPerBatch = 2;
+    config.sslEnabled = true;
+    config.trustStoreFile = trustStoreFile;
+    config.trustStorePassword = trustStorePassword;
+    config.hostVerification = hostnameVerification;
+  }
+
+  private Stage.Context getContext() {
+    return ContextInfoCreator.createTargetContext("i", false, OnRecordError.TO_ERROR);
+  }
+  @Test
+  public void testCreateSSLSocketFactory() throws Exception {
+    // create trust store
+    File testDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDir.mkdirs());
+    KeyPair kp = SSLTestUtils.generateKeyPair();
+    Certificate cert1 = SSLTestUtils.generateCertificate("CN=Cert1", kp, 30);
+    String truststoreFile = new File(testDir, "truststore.jks").toString();
+    SSLTestUtils.createTrustStore(truststoreFile, "password", "cert1", cert1);
+
+    ForTestConfigs target = new ForTestConfigs(null);
+    injectConfigsHttps(target, truststoreFile, "password", true);
+    SSLSocketFactory factory = target.createSSLSocketFactory(getContext());
+    Assert.assertNotNull(factory);
+  }
+
+  @Test
+  public void testValidateHostPorts() throws Exception {
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    ForTestConfigs config = new ForTestConfigs(conn);
+    injectConfigsHttp(config);
+    config.hostPorts = Collections.emptyList();
+
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    // no hostports
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid hostport
+    config.hostPorts = Arrays.asList("localhost");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // null hostport
+    List<String> list = new ArrayList<>();
+    list.add(null);
+    config.hostPorts = list;
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid hostport
+    config.hostPorts = Arrays.asList("localhost:-1");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid hostport
+    config.hostPorts = Arrays.asList("localhost:1000000");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid hostport
+    config.hostPorts = Arrays.asList("localhost:x");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid host
+    config.hostPorts = Arrays.asList(UUID.randomUUID().toString() + ":10000");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // dup hostport
+    config.hostPorts = Arrays.asList("localhost:10000", "localhost:10000");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // good hostport
+    config.hostPorts = Arrays.asList("localhost:10000", "localhost:10001");
+    config.validateHostPorts(getContext(), issues);
+    Assert.assertEquals(0, issues.size());
+  }
+
+  @Test
+  public void testValidateSecurity() throws Exception {
+    File testDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDir.mkdirs());
+
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    ForTestConfigs config = new ForTestConfigs(conn);
+    injectConfigsHttps(config, "", "", true);
+
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    // no path is not a file
+    config.trustStoreFile = testDir.toString();
+    config.validateSecurity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // file does not exist
+    config.trustStoreFile = UUID.randomUUID().toString();
+    config.validateSecurity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // invalid trust store file
+    File invalidStore = new File(testDir, "invalid.jks");
+    Files.touch(invalidStore);
+    config.trustStoreFile = invalidStore.toString();
+    config.validateSecurity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // valid trust store file
+    KeyPair kp = SSLTestUtils.generateKeyPair();
+    Certificate cert1 = SSLTestUtils.generateCertificate("CN=Cert1", kp, 30);
+    String trustStoreLocation = new File(testDir, "truststore.jks").toString();
+    SSLTestUtils.createTrustStore(trustStoreLocation, "password", "cert1", cert1);
+
+    config.trustStoreFile = trustStoreLocation;
+    config.trustStorePassword = "password";
+    config.validateSecurity(getContext(), issues);
+    Assert.assertEquals(0, issues.size());
+
+    // valid trust store file, invalid password
+    config.trustStoreFile = trustStoreLocation;
+    config.trustStorePassword = "invalid";
+    config.validateSecurity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+  }
+
+  @Test
+  public void testValidateConnectivity() throws Exception {
+    HttpURLConnection conn = Mockito.mock(MockHttpURLConnection.class);
+    ForTestConfigs config = new ForTestConfigs(conn);
+    injectConfigsHttp(config);
+
+    List<Stage.ConfigIssue> issues = new ArrayList<>();
+
+    // test HTTP_ACCEPTED
+    Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    config.validateConnectivity(getContext(), issues);
+    Assert.assertEquals(0, issues.size());
+    Mockito.verify(conn).setRequestMethod(Mockito.eq("GET"));
+    Mockito.verify(conn).setDefaultUseCaches(Mockito.eq(false));
+
+    // test not HTTP_ACCEPTED
+    Mockito.reset(conn);
+    Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_BAD_REQUEST);
+    config.validateConnectivity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+    issues.clear();
+
+    // test conn exception
+    Mockito.reset(conn);
+    Mockito.when(conn.getResponseCode()).thenThrow(new IOException());
+    config.validateConnectivity(getContext(), issues);
+    Assert.assertEquals(1, issues.size());
+  }
+
+}

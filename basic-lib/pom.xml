@@ -32,6 +32,8 @@
     <jersey.version>2.17</jersey.version>
     <joda.version>2.8</joda.version>
     <netty.version>4.0.27.Final</netty.version>
+    <xerces.version>2.11.0</xerces.version>
+    <bouncycastle.version>1.46</bouncycastle.version>
   </properties>
 
   <dependencies>
@@ -138,11 +140,17 @@
       <version>${hikaricp.version}</version>
     </dependency>
 
-  <dependency>
-    <groupId>joda-time</groupId>
-    <artifactId>joda-time</artifactId>
-    <version>${joda.version}</version>
-  </dependency>
+    <dependency>
+      <groupId>joda-time</groupId>
+      <artifactId>joda-time</artifactId>
+      <version>${joda.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.maxmind.geoip2</groupId>
+      <artifactId>geoip2</artifactId>
+      <version>${geoip2.version}</version>
+    </dependency>
 
     <!-- Test Dependencies -->
     <dependency>
@@ -169,10 +177,12 @@
     </dependency>
 
     <dependency>
-        <groupId>com.maxmind.geoip2</groupId>
-        <artifactId>geoip2</artifactId>
-        <version>${geoip2.version}</version>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>test</scope>
     </dependency>
+
 
   </dependencies>
 

@@ -1,0 +1,84 @@
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.stage.destination.sdcipc;
+
+import org.bouncycastle.x509.X509V1CertificateGenerator;
+import org.h2.util.IOUtils;
+
+import javax.security.auth.x500.X500Principal;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.security.GeneralSecurityException;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.Date;
+
+public class SSLTestUtils {
+
+  public static X509Certificate generateCertificate(String dn, KeyPair keyPair, int days) throws Exception {
+
+    Date from = new Date();
+    Date to = new Date(from.getTime() + days * 86400000l);
+    BigInteger sn = new BigInteger(64, new SecureRandom());
+    X509V1CertificateGenerator certGen = new X509V1CertificateGenerator();
+    X500Principal dnName = new X500Principal(dn);
+
+    certGen.setSerialNumber(sn);
+    certGen.setIssuerDN(dnName);
+    certGen.setNotBefore(from);
+    certGen.setNotAfter(to);
+    certGen.setSubjectDN(dnName);
+    certGen.setPublicKey(keyPair.getPublic());
+    certGen.setSignatureAlgorithm("SHA1withRSA");
+
+    return certGen.generate(keyPair.getPrivate());
+  }
+
+  public static KeyPair generateKeyPair() throws Exception {
+    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+    keyGen.initialize(1024);
+    return keyGen.genKeyPair();
+  }
+
+  private static KeyStore createEmptyKeyStore() throws GeneralSecurityException, IOException {
+    KeyStore ks = KeyStore.getInstance("JKS");
+    ks.load(null, null); // initialize
+    return ks;
+  }
+
+  private static void saveKeyStore(KeyStore ks, String filename, String password)  throws Exception {
+    try (FileOutputStream out = new FileOutputStream(filename)) {
+      ks.store(out, password.toCharArray());
+    }
+  }
+
+  public static void createKeyStore(String filename, String password, String alias, Key privateKey, Certificate cert)
+      throws Exception {
+    KeyStore ks = createEmptyKeyStore();
+    ks.setKeyEntry(alias, privateKey, password.toCharArray(), new Certificate[]{cert});
+    saveKeyStore(ks, filename, password);
+  }
+
+  public static void createTrustStore(String filename, String password, String alias, Certificate cert)
+      throws Exception {
+    KeyStore ks = createEmptyKeyStore();
+    ks.setCertificateEntry(alias, cert);
+    saveKeyStore(ks, filename, password);
+  }
+
+  public static String getHostname() throws Exception {
+    Process p = Runtime.getRuntime().exec("hostname");
+    p.waitFor();
+    return IOUtils.readStringAndClose(new InputStreamReader(p.getInputStream()), 1000).trim();
+  }
+}
