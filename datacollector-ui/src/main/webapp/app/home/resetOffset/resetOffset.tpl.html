@@ -6,6 +6,9 @@
   <h3 class="modal-title" translate="home.resetOffset.confirmationTitle">Reset Offset Confirmation</h3>
 </div>
 <div class="modal-body reset-offset-modal-body">
+
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
   <p ng-hide="isOffsetResetSucceed || showLoading"
      translate="home.resetOffset.confirmationMessage" translate-values="{name: pipelineInfo.name}"></p>
 
