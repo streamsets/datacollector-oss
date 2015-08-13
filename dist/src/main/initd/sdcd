@@ -67,7 +67,7 @@ if [ "$1" = "start" ] ; then
       fi
     fi
   fi
-  nohup $BASEDIR/libexec/_sdc -skipenvsourcing -verbose  &>$SDC_LOG/sdc.out </dev/null &
+  nohup /bin/bash $BASEDIR/libexec/_sdc -skipenvsourcing -verbose  &>$SDC_LOG/sdc.out </dev/null &
   echo $! > "$SDC_PID"
   echo "sdc started."
 elif [ "$1" = "stop" ]; then
