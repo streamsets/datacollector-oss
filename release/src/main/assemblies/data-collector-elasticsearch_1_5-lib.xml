@@ -5,7 +5,7 @@
  written consent of StreamSets, Inc.
 -->
 <assembly>
-  <id>elasticsearch_1_5_0-lib</id>
+  <id>elasticsearch_1_5-lib</id>
   <formats>
     <format>tar.gz</format>
   </formats>

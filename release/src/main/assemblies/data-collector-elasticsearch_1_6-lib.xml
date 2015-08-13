@@ -5,7 +5,7 @@
  written consent of StreamSets, Inc.
 -->
 <assembly>
-  <id>elasticsearch_1_4-lib</id>
+  <id>elasticsearch_1_6-lib</id>
   <formats>
     <format>tar.gz</format>
   </formats>
@@ -21,7 +21,7 @@
 
     <!-- Library -->
     <fileSet>
-      <directory>${basedir}/../elasticsearch_1_4-lib/target/streamsets-libs</directory>
+      <directory>${basedir}/../elasticsearch_1_6-lib/target/streamsets-libs</directory>
       <outputDirectory>/streamsets-datacollector-${project.version}/streamsets-libs</outputDirectory>
     </fileSet>
   </fileSets>

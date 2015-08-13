@@ -223,7 +223,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>elasticsearch-1.4.4</id>
+            <id>elasticsearch-1.4</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -238,7 +238,7 @@
             </configuration>
           </execution>
           <execution>
-            <id>elasticsearch-1.5.0</id>
+            <id>elasticsearch-1.5</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -249,6 +249,36 @@
               <finalName>streamsets-datacollector-elasticsearch_1_5-lib-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector-elasticsearch_1_5-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>elasticsearch-1.6</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-elasticsearch_1_6-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_6-lib.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>elasticsearch-1.7</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-elasticsearch_1_7-lib-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-elasticsearch_1_7-lib.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

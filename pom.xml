@@ -44,6 +44,8 @@
     <jython_2_7-lib>none</jython_2_7-lib>
     <elasticsearch_1_4-lib>none</elasticsearch_1_4-lib>
     <elasticsearch_1_5-lib>none</elasticsearch_1_5-lib>
+    <elasticsearch_1_6-lib>none</elasticsearch_1_6-lib>
+    <elasticsearch_1_7-lib>none</elasticsearch_1_7-lib>
     <cassandra_2-lib>none</cassandra_2-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
   </properties>
@@ -238,6 +240,8 @@
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <elasticsearch_1_4-lib>elasticsearch_1_4-lib</elasticsearch_1_4-lib>
+        <elasticsearch_1_5-lib>elasticsearch_1_5-lib</elasticsearch_1_5-lib>
+        <elasticsearch_1_6-lib>elasticsearch_1_6-lib</elasticsearch_1_6-lib>
         <aws-lib>aws-lib</aws-lib>
       </properties>
       <modules>
@@ -247,6 +251,8 @@
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>elasticsearch_1_4-lib</module>
+        <module>elasticsearch_1_5-lib</module>
+        <module>elasticsearch_1_6-lib</module>
         <module>aws-lib</module>
       </modules>
     </profile>
@@ -263,7 +269,7 @@
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <cdh_kafka_1_2_0-lib>cdh_kafka_1_2_0-lib</cdh_kafka_1_2_0-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
-        <elasticsearch_1_5-lib>elasticsearch_1_5-lib</elasticsearch_1_5-lib>
+        <elasticsearch_1_7-lib>elasticsearch_1_7-lib</elasticsearch_1_7-lib>
         <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_4-cluster-cdh_kafka_1_2_0-lib>cdh_5_4-cluster-cdh_kafka_1_2_0-lib</cdh_5_4-cluster-cdh_kafka_1_2_0-lib>
@@ -272,7 +278,7 @@
         <module>cdh_5_4-lib</module>
         <module>hdp_2_3-lib</module>
         <module>jython_2_7-lib</module>
-        <module>elasticsearch_1_5-lib</module>
+        <module>elasticsearch_1_7-lib</module>
         <module>cassandra_2-lib</module>
         <module>cdh_kafka_1_2_0-lib</module>
         <module>mongodb_3-lib</module>

@@ -17,12 +17,12 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-elasticsearch_1_4-lib</artifactId>
   <version>1.1.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Elastic Search 1.4.4 Lib</description>
-  <name>StreamSets Data Collector Elastic Search 1.4.4 Lib</name>
+  <description>StreamSets Data Collector Elastic Search 1.4.5 Lib</description>
+  <name>StreamSets Data Collector Elastic Search 1.4.5 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>1.4.4</elasticsearch.version>
+    <elasticsearch.version>1.4.5</elasticsearch.version>
   </properties>
 
   <dependencies>
