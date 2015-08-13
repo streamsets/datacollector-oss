@@ -28,7 +28,7 @@ public class ActiveRecordWriters {
   private final static boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   private static class DelayedRecordWriter implements Delayed {
-    private RecordWriter writer;
+    private final RecordWriter writer;
 
     public DelayedRecordWriter(RecordWriter writer) {
       this.writer = writer;
@@ -49,13 +49,14 @@ public class ActiveRecordWriters {
       return writer;
     }
 
+    @Override
     public String toString() {
       return Utils.format("DelayedRecordWriter[path='{}' expiresInSecs='{}'", writer.getPath(),
                           getDelay(TimeUnit.SECONDS));
     }
   }
 
-  private RecordWriterManager manager;
+  private final RecordWriterManager manager;
   private Map<String, RecordWriter> writers;
   private DelayQueue<DelayedRecordWriter> cutOffQueue;
 
@@ -123,6 +124,20 @@ public class ActiveRecordWriters {
     purge();
   }
 
+  public void flushAll() {
+    LOG.info("Flush all '{}'", toString());
+    for (RecordWriter writer : writers.values()) {
+      if (!writer.isClosed()) {
+        try {
+          writer.flush();
+        } catch (IOException ex) {
+          String msg = Utils.format("Error flushing writer {} : {}", writer, ex);
+          LOG.warn(msg, ex);
+        }
+      }
+    }
+  }
+
   public void closeAll() {
     LOG.info("Close all '{}'", toString());
     for (RecordWriter writer : writers.values()) {
@@ -131,7 +146,7 @@ public class ActiveRecordWriters {
           manager.commitWriter(writer);
         } catch (IOException ex) {
           String msg = Utils.format("Error closing writer {} : {}", writer, ex);
-          LOG.info(msg, ex);
+          LOG.warn(msg, ex);
         }
       }
     }

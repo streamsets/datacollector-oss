@@ -152,6 +152,7 @@ public class RecordWriter {
     return generator == null && seqWriter == null;
   }
 
+  @Override
   public String toString() {
     return Utils.format("RecordWriter[path='{}']", path);
   }

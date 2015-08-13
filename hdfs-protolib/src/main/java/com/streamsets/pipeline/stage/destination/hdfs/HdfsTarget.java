@@ -10,11 +10,12 @@ import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -29,6 +30,7 @@ import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriterManager;
+
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -44,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -51,13 +54,14 @@ import java.nio.charset.Charset;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
 
-public class HdfsTarget extends RecordTarget {
+public class HdfsTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
   private final static int MEGA_BYTE = 1024 * 1024;
 
@@ -555,7 +559,31 @@ public class HdfsTarget extends RecordTarget {
           if (getLateWriters() != null) {
             getLateWriters().purge();
           }
-          HdfsTarget.super.write(batch);
+          Iterator<Record> it = batch.getRecords();
+          if (it.hasNext()) {
+            while (it.hasNext()) {
+              Record record = it.next();
+              try {
+                write(record);
+              } catch (OnRecordErrorException ex) {
+                switch (getContext().getOnErrorRecord()) {
+                  case DISCARD:
+                    break;
+                  case TO_ERROR:
+                    getContext().toError(record, ex);
+                    break;
+                  case STOP_PIPELINE:
+                    throw ex;
+                  default:
+                    throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                                                                 getContext().getOnErrorRecord(), ex));
+                }
+              }
+            }
+            getCurrentWriters().flushAll();
+          } else {
+            emptyBatch();
+          }
           return null;
         }
       });
@@ -566,7 +594,6 @@ public class HdfsTarget extends RecordTarget {
 
   // we use the emptyBatch() method call to close open files when the late window closes even if there is no more
   // new data.
-  @Override
   protected void emptyBatch() throws StageException {
     setBatchTime();
     try {
@@ -615,7 +642,6 @@ public class HdfsTarget extends RecordTarget {
   private Counter lateRecordsCounter;
   private Meter lateRecordsMeter;
 
-  @Override
   protected void write(Record record) throws StageException {
     try {
       Date recordTime = getRecordTime(record);
