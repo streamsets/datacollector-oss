@@ -57,6 +57,9 @@ public class LiveFile {
   public LiveFile(Path path) throws IOException {
     Utils.checkNotNull(path, "path");
     this.path = path.toAbsolutePath();
+    if (!Files.isRegularFile(this.path)) {
+      throw new NoSuchFileException(Utils.format("Path '{}' is not a file", this.path));
+    }
     BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
     headLen = (int) Math.min(HEAD_LEN, attrs.size());
     headHash = computeHash(path, headLen);
