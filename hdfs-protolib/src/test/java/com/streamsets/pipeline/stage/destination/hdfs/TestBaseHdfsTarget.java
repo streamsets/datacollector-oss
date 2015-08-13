@@ -16,9 +16,12 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.configurablestage.DStage;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -521,5 +524,46 @@ public class TestBaseHdfsTarget {
     Assert.assertEquals(2, status.length);
   }
 
-
+  @Test
+  public void testWriteBatch() throws Exception{
+    final Path dir = new Path("/" + UUID.randomUUID().toString());
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+    .setOnRecordError(OnRecordError.STOP_PIPELINE)
+    .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
+    .addConfiguration("hdfsUser", "")
+    .addConfiguration("hdfsKerberos", false)
+    .addConfiguration("hdfsConfDir", "")
+    .addConfiguration("hdfsConfigs", new HashMap<>())
+    .addConfiguration("uniquePrefix", "foo")
+    .addConfiguration("dirPathTemplate", dir.toString())
+    .addConfiguration("timeZoneID", "UTC")
+    .addConfiguration("fileType", HdfsFileType.TEXT)
+    .addConfiguration("keyEl", "${uuid()}")
+    .addConfiguration("compression", CompressionMode.NONE)
+    .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
+    .addConfiguration("maxRecordsPerFile", 10)
+    .addConfiguration("maxFileSize", 100)
+    .addConfiguration("timeDriver", "${time:now()}")
+    .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
+    .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
+    .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
+    .addConfiguration("dataFormat", DataFormat.SDC_JSON)
+    .addConfiguration("csvFileFormat", null)
+    .addConfiguration("csvReplaceNewLines", false)
+    .addConfiguration("charset", "UTF-8")
+    .build();
+    runner.runInit();
+    Date date = new Date();
+    Date recordDate = new Date(date.getTime());
+    Record record1 = RecordCreator.create();
+    record1.set(Field.create("a"));
+    Record record2 = RecordCreator.create();
+    record2.set(Field.create("z"));
+    runner.runWrite(Arrays.asList(record1, record2));
+    RecordWriter recordWriter =
+      ((HdfsTarget) ((DStage) runner.getStage()).getStage()).getCurrentWriters().get(date, recordDate, record1);
+    Assert.assertEquals(2, recordWriter.getRecords());
+    Assert.assertTrue(recordWriter.getLength() > 2);
+    Assert.assertTrue(recordWriter.isTextFile());
+  }
 }
