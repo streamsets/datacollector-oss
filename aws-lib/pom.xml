@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0RC4</version>
+    <version>1.0.0RC5</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-aws-lib</artifactId>
-  <version>1.0.0RC4</version>
+  <version>1.0.0RC5</version>
   <description>StreamSets Data Collector Amazon AWS Library</description>
   <name>StreamSets Data Collector Amazon AWS Library</name>
   <packaging>jar</packaging>
