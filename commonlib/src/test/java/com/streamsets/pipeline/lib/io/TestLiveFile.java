@@ -130,4 +130,9 @@ public class TestLiveFile {
     Assert.assertEquals(lf1, lf1.refresh());
   }
 
+  @Test(expected = NoSuchFileException.class)
+  public void testPathIsDir() throws IOException {
+    new LiveFile(testDir.toPath());
+  }
+
 }

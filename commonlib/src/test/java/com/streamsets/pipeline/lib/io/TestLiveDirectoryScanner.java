@@ -42,6 +42,15 @@ public class TestLiveDirectoryScanner {
     Assert.assertEquals(new LiveFile(file), lf);
   }
 
+  @Test
+  public void testDirectoryMatchingName() throws Exception {
+    Path file = new File(testDir, "my.log").toPath();
+    Files.createDirectories(file);
+    LiveDirectoryScanner spooler = new LiveDirectoryScanner(testDir.getAbsolutePath(), null,
+                                                            LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""));
+    Assert.assertNull(spooler.scan(null));
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testGetUsingLiveFile() throws Exception {
     Path file = new File(testDir, "my.log").toPath();

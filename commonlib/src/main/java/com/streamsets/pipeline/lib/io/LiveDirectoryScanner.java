@@ -108,7 +108,7 @@ public class LiveDirectoryScanner {
     @Override
     public boolean accept(Path entry) throws IOException {
       boolean accept = false;
-      if (fileMatcher.matches(entry.getFileName())) {
+      if (fileMatcher.matches(entry.getFileName()) && Files.isRegularFile(entry)) {
         if (firstFile == null) {
           accept = true;
         } else {
