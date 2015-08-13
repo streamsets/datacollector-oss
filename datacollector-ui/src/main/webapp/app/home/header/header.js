@@ -108,7 +108,7 @@ angular
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
             function (res) {
-              $scope.moveGraphToCenter();
+              //$scope.moveGraphToCenter();
               $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
 
               $timeout(function() {
@@ -148,7 +148,7 @@ angular
         });
 
         modalInstance.result.then(function(status) {
-          $scope.moveGraphToCenter();
+          //$scope.moveGraphToCenter();
           $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
           var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];
 
