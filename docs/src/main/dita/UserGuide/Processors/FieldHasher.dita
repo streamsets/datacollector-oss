@@ -6,9 +6,8 @@
   MD5, SHA1 or SHA2 to hash field values. </shortdesc>
  <conbody>
   <p><indexterm>Field Hasher
-     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
-     Hasher</indexterm></indexterm>Use the Field Hasher to encode highly-sensitive data or data that
-   you might want to decode at a later date. For example, you might use the Field Hasher to encode
-   social security or credit card numbers.</p>
+          processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+          Hasher</indexterm></indexterm>Use the Field Hasher to encode highly-sensitive data. For
+      example, you might use the Field Hasher to encode social security or credit card numbers.</p>
  </conbody>
 </concept>
