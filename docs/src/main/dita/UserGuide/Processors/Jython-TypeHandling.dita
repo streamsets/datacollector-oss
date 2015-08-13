@@ -4,8 +4,8 @@
  <title>Type Handling</title>
  <conbody>
   <p><indexterm>Jython Evaluator processor<indexterm>type
-        handling</indexterm></indexterm><indexterm>type handling<indexterm>Jython Evaluator
-          processor</indexterm></indexterm>Though Jython does not use type information when
+        handling</indexterm></indexterm><indexterm>type handling<indexterm>Jython
+          Evaluator</indexterm></indexterm>Though Jython does not use type information when
       processing data, passing data to the rest of the pipeline requires data types. </p>
     <p>Note the following type information before you configure the remainder of the pipeline: <ul
         id="ul_e3h_1qc_5r">

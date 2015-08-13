@@ -4,9 +4,10 @@
  <title>Data Formats</title>
  <conbody>
   <p><indexterm>Hadoop FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
-          formats<indexterm>Hadoop FS</indexterm></indexterm>Hadoop FS writes data to HDFS based on
-      the data format that you select. You can use the following data formats: <draft-comment
-        author="Loretta">copied from Reusable steps - removed SDC Record format.</draft-comment><dl>
+          formats<indexterm>Hadoop FS destination</indexterm></indexterm>Hadoop FS writes data to
+      HDFS based on the data format that you select. You can use the following data formats:
+        <draft-comment author="Loretta">copied from Reusable steps - removed SDC Record
+        format.</draft-comment><dl>
         <dlentry>
           <dt>Text</dt>
           <dd>The destination writes a single text field of a record. When you configure the stage,
