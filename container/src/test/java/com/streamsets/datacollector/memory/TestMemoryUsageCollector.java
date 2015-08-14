@@ -42,6 +42,7 @@ public class TestMemoryUsageCollector {
   public static void setupClass() throws Exception {
     initalizeMemoryUtility();
   }
+
   @Test
   public void testBasic() throws Exception {
     Assert.assertEquals(16, MemoryUsageCollector.getMemoryUsageOfForTests(new Object()));

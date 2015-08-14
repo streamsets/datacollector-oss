@@ -243,7 +243,7 @@ public class TestProductionPipeline {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
         try {
-          Thread.sleep(5000); // sleep enough time to get
+          Thread.sleep(10000); // sleep enough time to get
         } catch (InterruptedException e) {}
         return super.produce(lastSourceOffset, maxBatchSize, batchMaker);
       }
@@ -251,9 +251,8 @@ public class TestProductionPipeline {
     MockStages.setSourceCapture(capture);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
       false/*source not committer*/);
-    long startTime = System.currentTimeMillis();
     //Need sleep because the file system could truncate the time to the last second.
-    Thread.sleep(1000);
+    Thread.sleep(15000);
     try {
       pipeline.run();
       Assert.fail("Expected PipelineRuntimeException");
