@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -170,7 +171,7 @@ public class PipelineConfigurationValidator {
   boolean upgradePipeline() {
     List<Issue> upgradeIssues = new ArrayList<>();
     PipelineConfiguration pConf = getUpgrader().upgradeIfNecessary(stageLibrary,
-                                                                   pipelineConfiguration, upgradeIssues);
+      pipelineConfiguration, upgradeIssues);
     if (pConf != null) {
       pipelineConfiguration = pConf;
     }
@@ -179,15 +180,20 @@ public class PipelineConfigurationValidator {
   }
 
   private boolean validateStageExecutionMode(StageConfiguration stageConf, ExecutionMode executionMode,
-      List<Issue> issues) {
+      List<Issue> issues, boolean errorStage) {
     boolean canPreview = true;
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
     StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
     if (stageDef != null) {
       if (!stageDef.getExecutionModes().contains(executionMode)) {
         canPreview = false;
-        issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageDef.getLabel(),
-          stageDef.getLibraryLabel(), executionMode.getLabel()));
+        if(errorStage) {
+          issues.add(IssueCreator.getPipeline().create(PipelineGroups.BAD_RECORDS.name(), "badRecordsHandling",
+            ValidationError.VALIDATION_0074, stageDef.getLabel(), stageDef.getLibraryLabel(), executionMode.getLabel()));
+        } else {
+          issues.add(issueCreator.create(ValidationError.VALIDATION_0071, stageDef.getLabel(),
+            stageDef.getLibraryLabel(), executionMode.getLabel()));
+        }
       }
     } else {
       canPreview = false;
@@ -204,10 +210,10 @@ public class PipelineConfigurationValidator {
     if (errors.isEmpty()) {
       StageConfiguration errorStage = pipelineConf.getErrorStage();
       if (errorStage != null) {
-        canPreview &= validateStageExecutionMode(errorStage, pipelineExecutionMode, errors);
+        canPreview &= validateStageExecutionMode(errorStage, pipelineExecutionMode, errors, true);
       }
       for (StageConfiguration stageConf : pipelineConf.getStages()) {
-        canPreview &= validateStageExecutionMode(stageConf, pipelineExecutionMode, errors);
+        canPreview &= validateStageExecutionMode(stageConf, pipelineExecutionMode, errors, false);
       }
     } else {
       canPreview = false;

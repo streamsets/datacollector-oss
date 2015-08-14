@@ -10,7 +10,7 @@ angular
     var getIssueMessage = function(config, issues, instanceName, configDefinition) {
       if(instanceName && issues.stageIssues && issues.stageIssues[instanceName]) {
         issues = issues.stageIssues[instanceName];
-      } else if(config.errorStage && issues.stageIssues && issues.stageIssues[config.errorStage.instanceName]) {
+      } else if(config.errorStage && issues.stageIssues && issues.stageIssues[config.errorStage.instanceName] && instanceName) {
         issues = issues.stageIssues[config.errorStage.instanceName];
       } else if(issues.pipelineIssues){
         issues = issues.pipelineIssues;
@@ -38,6 +38,7 @@ angular
        * Returns Codemirror Options.
        *
        * @param options
+       * @param configDefinition
        * @returns {*}
        */
       getCodeMirrorOptions: function(options, configDefinition) {
