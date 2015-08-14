@@ -14,7 +14,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.flume.FlumeErrors;
 import com.streamsets.pipeline.lib.FlumeUtil;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -127,27 +127,27 @@ public class FlumeTarget extends BaseTarget {
     FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(), "flumeHostsConfig", getContext());
     if(batchSize < 1) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "batchSize",
-        Errors.FLUME_104, "batchSize", 1));
+        FlumeErrors.FLUME_104, "batchSize", 1));
     }
     if(clientType == ClientType.AVRO_LOAD_BALANCING && backOff && maxBackOff < 0) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "maxBackOff",
-        Errors.FLUME_104, "maxBackOff", 0));
+        FlumeErrors.FLUME_104, "maxBackOff", 0));
     }
     if(connectionTimeout < 1000) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "connectionTimeout",
-        Errors.FLUME_104, "connectionTimeout", 1000));
+        FlumeErrors.FLUME_104, "connectionTimeout", 1000));
     }
     if(requestTimeout < 1000) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "requestTimeout",
-        Errors.FLUME_104, "requestTimeout", 1000));
+        FlumeErrors.FLUME_104, "requestTimeout", 1000));
     }
     if(maxRetryAttempts < 0) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "maxRetryAttempts",
-        Errors.FLUME_104, "maxRetryAttempts", 0));
+        FlumeErrors.FLUME_104, "maxRetryAttempts", 0));
     }
     if(waitBetweenRetries < 0) {
       issues.add(getContext().createConfigIssue(Groups.FLUME.name(), "waitBetweenRetries",
-        Errors.FLUME_104, "waitBetweenRetries", 0));
+        FlumeErrors.FLUME_104, "waitBetweenRetries", 0));
     }
     if (issues.isEmpty()) {
       connect();
@@ -306,7 +306,7 @@ public class FlumeTarget extends BaseTarget {
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.FLUME_50, record.getHeader().getSourceId(), ex.toString(), ex);
+          throw new StageException(FlumeErrors.FLUME_50, record.getHeader().getSourceId(), ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -338,11 +338,11 @@ public class FlumeTarget extends BaseTarget {
         } else {
           //The thread was interrupted which means it was stopped. The data might not have been delivered.
           //So throw an exception to prevent committing the batch.
-          throw new StageException(Errors.FLUME_52);
+          throw new StageException(FlumeErrors.FLUME_52);
         }
       }
     }
-    throw new StageException(Errors.FLUME_51, ex.toString(), ex);
+    throw new StageException(FlumeErrors.FLUME_51, ex.toString(), ex);
   }
 
   private void reconnect() {

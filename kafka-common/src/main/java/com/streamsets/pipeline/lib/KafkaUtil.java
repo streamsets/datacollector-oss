@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.TopicMetadata;
 import kafka.javaapi.TopicMetadataRequest;
@@ -75,7 +76,7 @@ public class KafkaUtil {
     }
     if(connectionError) {
       //could not connect any broker even after retries. Fail with exception
-      throw new IOException(Utils.format(Errors.KAFKA_67.getMessage(), getKafkaBrokers(kafkaBrokers)));
+      throw new IOException(Utils.format(KafkaErrors.KAFKA_67.getMessage(), getKafkaBrokers(kafkaBrokers)));
     }
     return topicMetadata;
   }
@@ -84,11 +85,11 @@ public class KafkaUtil {
                                                long backOffms) throws IOException {
     List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
     if(kafkaBrokers.isEmpty()) {
-      throw new IOException(Utils.format(Errors.KAFKA_07.getMessage(), metadataBrokerList));
+      throw new IOException(Utils.format(KafkaErrors.KAFKA_07.getMessage(), metadataBrokerList));
     }
     TopicMetadata topicMetadata = getTopicMetadata(kafkaBrokers, topic, maxRetries, backOffms);
     if(topicMetadata == null || topicMetadata.errorCode() != 0) {
-      throw new IOException(Utils.format(Errors.KAFKA_03.getMessage(), topic, metadataBrokerList));
+      throw new IOException(Utils.format(KafkaErrors.KAFKA_03.getMessage(), topic, metadataBrokerList));
     }
     return topicMetadata.partitionsMetadata().size();
   }
@@ -97,7 +98,7 @@ public class KafkaUtil {
                                                                       String configGroupName, String configName, Stage.Context context) {
     if(connectionString == null || connectionString.isEmpty()) {
       issues.add(context.createConfigIssue(configGroupName, configName,
-        Errors.KAFKA_06, configName));
+        KafkaErrors.KAFKA_06, configName));
       return null;
     }
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
@@ -105,13 +106,13 @@ public class KafkaUtil {
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectionString));
+        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
       } else {
         try {
           int port = Integer.parseInt(brokerHostAndPort[1].trim());
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectionString));
+          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
         }
       }
     }
@@ -123,7 +124,7 @@ public class KafkaUtil {
                                                              Stage.Context context) {
     if(connectString == null || connectString.isEmpty()) {
       issues.add(context.createConfigIssue(configGroupName, configName,
-        Errors.KAFKA_06, configName));
+        KafkaErrors.KAFKA_06, configName));
       return null;
     }
 
@@ -136,7 +137,7 @@ public class KafkaUtil {
         try {
           PathUtils.validatePath(chrootPath);
         } catch (IllegalArgumentException e) {
-          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_09, connectString,
+          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_09, connectString,
             e.toString()));
         }
       }
@@ -150,14 +151,14 @@ public class KafkaUtil {
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
       if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_09, connectString,
+        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_09, connectString,
           "The connection String is not of the form <HOST>:<PORT>"));
       } else {
         try {
           int port = Integer.parseInt(brokerHostAndPort[1].trim());
           kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
         } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(configGroupName, configName, Errors.KAFKA_07, connectString,
+          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectString,
             e.toString()));
         }
       }

@@ -8,6 +8,7 @@ package com.streamsets.pipeline.lib;
 import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
 import kafka.utils.MockTime;
@@ -65,7 +66,7 @@ public class TestKafkaUtil {
     } catch (IOException e) {
       //NOP assertEquals(Errors.KAFKA_03, e.getErrorCode());
     } catch (Exception e) {
-      Assert.fail("Expected stage exception with error code " + Errors.KAFKA_03 + " but got " + e);
+      Assert.fail("Expected stage exception with error code " + KafkaErrors.KAFKA_03 + " but got " + e);
     }
     kafkaServer.shutdown();
   }

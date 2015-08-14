@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -79,7 +79,7 @@ public class KafkaConsumer {
     try {
       createConsumer(issues, context);
     } catch (StageException ex) {
-      issues.add(context.createConfigIssue(null, null, Errors.KAFKA_10, ex.toString()));
+      issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, ex.toString()));
     }
   }
 
@@ -144,11 +144,11 @@ public class KafkaConsumer {
     } catch (Exception e) {
       if(issues != null) {
         issues.add(context.createConfigIssue(Groups.KAFKA.name(), "zookeeperConnect",
-          Errors.KAFKA_31, zookeeperConnect, e.toString()));
+          KafkaErrors.KAFKA_31, zookeeperConnect, e.toString()));
         return;
       } else {
-        LOG.error(Errors.KAFKA_31.getMessage(), zookeeperConnect, e.toString(), e);
-        throw new StageException(Errors.KAFKA_31, zookeeperConnect, e.toString(), e);
+        LOG.error(KafkaErrors.KAFKA_31.getMessage(), zookeeperConnect, e.toString(), e);
+        throw new StageException(KafkaErrors.KAFKA_31, zookeeperConnect, e.toString(), e);
       }
     }
 
@@ -168,8 +168,8 @@ public class KafkaConsumer {
     try {
       consumerIterator = stream.iterator();
     } catch (Exception e) {
-      LOG.error(Errors.KAFKA_32.getMessage(), e.toString(), e);
-      throw new StageException(Errors.KAFKA_32, e.toString(), e);
+      LOG.error(KafkaErrors.KAFKA_32.getMessage(), e.toString(), e);
+      throw new StageException(KafkaErrors.KAFKA_32, e.toString(), e);
     }
   }
 
