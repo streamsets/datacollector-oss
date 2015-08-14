@@ -488,6 +488,11 @@ angular
               });
 
               chartBean.values.push([date, propertyValue]);
+
+              //Store only last 10 minutes data
+              if(chartBean.values.length > 150) {
+                chartBean.values.shift();
+              }
             }
           });
 
