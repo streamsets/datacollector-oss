@@ -7,6 +7,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
@@ -39,6 +40,9 @@ public class SourceRunner extends StageRunner<Source> {
       ensureStatus(Status.INITIALIZED);
       BatchMakerImpl batchMaker = new BatchMakerImpl(((Source.Context) getContext()).getOutputLanes());
       String newOffset = getStage().produce(lastOffset, maxBatchSize, batchMaker);
+      if (getStage() instanceof OffsetCommitter) {
+        ((OffsetCommitter)getStage()).commit(newOffset);
+      }
       return new Output(newOffset, batchMaker.getOutput());
     } finally {
       LOG.debug("Stage '{}' produce ends", getInfo().getInstanceName());

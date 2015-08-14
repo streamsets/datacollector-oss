@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import org.junit.Assert;
@@ -20,6 +21,23 @@ public class TestSourceRunner {
       Assert.assertEquals(10, maxBatchSize);
       batchMaker.addRecord(getContext().createRecord("a"));
       return "newOffset";
+    }
+  }
+
+  public static class DummySourceOffsetCommitter extends BaseSource implements OffsetCommitter {
+    boolean committed;
+
+    @Override
+    public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+      Assert.assertEquals("lastOffset", lastSourceOffset);
+      Assert.assertEquals(10, maxBatchSize);
+      batchMaker.addRecord(getContext().createRecord("a"));
+      return "newOffset";
+    }
+
+    @Override
+    public void commit(String offset) throws StageException {
+      committed = true;
     }
   }
 
@@ -73,6 +91,27 @@ public class TestSourceRunner {
     try {
       runner.runInit();
       StageRunner.Output output = runner.runProduce("lastOffset", 10);
+      Assert.assertNotNull(output);
+      Assert.assertEquals("newOffset", output.getNewOffset());
+      Assert.assertEquals(1, output.getRecords().size());
+      Assert.assertTrue(output.getRecords().containsKey("a"));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Assert.assertNotNull(output.getRecords().get("a").get(0));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testOffsetCommitterSource() throws Exception {
+    DummySourceOffsetCommitter stage = new DummySourceOffsetCommitter();
+    SourceRunner.Builder builder = new SourceRunner.Builder(DummySource.class, stage).addOutputLane("a");
+    SourceRunner runner = builder.build();
+    try {
+      runner.runInit();
+      Assert.assertFalse(stage.committed);
+      StageRunner.Output output = runner.runProduce("lastOffset", 10);
+      Assert.assertTrue(stage.committed);
       Assert.assertNotNull(output);
       Assert.assertEquals("newOffset", output.getNewOffset());
       Assert.assertEquals(1, output.getRecords().size());
