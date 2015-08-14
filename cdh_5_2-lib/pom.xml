@@ -11,12 +11,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.0.0RC5</version>
+    <version>1.0.0RC6</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_2-lib</artifactId>
-  <version>1.0.0RC5</version>
+  <version>1.0.0RC6</version>
   <description>StreamSets Data Collector CDH5.2.6 Lib</description>
   <name>StreamSets Data Collector CDH5.2.6 Lib</name>
   <packaging>jar</packaging>

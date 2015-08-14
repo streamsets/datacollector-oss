@@ -5,12 +5,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-cloudera-integration</artifactId>
-    <version>1.0.0RC5</version>
+    <version>1.0.0RC6</version>
   </parent>
 
   <groupId>com.streamsets</groupId>
   <artifactId>STREAMSETS</artifactId>
-  <version>1.0.0RC5</version>
+  <version>1.0.0RC6</version>
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
