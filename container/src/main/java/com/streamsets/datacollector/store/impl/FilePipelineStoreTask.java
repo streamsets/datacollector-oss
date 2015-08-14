@@ -171,7 +171,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   private boolean cleanUp(String name) throws PipelineStoreException {
-    return PipelineDirectoryUtil.deleteAll(getPipelineDir(name));
+    boolean deleted = PipelineDirectoryUtil.deleteAll(getPipelineDir(name));
+    deleted &= PipelineDirectoryUtil.deletePipelineDir(runtimeInfo, name);
+    return deleted;
   }
 
   @Override
@@ -189,7 +191,6 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         if (!cleanUp(name)) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0203, name);
         }
-        pipelineStateStore.delete(name, REV);
       }
     }
   }

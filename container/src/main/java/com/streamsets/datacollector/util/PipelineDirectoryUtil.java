@@ -28,6 +28,16 @@ public class PipelineDirectoryUtil {
     return pipelineDir;
   }
 
+  public static boolean deletePipelineDir(RuntimeInfo runtimeInfo, String pipelineName) {
+    File pipelineDir = new File(new File(runtimeInfo.getDataDir(), PIPELINE_BASE_DIR),
+      PipelineUtils.escapedPipelineName(pipelineName));
+    boolean deleted = true;
+    if(pipelineDir.exists()) {
+      deleted = deleteAll(pipelineDir);
+    }
+    return deleted;
+  }
+
   public static File getPipelineSnapshotDir(RuntimeInfo runtimeInfo, String pipelineName, String rev,
                                             String snapshotName) {
     File pipelineDir = getPipelineDir(runtimeInfo, pipelineName, rev);
