@@ -14,7 +14,8 @@ angular.module('dataCollectorApp.common')
       PIPELINE_EXECUTION_MODE = 'pipeline.execution.mode',
       CALLBACK_SERVER_URL = 'callback.server.url',
       UI_UNDO_LIMIT = 'ui.undo.limit',
-      METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable';
+      METRICS_TIME_SERIES_ENABLE = 'metrics.timeSeries.enable',
+      MONITOR_MEMORY = 'monitor.memory';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -165,6 +166,16 @@ angular.module('dataCollectorApp.common')
         return self.config[METRICS_TIME_SERIES_ENABLE] === 'true';
       }
       return true;
+    };
+
+    /**
+     * Returns monitor.memory flag value
+     */
+    this.isMonitorMemoryEnabled = function() {
+      if(self.config) {
+        return self.config[MONITOR_MEMORY] === 'true';
+      }
+      return false;
     };
 
   });
