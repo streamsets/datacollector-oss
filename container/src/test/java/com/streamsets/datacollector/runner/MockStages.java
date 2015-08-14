@@ -287,7 +287,7 @@ public class MockStages {
     }
 
     @Override
-    public void setDoneFlag() {
+    public void postDestroy() {
     }
 
   }

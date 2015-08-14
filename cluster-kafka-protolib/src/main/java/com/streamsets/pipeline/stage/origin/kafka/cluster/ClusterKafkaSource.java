@@ -123,7 +123,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   }
 
   @Override
-  public void setDoneFlag() {
+  public void postDestroy() {
     //don't do anything
   }
 

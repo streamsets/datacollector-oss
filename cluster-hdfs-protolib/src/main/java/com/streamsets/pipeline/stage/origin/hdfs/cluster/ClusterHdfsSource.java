@@ -594,7 +594,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return configsToShip;
   }
   @Override
-  public void setDoneFlag() {
+  public void postDestroy() {
     countDownLatch.countDown();
   }
 }

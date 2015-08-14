@@ -14,7 +14,6 @@ import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
@@ -119,8 +118,8 @@ public class ProductionPipeline {
         LOG.debug("Destroying");
         pipeline.destroy();
         if (pipeline.getSource() instanceof ClusterSource) {
-          LOG.debug("Setting done flag for cluster source");
-          ((ClusterSource) pipeline.getSource()).setDoneFlag();
+          LOG.debug("Calling cluster source post destroy");
+          ((ClusterSource) pipeline.getSource()).postDestroy();
         }
         if (finishing) {
           LOG.debug("Finished");

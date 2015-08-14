@@ -55,5 +55,5 @@ public interface ClusterSource extends Source {
 
   void shutdown();
 
-  void setDoneFlag();
+  void postDestroy();
 }

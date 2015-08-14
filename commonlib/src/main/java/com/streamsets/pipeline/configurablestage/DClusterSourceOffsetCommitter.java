@@ -101,9 +101,9 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
   }
 
   @Override
-  public void setDoneFlag() {
+  public void postDestroy() {
     initializeClusterSource();
-    clusterSource.setDoneFlag();
+    clusterSource.postDestroy();
   }
 
 }
