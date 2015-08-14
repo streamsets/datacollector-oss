@@ -93,7 +93,8 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         if(scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST') {
           if(!scope.diffRecordValue || scope.recordValue.path !== scope.diffRecordValue.path) {
             scope.updatedField = true;
-          } else if(scope.recordValue.value !== scope.diffRecordValue.value){
+          } else if(scope.recordValue.value !== scope.diffRecordValue.value ||
+            scope.recordValue.type !== scope.diffRecordValue.type){
             scope.updatedValue = true;
           }
         } else {

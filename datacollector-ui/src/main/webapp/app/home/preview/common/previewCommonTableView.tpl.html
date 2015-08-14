@@ -57,7 +57,11 @@
     <!--Input -->
 
     <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
-        ng-class="{'value-deletion': (detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE && flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value) }">
+        ng-class="{
+          'value-deletion': detailPaneConfig.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+              (flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value ||
+              flattenInputRecord[fieldPath].type !== flattenOutputRecord[fieldPath].type)
+          }">
 
       <span class="pull-right glyphicon glyphicon-asterisk dirty-icon" ng-if="flattenInputRecord[fieldPath].dirty"></span>
 
@@ -94,7 +98,10 @@
 
     <td ng-if="flattenOutputRecord"
         ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
-        ng-class="{'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value }">
+        ng-class="{
+          'value-addition': flattenInputRecord[fieldPath].value !== flattenOutputRecord[fieldPath].value ||
+          flattenInputRecord[fieldPath].type !== flattenOutputRecord[fieldPath].type
+          }">
       <span class="number-circle" ng-if="$index === 0 && laneMap"
         tooltip="{{('home.previewPane.streamCondition' | translate ) + ': ' + laneMap[outputRecords[0].laneName].condition}}">{{laneMap[outputRecords[0].laneName].index}}</span>
       <span
