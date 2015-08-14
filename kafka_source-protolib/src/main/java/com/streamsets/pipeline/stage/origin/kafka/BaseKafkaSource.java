@@ -18,7 +18,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -124,40 +124,40 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     List<ConfigIssue> issues = new ArrayList<ConfigIssue>();
     if(topic == null || topic.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_05));
+        KafkaErrors.KAFKA_05));
     }
     //maxWaitTime
     if(maxWaitTime < 1) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "maxWaitTime",
-        Errors.KAFKA_35));
+        KafkaErrors.KAFKA_35));
     }
 
     switch (dataFormat) {
       case JSON:
         if (jsonMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", Errors.KAFKA_38));
+          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "maxJsonObjectLen", KafkaErrors.KAFKA_38));
         }
         break;
       case TEXT:
         if (textMaxLineLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", Errors.KAFKA_38));
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "maxLogLineLength", KafkaErrors.KAFKA_38));
         }
         break;
       case DELIMITED:
         if (csvMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.KAFKA_38));
+          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", KafkaErrors.KAFKA_38));
         }
         break;
       case XML:
         if (produceSingleRecordPerMessage) {
           issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "produceSingleRecordPerMessage",
-                                                    Errors.KAFKA_40));
+                                                    KafkaErrors.KAFKA_40));
         }
         if (xmlMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", Errors.KAFKA_38));
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "maxXmlObjectLen", KafkaErrors.KAFKA_38));
         }
         if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.KAFKA_36,
+          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", KafkaErrors.KAFKA_36,
                                                     xmlRecordElement));
         }
         break;
@@ -172,12 +172,12 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         break;
       case AVRO:
         if(!messageHasSchema && (avroSchema == null || avroSchema.isEmpty())) {
-          issues.add(getContext().createConfigIssue(Groups.AVRO.name(), "avroSchema", Errors.KAFKA_43,
+          issues.add(getContext().createConfigIssue(Groups.AVRO.name(), "avroSchema", KafkaErrors.KAFKA_43,
             avroSchema));
         }
         break;
       default:
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", Errors.KAFKA_39, dataFormat));
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "dataFormat", KafkaErrors.KAFKA_39, dataFormat));
     }
 
     validateParserFactoryConfigs(issues);
@@ -187,14 +187,14 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       int partitionCount = KafkaUtil.getPartitionCount(metadataBrokerList, topic, 3, 1000);
       if(partitionCount < 1) {
         issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-          Errors.KAFKA_42, topic));
+          KafkaErrors.KAFKA_42, topic));
       } else {
         //cache the partition count as parallelism for future use
         originParallelism = partitionCount;
       }
     } catch (IOException e) {
       issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic",
-        Errors.KAFKA_41, topic, e.toString(), e));
+        KafkaErrors.KAFKA_41, topic, e.toString(), e));
     }
 
     // Validate zookeeper config
@@ -211,7 +211,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
      //consumerGroup
      if(consumerGroup == null || consumerGroup.isEmpty()) {
        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "consumerGroup",
-         Errors.KAFKA_33));
+         KafkaErrors.KAFKA_33));
      }
      return issues;
   }
@@ -237,7 +237,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       } catch (UnsupportedCharsetException ex) {
         // setting it to a valid one so the parser factory can be configured and tested for more errors
         messageCharset = StandardCharsets.UTF_8;
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", Errors.KAFKA_08, charset));
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "charset", KafkaErrors.KAFKA_08, charset));
       }
     }
     builder.setCharset(messageCharset).setRemoveCtrlChars(removeCtrlChars);
@@ -302,13 +302,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(Errors.KAFKA_37, messageId, ex.toString(), ex);
+        getContext().reportError(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {
           throw (StageException) ex;
         } else {
-          throw new StageException(Errors.KAFKA_37, messageId, ex.toString(), ex);
+          throw new StageException(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
         }
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",

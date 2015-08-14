@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.api.FetchRequest;
@@ -77,12 +77,12 @@ public class LowLevelKafkaConsumer {
     brokers.add(broker);
     PartitionMetadata metadata = getPartitionMetadata(brokers, topic, partition);
     if (metadata == null) {
-      LOG.error(Errors.KAFKA_23.getMessage(), topic, partition);
-      throw new StageException(Errors.KAFKA_23, topic, partition);
+      LOG.error(KafkaErrors.KAFKA_23.getMessage(), topic, partition);
+      throw new StageException(KafkaErrors.KAFKA_23, topic, partition);
     }
     if (metadata.leader() == null) {
-      LOG.error(Errors.KAFKA_24.getMessage(), topic, partition);
-      throw new StageException(Errors.KAFKA_24, topic, partition);
+      LOG.error(KafkaErrors.KAFKA_24.getMessage(), topic, partition);
+      throw new StageException(KafkaErrors.KAFKA_24, topic, partition);
     }
     leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
@@ -108,10 +108,10 @@ public class LowLevelKafkaConsumer {
         //If the value of consumer.timeout.ms is set to a positive integer, a timeout exception is thrown to the
         //consumer if no message is available for consumption after the specified timeout value.
         //If this happens exit gracefully
-        LOG.warn(Errors.KAFKA_28.getMessage());
+        LOG.warn(KafkaErrors.KAFKA_28.getMessage());
         return Collections.emptyList();
       } else {
-        throw new StageException(Errors.KAFKA_29, e.toString(), e);
+        throw new StageException(KafkaErrors.KAFKA_29, e.toString(), e);
       }
     }
 
@@ -133,7 +133,7 @@ public class LowLevelKafkaConsumer {
 
       if(fetchResponse.hasError()) {
         //could not fetch the second time, give kafka some time
-        LOG.error(Errors.KAFKA_26.getMessage(), topic, partition, offset);
+        LOG.error(KafkaErrors.KAFKA_26.getMessage(), topic, partition, offset);
       }
     }
 
@@ -141,7 +141,7 @@ public class LowLevelKafkaConsumer {
     for (kafka.message.MessageAndOffset messageAndOffset : fetchResponse.messageSet(topic, partition)) {
       long currentOffset = messageAndOffset.offset();
       if (currentOffset < offset) {
-        LOG.warn(Errors.KAFKA_27.getMessage(), currentOffset, offset);
+        LOG.warn(KafkaErrors.KAFKA_27.getMessage(), currentOffset, offset);
         continue;
       }
       ByteBuffer payload = messageAndOffset.message().payload();
@@ -165,15 +165,15 @@ public class LowLevelKafkaConsumer {
       OffsetResponse response = consumer.getOffsetsBefore(request);
 
       if (response.hasError()) {
-        LOG.error(Errors.KAFKA_22.getMessage(), consumer.host() + ":" + consumer.port(),
+        LOG.error(KafkaErrors.KAFKA_22.getMessage(), consumer.host() + ":" + consumer.port(),
           response.errorCode(topic, partition));
         return 0;
       }
       long[] offsets = response.offsets(topic, partition);
       return offsets[0];
     } catch (Exception e) {
-      LOG.error(Errors.KAFKA_30.getMessage(), e);
-      throw new StageException(Errors.KAFKA_30, e.toString(), e);
+      LOG.error(KafkaErrors.KAFKA_30.getMessage(), e);
+      throw new StageException(KafkaErrors.KAFKA_30, e.toString(), e);
     }
   }
 
@@ -194,8 +194,8 @@ public class LowLevelKafkaConsumer {
         ThreadUtil.sleep(ONE_SECOND);
       }
     }
-    LOG.error(Errors.KAFKA_21.getMessage());
-    throw new StageException(Errors.KAFKA_21);
+    LOG.error(KafkaErrors.KAFKA_21.getMessage());
+    throw new StageException(KafkaErrors.KAFKA_21);
   }
 
   private PartitionMetadata getPartitionMetadata(List<KafkaBroker> brokers, String topic, int partition) {
@@ -223,7 +223,7 @@ public class LowLevelKafkaConsumer {
           }
         }
       } catch (Exception e) {
-        LOG.error(Errors.KAFKA_25.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
+        LOG.error(KafkaErrors.KAFKA_25.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
           e.toString(), e);
       } finally {
         if (simpleConsumer != null) {

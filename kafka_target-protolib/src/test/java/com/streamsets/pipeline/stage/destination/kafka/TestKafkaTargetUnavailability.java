@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -93,7 +93,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (KafkaConnectionException e) {
-      Assert.assertEquals(Errors.KAFKA_50, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -141,7 +141,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (KafkaConnectionException e) {
-      Assert.assertEquals(Errors.KAFKA_50, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -189,7 +189,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (KafkaConnectionException e) {
-      Assert.assertEquals(Errors.KAFKA_50, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -238,7 +238,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (KafkaConnectionException e) {
-      Assert.assertEquals(Errors.KAFKA_67, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_67, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -287,7 +287,7 @@ public class TestKafkaTargetUnavailability {
       targetRunner.runWrite(logRecords);
       Assert.fail("Expected StageException, got none.");
     } catch (KafkaConnectionException e) {
-      Assert.assertEquals(Errors.KAFKA_67, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_67, e.getErrorCode());
     }
 
     targetRunner.runDestroy();
@@ -319,7 +319,7 @@ public class TestKafkaTargetUnavailability {
     try {
       targetRunner.runWrite(logRecords);
     } catch (StageException e) {
-      Assert.assertEquals(Errors.KAFKA_50, e.getErrorCode());
+      Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
     }
     targetRunner.runDestroy();
   }

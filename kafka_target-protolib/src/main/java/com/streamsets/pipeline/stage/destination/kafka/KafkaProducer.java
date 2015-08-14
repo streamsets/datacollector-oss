@@ -7,7 +7,7 @@ package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -101,8 +101,8 @@ public class KafkaProducer {
       //Producer internally refreshes metadata and retries if there is any recoverable exception.
       //If retry fails, a FailedToSendMessageException is thrown.
       //In this case we want to fail pipeline.
-      LOG.error(Errors.KAFKA_50.getMessage(), e.toString(), e);
-      throw new KafkaConnectionException(Errors.KAFKA_50, e.toString(), e);
+      LOG.error(KafkaErrors.KAFKA_50.getMessage(), e.toString(), e);
+      throw new KafkaConnectionException(KafkaErrors.KAFKA_50, e.toString(), e);
     }
   }
 

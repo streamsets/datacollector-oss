@@ -18,7 +18,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.Errors;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaUtil;
@@ -144,7 +144,7 @@ public class KafkaTarget extends BaseTarget {
     if(runtimeTopicResolution) {
       //EL containing record: functions - make sure the expression is valid and parses correctly
       if(topicExpression == null || topicExpression.trim().isEmpty()) {
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topicExpression", Errors.KAFKA_05));
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topicExpression", KafkaErrors.KAFKA_05));
       }
       validateTopicExpression(issues);
       //Also a topic white list is expected in this case, validate the list
@@ -162,7 +162,7 @@ public class KafkaTarget extends BaseTarget {
           topic = topicEval.eval(topicVars, topic, String.class);
         } catch (Exception ex) {
           validateTopicExists = false;
-          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_61, topic,
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", KafkaErrors.KAFKA_61, topic,
             ex.toString(), ex));
         }
       }
@@ -313,12 +313,12 @@ public class KafkaTarget extends BaseTarget {
                   break;
                 case TO_ERROR:
                   for (Record record : list) {
-                    getContext().toError(record, Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
+                    getContext().toError(record, KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
                       ex.toString(), ex);
                   }
                   break;
                 case STOP_PIPELINE:
-                  throw new StageException(Errors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(),
+                  throw new StageException(KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(),
                     ex);
                 default:
                   throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -367,7 +367,7 @@ public class KafkaTarget extends BaseTarget {
             if (ex instanceof StageException) {
               throw (StageException) ex;
             } else {
-              throw new StageException(Errors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
+              throw new StageException(KafkaErrors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
             }
           default:
             throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
@@ -387,12 +387,12 @@ public class KafkaTarget extends BaseTarget {
       try {
         int p = partitionEval.eval(partitionVars, partition, Integer.class);
         if (p < 0 || p >= topicPartitionMap.get(topic)) {
-          throw new StageException(Errors.KAFKA_56, partition, topic, topicPartitionMap.get(topic),
+          throw new StageException(KafkaErrors.KAFKA_56, partition, topic, topicPartitionMap.get(topic),
             record.getHeader().getSourceId());
         }
         partitionKey = Integer.toString(p);
       } catch (ELEvalException e) {
-        throw new StageException(Errors.KAFKA_54, partition, record.getHeader().getSourceId(), e.toString());
+        throw new StageException(KafkaErrors.KAFKA_54, partition, record.getHeader().getSourceId(), e.toString());
       }
     }
     return partitionKey;
@@ -426,10 +426,10 @@ public class KafkaTarget extends BaseTarget {
       try {
         result = topicEval.eval(topicVars, topicExpression, String.class);
         if (result == null || result.isEmpty()) {
-          throw new StageException(Errors.KAFKA_62, topicExpression, record.getHeader().getSourceId());
+          throw new StageException(KafkaErrors.KAFKA_62, topicExpression, record.getHeader().getSourceId());
         }
         if (!allowedTopics.contains(result) && !allowAllTopics) {
-          throw new StageException(Errors.KAFKA_65, result, record.getHeader().getSourceId());
+          throw new StageException(KafkaErrors.KAFKA_65, result, record.getHeader().getSourceId());
         }
         if (!topicPartitionMap.containsKey(result)) {
           //allowAllTopics must be true to get here
@@ -444,14 +444,14 @@ public class KafkaTarget extends BaseTarget {
               KafkaUtil.getTopicMetadata(kafkaBrokers, result, messageSendMaxRetries, retryBackoffMs);
           if (topicMetadata == null) {
             //Could not get topic metadata from any of the supplied brokers
-            StageException s = new StageException(Errors.KAFKA_03, result, metadataBrokerList);
+            StageException s = new StageException(KafkaErrors.KAFKA_03, result, metadataBrokerList);
             //cache bad topic name and the exception
             invalidTopicMap.put(result, s);
             throw s;
           }
           if (topicMetadata.errorCode() == ErrorMapping.UnknownTopicOrPartitionCode()) {
             //Topic does not exist
-            StageException s = new StageException(Errors.KAFKA_04, result);
+            StageException s = new StageException(KafkaErrors.KAFKA_04, result);
             invalidTopicMap.put(result, s);
             throw s;
           }
@@ -461,9 +461,9 @@ public class KafkaTarget extends BaseTarget {
           LOG.warn("Encountered {} different topics while running the pipeline", topicPartitionMap.keySet().size());
         }
       } catch (IOException e) {
-        throw new StageException(Errors.KAFKA_52, result, kafkaBrokers, e.toString());
+        throw new StageException(KafkaErrors.KAFKA_52, result, kafkaBrokers, e.toString());
       } catch (ELEvalException e) {
-        throw new StageException(Errors.KAFKA_63, topicExpression, record.getHeader().getSourceId(), e.toString());
+        throw new StageException(KafkaErrors.KAFKA_63, topicExpression, record.getHeader().getSourceId(), e.toString());
       }
     }
     return result;
@@ -487,7 +487,7 @@ public class KafkaTarget extends BaseTarget {
       partitionVars = getContext().createELVars();
       //There is no scope to provide partitionVars for kafka target as of today, create empty partitionVars
       ELUtils.validateExpression(partitionEval, getContext().createELVars(), partition, getContext(),
-        Groups.KAFKA.name(), "partition", Errors.KAFKA_57, Object.class, issues);
+        Groups.KAFKA.name(), "partition", KafkaErrors.KAFKA_57, Object.class, issues);
     }
   }
 
@@ -495,7 +495,7 @@ public class KafkaTarget extends BaseTarget {
     topicEval = getContext().createELEval("topicExpression");
     topicVars = getContext().createELVars();
     ELUtils.validateExpression(topicEval, getContext().createELVars(), topicExpression, getContext(),
-      Groups.KAFKA.name(), "topicExpression", Errors.KAFKA_61, Object.class, issues);
+      Groups.KAFKA.name(), "topicExpression", KafkaErrors.KAFKA_61, Object.class, issues);
   }
 
   private void validateDataFormatAndSpecificConfig(List<Stage.ConfigIssue> issues, DataFormat dataFormat,
@@ -504,7 +504,7 @@ public class KafkaTarget extends BaseTarget {
       case TEXT:
         //required the field configuration to be set and it is "/" by default
         if(textFieldPath == null || textFieldPath.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", Errors.KAFKA_58));
+          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", KafkaErrors.KAFKA_58));
         }
         break;
       case JSON:
@@ -514,32 +514,32 @@ public class KafkaTarget extends BaseTarget {
         //no-op
         break;
       default:
-        issues.add(context.createConfigIssue(groupName, configName, Errors.KAFKA_02, dataFormat));
+        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_02, dataFormat));
         //XML is not supported for KafkaTarget
     }
   }
 
   private void validateTopicExistence(List<ConfigIssue> issues, String topic) {
     if(topic == null || topic.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_05));
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", KafkaErrors.KAFKA_05));
     } else {
       TopicMetadata topicMetadata;
       try {
         topicMetadata = KafkaUtil.getTopicMetadata(kafkaBrokers, topic, 1, 0);
       } catch (IOException e) {
         //Could not connect to kafka with the given metadata broker list
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList", Errors.KAFKA_67,
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "metadataBrokerList", KafkaErrors.KAFKA_67,
           metadataBrokerList));
         return;
       }
 
       if(topicMetadata == null) {
         //Could not get topic metadata from any of the supplied brokers
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_03, topic,
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", KafkaErrors.KAFKA_03, topic,
           metadataBrokerList));
       } else if (topicMetadata.errorCode()== ErrorMapping.UnknownTopicOrPartitionCode()) {
         //Topic does not exist
-        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", Errors.KAFKA_04, topic));
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topic", KafkaErrors.KAFKA_04, topic));
       } else {
         int numberOfPartitions = topicMetadata.partitionsMetadata().size();
         allowedTopics.add(topic);
@@ -551,7 +551,7 @@ public class KafkaTarget extends BaseTarget {
   private void validateTopicWhiteList(List<ConfigIssue> issues, List<KafkaBroker> kafkaBrokers) {
     //if runtimeTopicResolution then topic white list cannot be empty
     if(topicWhiteList == null || topicWhiteList.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topicWhiteList", Errors.KAFKA_64));
+      issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "topicWhiteList", KafkaErrors.KAFKA_64));
     } else if (topicWhiteList.equals("*")) {
       allowAllTopics = true;
     } else {
@@ -573,11 +573,11 @@ public class KafkaTarget extends BaseTarget {
         try {
           messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).trim());
         } catch (NullPointerException | NumberFormatException e) {
-          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             MESSAGE_SEND_MAX_RETRIES_KEY, "integer", e.toString(), e));
         }
         if(messageSendMaxRetries < 0) {
-          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             MESSAGE_SEND_MAX_RETRIES_KEY, "integer"));
         }
       } else {
@@ -588,11 +588,11 @@ public class KafkaTarget extends BaseTarget {
         try {
           retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).trim());
         } catch (NullPointerException | NumberFormatException e) {
-          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             RETRY_BACKOFF_MS_KEY, "long", e.toString(), e));
         }
         if(retryBackoffMs < 0) {
-          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", Errors.KAFKA_66,
+          issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             RETRY_BACKOFF_MS_KEY, "long"));
         }
       } else {

@@ -3,13 +3,13 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib;
+package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
+public enum KafkaErrors implements ErrorCode {
 
   KAFKA_00("Cannot parse CSV: {}"),
   KAFKA_01("Cannot parse JSON: {}"),
@@ -73,7 +73,7 @@ public enum Errors implements ErrorCode {
   ;
   private final String msg;
 
-  Errors(String msg) {
+  KafkaErrors(String msg) {
     this.msg = msg;
   }
 

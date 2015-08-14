@@ -3,13 +3,13 @@
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
-package com.streamsets.pipeline.lib;
+package com.streamsets.pipeline.lib.flume;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
+public enum FlumeErrors implements ErrorCode {
   //Flume Origin
 
   //Flume target messages
@@ -26,7 +26,7 @@ public enum Errors implements ErrorCode {
   ;
   private final String msg;
 
-  Errors(String msg) {
+  FlumeErrors(String msg) {
     this.msg = msg;
   }
 
