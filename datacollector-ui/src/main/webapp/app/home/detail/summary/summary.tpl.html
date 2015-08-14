@@ -179,7 +179,7 @@
 
 <script type="text/ng-template" id="memoryConsumedLineChartTemplate">
   <div class="col-sm-4"
-       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER"
+       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && monitorMemoryEnabled"
        ng-controller="MemoryConsumedLineChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -360,7 +360,7 @@
 
 <script type="text/ng-template" id="summaryAllStageMemoryConsumedBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER"
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && monitorMemoryEnabled"
        ng-controller="AllStageMemoryConsumedChartController">
     <div class="panel panel-default">
       <div class="panel-heading">

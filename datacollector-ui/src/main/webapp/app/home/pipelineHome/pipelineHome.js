@@ -46,15 +46,10 @@ angular
       archiveOp = false,
       reloadingNew = false;
 
-    configuration.init().then(function() {
-      if(configuration.isAnalyticsEnabled()) {
-        Analytics.trackPage('/collector/pipeline/pipelineName');
-      }
-    });
-
     angular.extend($scope, {
       _: _,
       showLoading: true,
+      monitorMemoryEnabled: false,
       isPipelineReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator]),
       isPipelineRulesReadOnly: !authService.isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager]),
       selectedType: pipelineConstant.PIPELINE,
@@ -625,6 +620,12 @@ angular
 
         isWebSocketSupported = (typeof(WebSocket) === "function") && configuration.isWebSocketUseEnabled();
         undoLimit = configuration.getUndoLimit();
+
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.trackPage('/collector/pipeline/pipelineName');
+        }
+
+        $scope.monitorMemoryEnabled = configuration.isMonitorMemoryEnabled();
 
         //Definitions
         $scope.pipelineConfigDefinition = pipelineService.getPipelineConfigDefinition();
