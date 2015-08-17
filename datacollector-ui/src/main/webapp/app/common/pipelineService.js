@@ -23,8 +23,8 @@ angular.module('dataCollectorApp.common')
 
     this.initializeDefer = undefined;
 
-    this.init = function() {
-      if(!self.initializeDefer) {
+    this.init = function(force) {
+      if(!self.initializeDefer || force) {
         self.initializeDefer = $q.defer();
 
         $q.all([
@@ -86,6 +86,17 @@ angular.module('dataCollectorApp.common')
       }
 
       return self.initializeDefer.promise;
+    };
+
+    /**
+     * Refresh pipeline by re fetching from server
+     */
+    this.refreshPipelines = function() {
+      return api.pipelineAgent.getPipelines()
+        .then(function (results) {
+          self.pipelines = results.data;
+          return self.pipelines;
+        });
     };
 
     /**

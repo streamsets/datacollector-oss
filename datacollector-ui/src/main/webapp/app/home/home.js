@@ -40,6 +40,15 @@ angular
       sortReverse: true,
 
       /**
+       * Refresh pipelines
+       */
+      refreshPipelines: function() {
+        pipelineService.refreshPipelines().then(function(pipelines) {
+          $scope.pipelines = pipelines;
+        });
+      },
+
+      /**
        * Add New Pipeline Configuration
        */
       addPipelineConfig: function() {
@@ -173,7 +182,7 @@ angular
 
     $q.all([
       api.pipelineAgent.getAllPipelineStatus(),
-      pipelineService.init(),
+      pipelineService.init(true),
       configuration.init()
     ])
     .then(

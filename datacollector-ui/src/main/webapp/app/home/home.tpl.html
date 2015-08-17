@@ -33,6 +33,16 @@
     <div class="panel-title size-toolbar">
       <h3 class="pull-left" translate="home.title">Pipelines</h3>
 
+      <div class="pull-left">
+        <a class="btn btn-link icon-button refresh-btn"
+           tooltip-placement="bottom"
+           tooltip="{{'global.form.refresh' | translate}}"
+           tooltip-popup-delay="500"
+           ng-click="refreshPipelines()">
+          <span class="fa fa-refresh fa-14x"></span>
+        </a>
+      </div>
+
       <div class="pull-right" ng-show="pipelines.length > 1">
 
         <span class="sort-by-label">Sort by:</span>
@@ -100,7 +110,6 @@
           </ul>
         </div>
       </div>
-
 
     </div>
   </div>
