@@ -14,8 +14,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.flume.FlumeErrors;
 import com.streamsets.pipeline.lib.FlumeUtil;
+import com.streamsets.pipeline.lib.flume.FlumeErrors;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -263,7 +264,7 @@ public class FlumeTarget extends BaseTarget {
         generator.write(record);
         generator.close();
         events.add(EventBuilder.withBody(baos.toByteArray(), headers));
-      } catch (Exception ex) {
+      } catch (IOException | StageException ex) {
         handleException(ex, record);
       }
     }
@@ -288,7 +289,7 @@ public class FlumeTarget extends BaseTarget {
       currentRecord = null;
       generator.close();
       events.add(EventBuilder.withBody(baos.toByteArray()));
-    } catch (Exception ex) {
+    } catch (IOException | StageException ex) {
       handleException(ex, currentRecord);
     }
     writeToFlume(events);

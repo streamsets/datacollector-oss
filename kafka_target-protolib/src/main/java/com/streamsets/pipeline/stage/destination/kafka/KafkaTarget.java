@@ -308,7 +308,7 @@ public class KafkaTarget extends BaseTarget {
               generator.close();
               byte[] bytes = baos.toByteArray();
               kafkaProducer.enqueueMessage(entryTopic, bytes, partition);
-            } catch (Exception ex) {
+            } catch (IOException | StageException ex) {
               //clear the message list
               kafkaProducer.getMessageList().clear();
               String sourceId = (currentRecord == null) ? "<NONE>" : currentRecord.getHeader().getSourceId();
@@ -362,7 +362,7 @@ public class KafkaTarget extends BaseTarget {
         //even after retrying with backoff as specified in the retry and backoff config options
         //In this case we fail pipeline.
         throw ex;
-      } catch (Exception ex) {
+      } catch (IOException | StageException ex) {
         switch (getContext().getOnErrorRecord()) {
           case DISCARD:
             break;
