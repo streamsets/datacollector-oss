@@ -35,7 +35,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       displayPosition = 10,
       group = "TYPE_CONVERSION"
   )
-  @ComplexField(FieldTypeConverterConfig.class)
+  @ComplexField
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
   @Override

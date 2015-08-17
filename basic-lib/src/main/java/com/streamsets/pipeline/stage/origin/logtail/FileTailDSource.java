@@ -135,7 +135,7 @@ public class FileTailDSource extends DSource {
       group = "FILES",
       elDefs = PatternEL.class
   )
-  @ComplexField(FileInfo.class)
+  @ComplexField
   public List<FileInfo> fileInfos;
 
   // Post processing
@@ -234,7 +234,7 @@ public class FileTailDSource extends DSource {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField(RegExConfig.class)
+  @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

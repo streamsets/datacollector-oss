@@ -375,7 +375,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField(RegExConfig.class)
+  @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

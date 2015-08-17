@@ -78,7 +78,7 @@ public class HiveDTarget extends DTarget {
       displayPosition = 50,
       group = "HIVE"
   )
-  @ComplexField(FieldMappingConfig.class)
+  @ComplexField
   public List<FieldMappingConfig> columnMappings;
 
   @ConfigDef(

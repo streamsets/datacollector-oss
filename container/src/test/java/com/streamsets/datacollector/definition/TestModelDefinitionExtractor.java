@@ -75,7 +75,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField(Bean.class)
+    @ComplexField
     public Bean invalid3;
 
     @ConfigDef(
@@ -124,7 +124,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField(Bean.class)
+    @ComplexField
     public List<Bean> complexField;
   }
 
@@ -134,7 +134,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField(Configs.class)
+    @ComplexField
     public List<Configs> complexField;
   }
 

@@ -479,7 +479,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField(RegExConfig.class)
+  @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK
