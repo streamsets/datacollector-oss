@@ -76,7 +76,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0202("Cannot create pipeline '{}': {}"),
   CONTAINER_0203("Cannot delete pipeline '{}': {}"),
   CONTAINER_0204("Cannot save pipeline '{}': {}"),
-  CONTAINER_0205("The provided pipeline UUID does not match the stored pipeline UUID - please reload the pipeline '{}'"),
+  CONTAINER_0205("The pipeline '{}' has been changed. Reload the page to view or edit the latest version of the pipeline."),
   CONTAINER_0206("Cannot load details for pipeline '{}': {}"),
   CONTAINER_0207("Definition for Stage '{}' from library '{}' with version '{}' is not available"),
   CONTAINER_0208("Pipeline in state '{}' cannot be saved"),
