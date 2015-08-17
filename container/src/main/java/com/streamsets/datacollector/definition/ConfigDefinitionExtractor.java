@@ -35,16 +35,17 @@ public abstract class ConfigDefinitionExtractor {
     return EXTRACTOR;
   }
 
-  public List<ErrorMessage> validate(Class klass, Object contextMsg) {
-    return validate("", klass, true, false, false, contextMsg);
+  public List<ErrorMessage> validate(Class klass, List<String> stageGroups, Object contextMsg) {
+    return validate("", klass, stageGroups, true, false, false, contextMsg);
   }
 
-  public List<ErrorMessage> validateComplexField(String configPrefix, Class klass, Object contextMsg) {
-    return validate(configPrefix, klass, true, false, true, contextMsg);
+  public List<ErrorMessage> validateComplexField(String configPrefix, Class klass, List<String> stageGroups,
+      Object contextMsg) {
+    return validate(configPrefix, klass, stageGroups, true, false, true, contextMsg);
   }
 
-  private List<ErrorMessage> validate(String configPrefix, Class klass, boolean validateDependencies, boolean isBean,
-      boolean isComplexField, Object contextMsg) {
+  private List<ErrorMessage> validate(String configPrefix, Class klass, List<String> stageGroups,
+      boolean validateDependencies, boolean isBean, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     boolean noConfigs = true;
     for (Field field : klass.getDeclaredFields()) {
@@ -64,14 +65,14 @@ public abstract class ConfigDefinitionExtractor {
         }
         if (field.getAnnotation(ConfigDef.class) != null) {
           noConfigs = false;
-          List<ErrorMessage> subErrors = validateConfigDef(configPrefix, field, isComplexField,
+          List<ErrorMessage> subErrors = validateConfigDef(configPrefix, stageGroups, field, isComplexField,
                                                            Utils.formatL("{} Field='{}'", contextMsg,
                                                                          field.getName()));
           errors.addAll(subErrors);
         } else if (field.getAnnotation(ConfigDefBean.class) != null) {
           noConfigs = false;
-          List<ErrorMessage> subErrors = validateConfigDefBean(configPrefix + field.getName() + ".", field.getType(),
-              isComplexField, Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()));
+          List<ErrorMessage> subErrors = validateConfigDefBean(configPrefix + field.getName() + ".", field,
+              stageGroups, isComplexField, Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()));
           errors.addAll(subErrors);
         }
       }
@@ -80,38 +81,83 @@ public abstract class ConfigDefinitionExtractor {
       errors.add(new ErrorMessage(DefinitionError.DEF_160, contextMsg));
     }
     if (errors.isEmpty() & validateDependencies) {
-      errors.addAll(validateDependencies(getConfigDefinitions(configPrefix, klass, contextMsg), contextMsg));
+      errors.addAll(validateDependencies(getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg),
+                                         contextMsg));
     }
     return errors;
   }
 
-  private List<ConfigDefinition> getConfigDefinitions(String configPrefix, Class klass, Object contextMsg) {
+  private static String resolveGroup(List<String> parentGroups, String group, Object contextMsg, List<ErrorMessage> errors) {
+    if (group.startsWith("#")) {
+      try {
+        int pos = Integer.parseInt(group.substring(1).trim());
+        if (pos >= 0 && pos < parentGroups.size()) {
+          group = parentGroups.get(pos);
+        } else {
+          errors.add(new ErrorMessage(DefinitionError.DEF_163, contextMsg, pos, parentGroups.size() - 1));
+        }
+      } catch (NumberFormatException ex) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_164, contextMsg, ex.toString()));
+      }
+    } else {
+      if (!parentGroups.contains(group)) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_165, contextMsg, group, parentGroups));
+      }
+    }
+    return group;
+  }
+
+  public static List<String> getGroups(Field field, List<String> parentGroups, Object contextMsg,
+      List<ErrorMessage> errors) {
+    List<String> list = new ArrayList<>();
+    ConfigDefBean configDefBean = field.getAnnotation(ConfigDefBean.class);
+    if (configDefBean != null) {
+      String[] groups = configDefBean.groups();
+      if (groups.length > 0) {
+        for (String group : groups) {
+          list.add(resolveGroup(parentGroups, group, contextMsg, errors));
+        }
+      } else {
+        // no groups in the annotation, we propagate all parent groups then
+        list.addAll(parentGroups);
+      }
+    } else {
+      throw new IllegalArgumentException(Utils.format("{} is not annotated with ConfigDefBean", contextMsg));
+    }
+    return list;
+  }
+
+  private List<ConfigDefinition> getConfigDefinitions(String configPrefix, Class klass, List<String> stageGroups,
+      Object contextMsg) {
     List<ConfigDefinition> defs = new ArrayList<>();
     for (Field field : klass.getFields()) {
       if (field.getAnnotation(ConfigDef.class) != null) {
-        defs.add(extractConfigDef(configPrefix, field, Utils.formatL("{} Field='{}'", contextMsg, field.getName())));
+        defs.add(extractConfigDef(configPrefix, stageGroups, field, Utils.formatL("{} Field='{}'", contextMsg,
+                                                                                  field.getName())));
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
-        defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), true,
+        List<String> beanGroups = getGroups(field, stageGroups, contextMsg, new ArrayList<ErrorMessage>());
+        defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), beanGroups, true,
             Utils.formatL("{} BeanField='{}'", contextMsg, field.getName())));
       }
     }
     return defs;
   }
 
-  public List<ConfigDefinition> extract(Class klass, Object contextMsg) {
-    return extract("", klass, contextMsg);
+  public List<ConfigDefinition> extract(Class klass, List<String> stageGroups, Object contextMsg) {
+    return extract("", klass, stageGroups, contextMsg);
   }
 
-  public List<ConfigDefinition> extract(String configPrefix, Class klass, Object contextMsg) {
-    List<ConfigDefinition> defs = extract(configPrefix, klass, false, contextMsg);
+  public List<ConfigDefinition> extract(String configPrefix, Class klass, List<String> stageGroups, Object contextMsg) {
+    List<ConfigDefinition> defs = extract(configPrefix, klass, stageGroups, false, contextMsg);
     resolveDependencies("", defs, contextMsg);
     return defs;
   }
 
-  private List<ConfigDefinition> extract(String configPrefix, Class klass, boolean isBean, Object contextMsg) {
-    List<ErrorMessage> errors = validate(configPrefix, klass, false, isBean, false, contextMsg);
+  private List<ConfigDefinition> extract(String configPrefix, Class klass, List<String> stageGroups, boolean isBean,
+      Object contextMsg) {
+    List<ErrorMessage> errors = validate(configPrefix, klass, stageGroups, false, isBean, false, contextMsg);
     if (errors.isEmpty()) {
-      return getConfigDefinitions(configPrefix, klass, contextMsg);
+      return getConfigDefinitions(configPrefix, klass, stageGroups, contextMsg);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid ConfigDefinition: {}", errors));
     }
@@ -177,16 +223,19 @@ public abstract class ConfigDefinitionExtractor {
     }
   }
 
-  List<ErrorMessage> validateConfigDef(String configPrefix, Field field, boolean isComplexField, Object contextMsg) {
+  List<ErrorMessage> validateConfigDef(String configPrefix, List<String> stageGroups, Field field,
+      boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     ConfigDef annotation = field.getAnnotation(ConfigDef.class);
     errors.addAll(ConfigValueExtractor.get().validate(field, annotation, contextMsg));
     if (annotation.type() == ConfigDef.Type.MODEL && field.getAnnotation(ComplexField.class) != null && isComplexField) {
       errors.add(new ErrorMessage(DefinitionError.DEF_161, contextMsg,  field.getName()));
     } else {
-      List<ErrorMessage> modelErrors = ModelDefinitionExtractor.get().validate(configPrefix + field.getName() + ".", field, contextMsg);
+      List<ErrorMessage> modelErrors = ModelDefinitionExtractor.get().validate(configPrefix + field.getName() + ".",
+                                                                               field, contextMsg);
       if (modelErrors.isEmpty()) {
-        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".", field, contextMsg);
+        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".",
+                                                                       field, contextMsg);
         errors.addAll(validateELFunctions(annotation, model, contextMsg));
         errors.addAll(validateELConstants(annotation, model, contextMsg));
       } else {
@@ -203,14 +252,17 @@ public abstract class ConfigDefinitionExtractor {
   }
 
   @SuppressWarnings("unchecked")
-  List<ErrorMessage> validateConfigDefBean(String configPrefix, Class klass, boolean isComplexField, Object contextMsg) {
+  List<ErrorMessage> validateConfigDefBean(String configPrefix, Field field, List<String> stageGroups,
+      boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
+    Class klass = field.getType();
     try {
       if (klass.isPrimitive()) {
         errors.add(new ErrorMessage(DefinitionError.DEF_162, contextMsg, klass.getSimpleName()));
       } else {
         klass.getConstructor();
-        errors.addAll(validate(configPrefix, klass, false, true, isComplexField, contextMsg));
+        List<String> beanGroups = getGroups(field, stageGroups, contextMsg, errors);
+        errors.addAll(validate(configPrefix, klass, beanGroups, false, true, isComplexField, contextMsg));
       }
     } catch (NoSuchMethodException ex) {
       errors.add(new ErrorMessage(DefinitionError.DEF_156, contextMsg, klass.getSimpleName()));
@@ -218,8 +270,8 @@ public abstract class ConfigDefinitionExtractor {
     return errors;
   }
 
-  ConfigDefinition extractConfigDef(String configPrefix, Field field, Object contextMsg) {
-    List<ErrorMessage> errors = validateConfigDef(configPrefix, field, false, contextMsg);
+  ConfigDefinition extractConfigDef(String configPrefix, List<String> stageGroups, Field field, Object contextMsg) {
+    List<ErrorMessage> errors = validateConfigDef(configPrefix, stageGroups, field, false, contextMsg);
     if (errors.isEmpty()) {
       ConfigDefinition def = null;
       ConfigDef annotation = field.getAnnotation(ConfigDef.class);
@@ -231,11 +283,12 @@ public abstract class ConfigDefinitionExtractor {
         Object defaultValue = ConfigValueExtractor.get().extract(field, annotation, contextMsg);
         boolean required = annotation.required();
         String group = annotation.group();
+        group = resolveGroup(stageGroups, group, contextMsg, errors);
         String fieldName = field.getName();
         String dependsOn = resolveDependsOn(configPrefix, annotation.dependsOn());
         List<Object> triggeredByValues = null;  // done at resolveDependencies() invocation
-        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".", field,
-                                                                       contextMsg);
+        ModelDefinition model = ModelDefinitionExtractor.get().extract(configPrefix + field.getName() + ".",
+                                                                       field, contextMsg);
         if (model != null) {
           defaultValue = model.getModelType().prepareDefault(defaultValue);
         }

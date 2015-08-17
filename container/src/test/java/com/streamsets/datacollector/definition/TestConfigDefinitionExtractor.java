@@ -8,7 +8,6 @@ package com.streamsets.datacollector.definition;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
-import com.streamsets.datacollector.definition.ConfigDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -22,8 +21,11 @@ import com.streamsets.pipeline.api.LanePredicateMapping;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class TestConfigDefinitionExtractor {
@@ -108,7 +110,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testStringConfigOk() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok1.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok1.class, Collections.<String>emptyList(),
+                                                                             "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals("config", config.getName());
@@ -134,7 +137,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testTypeNoELConfigOk() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok2.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok2.class, Collections.<String>emptyList(),
+                                                                             "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals(ConfigDef.Type.BOOLEAN, config.getType());
@@ -145,7 +149,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testModelNoELConfigOk() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok4.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok4.class, Collections.<String>emptyList(),
+                                                                             "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
@@ -155,7 +160,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testModelELConfigOk() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok3.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok3.class, Collections.<String>emptyList(),
+                                                                             "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
@@ -195,7 +201,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testModel() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Model.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Model.class, Collections.<String>emptyList(),
+                                                                             "x");
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
@@ -214,7 +221,7 @@ public class TestConfigDefinitionExtractor {
 
   @Test(expected = IllegalArgumentException.class)
   public void testStringConfigFail1() {
-    ConfigDefinitionExtractor.get().extract(Fail1.class, "x");
+    ConfigDefinitionExtractor.get().extract(Fail1.class, Collections.<String>emptyList(), "x");
   }
 
   public static class Fail2 {
@@ -229,7 +236,7 @@ public class TestConfigDefinitionExtractor {
 
   @Test(expected = IllegalArgumentException.class)
   public void testStringConfigFail2() {
-    ConfigDefinitionExtractor.get().extract(Fail2.class, "x");
+    ConfigDefinitionExtractor.get().extract(Fail2.class, Collections.<String>emptyList(), "x");
   }
 
   public static class Fail3 {
@@ -245,7 +252,7 @@ public class TestConfigDefinitionExtractor {
 
   @Test(expected = IllegalArgumentException.class)
   public void testStringConfigFail3() {
-    ConfigDefinitionExtractor.get().extract(Fail3.class, "x");
+    ConfigDefinitionExtractor.get().extract(Fail3.class, Collections.<String>emptyList(), "x");
   }
 
   public static class DependsOn {
@@ -269,7 +276,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testDependsOn() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(DependsOn.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(DependsOn.class,
+                                                                             Collections.<String>emptyList(),"x");
     Assert.assertEquals(2, configs.size());
     ConfigDefinition cd1 = configs.get(0);
     ConfigDefinition cd2 = configs.get(1);
@@ -320,7 +328,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testDependsOnChain() {
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(DependsOnChain.class, "x");
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(DependsOnChain.class,
+                                                                             Collections.<String>emptyList(), "x");
     Assert.assertEquals(3, configs.size());
     ConfigDefinition a = null;
     for (ConfigDefinition cd : configs) {
@@ -349,7 +358,8 @@ public class TestConfigDefinitionExtractor {
         required = true,
         type = ConfigDef.Type.NUMBER,
         dependsOn = "prop5",
-        triggeredByValue = "1"
+        triggeredByValue = "1",
+        group = "foo"
     )
     public long prop6;
 
@@ -358,7 +368,8 @@ public class TestConfigDefinitionExtractor {
         required = true,
         type = ConfigDef.Type.NUMBER,
         dependsOn = "^prop2.prop3",
-        triggeredByValue = "2"
+        triggeredByValue = "2",
+        group = "#1"
     )
     public long prop7;
 
@@ -378,7 +389,8 @@ public class TestConfigDefinitionExtractor {
     @ConfigDef(
         label = "L",
         required = true,
-        type = ConfigDef.Type.NUMBER
+        type = ConfigDef.Type.NUMBER,
+        group = "foo"
     )
     public long prop3;
 
@@ -396,14 +408,16 @@ public class TestConfigDefinitionExtractor {
     )
     public String prop1;
 
-    @ConfigDefBean
+    @ConfigDefBean(groups = { "foo", "#0"})
     public SubBean prop2;
   }
 
   @Test
   public void testConfigDefBean() {
-    Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, "x").isEmpty());
-    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean.class, "x");
+    Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, ImmutableList.of("bar", "foo"),
+                                                               "x").isEmpty());
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean.class,
+                                                                             ImmutableList.of("bar", "foo"), "x");
     Assert.assertEquals(6, configs.size());
     Set<String> expectedNames = ImmutableSet.of("prop1", "prop2.prop3", "prop2.prop4.prop5", "prop2.prop4.prop6",
                                                 "prop2.prop4.prop7", "prop2.prop4.prop8");
@@ -416,6 +430,23 @@ public class TestConfigDefinitionExtractor {
     }
     Assert.assertEquals(expectedNames, gotNames);
     Assert.assertEquals(expectedFieldNames, gotFieldNames);
+  }
+
+  @Test
+  public void testGroupsResolution() {
+    Assert.assertTrue(ConfigDefinitionExtractor.get().validate(Bean.class, ImmutableList.of("bar", "foo"),
+                                                               "x").isEmpty());
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean.class,
+                                                                             ImmutableList.of("bar", "foo"), "x");
+    Map<String, ConfigDefinition> configMap = new HashMap<>();
+    for (ConfigDefinition config : configs) {
+      configMap.put(config.getName(), config);
+    }
+    Assert.assertEquals("", configMap.get("prop1").getGroup());
+    Assert.assertEquals("foo", configMap.get("prop2.prop3").getGroup());
+    Assert.assertEquals("", configMap.get("prop2.prop4.prop5").getGroup());
+    Assert.assertEquals("foo", configMap.get("prop2.prop4.prop6").getGroup());
+    Assert.assertEquals("bar", configMap.get("prop2.prop4.prop7").getGroup());
   }
 
   public static class SubBean1 {
@@ -439,7 +470,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testConfigDefBeanInvalidBeanWithoutConfig() {
-    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean1.class, "x").size());
+    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean1.class, Collections.<String>emptyList(),
+                                                                    "x").size());
   }
 
   public static class SubBean2 {
@@ -485,7 +517,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testConfigDefBeanInvalidDependsOn() {
-    Assert.assertEquals(3, ConfigDefinitionExtractor.get().validate(Bean2.class, "x").size());
+    Assert.assertEquals(3, ConfigDefinitionExtractor.get().validate(Bean2.class, Collections.<String>emptyList(),
+                                                                    "x").size());
   }
 
   public static class SubBean3 {
@@ -515,7 +548,8 @@ public class TestConfigDefinitionExtractor {
 
   @Test
   public void testConfigDefBeanNonExistentDependsOn() {
-    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean3.class, "x").size());
+    Assert.assertEquals(1, ConfigDefinitionExtractor.get().validate(Bean3.class, Collections.<String>emptyList(),
+                                                                    "x").size());
   }
 
 }

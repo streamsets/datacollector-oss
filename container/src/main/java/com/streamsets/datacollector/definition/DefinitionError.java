@@ -55,6 +55,9 @@ public enum DefinitionError implements ErrorCode {
   DEF_160("{} bean does not have any configuration properties"),
   DEF_161("{} Field='{}' there cannot be nested @ComplexField configs"),
   DEF_162("{} a ConfigDefBean cannot be a primitive type '{}'"),
+  DEF_163("{} group ordinal '{}' out of range, valid range '0..{}'"),
+  DEF_164("{} invalid group ordinal value: {}"),
+  DEF_165("{} group '{}' not in parent groups '{}'"),
 
   //ModelDefinitionExtractor
   DEF_200("{}, Model annotation missing'"),

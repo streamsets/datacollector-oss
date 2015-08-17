@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class RawSourceDefinitionExtractor {
@@ -35,7 +36,8 @@ public abstract class RawSourceDefinitionExtractor {
       if (rawSource != null) {
         Class rsKlass = rawSource.rawSourcePreviewer();
         List<ConfigDefinition> configDefs = ConfigDefinitionExtractor.get().
-            extract(rsKlass, Utils.formatL("{} RawSource='{}'", contextMsg, rsKlass.getSimpleName()));
+            extract(rsKlass, Collections.<String>emptyList(), Utils.formatL("{} RawSource='{}'", contextMsg,
+                                                                            rsKlass.getSimpleName()));
         rDef = new RawSourceDefinition(rawSource.rawSourcePreviewer().getName(), rawSource.mimeType(), configDefs);
       }
       return rDef;

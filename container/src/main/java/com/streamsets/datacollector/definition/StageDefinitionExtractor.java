@@ -14,6 +14,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.HideConfig;
@@ -48,6 +49,7 @@ public abstract class StageDefinitionExtractor {
 
   static {
     List<ConfigDefinition> defs = ConfigDefinitionExtractor.get().extract(BuiltInStageDefConfigs.class,
+                                                                          Collections.<String>emptyList(),
                                                                           "Built-in stage configurations");
     Map<String, ConfigDefinition> map = new HashMap<>();
     for (ConfigDefinition def : defs) {
@@ -66,6 +68,20 @@ public abstract class StageDefinitionExtractor {
 
   static String getStageName(Class klass) {
     return klass.getName().replace(".", "_").replace("$", "_");
+  }
+
+  public static List<String> getGroups(Class<? extends Stage> klass) {
+    List<String> list = new ArrayList<>();
+    ConfigGroups groups = klass.getAnnotation(ConfigGroups.class);
+    if (groups != null) {
+      Class<? extends Enum> groupKlass = (Class<? extends Enum>) groups.value();
+      for (Enum e : groupKlass.getEnumConstants()) {
+        list.add(e.name());
+      }
+    } else {
+      list.add(""); // the default empty group
+    }
+    return list;
   }
 
   public List<ErrorMessage> validate(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
@@ -91,7 +107,13 @@ public abstract class StageDefinitionExtractor {
       }
       HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
 
-      List<ErrorMessage> configErrors = ConfigDefinitionExtractor.get().validate(klass, contextMsg);
+      List<String> stageGroups = getGroups(klass);
+
+      List<ErrorMessage> configGroupErrors = ConfigGroupExtractor.get().validate(klass, contextMsg);
+      errors.addAll(configGroupErrors);
+      errors.addAll(ConfigGroupExtractor.get().validate(klass, contextMsg));
+
+      List<ErrorMessage> configErrors = ConfigDefinitionExtractor.get().validate(klass, stageGroups, contextMsg);
       errors.addAll(configErrors);
 
       List<ErrorMessage> rawSourceErrors = RawSourceDefinitionExtractor.get().validate(klass, contextMsg);
@@ -100,11 +122,7 @@ public abstract class StageDefinitionExtractor {
         if (RawSourceDefinitionExtractor.get().extract(klass, contextMsg) != null) {
           errors.add(new ErrorMessage(DefinitionError.DEF_304, contextMsg));
         }
-
       }
-      List<ErrorMessage> configGroupErrors = ConfigGroupExtractor.get().validate(klass, contextMsg);
-      errors.addAll(configGroupErrors);
-      errors.addAll(ConfigGroupExtractor.get().validate(klass, contextMsg));
 
       if (!sDef.outputStreams().isEnum()) {
         errors.add(new ErrorMessage(DefinitionError.DEF_305, contextMsg, sDef.outputStreams().getSimpleName()));
@@ -212,7 +230,10 @@ public abstract class StageDefinitionExtractor {
 
   private List<ConfigDefinition> extractConfigDefinitions(Class<? extends Stage> klass, HideConfig hideConfigs,
       Object contextMsg) {
-    List<ConfigDefinition> cDefs = ConfigDefinitionExtractor.get().extract(klass, contextMsg);
+
+    List<String> stageGroups = getGroups(klass);
+
+    List<ConfigDefinition> cDefs = ConfigDefinitionExtractor.get().extract(klass, stageGroups, contextMsg);
 
     Set<String> hideConfigSet = (hideConfigs != null) ? ImmutableSet.copyOf(hideConfigs.value())
                                                      : Collections.<String>emptySet();

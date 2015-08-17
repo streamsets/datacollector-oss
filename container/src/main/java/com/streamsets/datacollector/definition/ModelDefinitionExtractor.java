@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -227,7 +228,8 @@ public abstract class ModelDefinitionExtractor {
       } else {
         configPrefix += field.getName() + ".";
         Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", complexFieldClass, contextMsg));
+        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", complexFieldClass,
+                                                                           Collections.<String>emptyList(),contextMsg));
       }
       return errors;
     }
@@ -238,7 +240,8 @@ public abstract class ModelDefinitionExtractor {
       if (errors.isEmpty()) {
         Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
         return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, complexFieldClass,
-                                   ConfigDefinitionExtractor.get().extract("", complexFieldClass, contextMsg));
+                                   ConfigDefinitionExtractor.get().extract("", complexFieldClass,
+                                                                           Collections.<String>emptyList(), contextMsg));
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
