@@ -45,7 +45,7 @@ angular.module('dataCollectorApp')
     });
 
     AnalyticsProvider.setAccount('UA-60917135-1');
-    AnalyticsProvider.trackPages(true);
+    AnalyticsProvider.trackPages(false);
     AnalyticsProvider.trackUrlParams(true);
     AnalyticsProvider.setDomainName('none');
     AnalyticsProvider.useAnalytics(true);

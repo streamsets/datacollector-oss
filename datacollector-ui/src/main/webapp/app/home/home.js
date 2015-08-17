@@ -20,7 +20,7 @@ angular
       });
   }])
   .controller('HomeController', function ($scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api,
-                                          configuration, pipelineConstant) {
+                                          configuration, pipelineConstant, Analytics) {
 
     $location.search('auth_token', null);
     $location.search('auth_user', null);
@@ -186,6 +186,11 @@ angular
           $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL() +
             '/collector/pipeline/' + $scope.pipelines[0].name;
         }
+
+        if(configuration.isAnalyticsEnabled()) {
+          Analytics.trackPage('/');
+        }
+
       },
       function (results) {
         $scope.loaded = true;
