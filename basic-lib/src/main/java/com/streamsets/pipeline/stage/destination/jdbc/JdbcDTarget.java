@@ -99,7 +99,7 @@ public class JdbcDTarget extends DTarget {
       displayPosition = 40,
       group = "JDBC"
   )
-  @ComplexField(JdbcFieldMappingConfig.class)
+  @ComplexField
   public List<JdbcFieldMappingConfig> columnNames;
 
   @ConfigDef(

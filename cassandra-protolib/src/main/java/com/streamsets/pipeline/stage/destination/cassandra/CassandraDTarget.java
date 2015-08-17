@@ -91,7 +91,7 @@ public class CassandraDTarget extends DTarget {
       displayPosition = 60,
       group = "CASSANDRA"
   )
-  @ComplexField(CassandraFieldMappingConfig.class)
+  @ComplexField
   public List<CassandraFieldMappingConfig> columnNames;
 
   @ConfigDef(

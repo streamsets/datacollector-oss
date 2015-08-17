@@ -38,7 +38,7 @@ public class FieldMergerDProcessor extends DProcessor {
       displayPosition = 40,
       group = "MERGE"
   )
-  @ComplexField(FieldMergerConfig.class)
+  @ComplexField
   public List<FieldMergerConfig> mergeMapping;
 
   @ConfigDef(

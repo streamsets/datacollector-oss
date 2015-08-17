@@ -194,7 +194,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField(RegExConfig.class)
+  @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

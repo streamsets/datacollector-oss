@@ -89,7 +89,7 @@ public class SolrDTarget extends DTarget {
     displayPosition = 50,
     group = "SOLR"
   )
-  @ComplexField(SolrFieldMappingConfig.class)
+  @ComplexField
   public List<SolrFieldMappingConfig> fieldNamesMap;
 
   @Override

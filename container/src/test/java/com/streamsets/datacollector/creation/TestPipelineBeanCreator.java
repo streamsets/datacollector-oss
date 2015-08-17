@@ -234,7 +234,7 @@ public class TestPipelineBeanCreator {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField(String.class)
+    @ComplexField
     public List<Bean> complexField;
 
     @Override

@@ -114,7 +114,7 @@ public class LogParserDProcessor extends DProcessor {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField(RegExConfig.class)
+  @ComplexField
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK
