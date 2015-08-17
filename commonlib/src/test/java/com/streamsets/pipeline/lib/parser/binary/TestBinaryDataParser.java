@@ -1,0 +1,71 @@
+/**
+ * (c) 2014 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.lib.parser.binary;
+
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+
+public class TestBinaryDataParser {
+
+  private static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
+    "team that is laser-focused on solving hard problems so our customers don’t have to.";
+
+  private Stage.Context getContext() {
+    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
+  }
+
+  private byte[] getTestBytes() throws Exception {
+    return TEST_STRING_255.getBytes();
+  }
+
+  @Test
+  public void testParse() throws Exception {
+    byte[] data = getTestBytes();
+    DataParser parser = new BinaryDataParser(getContext(), new ByteArrayInputStream(data), "myId", 1000);
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertTrue(Arrays.equals(TEST_STRING_255.getBytes(), record.get().getValueAsByteArray()));
+    Assert.assertEquals(255, record.get().getValueAsByteArray().length);
+
+    long offset = Long.parseLong(parser.getOffset());
+    Assert.assertEquals(255, offset);
+
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals(255, Long.parseLong(parser.getOffset()));
+    parser.close();
+  }
+
+  @Test(expected = DataParserException.class)
+  public void testParseExceedsMaxDataLength() throws Exception {
+    byte[] data = getTestBytes();
+    DataParser parser = new BinaryDataParser(getContext(), new ByteArrayInputStream(data), "myId", 159);
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+    parser.parse();
+  }
+
+  @Test(expected = IOException.class)
+  public void testClose() throws Exception {
+    byte[] data = getTestBytes();
+    DataParser parser = new BinaryDataParser(getContext(), new ByteArrayInputStream(data), "myId", 1000);
+    parser.close();
+    parser.parse();
+  }
+
+}

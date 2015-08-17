@@ -17,6 +17,7 @@ public enum Groups implements Label {
   XML("XML"),
   LOG("Log"),
   AVRO("Avro"),
+  BINARY("Binary"),
   ;
 
   private final String label;

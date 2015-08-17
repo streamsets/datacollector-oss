@@ -18,18 +18,19 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaBroker;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaUtil;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.common.ErrorMapping;
 import kafka.javaapi.TopicMetadata;
 import org.slf4j.Logger;
@@ -75,6 +76,7 @@ public class KafkaTarget extends BaseTarget {
   private String charset;
   private final String avroSchema;
   private final  boolean includeSchema;
+  private final String binaryFieldPath;
 
   private KafkaProducer kafkaProducer;
   private long recordCounter = 0;
@@ -101,7 +103,7 @@ public class KafkaTarget extends BaseTarget {
                      DataFormat dataFormat, String charset, boolean singleMessagePerBatch,
                      Map<String, String> kafkaProducerConfigs, CsvMode csvFileFormat, CsvHeader csvHeader,
                      boolean csvReplaceNewLines, JsonMode jsonMode, String textFieldPath, boolean textEmptyLineIfNull,
-                     String avroSchema,  boolean includeSchema) {
+                     String avroSchema,  boolean includeSchema, String binaryFieldPath) {
     this.metadataBrokerList = metadataBrokerList;
     this.partitionStrategy = partitionStrategy;
     this.partition = partition;
@@ -121,6 +123,7 @@ public class KafkaTarget extends BaseTarget {
     this.topicWhiteList = topicWhiteList;
     this.avroSchema = avroSchema;
     this.includeSchema = includeSchema;
+    this.binaryFieldPath = binaryFieldPath;
   }
 
   @Override
@@ -218,6 +221,9 @@ public class KafkaTarget extends BaseTarget {
       case AVRO:
         builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
         builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
+        break;
+      case BINARY:
+        builder.setConfig(BinaryDataGeneratorFactory.FIELD_PATH_KEY, binaryFieldPath);
         break;
     }
     return builder.build();
@@ -502,9 +508,15 @@ public class KafkaTarget extends BaseTarget {
                                                    Stage.Context context, String groupName, String configName) {
     switch (dataFormat) {
       case TEXT:
-        //required the field configuration to be set and it is "/" by default
+        //required field configuration to be set and it is "/" by default
         if(textFieldPath == null || textFieldPath.isEmpty()) {
           issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "fieldPath", KafkaErrors.KAFKA_58));
+        }
+        break;
+      case BINARY:
+        //required field configuration to be set and it is "/" by default
+        if(binaryFieldPath == null || binaryFieldPath.isEmpty()) {
+          issues.add(getContext().createConfigIssue(Groups.BINARY.name(), "fieldPath", KafkaErrors.KAFKA_58));
         }
         break;
       case JSON:

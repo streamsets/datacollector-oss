@@ -11,7 +11,7 @@ import com.streamsets.pipeline.config.DataFormat;
 public class ProducerDataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public ProducerDataFormatChooserValues() {
-    super(DataFormat.SDC_JSON, DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED, DataFormat.AVRO);
+    super(DataFormat.SDC_JSON, DataFormat.TEXT, DataFormat.JSON, DataFormat.DELIMITED, DataFormat.AVRO, DataFormat.BINARY);
   }
 
 }

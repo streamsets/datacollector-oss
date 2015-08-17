@@ -75,6 +75,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected KafkaConsumer kafkaConsumer;
   private final boolean messageHasSchema;
   private final String avroSchema;
+  private final int binaryMaxObjectLen;
 
   protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
@@ -116,6 +117,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.onParseError = args.getOnParseError();
     this.messageHasSchema = args.isSchemaInMessage();
     this.avroSchema = args.getAvroSchema();
+    this.binaryMaxObjectLen = args.getBinaryMaxObjectLen();
 
   }
 
@@ -162,6 +164,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         }
         break;
       case SDC_JSON:
+      case BINARY:
         break;
       case LOG:
         logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
@@ -269,6 +272,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         builder.setMaxDataLen(Integer.MAX_VALUE).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema)
         .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, messageHasSchema);
         break;
+      case BINARY:
+        builder.setMaxDataLen(binaryMaxObjectLen);
     }
     parserFactory = builder.build();
   }

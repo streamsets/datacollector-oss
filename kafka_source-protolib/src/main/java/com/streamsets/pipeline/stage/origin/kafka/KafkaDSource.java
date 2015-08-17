@@ -495,6 +495,23 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
   )
   public String avroSchema;
 
+  //BINARY
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1024",
+    label = "Max Data Size",
+    description = "Data exceeding the max limit is truncated",
+    displayPosition = 850,
+    group = "BINARY",
+    dependsOn = "dataFormat",
+    triggeredByValue = "BINARY",
+    min = 1,
+    max = Integer.MAX_VALUE
+  )
+  public int binaryMaxObjectLen;
+
   @Override
   protected Source createSource() {
     SourceArguments args = new SourceArguments(metadataBrokerList,
@@ -504,7 +521,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
       enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs,
-      schemaInMessage, avroSchema);
+      schemaInMessage, avroSchema, binaryMaxObjectLen);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
       new ClusterKafkaSourceFactory(args));
     return delegatingKafkaSource;

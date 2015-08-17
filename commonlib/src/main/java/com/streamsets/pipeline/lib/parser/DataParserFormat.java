@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.data.DataFormat;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
+import com.streamsets.pipeline.lib.parser.binary.BinaryDataParserFactory;
 import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.json.JsonDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
@@ -29,6 +30,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
   SDC_RECORD(SdcRecordDataParserFactory.class, SdcRecordDataParserFactory.MODES, SdcRecordDataParserFactory.CONFIGS),
   LOG(LogDataParserFactory.class, LogDataParserFactory.MODES, LogDataParserFactory.CONFIGS),
   AVRO(AvroDataParserFactory.class, AvroDataParserFactory.MODES, AvroDataParserFactory.CONFIGS),
+  BINARY(BinaryDataParserFactory.class, BinaryDataParserFactory.MODES, BinaryDataParserFactory.CONFIGS),
 
   ;
 

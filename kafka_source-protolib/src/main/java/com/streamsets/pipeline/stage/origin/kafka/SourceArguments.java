@@ -56,6 +56,7 @@ public class SourceArguments {
   protected final Map<String, String> kafkaConsumerConfigs;
   protected final boolean schemaInMessage;
   protected final String avroSchema;
+  protected final int binaryMaxObjectLen;
 
   public SourceArguments(String metadataBrokerList, String zookeeperConnect, String consumerGroup, String topic,
                          DataFormat dataFormat, String charset, boolean removeCtrlChars,
@@ -66,7 +67,8 @@ public class SourceArguments {
                          String customLogFormat, String regex, String grokPatternDefinition, String grokPattern,
                          List<RegExConfig> fieldPathsToGroupName, boolean enableLog4jCustomLogFormat,
                          String log4jCustomLogFormat, int maxStackTraceLines, OnParseError onParseError,
-                         Map<String, String> kafkaConsumerConfigs, boolean schemaInMessage, String avroSchema) {
+                         Map<String, String> kafkaConsumerConfigs, boolean schemaInMessage, String avroSchema,
+                         int binaryMaxObjectLen) {
     this.metadataBrokerList = metadataBrokerList;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
@@ -102,6 +104,7 @@ public class SourceArguments {
       Collections.<String, String>emptyMap() : kafkaConsumerConfigs);
     this.schemaInMessage = schemaInMessage;
     this.avroSchema = avroSchema;
+    this.binaryMaxObjectLen = binaryMaxObjectLen;
   }
 
   public String getMetadataBrokerList() {
@@ -234,5 +237,9 @@ public class SourceArguments {
 
   public String getAvroSchema() {
     return avroSchema;
+  }
+
+  public int getBinaryMaxObjectLen() {
+    return binaryMaxObjectLen;
   }
 }

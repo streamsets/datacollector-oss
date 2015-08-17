@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.BindException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -132,6 +131,10 @@ public class KafkaTestUtil {
   public static final String LOG_LINE_WITH_STACK_TRACE = DATE_LEVEL_CLASS + ERROR_MSG_WITH_STACK_TRACE;
   public static final String LOG_LINE = "2015-03-20 15:53:31,161 DEBUG PipelineConfigurationValidator - " +
     "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0";
+
+  public static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
+    "team that is laser-focused on solving hard problems so our customers don’t have to.";
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaTestUtil.class);
   private static final long TIME_OUT = 5000;
@@ -248,6 +251,18 @@ public class KafkaTestUtil {
       Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
       r.set(Field.create((TEST_STRING + i)));
       records.add(r);
+    }
+    return records;
+  }
+
+  public static List<Record> createBinaryRecords() {
+    List<Record> records = new ArrayList<>(9);
+    for (int i = 0; i < 9; i++) {
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("data", Field.create((TEST_STRING_255 + i).getBytes()));
+      record.set(Field.create(map));
+      records.add(record);
     }
     return records;
   }

@@ -27,7 +27,7 @@ public class ToErrorKafkaDTarget extends KafkaDTarget {
   protected Target createTarget() {
     return new KafkaTarget(metadataBrokerList, false, topic, null, null, partitionStrategy, partition, DataFormat.SDC_JSON, null,
                            singleMessagePerBatch, kafkaProducerConfigs, null, null, false, null,
-                           null, false, null, false);
+                           null, false, null, false, null);
   }
 
 }

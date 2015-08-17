@@ -40,6 +40,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,7 @@ public class TestKafkaSource {
   private static final String TOPIC11 = "TestKafkaSource11";
   private static final String TOPIC12 = "TestKafkaSource12";
   private static final String TOPIC13 = "TestKafkaSource13";
+  private static final String TOPIC14 = "TestKafkaSource14";
   private static final String CONSUMER_GROUP = "SDC";
 
   private static Producer<String, String> producer;
@@ -103,6 +105,7 @@ public class TestKafkaSource {
     KafkaTestUtil.createTopic(TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC12, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC13, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
     producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
 
@@ -1103,6 +1106,61 @@ public class TestKafkaSource {
     Assert.assertEquals("boss@company.com", emails.get(0).getValueAsString());
     Assert.assertEquals("boss2@company.com", emails.get(1).getValueAsString());
 
+  }
+
+  @Test
+  public void testProduceBinaryRecords() throws StageException, InterruptedException {
+
+    CountDownLatch startLatch = new CountDownLatch(1);
+
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    executorService.submit(new ProducerRunnable( TOPIC14, SINGLE_PARTITION, producer, startLatch, DataType.TEXT, null, -1,
+      null));
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("topic", TOPIC14)
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 9)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("dataFormat", DataFormat.BINARY)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("removeCtrlChars", false)
+      .addConfiguration("textMaxLineLen", 4096)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
+      .addConfiguration("binaryMaxObjectLen", 1000)
+      .build();
+    sourceRunner.runInit();
+
+    startLatch.countDown();
+    StageRunner.Output output = sourceRunner.runProduce(null, 5);
+    shutDownExecutorService(executorService);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(5, records.size());
+
+    for(int i = 0; i < records.size(); i++) {
+      Assert.assertNotNull(records.get(i).get("/"));
+      Assert.assertNotNull(records.get(i).get().getValueAsByteArray());
+      Assert.assertTrue(Arrays.equals(KafkaTestUtil.generateTestData(DataType.TEXT, null).getBytes(),
+        records.get(i).get("/").getValueAsByteArray()));
+    }
+
+    sourceRunner.runDestroy();
   }
 
   private void shutDownExecutorService(ExecutorService executorService) throws InterruptedException {

@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.data.DataFormat;
 import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.json.JsonDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.sdcrecord.SdcRecordDataGeneratorFactory;
@@ -27,6 +28,7 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
   SDC_RECORD(SdcRecordDataGeneratorFactory.class, SdcRecordDataGeneratorFactory.MODES,
     SdcRecordDataGeneratorFactory.CONFIGS),
   AVRO(AvroDataGeneratorFactory.class, AvroDataGeneratorFactory.MODES, AvroDataGeneratorFactory.CONFIGS),
+  BINARY(BinaryDataGeneratorFactory.class, BinaryDataGeneratorFactory.MODES, BinaryDataGeneratorFactory.CONFIGS),
   ;
 
   private final Class<? extends DataGeneratorFactory> klass;

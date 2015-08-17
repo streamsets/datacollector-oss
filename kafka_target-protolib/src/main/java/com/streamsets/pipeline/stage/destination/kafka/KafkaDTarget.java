@@ -301,11 +301,28 @@ public class KafkaDTarget extends DTarget {
   )
   public boolean includeSchema;
 
+  /********  For Binary Content  ***********/
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "/",
+    label = "Binary Field Path",
+    description = "Field to write data to Kafka",
+    displayPosition = 120,
+    group = "BINARY",
+    dependsOn = "dataFormat",
+    triggeredByValue = "BINARY",
+    elDefs = {StringEL.class}
+  )
+  @FieldSelector(singleValued = true)
+  public String binaryFieldPath;
+
   @Override
   protected Target createTarget() {
     return new KafkaTarget(metadataBrokerList, runtimeTopicResolution, topic, topicExpression, topicWhiteList,
       partitionStrategy, partition, dataFormat, charset, singleMessagePerBatch, kafkaProducerConfigs, csvFileFormat,
       csvHeader, csvReplaceNewLines, jsonMode, textFieldPath, textEmptyLineIfNull,
-      avroSchema, includeSchema);
+      avroSchema, includeSchema, binaryFieldPath);
   }
 }

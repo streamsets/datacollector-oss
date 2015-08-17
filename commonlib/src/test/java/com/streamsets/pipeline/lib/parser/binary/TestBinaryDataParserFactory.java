@@ -1,0 +1,70 @@
+/**
+ * (c) 2014 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.pipeline.lib.parser.binary;
+
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+public class TestBinaryDataParserFactory {
+
+  private static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
+    "team that is laser-focused on solving hard problems so our customers don’t have to.";
+
+  private Stage.Context getContext() {
+    return ContextInfoCreator.createSourceContext("i", false, OnRecordError.TO_ERROR, Collections.EMPTY_LIST);
+  }
+
+  private byte[] getTestBytes() throws Exception {
+    return TEST_STRING_255.getBytes();
+  }
+
+  @Test
+  public void testGetParser() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+                                                                                     DataParserFormat.BINARY);
+    DataParserFactory factory = dataParserFactoryBuilder
+        .setMaxDataLen(1000)
+        .build();
+
+    DataParser parser = factory.getParser("id", getTestBytes());
+    Assert.assertEquals("0", parser.getOffset());
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("255", parser.getOffset());
+
+    Assert.assertTrue(record.has("/"));
+    Assert.assertTrue(Arrays.equals(getTestBytes(), record.get("/").getValueAsByteArray()));
+    Assert.assertEquals(255, record.get().getValueAsByteArray().length);
+
+    parser.close();
+  }
+
+  @Test(expected = DataParserException.class)
+  public void testParseExceedsMaxDataLength() throws Exception {
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.BINARY);
+    DataParserFactory factory = dataParserFactoryBuilder
+      .setMaxDataLen(159)
+      .build();
+
+    DataParser parser = factory.getParser("id", getTestBytes());
+    Assert.assertEquals("0", parser.getOffset());
+    parser.parse();
+  }
+}

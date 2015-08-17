@@ -43,6 +43,7 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class TestKafkaTargetSinglePartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams16;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams17;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams18;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams19;
 
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
@@ -89,6 +91,7 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC16 = "TestKafkaTargetSinglePartition16";
   private static final String TOPIC17 = "TestKafkaTargetSinglePartition17";
   private static final String TOPIC18 = "TestKafkaTargetSinglePartition18";
+  private static final String TOPIC19 = "TestKafkaTargetSinglePartition19";
 
   @BeforeClass
   public static void setUp() {
@@ -114,6 +117,7 @@ public class TestKafkaTargetSinglePartition {
     KafkaTestUtil.createTopic(TOPIC16, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC17, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC18, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC19, PARTITIONS, REPLICATION_FACTOR);
 
     kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
     kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
@@ -133,6 +137,7 @@ public class TestKafkaTargetSinglePartition {
     kafkaStreams16 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC16, PARTITIONS);
     kafkaStreams17 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC17, PARTITIONS);
     kafkaStreams18 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC18, PARTITIONS);
+    kafkaStreams19 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC19, PARTITIONS);
   }
 
   @AfterClass
@@ -1188,5 +1193,50 @@ public class TestKafkaTargetSinglePartition {
     Assert.assertEquals(1, messageCounter);
     Assert.assertEquals(3, genericRecords.size());
     SdcAvroTestUtil.compare1(genericRecords);
+  }
+
+  @Test
+  public void testWriteBinaryRecords() throws InterruptedException, StageException {
+
+    Map<String, String> kafkaProducerConfig = new HashMap();
+    kafkaProducerConfig.put("request.required.acks", "2");
+    kafkaProducerConfig.put("request.timeout.ms", "2000");
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC19)
+      .addConfiguration("partition", "0")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
+      .addConfiguration("dataFormat", DataFormat.BINARY)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
+      .addConfiguration("textFieldPath", "/")
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .addConfiguration("binaryFieldPath", "/data")
+      .build();
+
+    targetRunner.runInit();
+    List<Record> binaryRecords = KafkaTestUtil.createBinaryRecords();
+    targetRunner.runWrite(binaryRecords);
+    targetRunner.runDestroy();
+
+    List<byte[]> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams19.size() == 1);
+    ConsumerIterator<byte[], byte[]> it = kafkaStreams19.get(0).iterator();
+    try {
+      while (it.hasNext()) {
+        messages.add(it.next().message());
+      }
+    } catch (kafka.consumer.ConsumerTimeoutException e) {
+      //no-op
+    }
+    Assert.assertEquals(9, messages.size());
+    for(int i = 0; i < binaryRecords.size(); i++) {
+      Assert.assertTrue(Arrays.equals(binaryRecords.get(i).get("/data").getValueAsByteArray(), messages.get(i)));
+    }
   }
 }
