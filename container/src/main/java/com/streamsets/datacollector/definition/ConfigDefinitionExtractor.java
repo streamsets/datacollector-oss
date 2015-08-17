@@ -206,10 +206,12 @@ public abstract class ConfigDefinitionExtractor {
   List<ErrorMessage> validateConfigDefBean(String configPrefix, Class klass, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     try {
-      if (!klass.isPrimitive()) {
+      if (klass.isPrimitive()) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_162, contextMsg, klass.getSimpleName()));
+      } else {
         klass.getConstructor();
+        errors.addAll(validate(configPrefix, klass, false, true, isComplexField, contextMsg));
       }
-      errors.addAll(validate(configPrefix, klass, false, true, isComplexField, contextMsg));
     } catch (NoSuchMethodException ex) {
       errors.add(new ErrorMessage(DefinitionError.DEF_156, contextMsg, klass.getSimpleName()));
     }
