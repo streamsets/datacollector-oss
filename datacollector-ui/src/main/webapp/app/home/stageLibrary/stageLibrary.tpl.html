@@ -20,11 +20,12 @@
     <div class="stage-list-container">
       <ul class="stages-list">
         <li id="item1" draggable drag-data="stageLibrary"
-            tooltip-placement="bottom" tooltip="{{stageLibrary.description}}"
-            tooltip-append-to-body="true"
-            tooltip-popup-delay="500"
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
-            ng-init="icon=getStageIconURL(stageLibrary)">
+            ng-init="icon=getStageIconURL(stageLibrary)"
+            tooltip-placement="{{$index < filteredStageLibraries.length - 2 ? 'bottom' : 'top'}}"
+            tooltip="{{stageLibrary.description}}"
+            tooltip-append-to-body="true"
+            tooltip-popup-delay="500">
           <a role="menuitem" tabindex="-1" href="/"
              ng-click="addStageInstance({stage: stageLibrary}, $event)"
              ng-style="{'background-image': 'url({{icon}})'}">
