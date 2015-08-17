@@ -22,6 +22,7 @@
   <packaging>jar</packaging>
 
   <properties>
+    <activemq.version>5.7.0</activemq.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-lang.version>3.4</commons-lang.version>
     <geoip2.version>2.1.0</geoip2.version>
@@ -124,6 +125,13 @@
       <artifactId>netty-buffer</artifactId>
       <version>${netty.version}</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <version>${activemq.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
