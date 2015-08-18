@@ -37,6 +37,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   //Runtime stat gauge name
   public static final String RUNTIME_STATS_GAUGE = "RuntimeStatsGauge";
   private Timer processingTimer;
+  private Counter inputRecordsCounter;
+  private Counter outputRecordsCounter;
+  private Counter errorRecordsCounter;
+  private Counter stageErrorCounter;
   private Counter memoryConsumedCounter;
   private Meter inputRecordsMeter;
   private Meter outputRecordsMeter;
@@ -79,6 +83,10 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       MetricRegistry metrics = getStage().getContext().getMetrics();
       String metricsKey = "stage." + getStage().getConfiguration().getInstanceName();
       processingTimer = MetricsConfigurator.createTimer(metrics, metricsKey + ".batchProcessing", name, rev);
+      inputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".inputRecords", name, rev);
+      outputRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".outputRecords", name, rev);
+      errorRecordsCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".errorRecords", name, rev);
+      stageErrorCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".stageErrors", name, rev);
       memoryConsumedCounter = MetricsConfigurator.createCounter(metrics, metricsKey + ".memoryConsumed", name, rev);
       inputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".inputRecords", name, rev);
       outputRecordsMeter = MetricsConfigurator.createMeter(metrics, metricsKey + ".outputRecords", name, rev);
@@ -144,10 +152,12 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     }
     processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
 
+    inputRecordsCounter.inc(batchImpl.getSize());
     inputRecordsMeter.mark(batchImpl.getSize());
     inputRecordsHistogram.update(batchImpl.getSize());
 
     int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
+    errorRecordsCounter.inc(stageErrorRecordCount);
     errorRecordsMeter.mark(stageErrorRecordCount);
     errorRecordsHistogram.update(stageErrorRecordCount);
 
@@ -157,11 +167,13 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       //Records are sent to destination or to the error sink.
       outputRecordsCount = batchImpl.getSize() - stageErrorRecordCount;
     }
+    outputRecordsCounter.inc(outputRecordsCount);
     outputRecordsMeter.mark(outputRecordsCount);
     outputRecordsHistogram.update(outputRecordsCount);
 
 
     int stageErrorsCount = errorSink.getStageErrors(getStage().getInfo().getInstanceName()).size();
+    stageErrorCounter.inc(stageErrorsCount);
     stageErrorMeter.mark(stageErrorsCount);
     stageErrorsHistogram.update(stageErrorsCount);
 
