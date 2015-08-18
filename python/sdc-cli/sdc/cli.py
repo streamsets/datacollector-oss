@@ -34,7 +34,7 @@ pass_api = click.make_pass_decorator(api.DataCollector)
 )
 @click.option(
     '--config-file',
-    default=DEFAULT_CFG,
+    default=None,
     envvar='SDC_CLI_CFG',
     help='Default location: %s' % os.path.join(click.get_app_dir(APP_NAME), 'config.ini'),
 )
@@ -48,7 +48,7 @@ pass_api = click.make_pass_decorator(api.DataCollector)
 @click.pass_context
 def cli(ctx, sdc_url, sdc_user, sdc_password, config_file, auth_type):
     """sdc-cli is the command line interface for controlling StreamSets Data Collector via its REST API."""
-    _create_default_config()
+    _create_default_config(config_file)
 
     cfg_values = {
         'url': sdc_url,
@@ -196,14 +196,17 @@ def _write_default_config(cfg=DEFAULT_CFG):
         parser.write(cfg_file)
 
 
-def _create_default_config():
-    cfg_dir = os.path.dirname(DEFAULT_CFG)
+def _create_default_config(config_path=None):
+    if config_path is None:
+        cfg_dir = os.path.dirname(DEFAULT_CFG)
+        config_path = DEFAULT_CFG
+    else:
+        cfg_dir = os.path.dirname(config_path)
+        
     if not os.path.exists(cfg_dir):
         os.makedirs(cfg_dir)
-
-    if not os.path.exists(DEFAULT_CFG):
-        _write_default_config(DEFAULT_CFG)
-
+    if not os.path.exists(config_path):
+        _write_default_config(config_path)
 
 def _print_json(d, pretty=False):
     """Print dict as JSON, optionally in pretty print mode."""
