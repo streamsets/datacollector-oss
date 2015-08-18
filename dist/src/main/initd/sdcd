@@ -18,14 +18,36 @@ PRG=`dirname "${PRG}"`/"$link"
 fi
 done
 
+# Source function library.
+if [ -f /etc/rc.d/init.d/functions ]; then
+  . /etc/rc.d/init.d/functions
+elif [ -f /lib/lsb/init-functions ]; then
+  . /lib/lsb/init-functions
+  . /etc/rc.status
+  rc_reset
+fi
 BASEDIR=`dirname ${PRG}`
 BASEDIR=`cd ${BASEDIR}/..;pwd`
 
+is_sdc_alive() {
+  if [ -f $SDC_PID ]
+  then
+    if [ -e /etc/SuSE-release ]
+    then
+      pidofproc -p $SDC_PID java > /dev/null
+    else
+      checkpid `cat $SDC_PID`
+    fi
+    return $?
+  else
+    return 3
+  fi
+}
+
 if [ -z "$SDC_PID" ]
 then
-  echo "The \$SDC_PID environment variable is not defined."
-  echo ""
-  echo "WARNING: the sdcd script is meant to be used via init.d scripts only"
+  echo "ERROR: The \$SDC_PID environment variable is not defined."
+  echo "ERROR: the sdcd script is meant to be used via init.d scripts only"
   exit 2
 fi
 
@@ -33,34 +55,34 @@ if [ "$1" = "start" ] ; then
   if [ ! -z "$SDC_PID" ]; then
     if [ -f "$SDC_PID" ]; then
       if [ -s "$SDC_PID" ]; then
-        echo "Existing PID file found during start."
+        echo "INFO: Existing PID file found during start."
         if [ -r "$SDC_PID" ]; then
           PID=`cat "$SDC_PID"`
           ps -p $PID >/dev/null 2>&1
           if [ $? -eq 0 ] ; then
-            echo "sdc appears to still be running with PID $PID. Start aborted."
+            echo "ERROR: sdc appears to still be running with PID $PID. Start aborted."
             exit 1
           else
-            echo "Removing/clearing stale PID file."
+            echo "INFO: Removing/clearing stale PID file."
             rm -f "$SDC_PID" >/dev/null 2>&1
             if [ $? != 0 ]; then
               if [ -w "$SDC_PID" ]; then
                 cat /dev/null > "$SDC_PID"
               else
-                echo "Unable to remove or clear stale PID file. Start aborted."
+                echo "ERROR: Unable to remove or clear stale PID file. Start aborted."
                 exit 1
               fi
             fi
           fi
         else
-          echo "Unable to read PID file. Start aborted."
+          echo "ERROR: Unable to read PID file. Start aborted."
           exit 1
         fi
       else
         rm -f "$SDC_PID" >/dev/null 2>&1
         if [ $? != 0 ]; then
           if [ ! -w "$SDC_PID" ]; then
-            echo "Unable to remove or write to empty PID file. Start aborted."
+            echo "ERROR: Unable to remove or write to empty PID file. Start aborted."
             exit 1
           fi
         fi
@@ -69,21 +91,37 @@ if [ "$1" = "start" ] ; then
   fi
   nohup $BASEDIR/libexec/_sdc -skipenvsourcing -verbose  &>$SDC_LOG/sdc.out </dev/null &
   echo $! > "$SDC_PID"
-  echo "sdc started."
+  for i in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 # both seq and {k..n} don't always exist
+  do
+    sleep 1
+    is_sdc_alive
+    status=$?
+    if [[ $status -eq 3 ]]
+    then
+      echo "ERROR: sdc pid file '$SDC_PID' was not created."
+      exit $status
+    elif [[ $status -ne 0 ]]
+    then
+      echo "ERROR: sdc has died, see log in '$SDC_LOG'."
+      exit $status
+    fi
+  done
+  echo "INFO: sdc started successfully."
+  exit 0
 elif [ "$1" = "stop" ]; then
   if [ ! -z "$SDC_PID" ]; then
     if [ -f "$SDC_PID" ]; then
       if [ -s "$SDC_PID" ]; then
         kill -0 `cat "$SDC_PID"` >/dev/null 2>&1
         if [ $? -gt 0 ]; then
-          echo "PID file found but no matching process was found. Stop aborted."
+          echo "ERROR: PID file found but no matching process was found. Stop aborted."
           exit 1
         fi
       else
-        echo "PID file is empty and has been ignored."
+        echo "INFO: PID file is empty and has been ignored."
       fi
     else
-      echo "\$SDC_PID was set but the specified file does not exist. Is sdc running? Stop aborted."
+      echo "ERROR: \$SDC_PID was set but the specified file does not exist. Is sdc running? Stop aborted."
       exit 1
     fi
   fi
