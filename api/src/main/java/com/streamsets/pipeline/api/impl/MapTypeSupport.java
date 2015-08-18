@@ -24,7 +24,7 @@ public class MapTypeSupport extends TypeSupport<Map> {
 
   @Override
   public Object convert(Object value, TypeSupport targetTypeSupport) {
-    if (targetTypeSupport instanceof MapTypeSupport) {
+    if (targetTypeSupport instanceof MapTypeSupport || targetTypeSupport instanceof ListMapTypeSupport) {
       return value;
     } else {
       throw new IllegalArgumentException(Utils.format(Errors.API_16.getMessage(), targetTypeSupport));

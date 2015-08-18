@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -207,7 +208,8 @@ public class TestField {
       Field.create("s"),
       Field.create(new byte[]{1, 2}),
       Field.create(new LinkedHashMap<String, Field>()),
-      Field.create(new ArrayList<Field>())
+      Field.create(new ArrayList<Field>()),
+      Field.createListMap(new LinkedHashMap<String, Field>())
   );
 
   @SuppressWarnings("unchecked")
@@ -231,8 +233,9 @@ public class TestField {
       .put(Type.STRING, ImmutableList.of(Type.BOOLEAN, Type.BYTE, Type.STRING, Type.SHORT, Type.INTEGER, Type.LONG,
                                          Type.FLOAT, Type.DOUBLE, Type.DECIMAL, Type.DATE, Type.DATETIME, Type.CHAR))
       .put(Type.BYTE_ARRAY, ImmutableList.of(Type.BYTE_ARRAY))
-      .put(Type.MAP, ImmutableList.of(Type.MAP))
-      .put(Type.LIST, ImmutableList.of(Type.LIST))
+      .put(Type.MAP, ImmutableList.of(Type.MAP, Type.LIST_MAP))
+      .put(Type.LIST, ImmutableList.of(Type.LIST, Type.LIST_MAP))
+      .put(Type.LIST_MAP, ImmutableList.of(Type.LIST_MAP, Type.MAP, Type.LIST))
       .put(Type.DATE, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING, Type.LONG))
       .put(Type.DATETIME, ImmutableList.of(Type.DATE, Type.DATETIME, Type.STRING, Type.LONG))
       .build();
@@ -485,6 +488,9 @@ public class TestField {
             case LIST:
               Assert.assertEquals(new ArrayList<Field>(), f.getValueAsList());
               break;
+            case LIST_MAP:
+              Assert.assertEquals(new LinkedHashMap<String, Field>(), f.getValueAsListMap());
+              break;
           }
         } else {
           try {
@@ -534,6 +540,9 @@ public class TestField {
               case LIST:
                 f.getValueAsList();
                 break;
+              case LIST_MAP:
+                f.getValueAsListMap();
+                break;
             }
             Assert.fail(Utils.format("Failed asserting that type '{}' cannot be get as a '{}'", f.getType(), t));
           } catch (IllegalArgumentException ex) {
@@ -543,5 +552,74 @@ public class TestField {
       }
     }
   }
+
+
+  @Test
+  public void testListMap() {
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("firstField", Field.create("sampleValue"));
+    linkedHashMap.put("secondField", Field.create(20));
+
+    Field listMapField = Field.createListMap(linkedHashMap);
+
+    LinkedHashMap<String, Field> linkedHashMapReturnVal = listMapField.getValueAsListMap();
+    Assert.assertEquals(2, linkedHashMapReturnVal.size());
+    Field firstField = linkedHashMapReturnVal.get("firstField");
+    Assert.assertEquals("sampleValue", firstField.getValue());
+    Field secondField = linkedHashMapReturnVal.get("secondField");
+    Assert.assertEquals(20, secondField.getValue());
+
+    List<Field> list = listMapField.getValueAsList();
+    Assert.assertEquals(2, list.size());
+    firstField = list.get(0);
+    Assert.assertEquals("sampleValue", firstField.getValue());
+    secondField = list.get(1);
+    Assert.assertEquals(20, secondField.getValue());
+
+    Map<String, Field> map = listMapField.getValueAsMap();
+    Assert.assertEquals(2, map.size());
+    firstField = linkedHashMapReturnVal.get("firstField");
+    Assert.assertEquals("sampleValue", firstField.getValue());
+    secondField = linkedHashMapReturnVal.get("secondField");
+    Assert.assertEquals(20, secondField.getValue());
+
+    //Test List to ListMap
+    List<Field> list1 = new ArrayList<>(3);
+    list1.add(Field.create("stringValue"));
+    list1.add(Field.create(40));
+    list1.add(Field.create(true));
+
+    Field listField = Field.create(list1);
+
+    LinkedHashMap<String, Field> listMap = listField.getValueAsListMap();
+    Assert.assertEquals(3, listMap.size());
+    firstField = listMap.get("0");
+    Assert.assertEquals("stringValue", firstField.getValue());
+    secondField = listMap.get("1");
+    Assert.assertEquals(40, secondField.getValue());
+    Field thirdField = listMap.get("2");
+    Assert.assertEquals(true, thirdField.getValue());
+
+
+
+    //Test Map to ListMap
+    Map<String, Field> map1 = new HashMap<>(3);
+    map1.put("column1", Field.create("stringValue"));
+    map1.put("column2", Field.create(40));
+    map1.put("column3", Field.create(true));
+
+    Field mapField = Field.create(map1);
+
+    listMap = mapField.getValueAsListMap();
+    Assert.assertEquals(3, listMap.size());
+    firstField = listMap.get("column1");
+    Assert.assertEquals("stringValue", firstField.getValue());
+    secondField = listMap.get("column2");
+    Assert.assertEquals(40, secondField.getValue());
+    thirdField = listMap.get("column3");
+    Assert.assertEquals(true, thirdField.getValue());
+
+  }
+
 
 }

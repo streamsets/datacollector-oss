@@ -5,26 +5,28 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.impl.CreateByRef;
-import com.streamsets.pipeline.api.impl.ListTypeSupport;
-import com.streamsets.pipeline.api.impl.MapTypeSupport;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.BooleanTypeSupport;
 import com.streamsets.pipeline.api.impl.ByteArrayTypeSupport;
 import com.streamsets.pipeline.api.impl.ByteTypeSupport;
 import com.streamsets.pipeline.api.impl.CharTypeSupport;
+import com.streamsets.pipeline.api.impl.CreateByRef;
 import com.streamsets.pipeline.api.impl.DateTypeSupport;
 import com.streamsets.pipeline.api.impl.DecimalTypeSupport;
 import com.streamsets.pipeline.api.impl.DoubleTypeSupport;
 import com.streamsets.pipeline.api.impl.FloatTypeSupport;
 import com.streamsets.pipeline.api.impl.IntegerTypeSupport;
+import com.streamsets.pipeline.api.impl.ListMapTypeSupport;
+import com.streamsets.pipeline.api.impl.ListTypeSupport;
 import com.streamsets.pipeline.api.impl.LongTypeSupport;
+import com.streamsets.pipeline.api.impl.MapTypeSupport;
 import com.streamsets.pipeline.api.impl.ShortTypeSupport;
 import com.streamsets.pipeline.api.impl.StringTypeSupport;
 import com.streamsets.pipeline.api.impl.TypeSupport;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +65,8 @@ public class Field implements Cloneable {
     STRING(new StringTypeSupport()),
     BYTE_ARRAY(new ByteArrayTypeSupport()),
     MAP(new MapTypeSupport()),
-    LIST(new ListTypeSupport());
+    LIST(new ListTypeSupport()),
+    LIST_MAP(new ListMapTypeSupport());
 
     final TypeSupport<?> supporter;
 
@@ -163,6 +166,11 @@ public class Field implements Cloneable {
     return new Field(Type.LIST, v);
   }
 
+  // deep copy
+  public static Field createListMap(LinkedHashMap<String, Field> v) {
+    return new Field(Type.LIST_MAP, v);
+  }
+
   // deep copy for MAP and LIST type
   public static <T> Field create(Type type, T value) {
     return new Field(Utils.checkNotNull(type, "type"), type.convert(value));
@@ -260,6 +268,11 @@ public class Field implements Cloneable {
   @SuppressWarnings("unchecked")
   public List<Field> getValueAsList() {
     return (List<Field>) type.convert(getValue(), Type.LIST);
+  }
+
+  @SuppressWarnings("unchecked")
+  public LinkedHashMap<String, Field> getValueAsListMap() {
+    return (LinkedHashMap<String, Field>) type.convert(getValue(), Type.LIST_MAP);
   }
 
   @Override

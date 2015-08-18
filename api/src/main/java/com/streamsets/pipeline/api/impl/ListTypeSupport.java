@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.base.Errors;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ListTypeSupport extends TypeSupport<List> {
@@ -26,6 +27,13 @@ public class ListTypeSupport extends TypeSupport<List> {
   public Object convert(Object value, TypeSupport targetTypeSupport) {
     if (targetTypeSupport instanceof ListTypeSupport) {
       return value;
+    } else if(targetTypeSupport instanceof ListMapTypeSupport) {
+      List list = (List) value;
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>(list.size());
+      for (int i = 0; i < list.size(); i++) {
+        listMap.put(i + "", (Field)list.get(i));
+      }
+      return listMap;
     } else {
       throw new IllegalArgumentException(Utils.format(Errors.API_13.getMessage(), targetTypeSupport));
     }

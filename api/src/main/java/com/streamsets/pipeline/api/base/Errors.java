@@ -34,7 +34,10 @@ public enum Errors implements ErrorCode {
   API_18("Cannot convert Map, List, or Byte[] to String"),
 
   API_19("Error while initializing stage: {}"),
-  API_20("The stage implementation overridden the init() but didn't call super.init()")
+  API_20("The stage implementation overridden the init() but didn't call super.init()"),
+
+  API_21("Cannot convert {} field '{}' to ListMap"),
+  API_22("Cannot convert ListMap to {}"),
 
 ;
 
