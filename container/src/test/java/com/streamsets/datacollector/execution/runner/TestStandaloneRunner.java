@@ -23,6 +23,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.datacollector.execution.StateListener;
 
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -94,45 +95,85 @@ public class TestStandaloneRunner {
   public void testPipelinePrepare() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.FINISHED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.CONNECTING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STARTING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTED, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     runner.start();
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
-      ExecutionMode.STANDALONE, null);
+      ExecutionMode.STANDALONE, null, 0, 0);
     assertNull(runner.getState().getMetrics());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
+      ExecutionMode.STANDALONE, null, 0, 0);
+    runner.start();
+    assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
+      ExecutionMode.STANDALONE, null, 0, 0);
+    runner.stop();
+    assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
+  }
+
+  @Test
+  public void testPipelineRetry() throws Exception {
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner.start();
+    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    TestUtil.EMPTY_OFFSET = true;
+    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
+      ExecutionMode.STANDALONE, null, 0, 0);
+    runner = ((AsyncRunner)runner).getRunner();
+    ((StateListener)runner).stateChanged(PipelineStatus.RETRY, null, null);
+    assertEquals(1, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getRetryAttempt());
+    assertEquals(PipelineStatus.RETRY, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
+      ExecutionMode.STANDALONE, null, 1, 0);
+    ((StateListener)runner).stateChanged(PipelineStatus.RETRY, null, null);
+    assertEquals(2, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getRetryAttempt());
+    assertEquals(PipelineStatus.RETRY, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
+      ExecutionMode.STANDALONE, null, 2, 0);
+    ((StateListener)runner).stateChanged(PipelineStatus.RETRY, null, null);
+    assertEquals(3, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getRetryAttempt());
+    assertEquals(PipelineStatus.RETRY, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR, null, null,
+      ExecutionMode.STANDALONE, null, 3, 0);
+    ((StateListener)runner).stateChanged(PipelineStatus.RETRY, null, null);
+    assertEquals(0, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getRetryAttempt());
+    assertEquals(PipelineStatus.RUN_ERROR, pipelineStateStore.getState(TestUtil.MY_PIPELINE, "0").getStatus());
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
+      ExecutionMode.STANDALONE, null, 0, 0);
   }
 
   @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
-    Runner runner = pipelineManager.getRunner( "admin", TestUtil.MY_PIPELINE, "0");
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     waitAndAssertState(runner, PipelineStatus.RUNNING);
     assertNull(runner.getState().getMetrics());
@@ -187,7 +228,7 @@ public class TestStandaloneRunner {
     assertNotNull(runner.getState().getMetrics());
     // Simulate finishing, the runner shouldn't restart on finishing
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHING, null, null,
-      ExecutionMode.STANDALONE, runner.getState().getMetrics());
+      ExecutionMode.STANDALONE, runner.getState().getMetrics(), 0, 0);
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);

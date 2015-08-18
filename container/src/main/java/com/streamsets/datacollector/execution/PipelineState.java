@@ -29,4 +29,8 @@ public interface PipelineState {
 
   public String getMetrics();
 
+  public int getRetryAttempt();
+
+  public long getNextRetryTimeStamp();
+
 }

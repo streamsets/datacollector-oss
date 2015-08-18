@@ -23,10 +23,12 @@ public class PipelineStateImpl implements PipelineState {
   private final String user;
   private final ExecutionMode executionMode;
   private final String metrics;
+  private final int retryAttempt;
+  private final long nextRetryTimeStamp;
 
   @SuppressWarnings("unchecked")
   public PipelineStateImpl(String user, String name, String rev, PipelineStatus status, String message, long timeStamp,
-                        Map<String, Object> attributes, ExecutionMode executionMode, String metrics) {
+    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) {
     this.name = name;
     this.rev = rev;
     this.user = user;
@@ -36,6 +38,8 @@ public class PipelineStateImpl implements PipelineState {
     this.attributes = (Map) ((attributes != null) ? new HashMap<>(attributes) : new HashMap<>());
     this.executionMode = executionMode;
     this.metrics = metrics;
+    this.retryAttempt = retryAttempt;
+    this.nextRetryTimeStamp = nextRetryTimeStamp;
   }
 
   @Override
@@ -87,5 +91,15 @@ public class PipelineStateImpl implements PipelineState {
   @Override
   public String getMetrics() {
     return metrics;
+  }
+
+  @Override
+  public int getRetryAttempt() {
+    return retryAttempt;
+  }
+
+  @Override
+  public long getNextRetryTimeStamp() {
+    return nextRetryTimeStamp;
   }
 }

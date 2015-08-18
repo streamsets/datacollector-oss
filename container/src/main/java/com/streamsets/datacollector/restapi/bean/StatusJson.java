@@ -18,7 +18,7 @@ public enum StatusJson {
 
   FINISHING,        // pipeline job finishing (source reached end, returning NULL offset) (calling destroy on pipeline)
   FINISHED,         // pipeline job finished                                              (done)
-
+  RETRY,
   KILLED,           // only happens in cluster mode
 
 

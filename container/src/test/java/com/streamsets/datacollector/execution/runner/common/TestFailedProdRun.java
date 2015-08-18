@@ -77,6 +77,7 @@ public class TestFailedProdRun {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
 
+
   }
 
 
@@ -123,6 +124,7 @@ public class TestFailedProdRun {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, conf, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(pipelineConfiguration);
     try {
+      pipeline.registerStatusListener(new TestProductionPipeline.MyStateListener());
       pipeline.run();
     } catch (SomeException ex) {
       Assert.assertSame(ex, ErrorListeningSource.thrownError);

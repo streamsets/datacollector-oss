@@ -27,12 +27,14 @@ import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
+import com.streamsets.datacollector.execution.runner.RetryUtils;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.DataObserverRunnable;
 import com.streamsets.datacollector.execution.runner.common.MetricObserverRunnable;
@@ -90,6 +92,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -116,6 +119,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private DataObserverRunnable observerRunnable;
   private ProductionPipeline prodPipeline;
   private MetricsEventRunnable metricsEventRunnable;
+  private int maxRetries;
+  private ScheduledFuture<Void> retryFuture;
 
   private ProductionPipelineRunnable pipelineRunnable;
   private volatile boolean isClosed;
@@ -129,7 +134,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .put(PipelineStatus.START_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.RUNNING, ImmutableSet.of(PipelineStatus.RUNNING_ERROR, PipelineStatus.FINISHING,
       PipelineStatus.STOPPING, PipelineStatus.DISCONNECTING))
-    .put(PipelineStatus.RUNNING_ERROR, ImmutableSet.of(PipelineStatus.RUN_ERROR))
+    .put(PipelineStatus.RUNNING_ERROR, ImmutableSet.of(PipelineStatus.RETRY, PipelineStatus.RUN_ERROR))
+    .put(PipelineStatus.RETRY, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.STOPPING, PipelineStatus.DISCONNECTING))
     .put(PipelineStatus.RUN_ERROR, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.FINISHING, ImmutableSet.of(PipelineStatus.FINISHED))
     .put(PipelineStatus.STOPPING, ImmutableSet.of(PipelineStatus.STOPPED))
@@ -137,7 +143,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     .put(PipelineStatus.STOPPED, ImmutableSet.of(PipelineStatus.STARTING))
     .put(PipelineStatus.DISCONNECTING, ImmutableSet.of(PipelineStatus.DISCONNECTED))
     .put(PipelineStatus.DISCONNECTED, ImmutableSet.of(PipelineStatus.CONNECTING))
-    .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.DISCONNECTING))
+    .put(PipelineStatus.CONNECTING, ImmutableSet.of(PipelineStatus.STARTING, PipelineStatus.DISCONNECTING, PipelineStatus.RETRY))
     .build();
 
   public StandaloneRunner(String user, String name, String rev, ObjectGraph objectGraph) {
@@ -159,10 +165,12 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       switch (status) {
         case STARTING:
           msg = "Pipeline was in STARTING state, forcing it to DISCONNECTING";
+        case RETRY:
+          msg = (msg == null) ? "Pipeline was in RETRY state, forcing it to DISCONNECTING": msg;
         case CONNECTING:
-          msg = msg == null ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
+          msg = (msg == null) ? "Pipeline was in CONNECTING state, forcing it to DISCONNECTING" : msg;
         case RUNNING:
-          msg = msg == null ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
+          msg = (msg == null) ? "Pipeline was in RUNNING state, forcing it to DISCONNECTING" : msg;
           LOG.debug(msg);
           validateAndSetStateTransition(PipelineStatus.DISCONNECTING, msg, null);
         case DISCONNECTING:
@@ -186,7 +194,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           LOG.debug(msg);
           validateAndSetStateTransition(PipelineStatus.FINISHED, null, null);
           break;
-        case RUN_ERROR: // do nothing
+        case RUN_ERROR:
         case EDITED:
         case FINISHED:
         case KILLED:
@@ -208,21 +216,19 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       MDC.put(LogConstants.ENTITY, name);
       PipelineStatus status = getState().getStatus();
       LOG.info("Pipeline '{}::{}' has status: '{}'", name, rev, status);
-
       //if the pipeline was running and capture snapshot in progress, then cancel and delete snapshots
       for(SnapshotInfo snapshotInfo : getSnapshotsInfo()) {
         if(snapshotInfo.isInProgress()) {
           snapshotStore.deleteSnapshot(snapshotInfo.getName(), snapshotInfo.getRev(), snapshotInfo.getId());
         }
       }
-
       switch (status) {
         case DISCONNECTED:
           String msg = "Pipeline was in DISCONNECTED state, changing it to CONNECTING";
           LOG.debug(msg);
           validateAndSetStateTransition(PipelineStatus.CONNECTING, msg, null);
-          prepareForStart();
-          start();
+          retryOrStart();
+          break;
         default:
           LOG.error(Utils.format("Pipeline cannot start with status: '{}'", status));
       }
@@ -231,11 +237,35 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     }
   }
 
+  private void retryOrStart() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
+    PipelineState pipelineState = getState();
+    if (pipelineState.getRetryAttempt() == 0) {
+      prepareForStart();
+      start();
+    } else {
+      validateAndSetStateTransition(PipelineStatus.RETRY, "Changing the state to RETRY on startup", null);
+      long retryTimeStamp = pipelineState.getNextRetryTimeStamp();
+      long delay = 0;
+      long currentTime = System.currentTimeMillis();
+      if (retryTimeStamp > currentTime) {
+        delay = retryTimeStamp - currentTime;
+      }
+      retryFuture = scheduleForRetries(delay);
+    }
+  }
+
   @Override
-  public void onDataCollectorStop() throws PipelineStoreException {
+  public void onDataCollectorStop() throws PipelineStoreException, PipelineRunnerException {
     try {
       MDC.put(LogConstants.USER, user);
       MDC.put(LogConstants.ENTITY, name);
+      if (getState().getStatus() == PipelineStatus.RETRY) {
+        LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
+        retryFuture.cancel(true);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Disconnecting as SDC is shutting down", null);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Disconnected", null);
+        return;
+      }
       if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
         LOG.info("Pipeline '{}'::'{}' is no longer active", name, rev);
         return;
@@ -424,9 +454,31 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       fromState = getState();
       checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(toStatus), ContainerError.CONTAINER_0102,
         fromState.getStatus(), toStatus);
-
+      long nextRetryTimeStamp = fromState.getNextRetryTimeStamp();
+      int retryAttempt = fromState.getRetryAttempt();
       String metricString = null;
-      if (!toStatus.isActive() || toStatus == PipelineStatus.DISCONNECTED) {
+      if (toStatus == PipelineStatus.RETRY && fromState.getStatus() != PipelineStatus.CONNECTING) {
+        retryAttempt = fromState.getRetryAttempt() + 1;
+        if (retryAttempt > maxRetries && maxRetries != -1) {
+          LOG.info("Retry attempt '{}' is greater than max no of retries '{}'", retryAttempt, maxRetries);
+          toStatus = PipelineStatus.RUN_ERROR;
+          retryAttempt = 0;
+          nextRetryTimeStamp = 0;
+        } else {
+          nextRetryTimeStamp = RetryUtils.getNextRetryTimeStamp(retryAttempt, getState().getTimeStamp());
+          long delay = 0;
+          long currentTime = System.currentTimeMillis();
+          if (nextRetryTimeStamp > currentTime) {
+            delay = nextRetryTimeStamp - currentTime;
+          }
+          retryFuture = scheduleForRetries(delay);
+        }
+      } else if (!toStatus.isActive()) {
+        retryAttempt = 0;
+        nextRetryTimeStamp = 0;
+      }
+      if (!toStatus.isActive() || toStatus == PipelineStatus.DISCONNECTED
+        || (toStatus == PipelineStatus.RETRY && fromState.getStatus() != PipelineStatus.CONNECTING)) {
         Object metrics = getMetrics();
         if (metrics != null) {
           ObjectMapper objectMapper = ObjectMapperFactory.get();
@@ -442,9 +494,23 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       }
       pipelineState =
         pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.STANDALONE,
-          metricString);
+          metricString, retryAttempt, nextRetryTimeStamp);
     }
     eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.STANDALONE);
+  }
+
+  private ScheduledFuture<Void> scheduleForRetries(long delay) {
+    LOG.info("Scheduling retry in '{}' milliseconds", delay);
+    ScheduledFuture<Void> future = runnerExecutor.schedule(new Callable<Void>() {
+      @Override
+      public Void call() throws StageException, PipelineException {
+        LOG.info("Starting the runner now");
+        prepareForStart();
+        start();
+        return null;
+      }
+    }, delay, TimeUnit.MILLISECONDS);
+    return future;
   }
 
   private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
@@ -505,6 +571,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
         }
+        maxRetries = pipelineConfigBean.retryAttempts;
 
         MemoryLimitConfiguration memoryLimitConfiguration = getMemoryLimitConfiguration(pipelineConfigBean);
 
@@ -581,21 +648,30 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         throw e;
       }
     }
-
+    LOG.debug("Starting the runnable for pipeline {} {}", name, rev);
     if(!pipelineRunnable.isStopped()) {
       pipelineRunnable.run();
     }
-    LOG.debug("Started pipeline {} {}", name, rev);
+
   }
 
   private void stopPipeline(boolean sdcShutting) throws PipelineException {
+    if (getState().getStatus() == PipelineStatus.RETRY) {
+      LOG.info("Pipeline '{}'::'{}' is in retry", name , rev);
+      retryFuture.cancel(true);
+      validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
+      return;
+    }
     synchronized (this) {
       if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
         LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
         pipelineRunnable.stop(sdcShutting);
+        pipelineRunnable = null;
+
       }
       if (metricsEventRunnable != null) {
         metricsEventRunnable.setThreadHealthReporter(null);
+        metricsEventRunnable = null;
       }
       if (threadHealthReporter != null) {
         threadHealthReporter.destroy();

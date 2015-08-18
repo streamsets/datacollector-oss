@@ -26,7 +26,7 @@ public interface PipelineStateStore {
   public void delete(String name, String rev) throws PipelineStoreException;
 
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-    Map<String, Object> attributes, ExecutionMode executionMode, String metrics) throws PipelineStoreException;
+    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) throws PipelineStoreException;
 
   public PipelineState getState(String name, String rev) throws PipelineStoreException;
 

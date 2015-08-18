@@ -164,7 +164,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       pipeline.setPipelineInfo(info);
       if (pipelineStateStore != null) {
         pipelineStateStore.saveState(user, name, REV, PipelineStatus.EDITED, "Pipeline edited", null,
-          ExecutionMode.STANDALONE, null);
+          ExecutionMode.STANDALONE, null, 0, 0);
       }
       return pipeline;
     }

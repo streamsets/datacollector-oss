@@ -256,25 +256,26 @@ public class TestUtil {
             ExecutionMode.STANDALONE.name()));
         }
 
-        if(!pipelineStoreTask.hasPipeline(MY_PIPELINE)) {
+        if (!pipelineStoreTask.hasPipeline(MY_PIPELINE)) {
           pipelineStoreTask.create(USER, MY_PIPELINE, "description");
           PipelineConfiguration pipelineConf = pipelineStoreTask.load(MY_PIPELINE, ZERO_REV);
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
-          pipelineConf.getConfiguration().add(new Config("executionMode",
-            ExecutionMode.STANDALONE.name()));
-          pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description"
-            , pipelineConf);
+          pipelineConf.getConfiguration().add(new Config("executionMode", ExecutionMode.STANDALONE.name()));
+          pipelineConf.getConfiguration().add(new Config("retryAttempts", 3));
+          pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description", pipelineConf);
 
-          //create a DataRuleDefinition for one of the stages
-          DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("myID", "myLabel", "s", 100, 10,
-            "${record:value(\"/name\") != null}", true, "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
+          // create a DataRuleDefinition for one of the stages
+          DataRuleDefinition dataRuleDefinition =
+            new DataRuleDefinition("myID", "myLabel", "s", 100, 10, "${record:value(\"/name\") != null}", true,
+              "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
           List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
           dataRuleDefinitions.add(dataRuleDefinition);
 
-          RuleDefinitions ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-            dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+          RuleDefinitions ruleDefinitions =
+            new RuleDefinitions(Collections.<MetricsRuleDefinition> emptyList(), dataRuleDefinitions,
+              Collections.<String> emptyList(), UUID.randomUUID());
           pipelineStoreTask.storeRules(MY_PIPELINE, ZERO_REV, ruleDefinitions);
         }
 

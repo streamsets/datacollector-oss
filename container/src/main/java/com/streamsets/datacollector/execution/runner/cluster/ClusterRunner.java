@@ -446,7 +446,7 @@ public class ClusterRunner extends AbstractRunner {
         }
         pipelineState =
           pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.CLUSTER,
-            metricsJSONStr);
+            metricsJSONStr, 0, 0);
       }
       // This should be out of sync block
       if (eventListenerManager != null) {
@@ -748,4 +748,5 @@ public class ClusterRunner extends AbstractRunner {
   public String getToken() {
     return slaveCallbackManager.getClusterToken();
   }
+
 }

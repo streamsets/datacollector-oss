@@ -26,10 +26,12 @@ public class PipelineStateJson {
     @JsonProperty("timeStamp") long timeStamp,
     @JsonProperty("attributes") Map<String, Object> attributes,
     @JsonProperty("executionMode") ExecutionModeJson executionModeJson,
-    @JsonProperty("metrics") String metrics) {
+    @JsonProperty("metrics") String metrics,
+    @JsonProperty("retryAttempt") int retryAttempt,
+    @JsonProperty("nextRetryTimeStamp") long nextRetryTimeStamp) {
     pipelineState = new com.streamsets.datacollector.execution.manager.PipelineStateImpl(user, name, rev,
       BeanHelper.unwrapState(statusJson), message, timeStamp, attributes,
-      BeanHelper.unwrapExecutionMode(executionModeJson), metrics);
+      BeanHelper.unwrapExecutionMode(executionModeJson), metrics, retryAttempt, nextRetryTimeStamp);
   }
 
   public PipelineStateJson(com.streamsets.datacollector.execution.PipelineState pipelineState) {
@@ -70,6 +72,14 @@ public class PipelineStateJson {
 
   public String getMetrics() {
     return pipelineState.getMetrics();
+  }
+
+  public int getRetryAttempt() {
+    return pipelineState.getRetryAttempt();
+  }
+
+  public long getNextRetryTimeStamp() {
+    return pipelineState.getNextRetryTimeStamp();
   }
 
   @JsonIgnore

@@ -14,6 +14,7 @@ import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.datacollector.execution.runner.common.TestProductionPipeline.MyStateListener;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
@@ -28,7 +29,9 @@ import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+
 import dagger.ObjectGraph;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -73,10 +76,11 @@ public class TestProdPipelineRunnable {
   public void testRun() throws Exception {
     TestUtil.captureMockStages();
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true);
+    pipeline.registerStatusListener(new MyStateListener());
     ProductionPipelineRunnable runnable =
       new ProductionPipelineRunnable(null, (StandaloneRunner) ((AsyncRunner)runner).getRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
         Collections.<Future<?>> emptyList());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null, 0, 0);
     runnable.run();
     // The source returns null offset because all the data from source was read
     Assert.assertNull(pipeline.getCommittedOffset());
@@ -89,7 +93,7 @@ public class TestProdPipelineRunnable {
     ProductionPipelineRunnable runnable = new ProductionPipelineRunnable
       (null, (StandaloneRunner) ((AsyncRunner)runner).getRunner(), pipeline, TestUtil.MY_PIPELINE, "0",
       Collections.<Future<?>>emptyList());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING, null, null, null, null, 0, 0);
     //Stops after the first batch
     runnable.run();
     runnable.stop(false);
@@ -158,7 +162,7 @@ public class TestProdPipelineRunnable {
     ProductionPipeline pipeline = new ProductionPipelineBuilder(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo,
       MockStages.createStageLibrary(), runner, null).build(MockStages.createPipelineConfigurationSourceProcessorTarget());
 
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null, null, null, 0, 0);
 
     if(captureNextBatch) {
       runner.capture(SNAPSHOT_NAME, 1, 1);

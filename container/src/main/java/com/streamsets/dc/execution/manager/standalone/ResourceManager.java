@@ -6,6 +6,7 @@
 package com.streamsets.dc.execution.manager.standalone;
 
 import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.util.Configuration;
@@ -34,10 +35,11 @@ public class ResourceManager implements StateEventListener {
   }
 
   @Override
-  public void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson,
-                                         ThreadUsage threadUsage) {
-    if (fromState.getStatus().isActive() && !toState.getStatus().isActive()) {
-      synchronized(this) {
+  public void
+    onStateChange(PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage) {
+    if ((fromState.getStatus().isActive() && !toState.getStatus().isActive())
+      || toState.getStatus() == PipelineStatus.RETRY) {
+      synchronized (this) {
         currentCapacity = threadUsage.release(currentCapacity);
       }
     }

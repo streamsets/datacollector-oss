@@ -75,7 +75,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     Utils.checkState(!pipelineState.getStatus().isActive(),
       Utils.format("Cannot edit pipeline in state: '{}'", pipelineState.getStatus()));
     if (pipelineState.getStatus() != PipelineStatus.EDITED || executionMode != pipelineState.getExecutionMode()) {
-      return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode, null);
+      return saveState(user, name, rev, PipelineStatus.EDITED, "Pipeline edited", null, executionMode, null, 0, 0);
     } else {
       return null;
     }
@@ -92,13 +92,14 @@ public class FilePipelineStateStore implements PipelineStateStore {
 
   @Override
   public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-    Map<String, Object> attributes, ExecutionMode executionMode, String metrics) throws PipelineStoreException {
+    Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp)
+    throws PipelineStoreException {
     register(name, rev);
-    LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}';"
-      + "status msg is '{}'", name, rev, user, status,
-      executionMode, message);
+    LOG.debug("Changing state of pipeline '{}','{}','{}' to '{}' in execution mode: '{}';" + "status msg is '{}'",
+      name, rev, user, status, executionMode, message);
     PipelineState pipelineState =
-      new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode, metrics);
+      new PipelineStateImpl(user, name, rev, status, message, System.currentTimeMillis(), attributes, executionMode,
+        metrics, retryAttempt, nextRetryTimeStamp);
     persistPipelineState(pipelineState);
     return pipelineState;
   }

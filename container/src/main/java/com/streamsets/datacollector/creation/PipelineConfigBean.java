@@ -18,7 +18,6 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooser;
 
 import java.util.Collections;
@@ -55,6 +54,26 @@ public class PipelineConfigBean implements Stage {
   @ValueChooser(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    label = "Retry pipeline on error",
+    displayPosition = 30)
+  public boolean shouldRetry;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "-1",
+    label = "Retry attempts",
+    dependsOn = "shouldRetry",
+    triggeredByValue = "true",
+    description = "Max no of retries for a pipeline. The default value is -1 which causes the "
+      + "retry to happen infinitely. The interval for first retry "
+      + "is 15 secs and then it increases exponentially flattening at 5 mins",
+    displayPosition = 30)
+  public int retryAttempts;
 
   @ConfigDef(
     required = true,
@@ -63,7 +82,7 @@ public class PipelineConfigBean implements Stage {
     defaultValue = "${jvm:maxMemoryMB() * 0.65}",
     description = "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap " +
       "size. Default is 668.",
-    displayPosition = 30,
+    displayPosition = 60,
     min = 128,
     group = ""
   )
@@ -77,7 +96,7 @@ public class PipelineConfigBean implements Stage {
       label = "On Memory Exceeded",
       description = "Behavior when the pipeline exceeds the memory limit. Tip: Configure an alert to indicate when the " +
         "memory use approaches the limit." ,
-      displayPosition = 40,
+      displayPosition = 70,
       group = ""
   )
   @ValueChooser(MemoryLimitExceededChooserValues.class)
@@ -89,7 +108,7 @@ public class PipelineConfigBean implements Stage {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Constants",
-      displayPosition = 10,
+      displayPosition = 80,
       group = "CONSTANTS"
   )
   public Map<String, Object> constants;
@@ -99,7 +118,7 @@ public class PipelineConfigBean implements Stage {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Error Records",
-      displayPosition = 10,
+      displayPosition = 90,
       group = "BAD_RECORDS"
   )
   @ValueChooser(ErrorHandlingChooserValues.class)
@@ -111,7 +130,7 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.NUMBER,
       label = "Worker Memory (MB)",
       defaultValue = "1024",
-      displayPosition = 10,
+      displayPosition = 100,
       group = "CLUSTER",
       dependsOn = "executionMode",
       triggeredByValue = "CLUSTER"
@@ -125,7 +144,7 @@ public class PipelineConfigBean implements Stage {
     label = "Worker Java Options",
     defaultValue = "-XX:PermSize=128M -XX:MaxPermSize=256M -Dlog4j.debug",
     description = "Add properties as needed. Changes to default settings are not recommended.",
-    displayPosition = 20,
+    displayPosition = 110,
     group = "CLUSTER",
     dependsOn = "executionMode",
     triggeredByValue = "CLUSTER"
@@ -138,7 +157,7 @@ public class PipelineConfigBean implements Stage {
     type = ConfigDef.Type.MAP,
     label = "Launcher ENV",
     description = "Sets additional environment variables for the cluster launcher",
-    displayPosition = 60,
+    displayPosition = 120,
     group = "CLUSTER",
     dependsOn = "executionMode",
     triggeredByValue = "CLUSTER"

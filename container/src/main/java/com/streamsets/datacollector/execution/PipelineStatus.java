@@ -15,6 +15,8 @@ public enum PipelineStatus {
   RUNNING_ERROR (true),    // pipeline job failed while running (calling destroy on pipeline) - only for standalone
   RUN_ERROR (false),        // pipeline job failed while running (done)
 
+  RETRY (true),           // Retry - only for standalone
+
   FINISHING (true),        // pipeline job finishing (source reached end, returning NULL offset) (calling destroy on pipeline) - only for standalone
   FINISHED (false),         // pipeline job finished                                              (done)
 

@@ -73,11 +73,11 @@ public class TestPipelineStateStore {
 
     @Override
     public PipelineState saveState(String user, String name, String rev, PipelineStatus status, String message,
-                                   Map<String, Object> attributes, ExecutionMode executionMode, String metrics) throws PipelineStoreException {
+                                   Map<String, Object> attributes, ExecutionMode executionMode, String metrics, int retryAttempt, long nextRetryTimeStamp) throws PipelineStoreException {
       if (INVALIDATE_CACHE) {
         super.destroy();
       }
-      return super.saveState(user, name, rev, status, message, attributes, executionMode, metrics);
+      return super.saveState(user, name, rev, status, message, attributes, executionMode, metrics, retryAttempt, nextRetryTimeStamp);
     }
 
   }
@@ -205,8 +205,8 @@ public class TestPipelineStateStore {
 
   @Test
   public void stateHistory() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null);
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline stopped", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
     List<PipelineState> history = pipelineStateStore.getHistory("aaa", "0", true);
     for (PipelineState pipelineState: history) {
       assertEquals(PipelineStatus.RUNNING, pipelineState.getStatus());
@@ -216,16 +216,16 @@ public class TestPipelineStateStore {
 
   @Test
   public void stateChangeExecutionMode() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.CLUSTER, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.CLUSTER, null, 0, 0);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals(ExecutionMode.CLUSTER, pipelineState.getExecutionMode());
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
     pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals(ExecutionMode.STANDALONE, pipelineState.getExecutionMode());
   }
 
   public void stateSave() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.EDITED, "Pipeline edited", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.EDITED, "Pipeline edited", null, ExecutionMode.STANDALONE, null, 0, 0);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals("user1", pipelineState.getUser());
     assertEquals("aaa", pipelineState.getName());
@@ -236,7 +236,7 @@ public class TestPipelineStateStore {
   }
 
   public void stateDelete() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
     pipelineStateStore.delete("aaa", "0");
     try {
       pipelineStateStore.getState("aaa", "0");
@@ -247,7 +247,7 @@ public class TestPipelineStateStore {
   }
 
   public void stateEdit() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
     pipelineStateStore.edited("user2", "aaa", "0", ExecutionMode.STANDALONE);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals("user2", pipelineState.getUser());
@@ -255,7 +255,7 @@ public class TestPipelineStateStore {
     assertEquals("0", pipelineState.getRev());
     assertEquals(PipelineStatus.EDITED, pipelineState.getStatus());
 
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline running", null, ExecutionMode.STANDALONE, null);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.RUNNING, "Pipeline running", null, ExecutionMode.STANDALONE, null, 0, 0);
     try {
       pipelineStateStore.edited("user2", "aaa", "0", ExecutionMode.STANDALONE);
       fail("Expected exception but didn't get any");

@@ -8,7 +8,6 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.StateListener;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
@@ -36,28 +35,26 @@ import java.util.Map;
 public class ProductionPipeline {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipeline.class);
-
-  private final RuntimeInfo runtimeInfo;
   private final PipelineConfiguration pipelineConf;
   private final Pipeline pipeline;
   private final ProductionPipelineRunner pipelineRunner;
   private StateListener stateListener;
-  private volatile PipelineStatus pipelineStatus;
   private final String name;
   private final String rev;
   private final boolean isExecutingInSlave;
+  private final boolean shouldRetry;
 
-  public ProductionPipeline(String name, String rev, Configuration conf, RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf,
-                            Pipeline pipeline) {
+  public ProductionPipeline(String name, String rev, PipelineConfiguration pipelineConf,
+                            Configuration conf, Pipeline pipeline, boolean shouldRetry) {
     this.name = name;
     this.rev = rev;
-    this.runtimeInfo = runtimeInfo;
     this.pipelineConf = pipelineConf;
     this.pipeline = pipeline;
     this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
     ExecutionMode executionMode =
       ExecutionMode.valueOf(conf.get(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name()));
     isExecutingInSlave = (executionMode == ExecutionMode.SLAVE);
+    this.shouldRetry = shouldRetry;
   }
 
   public StateListener getStatusListener() {
@@ -70,10 +67,7 @@ public class ProductionPipeline {
 
   private void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
     throws PipelineRuntimeException {
-    this.pipelineStatus = pipelineStatus;
-    if (stateListener != null) {
-      stateListener.stateChanged(pipelineStatus, message, attributes);
-    }
+    stateListener.stateChanged(pipelineStatus, message, attributes);
   }
 
   public void run() throws StageException, PipelineRuntimeException {
@@ -123,6 +117,7 @@ public class ProductionPipeline {
         }
       } finally {
         LOG.debug("Destroying");
+
         try {
           pipeline.destroy();
           if (isExecutingInSlave) {
@@ -140,7 +135,11 @@ public class ProductionPipeline {
             stateChanged(PipelineStatus.FINISHED, null, null);
           } else if (errorWhileRunning) {
             LOG.debug("Stopped due to an error");
-            stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+            if (shouldRetry && !isExecutingInSlave) {
+              stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
+            } else {
+              stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+            }
           }
         }
       }

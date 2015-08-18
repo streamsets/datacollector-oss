@@ -10,7 +10,9 @@ import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.MemoryLimitConfiguration;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.SnapshotStore;
+import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -34,11 +36,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -48,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -97,6 +102,7 @@ public class TestProductionPipeline {
   public void testGetCommittedOffset() throws Exception {
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, false);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
     //The source returns null offset the first time.
@@ -107,6 +113,7 @@ public class TestProductionPipeline {
   public void testProductionRunnerOffsetAPIs() throws Exception {
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, false);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
     //The source returns null offset the first time.
@@ -119,6 +126,7 @@ public class TestProductionPipeline {
   public void testProductionRunAtLeastOnce() throws Exception {
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, true, false);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
 
     //The source returns null offset the first time.
@@ -130,6 +138,7 @@ public class TestProductionPipeline {
   public void testProductionRunAtMostOnce() throws Exception {
 
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, false);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     //The source returns null offset the first time.
     Assert.assertNull(pipeline.getCommittedOffset());
@@ -172,6 +181,7 @@ public class TestProductionPipeline {
     MockStages.setSourceCapture(capture);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
       true/*source is committer*/);
+    pipeline.registerStatusListener(new MyStateListener());
     long startTime = System.currentTimeMillis();
     //Need sleep because the file system could truncate the time to the last second.
     Thread.sleep(1000);
@@ -210,6 +220,7 @@ public class TestProductionPipeline {
       }
     }
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     for (String name : runtimeInfoMetrics.getNames()) {
       if (name.startsWith(MetricsConfigurator.JMX_PREFIX)) {
@@ -224,6 +235,7 @@ public class TestProductionPipeline {
     MockStages.setSourceCapture(capture);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
       false/*source not committer*/);
+    pipeline.registerStatusListener(new MyStateListener());
     long startTime = System.currentTimeMillis();
     //Need sleep because the file system could truncate the time to the last second.
     Thread.sleep(1000);
@@ -252,6 +264,7 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true,
       false/*source not committer*/);
     //Need sleep because the file system could truncate the time to the last second.
+    pipeline.registerStatusListener(new MyStateListener());
     Thread.sleep(15000);
     try {
       pipeline.run();
@@ -276,6 +289,7 @@ public class TestProductionPipeline {
     PreviewCheckSource capture = new PreviewCheckSource();
     MockStages.setSourceCapture(capture);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     Assert.assertFalse(capture.isPreview);
   }
@@ -343,6 +357,7 @@ public class TestProductionPipeline {
     Source capture = new SourceValidateConfigFailureCapture();
     MockStages.setSourceCapture(capture);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
   }
 
@@ -407,6 +422,7 @@ public class TestProductionPipeline {
     ErrorStageTarget errorStage = new ErrorStageTarget();
     MockStages.setErrorStageCapture(errorStage);
     ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_MOST_ONCE, true, true);
+    pipeline.registerStatusListener(new MyStateListener());
     pipeline.run();
     Assert.assertEquals(4, errorStage.records.size());
     assertErrorRecord(errorStage.records.get(0), runtimeInfo.getId(), PIPELINE_NAME, Field.create("E0"),
@@ -428,5 +444,13 @@ public class TestProductionPipeline {
     Assert.assertEquals(errorStage, record.getHeader().getErrorStage());
     Assert.assertNotNull(record.getHeader().getErrorMessage());
     Assert.assertNotEquals(0, record.getHeader().getErrorTimestamp());
+  }
+
+  static class MyStateListener implements StateListener {
+    @Override
+    public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
+      throws PipelineRuntimeException {
+    }
+
   }
 }

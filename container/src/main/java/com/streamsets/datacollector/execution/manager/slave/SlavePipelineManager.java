@@ -71,7 +71,7 @@ public class SlavePipelineManager extends AbstractTask implements Manager {
     }
     runner = runnerProvider.createRunner(user, name, rev, objectGraph, null);
     // Set the initial state
-    pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, null, ExecutionMode.SLAVE, null);
+    pipelineStateStore.saveState(user, name, rev, PipelineStatus.EDITED, null, null, ExecutionMode.SLAVE, null, 0, 0);
     return runner;
   }
 

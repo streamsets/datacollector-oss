@@ -6,6 +6,8 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -16,7 +18,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ValidationUtil;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductionPipelineBuilder {
@@ -68,7 +70,8 @@ public class ProductionPipelineBuilder {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));
     }
-    return new ProductionPipeline(name, rev, configuration, runtimeInfo, pipelineConf, pipeline);
+    PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, new ArrayList<Issue>());
+    return new ProductionPipeline(name, rev, pipelineConf, configuration, pipeline, pipelineConfigBean.shouldRetry);
   }
 
 }
