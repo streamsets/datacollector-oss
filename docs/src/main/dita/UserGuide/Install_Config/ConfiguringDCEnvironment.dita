@@ -17,11 +17,18 @@
                 /> environment configuration file. After you edit the file, restart the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to enable the changes. </p>
-            <p>The <ph
+            <p>Use one of the following <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> environment configuration file, <filepath>sdc-env.sh</filepath>, is located in
-                the following
-                location:<codeblock>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeblock>The <ph
+                /> environment configuration files:<ul id="ul_vmp_l3h_1t">
+                    <li>If you start the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> from the command line, use the following file:
+                        <codeblock>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeblock></li>
+                    <li>If you start the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> as a service, use the following file:
+                        <codeblock>&lt;SDCinstalldir>/libexec/sdcd-env.sh</codeblock></li>
+                </ul>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> environment configuration file includes the following environment
                     variables:<table frame="all" rowsep="1" colsep="1" id="table_hby_1bn_qr">

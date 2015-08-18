@@ -3,7 +3,31 @@
 <concept id="concept_rng_qym_qr">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
   Environment Configuration</title>
- <shortdesc>You can edit the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
-  configuration file, sdc-env.sh, to configure Java options. </shortdesc>
+ <conbody>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   provides two environment configuration files:<ul id="ul_v4w_fph_1t">
+    <li><codeph>sdc-env.sh</codeph> - Use when you start the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+     manually.</li>
+    <li><codeph>sdcd.env.sh</codeph> - Use when you start the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
+     service. Also defines the Data Collector user, group, and directories.</li>
+   </ul></p>
+  <p>Both <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   environment configuration files include the following environment variables:<dl>
+    <dlentry>
+     <dt>SDC_ROOT_CLASSPATH</dt>
+     <dd>Defines the path to jar files to be added to the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> root
+      classloader. Use for components that must be in the root classloader, such as Snappy. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>SDC_JAVA_OPTS</dt>
+     <dd>Defines additional Java configuration options for the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. By
+      default, this property includes the heap size for the <ph
+       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
 </concept>

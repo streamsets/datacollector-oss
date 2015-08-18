@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jdj_4rg_1t">
+ <title>Enabling External JMX Tools</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> can provide JMX metrics to third-party tools. </shortdesc>
+ <conbody>
+  <p><indexterm>JMX metrics<indexterm>enabling external JMX
+    tools</indexterm></indexterm><indexterm>Java configuration options<indexterm>enabling
+     third-party JMX tooling</indexterm></indexterm>The following Java environment variables enable
+   passing JMX metrics to external tools:<ul id="ul_trq_qsh_1t">
+    <li>Dcom.sun.management.jmxremote</li>
+    <li>Dcom.sun.management.jmxremote.port=&lt;port_number></li>
+    <li>Dcom.sun.management.jmxremote.local.only=&lt;true | false></li>
+    <li>Dcom.sun.management.jmxremote.authenticate=&lt;true | false></li>
+    <li>Dcom.sun.management.jmxremote.ssl=&lt;true | false></li>
+   </ul></p>
+  <p>You can pass the variables in the command line if you start the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> manually. Or,
+   you can add the variables to the SDC_JAVA_OPTS environment variable in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
+   file. </p>
+  <p>For example, the following set of variables passes JMX metrics through port 80345 using
+   authentication but without SSL:</p>
+  <p>
+   <codeblock>SDC_JAVA_OPTS "-Dcom.sun.management.jmxremote 
+- Dcom.sun.management.jmxremote.port=80345
+-Dcom.sun.management.jmxremote.local.only=false 
+-Dcom.sun.management.jmxremote.authenticate=true 
+-Dcom.sun.management.jmxremote.ssl=false"</codeblock>
+  </p>
+ </conbody>
+</concept>

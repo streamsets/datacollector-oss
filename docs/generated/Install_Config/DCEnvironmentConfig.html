@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can edit the Data Collector environment file to add or update Java configuration options. If you start the Data Collector manually, use the following file: &lt;SDCinstalldir&gt;/libexec/sdc-env.sh If ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="abstract" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="description" content="You can edit the Data Collector environment configuration file, sdc-env.sh, to configure Java options."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector provides two environment configuration files: sdc-env.sh - Use when you start the Data Collector manually. sdcd.env.sh - Use when you start the Data Collector as a service. Also ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Environment Configuration"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rng_qym_qr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Environment Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,9 +15,45 @@
                   Collector</span>
   Environment Configuration</h1>
 
- <p class="shortdesc">You can edit the <span class="ph">Data
-                  Collector</span> environment
-  configuration file, sdc-env.sh, to configure Java options. </p>
+ <div class="body conbody">
+  <div class="p">The <span class="ph">Data
+                  Collector</span>
+   provides two environment configuration files:<ul class="ul" id="concept_rng_qym_qr__ul_v4w_fph_1t">
+    <li class="li"><samp class="ph codeph">sdc-env.sh</samp> - Use when you start the <span class="ph">Data
+                  Collector</span>
+     manually.</li>
+
+    <li class="li"><samp class="ph codeph">sdcd.env.sh</samp> - Use when you start the <span class="ph">Data
+                  Collector</span> as a
+     service. Also defines the Data Collector user, group, and directories.</li>
+
+   </ul>
+</div>
+
+  <div class="p">Both <span class="ph">Data
+                  Collector</span>
+   environment configuration files include the following environment variables:<dl class="dl">
+    
+     <dt class="dt dlterm">SDC_ROOT_CLASSPATH</dt>
+
+     <dd class="dd">Defines the path to jar files to be added to the <span class="ph">Data
+                  Collector</span> root
+      classloader. Use for components that must be in the root classloader, such as Snappy. </dd>
+
+    
+    
+     <dt class="dt dlterm">SDC_JAVA_OPTS</dt>
+
+     <dd class="dd">Defines additional Java configuration options for the <span class="ph">Data
+                  Collector</span>. By
+      default, this property includes the heap size for the <span class="ph">Data
+                  Collector</span>.</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_vrx_4fg_qr">
@@ -27,39 +63,6 @@
   <p class="p">You can edit the <span class="ph">Data
                   Collector</span>
       environment file to add or update Java configuration options. </p>
-
-    <p class="p">If you start the <span class="ph">Data
-                  Collector</span> manually,
-      use the following file: <span class="ph filepath">&lt;SDCinstalldir&gt;/libexec/sdc-env.sh</span></p>
-
-    <p class="p">If you start the <span class="ph">Data
-                  Collector</span> as a
-      service, use the following file:
-      <span class="ph filepath">&lt;SDCinstalldir&gt;/libexec/sdcd-env.sh</span></p>
-
-    <div class="p">The <span class="ph">Data
-                  Collector</span>
-      environment configuration file includes the following Java configuration options:<dl class="dl">
-        
-          <dt class="dt dlterm">SDC_ROOT_CLASSPATH</dt>
-
-          <dd class="dd">Defines the path to jar files to be added to the <span class="ph">Data
-                  Collector</span> root
-            classloader. Use for components that must be in the root classloader, such as Snappy.
-          </dd>
-
-        
-        
-          <dt class="dt dlterm">SDC_JAVA_OPTS</dt>
-
-          <dd class="dd">Defines additional Java configuration options for the <span class="ph">Data
-                  Collector</span>. By
-            default, this property includes the heap size for the <span class="ph">Data
-                  Collector</span>.</dd>
-
-        
-      </dl>
-</div>
 
  </div>
 
@@ -73,7 +76,8 @@
                   Collector</span> Java
     heap size is 1024 MB. </p>
 
-  <p class="p">The Java heap size determines the heap size allocated to the <span class="ph">Data
+  <p class="p">The Java heap size determines the heap
+      size allocated to the <span class="ph">Data
                   Collector</span> and
       affects the amount of memory the <span class="ph">Data
                   Collector</span> can use
@@ -125,11 +129,13 @@
                   Collector</span> with Java 7,
   you can define the Java Permanent Generation size, also known as the PermGen size.</p>
 
-  <p class="p">The PermGen size determines the amount of memory that the <span class="ph">Data
+  <p class="p">The PermGen size determines the amount of
+      memory that the <span class="ph">Data
                   Collector</span> web
-   application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the <span class="ph">Data
-                  Collector</span>  environment
-   configuration file.</p>
+      application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the
+        <span class="ph">Data
+                  Collector</span>
+      environment configuration file.</p>
 
   <div class="p">Use the following properties to define the PermGen size:<ul class="ul" id="concept_kxf_y2m_sr__ul_qjd_33m_sr">
         <li class="li">MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>
@@ -143,6 +149,58 @@
       the <span class="ph">Data
                   Collector</span> to
       fail to start.</p>
+
+    <div class="p">By default, the PermGen size is defined as
+      follows:<pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <span class="ph uicontrol">-XX:PermSize=128M -XX:MaxPermSize=256M</span> -server ${SDC_JAVA_OPTS}"</pre>
+</div>
+
+    <div class="p">If, for example, you doubled the heap size to 2048 MB, you might set the options as
+      follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m -XX:MaxPermSize=512M -XX:PermSize=256M -server ${SDC_JAVA_OPTS} "
+</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested2" id="concept_jdj_4rg_1t">
+ <h3 class="title topictitle3">Enabling External JMX Tools</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span> can provide JMX metrics to third-party tools. </p>
+
+  <div class="p">The following Java environment variables enable
+   passing JMX metrics to external tools:<ul class="ul" id="concept_jdj_4rg_1t__ul_trq_qsh_1t">
+    <li class="li">Dcom.sun.management.jmxremote</li>
+
+    <li class="li">Dcom.sun.management.jmxremote.port=&lt;port_number&gt;</li>
+
+    <li class="li">Dcom.sun.management.jmxremote.local.only=&lt;true | false&gt;</li>
+
+    <li class="li">Dcom.sun.management.jmxremote.authenticate=&lt;true | false&gt;</li>
+
+    <li class="li">Dcom.sun.management.jmxremote.ssl=&lt;true | false&gt;</li>
+
+   </ul>
+</div>
+
+  <p class="p">You can pass the variables in the command line if you start the <span class="ph">Data
+                  Collector</span> manually. Or,
+   you can add the variables to the SDC_JAVA_OPTS environment variable in the <span class="ph">Data
+                  Collector</span> environment
+   file. </p>
+
+  <p class="p">For example, the following set of variables passes JMX metrics through port 80345 using
+   authentication but without SSL:</p>
+
+  <div class="p">
+   <pre class="pre codeblock">SDC_JAVA_OPTS "-Dcom.sun.management.jmxremote 
+- Dcom.sun.management.jmxremote.port=80345
+-Dcom.sun.management.jmxremote.local.only=false 
+-Dcom.sun.management.jmxremote.authenticate=true 
+-Dcom.sun.management.jmxremote.ssl=false"</pre>
+
+  </div>
 
  </div>
 
@@ -164,10 +222,19 @@
                   Collector</span> environment configuration file. After you edit the file, restart the <span class="ph">Data
                   Collector</span> to enable the changes. </p>
 
-            <div class="p">The <span class="ph">Data
-                  Collector</span> environment configuration file, <span class="ph filepath">sdc-env.sh</span>, is located in
-                the following
-                location:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/libexec/sdc-env.sh</pre>
+            <div class="p">Use one of the following <span class="ph">Data
+                  Collector</span> environment configuration files:<ul class="ul" id="task_ugz_41n_qr__ul_vmp_l3h_1t">
+                    <li class="li">If you start the <span class="ph">Data
+                  Collector</span> from the command line, use the following file:
+                        <pre class="pre codeblock">&lt;SDCinstalldir&gt;/libexec/sdc-env.sh</pre>
+</li>
+
+                    <li class="li">If you start the <span class="ph">Data
+                  Collector</span> as a service, use the following file:
+                        <pre class="pre codeblock">&lt;SDCinstalldir&gt;/libexec/sdcd-env.sh</pre>
+</li>
+
+                </ul>
 The <span class="ph">Data
                   Collector</span> environment configuration file includes the following environment
                     variables:
@@ -176,9 +243,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="43.75%" id="d21206e294">Environment Variables</th>
+                                <th class="entry" valign="top" width="43.75%" id="d21206e404">Environment Variables</th>
 
-                                <th class="entry" valign="top" width="56.25%" id="d21206e297">Description</th>
+                                <th class="entry" valign="top" width="56.25%" id="d21206e407">Description</th>
 
                             </tr>
 
@@ -186,18 +253,18 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21206e294 ">SDC_ROOT_CLASSPATH</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21206e404 ">SDC_ROOT_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21206e297 ">Defines the path to jar files to be added to the Data
+                                <td class="entry" valign="top" width="56.25%" headers="d21206e407 ">Defines the path to jar files to be added to the Data
                                     Collector root classloader. Use for components that must be in
                                     the root classloader, such as Snappy. </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21206e294 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21206e404 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21206e297 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="56.25%" headers="d21206e407 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -209,9 +276,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21206e294 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21206e404 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21206e297 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="56.25%" headers="d21206e407 ">Default is True. Do not change this property. </td>
 
                             </tr>
 
