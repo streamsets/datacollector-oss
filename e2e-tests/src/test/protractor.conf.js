@@ -17,13 +17,13 @@ exports.config = {
       'ui/pipelineHomePage.js',
       'ui/homePage.js',
       'ui/createPipeline.js',
+      'ui/previewTest.js',
       'ui/configurationPage.js',
       'ui/jvmMetricsPage.js',
       'ui/logPage.js'
     ],
     single: [
-      'ui/pipelineHomePage.js'
-      //'ui/homePage.js'
+      'ui/previewTest.js'
     ]
   },
 

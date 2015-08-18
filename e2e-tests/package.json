@@ -1,7 +1,7 @@
 {
   "name": "data-collector-e2e-tests",
   "private": true,
-  "version": "1.0.0b2-SNAPSHOT",
+  "version": "1.1.0-SNAPSHOT",
   "description": "StreamSets Data Collector e2e tests",
   "homepage": "http://streamsets.com/",
   "devDependencies": {
