@@ -45,41 +45,41 @@ public class VerifyUtils {
 
 
   public static int getSourceOutputRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Source.*outputRecords.counter");
+    return getCounter(metrics, "stage.*Source.*outputRecords.meter");
   }
 
   public static int getSourceErrorRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Source.*errorRecords.counter");
+    return getCounter(metrics, "stage.*Source.*errorRecords.meter");
   }
 
   public static int getSourceInputRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Source.*inputRecords.counter");
+    return getCounter(metrics, "stage.*Source.*inputRecords.meter");
   }
 
   public static int getSourceStageErrors(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Source.*stageErrors.counter");
+    return getCounter(metrics, "stage.*Source.*stageErrors.meter");
   }
 
   public static int getTargetOutputRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Target.*outputRecords.counter");
+    return getCounter(metrics, "stage.*Target.*outputRecords.meter");
   }
 
   public static int getTargetErrorRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Target.*errorRecords.counter");
+    return getCounter(metrics, "stage.*Target.*errorRecords.meter");
   }
 
   public static int getTargetInputRecords(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Target.*inputRecords.counter");
+    return getCounter(metrics, "stage.*Target.*inputRecords.meter");
   }
 
   public static int getTargetStageErrors(Map<String, Map<String, Object>> metrics) {
-    return getCounter(metrics, "stage.*Target.*stageErrors.counter");
+    return getCounter(metrics, "stage.*Target.*stageErrors.meter");
   }
 
   public static Map<String, Map<String, Object>> getCountersFromMetrics(URI serverURI, String name, String rev)
     throws IOException, InterruptedException {
     Map<String, Map<String, Map<String, Object>>> map = getMetrics(serverURI, name, rev);
-    Map<String, Map<String, Object>> countersMap = map != null ? map.get("counters") : null;
+    Map<String, Map<String, Object>> countersMap = map != null ? map.get("meters") : null;
     return countersMap;
   }
 

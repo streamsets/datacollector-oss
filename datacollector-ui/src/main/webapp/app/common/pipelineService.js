@@ -1108,7 +1108,7 @@ angular.module('dataCollectorApp.common')
         COUNTER: [
             {
               value: 'pipeline.memoryConsumed.counter',
-              label: 'Pipeline Memory Consumption Counter (bytes)'
+              label: 'Pipeline Memory Consumption Counter (MB)'
             }
         ],
         HISTOGRAM: [
@@ -1166,24 +1166,8 @@ angular.module('dataCollectorApp.common')
         //Counters
         metricIDList.COUNTER.push.apply(metricIDList.COUNTER, [
           {
-            value: 'stage.' + instanceName + '.inputRecords.counter',
-            label: label + ' Input Records Counter'
-          },
-          {
-            value: 'stage.' + instanceName + '.outputRecords.counter',
-            label: label + ' Output Records Counter'
-          },
-          {
-            value: 'stage.' + instanceName + '.errorRecords.counter',
-            label: label + ' Bad Records Counter'
-          },
-          {
-            value: 'stage.' + instanceName + '.stageErrors.counter',
-            label: label + ' Stage Errors Counter'
-          },
-          {
             value: 'stage.' + instanceName + '.memoryConsumed.counter',
-            label: label + ' Heap Memory Usage Counter (bytes)'
+            label: label + ' Heap Memory Usage Counter (MB)'
           }
         ]);
 
