@@ -27,7 +27,6 @@ import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
-import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -48,7 +47,6 @@ import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -59,7 +57,6 @@ import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
-import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
@@ -74,18 +71,16 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -100,8 +95,6 @@ import java.util.concurrent.TimeUnit;
 public class StandaloneRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneRunner.class);
 
-  @Inject RuntimeInfo runtimeInfo;
-  @Inject Configuration configuration;
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject SnapshotStore snapshotStore;
@@ -596,6 +589,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);
         ProductionPipelineRunner runner = (ProductionPipelineRunner) objectGraph.get(PipelineRunner.class);
         ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
+
+        //register email notifier with event listener manager
+        registerEmailNotifierIfRequired(pipelineConfigBean, name, rev);
 
         //This which are not injected as of now.
         productionObserver.setObserveRequests(productionObserveRequests);

@@ -7,6 +7,7 @@ package com.streamsets.datacollector.execution;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -15,7 +16,6 @@ import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,6 @@ public class EventListenerManager {
   private final List<StateEventListener> stateEventListenerList;
   private final List<AlertEventListener> alertEventListenerList;
 
-  @Inject
   public EventListenerManager() {
     metricsEventListenerMap = new HashMap<>();
     stateEventListenerList = new ArrayList<>();
@@ -38,6 +37,10 @@ public class EventListenerManager {
     synchronized(stateEventListenerList) {
       stateEventListenerList.add(stateEventListener);
     }
+  }
+
+  public List<StateEventListener> getStateEventListenerList() {
+    return ImmutableList.copyOf(stateEventListenerList);
   }
 
   public void removeStateEventListener(StateEventListener stateEventListener) {

@@ -12,6 +12,8 @@ import com.streamsets.datacollector.config.ExecutionModeChooserValues;
 import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.MemoryLimitExceededChooserValues;
 import com.streamsets.datacollector.config.PipelineGroups;
+import com.streamsets.datacollector.config.PipelineState;
+import com.streamsets.datacollector.config.PipelineStateChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -103,6 +105,28 @@ public class PipelineConfigBean implements Stage {
   public MemoryLimitExceeded memoryLimitExceeded;
 
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.LIST,
+    defaultValue = "[\"RUN_ERROR\", \"STOPPED\", \"FINISHED\"]",
+    label = "Notify on Pipeline State Changes",
+    description = "Notifies via email when pipeline gets to the specified states",
+    displayPosition = 75,
+    group = ""
+  )
+  @ValueChooser(PipelineStateChooserValues.class)
+  public List<PipelineState> notifyOnStates;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.LIST,
+    defaultValue = "",
+    label = "Email Addresses",
+    description = "Email Addresses",
+    displayPosition = 76,
+    group = ""
+  )
+  public List<String> emails;
 
   @ConfigDef(
       required = false,
@@ -163,6 +187,7 @@ public class PipelineConfigBean implements Stage {
     triggeredByValue = "CLUSTER"
   )
   public Map clusterLauncherEnv;
+
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

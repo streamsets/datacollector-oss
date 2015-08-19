@@ -625,7 +625,7 @@ public class ClusterRunner extends AbstractRunner {
 
   private synchronized void doStart(PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) throws PipelineStoreException,
     PipelineRunnerException {
-    String msg = null;
+    String msg;
     try {
       Utils.checkNotNull(pipelineConf, "PipelineConfiguration cannot be null");
       Utils.checkState(clusterSourceInfo.getParallelism() != 0, "Parallelism cannot be zero");
@@ -637,6 +637,9 @@ public class ClusterRunner extends AbstractRunner {
       if (pipelineConfigBean == null) {
         throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
       }
+
+      registerEmailNotifierIfRequired(pipelineConfigBean, name, rev);
+
       Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
       Map<String, String> sourceInfo = new HashMap<>();
       File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");

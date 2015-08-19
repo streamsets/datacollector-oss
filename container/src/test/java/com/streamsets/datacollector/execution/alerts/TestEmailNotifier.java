@@ -1,0 +1,161 @@
+/**
+ * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * be copied, modified, or distributed in whole or part without
+ * written consent of StreamSets, Inc.
+ */
+package com.streamsets.datacollector.execution.alerts;
+
+import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
+import com.streamsets.datacollector.email.EmailSender;
+import com.streamsets.datacollector.execution.PipelineState;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.ExecutionMode;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Arrays;
+import java.util.HashMap;
+
+public class TestEmailNotifier {
+
+  private static GreenMail server;
+  private static EmailSender emailSender;
+  private static RuntimeInfo runtimeInfo;
+
+  @Before
+  public void setUp() throws Exception {
+    ServerSetup serverSetup = new ServerSetup(getFreePort(), "localhost", "smtp");
+    server = new GreenMail(serverSetup);
+    server.setUser("user@x", "user", "password");
+    server.start();
+
+    Configuration conf = new Configuration();
+    conf.set("mail.smtp.host", "localhost");
+    conf.set("mail.smtp.port", Integer.toString(server.getSmtp().getPort()));
+    emailSender = new EmailSender(conf);
+
+    runtimeInfo = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
+      Arrays.asList(TestEmailNotifier.class.getClassLoader()));
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    server.stop();
+  }
+
+  public static int getFreePort() throws IOException {
+    ServerSocket serverSocket = new ServerSocket(0);
+    int port = serverSocket.getLocalPort();
+    serverSocket.close();
+    return port;
+  }
+
+  @Test
+  public void testEmailNotifierRunError() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("RUN_ERROR"));
+
+    PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState runErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUN_ERROR, "Run Error",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(runningState, runErrorState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - ERROR"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+  @Test
+  public void testEmailNotifierStartError() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar")
+      , ImmutableSet.of("START_ERROR"));
+
+    PipelineState startingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STARTING, "Starting",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState startErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.START_ERROR, "Start Error",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(startingState, startErrorState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - ERROR"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+  @Test
+  public void testEmailNotifierFinished() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("FINISHED"));
+
+    PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState finishedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.FINISHED, "Finished",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(runningState, finishedState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - FINISHED"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+  @Test
+  public void testEmailNotifierStopped() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("STOPPED"));
+
+    PipelineState stoppingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STOPPING, "Stopping",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState stoppedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.STOPPED, "Stopped",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(stoppingState, stoppedState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - STOPPED"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+  @Test
+  public void testEmailNotifierWrongPipeline() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("y", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("RUN_ERROR"));
+
+    PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState runErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUN_ERROR, "Run Error",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(runningState, runErrorState, "", null);
+
+    Assert.assertTrue(server.getReceivedMessages().length == 0);
+
+  }
+}

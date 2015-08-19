@@ -4,16 +4,18 @@
  */
 package com.streamsets.datacollector.execution.runner;
 
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
-import com.streamsets.datacollector.execution.common.ExecutorConstants;
-import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
+import com.streamsets.datacollector.execution.common.ExecutorConstants;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
+import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -24,11 +26,10 @@ import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.dc.execution.manager.standalone.ResourceManager;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.datacollector.execution.StateListener;
-
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -36,15 +37,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Singleton;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestStandaloneRunner {
 
@@ -367,7 +364,7 @@ public class TestStandaloneRunner {
   @Test
   public void testRunningMaxPipelines() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule(), ConfigModule.class);
-    Manager pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
+    pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     pipelineManager.init();
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
@@ -400,6 +397,54 @@ public class TestStandaloneRunner {
     waitAndAssertState(runner2, PipelineStatus.STOPPED);
   }
 
+  @Test(timeout = 20000)
+  public void testPipelineStoppedWithMail() throws Exception {
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
+    runner.start();
+    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    runner.stop();
+    waitAndAssertState(runner, PipelineStatus.STOPPED);
+    //wait for email
+    GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();
+    while(mailServer.getReceivedMessages().length < 1) {
+      ThreadUtil.sleep(100);
+    }
+    String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " + TestUtil.PIPELINE_WITH_EMAIL
+      + " - STOPPED"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(mailServer.getReceivedMessages()[0]));
+
+    mailServer.reset();
+  }
+
+  @Test(timeout = 20000)
+  public void testPipelineFinishWithMail() throws Exception {
+    Runner runner = pipelineManager.getRunner( "admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
+    runner.start();
+    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    assertNull(runner.getState().getMetrics());
+    TestUtil.EMPTY_OFFSET = true;
+    waitAndAssertState(runner, PipelineStatus.FINISHED);
+    assertNotNull(runner.getState().getMetrics());
+    //wait for email
+    GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();
+    while(mailServer.getReceivedMessages().length < 1) {
+      ThreadUtil.sleep(100);
+    }
+    String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " + TestUtil.PIPELINE_WITH_EMAIL
+      + " - FINISHED"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(mailServer.getReceivedMessages()[0]));
+
+    mailServer.reset();
+  }
+
   @Module(overrides = true, library = true)
   static class ConfigModule {
     @Provides
@@ -416,6 +461,5 @@ public class TestStandaloneRunner {
       return new ResourceManager(configuration);
     }
   }
-
 
 }

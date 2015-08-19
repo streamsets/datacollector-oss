@@ -6,6 +6,8 @@
 package com.streamsets.datacollector.util;
 
 import com.codahale.metrics.MetricRegistry;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -65,6 +67,8 @@ import org.mockito.Mockito;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,6 +84,7 @@ public class TestUtil {
   public static final String MY_PIPELINE = "my pipeline";
   public static final String MY_SECOND_PIPELINE = "my second pipeline";
   public static final String HIGHER_VERSION_PIPELINE = "higher version pipeline";
+  public static final String PIPELINE_WITH_EMAIL = "Pipeline with Email";
   public static final String PIPELINE_REV = "2.0";
   public static final String ZERO_REV = "0";
   public static boolean EMPTY_OFFSET = false;
@@ -301,6 +306,20 @@ public class TestUtil {
             , mockPipelineConf);
         }
 
+        if(!pipelineStoreTask.hasPipeline(PIPELINE_WITH_EMAIL)) {
+          pipelineStoreTask.create("user2", PIPELINE_WITH_EMAIL, "description2");
+          PipelineConfiguration pipelineConf = pipelineStoreTask.load(PIPELINE_WITH_EMAIL, ZERO_REV);
+          PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+          pipelineConf.setStages(mockPipelineConf.getStages());
+          pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineConf.getConfiguration().add(new Config("executionMode",
+            ExecutionMode.STANDALONE.name()));
+          pipelineConf.getConfiguration().add(new Config("notifyOnTermination", true));
+          pipelineConf.getConfiguration().add(new Config("emails", Arrays.asList("foo", "bar")));
+          pipelineStoreTask.save("admin2", PIPELINE_WITH_EMAIL, ZERO_REV, "description"
+            , pipelineConf);
+        }
+
       } catch (PipelineStoreException e) {
         throw new RuntimeException(e);
       }
@@ -330,7 +349,36 @@ public class TestUtil {
   @Module(library = true)
   public static class TestRuntimeModule {
 
+    private static GreenMail server;
+
+    public static GreenMail getMailServer() {
+      if(server == null) {
+        int port = 25;
+        try {
+          ServerSocket serverSocket = new ServerSocket(0);
+          port = serverSocket.getLocalPort();
+          serverSocket.close();
+        } catch (IOException e) {
+
+        }
+        ServerSetup serverSetup = new ServerSetup(port, "localhost", "smtp");
+        server = new GreenMail(serverSetup);
+        server.setUser("user@x", "user", "password");
+        server.start();
+      }
+      return server;
+    }
+
     public TestRuntimeModule() {
+    }
+
+    @Provides
+    @Singleton
+    public Configuration provideConfiguration() {
+      Configuration conf = new Configuration();
+      conf.set("mail.smtp.host", "localhost");
+      conf.set("mail.smtp.port", getMailServer().getSmtp().getPort());
+      return conf;
     }
 
     @Provides @Singleton
@@ -340,11 +388,7 @@ public class TestUtil {
       return info;
     }
 
-    @Provides  @Singleton
-    public Configuration provideConfiguration() {
-      Configuration conf = new Configuration();
-      return conf;
-    }
+
 
     @Provides @Singleton
     public EventListenerManager provideEventListenerManager() {

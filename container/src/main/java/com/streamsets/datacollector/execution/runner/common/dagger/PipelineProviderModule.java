@@ -12,6 +12,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
+import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.common.DataObserverRunnable;
 import com.streamsets.datacollector.execution.runner.common.MetricObserverRunnable;
@@ -39,7 +40,7 @@ import dagger.Provides;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-@Module(injects = {EmailSender.class, AlertManager.class, Observer.class, RulesConfigLoader.class,
+@Module(injects = {EmailNotifier.class, EmailSender.class, AlertManager.class, Observer.class, RulesConfigLoader.class,
   ThreadHealthReporter.class, DataObserverRunnable.class, RulesConfigLoaderRunnable.class, MetricObserverRunnable.class,
   ProductionPipelineBuilder.class, PipelineRunner.class, MetricsEventRunnable.class},
   library = true, complete = false, includes = {MetricsModule.class})
