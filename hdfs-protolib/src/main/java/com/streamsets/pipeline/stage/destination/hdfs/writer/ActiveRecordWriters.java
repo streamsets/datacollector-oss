@@ -125,7 +125,9 @@ public class ActiveRecordWriters {
   }
 
   public void flushAll() {
-    LOG.info("Flush all '{}'", toString());
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Flush all '{}'", toString());
+    }
     for (RecordWriter writer : writers.values()) {
       if (!writer.isClosed()) {
         try {
@@ -139,7 +141,9 @@ public class ActiveRecordWriters {
   }
 
   public void closeAll() {
-    LOG.info("Close all '{}'", toString());
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Close all '{}'", toString());
+    }
     for (RecordWriter writer : writers.values()) {
       if (!writer.isClosed()) {
         try {
