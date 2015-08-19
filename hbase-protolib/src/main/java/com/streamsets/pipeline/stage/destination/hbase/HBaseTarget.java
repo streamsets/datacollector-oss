@@ -4,23 +4,16 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.security.AccessControlContext;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import javax.security.auth.Subject;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Field.Type;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -37,44 +30,60 @@ import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.util.KerberosUtil;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Field.Type;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.util.JsonUtil;
+import javax.security.auth.Subject;
+import java.io.File;
+import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class HBaseTarget extends BaseTarget {
-
   private static final Logger LOG = LoggerFactory.getLogger(HBaseTarget.class);
-  final private String zookeeperQuorum;
-  final private int clientPort;
-  final private String zookeeperParentZnode;
-  final private String tableName;
-  final private String hbaseRowKey;
-  final private List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
-  final private boolean kerberosAuth;
-  //master and regionserver principals are not defined in HBase constants, so do it here
-  final private String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
-  final private String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
-  final private SortedMap<String, ColumnInfo> columnMappings = new TreeMap<>();
-  private Configuration hbaseConf;
-  final private Map<String, String> hbaseConfigs;
-  final private StorageType rowKeyStorageType;
-  private UserGroupInformation loginUgi;
-  final private String hbaseConfDir;
-  private final String hbaseUser;
+  // master and region server principals are not defined in HBase constants, so do it here
+  private static final String MASTER_KERBEROS_PRINCIPAL = "hbase.master.kerberos.principal";
+  private static final String REGIONSERVER_KERBEROS_PRINCIPAL = "hbase.regionserver.kerberos.principal";
+  private static final String HBASE_CONF_DIR_CONFIG = "hbaseConfDir";
 
-  public HBaseTarget(String zookeeperQuorum, int clientPort, String zookeeperParentZnode, String tableName,
-    String hbaseRowKey, StorageType rowKeyStorageType, List<HBaseFieldMappingConfig> hbaseFieldColumnMapping,
-    boolean kerberosAuth, String hbaseConfDir, Map<String, String> hbaseConfigs, String hbaseUser) {
+  private final String zookeeperQuorum;
+  private final int clientPort;
+  private final String zookeeperParentZnode;
+  private final String tableName;
+  private final String hbaseRowKey;
+  private final List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
+  private final boolean kerberosAuth;
+  private final SortedMap<String, ColumnInfo> columnMappings = new TreeMap<>();
+  private final Map<String, String> hbaseConfigs;
+  private final StorageType rowKeyStorageType;
+  private final String hbaseConfDir;
+  private final String hbaseUser;
+  
+  private Configuration hbaseConf;
+  private UserGroupInformation loginUgi;
+
+  public HBaseTarget(
+      String zookeeperQuorum,
+      int clientPort,
+      String zookeeperParentZnode,
+      String tableName,
+      String hbaseRowKey,
+      StorageType rowKeyStorageType,
+      List<HBaseFieldMappingConfig> hbaseFieldColumnMapping,
+      boolean kerberosAuth,
+      String hbaseConfDir,
+      Map<String, String> hbaseConfigs,
+      String hbaseUser
+  ) {
     this.zookeeperQuorum = zookeeperQuorum;
     this.clientPort = clientPort;
     this.zookeeperParentZnode = zookeeperParentZnode;
@@ -95,7 +104,7 @@ public class HBaseTarget extends BaseTarget {
 
     if (getContext().isPreview()) {
       // by default the retry number is set to 35 which is too much for preview mode
-      LOG.debug("Setting hbase client retries to 3 for preview");
+      LOG.debug("Setting HBase client retries to 3 for preview");
       hbaseConf.set(HConstants.HBASE_CLIENT_RETRIES_NUMBER, "3");
     }
     validateQuorumConfigs(issues);
@@ -109,8 +118,7 @@ public class HBaseTarget extends BaseTarget {
     validateStorageTypes(issues);
     if (issues.isEmpty()) {
       for (HBaseFieldMappingConfig column : hbaseFieldColumnMapping) {
-        columnMappings.put(column.columnName, new ColumnInfo(column.columnValue,
-                                                             column.columnStorageType));
+        columnMappings.put(column.columnName, new ColumnInfo(column.columnValue, column.columnStorageType));
       }
     }
     return issues;
@@ -122,23 +130,31 @@ public class HBaseTarget extends BaseTarget {
       File hbaseConfigDir = new File(hbaseConfDir);
       if(getContext().isClusterMode() && hbaseConfigDir.isAbsolute()) {
         //Do not allow absolute hdfs config directory in cluster mode
-        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_24, hbaseConfDir));
+        issues.add(
+            getContext().createConfigIssue(Groups.HBASE.name(), HBASE_CONF_DIR_CONFIG, Errors.HBASE_24, hbaseConfDir)
+        );
       } else {
         if (!hbaseConfigDir.isAbsolute()) {
           hbaseConfigDir = new File(getContext().getResourcesDirectory(), hbaseConfDir).getAbsoluteFile();
         }
         if (!hbaseConfigDir.exists()) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_19,
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_CONF_DIR_CONFIG, Errors.HBASE_19,
             hbaseConfDir));
         } else if (!hbaseConfigDir.isDirectory()) {
-          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_20,
+          issues.add(getContext().createConfigIssue(Groups.HBASE.name(), HBASE_CONF_DIR_CONFIG, Errors.HBASE_20,
             hbaseConfDir));
         } else {
           File hbaseSiteXml = new File(hbaseConfigDir, "hbase-site.xml");
           if (hbaseSiteXml.exists()) {
             if (!hbaseSiteXml.isFile()) {
-              issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "hbaseConfDir", Errors.HBASE_21,
-                hbaseConfDir, "hbase-site.xml"));
+              issues.add(getContext().createConfigIssue(
+                      Groups.HBASE.name(),
+                      HBASE_CONF_DIR_CONFIG,
+                      Errors.HBASE_21,
+                      hbaseConfDir,
+                      "hbase-site.xml"
+                  )
+              );
             }
             hbaseConf.addResource(new Path(hbaseSiteXml.getAbsolutePath()));
           }
@@ -339,10 +355,13 @@ public class HBaseTarget extends BaseTarget {
   private void writeBatch(Batch batch) throws StageException {
     HTable hTable = null;
     Iterator<Record> it = batch.getRecords();
-    Map<String, Record> rowKeyToRecord = new HashMap<String, Record>();
-    Map<Record, WriteErrorInfo> badRecordsInfo = new HashMap<Record, WriteErrorInfo>();
+    Map<String, Record> rowKeyToRecord = new HashMap<>();
+    Map<Record, WriteErrorInfo> badRecordsInfo = new HashMap<>();
     try {
       hTable = new HTable(hbaseConf, tableName);
+      // Disable auto-flush to increase performance by reducing the number of RPCs.
+      // HTable is deprecated as of HBase 1.0 and replaced by Table which does not use autoFlush
+      hTable.setAutoFlushTo(false);
       while (it.hasNext()) {
         Record record = it.next();
         try {
@@ -368,7 +387,7 @@ public class HBaseTarget extends BaseTarget {
             throw new StageException(Errors.HBASE_02, ex);
           }
         } catch (Exception ex) {
-          LOG.debug("Got exception while writing to hbase", ex);
+          LOG.debug("Got exception while writing to HBase", ex);
           switch (getContext().getOnErrorRecord()) {
           case DISCARD:
             break;
@@ -393,7 +412,7 @@ public class HBaseTarget extends BaseTarget {
       // This will flush the internal buffer
       hTable.flushCommits();
     } catch (Exception ex) {
-      LOG.debug("Got exception while writing to hbase", ex);
+      LOG.debug("Got exception while writing to HBase", ex);
       switch (getContext().getOnErrorRecord()) {
       case DISCARD:
         break;
@@ -423,14 +442,13 @@ public class HBaseTarget extends BaseTarget {
           hTable.close();
         }
       } catch (IOException e) {
-        LOG.warn("Cannot close htable ", e);
-        hTable = null;
+        LOG.warn("Cannot close table ", e);
       }
     }
   }
 
   private byte[] getBytesForValue(Record record, ColumnInfo columnInfo) throws StageException {
-    byte[] value = null;
+    byte[] value;
     String index = columnInfo.columnValue;
     StorageType columnStorageType = columnInfo.storageType;
     Field field = record.get(index);
