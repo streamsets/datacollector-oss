@@ -19,6 +19,7 @@ import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.ComplexField;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ElDef;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.FieldSelector;
@@ -70,7 +71,7 @@ import java.util.Set;
 
 
 @SupportedAnnotationTypes({"com.streamsets.pipeline.api.StageDef",
-  "com.streamsets.pipeline.api.GenerateResourceBundle"})
+  "com.streamsets.pipeline.api.GenerateResourceBundle", "com.streamsets.pipeline.api.ElDef"})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
@@ -84,7 +85,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final String SEPARATOR = ".";
   private static final String DOT = ".";
   private static final String DEFAULT_CONSTRUCTOR = "<init>";
-  private static final String STAGES_DEFINITION_RESOURCE = StageLibraryTask.STAGES_DEFINITION_RESOURCE;
+  public static final String STAGES_DEFINITION_RESOURCE = StageLibraryTask.STAGES_DEFINITION_RESOURCE;
+  public static final String EL_DEFINITION_RESOURCE = StageLibraryTask.EL_DEFINITION_RESOURCE;
   private static final String DC_RESOURCE_BUNDLES_JSON = "datacollector-resource-bundles.json";
   private static final String MAP_TYPE_WITH_KEY = "java.util.Map<java.lang.String,";
   private static final String VARIABLE_OUTPUT_STREAMS_CLASS = StageDef.VariableOutputStreams.class.getName();
@@ -110,6 +112,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   /*Set of stage names for which resource bundles must be generated*/
   private final Set<String> stagesNeedingResourceBundles;
 
+  /*Classes defining ELs*/
+  private Set<String> elDefinitions = null;
+
 
   /***********************************************/
   /**************** public API *******************/
@@ -124,6 +129,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     json.enable(SerializationFeature.INDENT_OUTPUT);
     stagesNeedingResourceBundles = new HashSet<>();
     enumsNeedingResourceBundles = new HashSet<>();
+    elDefinitions = new HashSet<>();
   }
 
   @Override
@@ -136,6 +142,14 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       //It will most likely be a class. being extra safe
       if(eKind.isClass()) {
         stageDefinitions.add(createStageConfig((TypeElement)e));
+      }
+    }
+
+    for(Element e : roundEnv.getElementsAnnotatedWith(ElDef.class)) {
+      ElementKind eKind = e.getKind();
+      //It will most likely be a class. being extra safe
+      if(eKind.isClass()) {
+        elDefinitions.add(((TypeElement)e).getQualifiedName().toString());
       }
     }
 
@@ -214,6 +228,18 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       }
       Map<String, Object> map = new HashMap<>();
       map.put("stageClasses", stageClasses);
+      json.writeValue(out, map);
+    } catch (IOException e) {
+      processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());
+    }
+    try (OutputStream out = processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "",
+                                                                    EL_DEFINITION_RESOURCE).openOutputStream()) {
+      List<String> elDefClasses = new ArrayList<>();
+      for (String name : elDefinitions) {
+        elDefClasses.add(name);
+      }
+      Map<String, Object> map = new HashMap<>();
+      map.put("elClasses", elDefClasses);
       json.writeValue(out, map);
     } catch (IOException e) {
       processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.toString());

@@ -10,7 +10,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testBase;
  *
  */
 
-import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
+import com.streamsets.pipeline.sdk.annotationsprocessor.PipelineAnnotationsProcessor;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,8 +53,10 @@ public abstract class TestPipelineAnnotationProcessorBase {
     collector = new DiagnosticCollectorForTests<>();
     fileManager = COMPILER.getStandardFileManager(collector, Locale.US, Charset.forName("UTF-8"));
 
-    //remove previously generated PipelineStages.json
-    File f = new File(Constants.PIPELINE_STAGES_JSON);
+    //remove previously generated files
+    File f = new File(PipelineAnnotationsProcessor.STAGES_DEFINITION_RESOURCE);
+    f.delete();
+    f = new File(PipelineAnnotationsProcessor.EL_DEFINITION_RESOURCE);
     f.delete();
   }
 
@@ -99,10 +100,10 @@ public abstract class TestPipelineAnnotationProcessorBase {
     //Result of the compilation
     Boolean compilationResult = task.call();
     //Output from compiler
-    String ouptputString = new String(stdoutStream.toByteArray());
+    String outputString = new String(stdoutStream.toByteArray());
 
     //The real test case
-    test(collector.getDiagnostics(), ouptputString, compilationResult);
+    test(collector.getDiagnostics(), outputString, compilationResult);
   }
 
   /**

@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.sdk.annotationsprocessor.validation.test;
 
-import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
+import com.streamsets.pipeline.sdk.annotationsprocessor.PipelineAnnotationsProcessor;
 import com.streamsets.pipeline.sdk.annotationsprocessor.testBase.TestPipelineAnnotationProcessorBase;
 import org.junit.Assert;
 
@@ -83,7 +83,7 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     }
     Assert.assertEquals(expectedSet.size(), diagnostics.size());
     //test that no PipelineStages file is generated
-    File f = new File(Constants.PIPELINE_STAGES_JSON);
+    File f = new File(PipelineAnnotationsProcessor.STAGES_DEFINITION_RESOURCE);
     Assert.assertFalse(f.exists());
   }
 }

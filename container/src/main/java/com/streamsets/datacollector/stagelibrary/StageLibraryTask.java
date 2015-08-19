@@ -16,6 +16,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public static final String STAGES_DEFINITION_RESOURCE = "PipelineStages.json";
 
+  public static final String EL_DEFINITION_RESOURCE = "ElDefinitions.json";
+
   public PipelineDefinition getPipeline();
 
   public List<StageDefinition> getStages();

@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.sdk.annotationsprocessor.json.test;
 
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.pipeline.sdk.annotationsprocessor.Constants;
 
+import com.streamsets.pipeline.sdk.annotationsprocessor.PipelineAnnotationsProcessor;
 import org.junit.Assert;
 
 import java.io.IOException;
@@ -18,14 +18,14 @@ import java.util.Map;
 
 public class TestUtil {
 
-  public static List<String> getGeneratedStageCollection() throws IOException {
+  private  static List<String> getGeneratedStageCollection() throws IOException {
     InputStream inputStream = Thread.currentThread().getContextClassLoader().
-        getResourceAsStream(Constants.PIPELINE_STAGES_JSON);
-    return getStageCollection(inputStream);
+        getResourceAsStream(PipelineAnnotationsProcessor.STAGES_DEFINITION_RESOURCE);
+    return getCollection(inputStream, "stageClasses");
   }
 
-  public static List<String> getStageCollection(InputStream inputStream) throws IOException {
-    return (List)(ObjectMapperFactory.get().readValue(inputStream, Map.class).get("stageClasses"));
+  private static List<String> getCollection(InputStream inputStream, String key) throws IOException {
+    return (List)(ObjectMapperFactory.get().readValue(inputStream, Map.class).get(key));
   }
 
   public static void compareExpectedAndActualStages(String expectedJsonFileName) {
@@ -35,11 +35,23 @@ public class TestUtil {
       InputStream in = Thread.currentThread().getContextClassLoader().
           getResourceAsStream(expectedJsonFileName);
 
-      List<String> expectedStages = TestUtil.getStageCollection(in);
+      List<String> expectedStages = TestUtil.getCollection(in, "stageClasses");
 
-      Assert.assertEquals(new HashSet<String>(expectedStages), new HashSet<String>(actualStages));
+      Assert.assertEquals(new HashSet<>(expectedStages), new HashSet<>(actualStages));
     } catch (IOException ex) {
       Assert.fail(ex.getMessage());
+    }
+  }
+
+
+  public static List<String> getELDefsCollection() {
+    try {
+      InputStream inputStream = Thread.currentThread().getContextClassLoader().
+          getResourceAsStream(PipelineAnnotationsProcessor.EL_DEFINITION_RESOURCE);
+      return getCollection(inputStream, "elClasses");
+    } catch (IOException ex) {
+      Assert.fail(ex.toString());
+      return null;
     }
   }
 
