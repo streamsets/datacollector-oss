@@ -14,12 +14,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * This class is responsible for all activities which cross classloaders. At present
@@ -99,9 +101,12 @@ public class BootstrapCluster {
     } else {
       apiUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/api-lib/*.jar");
       containerUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/container-lib/*.jar");
-      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot +
-        "/streamsets-libs");
-      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs");
+
+      Set<String> systemWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.SYSTEM_LIBS_KEY);
+      Set<String> userWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.USER_LIBS_KEY);
+
+      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", systemWhiteList);
+      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", userWhiteList);
     }
     Map<String, List<URL>> libsUrls = new LinkedHashMap<String, List<URL>> ();
     libsUrls.putAll(streamsetsLibsUrls);

@@ -7,14 +7,20 @@ package com.streamsets.pipeline;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.AccessControlException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class BootstrapMain {
   private static final String PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP = "streamsets.bootstrap.debug";
@@ -25,6 +31,7 @@ public class BootstrapMain {
   private static final String CONTAINER_CLASSPATH_OPTION = "-containerClasspath";
   private static final String STREAMSETS_LIBRARIES_DIR_OPTION = "-streamsetsLibrariesDir";
   private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
+  private static final String CONFIG_DIR_OPTION = "-configDir";
 
   private static final String SET_CONTEXT_METHOD = "setContext";
   private static final String MAIN_METHOD = "main";
@@ -43,6 +50,15 @@ public class BootstrapMain {
   private static final String MISSING_STAGE_LIBRARIES_DIR_MSG = "Stage libraries directory '%s' does not exist";
   private static final String CLASSPATH_DIR_DOES_NOT_EXIST_MSG = "Classpath directory '%s' does not exist";
   private static final String CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG = "Specified Classpath path '%s' is not a directory";
+
+  static final String WHITE_LIST_FILE = "stagelibswhitelist.properties";
+  static final String SYSTEM_LIBS_KEY = "system.stagelibs.whitelist";
+  static final String USER_LIBS_KEY = "user.stagelibs.whitelist";
+  static final String ALL_VALUES = "*";
+
+  private static final String WHITE_LIST_FILE_NOT_FOUND_MSG = "WhiteList file '" + WHITE_LIST_FILE + "' does not exist";
+  private static final String WHITE_LIST_PROPERTY_MISSING_MSG = "WhiteList property '%s' is missing in in file '%s'";
+  private static final String WHITE_LIST_COULD_NOT_LOAD_FILE_MSG = "Could not load WhiteList file '%s': %s";
 
   private static final String DEBUG_MSG_PREFIX = "DEBUG: ";
 
@@ -79,6 +95,7 @@ public class BootstrapMain {
     String containerClasspath = null;
     String streamsetsLibrariesDir = null;
     String userLibrariesDir = null;
+    String configDir = null;
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals(MAIN_CLASS_OPTION)) {
         i++;
@@ -116,6 +133,13 @@ public class BootstrapMain {
         } else {
           throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
         }
+      } else if (args[i].equals(CONFIG_DIR_OPTION)) {
+        i++;
+        if (i < args.length) {
+          configDir = args[i];
+        } else {
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
+        }
       } else {
         throw new IllegalArgumentException(String.format(INVALID_OPTION_ARG_MSG, args[i]));
       }
@@ -135,9 +159,14 @@ public class BootstrapMain {
     if (userLibrariesDir == null) {
       throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, USER_LIBRARIES_DIR_OPTION));
     }
+    if (configDir == null) {
+      throw new IllegalArgumentException(String.format(OPTION_NOT_SPECIFIED_MSG, CONFIG_DIR_OPTION));
+    }
 
     boolean debug = Boolean.getBoolean(PIPELINE_BOOTSTRAP_DEBUG_SYS_PROP);
     if (debug) {
+      System.out.println(DEBUG_MSG_PREFIX);
+      System.out.println(String.format(DEBUG_MSG, CONFIG_DIR_OPTION, configDir));
       System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, MAIN_CLASS_OPTION, mainClass));
       System.out.println(DEBUG_MSG_PREFIX);
@@ -153,8 +182,18 @@ public class BootstrapMain {
     // Extract classpath URLs for API, Container and Stage Libraries
     List<URL> apiUrls = getClasspathUrls(apiClasspath);
     List<URL> containerUrls = getClasspathUrls(containerClasspath);
-    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir);
-    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir);
+
+    Set<String> systemWhiteList = getWhiteList(configDir, SYSTEM_LIBS_KEY);
+    Set<String> userWhiteList = getWhiteList(configDir, USER_LIBS_KEY);
+    if (debug) {
+      String whiteListStr = (systemWhiteList == null) ? ALL_VALUES : systemWhiteList.toString();
+      System.out.println(String.format(DEBUG_MSG, "System libs white list", whiteListStr));
+      whiteListStr = (userWhiteList == null) ? ALL_VALUES : userWhiteList.toString();
+      System.out.println(String.format(DEBUG_MSG, "User libs white list", whiteListStr));
+    }
+
+    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir, systemWhiteList);
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, userWhiteList);
 
     if (debug) {
       System.out.println(DEBUG_MSG_PREFIX);
@@ -214,8 +253,41 @@ public class BootstrapMain {
     method.invoke(null, new Object[]{new String[]{}});
   }
 
+  // if whitelist is '*' set is NULL, else whitelist has the whitelisted values
+  public static Set<String> getWhiteList(String configDir, String property) {
+    Set<String> set = new HashSet<>();
+    File whiteListFile = new File(configDir, WHITE_LIST_FILE).getAbsoluteFile();
+    if (!whiteListFile.exists()) {
+      throw new RuntimeException(WHITE_LIST_FILE_NOT_FOUND_MSG);
+    } else{
+      try (InputStream is = new FileInputStream(whiteListFile)) {
+        Properties props = new Properties();
+        props.load(is);
+        String whiteList = props.getProperty(property);
+        if (whiteList == null) {
+          throw new RuntimeException(String.format(WHITE_LIST_PROPERTY_MISSING_MSG, property, whiteListFile));
+        }
+        whiteList = whiteList.trim();
+        if (whiteList.equals(ALL_VALUES)) {
+          set = null;
+        } else {
+          for (String name : whiteList.split(",")) {
+            name = name.trim();
+            if (!name.isEmpty()) {
+              set.add(name.trim());
+            }
+          }
+        }
+      } catch (IOException ex) {
+        throw new RuntimeException(String.format(WHITE_LIST_COULD_NOT_LOAD_FILE_MSG, whiteListFile, ex.toString()), ex);
+      }
+    }
+    return set;
+  }
+
   // Visible for testing
-  public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir) throws Exception {
+  public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir,
+      final Set<String> whiteListDirs) throws Exception {
     Map<String, List<URL>> map = new LinkedHashMap<String, List<URL>>();
 
     File baseDir = new File(stageLibrariesDir).getAbsoluteFile();
@@ -223,7 +295,8 @@ public class BootstrapMain {
       File[] libDirs = baseDir.listFiles(new FileFilter() {
         @Override
         public boolean accept(File pathname) {
-          return pathname.isDirectory();
+          // whiteListDirs == NULL means ALL
+          return pathname.isDirectory() && (whiteListDirs == null || whiteListDirs.contains(pathname.getName()));
         }
       });
       for (File libDir : libDirs) {

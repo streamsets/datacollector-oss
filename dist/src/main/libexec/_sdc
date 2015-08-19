@@ -121,7 +121,7 @@ cd ${SDC_DIST}
 
 exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
--streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}"
+-streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF}
 status=$?
 echo "Exit: $status"
 exit $status

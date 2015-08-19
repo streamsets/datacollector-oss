@@ -10,12 +10,17 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.UUID;
 
 public class TestBootstrapMain {
 
@@ -32,6 +37,10 @@ public class TestBootstrapMain {
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d"},
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
           "-userLibrariesDir"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
+          "-userLibrariesDir", "e",},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
+          "-userLibrariesDir", "e", "-configDir"},
   };
 
   @Test
@@ -50,7 +59,7 @@ public class TestBootstrapMain {
   @Test(expected = RuntimeException.class)
   public void testAllOptions() throws Exception {
       BootstrapMain.main(new String[] {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c",
-          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e"});
+          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e", "-configDir", "f"});
   }
 
   private String extractPathFromUrlString(String url) {
@@ -157,7 +166,7 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspaths() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
-    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir);
+    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
     Assert.assertEquals(String.valueOf(libs), 2, libs.size());
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage1"));
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage2"));
@@ -171,14 +180,14 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspathsInvalidLibs() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "invalid-libs";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetStageLibrariesClasspathsInvalidStageLib() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "stage-libs-invalid-lib";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
   }
 
   private static boolean setClassLoaders;
@@ -198,6 +207,21 @@ public class TestBootstrapMain {
     }
   }
 
+  public static class TMainWhiteList {
+    public static void setContext(ClassLoader api, ClassLoader container,
+        List<? extends ClassLoader> libs, Instrumentation instrumentation) {
+      Assert.assertNotNull(api);
+      Assert.assertNotNull(container);
+      Assert.assertEquals(1, libs.size());
+      Assert.assertEquals("stage1", ((SDCClassLoader) libs.get(0)).getName());
+      setClassLoaders = true;
+    }
+
+    public static void main(String[] args)  {
+      main = true;
+    }
+  }
+
   @Test
   public void testMainInvocation() throws Exception {
     String baseDir = getBaseDir();
@@ -206,13 +230,31 @@ public class TestBootstrapMain {
     String streamsetsLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
     String userLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "user-libs";
 
+    File dir = new File(confDir);
+    dir.mkdirs();
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "*");
+    props.setProperty(BootstrapMain.USER_LIBS_KEY, "*");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
     setClassLoaders = false;
     main = false;
-    BootstrapMain.main(new String[] {"-mainClass", TMain.class.getName(), "-apiClasspath", apiDir,
+    BootstrapMain.main(new String[]{"-mainClass", TMain.class.getName(), "-apiClasspath", apiDir,
         "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
-        userLibsDir});
+        userLibsDir, "-configDir", confDir});
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
+
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "stage1");
+    props.setProperty(BootstrapMain.USER_LIBS_KEY, "");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    BootstrapMain.main(new String[]{"-mainClass", TMainWhiteList.class.getName(), "-apiClasspath", apiDir,
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir, "-configDir", confDir});
+
   }
 
   @Test
@@ -228,6 +270,79 @@ public class TestBootstrapMain {
   @Test
   public void testConstructor() {
     new BootstrapMain();
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWhiteListMissingDir() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWhiteListMissingFile() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWhiteListMissingProperty() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY);
+  }
+
+  @Test
+  public void testGetWhiteListAllValues() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, BootstrapMain.ALL_VALUES);
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    Assert.assertNull(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY));
+  }
+
+  @Test
+  public void testGetWhiteListNoValues() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, " ");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, ",,");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+  }
+
+  @Test
+  public void testGetWhiteListCustomValues() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "a, b ,");
+    try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
+      props.store(os, "");
+    }
+    Assert.assertEquals(ImmutableSet.of("a","b"), BootstrapMain.getWhiteList(dir.getAbsolutePath(),
+                                                                             BootstrapMain.SYSTEM_LIBS_KEY));
   }
 
 }
