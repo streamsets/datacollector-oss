@@ -117,17 +117,25 @@ public class ProductionPipeline {
         }
       } finally {
         LOG.debug("Destroying");
-        pipeline.destroy();
-        if (pipeline.getSource() instanceof ClusterSource) {
-          LOG.debug("Setting done flag for cluster source");
-          ((ClusterSource) pipeline.getSource()).setDoneFlag();
-        }
-        if (finishing) {
-          LOG.debug("Finished");
-          stateChanged(PipelineStatus.FINISHED, null, null);
-        } else if (errorWhileRunning) {
-          LOG.debug("Stopped due to an error");
-          stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+        try {
+          pipeline.destroy();
+          if (pipeline.getSource() instanceof ClusterSource) {
+            LOG.debug("Setting done flag for cluster source");
+            ((ClusterSource) pipeline.getSource()).setDoneFlag();
+          }
+        } catch (Throwable e) {
+          LOG.warn("Error while calling destroy: " + e, e);
+          throw e;
+        } finally {
+          // if the destroy throws an Exception but pipeline.run() finishes well,
+          // me move to finished state
+          if (finishing) {
+            LOG.debug("Finished");
+            stateChanged(PipelineStatus.FINISHED, null, null);
+          } else if (errorWhileRunning) {
+            LOG.debug("Stopped due to an error");
+            stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+          }
         }
       }
     } finally {

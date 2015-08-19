@@ -55,7 +55,7 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
     clusterSource.put(batch);
   }
 
-  private void initializeClusterSource() {
+  private boolean initializeClusterSource() {
     // TODO fix this hack and ensure initialization is synchronous
     long start = System.currentTimeMillis();
     while (clusterSource == null && ThreadUtil.sleep(1) && (System.currentTimeMillis() - start) < 60L * 1000L) {
@@ -63,15 +63,18 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
       Source source = getSource();
       if (source instanceof ClusterSource) {
         clusterSource = (ClusterSource) source;
+        return true;
       } else if (source != null) {
-        throw new RuntimeException(Utils.format(
-          "The instance '{}' should not call this method as it does not implement '{}'", source.getClass().getName(),
+        LOG.info(Utils.format(
+          "The instance '{}' will not call this method as it does not implement '{}'", source.getClass().getName(),
           ClusterSource.class.getName()));
+        return false;
       }
     }
     if (clusterSource == null) {
       throw new RuntimeException("Could not obtain cluster source");
     }
+    return true;
   }
 
   /**
@@ -80,8 +83,12 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public long getRecordsProduced() {
-    initializeClusterSource();
-    return clusterSource.getRecordsProduced();
+    if (initializeClusterSource()) {
+      return clusterSource.getRecordsProduced();
+    } else {
+      return -1;
+    }
+
   }
 
   /**
@@ -90,20 +97,27 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public boolean inErrorState() {
-    initializeClusterSource();
-    return clusterSource.inErrorState();
+    if (initializeClusterSource()) {
+      return clusterSource.inErrorState();
+    } else {
+      return false;
+    }
   }
 
   @Override
   public Map<String, String> getConfigsToShip() {
-    initializeClusterSource();
-    return clusterSource.getConfigsToShip();
+    if (initializeClusterSource()) {
+      return clusterSource.getConfigsToShip();
+    } else {
+      return null;
+    }
   }
 
   @Override
   public void setDoneFlag() {
-    initializeClusterSource();
-    clusterSource.setDoneFlag();
+    if (initializeClusterSource()) {
+      clusterSource.setDoneFlag();
+    }
   }
 
 }
