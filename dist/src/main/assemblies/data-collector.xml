@@ -120,6 +120,12 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
+    <!-- common-lib dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/emptydir</directory>
+      <outputDirectory>/libs-common-lib</outputDirectory>
+    </fileSet>
+
     <!-- Create an empty user-libs -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>

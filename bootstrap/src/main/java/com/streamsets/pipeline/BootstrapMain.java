@@ -31,6 +31,7 @@ public class BootstrapMain {
   private static final String CONTAINER_CLASSPATH_OPTION = "-containerClasspath";
   private static final String STREAMSETS_LIBRARIES_DIR_OPTION = "-streamsetsLibrariesDir";
   private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
+  private static final String LIBS_COMMON_LIB_DIR_OPTION = "-libsCommonLibDir";
   private static final String CONFIG_DIR_OPTION = "-configDir";
 
   private static final String SET_CONTEXT_METHOD = "setContext";
@@ -96,6 +97,7 @@ public class BootstrapMain {
     String streamsetsLibrariesDir = null;
     String userLibrariesDir = null;
     String configDir = null;
+    String libsCommonLibDir = null;
     for (int i = 0; i < args.length; i++) {
       if (args[i].equals(MAIN_CLASS_OPTION)) {
         i++;
@@ -137,6 +139,13 @@ public class BootstrapMain {
         i++;
         if (i < args.length) {
           configDir = args[i];
+        } else {
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
+        }
+      } else if (args[i].equals(LIBS_COMMON_LIB_DIR_OPTION)) {
+        i++;
+        if (i < args.length) {
+          libsCommonLibDir = args[i];
         } else {
           throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, USER_LIBRARIES_DIR_OPTION));
         }
@@ -192,8 +201,8 @@ public class BootstrapMain {
       System.out.println(String.format(DEBUG_MSG, "User libs white list", whiteListStr));
     }
 
-    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir, systemWhiteList);
-    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, userWhiteList);
+    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir, systemWhiteList, libsCommonLibDir);
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, userWhiteList, libsCommonLibDir);
 
     if (debug) {
       System.out.println(DEBUG_MSG_PREFIX);
@@ -258,14 +267,14 @@ public class BootstrapMain {
     Set<String> set = new HashSet<>();
     File whiteListFile = new File(configDir, WHITE_LIST_FILE).getAbsoluteFile();
     if (!whiteListFile.exists()) {
-      throw new RuntimeException(WHITE_LIST_FILE_NOT_FOUND_MSG);
+      throw new IllegalArgumentException(WHITE_LIST_FILE_NOT_FOUND_MSG);
     } else{
       try (InputStream is = new FileInputStream(whiteListFile)) {
         Properties props = new Properties();
         props.load(is);
         String whiteList = props.getProperty(property);
         if (whiteList == null) {
-          throw new RuntimeException(String.format(WHITE_LIST_PROPERTY_MISSING_MSG, property, whiteListFile));
+          throw new IllegalArgumentException(String.format(WHITE_LIST_PROPERTY_MISSING_MSG, property, whiteListFile));
         }
         whiteList = whiteList.trim();
         if (whiteList.equals(ALL_VALUES)) {
@@ -279,7 +288,8 @@ public class BootstrapMain {
           }
         }
       } catch (IOException ex) {
-        throw new RuntimeException(String.format(WHITE_LIST_COULD_NOT_LOAD_FILE_MSG, whiteListFile, ex.toString()), ex);
+        throw new IllegalArgumentException(String.format(WHITE_LIST_COULD_NOT_LOAD_FILE_MSG,
+                                                         whiteListFile, ex.toString()), ex);
       }
     }
     return set;
@@ -287,7 +297,7 @@ public class BootstrapMain {
 
   // Visible for testing
   public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir,
-      final Set<String> whiteListDirs) throws Exception {
+      final Set<String> whiteListDirs, String libsCommonLibDir) throws Exception {
     Map<String, List<URL>> map = new LinkedHashMap<String, List<URL>>();
 
     File baseDir = new File(stageLibrariesDir).getAbsoluteFile();
@@ -299,6 +309,11 @@ public class BootstrapMain {
           return pathname.isDirectory() && (whiteListDirs == null || whiteListDirs.contains(pathname.getName()));
         }
       });
+      StringBuilder commonLibJars = new StringBuilder();
+      if (libsCommonLibDir != null) {
+        commonLibJars.append(new File(libsCommonLibDir).getAbsolutePath()).append(FILE_SEPARATOR).append(JARS_WILDCARD).
+            append(CLASSPATH_SEPARATOR);
+      }
       for (File libDir : libDirs) {
         File jarsDir = new File(libDir, STAGE_LIB_JARS_DIR);
         File etc = new File(libDir, STAGE_LIB_CONF_DIR);
@@ -309,6 +324,7 @@ public class BootstrapMain {
         if (etc.exists()) {
           sb.append(etc.getAbsolutePath()).append(FILE_SEPARATOR).append(CLASSPATH_SEPARATOR);
         }
+        sb.append(commonLibJars);
         sb.append(jarsDir.getAbsolutePath()).append(FILE_SEPARATOR).append(JARS_WILDCARD);
         map.put(libDir.getParentFile().getName() + FILE_SEPARATOR + libDir.getName(), getClasspathUrls(sb.toString()));
       }

@@ -6,6 +6,7 @@
 package com.streamsets.pipeline;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Files;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +41,8 @@ public class TestBootstrapMain {
           "-userLibrariesDir", "e",},
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
           "-userLibrariesDir", "e", "-configDir"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
+          "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir"},
   };
 
   @Test
@@ -59,7 +61,7 @@ public class TestBootstrapMain {
   @Test(expected = RuntimeException.class)
   public void testAllOptions() throws Exception {
       BootstrapMain.main(new String[] {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c",
-          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e", "-configDir", "f"});
+          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir", "g"});
   }
 
   private String extractPathFromUrlString(String url) {
@@ -166,7 +168,7 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspaths() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
-    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
+    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
     Assert.assertEquals(String.valueOf(libs), 2, libs.size());
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage1"));
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage2"));
@@ -180,14 +182,14 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspathsInvalidLibs() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "invalid-libs";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetStageLibrariesClasspathsInvalidStageLib() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "stage-libs-invalid-lib";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
   }
 
   private static boolean setClassLoaders;
@@ -199,6 +201,28 @@ public class TestBootstrapMain {
       Assert.assertNotNull(api);
       Assert.assertNotNull(container);
       Assert.assertEquals(3, libs.size());
+      setClassLoaders = true;
+    }
+
+    public static void main(String[] args)  {
+      main = true;
+    }
+  }
+
+  public static class TMainLibsCommonLib {
+    public static void setContext(ClassLoader api, ClassLoader container,
+        List<? extends ClassLoader> libs, Instrumentation instrumentation) {
+      Assert.assertNotNull(api);
+      Assert.assertNotNull(container);
+      Assert.assertEquals(3, libs.size());
+      boolean found = false;
+      for (URL url : ((SDCClassLoader) libs.get(0)).getURLs()) {
+        found = url.toExternalForm().endsWith("/libs-common-lib/x.jar");
+        if (found) {
+          break;
+        }
+      }
+      Assert.assertTrue(found);
       setClassLoaders = true;
     }
 
@@ -229,6 +253,7 @@ public class TestBootstrapMain {
     String confDir = baseDir + BootstrapMain.FILE_SEPARATOR + "conf-dir";
     String streamsetsLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
     String userLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "user-libs";
+    String commonLibDir = baseDir + BootstrapMain.FILE_SEPARATOR + "libs-common-lib";
 
     File dir = new File(confDir);
     dir.mkdirs();
@@ -246,6 +271,19 @@ public class TestBootstrapMain {
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
 
+    setClassLoaders = false;
+    main = false;
+    File commonsDir = new File(commonLibDir);
+    commonsDir.mkdirs();
+    Files.touch(new File(commonLibDir, "x.jar"));
+    BootstrapMain.main(new String[]{"-mainClass", TMainLibsCommonLib.class.getName(), "-apiClasspath", apiDir,
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir, "-configDir", confDir, "-libsCommonLibDir", commonLibDir});
+    Assert.assertTrue(setClassLoaders);
+    Assert.assertTrue(main);
+
+    setClassLoaders = false;
+    main = false;
     props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "stage1");
     props.setProperty(BootstrapMain.USER_LIBS_KEY, "");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
@@ -254,7 +292,8 @@ public class TestBootstrapMain {
     BootstrapMain.main(new String[]{"-mainClass", TMainWhiteList.class.getName(), "-apiClasspath", apiDir,
         "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
         userLibsDir, "-configDir", confDir});
-
+    Assert.assertTrue(setClassLoaders);
+    Assert.assertTrue(main);
   }
 
   @Test
@@ -272,20 +311,20 @@ public class TestBootstrapMain {
     new BootstrapMain();
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void testGetWhiteListMissingDir() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void testGetWhiteListMissingFile() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
   }
 
-  @Test(expected = RuntimeException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void testGetWhiteListMissingProperty() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());

@@ -15,11 +15,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 public class MiniSDC {
@@ -43,8 +41,8 @@ public class MiniSDC {
     }
     apiUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/api-lib/*.jar");
     containerUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/container-lib/*.jar");
-    streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null);
-    userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null);
+    streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null, null);
+    userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, null);
 
     ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
     ClassLoader containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);

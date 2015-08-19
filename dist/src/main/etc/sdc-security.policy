@@ -31,3 +31,8 @@ grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
 // User stage libraries code base:
 grant codebase "file://${sdc.dist.dir}/user-libs/-" {
 };
+
+// For JARs to be available to all stage libraries
+grant codebase "file://${sdc.dist.dir}/libs-common-lib/-" {
+  permission java.security.AllPermission;
+};

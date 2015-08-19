@@ -105,8 +105,12 @@ public class BootstrapCluster {
       Set<String> systemWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.SYSTEM_LIBS_KEY);
       Set<String> userWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.USER_LIBS_KEY);
 
-      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", systemWhiteList);
-      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", userWhiteList);
+      String libsCommonLibDir = libraryRoot + "/libs-common-lib";
+
+      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", systemWhiteList,
+                                                                     libsCommonLibDir);
+      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", userWhiteList,
+                                                               libsCommonLibDir);
     }
     Map<String, List<URL>> libsUrls = new LinkedHashMap<String, List<URL>> ();
     libsUrls.putAll(streamsetsLibsUrls);

@@ -64,6 +64,8 @@ API_CLASSPATH="${SDC_DIST}/api-lib/"'*.jar'
 
 CONTAINER_CLASSPATH="${SDC_CONF}:${SDC_DIST}/container-lib/"'*.jar'
 
+LIBS_COMMON_LIB_DIR="${LIBS_COMMON_LIB_DIR:=${SDC_DIST}/libs-common-lib/}"
+
 STREAMSETS_LIBRARIES_DIR="${SDC_DIST}/streamsets-libs"
 
 USER_LIBRARIES_DIR="${SDC_HOME}/user-libs"
@@ -111,6 +113,7 @@ then
   echo "  BOOTSTRAP_CLASSPATH      : ${BOOTSTRAP_CLASSPATH}"
   echo "  API_CLASSPATH            : ${API_CLASSPATH}"
   echo "  CONTAINER_CLASSPATH      : ${CONTAINER_CLASSPATH}"
+  echo "  LIBS_COMMON_LIB_DIR      : ${LIBS_COMMON_LIB_DIR}"
   echo "  STREAMSETS_LIBRARIES_DIR : ${STREAMSETS_LIBRARIES_DIR}"
   echo "  USER_LIBRARIES_DIR       : ${USER_LIBRARIES_DIR}"
   echo "  JAVA OPTS                : ${SDC_JAVA_OPTS}"
@@ -121,7 +124,9 @@ cd ${SDC_DIST}
 
 exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
--streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF}
+-streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
+-libsCommonLibDir "${LIBS_COMMON_LIB_DIR}"
+
 status=$?
 echo "Exit: $status"
 exit $status
