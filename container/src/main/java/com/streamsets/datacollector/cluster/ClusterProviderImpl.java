@@ -185,7 +185,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcProperties.load(sdcInStream);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
-        ExecutionMode.SLAVE.name().toLowerCase());
+        ExecutionMode.SLAVE.name());
       if(runtimeInfo != null) {
         sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());

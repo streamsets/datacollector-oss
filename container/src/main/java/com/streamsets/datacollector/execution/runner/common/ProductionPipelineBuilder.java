@@ -38,8 +38,8 @@ public class ProductionPipelineBuilder {
   private final Configuration configuration;
   private final RuntimeInfo runtimeInfo;
 
-  private ProductionPipelineRunner runner;
-  private Observer observer;
+  private final ProductionPipelineRunner runner;
+  private final Observer observer;
 
   public ProductionPipelineBuilder(@Named("name") String name, @Named("rev") String rev,
                                    Configuration configuration, RuntimeInfo runtimeInfo,
@@ -68,7 +68,7 @@ public class ProductionPipelineBuilder {
       runner.setOffsetTracker(new ProductionSourceOffsetCommitterOffsetTracker(name, rev, runtimeInfo,
         (OffsetCommitter) pipeline.getSource()));
     }
-    return new ProductionPipeline(name, rev, runtimeInfo, pipelineConf, pipeline);
+    return new ProductionPipeline(name, rev, configuration, runtimeInfo, pipelineConf, pipeline);
   }
 
 }

@@ -9,15 +9,18 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.ProductionSourceOffsetTracker;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
@@ -42,8 +45,9 @@ public class ProductionPipeline {
   private volatile PipelineStatus pipelineStatus;
   private final String name;
   private final String rev;
+  private final boolean isExecutingInSlave;
 
-  public ProductionPipeline(String name, String rev, RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf,
+  public ProductionPipeline(String name, String rev, Configuration conf, RuntimeInfo runtimeInfo, PipelineConfiguration pipelineConf,
                             Pipeline pipeline) {
     this.name = name;
     this.rev = rev;
@@ -51,6 +55,9 @@ public class ProductionPipeline {
     this.pipelineConf = pipelineConf;
     this.pipeline = pipeline;
     this.pipelineRunner =  (ProductionPipelineRunner)pipeline.getRunner();
+    ExecutionMode executionMode =
+      ExecutionMode.valueOf(conf.get(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name()));
+    isExecutingInSlave = (executionMode == ExecutionMode.SLAVE);
   }
 
   public StateListener getStatusListener() {
@@ -116,17 +123,25 @@ public class ProductionPipeline {
         }
       } finally {
         LOG.debug("Destroying");
-        pipeline.destroy();
-        if (pipeline.getSource() instanceof ClusterSource) {
-          LOG.debug("Calling cluster source post destroy");
-          ((ClusterSource) pipeline.getSource()).postDestroy();
-        }
-        if (finishing) {
-          LOG.debug("Finished");
-          stateChanged(PipelineStatus.FINISHED, null, null);
-        } else if (errorWhileRunning) {
-          LOG.debug("Stopped due to an error");
-          stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+        try {
+          pipeline.destroy();
+          if (isExecutingInSlave) {
+            LOG.debug("Calling cluster source post destroy");
+            ((ClusterSource) pipeline.getSource()).postDestroy();
+          }
+        } catch (Throwable e) {
+          LOG.warn("Error while calling destroy: " + e, e);
+          throw e;
+        } finally {
+          // if the destroy throws an Exception but pipeline.run() finishes well,
+          // me move to finished state
+          if (finishing) {
+            LOG.debug("Finished");
+            stateChanged(PipelineStatus.FINISHED, null, null);
+          } else if (errorWhileRunning) {
+            LOG.debug("Stopped due to an error");
+            stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
+          }
         }
       }
     } finally {
