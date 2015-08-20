@@ -61,10 +61,15 @@
                                             href="HadoopFS-HadoopProperties-dest.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_br4_fgs_5r"/></xref></entry>
-                                    <entry>Directory for a local HDFS configuration files. To use
-                                        properties defined in the core-site.xml and hdfs-site.xml
-                                        configuration files, enter the directory where the files are
-                                        located. <note>Properties in the configuration files are
+                                    <entry>Location of the HDFS configuration files.<p>Use a
+                                            directory or symlink within the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory.</p><p>You can use the following
+                                            files with the Hadoop FS destination:<ul
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HDFSdest"
+                                                id="ul_qnc_jtt_bt">
+                                                <li/>
+                                            </ul></p><note>Properties in the configuration files are
                                             overridden by individual properties defined in the
                                             stage.</note></entry>
                                 </row>

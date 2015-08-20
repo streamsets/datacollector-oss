@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tjp_v5l_zq">
- <title>HBase Properties and Configuration File</title>
- <shortdesc>You can configure the HBase destination to use HBase properties. </shortdesc>
+ <title>HDFS Properties and Configuration File</title>
  <conbody>
   <p><indexterm>HBase destination<indexterm>additional
-                properties</indexterm></indexterm><indexterm>custom
-                    properties<indexterm>HBase</indexterm></indexterm>The HBase destination provides
-            the following options for using HBase properties:<dl>
+                properties</indexterm></indexterm><indexterm>custom properties<indexterm>HBase
+                    destination</indexterm></indexterm>You can configure the HBase destination to
+            use individual HDFS properties or HDFS configuration files:</p>
+        <p>
+            <dl>
                 <dlentry>
-                    <dt>HBase configuration file, hbase-site.xml </dt>
-                    <dd>You can store the hbase-site.xml configuration file in a directory local to
-                        the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> and define the directory in the destination.</dd>
+                    <dt>HBase configuration file</dt>
+                    <dd>You can use the following HDFS configuration file with the HBase
+                        configuration file: To use HDFS configuration files: <ul
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
+                            id="ul_rwk_x5r_bt">
+                            <li/>
+                        </ul><ol id="ol_rb2_2nr_bt">
+                            <li>Store the files or a symlink to the files in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> resources directory. </li>
+                            <li>In the HBase destination, specify the location of the files. </li>
+                        </ol></dd>
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>
@@ -23,6 +31,7 @@
                             values.<note>Individual properties override properties defined in the
                             HBase configuration file. </note></dd>
                 </dlentry>
-            </dl></p>
+            </dl>
+        </p>
  </conbody>
 </concept>

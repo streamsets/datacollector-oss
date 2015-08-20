@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_xh5_y4d_br">
- <title>Hadoop Properties and Configuration Files</title>
-    <shortdesc>You can configure the Hadoop destination to use HDFS properties. </shortdesc>
+ <title>HDFS Properties and Configuration Files</title>
     <conbody>
         <p><indexterm>Hadoop FS destination<indexterm>using or adding HDFS
-                properties</indexterm></indexterm><indexterm>custom properties<indexterm>Hadoop FS
-                    destination</indexterm></indexterm>The Hadoop FS destination provides the
-            following options for using HDFS properties:<draft-comment author="Loretta">Make sure
-                changes go into the origin version of this file.</draft-comment><dl>
+                properties</indexterm></indexterm><indexterm>HDFS properties<indexterm>Hadoop FS
+                    destination</indexterm></indexterm>You can configure the Hadoop FS destination
+            to use individual HDFS properties or HDFS configuration files:<draft-comment
+                author="Loretta">Make sure changes go into the origin version of this
+                file.</draft-comment><dl>
                 <dlentry>
-                    <dt>HDFS configuration files: core-site.xml and hdfs-site.xml</dt>
-                    <dd>You can store the core-site.xml and hdfs-site.xml configuration files in a
-                        directory local to the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> and define the directory in the destination.</dd>
+                    <dt>HDFS configuration files</dt>
+                    <dd>You can use the following HDFS configuration files with the Hadoop FS
+                            destination:<ul
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HDFSdest"
+                            id="ul_qhn_ytr_bt">
+                            <li/>
+                        </ul></dd>
+                    <dd>To use HDFS configuration files: <ol id="ol_rb2_2nr_bt">
+                            <li>Store the files or a symlink to the files in the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> resources directory. </li>
+                            <li>In the Hadoop FS destination, specify the location of the files.
+                            </li>
+                        </ol></dd>
                 </dlentry>
                 <dlentry>
                     <dt>Individual properties</dt>

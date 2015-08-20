@@ -160,5 +160,29 @@
             <p id="HDFS_user_props">When necessary, you can enable Kerberos authentication or use an
                   HDFS user to connect to HDFS. You can also use HDFS properties files and add other
                   HDFS configuration properties as needed. </p>
+            <draft-comment author="Loretta">list of HDFS configuration files used by Hadoop FS
+                  origin - used in Hadoop Properties and Configuring Hadoop FS
+                  origin.</draft-comment>
+            <p>
+                  <ul id="ul-HDFSfiles_HDFSorigin">
+                        <li>core-site.xml</li>
+                        <li>hdfs-site.xml </li>
+                        <li>yarn-site.xml</li>
+                        <li>mapred-site.xml</li>
+                  </ul>
+                  <draft-comment author="Loretta" id="ul_">list of HDFS configuration files used by
+                        Hadoop FS destination - used in Hadoop Properties and Configuring Hadoop FS
+                        destination.</draft-comment>
+                  <ul id="HDFSfiles_HDFSdest">
+                        <li>core-site.xml</li>
+                        <li>hdfs-site.xml </li>
+                  </ul>
+            </p>
+            <draft-comment author="Loretta">list of HDFS configuration files used by HBase
+                  destination - used in Hadoop Properties and Configuring HBase
+                  destination.</draft-comment>
+            <ul id="HDFSfiles_HBasedest">
+                  <li>hbase-site.xml</li>
+            </ul>
       </conbody>
 </concept>

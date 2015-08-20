@@ -81,11 +81,15 @@
                                                 placement="inline" id="image_ocv_4qg_xs"
                                         /></xref></entry>
                                     <entry>
-                                        <p>Directory for a local HDFS configuration files. To use
-                                            properties defined in the
-                                                <filepath>core-site.xml</filepath> and
-                                                <filepath>hdfs-site.xml</filepath> configuration
-                                            files, enter the directory where the files are located. </p>
+                                        <p>Location of the HDFS configuration files. Use a directory
+                                            or symlink within the Data Collector resources
+                                            directory.</p>
+                                        <p>You can use the following files with the Hadoop FS
+                                                origin:<ul
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-HDFSfiles_HDFSorigin"
+                                                id="ul_o22_m4r_bt">
+                                                <li/>
+                                            </ul></p>
                                         <p>
                                             <note>Properties in the configuration files are
                                                 overridden by individual properties defined in the
