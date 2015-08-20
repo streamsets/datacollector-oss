@@ -40,6 +40,8 @@ import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -266,6 +268,194 @@ public class TestClusterHDFSSource {
     }
   }
 
+  @Test(timeout = 30000)
+  public void testProduceDelimitedNoHeader() throws Exception {
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+      .addOutputLane("lane")
+      .setClusterMode(true)
+      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
+      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
+      .addConfiguration("recursive", false)
+      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
+      .addConfiguration("dataFormat", DataFormat.DELIMITED)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
+      .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("textMaxLineLen", 1024)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .build();
+      sourceRunner.runInit();
+
+    List<Map.Entry> list = new ArrayList<>();
+    list.add(new Pair("1", new String("A,B\na,b")));
+    list.add(new Pair("2", new String("C,D\nc,d")));
+
+    Thread th = createThreadForAddingBatch(sourceRunner, list);
+    try {
+    StageRunner.Output output = sourceRunner.runProduce(null, 5);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertEquals("2", newOffset);
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(4, records.size());
+    Record record = records.get(0);
+    Assert.assertEquals("A", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("B", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    record = records.get(1);
+    Assert.assertEquals("a", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    record = records.get(2);
+    Assert.assertEquals("C", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("D", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+    record = records.get(3);
+    Assert.assertEquals("c", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[0]/header"));
+    Assert.assertEquals("d", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+    Assert.assertFalse(record.has("[1]/header"));
+
+    if (sourceRunner != null) {
+      sourceRunner.runDestroy();
+    }
+    } finally {
+      th.interrupt();
+    }
+  }
+
+  @Test(timeout = 30000)
+  public void testProduceDelimitedIgnoreHeader() throws Exception {
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+      .addOutputLane("lane")
+      .setClusterMode(true)
+      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
+      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
+      .addConfiguration("recursive", false)
+      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
+      .addConfiguration("dataFormat", DataFormat.DELIMITED)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.IGNORE_HEADER)
+      .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("textMaxLineLen", 1024)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .build();
+      sourceRunner.runInit();
+
+    List<Map.Entry> list = new ArrayList<>();
+    list.add(new Pair("path::0::0", new String("A,B\na,b")));
+    list.add(new Pair("path::1::1", new String("C,D\nc,d")));
+
+    Thread th = createThreadForAddingBatch(sourceRunner, list);
+    try {
+      StageRunner.Output output = sourceRunner.runProduce(null, 5);
+
+      String newOffset = output.getNewOffset();
+      Assert.assertEquals("path::1::1", newOffset);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(2, records.size());
+      Record record = records.get(0);
+      Assert.assertEquals("C", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertFalse(record.has("[0]/header"));
+      Assert.assertEquals("D", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertFalse(record.has("[1]/header"));
+      record = records.get(1);
+      Assert.assertEquals("c", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertFalse(record.has("[0]/header"));
+      Assert.assertEquals("d", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertFalse(record.has("[1]/header"));
+
+      if (sourceRunner != null) {
+        sourceRunner.runDestroy();
+      }
+    } finally {
+      th.interrupt();
+    }
+  }
+
+  @Test(timeout = 30000)
+  public void testProduceDelimitedWithHeader() throws Exception {
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+      .addOutputLane("lane")
+      .setClusterMode(true)
+      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
+      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
+      .addConfiguration("recursive", false)
+      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
+      .addConfiguration("dataFormat", DataFormat.DELIMITED)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
+      .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("textMaxLineLen", 1024)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .build();
+      sourceRunner.runInit();
+
+    List<Map.Entry> list = new ArrayList<>();
+    list.add(new Pair("HEADER_COL_1,HEADER_COL_2", null));
+    list.add(new Pair("path::" + "1", new String("a,b\nC,D\nc,d")));
+
+    Thread th = createThreadForAddingBatch(sourceRunner, list);
+    try {
+      StageRunner.Output output = sourceRunner.runProduce(null, 5);
+
+      String newOffset = output.getNewOffset();
+      Assert.assertEquals("path::" + "1", newOffset);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(3, records.size());
+      Record record = records.get(0);
+      Assert.assertEquals("a", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_1", record.get().getValueAsList().get(0).getValueAsMap().get("header").getValueAsString());
+      Assert.assertEquals("b", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_2", record.get().getValueAsList().get(1).getValueAsMap().get("header").getValueAsString());
+      record = records.get(1);
+      Assert.assertEquals("C", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_1", record.get().getValueAsList().get(0).getValueAsMap().get("header").getValueAsString());
+      Assert.assertEquals("D", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_2", record.get().getValueAsList().get(1).getValueAsMap().get("header").getValueAsString());
+      record = records.get(2);
+      Assert.assertEquals("c", record.get().getValueAsList().get(0).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_1", record.get().getValueAsList().get(0).getValueAsMap().get("header").getValueAsString());
+      Assert.assertEquals("d", record.get().getValueAsList().get(1).getValueAsMap().get("value").getValueAsString());
+      Assert.assertEquals("HEADER_COL_2", record.get().getValueAsList().get(1).getValueAsMap().get("header").getValueAsString());
+      if (sourceRunner != null) {
+        sourceRunner.runDestroy();
+      }
+    } finally {
+      th.interrupt();
+    }
+  }
+
 
   private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Map.Entry> list) {
     Thread sourceThread = new Thread() {
@@ -302,7 +492,7 @@ public class TestClusterHDFSSource {
       return new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat, textMaxLineLen,
         jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
         grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-        produceSingleRecordPerMessage, hdfsKerberos, null, null);
+        produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomDelimiter, csvCustomDelimiter);
     }
   }
 

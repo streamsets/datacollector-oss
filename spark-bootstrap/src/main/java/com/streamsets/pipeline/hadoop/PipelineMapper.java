@@ -8,13 +8,19 @@ package com.streamsets.pipeline.hadoop;
 import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,17 +70,36 @@ public class PipelineMapper extends Mapper {
     String file = "unknown::";
     if (inputSplit instanceof FileSplit) {
       fileSplit = (FileSplit)inputSplit;
+    } else {
+      throw new IllegalStateException("Unsupported InputSplit: " + inputSplit.getClass().getName());
     }
+    String header = null;
     if (fileSplit != null) {
-      file = fileSplit.getPath() + "::";
+      file = fileSplit.getPath() + "::" + fileSplit.getStart() + "::";
+      if (properties.getProperty("dataFormat").equals("DELIMITED")
+        && properties.getProperty("csvHeader").equals("WITH_HEADER")) {
+        if (fileSplit.getStart() == 0) {
+          boolean hasNext = context.nextKeyValue();
+          if (hasNext) {
+            header = String.valueOf(context.getCurrentValue());
+          }
+        } else {
+          header = getHeaderFromFile(context.getConfiguration(), fileSplit.getPath());
+        }
+        LOG.info("Header in file " + fileSplit.getPath() + " for start offset " + fileSplit.getStart() + ": " + header);
+      }
     }
-
     int batchSize = Integer.parseInt(properties.getProperty("production.maxBatchSize", "1000").trim());
     boolean errorOccurred = true;
     try {
       boolean hasNext = context.nextKeyValue();
       while (hasNext) {
         List<Map.Entry> batch = new ArrayList<>();
+        if (header != null) {
+          batch.add(new Pair(header, null));
+          // increment batch size as adding the first entry as header
+          batchSize = batchSize + 1;
+        }
         while (hasNext && batch.size() < batchSize) {
           batch.add(new Pair(file + context.getCurrentKey(), String.valueOf(context.getCurrentValue())));
           hasNext = context.nextKeyValue(); // not like iterator.hasNext, actually advances
@@ -102,5 +127,26 @@ public class PipelineMapper extends Mapper {
         }
       }
     }
+  }
+
+  private String getHeaderFromFile(Configuration hadoopConf, Path path) throws IOException {
+    String header;
+    BufferedReader br = null;
+    try {
+      FileSystem fs = FileSystem.get(hadoopConf);
+      br = new BufferedReader(new InputStreamReader(fs.open(path)));
+      // read one line - the header
+      header = br.readLine();
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          LOG.warn("Error while closing file: '{}', exception string is: '{}'", path, e, e);
+          br = null;
+        }
+      }
+    }
+    return header;
   }
 }

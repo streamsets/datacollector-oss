@@ -14,6 +14,10 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvHeaderChooserValues;
+import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
@@ -306,12 +310,88 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   )
   public Map<String, String> hdfsConfigs;
 
+  //CSV
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "CSV",
+    label = "File Type",
+    description = "",
+    displayPosition = 300,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED"
+   )
+   @ValueChooser(CsvModeChooserValues.class)
+   public CsvMode csvFileFormat;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "NO_HEADER",
+    label = "Header Line",
+    description = "",
+    displayPosition = 310,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED")
+  @ValueChooser(CsvHeaderChooserValues.class)
+  public CsvHeader csvHeader;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.NUMBER,
+    defaultValue = "1024",
+    label = "Max Record Length (chars)",
+    description = "Larger objects are not processed",
+    displayPosition = 320,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED",
+    min = 1,
+    max = Integer.MAX_VALUE)
+  public int csvMaxObjectLen;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "|",
+    label = "Delimiter Character",
+    displayPosition = 330,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM")
+  public char csvCustomDelimiter;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\\",
+    label = "Escape Character",
+    displayPosition = 340,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM")
+  public char csvCustomEscape;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\"",
+    label = "Quote Character",
+    displayPosition = 350,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM")
+  public char csvCustomQuote;
+
   @Override
   protected Source createSource() {
      clusterHDFSSource = new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat,
       textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-       produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir);
+       produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter,
+       csvCustomEscape, csvCustomQuote);
      return clusterHDFSSource;
   }
 

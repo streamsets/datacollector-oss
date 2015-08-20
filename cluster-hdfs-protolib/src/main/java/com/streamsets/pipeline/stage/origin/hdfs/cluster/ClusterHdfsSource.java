@@ -55,6 +55,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
@@ -63,6 +65,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
@@ -103,12 +106,19 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private long recordsProduced;
   private final Map<String, String> previewBuffer;
   private final CountDownLatch countDownLatch;
+  private final CsvMode csvFileFormat;
+  private final CsvHeader csvHeader;
+  private final int csvMaxObjectLen;
+  private final char csvCustomDelimiter;
+  private final char csvCustomEscape;
+  private final char csvCustomQuote;
+
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
     int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
     List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition, String grokPattern,
     boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen, boolean produceSingleRecordPerMessage,
-    boolean hdfsKerberos, String hdfsUser, String hadoopConfDir) {
+    boolean hdfsKerberos, String hdfsUser, String hadoopConfDir, CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape, char csvCustomQuote) {
     controlChannel = new ControlChannel();
     dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
@@ -137,6 +147,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.recordsProduced = 0;
     this.previewBuffer = new LinkedHashMap<>();
     this.countDownLatch = new CountDownLatch(1);
+    this.csvFileFormat = csvFileFormat;
+    this.csvHeader = csvHeader;
+    this.csvMaxObjectLen = csvMaxObjectLen;
+    this.csvCustomDelimiter = csvCustomDelimiter;
+    this.csvCustomEscape = csvCustomEscape;
+    this.csvCustomQuote = csvCustomQuote;
   }
   @Override
   public List<ConfigIssue> init() {
@@ -181,7 +197,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                       String line;
                       int offset = 0;
                       while ((line = reader.readLine()) != null && previewBuffer.size() < PREVIEW_SIZE) {
-                        previewBuffer.put(path + "::" + offset, line);
+                        previewBuffer.put(path + "::" + offset + "::" + offset, line);
                         offset += line.getBytes(StandardCharsets.UTF_8).length + 1; // byte length and newline
                       }
                     } catch (IOException ex) {
@@ -228,6 +244,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                                                             OnParseError.ERROR, 0, Groups.LOG.name(),
                                                             getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, getContext());
+        break;
+      case DELIMITED:
+        if (csvMaxObjectLen < 1) {
+          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.HADOOPFS_30));
+        }
         break;
       default:
         issues.add(getContext().createConfigIssue(Groups.LOG.name(), "dataFormat", Errors.HADOOPFS_06, dataFormat));
@@ -412,6 +433,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     builder.setCharset(StandardCharsets.UTF_8);
 
     switch (dataFormat) {
+      case DELIMITED:
+        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode((csvHeader == CsvHeader.IGNORE_HEADER) ? CsvHeader.NO_HEADER: csvHeader)
+        .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
+        .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
+        .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
+        break;
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);
         break;
@@ -430,14 +457,25 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     OffsetAndResult<Map.Entry> offsetAndResult;
     if (getContext().isPreview()) {
-      // we only support text today
+      // we support text and csv today
       List<Map.Entry> records = new ArrayList<>();
       int count = 0;
       Iterator<String> keys = previewBuffer.keySet().iterator();
       while (count < maxBatchSize && count < previewBuffer.size() && keys.hasNext()) {
         String key =  keys.next();
-        records.add(new Pair(key, previewBuffer.get(key)));
-        count++;
+        if (count == 0 && DataFormat.DELIMITED == dataFormat && CsvHeader.NO_HEADER != csvHeader
+          && key.split("::")[1].equals("0") && key.split("::")[2].equals("0")) {
+          // add header
+          if (CsvHeader.WITH_HEADER == csvHeader) {
+            records.add(new Pair(previewBuffer.get(key), null));
+          } else if (CsvHeader.IGNORE_HEADER == csvHeader) {
+            // this record will be ignored - dont increment the count
+          }
+        } else {
+          records.add(new Pair(key, previewBuffer.get(key)));
+          count++;
+        }
+
       }
       offsetAndResult = new OffsetAndResult<>(recordsProduced, records);
     } else {
@@ -449,12 +487,44 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
     String messageId = null;
     int count = 0;
+    String header = null;
     for (Map.Entry message : offsetAndResult.getResult()) {
       count++;
       messageId = String.valueOf(message.getKey());
-      List<Record> listRecords = processMessage(messageId, String.valueOf(message.getValue()));
-      for (Record record : listRecords) {
-        batchMaker.addRecord(record);
+      List<Record> listRecords = null;
+      if (dataFormat == DataFormat.TEXT) {
+        listRecords = processMessage(messageId, String.valueOf(message.getValue()));
+      } else {
+        switch (csvHeader) {
+          case IGNORE_HEADER:
+            // ignore header by skipping this header string
+            // [1] - startOffset - [2] - contextKey
+            String[] offsetContextSplit = messageId.split("::");
+            if (offsetContextSplit[1].equals("0") && offsetContextSplit[2].equals("0")) {
+              break;
+            }
+          case NO_HEADER:
+            listRecords = processMessage(messageId, String.valueOf(message.getValue()));
+            break;
+          case WITH_HEADER:
+            if (header == null) {
+              header = messageId;
+              LOG.info("Header is: " + header);
+              Utils.checkState(message.getValue() == null, "Message value for header record should be null");
+            } else {
+              listRecords = processMessage(messageId, header + "\n" + String.valueOf(message.getValue()));
+            }
+            break;
+          default:
+            String msg = Utils.format("Unrecognized header: '{}'", csvHeader);
+            LOG.warn(msg);
+            throw new IllegalStateException(msg);
+        }
+      }
+      if (listRecords != null) {
+        for (Record record : listRecords) {
+          batchMaker.addRecord(record);
+        }
       }
     }
     if (count == 0) {
@@ -463,7 +533,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
     return Utils.checkNotNull(messageId, "Log error, message ID cannot be null at this point.");
   }
-
 
   protected List<Record> processMessage(String messageId, String message) throws StageException {
     List<Record> records = new ArrayList<>();

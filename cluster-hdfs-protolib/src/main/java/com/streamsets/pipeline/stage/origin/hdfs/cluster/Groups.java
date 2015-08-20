@@ -12,6 +12,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   HADOOP_FS("Hadoop FS"),
   TEXT("Text"),
+  DELIMITED("Delimited"),
   JSON("JSON"),
   LOG("Log")
   ;
