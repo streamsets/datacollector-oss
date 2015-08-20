@@ -67,6 +67,8 @@ public class PathElement {
       boolean requiresStart = true;
       boolean requiresName = false;
       boolean requiresIndex = false;
+      boolean singleQuote = false;
+      boolean doubleQuote = false;
       StringBuilder collector = new StringBuilder();
       int pos = 0;
       for (; pos < chars.length; pos++) {
@@ -74,6 +76,8 @@ public class PathElement {
           requiresStart = false;
           requiresName = false;
           requiresIndex = false;
+          singleQuote = false;
+          doubleQuote = false;
           switch (chars[pos]) {
             case '/':
               requiresName = true;
@@ -87,21 +91,49 @@ public class PathElement {
         } else {
           if (requiresName) {
             switch (chars[pos]) {
+              case '\'':
+                if(pos == 0 || chars[pos - 1] != '\\') {
+                  if(!doubleQuote) {
+                    singleQuote = !singleQuote;
+                  } else {
+                    collector.append(chars[pos]);
+                  }
+                } else {
+                  collector.setLength(collector.length() - 1);
+                  collector.append(chars[pos]);
+                }
+                break;
+              case '"':
+                if(pos == 0 || chars[pos - 1] != '\\') {
+                  if(!singleQuote) {
+                    doubleQuote = !doubleQuote;
+                  } else {
+                    collector.append(chars[pos]);
+                  }
+                } else {
+                  collector.setLength(collector.length() - 1);
+                  collector.append(chars[pos]);
+                }
+                break;
               case '/':
               case '[':
               case ']':
-                if (chars.length <= pos + 1) {
-                  throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
-                }
-                if (chars[pos] == chars[pos + 1]) {
+                if(singleQuote || doubleQuote) {
                   collector.append(chars[pos]);
-                  pos++;
                 } else {
-                  elements.add(PathElement.createMapElement(collector.toString()));
-                  requiresStart = true;
-                  collector.setLength(0);
-                  //not very kosher, we need to replay the current char as start of path element
-                  pos--;
+                  if (chars.length <= pos + 1) {
+                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+                  }
+                  if (chars[pos] == chars[pos + 1]) {
+                    collector.append(chars[pos]);
+                    pos++;
+                  } else {
+                    elements.add(PathElement.createMapElement(collector.toString()));
+                    requiresStart = true;
+                    collector.setLength(0);
+                    //not very kosher, we need to replay the current char as start of path element
+                    pos--;
+                  }
                 }
                 break;
               default:
@@ -142,7 +174,11 @@ public class PathElement {
           }
         }
       }
-      if (pos < chars.length) {
+
+      if(singleQuote || doubleQuote) {
+        //If there is no matching quote
+        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, 0));
+      } else if (pos < chars.length) {
         throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
       } else if (collector.length() > 0) {
         // the last path element was a map entry, we need to create it.

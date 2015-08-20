@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.record;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
@@ -438,6 +439,101 @@ public class TestRecordImpl {
     RecordImpl r = new RecordImpl("stage", "source", null, null);
     r.set(Field.create(new HashMap<String, Field>()));
     r.set("/a[1]", Field.create(false));
+  }
+
+  public void testEscapingWithQuotes(String specialChar, String pathSpecialChar) {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create(true));
+    Field listField = Field.create(list);
+    Map<String, Field> map = new HashMap<>();
+    map.put("a" + specialChar, listField);
+    Field mapField = Field.create(map);
+    r.set(mapField);
+
+    Assert.assertEquals(mapField, r.get());
+    Assert.assertEquals(mapField, r.get(""));
+    Assert.assertEquals(listField, r.get("/'a" + pathSpecialChar + "'"));
+    Assert.assertEquals(Field.create(true), r.get("/'a" + pathSpecialChar + "'[0]"));
+    Assert.assertNull(r.get("/'a" + pathSpecialChar + "'[1]"));
+    Assert.assertTrue(r.has(""));
+    Assert.assertTrue(r.has("/'a" + pathSpecialChar + "'"));
+    Assert.assertFalse(r.has("/b"));
+    Assert.assertTrue(r.has("/'a" + pathSpecialChar + "'[0]"));
+    Assert.assertFalse(r.has("/'a" + pathSpecialChar + "'[1]"));
+    Assert.assertEquals(Field.create(true), r.delete("/'a" + pathSpecialChar + "'[0]"));
+    Assert.assertEquals(Field.create(new ArrayList<Field>()), r.delete("/'a" + pathSpecialChar + "'"));
+  }
+
+  @Test
+  public void testEscapingWithQuotesSlash() {
+    testEscapingWithQuotes("/", "/");
+  }
+
+  @Test
+  public void testEscapingWithQuotesOpenBracket() {
+    testEscapingWithQuotes("[", "[");
+  }
+
+  @Test
+  public void testEscapingWithQuotesCloseBracket() {
+    testEscapingWithQuotes("[", "[");
+  }
+
+  @Test
+  public void testEscapingWithQuotesEscapeQuote() {
+    testEscapingWithQuotes("'", "\\'");
+  }
+
+  @Test
+  public void testEscapingWitMixed() {
+    testEscapingWithQuotes(" & [] / - DF [ & ' ", " & [] / - DF [ & \\' ");
+  }
+
+
+  @Test
+  public void testQuoteEscaping() {
+    Map<String, Field> map;
+
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+
+    map = new HashMap<>();
+    map.put("foo", Field.create("fooValue"));
+    map.put("'foo", Field.create("quoteFooValue"));
+    map.put("foo bar", Field.create("foo space bar Value"));
+    map.put("foo bar list", Field.create(ImmutableList.of(Field.create("foo space bar list1"),
+      Field.create("foo space bar list2"))));
+    map.put("foo\"bar", Field.create("foo double quote bar Value"));
+    map.put("foo'bar", Field.create("foo single quote bar Value"));
+
+    map.put("fooList[1]", Field.create("foo List Like Value"));
+    List<Field> list = new ArrayList<>();
+    list.add(Field.create("list1"));
+    list.add(Field.create("list2"));
+    Field listField = Field.create(list);
+    map.put("fooList", listField);
+    map.put("fooMap/bar", Field.create("foo Map Like Value"));
+
+    Map<String, Field> nestedMap = new HashMap<>();
+    nestedMap.put("bar", Field.create("nested map bar value"));
+    map.put("fooMap", Field.create(nestedMap));
+
+    Field mapField = Field.create(map);
+    r.set(mapField);
+
+    Assert.assertEquals("fooValue", r.get("/foo").getValue());
+    Assert.assertEquals("fooValue", r.get("/'foo'").getValue());
+    Assert.assertEquals("quoteFooValue", r.get("/'\\'foo'").getValue());
+    Assert.assertEquals("foo space bar Value", r.get("/foo bar").getValue());
+    Assert.assertEquals("foo space bar Value", r.get("/'foo bar'").getValue());
+    Assert.assertEquals("foo space bar list1", r.get("/foo bar list[0]").getValue());
+    Assert.assertEquals("foo space bar list1", r.get("/'foo bar list'[0]").getValue());
+    Assert.assertEquals("foo double quote bar Value", r.get("/'foo\"bar'").getValue());
+    Assert.assertEquals("foo single quote bar Value", r.get("/\"foo'bar\"").getValue());
+    Assert.assertEquals("foo List Like Value", r.get("/'fooList[1]'").getValue());
+    Assert.assertEquals("list2", r.get("/fooList[1]").getValue());
+    Assert.assertEquals("foo Map Like Value", r.get("/'fooMap/bar'").getValue());
+    Assert.assertEquals("nested map bar value", r.get("/fooMap/bar").getValue());
   }
 
 }
