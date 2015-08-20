@@ -43,6 +43,8 @@ public class TestBootstrapMain {
           "-userLibrariesDir", "e", "-configDir"},
       {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
           "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir"},
+      {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c", "-streamsetsLibrariesDir", "d",
+          "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir", "g", "-streamsetsLibrariesExtraDir" },
   };
 
   @Test
@@ -61,7 +63,8 @@ public class TestBootstrapMain {
   @Test(expected = RuntimeException.class)
   public void testAllOptions() throws Exception {
       BootstrapMain.main(new String[] {"-mainClass", "a", "-apiClasspath", "b", "-containerClasspath", "c",
-          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir", "g"});
+          "-streamsetsLibrariesDir", "d", "-userLibrariesDir", "e", "-configDir", "f", "-libsCommonLibDir", "g",
+          "-streamsetsLibrariesExtraDir", "h" });
   }
 
   private String extractPathFromUrlString(String url) {
@@ -168,7 +171,7 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspaths() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "streamsets-libs";
-    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
+    Map<String, List<URL>> libs = BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null, null);
     Assert.assertEquals(String.valueOf(libs), 2, libs.size());
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage1"));
     Assert.assertNotNull(String.valueOf(libs.keySet()), libs.get("streamsets-libs/stage2"));
@@ -182,14 +185,14 @@ public class TestBootstrapMain {
   public void testGetStageLibrariesClasspathsInvalidLibs() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "invalid-libs";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetStageLibrariesClasspathsInvalidStageLib() throws Exception {
     String baseDir = getBaseDir();
     String stageLibsDir = baseDir + BootstrapMain.FILE_SEPARATOR + "stage-libs-invalid-lib";
-    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null);
+    BootstrapMain.getStageLibrariesClasspaths(stageLibsDir, null, null, null);
   }
 
   private static boolean setClassLoaders;
@@ -246,6 +249,38 @@ public class TestBootstrapMain {
     }
   }
 
+  private static boolean extraLibFound;
+  private static boolean extraConfFound;
+
+
+  public static class TMainExtraLibs {
+    public static void setContext(ClassLoader api, ClassLoader container,
+        List<? extends ClassLoader> libs, Instrumentation instrumentation) {
+      Assert.assertNotNull(api);
+      Assert.assertNotNull(container);
+      Assert.assertEquals(1, libs.size());
+      Assert.assertEquals("stage1", ((SDCClassLoader) libs.get(0)).getName());
+      URL[] urls =  ((SDCClassLoader) libs.get(0)).getURLs();
+      Assert.assertTrue(urls.length >= 3);
+      for (int i = 0; i < 3; i++) {
+        Assert.assertFalse(urls[i].toExternalForm().contains("extralibs"));
+      }
+      if (urls.length > 3) {
+        Assert.assertTrue(urls[3].toExternalForm().contains("extralibs/stage1/lib"));
+        extraLibFound = true;
+      }
+      if (urls.length > 4) {
+        Assert.assertTrue(urls[4].toExternalForm().contains("extralibs/stage1/etc"));
+        extraConfFound = true;
+      }
+      setClassLoaders = true;
+    }
+
+    public static void main(String[] args)  {
+      main = true;
+    }
+  }
+
   @Test
   public void testMainInvocation() throws Exception {
     String baseDir = getBaseDir();
@@ -271,6 +306,7 @@ public class TestBootstrapMain {
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
 
+    //libscommonlibs
     setClassLoaders = false;
     main = false;
     File commonsDir = new File(commonLibDir);
@@ -294,6 +330,55 @@ public class TestBootstrapMain {
         userLibsDir, "-configDir", confDir});
     Assert.assertTrue(setClassLoaders);
     Assert.assertTrue(main);
+
+    // extralibs
+
+    File extraLibDir = new File("target", UUID.randomUUID().toString() + "/extralibs").getAbsoluteFile();
+    Assert.assertTrue(extraLibDir.mkdirs());
+    String extraLib = extraLibDir.getAbsolutePath();
+
+    setClassLoaders = false;
+    main = false;
+    extraLibFound = false;
+    extraConfFound = false;
+    BootstrapMain.main(new String[]{"-mainClass", TMainExtraLibs.class.getName(), "-apiClasspath", apiDir,
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir, "-configDir", confDir, "-streamsetsLibrariesExtraDir", extraLib});
+    Assert.assertTrue(setClassLoaders);
+    Assert.assertTrue(main);
+    Assert.assertFalse(extraLibFound);
+    Assert.assertFalse(extraConfFound);
+
+    File extraLibLib = new File(extraLib, "stage1/lib");
+    Assert.assertTrue(extraLibLib.mkdirs());
+    Files.touch(new File(extraLibLib, "a.jar"));
+
+    setClassLoaders = false;
+    main = false;
+    extraLibFound = false;
+    extraConfFound = false;
+    BootstrapMain.main(new String[]{"-mainClass", TMainExtraLibs.class.getName(), "-apiClasspath", apiDir,
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir, "-configDir", confDir, "-streamsetsLibrariesExtraDir", extraLib});
+    Assert.assertTrue(setClassLoaders);
+    Assert.assertTrue(main);
+    Assert.assertTrue(extraLibFound);
+    Assert.assertFalse(extraConfFound);
+
+    File extraLibConf =  new File(extraLib, "stage1/etc");
+    Assert.assertTrue(extraLibConf.mkdirs());
+
+    setClassLoaders = false;
+    main = false;
+    extraLibFound = false;
+    extraConfFound = false;
+    BootstrapMain.main(new String[]{"-mainClass", TMainExtraLibs.class.getName(), "-apiClasspath", apiDir,
+        "-containerClasspath", confDir, "-streamsetsLibrariesDir", streamsetsLibsDir, "-userLibrariesDir",
+        userLibsDir, "-configDir", confDir, "-streamsetsLibrariesExtraDir", extraLib});
+    Assert.assertTrue(setClassLoaders);
+    Assert.assertTrue(main);
+    Assert.assertTrue(extraLibFound);
+    Assert.assertTrue(extraConfFound);
   }
 
   @Test

@@ -30,6 +30,7 @@ public class BootstrapMain {
   private static final String API_CLASSPATH_OPTION = "-apiClasspath";
   private static final String CONTAINER_CLASSPATH_OPTION = "-containerClasspath";
   private static final String STREAMSETS_LIBRARIES_DIR_OPTION = "-streamsetsLibrariesDir";
+  private static final String STREAMSETS_LIBRARIES_EXTRA_DIR_OPTION = "-streamsetsLibrariesExtraDir";
   private static final String USER_LIBRARIES_DIR_OPTION = "-userLibrariesDir";
   private static final String LIBS_COMMON_LIB_DIR_OPTION = "-libsCommonLibDir";
   private static final String CONFIG_DIR_OPTION = "-configDir";
@@ -95,6 +96,7 @@ public class BootstrapMain {
     String apiClasspath = null;
     String containerClasspath = null;
     String streamsetsLibrariesDir = null;
+    String streamsetsLibrariesExtraDir = null;
     String userLibrariesDir = null;
     String configDir = null;
     String libsCommonLibDir = null;
@@ -127,6 +129,13 @@ public class BootstrapMain {
           streamsetsLibrariesDir = args[i];
         } else {
           throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, STREAMSETS_LIBRARIES_DIR_OPTION));
+        }
+      } else if (args[i].equals(STREAMSETS_LIBRARIES_EXTRA_DIR_OPTION)) {
+        i++;
+        if (i < args.length) {
+          streamsetsLibrariesExtraDir = args[i];
+        } else {
+          throw new IllegalArgumentException(String.format(MISSING_ARG_MSG, STREAMSETS_LIBRARIES_EXTRA_DIR_OPTION));
         }
       } else if (args[i].equals(USER_LIBRARIES_DIR_OPTION)) {
         i++;
@@ -185,6 +194,8 @@ public class BootstrapMain {
       System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, STREAMSETS_LIBRARIES_DIR_OPTION, streamsetsLibrariesDir));
       System.out.println(DEBUG_MSG_PREFIX);
+      System.out.println(String.format(DEBUG_MSG, STREAMSETS_LIBRARIES_EXTRA_DIR_OPTION, streamsetsLibrariesExtraDir));
+      System.out.println(DEBUG_MSG_PREFIX);
       System.out.println(String.format(DEBUG_MSG, USER_LIBRARIES_DIR_OPTION, userLibrariesDir));
     }
 
@@ -201,8 +212,10 @@ public class BootstrapMain {
       System.out.println(String.format(DEBUG_MSG, "User libs white list", whiteListStr));
     }
 
-    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir, systemWhiteList, libsCommonLibDir);
-    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, userWhiteList, libsCommonLibDir);
+    Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir,
+        streamsetsLibrariesExtraDir, systemWhiteList, libsCommonLibDir);
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, null, userWhiteList,
+        libsCommonLibDir);
 
     if (debug) {
       System.out.println(DEBUG_MSG_PREFIX);
@@ -296,7 +309,7 @@ public class BootstrapMain {
   }
 
   // Visible for testing
-  public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir,
+  public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir, String librariesExtraDir,
       final Set<String> whiteListDirs, String libsCommonLibDir) throws Exception {
     Map<String, List<URL>> map = new LinkedHashMap<String, List<URL>>();
 
@@ -326,6 +339,23 @@ public class BootstrapMain {
         }
         sb.append(commonLibJars);
         sb.append(jarsDir.getAbsolutePath()).append(FILE_SEPARATOR).append(JARS_WILDCARD);
+
+        // add extralibs if avail
+        if (librariesExtraDir != null) {
+          File libExtraDir = new File(librariesExtraDir, libDir.getName());
+          if (libExtraDir.exists()) {
+            File extraJarsDir = new File(libExtraDir, STAGE_LIB_JARS_DIR);
+            if (extraJarsDir.exists()) {
+              sb.append(CLASSPATH_SEPARATOR).append(extraJarsDir.getAbsolutePath()).append(FILE_SEPARATOR).
+                  append(JARS_WILDCARD);
+            }
+            File extraEtc = new File(libExtraDir, STAGE_LIB_CONF_DIR);
+            if (extraEtc.exists()) {
+              sb.append(CLASSPATH_SEPARATOR).append(extraEtc.getAbsolutePath());
+            }
+          }
+        }
+
         map.put(libDir.getParentFile().getName() + FILE_SEPARATOR + libDir.getName(), getClasspathUrls(sb.toString()));
       }
     } else {

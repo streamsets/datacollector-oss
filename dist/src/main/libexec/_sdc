@@ -68,6 +68,8 @@ LIBS_COMMON_LIB_DIR="${LIBS_COMMON_LIB_DIR:=${SDC_DIST}/libs-common-lib/}"
 
 STREAMSETS_LIBRARIES_DIR="${SDC_DIST}/streamsets-libs"
 
+STREAMSETS_LIBRARIES_EXTRA_DIR=${STREAMSETS_LIBRARIES_EXTRA_DIR:=""}
+
 USER_LIBRARIES_DIR="${SDC_HOME}/user-libs"
 if [ ! -d "${USER_LIBRARIES_DIR}" ]
 then
@@ -102,30 +104,37 @@ fi
 if [ "$1" = "-verbose" ];
 then
   echo "SDC Agent:"
-  echo "  DIST                     : ${SDC_DIST}"
-  echo "  HOME                     : ${SDC_HOME}"
-  echo "  CONF                     : ${SDC_CONF}"
-  echo "  DATA                     : ${SDC_DATA}"
-  echo "  LOG                      : ${SDC_LOG}"
-  echo "  RESOURCES                : ${SDC_RESOURCES}"
-  echo "  SECURITY MANAGER POLICY  : ${SDC_POLICY_FILE}"
-  echo "  JAVA PATH                : ${JAVA}"
-  echo "  BOOTSTRAP_CLASSPATH      : ${BOOTSTRAP_CLASSPATH}"
-  echo "  API_CLASSPATH            : ${API_CLASSPATH}"
-  echo "  CONTAINER_CLASSPATH      : ${CONTAINER_CLASSPATH}"
-  echo "  LIBS_COMMON_LIB_DIR      : ${LIBS_COMMON_LIB_DIR}"
-  echo "  STREAMSETS_LIBRARIES_DIR : ${STREAMSETS_LIBRARIES_DIR}"
-  echo "  USER_LIBRARIES_DIR       : ${USER_LIBRARIES_DIR}"
-  echo "  JAVA OPTS                : ${SDC_JAVA_OPTS}"
-  echo "  MAIN CLASS               : ${SDC_MAIN_CLASS}"
+  echo "  DIST                           : ${SDC_DIST}"
+  echo "  HOME                           : ${SDC_HOME}"
+  echo "  CONF                           : ${SDC_CONF}"
+  echo "  DATA                           : ${SDC_DATA}"
+  echo "  LOG                            : ${SDC_LOG}"
+  echo "  RESOURCES                      : ${SDC_RESOURCES}"
+  echo "  SECURITY MANAGER POLICY        : ${SDC_POLICY_FILE}"
+  echo "  JAVA PATH                      : ${JAVA}"
+  echo "  BOOTSTRAP_CLASSPATH            : ${BOOTSTRAP_CLASSPATH}"
+  echo "  API_CLASSPATH                  : ${API_CLASSPATH}"
+  echo "  CONTAINER_CLASSPATH            : ${CONTAINER_CLASSPATH}"
+  echo "  LIBS_COMMON_LIB_DIR            : ${LIBS_COMMON_LIB_DIR}"
+  echo "  STREAMSETS_LIBRARIES_DIR       : ${STREAMSETS_LIBRARIES_DIR}"
+  echo "  STREAMSETS_LIBRARIES_EXTRA_DIR : ${STREAMSETS_LIBRARIES_EXTRA_DIR}"
+  echo "  USER_LIBRARIES_DIR             : ${USER_LIBRARIES_DIR}"
+  echo "  JAVA OPTS                      : ${SDC_JAVA_OPTS}"
+  echo "  MAIN CLASS                     : ${SDC_MAIN_CLASS}"
 fi
 
 cd ${SDC_DIST}
 
+EXTRA_OPTIONS=""
+if [ -n "${STREAMSETS_LIBRARIES_EXTRA_DIR}" ]
+then
+  EXTRA_OPTIONS="-streamsetsLibrariesExtraDir ${STREAMSETS_LIBRARIES_EXTRA_DIR}"
+fi
+
 exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
 -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
--libsCommonLibDir "${LIBS_COMMON_LIB_DIR}"
+-libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
 
 status=$?
 echo "Exit: $status"

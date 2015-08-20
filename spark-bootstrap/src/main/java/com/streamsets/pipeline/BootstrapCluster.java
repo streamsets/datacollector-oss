@@ -107,9 +107,10 @@ public class BootstrapCluster {
 
       String libsCommonLibDir = libraryRoot + "/libs-common-lib";
 
-      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", systemWhiteList,
-                                                                     libsCommonLibDir);
-      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", userWhiteList,
+      // in cluster mode, the library extra dir files from the master are collapsed on the library dir
+      streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null,
+                                                                     systemWhiteList, libsCommonLibDir);
+      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, userWhiteList,
                                                                libsCommonLibDir);
     }
     Map<String, List<URL>> libsUrls = new LinkedHashMap<String, List<URL>> ();
