@@ -29,6 +29,7 @@ import java.util.UUID;
 @StageDef(
   version = 2,
   label="Dev Data Generator",
+  description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
   icon="random.png",
   upgrader = RandomDataGeneratorSourceUpgrader.class
@@ -37,7 +38,7 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   private final Random random = new Random();
 
-  @ConfigDef(label = "Fields to generate", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
+  @ConfigDef(label = "Fields to Generate", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
     description="Fields to generate of the indicated type")
   @ComplexField
   public List<DataGeneratorConfig> dataGenConfigs;
@@ -139,7 +140,7 @@ public class RandomDataGeneratorSource extends BaseSource {
   public static class DataGeneratorConfig {
 
     @ConfigDef(required = true, type = ConfigDef.Type.STRING,
-      label = "Record field to generate")
+      label = "Field Name")
     public String field;
 
     @ConfigDef(required = true, type = ConfigDef.Type.MODEL,

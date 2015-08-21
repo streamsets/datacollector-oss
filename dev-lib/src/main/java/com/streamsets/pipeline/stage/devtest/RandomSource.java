@@ -28,29 +28,32 @@ import org.slf4j.LoggerFactory;
 @GenerateResourceBundle
 @StageDef(version = 1,
   label = "Dev Random Record Source",
+  description = "Generates records with the specified field names, using Long data. For development only.",
   execution = ExecutionMode.STANDALONE,
   icon = "random.png")
 public class RandomSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,
     defaultValue = "a,b,c",
-    label = "Record fields to generate, comma separated")
+    label = "Fields to Generate",
+    description = "Name of the Long fields to generate. Enter a comma separated list."
+    )
   public String fields;
 
   @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
     defaultValue = "1000",
-    label = "Delay between each batch",
+    label = "Delay Between Batches",
+    description = "Milliseconds to wait before sending the next batch",
     min = 0,
     max = Integer.MAX_VALUE)
   public int delay;
 
   @ConfigDef(required = true, type = ConfigDef.Type.NUMBER,
     defaultValue = "922337203685", // Long max value - 1
-    label = "Max records to generate",
+    label = "Max Records to Generate",
     min = 0,
     max = Long.MAX_VALUE)
   public long maxRecordsToGenerate;
-
 
   private int batchCount;
   private int batchSize;
