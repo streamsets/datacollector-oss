@@ -391,7 +391,7 @@ public class MockStages {
   }
 
   private static final StageLibraryDefinition createLibraryDef(ClassLoader cl) {
-    return new StageLibraryDefinition(cl, "default", "", new Properties()) {
+    return new StageLibraryDefinition(cl, "default", "", new Properties(), null, null, null) {
       @Override
       public List<ExecutionMode> getStageExecutionModesOverride(Class klass) {
         return ImmutableList.copyOf(ExecutionMode.values());

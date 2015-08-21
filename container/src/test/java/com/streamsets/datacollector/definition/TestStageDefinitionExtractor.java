@@ -181,7 +181,8 @@ public class TestStageDefinitionExtractor {
   }
 
   private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties());
+      new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(), "mock", "MOCK", new Properties(),
+                                 null, null, null);
 
   @Test
   public void testExtractSource1() {
@@ -286,7 +287,7 @@ public class TestStageDefinitionExtractor {
     Properties props = new Properties();
     props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + Source1.class.getName(), "CLUSTER");
     StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
-                                                               "mock", "MOCK", props);
+                                                               "mock", "MOCK", props, null, null, null);
 
     StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
     Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER),def.getExecutionModes());

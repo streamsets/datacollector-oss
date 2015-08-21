@@ -92,7 +92,7 @@ public class TestUtil {
   }
 
   private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(TestUtil.class.getClassLoader(), "mock", "MOCK", new Properties());
+      new StageLibraryDefinition(TestUtil.class.getClassLoader(), "mock", "MOCK", new Properties(), null, null, null);
 
   @SuppressWarnings("unchecked")
   /**

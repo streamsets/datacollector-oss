@@ -53,7 +53,8 @@ public abstract class PipelineBeanCreator {
 
   static private StageDefinition getPipelineDefinition() {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(Thread.currentThread().getContextClassLoader(),
-                                                                   "system", "System", new Properties());
+                                                                   "system", "System", new Properties(), null, null,
+                                                                   null);
     return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
   }
 

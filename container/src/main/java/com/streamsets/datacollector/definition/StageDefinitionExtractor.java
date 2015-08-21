@@ -146,7 +146,7 @@ public abstract class StageDefinitionExtractor {
       }
 
       if (configErrors.isEmpty() && configGroupErrors.isEmpty()) {
-        List<ConfigDefinition> configDefs = extractConfigDefinitions(klass, hideConfigs, contextMsg);
+        List<ConfigDefinition> configDefs = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
         ConfigGroupDefinition configGroupDef = ConfigGroupExtractor.get().extract(klass, contextMsg);
         errors.addAll(validateConfigGroups(configDefs, configGroupDef, contextMsg));
         if (variableOutputStreams) {
@@ -185,7 +185,7 @@ public abstract class StageDefinitionExtractor {
       boolean preconditions = !errorStage && type != StageType.SOURCE &&
                               ((hideConfigs == null) || !hideConfigs.preconditions());
       boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-      List<ConfigDefinition> configDefinitions = extractConfigDefinitions(klass, hideConfigs, contextMsg);
+      List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
       RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
       ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
       String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
@@ -228,8 +228,8 @@ public abstract class StageDefinitionExtractor {
     }
   }
 
-  private List<ConfigDefinition> extractConfigDefinitions(Class<? extends Stage> klass, HideConfig hideConfigs,
-      Object contextMsg) {
+  private List<ConfigDefinition> extractConfigDefinitions(StageLibraryDefinition libraryDef,
+      Class<? extends Stage> klass, HideConfig hideConfigs, Object contextMsg) {
 
     List<String> stageGroups = getGroups(klass);
 
@@ -245,6 +245,9 @@ public abstract class StageDefinitionExtractor {
           iterator.remove();
         }
       }
+    }
+    for (ConfigDefinition cDef : cDefs) {
+      cDef.addAutoELDefinitions(libraryDef);
     }
     return cDefs;
   }

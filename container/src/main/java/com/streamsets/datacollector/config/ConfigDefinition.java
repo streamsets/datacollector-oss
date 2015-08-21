@@ -42,15 +42,15 @@ public class ConfigDefinition {
   private List<Object> triggeredByValues;
   private final ModelDefinition model;
   private final int displayPosition;
-  private final List<ElFunctionDefinition> elFunctionDefinitions;
-  private final List<ElConstantDefinition> elConstantDefinitions;
-  private final List<String> elFunctionDefinitionsIdx;
-  private final List<String> elConstantDefinitionsIdx;
+  private List<ElFunctionDefinition> elFunctionDefinitions;
+  private List<ElConstantDefinition> elConstantDefinitions;
+  private List<String> elFunctionDefinitionsIdx;
+  private List<String> elConstantDefinitionsIdx;
   private final long min;
   private final long max;
   private final String mode;
   private final int lines;
-  private final List<Class> elDefs;
+  private List<Class> elDefs;
   private final ConfigDef.Evaluation evaluation;
   private Map<String, List<Object>> dependsOnMap;
 
@@ -101,6 +101,19 @@ public class ConfigDefinition {
     this.elDefs = elDefs;
     this.dependsOnMap = dependsOnMap;
     this.evaluation = evaluation;
+  }
+
+  public void addAutoELDefinitions(StageLibraryDefinition libraryDef) {
+    elDefs = new ArrayList<>(elDefs);
+    elDefs.addAll(libraryDef.getElDefs());
+    elFunctionDefinitions = new ArrayList<>(elFunctionDefinitions);
+    elFunctionDefinitions.addAll(libraryDef.getElFunctionDefinitions());
+    elFunctionDefinitionsIdx = new ArrayList<>(elFunctionDefinitionsIdx);
+    elFunctionDefinitionsIdx.addAll(libraryDef.getElFunctionDefinitionsIdx());
+    elConstantDefinitions = new ArrayList<>(elConstantDefinitions);
+    elConstantDefinitions.addAll(libraryDef.getElConstantDefinitions());
+    elConstantDefinitionsIdx = new ArrayList<>(elConstantDefinitionsIdx);
+    elConstantDefinitionsIdx.addAll(libraryDef.getElConstantDefinitionsIdx());
   }
 
   public Field getConfigField() {

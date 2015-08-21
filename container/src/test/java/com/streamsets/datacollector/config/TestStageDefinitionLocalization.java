@@ -44,7 +44,8 @@ public class TestStageDefinitionLocalization {
   }
 
   private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(TestStageDefinitionLocalization.class.getClassLoader(), "mock", "MOCK", new Properties());
+      new StageLibraryDefinition(TestStageDefinitionLocalization.class.getClassLoader(), "mock", "MOCK",
+                                 new Properties(), null, null, null);
 
   @SuppressWarnings("unchecked")
   private StageDefinition createStageDefinition() {

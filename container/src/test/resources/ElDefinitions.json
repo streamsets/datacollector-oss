@@ -1,0 +1,3 @@
+{
+  "elClasses" : ["com.streamsets.datacollector.stagelibrary.ForTestELs"]
+}

@@ -6,7 +6,12 @@
 package com.streamsets.datacollector.definition;
 
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.el.ElConstantDefinition;
+import com.streamsets.datacollector.el.ElFunctionDefinition;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.stagelibrary.StageLibraryUtils;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -15,8 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public abstract class StageLibraryDefinitionExtractor {
@@ -59,10 +67,34 @@ public abstract class StageLibraryDefinitionExtractor {
       } catch (IOException ex) {
         throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
       }
-      return new StageLibraryDefinition(classLoader, libraryName, libraryLabel, libraryProps);
+
+      List<Class> elClasses = new ArrayList<>();
+      try {
+        Enumeration<URL> resources = classLoader.getResources(StageLibraryTask.EL_DEFINITION_RESOURCE);
+        while (resources.hasMoreElements()) {
+          URL url = resources.nextElement();
+          try (InputStream is = url.openStream()) {
+            Map<String, List<String>> elInfo = ObjectMapperFactory.get().readValue(is, Map.class);
+            for (String className : elInfo.get("elClasses")) {
+              Class<? extends Stage> klass = (Class<? extends Stage>) classLoader.loadClass(className);
+              elClasses.add(klass);
+            }
+          }
+        }
+      } catch (IOException | ClassNotFoundException ex) {
+        throw new RuntimeException(
+            Utils.format("Could not load EL definitions from '{}', {}", classLoader, ex.toString()), ex);
+      }
+
+      Class[] elClassesArr = elClasses.toArray(new Class[elClasses.size()]);
+      Object contextMsg = Utils.formatL("Stage library [{}] EL definitions", classLoader);
+      List<ElFunctionDefinition> functionDefs = ELDefinitionExtractor.get().extractFunctions(elClassesArr, contextMsg);
+      List<ElConstantDefinition> constantDefs = ELDefinitionExtractor.get().extractConstants(elClassesArr, contextMsg);
+
+      return new StageLibraryDefinition(classLoader, libraryName, libraryLabel, libraryProps, elClassesArr,
+                                        functionDefs, constantDefs);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid Stage library: {}", errors));
     }
   }
-
 }
