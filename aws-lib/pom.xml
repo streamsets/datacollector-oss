@@ -23,6 +23,7 @@
 
   <properties>
     <kinesis.version>1.6.0</kinesis.version>
+    <s3.version>1.10.11</s3.version>
     <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
@@ -88,6 +89,15 @@
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
     </dependency>
+
+    <!-- S3 related-->
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <scope>compile</scope>
+      <version>${s3.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>

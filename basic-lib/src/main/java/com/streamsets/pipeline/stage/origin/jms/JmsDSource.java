@@ -16,6 +16,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
     version = 1,
@@ -38,13 +39,16 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   @ConfigDefBean(groups = {"JMS"})
   public DataFormatConfig dataFormatConfig;
 
+  @ConfigDefBean(groups = {"JMS"})
+  public MessageConfig messageConfig;
+
   @ConfigDefBean
   public JmsConfig jmsConfig;
 
   @Override
   protected Source createSource() {
-    return new JmsSource(basicConfig, credentialsConfig, dataFormatConfig, jmsConfig,
-      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig),
+    return new JmsSource(basicConfig, credentialsConfig, jmsConfig,
+      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig, messageConfig),
       new InitialContextFactory());
   }
 

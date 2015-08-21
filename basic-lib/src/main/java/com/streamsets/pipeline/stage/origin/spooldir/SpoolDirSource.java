@@ -313,7 +313,7 @@ public class SpoolDirSource extends BaseSource {
     } catch (UnsupportedCharsetException ex) {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
       fileCharset = StandardCharsets.UTF_8;
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_00, charset));
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_05, charset));
     }
     builder.setCharset(fileCharset);
     builder.setOverRunLimit(overrunLimit);

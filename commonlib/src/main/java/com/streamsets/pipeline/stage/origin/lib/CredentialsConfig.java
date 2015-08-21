@@ -14,7 +14,7 @@ public class CredentialsConfig {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
     label = "Use Credentials",
-    displayPosition = 70,
+    displayPosition = 2000,
     group = "#0"
   )
   public boolean useCredentials;

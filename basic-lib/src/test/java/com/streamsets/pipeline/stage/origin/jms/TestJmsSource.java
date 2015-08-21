@@ -16,6 +16,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
@@ -62,6 +63,7 @@ public class TestJmsSource {
   private BasicConfig basicConfig;
   private CredentialsConfig credentialsConfig;
   private DataFormatConfig dataFormatConfig;
+  private MessageConfig messageConfig;
   private JmsConfig jmsConfig;
 
   @Rule
@@ -90,6 +92,7 @@ public class TestJmsSource {
     basicConfig = new BasicConfig();
     credentialsConfig = new CredentialsConfig();
     dataFormatConfig = new DataFormatConfig();
+    messageConfig = new MessageConfig();
     jmsConfig = new JmsConfig();
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = USERNAME;
@@ -143,8 +146,9 @@ public class TestJmsSource {
   }
 
   private SourceRunner createRunner() {
-    JmsSource origin = new JmsSource(basicConfig, credentialsConfig, dataFormatConfig, jmsConfig,
-      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig), new InitialContextFactory());
+    JmsSource origin = new JmsSource(basicConfig, credentialsConfig, jmsConfig,
+      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig, messageConfig),
+      new InitialContextFactory());
     SourceRunner runner = new SourceRunner.Builder(JmsSource.class, origin)
       .addOutputLane("lane")
       .build();

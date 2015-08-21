@@ -31,7 +31,7 @@ public class DataFormatConfig {
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Data Format",
-    displayPosition = 100,
+    displayPosition = 3000,
     group = "#0"
   )
   @ValueChooser(DataFormatChooserValues.class)
@@ -42,7 +42,7 @@ public class DataFormatConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "UTF-8",
     label = "Messages Charset",
-    displayPosition = 102,
+    displayPosition = 3010,
     group = "#0",
     dependsOn = "dataFormat",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
@@ -56,22 +56,10 @@ public class DataFormatConfig {
     defaultValue = "false",
     label = "Ignore Control Characters",
     description = "Use only if required as it impacts reading performance",
-    displayPosition = 204,
+    displayPosition = 3020,
     group = "#0"
   )
   public boolean removeCtrlChars;
-
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Produce Single Record",
-    description = "Generates a single record for multiple objects within a message",
-    displayPosition = 66,
-    group = "#0"
-  )
-  public boolean produceSingleRecordPerMessage;
 
   @ConfigDef(
     required = true,

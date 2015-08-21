@@ -34,13 +34,15 @@ import java.util.Map;
 public class DataFormatParser {
   private final String parentName;
   private final DataFormatConfig dataFormatConfig;
+  private final MessageConfig messageConfig;
   private LogDataFormatValidator logDataFormatValidator;
   private Charset messageCharset;
   private DataParserFactory parserFactory;
 
-  public DataFormatParser(String parentName, DataFormatConfig dataFormatConfig) {
+  public DataFormatParser(String parentName, DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
     this.parentName = parentName;
     this.dataFormatConfig = dataFormatConfig;
+    this.messageConfig = messageConfig;
   }
 
   public List<Stage.ConfigIssue> init(Source.Context context) {
@@ -62,7 +64,7 @@ public class DataFormatParser {
         }
         break;
       case XML:
-        if (dataFormatConfig.produceSingleRecordPerMessage) {
+        if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
           issues.add(context.createConfigIssue(parentName, "produceSingleRecordPerMessage",
             ParserErrors.PARSER_06));
         }
@@ -155,7 +157,7 @@ public class DataFormatParser {
     } catch (IOException |DataParserException ex) {
       handleException(context, messageId, ex);
     }
-    if (dataFormatConfig.produceSingleRecordPerMessage) {
+    if (messageConfig.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
       for (Record record : records) {
         list.add(record.get());

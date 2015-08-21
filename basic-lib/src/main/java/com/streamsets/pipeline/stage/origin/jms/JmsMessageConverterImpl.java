@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
+import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
 
 import javax.jms.BytesMessage;
@@ -33,9 +34,9 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
   private final DataFormatConfig dataFormatConfig;
   private final DataFormatParser parser;
 
-  public JmsMessageConverterImpl(DataFormatConfig dataFormatConfig) {
+  public JmsMessageConverterImpl(DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
     this.dataFormatConfig = dataFormatConfig;
-    this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormatConfig);
+    this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormatConfig, messageConfig);
   }
 
   public List<Stage.ConfigIssue> init(Source.Context context) {

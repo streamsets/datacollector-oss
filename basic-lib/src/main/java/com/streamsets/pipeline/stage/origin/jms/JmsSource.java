@@ -12,7 +12,6 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +36,8 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   private ConnectionFactory connectionFactory;
   private long messagesConsumed;
 
-  public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, DataFormatConfig dataFormatConfig,
-                   JmsConfig jmsConfig, JmsMessageConsumerFactory jmsMessageConsumerFactory,
+  public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, JmsConfig jmsConfig,
+                   JmsMessageConsumerFactory jmsMessageConsumerFactory,
                    JmsMessageConverter jmsMessageConverter, InitialContextFactory initialContextFactory) {
     this.basicConfig = basicConfig;
     this.credentialsConfig = credentialsConfig;
