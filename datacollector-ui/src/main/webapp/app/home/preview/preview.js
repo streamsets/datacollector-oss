@@ -447,6 +447,9 @@ angular
         })
         .error(function(data, status, headers, config) {
           $scope.common.errors = [data];
+          $scope.closePreview();
+          $scope.showLoading = false;
+          defer.reject();
         });
     };
 

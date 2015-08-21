@@ -112,6 +112,7 @@ public class RecordImpl implements Record {
       return type.toString();
     }
 
+    @SuppressWarnings("unchecked")
     public Object getValue() {
       Object v = value;
       if (value != null) {
@@ -122,6 +123,11 @@ public class RecordImpl implements Record {
           case DOUBLE:
             v = value.toString();
             break;
+          case LIST_MAP:
+            // During serialization we convert listMap to list to preserve the order of fields in JSON object
+            // When we convert listMap to list we loose the key,
+            // UI & deserializer need to use path attribute to recover the key for listMap
+            return new ArrayList<>(((Map) value).values());
         }
       }
       return v;
@@ -152,13 +158,14 @@ public class RecordImpl implements Record {
             fieldWithPath = new FieldWithPath(path, Field.Type.LIST, list);
             break;
           case MAP:
+          case LIST_MAP:
             Map<String, FieldWithPath> map = new LinkedHashMap<>();
             for (Map.Entry<String, Field> entry : ((Map<String, Field>) field.getValue()).entrySet()) {
               String ePath = path + "/" + entry.getKey();
               Field eField = entry.getValue();
               map.put(entry.getKey(), createFieldWithPath(ePath, eField));
             }
-            fieldWithPath = new FieldWithPath(path, Field.Type.MAP, map);
+            fieldWithPath = new FieldWithPath(path, field.getType(), map);
             break;
           default:
             fieldWithPath = new FieldWithPath(path, field.getType(), field.getValue());
@@ -190,7 +197,7 @@ public class RecordImpl implements Record {
             next = current;
             break;
           case MAP:
-            if (current.getType() == Field.Type.MAP) {
+            if (current.getType() == Field.Type.MAP || current.getType() == Field.Type.LIST_MAP) {
               String name = element.getName();
               Map<String, Field> map = current.getValueAsMap();
               if (map != null) {
@@ -203,7 +210,7 @@ public class RecordImpl implements Record {
             }
             break;
           case LIST:
-            if (current.getType() == Field.Type.LIST) {
+            if (current.getType() == Field.Type.LIST || current.getType() == Field.Type.LIST_MAP) {
               int index = element.getIndex();
               List<Field> list = current.getValueAsList();
               if (list != null) {
@@ -249,6 +256,7 @@ public class RecordImpl implements Record {
           case LIST:
             deleted = fields.get(fieldPos - 1).getValueAsList().remove(elements.get(fieldPos).getIndex());
             break;
+
         }
       }
     }
@@ -274,6 +282,9 @@ public class RecordImpl implements Record {
         case LIST:
           gatherPaths("", value.getValueAsList(), paths);
           break;
+        case LIST_MAP:
+          gatherPaths("", value.getValueAsListMap(), paths);
+          break;
       }
     }
     return paths;
@@ -291,6 +302,10 @@ public class RecordImpl implements Record {
           case LIST:
             gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsList(), paths);
             break;
+          case LIST_MAP:
+            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsListMap(), paths);
+            break;
+
         }
       }
     }
@@ -311,6 +326,9 @@ public class RecordImpl implements Record {
             break;
           case LIST:
             gatherPaths(base + "[" + i + "]", element.getValueAsList(), paths);
+            break;
+          case LIST_MAP:
+            gatherPaths(base + "[" + i + "]", element.getValueAsListMap(), paths);
             break;
         }
       }

@@ -84,6 +84,19 @@
       }
     }
 
+    .field-index {
+      padding-right: @defaultPadding;
+      opacity: 0.4;
+
+      &:before {
+        content: '[';
+      }
+
+      &:after {
+        content: ']';
+      }
+    }
+
     .dirty {
       color: @brand-danger;
       font-style: italic;

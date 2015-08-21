@@ -22,14 +22,17 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 @GenerateResourceBundle
-@StageDef(version=1, label="Dev Data Generator",
+@StageDef(
+  version = 2,
+  label="Dev Data Generator",
   execution = ExecutionMode.STANDALONE,
-  icon="random.png")
+  icon="random.png",
+  upgrader = RandomDataGeneratorSourceUpgrader.class
+)
 public class RandomDataGeneratorSource extends BaseSource {
 
   private final Random random = new Random();
@@ -38,6 +41,14 @@ public class RandomDataGeneratorSource extends BaseSource {
     description="Fields to generate of the indicated type")
   @ComplexField
   public List<DataGeneratorConfig> dataGenConfigs;
+
+  @ConfigDef(label = "Root Field Type",
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "MAP",
+    description = "Field Type for root object")
+  @ValueChooser(RootTypeChooserValueProvider.class)
+  public RootType rootFieldType;
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -50,12 +61,21 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   private Record createRecord(String lastSourceOffset, int batchOffset) {
     Record record = getContext().createRecord("random:" + batchOffset);
-    Map<String, Field> map = new LinkedHashMap<>();
+    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
       map.put(dataGeneratorConfig.field, Field.create(getFieldType(dataGeneratorConfig.type),
         generateRandomData(dataGeneratorConfig.type)));
     }
-    record.set(Field.create(map));
+
+    switch (rootFieldType) {
+      case MAP:
+        record.set(Field.create(map));
+        break;
+      case LIST_MAP:
+        record.set(Field.createListMap(map));
+        break;
+    }
+
     return record;
   }
 
@@ -138,6 +158,11 @@ public class RandomDataGeneratorSource extends BaseSource {
     DATE,
     BOOLEAN,
     BYTE_ARRAY
+  }
+
+  enum RootType {
+    MAP,
+    LIST_MAP
   }
 
 }

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public  class TestRecordWriterReaderFactory {
@@ -78,6 +79,7 @@ public  class TestRecordWriterReaderFactory {
   private void testRecordWriterReader(RecordEncoding encoding) throws IOException {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     RecordWriter writer = RecordWriterReaderFactory.createRecordWriter(encoding, os);
+
     RecordImpl record1 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mode");
     record1.getHeader().setStagesPath("stagePath");
     record1.getHeader().setTrackingId("trackingId");
@@ -87,11 +89,23 @@ public  class TestRecordWriterReaderFactory {
     map.put("c", Field.create(new ArrayList<Field>()));
     record1.set(Field.create(map));
     writer.write(record1);
+
     RecordImpl record2 = new RecordImpl("stage2", "source2", null, null);
     record2.getHeader().setStagesPath("stagePath2");
     record2.getHeader().setTrackingId("trackingId2");
     record2.set(Field.create("Hello"));
     writer.write(record2);
+
+    RecordImpl record3 = new RecordImpl("stage", "source", new byte[] { 0, 1, 2}, "mode");
+    record3.getHeader().setStagesPath("stagePath3");
+    record3.getHeader().setTrackingId("trackingId3");
+    LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+    map.put("a", Field.create(new BigDecimal(1)));
+    map.put("b", Field.create("Hello"));
+    map.put("c", Field.create(new ArrayList<Field>()));
+    record3.set(Field.createListMap(listMap));
+    writer.write(record3);
+
     writer.close();
     byte[] bytes = os.toByteArray();
     Assert.assertEquals(encoding.getMagicNumber(), bytes[0]);
@@ -99,6 +113,7 @@ public  class TestRecordWriterReaderFactory {
     RecordReader reader = RecordWriterReaderFactory.createRecordReader(is, 0, 1000);
     Assert.assertEquals(record1, reader.readRecord());
     Assert.assertEquals(record2, reader.readRecord());
+    Assert.assertEquals(record3, reader.readRecord());
     Assert.assertNull(reader.readRecord());
     reader.close();
   }

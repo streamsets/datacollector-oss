@@ -7,16 +7,14 @@ package com.streamsets.datacollector.record;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.record.HeaderImpl;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -534,6 +532,24 @@ public class TestRecordImpl {
     Assert.assertEquals("list2", r.get("/fooList[1]").getValue());
     Assert.assertEquals("foo Map Like Value", r.get("/'fooMap/bar'").getValue());
     Assert.assertEquals("nested map bar value", r.get("/fooMap/bar").getValue());
+  }
+
+  @Test
+  public void testListMapRecord() {
+    RecordImpl r = new RecordImpl("stage", "source", null, null);
+    LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+    listMap.put("A", Field.create("ALPHA"));
+    listMap.put("B", Field.create("BETA"));
+    listMap.put("G", Field.create("GAMMA"));
+    Field listMapField = Field.createListMap(listMap);
+    r.set(listMapField);
+
+    Assert.assertEquals("ALPHA", r.get("/A").getValue());
+    Assert.assertEquals("ALPHA", r.get("[0]").getValue());
+    Assert.assertEquals("BETA", r.get("/B").getValue());
+    Assert.assertEquals("BETA", r.get("[1]").getValue());
+    Assert.assertEquals("GAMMA", r.get("/G").getValue());
+    Assert.assertEquals("GAMMA", r.get("[2]").getValue());
   }
 
 }

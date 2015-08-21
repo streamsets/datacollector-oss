@@ -13,6 +13,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         updatedValue: false,
         updatedField: false,
         limit: mapListLimit,
+        listMapKey: undefined,
 
         onClick: function($event) {
           $event.preventDefault();
@@ -86,11 +87,21 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         onShowAllClick: function($event) {
           $event.preventDefault();
           scope.limit = scope.valueLength;
+        },
+
+        /**
+         * Returns key for listMap value
+         * @param value
+         */
+        getListMapKey: function(recordValue) {
+          var path = recordValue.path,
+            pathSplit = path ? path.split('/') : undefined;
+          return pathSplit && pathSplit.length > 0 ? pathSplit[pathSplit.length - 1] : undefined;
         }
       });
 
       if(scope.diffType && scope.recordValue) {
-        if(scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST') {
+        if(scope.recordValue.type !== 'MAP' && scope.recordValue.type !== 'LIST' && scope.recordValue.type !== 'LIST_MAP') {
           if(!scope.diffRecordValue || scope.recordValue.path !== scope.diffRecordValue.path) {
             scope.updatedField = true;
           } else if(scope.recordValue.value !== scope.diffRecordValue.value ||
@@ -104,7 +115,8 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         }
       }
 
-      if(scope.recordValue && (scope.recordValue.type === 'MAP' || scope.recordValue.type === 'LIST')) {
+      if(scope.recordValue && (scope.recordValue.type === 'MAP' || scope.recordValue.type === 'LIST' ||
+        scope.recordValue.type === 'LIST_MAP')) {
         scope.valueLength = _.size(scope.recordValue.value);
       }
 
@@ -120,6 +132,7 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         diffRecord: '=',
         diffRecordValue: '=',
         fieldName: '=',
+        fieldIndex: '=',
         isRoot: '=',
         isError: '=',
         editable: '=',

@@ -44,6 +44,7 @@ public class TestRandomDataGenerator {
 
     SourceRunner runner = new SourceRunner.Builder(RandomDataGeneratorSource.class)
       .addConfiguration("dataGenConfigs", Arrays.asList(stringData, dateData, doubleData, longData, intData))
+      .addConfiguration("rootFieldType", RandomDataGeneratorSource.RootType.MAP)
       .addOutputLane("a")
       .build();
     runner.runInit();

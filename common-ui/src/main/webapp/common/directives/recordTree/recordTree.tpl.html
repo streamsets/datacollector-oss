@@ -16,10 +16,11 @@
 
         <span class="pointer toggler {{(isOpen || (isRoot && record.expand)) ? 'open' : ''}}"
             ng-click="onClick($event)"
-            ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST'"></span>
+            ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST' || recordValue.type === 'LIST_MAP'"></span>
 
         <input ng-if="selectable === true && !isRoot" type="checkbox" ng-model="selectedPath[recordValue.path]">
 
+        <span class="field-index" ng-if="fieldIndex !== undefined" ng-bind-html="fieldIndex"></span>
         <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}" ng-bind-html="fieldName"></span> :
 
         <span class="glyphicon glyphicon-asterisk dirty-icon" ng-if="record.dirty && isRoot"></span>
@@ -29,7 +30,6 @@
 
         <div ng-switch-when="MAP">
           <span class="field-type">{{recordValue.type}}</span>
-
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
@@ -43,13 +43,28 @@
             selectable="selectable"
             selected-path="selectedPath">
           </record-tree>
+        </div>
 
-
+        <div ng-switch-when="LIST_MAP">
+          <span class="field-type">{{recordValue.type}}</span>
+          <record-tree
+            ng-if="isOpen || (isRoot && record.expand)"
+            ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
+            record="record"
+            record-value="_recordValue"
+            diff-type="diffType"
+            diff-record-value="diffRecordValue.value[_fieldName]"
+            field-name="getListMapKey(_recordValue)"
+            field-index="$index"
+            is-root="false"
+            editable="editable"
+            selectable="selectable"
+            selected-path="selectedPath">
+          </record-tree>
         </div>
 
         <div ng-switch-when="LIST">
           <span class="field-type">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
-
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | limitTo: limit"
@@ -63,7 +78,6 @@
             selectable="selectable"
             selected-path="selectedPath">
           </record-tree>
-
         </div>
 
 

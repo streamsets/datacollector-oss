@@ -16,6 +16,7 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,18 @@ public class FieldDeserializer extends JsonDeserializer<FieldJson> {
               fList.add(parse(element));
             }
             value = fList;
+            break;
+          case LIST_MAP:
+            //When converting list to listMap, Key for the listMap is recovered using path attribute
+            Map<String, Field> listMap = new LinkedHashMap<>();
+            for (Map<String, Object> element : (List<Map<String, Object>>) value) {
+              String path = (String)element.get("path");
+              String [] pathSplit = (path != null) ? path.split("/") : null;
+              if(pathSplit != null && pathSplit.length > 0) {
+                listMap.put(pathSplit[pathSplit.length - 1], parse(element));
+              }
+            }
+            value = listMap;
             break;
           case BYTE_ARRAY:
             value = Base64.decodeBase64((String) value);
