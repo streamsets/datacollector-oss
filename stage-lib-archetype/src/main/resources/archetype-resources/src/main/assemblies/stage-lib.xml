@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ (c) 2015 StreamSets, Inc. All rights reserved. May not
+ be copied, modified, or distributed in whole or part without
+ written consent of StreamSets, Inc.
+-->
+<!--
+  Common assembly used by stage library modules
+-->
+<assembly>
+  <id>stage-lib</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>true</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/${project.artifactId}/lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <excludes>
+        <!-- Jython must be packaged differently. -->
+        <exclude>org.python:jython-standalone</exclude>
+
+        <!--
+             Excluding Snappy from all stage libs as it must be in the root ClassLoader,
+             avail in SDC distro at SDC/root-lib/
+        -->
+        <exclude>org.xerial.snappy:snappy-java</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+
+</assembly>

@@ -63,6 +63,7 @@
     <module>miniSDC</module>
     <module>sdk</module>
     <module>sdk-test</module>
+    <module>stage-lib-archetype</module>
 
     <module>root-lib</module>
 
@@ -283,6 +284,16 @@
         <module>cdh_kafka_1_2_0-lib</module>
         <module>mongodb_3-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_2_0-lib</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>archetype</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>stage-lib-archetype</module>
       </modules>
     </profile>
 
