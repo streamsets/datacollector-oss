@@ -129,6 +129,7 @@ public class TestTarFileCreator {
     readDir("user-libs/yxz456/lib/", tis);
     readJar(tis);
     readJar(tis);
+    readDir("libs-common-lib/", tis);
   }
 
   private static void readJar(TarInputStream tis) throws IOException {

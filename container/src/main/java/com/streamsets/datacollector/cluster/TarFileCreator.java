@@ -42,6 +42,7 @@ public class TarFileCreator {
     addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
     addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL);
     tarFolder(null, staticWebDir.getAbsolutePath(), out);
+    out.putNextEntry(new TarEntry(TarHeader.createHeader("libs-common-lib", 0L, now, true)));
     out.flush();
     out.close();
   }
