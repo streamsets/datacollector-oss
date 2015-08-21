@@ -25,6 +25,7 @@ angular
       pipelineConfigUpdated: false,
       stepExecuted: false,
       dirtyLanes: [],
+      snapshotsInfo: [],
 
       /**
        * Preview Data for previous stage instance.
@@ -448,6 +449,22 @@ angular
           $scope.common.errors = [data];
         });
     };
+
+    if($scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER) {
+      api.pipelineAgent.getSnapshotsInfo().then(function(res) {
+        if(res && res.data && res.data.length) {
+          $scope.snapshotsInfo = res.data;
+          $scope.snapshotsInfo = _.chain(res.data)
+            .filter(function(snapshotInfo) {
+              return !snapshotInfo.inProgress;
+            })
+            .sortBy('timeStamp')
+            .value();
+        }
+      }, function(res) {
+        $scope.common.errors = [res.data];
+      });
+    }
 
 
     $scope.$on('$destroy', function() {

@@ -50,7 +50,7 @@ angular
             .filter(function(snapshotInfo) {
               return !snapshotInfo.inProgress;
             })
-            .sortBy('id')
+            .sortBy('timeStamp')
             .value();
         }
       }, function(res) {

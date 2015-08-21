@@ -8,16 +8,15 @@
       <select class="form-control"
               name="previewSource"
               ng-model="pipelineConfig.uiInfo.previewConfig.previewSource">
-        <option value="{{pipelineConstant.CONFIGURED_SOURCE}}">
+        <option value="{{pipelineConstant.CONFIGURED_SOURCE}}"
+                ng-selected="pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.CONFIGURED_SOURCE">
           {{'home.previewPane.configuredSource' | translate}}</option>
-        <option value="{{pipelineConstant.SNAPSHOT_SOURCE}}">
+        <option value="{{pipelineConstant.SNAPSHOT_SOURCE}}"
+                ng-selected="pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
           {{'home.previewPane.snapshotSource' | translate}}</option>
-        <!--option value="{{pipelineConstant.USER_PROVIDED}}">
-          {{'home.previewPane.userProvider' | translate}}</option-->
       </select>
     </div>
   </div>
-
 
   <div class="form-group">
     <label class="col-lg-3 col-md-4 control-label" translate="home.previewPane.batchSize">Preview Batch Size</label>
@@ -50,6 +49,17 @@
       <input type="checkbox" name="writeToDestinations"
              ng-disabled="isPipelineRunning"
              ng-model="pipelineConfig.uiInfo.previewConfig.writeToDestinations">
+    </div>
+  </div>
+
+  <div class="form-group" ng-if="snapshotsInfo && snapshotsInfo.length && pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.SNAPSHOT_SOURCE">
+    <label class="col-lg-3 col-md-4 control-label" translate="home.previewPane.snapshotSource">Snapshot</label>
+    <div class="controls col-md-7">
+      <select class="form-control"
+              name="snapshotInfo"
+              ng-model="pipelineConfig.uiInfo.previewConfig.snapshotInfo"
+              ng-options="snapshotInfo.id group by snapshotInfo.name for snapshotInfo in snapshotsInfo track by snapshotInfo.timeStamp">
+      </select>
     </div>
   </div>
 
