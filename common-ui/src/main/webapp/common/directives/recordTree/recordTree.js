@@ -137,7 +137,9 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
         isError: '=',
         editable: '=',
         selectable: '=',
-        selectedPath: '='
+        selectedPath: '=',
+        showHeader: '=',
+        showFieldType: '='
       },
       templateUrl: 'common/directives/recordTree/recordTree.tpl.html',
       compile: function (element) {

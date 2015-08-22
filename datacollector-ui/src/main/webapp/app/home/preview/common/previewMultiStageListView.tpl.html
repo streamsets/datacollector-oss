@@ -33,7 +33,9 @@
         diff-record-value="outputRecords[0].value"
         field-name="('global.form.record' | translate)+($index+1) + getRecordAdditionalInfo(fromStage.selected, inputRecord, 'output')"
         is-root="true"
-        editable="previewMode">
+        editable="previewMode"
+        show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+        show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
       </record-tree>
     </td>
 
@@ -47,7 +49,9 @@
           diff-record-value="inputRecord.value"
           field-name="('global.form.record' | translate)+($parent.$index+1)"
           is-root="true"
-          editable="false">
+          editable="false"
+          show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+          show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
         </record-tree>
       </div>
     </td>
@@ -64,7 +68,9 @@
         field-name="('global.form.record' | translate)+ '-' + ('global.form.errorRecord' | translate) + ' ' + record.header.errorMessage"
         is-root="true"
         is-error="true"
-        editable="false">
+        editable="false"
+        show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+        show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
       </record-tree>
     </td>
 

@@ -1,4 +1,4 @@
-<ul class="record-list" ng-init="isOpen=false;">
+<ul class="record-list" ng-init="isOpen=false;headerExpand=false">
   <li class="record-list-item"
       ng-class="{
         'field-addition' : (diffType === 'output' && (updatedField || updatedValue)),
@@ -29,7 +29,7 @@
       <div ng-switch="recordValue.type">
 
         <div ng-switch-when="MAP">
-          <span class="field-type">{{recordValue.type}}</span>
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
@@ -41,12 +41,13 @@
             is-root="false"
             editable="editable"
             selectable="selectable"
-            selected-path="selectedPath">
+            selected-path="selectedPath"
+            show-field-type="showFieldType">
           </record-tree>
         </div>
 
         <div ng-switch-when="LIST_MAP">
-          <span class="field-type">{{recordValue.type}}</span>
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
@@ -59,12 +60,13 @@
             is-root="false"
             editable="editable"
             selectable="selectable"
-            selected-path="selectedPath">
+            selected-path="selectedPath"
+            show-field-type="showFieldType">
           </record-tree>
         </div>
 
         <div ng-switch-when="LIST">
-          <span class="field-type">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
           <record-tree
             ng-if="isOpen || (isRoot && record.expand)"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | limitTo: limit"
@@ -76,7 +78,8 @@
             is-root="false"
             editable="editable"
             selectable="selectable"
-            selected-path="selectedPath">
+            selected-path="selectedPath"
+            show-field-type="showFieldType">
           </record-tree>
         </div>
 
@@ -93,7 +96,7 @@
 
 
         <div ng-switch-when="DATE" class="clearfix">
-          <span class="field-type pull-left">{{recordValue.type}}</span>
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
 
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
@@ -116,7 +119,7 @@
 
         <div ng-switch-when="DATETIME" class="clearfix">
 
-          <span class="field-type pull-left">{{recordValue.type}}</span>
+          <span class="field-type pull-left" ng-show="showFieldType">{{recordValue.type}}</span>
 
           <span class="field-value pull-left {{recordValue.type}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
@@ -138,7 +141,7 @@
 
         <div ng-switch-default>
 
-          <span class="field-type">{{recordValue.type}}</span>
+          <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
 
           <span ng-if="editable !== true"
                 class="field-value {{recordValue.type}}"
@@ -159,5 +162,23 @@
     </div>
 
   </li>
+
+  <li class="record-list-item" ng-if="showHeader && record.header && (isOpen || (isRoot && record.expand))">
+      <label>
+        <span class="pointer toggler {{headerExpand ? 'open' : ''}}"
+              ng-click="headerExpand = !headerExpand"></span>
+        <span class="field-name" translate="global.form.recordHeader">Record Header</span>
+      </label>
+      <ul class="record-list" ng-if="headerExpand">
+        <li class="record-list-item"
+            ng-repeat="(headerName, headerValue) in record.header"
+            ng-if="headerValue && headerName !== 'values'">
+          <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+          <span class="field-value STRING" ng-if="headerName !== 'errorTimestamp'">{{headerValue + ''}}</span>
+          <span class="field-value DATE" ng-if="headerName === 'errorTimestamp'">{{headerValue + '' | date:'medium'}}</span>
+        </li>
+      </ul>
+  </li>
+
 </ul>
 
