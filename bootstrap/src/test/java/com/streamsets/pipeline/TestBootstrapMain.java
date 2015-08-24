@@ -396,17 +396,17 @@ public class TestBootstrapMain {
     new BootstrapMain();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testGetWhiteListMissingDir() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
-    BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
+    Assert.assertNull(BootstrapMain.getWhiteList(dir.getAbsolutePath(), null));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testGetWhiteListMissingFile() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
-    BootstrapMain.getWhiteList(dir.getAbsolutePath(), null);
+    Assert.assertNull(BootstrapMain.getWhiteList(dir.getAbsolutePath(), null));
   }
 
   @Test(expected = IllegalArgumentException.class)

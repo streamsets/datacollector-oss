@@ -58,7 +58,6 @@ public class BootstrapMain {
   static final String USER_LIBS_KEY = "user.stagelibs.whitelist";
   static final String ALL_VALUES = "*";
 
-  private static final String WHITE_LIST_FILE_NOT_FOUND_MSG = "WhiteList file '" + WHITE_LIST_FILE + "' does not exist";
   private static final String WHITE_LIST_PROPERTY_MISSING_MSG = "WhiteList property '%s' is missing in in file '%s'";
   private static final String WHITE_LIST_COULD_NOT_LOAD_FILE_MSG = "Could not load WhiteList file '%s': %s";
 
@@ -277,11 +276,9 @@ public class BootstrapMain {
 
   // if whitelist is '*' set is NULL, else whitelist has the whitelisted values
   public static Set<String> getWhiteList(String configDir, String property) {
-    Set<String> set = new HashSet<>();
+    Set<String> set = null;
     File whiteListFile = new File(configDir, WHITE_LIST_FILE).getAbsoluteFile();
-    if (!whiteListFile.exists()) {
-      throw new IllegalArgumentException(WHITE_LIST_FILE_NOT_FOUND_MSG);
-    } else{
+    if (whiteListFile.exists()) {
       try (InputStream is = new FileInputStream(whiteListFile)) {
         Properties props = new Properties();
         props.load(is);
@@ -290,9 +287,8 @@ public class BootstrapMain {
           throw new IllegalArgumentException(String.format(WHITE_LIST_PROPERTY_MISSING_MSG, property, whiteListFile));
         }
         whiteList = whiteList.trim();
-        if (whiteList.equals(ALL_VALUES)) {
-          set = null;
-        } else {
+        if (!whiteList.equals(ALL_VALUES)) {
+          set = new HashSet<>();
           for (String name : whiteList.split(",")) {
             name = name.trim();
             if (!name.isEmpty()) {
