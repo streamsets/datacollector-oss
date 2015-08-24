@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.OverrunException;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -23,7 +24,9 @@ import java.io.Reader;
  */
 public class StreamingJsonParser {
 
-  public static enum Mode {ARRAY_OBJECTS, MULTIPLE_OBJECTS}
+  private static final int MAX_CHARS_TO_READ_FORWARD = 64;
+
+  public enum Mode {ARRAY_OBJECTS, MULTIPLE_OBJECTS}
 
   private final Reader reader;
   private final JsonParser jsonParser;
@@ -32,6 +35,7 @@ public class StreamingJsonParser {
   private JsonStreamContext rootContext;
   private long posCorrection;
   private boolean closed;
+  private Byte firstNonSpaceChar;
 
   protected ObjectMapper getObjectMapper() {
     return new ObjectMapper();
@@ -44,9 +48,23 @@ public class StreamingJsonParser {
   public StreamingJsonParser(Reader reader, long initialPosition, Mode mode) throws IOException {
     starting = true;
     this.reader = reader;
-    if (mode == Mode.MULTIPLE_OBJECTS && initialPosition > 0) {
-      IOUtils.skipFully(reader, initialPosition);
-      posCorrection += initialPosition;
+    if (mode == Mode.MULTIPLE_OBJECTS) {
+      if (initialPosition > 0) {
+        IOUtils.skipFully(reader, initialPosition);
+        posCorrection += initialPosition;
+      }
+      if (reader.markSupported()) {
+        reader.mark(MAX_CHARS_TO_READ_FORWARD);
+        int count = 0;
+        byte firstByte = -1;
+        while (count++ < MAX_CHARS_TO_READ_FORWARD &&
+          (firstByte = (byte)reader.read()) != -1 &&
+          firstByte <= ' '); // everything less than a space is whitespace
+        if (firstByte > ' ') {
+          firstNonSpaceChar = firstByte;
+        }
+        reader.reset();
+      }
     }
     jsonParser = getObjectMapper().getFactory().createParser(reader);
     if (mode == Mode.ARRAY_OBJECTS && initialPosition > 0) {
@@ -131,13 +149,23 @@ public class StreamingJsonParser {
   protected void fastForwardToNextRootObject() throws IOException {
     Preconditions.checkState(mode == Mode.MULTIPLE_OBJECTS, "Parser must be in MULTIPLE_OBJECT mode");
     JsonToken token = jsonParser.getCurrentToken();
-    if (token == null) {
-      token = jsonParser.nextToken();
+    try {
+      if (token == null) {
+        token = jsonParser.nextToken();
+      }
+      while (token != null && !jsonParser.getParsingContext().inRoot()) {
+        token = jsonParser.nextToken();
+      }
+      nextToken = jsonParser.nextToken();
+    } catch (OverrunException e) {
+      if (firstNonSpaceChar == null || firstNonSpaceChar.byteValue() != '[') {
+        throw e;
+      } else {
+        String msg = Utils.format("Overrun exception occurred on a file starting with '[', which may " +
+          "indicate the incorrect processor mode '{}' is being used: {}", mode.name(), e);
+        throw new OverrunException(msg, e.getStreamOffset(), e);
+      }
     }
-    while (token != null && !jsonParser.getParsingContext().inRoot()) {
-      token = jsonParser.nextToken();
-    }
-    nextToken = jsonParser.nextToken();
   }
 
   public long getReaderPosition() {

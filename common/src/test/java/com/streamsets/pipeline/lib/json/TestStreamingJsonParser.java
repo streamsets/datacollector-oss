@@ -7,6 +7,8 @@ package com.streamsets.pipeline.lib.json;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.lib.io.OverrunException;
+import com.streamsets.pipeline.lib.io.OverrunInputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,6 +24,20 @@ public class TestStreamingJsonParser {
   private Reader getJsonReader(String name) throws Exception {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
     return (is != null) ? new InputStreamReader(is) : null;
+  }
+
+  @Test
+  public void testIncorrectJSONMode() throws Exception {
+    Reader reader = new InputStreamReader(new OverrunInputStream(Thread.currentThread().getContextClassLoader()
+      .getResourceAsStream("TestStreamingJsonParser-testIncorrectJSONMode.json"), 128, true));
+    StreamingJsonParser parser = new StreamingJsonParser(reader,
+      StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
+    try {
+      parser.read();
+      Assert.fail();
+    } catch (OverrunException e) {
+      Assert.assertEquals(164, e.getStreamOffset());
+    }
   }
 
   // Array of Maps

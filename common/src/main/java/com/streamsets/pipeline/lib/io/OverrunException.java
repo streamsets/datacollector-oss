@@ -11,7 +11,11 @@ public class OverrunException extends IOException {
   private long offset;
 
   public OverrunException(String message, long offset) {
-    super(message);
+    this(message, offset, null);
+  }
+
+  public OverrunException(String message, long offset, Throwable parent) {
+    super(message, parent);
     this.offset = offset;
   }
 
