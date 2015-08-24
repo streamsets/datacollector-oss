@@ -145,6 +145,19 @@
     </dependency>
 
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-spark-bootstrap</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.5</version>
@@ -396,6 +409,7 @@
                 <source>${basedir}/../flume-protolib/src/test/java</source>
                 <source>${basedir}/../kakfa_source-protolib/src/test/java</source>
                 <source>${basedir}/../kakfa_target-protolib/src/test/java</source>
+                <source>${basedir}/../cluster-hdfs-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -421,6 +435,9 @@
                 </resource>
                 <resource>
                   <directory>${basedir}/../kafka_target-protolib/src/test/resources</directory>
+                </resource>
+                <resource>
+                  <directory>${basedir}/../cluster-hdfs-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>

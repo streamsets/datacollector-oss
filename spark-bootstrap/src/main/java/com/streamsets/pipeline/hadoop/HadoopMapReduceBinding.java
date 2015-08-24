@@ -58,22 +58,16 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
-      String hdfsUri = getProperty(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY);
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
         String value = getProperty(realKey);
         conf.set(realKey, value, source);
       }
-      // TODO can this be deleted as all properties are copied to conf above?
-      conf.set(FileInputFormat.INPUT_DIR_RECURSIVE, getProperty(FileInputFormat.INPUT_DIR_RECURSIVE));
-      conf.set(FileInputFormat.SPLIT_MAXSIZE, getProperty(FileInputFormat.SPLIT_MAXSIZE));
-      conf.set("mapreduce.input.fileinputformat.list-status.num-threads",
-        getProperty("mapreduce.input.fileinputformat.list-status.num-threads"));
       conf.set("mapred.child.java.opts", javaOpts);
       conf.setBoolean("mapreduce.map.speculative", false);
       conf.setBoolean("mapreduce.reduce.speculative", false);
-      job = Job.getInstance(conf, "StreamSets Data Collector - Batch Mode");
+      job = Job.getInstance(conf, "StreamSets Data Collector - Batch Execution Mode");
       job.setJarByClass(this.getClass());
       job.setNumReduceTasks(0);
       job.setMapperClass(PipelineMapper.class);

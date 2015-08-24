@@ -4,12 +4,14 @@
  * written consent of StreamSets, Inc.
  */
 package com.streamsets.pipeline.spark;
+
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
-
-import org.apache.spark.*;
+import kafka.serializer.DefaultDecoder;
+import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.api.java.*;
+import org.apache.spark.streaming.api.java.JavaPairInputDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +20,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Properties;
-
-import kafka.serializer.DefaultDecoder;
 
 public class SparkStreamingBinding implements ClusterBinding {
   private static final String MAX_WAIT_TIME = "maxWaitTime";
