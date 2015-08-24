@@ -51,6 +51,7 @@ public class SpoolDirSource extends BaseSource {
   private static final String OFFSET_SEPARATOR = "::";
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
+  private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final int MIN_OVERRUN_LIMIT = 64 * 1000;
   private static final int MAX_OVERRUN_LIMIT = 1000 * 1000;
 
@@ -384,6 +385,9 @@ public class SpoolDirSource extends BaseSource {
       int separator = sourceOffset.indexOf(OFFSET_SEPARATOR);
       if (separator > -1) {
         file = sourceOffset.substring(0, separator);
+        if (NULL_FILE.equals(file)) {
+          file = null;
+        }
       }
     }
     return file;
@@ -401,7 +405,7 @@ public class SpoolDirSource extends BaseSource {
   }
 
   protected String createSourceOffset(String file, String fileOffset) {
-    return (file != null) ? file + OFFSET_SEPARATOR + fileOffset : null;
+    return (file == null) ? NULL_FILE + OFFSET_SEPARATOR + fileOffset : file + OFFSET_SEPARATOR + fileOffset;
   }
 
   private boolean hasToFetchNextFileFromSpooler(String file, String offset) {

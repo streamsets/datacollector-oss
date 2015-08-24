@@ -24,6 +24,10 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 public class TestSpoolDirSource {
+  /*
+   * Don't use the constant defined in SpoolDirSource in order to regression test the source.
+   */
+  private static final String NULL_FILE_OFFSET = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c::0";
 
   private String createTestDir() {
     File f = new File("target", UUID.randomUUID().toString());
@@ -94,6 +98,14 @@ public class TestSpoolDirSource {
     Assert.assertEquals("x", source.getFileFromSourceOffset(source.createSourceOffset("x", "1")));
     Assert.assertEquals("1", source.getOffsetFromSourceOffset(source.createSourceOffset("x", "1")));
   }
+  @Test
+  public void testOffsetMethods() throws Exception {
+    TSpoolDirSource source = createSource(null);
+    Assert.assertEquals(NULL_FILE_OFFSET, source.createSourceOffset(null, "0"));
+    Assert.assertEquals("file1::0", source.createSourceOffset("file1", "0"));
+    Assert.assertEquals("0", source.getOffsetFromSourceOffset(NULL_FILE_OFFSET));
+    Assert.assertNull(source.getFileFromSourceOffset(NULL_FILE_OFFSET));
+  }
 
   @Test
   public void testProduceNoInitialFileNoFileInSpoolDirNullOffset() throws Exception {
@@ -102,9 +114,8 @@ public class TestSpoolDirSource {
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce(null, 10);
-      Assert.assertEquals(null, output.getNewOffset());
+      Assert.assertEquals(NULL_FILE_OFFSET, output.getNewOffset());
       Assert.assertFalse(source.produceCalled);
-
     } finally {
       runner.runDestroy();
     }
