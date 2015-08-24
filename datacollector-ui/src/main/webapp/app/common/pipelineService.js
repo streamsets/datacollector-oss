@@ -42,7 +42,7 @@ angular.module('dataCollectorApp.common')
 
             //Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
-            self.stageDefintions = definitions.stages;
+            self.stageDefinitions = definitions.stages;
             self.elCatalog = definitions.elCatalog;
 
             angular.forEach(rulesElMetadata.elFunctionDefinitions, function(idx) {
@@ -113,10 +113,10 @@ angular.module('dataCollectorApp.common')
     /**
      * Returns Stage Definitions
      *
-     * @returns {*|stageDefintions}
+     * @returns {*|stageDefinitions}
      */
     this.getStageDefinitions = function() {
-      return self.stageDefintions;
+      return self.stageDefinitions;
     };
 
     /**
@@ -155,7 +155,7 @@ angular.module('dataCollectorApp.common')
     /**
      * Returns list of Pipelines
      *
-     * @returns {PipelineHomeController.pipelines|*|$scope.pipelines|a.pipelines|w.pipelines|string}
+     * @returns {*}
      */
     this.getPipelines = function() {
       return self.pipelines;
@@ -327,8 +327,8 @@ angular.module('dataCollectorApp.common')
       return maxYPos ? maxYPos + 150 : 50;
     };
 
-    this.setStageDefintions = function(stageDefns) {
-      self.stageDefintions = stageDefns;
+    this.setStageDefinitions = function(stageDefns) {
+      self.stageDefinitions = stageDefns;
     };
 
     /**
@@ -559,7 +559,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getConfigurationLabel = function (stageInstance, configName) {
-      var stageDefinition = _.find(self.stageDefintions, function (stage) {
+      var stageDefinition = _.find(self.stageDefinitions, function (stage) {
           return stageInstance.library === stage.library &&
             stageInstance.stageName === stage.name &&
             stageInstance.stageVersion === stage.version;
@@ -574,7 +574,7 @@ angular.module('dataCollectorApp.common')
 
     var getStageConfigurationNameConfigMap = function(stageInstance) {
       var nameConfigMap = {},
-        stageDefinition = _.find(self.stageDefintions, function (stage) {
+        stageDefinition = _.find(self.stageDefinitions, function (stage) {
           return stageInstance.library === stage.library &&
             stageInstance.stageName === stage.name &&
             stageInstance.stageVersion === stage.version;
@@ -701,22 +701,28 @@ angular.module('dataCollectorApp.common')
      * @param fieldPaths
      * @param nonListAndMap
      * @param fieldPathsType
+     * @param dFieldPaths
      */
-    this.getFieldPaths = function(record, fieldPaths, nonListAndMap, fieldPathsType) {
+    this.getFieldPaths = function(record, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths) {
+      if(!dFieldPaths) {
+        dFieldPaths = [];
+      }
       var keys;
       if(record.type === 'LIST') {
         angular.forEach(record.value, function(value) {
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
-            if(!nonListAndMap && value.path) {
-              fieldPaths.push(value.path);
+            if(!nonListAndMap && value.sqpath) {
+              fieldPaths.push(value.sqpath);
+              dFieldPaths.push(value.dqpath);
 
               if(fieldPathsType) {
                 fieldPathsType.push(value.type);
               }
             }
-            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType);
-          } else if(value.path) {
-            fieldPaths.push(value.path);
+            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths);
+          } else if(value.sqpath) {
+            fieldPaths.push(value.sqpath);
+            dFieldPaths.push(value.dqpath);
 
             if(fieldPathsType) {
               fieldPathsType.push(value.type);
@@ -728,16 +734,18 @@ angular.module('dataCollectorApp.common')
         angular.forEach(keys, function(key) {
           var value = record.value[key];
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
-            if(!nonListAndMap && value.path) {
-              fieldPaths.push(value.path);
+            if(!nonListAndMap && value.sqpath) {
+              fieldPaths.push(value.sqpath);
+              dFieldPaths.push(value.dqpath);
 
               if(fieldPathsType) {
                 fieldPathsType.push(value.type);
               }
             }
-            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType);
-          } else if(value.path) {
-            fieldPaths.push(value.path);
+            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths);
+          } else if(value.sqpath) {
+            fieldPaths.push(value.sqpath);
+            dFieldPaths.push(value.dqpath);
 
             if(fieldPathsType) {
               fieldPathsType.push(value.type);
@@ -749,16 +757,18 @@ angular.module('dataCollectorApp.common')
         angular.forEach(keys, function(key, index) {
           var value = record.value[key];
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
-            if(!nonListAndMap && value.path) {
-              fieldPaths.push(value.path);
+            if(!nonListAndMap && value.sqpath) {
+              fieldPaths.push(value.sqpath);
+              dFieldPaths.push(value.dqpath);
 
               if(fieldPathsType) {
                 fieldPathsType.push(value.type);
               }
             }
-            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType);
-          } else if(value.path) {
-            fieldPaths.push(value.path);
+            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths);
+          } else if(value.sqpath) {
+            fieldPaths.push(value.sqpath);
+            dFieldPaths.push(value.dqpath);
 
             if(!nonListAndMap) {
               fieldPaths.push('[' + index + ']');
@@ -771,6 +781,8 @@ angular.module('dataCollectorApp.common')
         });
       } else {
         fieldPaths.push(pipelineConstant.NON_LIST_MAP_ROOT);
+        dFieldPaths.push(pipelineConstant.NON_LIST_MAP_ROOT);
+
         if(fieldPathsType) {
           fieldPathsType.push(record.type);
         }
@@ -803,8 +815,8 @@ angular.module('dataCollectorApp.common')
         angular.forEach(record.value, function(value) {
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
             self.getFlattenRecord(value, flattenRecord);
-          } else if(value.path) {
-            flattenRecord[value.path] = value;
+          } else if(value.sqpath) {
+            flattenRecord[value.sqpath] = value;
           }
         });
       } else {

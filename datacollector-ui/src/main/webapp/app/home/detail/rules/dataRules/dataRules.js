@@ -162,10 +162,11 @@ angular
         previewService.getEdgeInputRecordsFromPreview($scope.activeConfigInfo.name, edge, 1).
           then(function (inputRecords) {
             if(_.isArray(inputRecords) && inputRecords.length) {
-              var fieldPaths = [];
-              pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths);
+              var fieldPaths = [],
+                dFieldPaths = [];
+              pipelineService.getFieldPaths(inputRecords[0].value, fieldPaths, undefined, undefined, dFieldPaths);
               $scope.fieldPaths = fieldPaths;
-              $rootScope.$broadcast('fieldPathsUpdated', fieldPaths);
+              $rootScope.$broadcast('fieldPathsUpdated', fieldPaths, undefined, dFieldPaths);
             }
           },
           function(res) {

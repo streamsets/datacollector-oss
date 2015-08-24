@@ -6,9 +6,11 @@
 package com.streamsets.datacollector.record;
 
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -94,18 +96,32 @@ public class RecordImpl implements Record {
   }
 
   private static class FieldWithPath {
-    private final String path;
+    private final String sqPath; //Single Quote escaped path
+    private final String dqPath; //Double Quote escaped path
     private final Field.Type type;
     private final Object value;
 
-    public FieldWithPath(String path, Field.Type type, Object value) {
-      this.path = path;
+    public FieldWithPath(String singleQuoteEscapedPath, String doubleQuoteEscapedPath, Field.Type type, Object value) {
+      this.sqPath = singleQuoteEscapedPath;
+      this.dqPath = doubleQuoteEscapedPath;
       this.type = type;
       this.value = value;
     }
 
-    public String getPath() {
-      return path;
+    /**
+     * Returns single quote escaped path
+     * @return String
+     */
+    public String getSQPath() {
+      return sqPath;
+    }
+
+    /**
+     * Returns double quote escaped path
+     * @return String
+     */
+    public String getDQPath() {
+      return dqPath;
     }
 
     public String getType() {
@@ -135,40 +151,43 @@ public class RecordImpl implements Record {
 
     @Override
     public String toString() {
-      return Utils.format("FieldWithPath[path='{}', type='{}', value='{}']", getPath(), getType(), getValue());
+      return Utils.format("FieldWithPath[path='{}', type='{}', value='{}']", getSQPath(), getType(), getValue());
     }
 
   }
 
   @SuppressWarnings("unchecked")
-  private FieldWithPath createFieldWithPath(String path, Field field) {
+  private FieldWithPath createFieldWithPath(String singleQuoteEscapedPath, String doubleQuoteEscapedPath, Field field) {
     FieldWithPath fieldWithPath = null;
     if (field != null) {
       if (field.getValue() == null) {
-        fieldWithPath = new FieldWithPath(path, field.getType(), null);
+        fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(), null);
       } else {
         switch (field.getType()) {
           case LIST:
             List<FieldWithPath> list = new ArrayList<>();
             List<Field> fList = (List<Field>) field.getValue();
             for (int i = 0; i < fList.size(); i++) {
-              String ePath = path + "[" + i + "]";
-              list.add(createFieldWithPath(ePath, fList.get(i)));
+              String ePath1 = singleQuoteEscapedPath + "[" + i + "]";
+              String ePath2 = doubleQuoteEscapedPath + "[" + i + "]";
+              list.add(createFieldWithPath(ePath1, ePath2, fList.get(i)));
             }
-            fieldWithPath = new FieldWithPath(path, Field.Type.LIST, list);
+            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, Field.Type.LIST, list);
             break;
           case MAP:
           case LIST_MAP:
             Map<String, FieldWithPath> map = new LinkedHashMap<>();
             for (Map.Entry<String, Field> entry : ((Map<String, Field>) field.getValue()).entrySet()) {
-              String ePath = path + "/" + entry.getKey();
+              String ePath1 = singleQuoteEscapedPath + "/" + EscapeUtil.singleQuoteEscape(entry.getKey());
+              String ePath2 = doubleQuoteEscapedPath + "/" + EscapeUtil.doubleQuoteEscape(entry.getKey());
               Field eField = entry.getValue();
-              map.put(entry.getKey(), createFieldWithPath(ePath, eField));
+              map.put(entry.getKey(), createFieldWithPath(ePath1, ePath2, eField));
             }
-            fieldWithPath = new FieldWithPath(path, field.getType(), map);
+            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(), map);
             break;
           default:
-            fieldWithPath = new FieldWithPath(path, field.getType(), field.getValue());
+            fieldWithPath = new FieldWithPath(singleQuoteEscapedPath, doubleQuoteEscapedPath, field.getType(),
+              field.getValue());
             break;
         }
       }
@@ -177,7 +196,7 @@ public class RecordImpl implements Record {
   }
 
   public FieldWithPath getValue() {
-    return createFieldWithPath("", get());
+    return createFieldWithPath("", "", get());
   }
 
   List<PathElement> parse(String fieldPath) {

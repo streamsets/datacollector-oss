@@ -106,8 +106,8 @@ public abstract class TestPipelineOperationsBase {
         // Field has type, path and value
         Assert.assertTrue(text.containsKey("value"));
         Assert.assertEquals("Hello Kafka", text.get("value"));
-        Assert.assertTrue(text.containsKey("path"));
-        Assert.assertEquals("/text", text.get("path"));
+        Assert.assertTrue(text.containsKey("sqpath"));
+        Assert.assertEquals("/text", text.get("sqpath"));
         Assert.assertTrue(text.containsKey("type"));
         Assert.assertEquals("STRING", text.get("type"));
       }

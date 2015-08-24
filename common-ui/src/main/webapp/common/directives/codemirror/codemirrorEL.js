@@ -19,6 +19,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
         return function postLink(scope, iElement, iAttrs) {
           var fieldPaths = [],
+            dFieldPaths = [],
             fieldPathsType = [];
 
           // Register our custom Codemirror hint plugin.
@@ -41,6 +42,8 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 replace("'", "\\'");
             var regex = new RegExp('^' + curWord, 'i');
             var completions =[];
+
+            var startWithSingleQuote = curLine.charAt(start- 1) == "'";
 
             if(curWord || options.ctrlSpaceKey) {
 
@@ -97,7 +100,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
                 }
               });
 
-              var fieldPathList = getFieldPaths(dictionary);
+              var fieldPathList = getFieldPaths(dictionary, startWithSingleQuote);
 
               angular.forEach(fieldPathList, function(fieldPath, index) {
                 if(!curWord || fieldPath.match(regex)) {
@@ -181,12 +184,14 @@ angular.module('dataCollectorApp.codemirrorDirectives')
           if (iAttrs.fieldPaths) {
             scope.$watch('iAttrs.fieldPaths', function() {
               fieldPaths = $parse(iAttrs.fieldPaths)(scope);
+              dFieldPaths = $parse(iAttrs.dFieldPaths)(scope);
               fieldPathsType = $parse(iAttrs.fieldPathsType)(scope);
             });
           }
 
-          scope.$on('fieldPathsUpdated', function(event, _fieldPaths, _fieldPathsType) {
+          scope.$on('fieldPathsUpdated', function(event, _fieldPaths, _fieldPathsType, _dFieldPaths) {
             fieldPaths = _fieldPaths;
+            dFieldPaths = _dFieldPaths;
             fieldPathsType = _fieldPathsType;
           });
 
@@ -219,11 +224,17 @@ angular.module('dataCollectorApp.codemirrorDirectives')
 
           });
 
-          function getFieldPaths(dictionary) {
+          function getFieldPaths(dictionary, startWithSingleQuote) {
+            var fieldPathList = fieldPaths;
+
+            if(startWithSingleQuote) {
+              fieldPathList = dFieldPaths;
+            }
+
             if(dictionary && dictionary.textMode &&
               (dictionary.textMode === 'text/javascript' || dictionary.textMode === 'text/x-python')) {
               var fp = [];
-              angular.forEach(fieldPaths, function(fieldPath) {
+              angular.forEach(fieldPathList, function(fieldPath) {
                 var fieldPathArr = fieldPath.split('/');
                 var val = 'value';
                 angular.forEach(fieldPathArr, function(p, index) {
@@ -242,7 +253,7 @@ angular.module('dataCollectorApp.codemirrorDirectives')
               });
               return fp;
             } else {
-              return fieldPaths;
+              return fieldPathList;
             }
           }
 

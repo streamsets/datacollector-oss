@@ -52,6 +52,7 @@
               }, configDefinition)"
          codemirror-el
          field-paths="fieldPaths"
+         d-field-paths="dFieldPaths"
          data-type="configDefinition.type">
     </div>
 
@@ -148,6 +149,7 @@
               }, configDefinition)"
              codemirror-el
              field-paths="fieldPaths"
+             d-field-paths="dFieldPaths"
              data-type="'STRING'">
         </div>
       </div>
@@ -210,6 +212,7 @@
               }, configDefinition)"
              codemirror-el
              field-paths="fieldPaths"
+             d-field-paths="dFieldPaths"
              data-type="'STRING'">
         </div>
       </div>
@@ -272,7 +275,7 @@
       <ui-select-match>
         {{$item}}
       </ui-select-match>
-      <ui-select-choices repeat="fieldPath in fieldPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
+      <ui-select-choices repeat="fieldPath in fieldSelectorPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
         <div ng-bind-html="fieldPath | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
@@ -284,12 +287,13 @@
         Select Field Using Preview Data
       </button>
     </div>
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
 </script>
 
 <script type="text/ng-template" id="fieldSelectorSingleValuedConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
-    <div class="input-group">
+  <div class="controls col-lg-7 col-md-8 input-group field-selector-single-value">
+    <div class="">
       <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
@@ -302,12 +306,9 @@
               ng-if="fieldPathsFetchInProgress"
               translate="home.detailPane.configurationTab.loading">Loading...</li>
 
-
-
           <li role="presentation" class="dropdown-header"
               ng-if="!fieldPathsFetchInProgress && fieldSelectorPaths.length === 0"
               translate="home.detailPane.configurationTab.noFieldFound">No Field found.</li>
-
         </ul>
       </div>
     </div>
@@ -340,7 +341,8 @@
                 }
               }, configDefinition)"
              codemirror-el
-             field-paths="fieldPaths">
+             field-paths="fieldPaths"
+             d-field-paths="dFieldPaths">
         </div>
 
       </div>
@@ -392,6 +394,7 @@
               }, customFieldConfigDefinition)"
        codemirror-el="getCodeMirrorHints(customFieldConfigDefinition)"
        field-paths="fieldPaths"
+       d-field-paths="dFieldPaths"
        data-type="customFieldConfigDefinition.type">
   </div>
 </script>
@@ -414,7 +417,8 @@
                 lineNumbers: true
               }, configDefinition)"
          codemirror-el
-         field-paths="fieldPaths">
+         field-paths="fieldPaths"
+         d-field-paths="dFieldPaths">
     </div>
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>

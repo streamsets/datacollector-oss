@@ -18,7 +18,7 @@
             ng-click="onClick($event)"
             ng-if="recordValue.type === 'MAP' || recordValue.type === 'LIST' || recordValue.type === 'LIST_MAP'"></span>
 
-        <input ng-if="selectable === true && !isRoot" type="checkbox" ng-model="selectedPath[recordValue.path]">
+        <input ng-if="selectable === true && !isRoot" type="checkbox" ng-model="selectedPath[recordValue.sqpath]">
 
         <span class="field-index" ng-if="fieldIndex !== undefined" ng-bind-html="fieldIndex"></span>
         <span class="field-name" ng-class="{'dirty ': recordValue.dirty || (record.dirty && isRoot)}" ng-bind-html="fieldName"></span> :

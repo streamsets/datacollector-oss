@@ -91,12 +91,42 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
 
         /**
          * Returns key for listMap value
-         * @param value
+         * @param recordValue
          */
         getListMapKey: function(recordValue) {
-          var path = recordValue.path,
-            pathSplit = path ? path.split('/') : undefined;
-          return pathSplit && pathSplit.length > 0 ? pathSplit[pathSplit.length - 1] : undefined;
+          var path = recordValue.sqpath,
+            pathSplit = path ? path.split('/') : undefined,
+            lastFieldName;
+
+          if(pathSplit && pathSplit.length > 0 ) {
+            lastFieldName = pathSplit[pathSplit.length - 1];
+
+            //handle special case field name containing slash eg. /'foo/bar'
+            if(lastFieldName.indexOf("'") !== -1 &&
+              !(lastFieldName.charAt(0) == '\'' && lastFieldName.charAt(lastFieldName.length - 1) == '\'')) {
+
+              //If path contains slash inside name, split it by "/'"
+              pathSplit = path.split("/'");
+              if(pathSplit.length > 0) {
+                lastFieldName = "'" + pathSplit[pathSplit.length - 1];
+              }
+            }
+          }
+
+          return scope.singleQuoteUnescape(lastFieldName);
+        },
+
+        /**
+         * Unescape single quote escaped field path
+         * @param path
+         * @returns {*}
+         */
+        singleQuoteUnescape: function(path) {
+          if(path != null && /[\[\]\/"']/.test(path) && path.length > 2) {
+            path = path.replace("\\\"", "\"").replace("\\\\\'", "'");
+            return path.substring(1, path.length - 1);
+          }
+          return path;
         }
       });
 

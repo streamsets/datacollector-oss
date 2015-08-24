@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.streamsets.datacollector.restapi.bean.FieldJson;
+import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
 
 import org.apache.commons.codec.binary.Base64;
@@ -55,11 +56,8 @@ public class FieldDeserializer extends JsonDeserializer<FieldJson> {
             //When converting list to listMap, Key for the listMap is recovered using path attribute
             Map<String, Field> listMap = new LinkedHashMap<>();
             for (Map<String, Object> element : (List<Map<String, Object>>) value) {
-              String path = (String)element.get("path");
-              String [] pathSplit = (path != null) ? path.split("/") : null;
-              if(pathSplit != null && pathSplit.length > 0) {
-                listMap.put(pathSplit[pathSplit.length - 1], parse(element));
-              }
+              String path = (String)element.get("sqpath");
+              listMap.put(EscapeUtil.getLastFieldNameFromPath(path), parse(element));
             }
             value = listMap;
             break;

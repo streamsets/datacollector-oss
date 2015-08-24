@@ -100,9 +100,31 @@ public  class TestRecordWriterReaderFactory {
     record3.getHeader().setStagesPath("stagePath3");
     record3.getHeader().setTrackingId("trackingId3");
     LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
-    map.put("a", Field.create(new BigDecimal(1)));
-    map.put("b", Field.create("Hello"));
-    map.put("c", Field.create(new ArrayList<Field>()));
+    listMap.put("a", Field.create(new BigDecimal(1)));
+    listMap.put("b", Field.create("Hello"));
+    listMap.put("c", Field.create(new ArrayList<Field>()));
+
+    //Test with special characters in listMap key to test JIRA SDC-1562
+    listMap.put("foo bar", Field.create("foo space bar"));
+    listMap.put("foo[bar", Field.create("foo open bracket bar"));
+    listMap.put("foo]bar", Field.create("foo close bracket bar"));
+    listMap.put("foo'bar", Field.create("foo single quote bar"));
+    listMap.put("foo\"bar", Field.create("foo double quote bar"));
+    listMap.put("foo -+^&*()#$@!~ bar", Field.create("foo special character bar"));
+    listMap.put("foo/bar", Field.create("foo slash bar"));
+    listMap.put("f/oo/'ba/\'r", Field.create("foo slash quote bar"));
+
+    //nested listMap
+    LinkedHashMap<String, Field> nestedListMap = new LinkedHashMap<>();
+    nestedListMap.put("foo bar", Field.create("foo space bar"));
+    nestedListMap.put("foo[bar", Field.create("foo open bracket bar"));
+    nestedListMap.put("foo]bar", Field.create("foo close bracket bar"));
+    nestedListMap.put("foo'bar", Field.create("foo single quote bar"));
+    nestedListMap.put("foo\"bar", Field.create("foo double quote bar"));
+    nestedListMap.put("foo -+^&*()#$@!~ bar", Field.create("foo special character bar"));
+    nestedListMap.put("foo/bar", Field.create("foo slash bar"));
+
+    listMap.put("nestedListMap", Field.createListMap(nestedListMap));
     record3.set(Field.createListMap(listMap));
     writer.write(record3);
 

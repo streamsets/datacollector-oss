@@ -499,6 +499,7 @@ public class TestRecordImpl {
     map.put("foo", Field.create("fooValue"));
     map.put("'foo", Field.create("quoteFooValue"));
     map.put("foo bar", Field.create("foo space bar Value"));
+    map.put("foo\bar", Field.create("foo back slash Value"));
     map.put("foo bar list", Field.create(ImmutableList.of(Field.create("foo space bar list1"),
       Field.create("foo space bar list2"))));
     map.put("foo\"bar", Field.create("foo double quote bar Value"));
@@ -524,6 +525,9 @@ public class TestRecordImpl {
     Assert.assertEquals("quoteFooValue", r.get("/'\\'foo'").getValue());
     Assert.assertEquals("foo space bar Value", r.get("/foo bar").getValue());
     Assert.assertEquals("foo space bar Value", r.get("/'foo bar'").getValue());
+
+    Assert.assertEquals("foo back slash Value", r.get("/'foo\bar'").getValue());
+
     Assert.assertEquals("foo space bar list1", r.get("/foo bar list[0]").getValue());
     Assert.assertEquals("foo space bar list1", r.get("/'foo bar list'[0]").getValue());
     Assert.assertEquals("foo double quote bar Value", r.get("/'foo\"bar'").getValue());

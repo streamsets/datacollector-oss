@@ -25,7 +25,9 @@ angular
 
     angular.extend($scope, {
       fieldPaths: [],
+      dFieldPaths: [],
       fieldPathsType: [],
+      fieldSelectorPaths: [],
 
       /**
        * Callback function when tab is selected.
@@ -583,7 +585,7 @@ angular
               $scope.$broadcast('fieldPathsUpdated', $scope.fieldPaths, $scope.fieldPathsType, $scope.dFieldPaths);
 
               angular.forEach($scope.fieldPaths, function(fieldPath) {
-                $scope.fieldSelectorPaths.push(fieldPath.replace("\\'", "\'"));
+                $scope.fieldSelectorPaths.push(fieldPath.replace("\\'", "\'").replace("\\\\", "\\"));
               });
             }
           },
@@ -628,6 +630,7 @@ angular
       initializeGroupInformation(options);
       if (options.type === pipelineConstant.STAGE_INSTANCE) {
         $scope.fieldPaths = [];
+        $scope.dFieldPaths = [];
         $scope.fieldPathsType = [];
       }
     });
