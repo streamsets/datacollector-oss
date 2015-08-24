@@ -129,10 +129,15 @@ angular.module('dataCollectorApp.common')
             deferred.reject(res);
           }
         )
-        .then(function(previewData) {
-          var stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
-          deferred.resolve(stagePreviewData.input);
-        });
+        .then(
+          function(previewData) {
+            var stagePreviewData = self.getPreviewDataForStage(previewData.batchesOutput[0], stageInstance);
+            deferred.resolve(stagePreviewData.input);
+          },
+          function(res) {
+            deferred.reject(res);
+          }
+        );
 
       return deferred.promise;
     };
@@ -362,10 +367,12 @@ angular.module('dataCollectorApp.common')
               }
             })
             .error(function(data, status, headers, config) {
+              defer.reject();
               $scope.common.errors = [data];
             });
         },
         function() {
+          defer.reject();
           console.log( "Timer rejected!" );
         }
       );
@@ -382,6 +389,7 @@ angular.module('dataCollectorApp.common')
           }
         })
         .error(function(data, status, headers, config) {
+          defer.reject();
           $scope.common.errors = [data];
         });
     };

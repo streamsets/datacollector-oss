@@ -569,14 +569,22 @@ angular
       if(stageInstance.uiInfo.stageType !== pipelineConstant.SOURCE_STAGE_TYPE && !$scope.fieldPathsFetchInProgress) {
         $scope.fieldPathsFetchInProgress = true;
 
+        $scope.fieldPaths = [];
+        $scope.dFieldPaths = [];
+        $scope.fieldPathsType = [];
+        $scope.fieldSelectorPaths = [];
+
         previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 1).
           then(function (inputRecords) {
             $scope.fieldPathsFetchInProgress = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
-              $scope.fieldPaths = [];
-              $scope.fieldPathsType = [];
-              pipelineService.getFieldPaths(inputRecords[0].value, $scope.fieldPaths, false, $scope.fieldPathsType);
-              $scope.$broadcast('fieldPathsUpdated', $scope.fieldPaths, $scope.fieldPathsType);
+              pipelineService.getFieldPaths(inputRecords[0].value, $scope.fieldPaths, false, $scope.fieldPathsType,
+                $scope.dFieldPaths);
+              $scope.$broadcast('fieldPathsUpdated', $scope.fieldPaths, $scope.fieldPathsType, $scope.dFieldPaths);
+
+              angular.forEach($scope.fieldPaths, function(fieldPath) {
+                $scope.fieldSelectorPaths.push(fieldPath.replace("\\'", "\'"));
+              });
             }
           },
           function(res) {

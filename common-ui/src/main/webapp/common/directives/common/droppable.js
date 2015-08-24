@@ -54,6 +54,7 @@ angular.module('dataCollectorApp.commonDirectives')
             if (e.stopPropagation) {
               e.stopPropagation();
             }
+            e.preventDefault();
 
             this.classList.remove('over');
 

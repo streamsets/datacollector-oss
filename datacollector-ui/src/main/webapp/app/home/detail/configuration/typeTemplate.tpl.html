@@ -288,28 +288,30 @@
 </script>
 
 <script type="text/ng-template" id="fieldSelectorSingleValuedConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8 input-group field-selector-single-value">
-    <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
-    <div class="input-group-btn">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-      <ul class="dropdown-menu dropdown-menu-right" role="menu">
-        <li ng-repeat="fieldPath in fieldPaths track by $index">
-          <a href="#" ng-click="detailPaneConfig.configuration[configIndex].value = fieldPath">{{fieldPath}}</a>
-        </li>
+  <div class="controls col-lg-7 col-md-8">
+    <div class="input-group">
+      <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+          <li ng-repeat="fieldPath in fieldSelectorPaths track by $index">
+            <a href="#" ng-click="detailPaneConfig.configuration[configIndex].value = fieldPath">{{fieldPath}}</a>
+          </li>
 
-        <li role="presentation" class="dropdown-header"
-            ng-if="fieldPathsFetchInProgress"
-            translate="home.detailPane.configurationTab.loading">Loading...</li>
+          <li role="presentation" class="dropdown-header"
+              ng-if="fieldPathsFetchInProgress"
+              translate="home.detailPane.configurationTab.loading">Loading...</li>
 
 
 
-        <li role="presentation" class="dropdown-header"
-            ng-if="!fieldPathsFetchInProgress && fieldPaths.length === 0"
-            translate="home.detailPane.configurationTab.noFieldFound">No Field found.</li>
+          <li role="presentation" class="dropdown-header"
+              ng-if="!fieldPathsFetchInProgress && fieldSelectorPaths.length === 0"
+              translate="home.detailPane.configurationTab.noFieldFound">No Field found.</li>
 
-      </ul>
+        </ul>
+      </div>
     </div>
-
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
 </script>
 
