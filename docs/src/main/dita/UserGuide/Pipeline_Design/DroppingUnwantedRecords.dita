@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ejl_lpy_bt">
+ <title>Dropping Unwanted Records</title>
+ <shortdesc>You can drop records from the pipeline at each stage by defining required fields or
+  preconditions for a record to enter a stage. </shortdesc>
+</concept>

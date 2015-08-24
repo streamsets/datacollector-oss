@@ -78,6 +78,10 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/RPC.dita">
+   <topicref href="../Origins/RPC-EnabingSecurity.dita"/>
+   <topicref href="../Origins/UDP-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/UDP-Configuring.dita"/>

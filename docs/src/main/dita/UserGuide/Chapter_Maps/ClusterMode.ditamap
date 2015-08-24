@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
- <title>Cluster Mode</title>
- <topicref href="../Cluster_Mode/ClusterMode_title.dita">
-  <topicref href="../Cluster_Mode/Overview.dita" chunk="to-content">
+ <title>Cluster Pipelines</title>
+ <topicref href="../Cluster_Mode/ClusterPipelines_title.dita">
+  <topicref href="../Cluster_Mode/ClusterPipelines.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/KerberosAuthentication.dita"/>
    <topicref href="../Cluster_Mode/ErrorHandlingLimitations.dita">

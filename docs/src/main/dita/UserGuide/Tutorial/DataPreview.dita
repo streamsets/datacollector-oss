@@ -22,7 +22,7 @@
                 additional reading, you can find more information here: <xref
                     href="../Pipeline_Configuration/ReferencingFieldNames.dita#concept_hjk_b4l_vq"/>
                 or <xref
-                    href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
+                    href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
                 />.</p>
             <p>To start data preview, all stages must be connected and all required fields filled
                 (though not necessarily correctly). Since the origin is configured and the only

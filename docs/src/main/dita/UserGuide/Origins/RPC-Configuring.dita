@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_lxh_1w2_ct">
+    <title>Configuring an RPC Origin</title>
+    <shortdesc>Configure an RPC origin to process data from an RPC destination.<draft-comment
+            author="Loretta">come back to this after Tucu cleans it up.</draft-comment></shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_tfp_vw2_ct">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd/>
+            </step>
+        </steps>
+    </taskbody>
+</task>

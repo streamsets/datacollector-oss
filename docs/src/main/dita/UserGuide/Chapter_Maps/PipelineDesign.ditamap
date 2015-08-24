@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Pipeline Design</title>
+ <topicref href="../Pipeline_Design/PipelineDesign_title.dita">
+  <topicref href="../Pipeline_Design/What_isa_Pipeline.dita"/>
+  <topicref href="../Pipeline_Design/DatainMotion.dita">
+   <topicref href="../Pipeline_Design/DeliveryGuarantee.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Design/DesigningDataFlow.dita">
+   <topicref href="../Pipeline_Design/BranchingStreams.dita"/>
+   <topicref href="../Pipeline_Design/MergingStreams.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Design/DroppingUnwantedRecords.dita">
+   <topicref href="../Pipeline_Design/RequiredFields.dita"/>
+   <topicref href="../Pipeline_Design/Preconditions.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Pipeline.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Stage.dita"/>
+   <topicref href="../Pipeline_Configuration/ErrorHandling-Example.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Design/SDCRecordFormat.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Design/DelimitedDataRecordStructure.dita">
+   <topicref href="../Pipeline_Design/DelimitedData-Processing.dita"/>
+  </topicref>
+  <topicref href="../Pipeline_Design/ControlCharacters.dita"/>
+ </topicref>
+</map>

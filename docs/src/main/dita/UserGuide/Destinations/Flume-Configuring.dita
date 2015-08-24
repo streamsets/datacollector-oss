@@ -100,7 +100,7 @@
                                     <entry>Data Format</entry>
                                     <entry>Data format for output events:<ul id="ul_ssq_sks_zr">
                                             <li>SDC Record <xref
-                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ucp_chr_br"/></xref></li>
                                             <li>Text</li>

@@ -8,10 +8,9 @@
         destination stages. </shortdesc>
  <conbody>
   <p><indexterm>pipeline design<indexterm>required fields</indexterm></indexterm><indexterm>required
-                                        fields<indexterm>overview</indexterm></indexterm> Configure
-                        required fields as part of the overall pipeline logic or to minimize
-                        processing errors. For example, if a Field Hasher encodes social security
-                        data in the /SSN field. To ensure all records include social security
-                        numbers, you can make /SSN a required field for the stage.</p>
+     fields<indexterm>overview</indexterm></indexterm>Configure required fields as part of the
+   overall pipeline logic or to minimize processing errors. For example, if a Field Hasher encodes
+   social security data in the /SSN field. To ensure all records include social security numbers,
+   you can make /SSN a required field for the stage.</p>
  </conbody>
 </concept>

@@ -16,11 +16,15 @@
             ensures that the pipeline processes all data. </dd>
           <dd>If a failure causes the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            stop while processing a batch of data, when restarts, it reprocesses the batch.</dd>
-          <dd>This option ensures that no data is lost. But if a failure occurs as the <ph
+            stop while processing a batch of data, when restarts, it reprocesses the batch. This
+            option ensures that no data is lost. </dd>
+          <dd>With this option, the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            writes data to destinations, up to one batch data might be duplicated in the
-            target.</dd>
+            commits the offset after receiving write confirmation from destination systems. If a
+            failure occurs after the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            passes data to destination systems but before receiving confirmation and committing the
+            offset, up to one batch data might be duplicated in destination systems.</dd>
         </dlentry>
         <dlentry>
           <dt>At most once</dt>
@@ -30,11 +34,15 @@
           <dd>If a failure causes the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             stop while processing a batch of data, when it starts up, it begins processing with the
-            next batch of data.</dd>
-          <dd>This option ensures duplicate data is not written to the target due to reprocessing.
-            But if a failure occurs as the <ph
+            next batch of data. This option avoids the duplication of data in destinations due to
+            reprocessing. </dd>
+          <dd>With this option, the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            writes data to destinations, up to one batch of data might not be processed.</dd>
+            commits the offset after a write without waiting for confirmation from destination
+            systems. If a failure occurs after the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            passes data to destinations and commits the offset, up to one batch of data might not be
+            written to the destination systems.</dd>
         </dlentry>
       </dl></p>
  </conbody>

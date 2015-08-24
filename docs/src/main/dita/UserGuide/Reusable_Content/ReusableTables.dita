@@ -45,7 +45,7 @@
      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <tbody>
       <row id="IgnoreControlChars-row">
-       <entry>Ignore Ctrl Characters <xref href="../Pipeline_Configuration/ControlCharacters.dita">
+       <entry>Ignore Ctrl Characters <xref href="../Pipeline_Design/ControlCharacters.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
           id="image_xwx_xrm_js"/></xref></entry>
        <entry>Removes all ASCII control characters except for the tab, line feed, and carriage

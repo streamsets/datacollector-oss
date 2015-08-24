@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_ill_2gx_rr">
- <title>Pipeline Design</title>
- <shortdesc>When you design a pipeline, you define and link the stages that you want to use. </shortdesc>
- <conbody>
-  <p>To add stages to the canvas, you can use the stage library and connect stages manually, or you
-   can use the Pipeline Creation Help Bar to automatically link a new stage to the pipeline.</p>
-  <p>To define pipeline properties, such as the delivery guarantee, constants or error handling,
-   click in any unused space of the canvas. To define the properties for a stage, select the
-   stage.</p>
-  <p>You can configure metric or data alerts on the Rules tab of the pipeline properties panel. </p>
- </conbody>
+ <title>Building a Pipeline</title>
 </concept>

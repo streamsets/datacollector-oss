@@ -50,6 +50,6 @@
                 >3 in "Configuring a Pipeline"</xref>.</postreq>
     </taskbody>
     <related-links>
-        <link href="../Pipeline_Configuration/What_isa_Pipeline.dita#concept_isl_w44_kq"/>
+        <link href="../Pipeline_Design/What_isa_Pipeline.dita#concept_isl_w44_kq"/>
     </related-links>
 </task>

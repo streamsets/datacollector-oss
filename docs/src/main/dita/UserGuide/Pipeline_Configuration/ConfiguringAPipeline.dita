@@ -38,7 +38,7 @@
                                     <entry>Optional description of the pipeline.</entry>
                                 </row>
                                 <row>
-                                    <entry>Execution Mode <xref href="../Cluster_Mode/Overview.dita"
+                                    <entry>Execution Mode <xref href="../Cluster_Mode/ClusterPipelines.dita"
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_zfp_n5g_cs"/>
                                         </xref></entry>
@@ -55,7 +55,7 @@
                                 </row>
                                 <row>
                                     <entry>Delivery Guarantee <xref
-                                            href="DeliveryGuarantee.dita#concept_ffz_hhw_kq">
+                                            href="../Pipeline_Design/DeliveryGuarantee.dita#concept_ffz_hhw_kq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rtg_yfm_zs"/></xref></entry>
                                     <entry>Determines how the <ph

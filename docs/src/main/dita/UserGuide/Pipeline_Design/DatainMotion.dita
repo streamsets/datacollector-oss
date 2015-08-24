@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_y1r_zky_bt">
+ <title>Data in Motion</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> passes data through the pipeline in <term>batches</term>. This is how it works:</shortdesc>
+ <conbody>
+  <p><indexterm>pipeline<indexterm>batch and processing
+    overview</indexterm></indexterm><indexterm>batch</indexterm>The origin creates a batch as it
+   reads data from the origin system or as data arrives from the origin system, noting the offset.
+   The offset is the location where the origin stops reading.</p>
+  <p>The origin sends the batch when the batch is full or when the batch wait time limit elapses.
+   The batch moves through the pipeline from processor to processor until it reaches pipeline
+   destinations.</p>
+  <p>Destinations write the batch to destination systems, and the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commits the
+   offset internally. Based on the pipeline delivery guarantee, the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> either commits
+   the offset as soon as it writes to destination systems or after receiving confirmation of the
+   write from destination systems. </p>
+  <p>After the offset commit, the origin stage creates a new batch. </p>
+  <p>Note that this describes general pipeline behavior. Behavior can differ based on the specific
+   pipeline configuration. For example, for the Kafka Consumer, the Kafka Zookeeper tracks and
+   provides the offset. And for origin systems that do not store data, such as Omniture and HTTP
+   Client, offsets are not noted because they aren't relevant. </p>
+ </conbody>
+</concept>

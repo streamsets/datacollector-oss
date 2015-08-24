@@ -9,12 +9,11 @@
       <ol id="ol_dtv_bzs_zs">
         <li>Download sample data. <p>You can download sample data from the following location:
               </p><p><xref
-              href="https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data"
+              href="https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data/nyc_taxi_data.csv"
               format="html" scope="external"
-              >https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data</xref></p><draft-comment
-            author="Loretta">URL not live yet.</draft-comment><p>You'll need a login to the
-            password-protected section of the site - it just takes a moment to set up an
-            account.</p></li>
+              >https://www.streamsets.com/documentation/1.0.0/DCtutorial/sample_data/nyc_taxi_data.csv</xref></p><p>You'll
+            need a login to the password-protected section of the site - it just takes a moment to
+            set up an account.</p></li>
         <li>Set up a directory local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
           save the sample data in the directory.<p>Let's use the same directory for the source,

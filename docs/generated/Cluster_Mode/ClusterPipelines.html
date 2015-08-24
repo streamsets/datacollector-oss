@@ -2,19 +2,20 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can run a pipeline in standalone or cluster execution mode. In standalone mode, a single Data Collector process runs the pipeline. A pipeline runs in standalone mode by default. In cluster mode, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Execution Mode"></meta><meta name="abstract" content="You can run a pipeline in standalone or cluster execution mode."></meta><meta name="description" content="You can run a pipeline in standalone or cluster execution mode."></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterMode_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Execution Mode</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Pipelines"></meta><meta name="abstract" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
 <body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Cluster_Mode/ClusterMode_title.html" title="Cluster Mode">Cluster Mode</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterMode_title.html" title="Cluster Mode"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Mode</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines">Cluster Pipelines</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_hmh_kfn_1s">
- <h1 class="title topictitle1">Cluster Execution Mode</h1>
+ <h1 class="title topictitle1">Cluster Pipelines</h1>
 
  
- <div class="body conbody"><p class="shortdesc">You can run a pipeline in standalone or cluster execution mode. </p>
+ <div class="body conbody"><p class="shortdesc">A <dfn class="term">cluster pipeline</dfn> is a pipeline that runs in cluster execution mode. You
+  can run a pipeline in standalone execution mode or cluster execution mode. </p>
 
   <p class="p">In standalone mode, a single <span class="ph">Data
                   Collector</span> process runs
@@ -28,7 +29,7 @@
   <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to Kafka. And then use a
-   cluster mode pipeline to process the data from the Kafka cluster and perform the expensive
+   cluster pipeline to process the data from the Kafka cluster and perform the expensive
    transformation.</p>
 
   <p class="p">Or, you might use cluster mode to move data from HDFS to another destination, such as
@@ -77,7 +78,7 @@
    </dl>
 </div>
 
-  <p class="p">You can use any processor or destination in cluster mode pipelines.</p>
+  <p class="p">You can use any processor or destination in cluster pipelines.</p>
 
  </div>
 
@@ -144,6 +145,6 @@
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterMode_title.html" title="Cluster Mode"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Mode</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
 </body>
 </html>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gs2_s5y_bt">
+ <title>Pipeline Configuration</title>
+ <shortdesc>Configure a pipeline on the pipeline canvas by adding and linking the stages that you
+  want to use. </shortdesc>
+ <conbody>
+  <p>When you configure a pipeline, you add a single <term>origin</term> stage to represent source
+   data, <term>processor</term> stages to perform processing and routing, and one or more
+    <term>destination</term> stages to represent target data. Link the stages to create the flow of
+   data from origin to destinations. </p>
+  <p>To add stages to the canvas, you can use the stage library and connect stages manually, or you
+   can use the Pipeline Creation Help Bar to automatically link a new stage to the pipeline.</p>
+  <p>The pipeline canvas automatically saves and validates your work, and provides warnings for
+   parts of the pipeline that are not yet complete or valid. You can view a full list of issues to
+   help you configure the pipeline. You can also perform a data preview to view how the pipeline
+   transforms data.</p>
+  <p>To define pipeline properties, such as the delivery guarantee, constants or error handling,
+   click in any unused space of the canvas. To define the properties for a stage, select the
+   stage.You can configure metric or data alerts on the Rules tab of the pipeline properties panel.
+  </p>
+ </conbody>
+</concept>

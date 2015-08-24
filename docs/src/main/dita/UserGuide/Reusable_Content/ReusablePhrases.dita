@@ -158,8 +158,8 @@
             <draft-comment author="Loretta">The following is used in HDFS origin and destination
                   overviews:</draft-comment>
             <p id="HDFS_user_props">When necessary, you can enable Kerberos authentication or use an
-                  HDFS user to connect to HDFS. You can also use HDFS properties files and add other
-                  HDFS configuration properties as needed. </p>
+                  HDFS user to connect to HDFS. You can also use HDFS configuration files and add
+                  other HDFS configuration properties as needed. </p>
             <draft-comment author="Loretta">list of HDFS configuration files used by Hadoop FS
                   origin - used in Hadoop Properties and Configuring Hadoop FS
                   origin.</draft-comment>

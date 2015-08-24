@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ad4_gpy_bt">
+ <title>Designing the Data Flow</title>
+ <shortdesc>You can branch and merge streams in the pipeline.</shortdesc>
+</concept>

@@ -11,7 +11,7 @@
   <p><indexterm>functions<indexterm>delimited data</indexterm></indexterm><indexterm>delimited data
      functions<indexterm>description</indexterm></indexterm>For more information about the delimited
    data record format, see <xref
-    href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>.</p>
+    href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>.</p>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
      <dt>record:dExists('&lt;header name>')</dt>

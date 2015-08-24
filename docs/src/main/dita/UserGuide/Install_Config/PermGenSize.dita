@@ -24,7 +24,7 @@
     <p>By default, the PermGen size is defined as
       follows:<codeblock>SDC_JAVA_OPTS="-Xmx1024m  -Xms1024m <uicontrol>-XX:PermSize=128M -XX:MaxPermSize=256M</uicontrol> -server ${SDC_JAVA_OPTS}"</codeblock></p>
     <p>If, for example, you doubled the heap size to 2048 MB, you might set the options as
-      follows:<codeblock> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m -XX:MaxPermSize=512M -XX:PermSize=256M -server ${SDC_JAVA_OPTS} "
+      follows:<codeblock> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m  <uicontrol>-XX:PermSize=256M -XX:MaxPermSize=512M</uicontrol> -server ${SDC_JAVA_OPTS} "
 </codeblock></p>
  </conbody>
 </concept>

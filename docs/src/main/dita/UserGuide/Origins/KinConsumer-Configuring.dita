@@ -44,7 +44,7 @@
                                     <entry>Type of data to be read. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
                                             <li>SDC Record <xref
-                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
                                             <li>JSON</li>

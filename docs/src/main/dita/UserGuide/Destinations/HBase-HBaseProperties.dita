@@ -12,11 +12,11 @@
                 <dlentry>
                     <dt>HBase configuration file</dt>
                     <dd>You can use the following HDFS configuration file with the HBase
-                        configuration file: To use HDFS configuration files: <ul
+                        configuration file: <ul
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFSfiles_HBasedest"
                             id="ul_rwk_x5r_bt">
                             <li/>
-                        </ul><ol id="ol_rb2_2nr_bt">
+                        </ul>To use HDFS configuration files: <ol id="ol_rb2_2nr_bt">
                             <li>Store the files or a symlink to the files in the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> resources directory. </li>

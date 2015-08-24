@@ -30,11 +30,14 @@
     </frontmatter>
     <chapter href="Chapter_Maps/GettingStarted.ditamap" format="ditamap" collection-type="sequence"/>
     <chapter href="Chapter_Maps/Install_Config.ditamap" format="ditamap"/>
-    <chapter href="Chapter_Maps/Pipeline.ditamap" format="ditamap" processing-role="normal"/>
+    <chapter href="Chapter_Maps/PipelineDesign.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/PipelineConfiguration.ditamap" format="ditamap"
+        processing-role="normal"/>
     <chapter href="Chapter_Maps/Origins.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Processors.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Destinations.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/ClusterMode.ditamap" format="ditamap"/>
+    <chapter href="Chapter_Maps/RPCPipelines.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/DataPreview.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/Alerts.ditamap" format="ditamap"/>
     <chapter href="Chapter_Maps/AdvancedPipelineConfig.ditamap" format="ditamap"/>

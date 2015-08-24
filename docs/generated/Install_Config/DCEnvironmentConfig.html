@@ -103,13 +103,13 @@
     </div>
 
     <div class="p">For example, to double the heap size, you might change the following default
-      settings:<pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server ${SDC_JAVA_OPTS}"</pre>
+      settings:<pre class="pre codeblock">SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx1024m -Xms1024m</span> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
 </div>
 
     <p class="p">to increase the Xmx and Xms settings as follows:</p>
 
     <div class="p">
-      <pre class="pre codeblock">SDC_JAVA_OPTS="-Xmx2048m -Xms2048m -server ${SDC_JAVA_OPTS}"</pre>
+      <pre class="pre codeblock">SDC_JAVA_OPTS="<span class="ph uicontrol">-Xmx2048m -Xms2048m</span> -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"</pre>
 
     </div>
 
@@ -155,7 +155,7 @@
 </div>
 
     <div class="p">If, for example, you doubled the heap size to 2048 MB, you might set the options as
-      follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m -XX:MaxPermSize=512M -XX:PermSize=256M -server ${SDC_JAVA_OPTS} "
+      follows:<pre class="pre codeblock"> SDC_JAVA_OPTS="-Xmx2048m  -Xms1048m  <span class="ph uicontrol">-XX:PermSize=256M -XX:MaxPermSize=512M</span> -server ${SDC_JAVA_OPTS} "
 </pre>
 </div>
 
@@ -243,9 +243,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="43.75%" id="d21288e404">Environment Variables</th>
+                                <th class="entry" valign="top" width="43.75%" id="d21365e413">Environment Variables</th>
 
-                                <th class="entry" valign="top" width="56.25%" id="d21288e407">Description</th>
+                                <th class="entry" valign="top" width="56.25%" id="d21365e416">Description</th>
 
                             </tr>
 
@@ -253,18 +253,18 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21288e404 ">SDC_ROOT_CLASSPATH</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21365e413 ">SDC_ROOT_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21288e407 ">Defines the path to jar files to be added to the Data
+                                <td class="entry" valign="top" width="56.25%" headers="d21365e416 ">Defines the path to jar files to be added to the Data
                                     Collector root classloader. Use for components that must be in
                                     the root classloader, such as Snappy. </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21288e404 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21365e413 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21288e407 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="56.25%" headers="d21365e416 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -276,9 +276,9 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d21288e404 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d21365e413 ">SDC_SECURITY_MANAGER_ENABLED</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d21288e407 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="56.25%" headers="d21365e416 ">Default is True. Do not change this property. </td>
 
                             </tr>
 

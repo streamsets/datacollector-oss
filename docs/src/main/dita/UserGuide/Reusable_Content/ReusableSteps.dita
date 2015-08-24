@@ -265,7 +265,7 @@
                                 </row>
                                 <row>
                                     <entry>Required Fields <xref
-                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_h4p_p5v_yq"/></xref></entry>
                                     <entry>Fields that must include data to be passed into the
@@ -274,7 +274,7 @@
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
-                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            href="../Pipeline_Design/Preconditions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_f3b_khp_fs"/></xref></entry>
                                     <entry>Conditions that must evaluate to TRUE to allow a record
@@ -329,7 +329,7 @@
                                 </row>
                                 <row>
                                     <entry>Required Fields <xref
-                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_nkk_pfh_hr"/></xref></entry>
                                     <entry>Fields that must include data to be passed into the
@@ -338,7 +338,7 @@
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
-                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            href="../Pipeline_Design/Preconditions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_pbl_thp_fs"/></xref></entry>
                                     <entry>Conditions that must evaluate to TRUE to allow a record
@@ -387,7 +387,7 @@
                                 </row>
                                 <row>
                                     <entry>Required Fields <xref
-                                            href="../Pipeline_Configuration/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_hwy_43h_hr"/></xref></entry>
                                     <entry>Fields that must include data to be passed into the
@@ -396,7 +396,7 @@
                                 </row>
                                 <row>
                                     <entry>Preconditions <xref
-                                            href="../Pipeline_Configuration/Preconditions.dita">
+                                            href="../Pipeline_Design/Preconditions.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rfz_thp_fs"/></xref></entry>
                                     <entry>Conditions that must evaluate to TRUE to allow a record
@@ -793,7 +793,7 @@
                                                 <li>JSON</li>
                                                 <li>Delimited</li>
                                                 <li>SDC Record <xref
-                                                  href="../Pipeline_Configuration/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_ucp_chr_br"/></xref></li>
                                                 <li>Avro</li>

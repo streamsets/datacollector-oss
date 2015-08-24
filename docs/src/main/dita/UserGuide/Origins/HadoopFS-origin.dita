@@ -14,6 +14,6 @@
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
  </conbody>
   <related-links>
-    <link href="../Cluster_Mode/Overview.dita#concept_hmh_kfn_1s"/>
+    <link href="../Cluster_Mode/ClusterPipelines.dita#concept_hmh_kfn_1s"/>
   </related-links>
 </concept>

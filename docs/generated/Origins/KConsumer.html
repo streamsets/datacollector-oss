@@ -97,7 +97,7 @@
           to a map based on the header line of the file. If the file does not include a header,
           Kafka Consumer creates the map based on column number.</dd>
 
-        <dd class="dd">For more information about the delimited data record structure, see <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a>.</dd>
+        <dd class="dd">For more information about the delimited data record structure, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordStructure.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a>.</dd>
 
    
    
@@ -283,9 +283,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e426">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e426">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e429">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e429">Description</th>
 
                                 </tr>
 
@@ -293,30 +293,30 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e426 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e426 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e429 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e426 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e429 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e429 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e426 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e426 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e429 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e429 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e426 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e426 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e429 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__ul_kwy_43h_hr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e429 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e426 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e429 ">Error record handling for the stage: <ul class="ul" id="task_npx_xgf_vq__ul_kwy_43h_hr">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -346,9 +346,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d29661e509">Kafka Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d29753e509">Kafka Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d29661e512">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d29753e512">Description</th>
 
                                 </tr>
 
@@ -356,9 +356,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Broker URI</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Broker URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Connection string for the Kafka broker. Use the following
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Connection string for the Kafka broker. Use the following
                                         format: <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To ensure a
                                             connection, enter a comma-separated list of additional
                                             broker URI.</p>
@@ -367,9 +367,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">ZooKeeper URI</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">ZooKeeper URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Connection string for the ZooKeeper of the Kafka cluster.
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Connection string for the ZooKeeper of the Kafka cluster.
                                         Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">To use a
                                             ZooKeeper quorum, enter a comma-separated list.
@@ -382,25 +382,25 @@
 
                                 </tr>
   <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Consumer Group</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Consumer Group</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Kafka consumer group that the <span class="ph">Data
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Kafka consumer group that the <span class="ph">Data
                   Collector</span> is a member of.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Topic</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Kafka topic to read.</td>
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Data Format <a class="xref" href="KConsumer.html#concept_xgs_nlc_wr" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_npx_xgf_vq__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Type of data to be read. Use one of the following
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_qgm_tjw_yq">
                                             <li class="li">Text</li>
 
@@ -410,7 +410,7 @@
 
                                             <li class="li">XML</li>
 
-                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
                                                   <img class="image" id="task_npx_xgf_vq__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
 
                                             <li class="li">Log</li>
@@ -423,27 +423,27 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Messages Charset</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Messages Charset</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Character encoding of the messages to be processed.<p class="p">Not
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Character encoding of the messages to be processed.<p class="p">Not
                                             used for the SDC Record or Avro data format.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Configuration/PipelineDesign.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
          <img class="image" id="task_npx_xgf_vq__d2906e97" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">For each partition, generates a single record for records
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">For each partition, generates a single record for records
                                         that include multiple objects. <p class="p">When not selected, Kafka
                                             Consumer generates multiple records when a record
                                             includes multiple objects.</p>
@@ -452,9 +452,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Max Batch Size (records)</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Max Batch Size (records)</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Maximum number of records processed at one time. Honors
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Maximum number of records processed at one time. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000.</p>
@@ -463,20 +463,20 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_npx_xgf_vq__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Number of milliseconds to wait before sending a partial
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Number of milliseconds to wait before sending a partial
                                         or empty batch. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29661e509 ">Kafka Configuration <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d29753e509 ">Kafka Configuration <a class="xref" href="KConsumer.html#concept_d5f_n2g_vq" title="You can add custom Kafka configuration properties to the Kafka Consumer.">
                                             <img class="image" id="task_npx_xgf_vq__image_mwv_b52_zq" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29661e512 ">Additional Kafka configuration properties to use. To add
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d29753e512 ">Additional Kafka configuration properties to use. To add
                                         properties, click <span class="ph uicontrol">Add</span> and define the
                                         Kafka property name and value. <p class="p">Use the property names and
                                             values as expected by Kafka.</p>
@@ -502,9 +502,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e748">Text Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e748">Text Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e751">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e751">Description</th>
 
                                 </tr>
 
@@ -512,9 +512,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e748 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e748 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e751 ">Maximum number of characters in a line. Longer lines are
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e751 ">Maximum number of characters in a line. Longer lines are
                                         truncated.</td>
 
                                 </tr>
@@ -536,9 +536,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e794">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e794">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e797">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e797">Description</th>
 
                                 </tr>
 
@@ -546,9 +546,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e794 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e794 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e797 ">Type of content in JSON files. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e797 ">Type of content in JSON files. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_xgm_2cp_1r">
                                             <li class="li">An event has an JSON array of objects</li>
 
@@ -560,9 +560,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e794 ">Max Object Length (chars) </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e794 ">Max Object Length (chars) </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e797 ">The maximum number of characters in a JSON
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e797 ">The maximum number of characters in a JSON
                                             object.<p class="p">Longer objects are diverted to the pipeline
                                             for error handling. </p>
 </td>
@@ -586,9 +586,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e859">Delimited Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e859">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e862">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e862">Description</th>
 
                                 </tr>
 
@@ -596,9 +596,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e859 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e859 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e862 ">Format for delimited data. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e862 ">Format for delimited data. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__ul_nkn_vhz_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -623,9 +623,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e859 ">Header Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e859 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e862 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e862 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
@@ -647,9 +647,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e947">XML Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e947">XML Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e950">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e950">Description</th>
 
                                 </tr>
 
@@ -657,9 +657,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e947 ">Delimiter Element</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e947 ">Delimiter Element</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e950 ">XML element that acts as a delimiter.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e950 ">XML element that acts as a delimiter.</td>
 
                                 </tr>
 
@@ -680,9 +680,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e994">Log Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e994">Log Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e997">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e997">Description</th>
 
                                 </tr>
 
@@ -690,9 +690,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e994 ">Log Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e994 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e997 ">Format of the log files. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e997 ">Format of the log files. Use one of the following
                                             options:<ul class="ul" id="task_npx_xgf_vq__d2897e848">
                                             <li class="li">Common Log Format</li>
 
@@ -714,17 +714,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e994 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e994 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e997 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e997 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e994 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e994 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e997 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e997 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -761,9 +761,9 @@
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d29661e1119">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d29753e1119">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d29661e1122">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d29753e1122">Description</th>
 
                                             </tr>
 
@@ -771,9 +771,9 @@
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e1119 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e1119 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e1122 ">Determines how to handle information that
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e1122 ">Determines how to handle information that
                                                   cannot be parsed:<ul class="ul" id="task_npx_xgf_vq__d2897e968">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
@@ -793,17 +793,17 @@
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e1119 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e1119 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e1122 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e1122 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e1119 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e1119 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e1122 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e1122 ">Use log4j variables to define a custom log
                                                   format.</td>
 
                                             </tr>
@@ -831,9 +831,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29661e1197">Avro Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29753e1197">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29661e1200">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29753e1200">Description</th>
 
                                 </tr>
 
@@ -841,17 +841,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e1197 ">Message includes Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e1197 ">Message includes Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e1200 ">Indicates that the message includes an Avro schema.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e1200 ">Indicates that the message includes an Avro schema.
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29661e1197 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29753e1197 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29661e1200 ">Avro schema definition to use when processing data. When
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29753e1200 ">Avro schema definition to use when processing data. When
                                         used, overrides any existing schema definitions associated
                                         with the data.<p class="p">You can optionally use the
                                             runtime:loadResource function to use a schema definition

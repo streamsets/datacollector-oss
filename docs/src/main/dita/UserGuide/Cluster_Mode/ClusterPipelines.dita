@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hmh_kfn_1s">
- <title>Cluster Execution Mode</title>
- <shortdesc>You can run a pipeline in standalone or cluster execution mode. </shortdesc>
+ <title>Cluster Pipelines</title>
+ <shortdesc>A <term>cluster pipeline</term> is a pipeline that runs in cluster execution mode. You
+  can run a pipeline in standalone execution mode or cluster execution mode. </shortdesc>
  <conbody>
   <p><indexterm>execution mode<indexterm>standalone and cluster
     modes</indexterm></indexterm><indexterm>cluster
@@ -17,7 +18,7 @@
   <p>When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to Kafka. And then use a
-   cluster mode pipeline to process the data from the Kafka cluster and perform the expensive
+   cluster pipeline to process the data from the Kafka cluster and perform the expensive
    transformation.</p>
   <p>Or, you might use cluster mode to move data from HDFS to another destination, such as
    Elasticsearch.</p>
@@ -51,6 +52,6 @@
      <dd>Use the Hadoop FS origin to process data from HDFS in cluster mode.</dd>
     </dlentry>
    </dl></p>
-  <p>You can use any processor or destination in cluster mode pipelines.</p>
+  <p>You can use any processor or destination in cluster pipelines.</p>
  </conbody>
 </concept>

@@ -39,7 +39,7 @@
           to a map based on the header line of the file. If the file does not include a header,
           Kafka Consumer creates the map based on column number.</dd>
         <dd>For more information about the delimited data record structure, see <xref
-            href="../Pipeline_Configuration/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
+            href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
           />.</dd>
    </dlentry>
    <dlentry>

@@ -70,6 +70,7 @@
   </topicmeta>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/RPC.dita"/>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>
   </topicmeta>

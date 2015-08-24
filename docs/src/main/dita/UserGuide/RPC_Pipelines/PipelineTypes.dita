@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_vmj_3ff_ct">
+ <title>RPC Pipeline Types</title>
+ <conbody>
+  <p><indexterm>RPC pipelines<indexterm>types</indexterm></indexterm><indexterm>origin
+     pipeline<indexterm>RPC pipelines</indexterm></indexterm><indexterm>destination
+     pipeline<indexterm>RPC pipelines</indexterm></indexterm>To pass data across data centers,
+   create two types of RPC pipelines: <dl>
+    <dlentry>
+     <dt>origin pipeline</dt>
+     <dd>Processes data from the origin system and passes it to the destination RPC pipeline. </dd>
+     <dd>Uses an RPC destination to pass data to the destination pipeline. You can configure the RPC
+      destination to write to multiple pipelines.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>destination pipeline</dt>
+     <dd>Processes data from the origin pipeline and passes it to the destination system.</dd>
+     <dd>Uses an RPC origin to process data from the origin pipeline.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>
