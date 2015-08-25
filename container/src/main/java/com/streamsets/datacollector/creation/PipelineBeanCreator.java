@@ -20,17 +20,20 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -391,7 +394,7 @@ public abstract class PipelineBeanCreator {
 
   Object toList(Object value, StageDefinition stageDef, ConfigDefinition configDef,
       Map<String, Object> pipelineConstants, String stageName, String groupName, String configName,
-      List<Issue> errors) {
+      List<Issue> errors, Field field) {
     IssueCreator issueCreator = IssueCreator.getStage(stageName);
     if (!(value instanceof List)) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_020));
@@ -406,6 +409,17 @@ public abstract class PipelineBeanCreator {
         } else {
           element = resolveIfImplicitEL(element, stageDef, configDef, pipelineConstants, stageName, errors);
           if (element != null) {
+            //We support list of String and enums.
+            //If the field type is enum and the element is String, convert to enum
+            if(field != null) {
+              Type type = field.getGenericType();
+              if (type instanceof ParameterizedType) {
+                Type type1 = ((ParameterizedType) type).getActualTypeArguments()[0];
+                if(((Class<?>)type1).isEnum()) {
+                  element = toEnum((Class<?>)type1, element, stageDef, stageName, groupName, configName, errors);
+                }
+              }
+            }
             list.add(element);
           } else {
             error = true;
@@ -550,7 +564,7 @@ public abstract class PipelineBeanCreator {
       if (configDef.getModel() != null && configDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
         value = toComplexField(value, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
       } else if (List.class.isAssignableFrom(field.getType())) {
-        value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
+        value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors, field);
       } else if (Map.class.isAssignableFrom(field.getType())) {
         value = toMap(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
       } else {
@@ -561,7 +575,8 @@ public abstract class PipelineBeanCreator {
           } else if (field.getType() == String.class) {
             value = toString(value, stageDef, stageName, groupName, configName, errors);
           } else if (List.class.isAssignableFrom(field.getType())) {
-            value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
+            value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors,
+              field);
           } else if (Map.class.isAssignableFrom(field.getType())) {
             value = toMap(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors);
           } else if (ConfigValueExtractor.CHARACTER_TYPES.contains(field.getType())) {

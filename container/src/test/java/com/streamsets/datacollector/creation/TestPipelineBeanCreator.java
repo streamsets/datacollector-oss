@@ -53,6 +53,10 @@ public class TestPipelineBeanCreator {
 
   public enum E { A, B }
 
+  public class MyConfigBean {
+    public List<E> enums;
+  }
+
   @Test
   public void testToEnum() {
     List<Issue> issues = new ArrayList<>();
@@ -257,29 +261,29 @@ public class TestPipelineBeanCreator {
     Map<String, Object> constants = ImmutableMap.<String, Object>of("a", "A");
     List<Issue> issues = new ArrayList<>();
     Object value = ImmutableList.of("${a}");
-    Object v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    Object v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertEquals(ImmutableList.of("A"), v);
     Assert.assertTrue(issues.isEmpty());
 
     value = ImmutableList.of("A");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertEquals(ImmutableList.of("A"), v);
     Assert.assertTrue(issues.isEmpty());
 
     value = Arrays.asList(null, "A");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = ImmutableList.of("${a");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
     issues.clear();
     value = "x";
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertNull(v);
     Assert.assertFalse(issues.isEmpty());
 
@@ -287,8 +291,18 @@ public class TestPipelineBeanCreator {
     issues.clear();
     configDef = stageDef.getConfigDefinition("listExplicit");
     value = ImmutableList.of("${a}");
-    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues);
+    v = PipelineBeanCreator.get().toList(value, stageDef, configDef, constants, "g", "s", "c", issues, null);
     Assert.assertEquals(ImmutableList.of("${a}"), v);
+    Assert.assertTrue(issues.isEmpty());
+  }
+
+  @Test
+  public void testToEnumList() throws NoSuchFieldException {
+    List<Issue> issues = new ArrayList<>();
+    Object value = ImmutableList.of("A");
+    Object v = PipelineBeanCreator.get().toList(value, Mockito.mock(StageDefinition.class),
+      Mockito.mock(ConfigDefinition.class), null, "g", "s", "c", issues, MyConfigBean.class.getField("enums"));
+    Assert.assertEquals(ImmutableList.of(E.A), v);
     Assert.assertTrue(issues.isEmpty());
   }
 
