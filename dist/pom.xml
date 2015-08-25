@@ -25,7 +25,7 @@
     <!-- trick to avoid pulling files from 'ui' & 'docs' if their profiles are not active -->
     <ui.dist-dir>${basedir}/src/main/emptydir</ui.dist-dir>
     <docs.dist-dir>${basedir}/src/main/emptydir</docs.dist-dir>
-
+    <sdc.log4j.level>DEBUG</sdc.log4j.level>
     <snappy.version>1.0.5</snappy.version>
   </properties>
 
@@ -222,6 +222,19 @@
           <scope>compile</scope>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- Override for log4j level for releases -->
+        <sdc.log4j.level>INFO</sdc.log4j.level>
+      </properties>
     </profile>
     <profile>
       <id>docs</id>

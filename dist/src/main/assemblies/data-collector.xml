@@ -65,7 +65,17 @@
         <exclude>*-password.txt</exclude>
         <exclude>*-realm.properties</exclude>
         <exclude>sdc-keystore.jks</exclude>
+        <exclude>sdc-log4j.properties</exclude>
       </excludes>
+    </fileSet>
+
+    <fileSet>
+      <directory>${basedir}/src/main/etc</directory>
+      <outputDirectory>/etc</outputDirectory>
+      <includes>
+        <include>sdc-log4j.properties</include>
+      </includes>
+      <filtered>true</filtered>
     </fileSet>
 
     <fileSet>

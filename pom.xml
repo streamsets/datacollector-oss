@@ -48,6 +48,7 @@
     <elasticsearch_1_7-lib>none</elasticsearch_1_7-lib>
     <cassandra_2-lib>none</cassandra_2-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
+
   </properties>
 
   <modules>
