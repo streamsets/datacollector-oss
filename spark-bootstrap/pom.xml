@@ -23,6 +23,7 @@
 
   <properties>
     <spark.version>1.3.0</spark.version>
+    <avro.version>1.7.7</avro.version>
   </properties>
 
   <dependencies>
@@ -45,6 +46,19 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-container</artifactId>
       <scope>test</scope> <!-- DO NOT CHANGE, tests which require this should be moved to integration tests -->
+    </dependency>
+	<dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <version>${avro.version}</version>
+      <classifier>hadoop2</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.spark</groupId>

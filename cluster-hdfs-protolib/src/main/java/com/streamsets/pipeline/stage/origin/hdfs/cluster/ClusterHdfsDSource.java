@@ -25,7 +25,6 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +63,20 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     group = "HADOOP_FS"
   )
   public List<String> hdfsDirLocations; // hdfsDirLocation
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.TEXT,
+    defaultValue = "",
+    label = "Avro Reader Schema",
+    description = "",
+    displayPosition = 20,
+    group = "AVRO",
+    dependsOn = "dataFormat",
+    triggeredByValue = "AVRO",
+    mode = ConfigDef.Mode.PLAIN_TEXT
+  )
+  public String avroSchema;
 
   @ConfigDef(
     required = true,
@@ -408,7 +421,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
       textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
        produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir, csvFileFormat, csvHeader, csvMaxObjectLen,
-       csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType);
+       csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, avroSchema);
      return clusterHDFSSource;
   }
 

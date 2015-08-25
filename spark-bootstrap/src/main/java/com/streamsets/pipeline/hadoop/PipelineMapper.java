@@ -9,6 +9,10 @@ import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
 
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.mapred.AvroKey;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -19,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -75,7 +80,7 @@ public class PipelineMapper extends Mapper {
     }
     String header = null;
     if (fileSplit != null) {
-      file = fileSplit.getPath() + "::" + fileSplit.getStart() + "::";
+      file = fileSplit.getPath() + "::" + fileSplit.getStart();
       if (properties.getProperty("dataFormat").equals("DELIMITED")
         && properties.getProperty("csvHeader").equals("WITH_HEADER")) {
         if (fileSplit.getStart() == 0) {
@@ -84,15 +89,17 @@ public class PipelineMapper extends Mapper {
             header = String.valueOf(context.getCurrentValue());
           }
         } else {
-          header = getHeaderFromFile(context.getConfiguration(), fileSplit.getPath());
+          header = PipelineMapper.getHeaderFromFile(context.getConfiguration(), fileSplit.getPath());
         }
         LOG.info("Header in file " + fileSplit.getPath() + " for start offset " + fileSplit.getStart() + ": " + header);
       }
     }
+    boolean isAvro = properties.getProperty("dataFormat").equalsIgnoreCase("AVRO");
     int batchSize = Integer.parseInt(properties.getProperty("production.maxBatchSize", "1000").trim());
     boolean errorOccurred = true;
     try {
       boolean hasNext = context.nextKeyValue();
+      int count = 0;
       while (hasNext) {
         List<Map.Entry> batch = new ArrayList<>();
         if (header != null) {
@@ -103,7 +110,13 @@ public class PipelineMapper extends Mapper {
           batchSize = batchSize + 1;
         }
         while (hasNext && batch.size() < batchSize) {
-          batch.add(new Pair(file + context.getCurrentKey(), String.valueOf(context.getCurrentValue())));
+          if (isAvro) {
+            GenericRecord avroMessageWrapper = ((AvroKey<GenericRecord>) context.getCurrentKey()).datum();
+            batch.add(new Pair(file + "::" + count, PipelineMapper.getBytesFromAvroRecord(avroMessageWrapper)));
+            count++;
+          } else {
+            batch.add(new Pair(file + context.getCurrentKey(), String.valueOf(context.getCurrentValue())));
+          }
           hasNext = context.nextKeyValue(); // not like iterator.hasNext, actually advances
         }
         clusterFunction.invoke(batch);
@@ -131,7 +144,17 @@ public class PipelineMapper extends Mapper {
     }
   }
 
-  private String getHeaderFromFile(Configuration hadoopConf, Path path) throws IOException {
+  private static byte[] getBytesFromAvroRecord(GenericRecord genericRecord) throws IOException {
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    DataFileWriter<GenericRecord> dataFileWriter =
+      new DataFileWriter<GenericRecord>(new GenericDatumWriter<GenericRecord>());
+    dataFileWriter.create(genericRecord.getSchema(), out);
+    dataFileWriter.append(genericRecord);
+    dataFileWriter.close();
+    return out.toByteArray();
+  }
+
+  private static String getHeaderFromFile(Configuration hadoopConf, Path path) throws IOException {
     String header;
     BufferedReader br = null;
     try {

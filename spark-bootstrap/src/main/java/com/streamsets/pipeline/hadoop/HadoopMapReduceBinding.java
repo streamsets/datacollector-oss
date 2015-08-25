@@ -9,10 +9,8 @@ import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
 
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.slf4j.Logger;
@@ -58,6 +56,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
+      String dataFormat = getProperty("dataFormat");
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
@@ -67,12 +66,20 @@ public class HadoopMapReduceBinding implements ClusterBinding {
       conf.set("mapred.child.java.opts", javaOpts);
       conf.setBoolean("mapreduce.map.speculative", false);
       conf.setBoolean("mapreduce.reduce.speculative", false);
+      if (dataFormat.equalsIgnoreCase("AVRO")) {
+        conf.set(Job.INPUT_FORMAT_CLASS_ATTR, "org.apache.avro.mapreduce.AvroKeyInputFormat");
+        conf.set(Job.MAP_OUTPUT_KEY_CLASS, "org.apache.avro.mapred.AvroKey");
+      }
       job = Job.getInstance(conf, "StreamSets Data Collector - Batch Execution Mode");
       job.setJarByClass(this.getClass());
       job.setNumReduceTasks(0);
+      if (!dataFormat.equalsIgnoreCase("AVRO")) {
+        job.setOutputKeyClass(NullWritable.class);
+      }
       job.setMapperClass(PipelineMapper.class);
-      job.setOutputKeyClass(NullWritable.class);
+
       job.setOutputValueClass(NullWritable.class);
+
       job.setOutputFormatClass(NullOutputFormat.class);
     }
   }

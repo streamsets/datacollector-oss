@@ -364,6 +364,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     String clusterToken = UUID.randomUUID().toString();
     ClusterOrigin clusterOrigin = null;
     String pathToSparkKafkaJar = null;
+    String pathToAvroMapredJar = null;
+    String pathToAvroJar = null;
     List<Issue> errors = new ArrayList<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
     if (!errors.isEmpty()) {
@@ -413,6 +415,21 @@ public class ClusterProviderImpl implements ClusterProvider {
           File jarFile = new File(jarUrl.getPath());
           if (jarFile.getName().startsWith(ClusterModeConstants.SPARK_KAFKA_JAR_PREFIX)) {
             pathToSparkKafkaJar = jarFile.getAbsolutePath();
+          }
+        }
+
+        for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
+          File jarFile = new File(jarUrl.getPath());
+          if (jarFile.getName().startsWith(ClusterModeConstants.AVRO_MAPRED_JAR_PREFIX)) {
+            pathToAvroMapredJar = jarFile.getAbsolutePath();
+          }
+        }
+        for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
+          File jarFile = new File(jarUrl.getPath());
+          Pattern pattern = Pattern.compile(ClusterModeConstants.AVRO_JAR_REGEX);
+          Matcher matcher = pattern.matcher(jarFile.getName());
+          if (matcher.matches()) {
+            pathToAvroJar = jarFile.getAbsolutePath();
           }
         }
       }
@@ -499,6 +516,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     InputStream clusterLog4jProperties = null;
     try {
       if (isBatch) {
+         Utils.checkState(pathToAvroJar != null, "Could not find avro jar");
+         Utils.checkState(pathToAvroMapredJar != null, "Could not find avro-mapred jar");
         clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-mr-log4j.properties"),
           "Cluster Log4J Properties");
       } else {
@@ -526,7 +545,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       args = generateMRArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
         config.clusterSlaveJavaOpts, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
-        sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath());
+        sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath(), pathToAvroJar,
+        pathToAvroMapredJar);
     } else {
       LOG.info("Submitting Spark Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
@@ -588,7 +608,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private List<String> generateMRArgs(String clusterManager, String slaveMemory, String javaOpts,
                                       String libsTarGz, String etcTarGz, String resourcesTarGz, String log4jProperties,
                                       String bootstrapJar, String sdcPropertiesFile,
-                                      String clusterBootstrapJar) {
+                                      String clusterBootstrapJar, String pathToAvroJar, String pathToAvroMapredJar) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
     args.add("start");
@@ -600,7 +620,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("-D");
     args.add("mapreduce.job.log4j-properties-file=" + log4jProperties);
     args.add("-libjars");
-    args.add(bootstrapJar);
+    args.add(Joiner.on(",").join(bootstrapJar, pathToAvroMapredJar, pathToAvroJar));
     args.add(sdcPropertiesFile);
     args.add(Joiner.on(" ").join(String.format("-Xmx%sm", slaveMemory), javaOpts,
       "-javaagent:./" + (new File(bootstrapJar)).getName()));

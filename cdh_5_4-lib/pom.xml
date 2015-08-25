@@ -29,6 +29,7 @@
     <solr.version>4.10.3-cdh5.4.5</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
     <thrift.version>0.9.2</thrift.version>
+    <avro.version>1.7.7</avro.version>
  </properties>
 
   <repositories>
@@ -109,6 +110,21 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <version>${avro.version}</version>
+      <scope>compile</scope>
+      <classifier>hadoop2</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
       <scope>compile</scope>
     </dependency>
 

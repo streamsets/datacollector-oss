@@ -78,10 +78,19 @@ public class AvroTypeUtil {
         f = Field.create(Field.Type.LONG, value);
         break;
       case MAP:
-        Map<Utf8, Object> avroMap = (Map<Utf8, Object>) value;
+        Map<Object, Object> avroMap = (Map<Object, Object>) value;
         Map<String, Field> map = new LinkedHashMap<>();
-        for (Map.Entry<Utf8, Object> entry : avroMap.entrySet()) {
-          map.put(entry.getKey().toString(), avroToSdcField(record, fieldPath + FORWARD_SLASH + entry.getKey().toString(),
+        for (Map.Entry<Object, Object> entry : avroMap.entrySet()) {
+          String key;
+          if (entry.getKey() instanceof Utf8) {
+            key = entry.getKey().toString();
+          } else if (entry.getKey() instanceof String) {
+            key = (String) entry.getKey();
+          } else {
+            throw new IllegalStateException(Utils.format("Unrecognized type for avro value: {}", entry.getKey()
+              .getClass().getName()));
+          }
+          map.put(key, avroToSdcField(record, fieldPath + FORWARD_SLASH + key,
             schema.getValueType(), entry.getValue()));
         }
         f = Field.create(map);

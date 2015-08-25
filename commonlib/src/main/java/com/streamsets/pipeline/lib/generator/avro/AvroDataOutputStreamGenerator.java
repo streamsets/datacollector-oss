@@ -21,9 +21,9 @@ import java.io.OutputStream;
 
 public class AvroDataOutputStreamGenerator implements DataGenerator {
 
-  private Schema schema;
+  private final Schema schema;
   private boolean closed;
-  private DataFileWriter<GenericRecord> dataFileWriter;
+  private final DataFileWriter<GenericRecord> dataFileWriter;
 
   public AvroDataOutputStreamGenerator(OutputStream outputStream, String avroSchema)
       throws IOException {

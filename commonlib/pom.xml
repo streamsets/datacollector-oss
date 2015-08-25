@@ -115,6 +115,14 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <version>${avro.version}</version>
+      <scope>compile</scope>
+      <classifier>hadoop2</classifier>
+    </dependency>
+
+    <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-avro</artifactId>
       <version>${jackson.version}</version>

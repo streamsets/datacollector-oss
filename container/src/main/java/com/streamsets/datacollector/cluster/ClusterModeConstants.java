@@ -19,5 +19,6 @@ public class ClusterModeConstants {
 
   public static final String SPARK_KAFKA_JAR_PREFIX = "spark-streaming-kafka";
   public static final String CLUSTER_SOURCE_BATCHMODE = "cluster.source.batchmode";
-
+  public static final String AVRO_MAPRED_JAR_PREFIX = "avro-mapred";
+  public static final String AVRO_JAR_REGEX = "avro-\\d+.*";
 }

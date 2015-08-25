@@ -27,7 +27,8 @@
     <hbase.version>0.98.4.2.2.6.5-3-hadoop2</hbase.version>
     <hive.version>0.14.0.2.2.6.5-3</hive.version>
     <kafka.version>0.8.1.2.2.6.5-3</kafka.version>
-    <thrift.version>0.9.0</thrift.version>
+    <thrift.version>0.9.0</thrift.version> 
+    <avro.version>1.7.7</avro.version>
   </properties>
 
   <repositories>
@@ -131,6 +132,20 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
       <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro-mapred</artifactId>
+      <version>${avro.version}</version>
+      <scope>compile</scope>
+      <classifier>hadoop2</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
       <scope>compile</scope>
     </dependency>
 

@@ -6,15 +6,11 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import java.util.List;
-
-import com.streamsets.pipeline.api.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-
 
 public class StandaloneKafkaSource extends BaseKafkaSource {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneKafkaSource.class);

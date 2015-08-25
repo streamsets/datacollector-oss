@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 public class AvroDataParserFactory extends DataParserFactory {
 
   static final String KEY_PREFIX = "avro.";
@@ -70,6 +71,7 @@ public class AvroDataParserFactory extends DataParserFactory {
     }
   }
 
+  @Override
   public DataParser getParser(File file, String fileOffset)
     throws DataParserException {
     try {

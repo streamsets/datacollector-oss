@@ -32,7 +32,7 @@ public class AvroMessageParser implements DataParser {
   private BinaryDecoder decoder;
   private GenericData.Record avroRecord;
   private boolean eof;
-  private Stage.Context context;
+  private final Stage.Context context;
   private final String messageId;
   private final boolean messageHasSchema;
 

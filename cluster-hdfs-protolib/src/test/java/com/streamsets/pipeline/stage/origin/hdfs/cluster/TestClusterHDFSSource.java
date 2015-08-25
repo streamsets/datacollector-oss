@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,8 +18,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import com.streamsets.pipeline.config.CsvRecordType;
+
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+
+import com.streamsets.pipeline.api.Field;
+
+import org.apache.avro.io.DatumWriter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -460,6 +470,100 @@ public class TestClusterHDFSSource {
     }
   }
 
+  @Test(timeout = 30000)
+  public void testProduceAvroData() throws Exception {
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+      .addOutputLane("lane")
+      .setClusterMode(true)
+      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
+      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
+      .addConfiguration("recursive", false)
+      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
+      .addConfiguration("dataFormat", DataFormat.AVRO)
+      .addConfiguration("csvFileFormat", CsvMode.CSV)
+      .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
+      .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("textMaxLineLen", 1024)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("hdfsKerberos", false)
+      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .build();
+      sourceRunner.runInit();
+
+    List<Map.Entry> list = new ArrayList<>();
+    list.add(new Pair("path::" + "1" + "::1", createAvroData("a", 30, ImmutableList.of("a@company.com", "a2@company.com"))));
+    list.add(new Pair("path::" + "1" + "::2", createAvroData("b", 40, ImmutableList.of("b@company.com", "b2@company.com"))));
+
+    Thread th = createThreadForAddingBatch(sourceRunner, list);
+    try {
+      StageRunner.Output output = sourceRunner.runProduce(null, 5);
+      String newOffset = output.getNewOffset();
+      Assert.assertEquals("path::" + "1::2", newOffset);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(2, records.size());
+
+      Record record = records.get(0);
+      Assert.assertTrue(record.has("/name"));
+      Assert.assertEquals("a", record.get("/name").getValueAsString());
+      Assert.assertTrue(record.has("/age"));
+      Assert.assertEquals(30, record.get("/age").getValueAsInteger());
+      Assert.assertTrue(record.has("/emails"));
+      Assert.assertTrue(record.get("/emails").getValueAsList() instanceof List);
+      List<Field> emails = record.get("/emails").getValueAsList();
+      Assert.assertEquals(2, emails.size());
+      Assert.assertEquals("a@company.com", emails.get(0).getValueAsString());
+      Assert.assertEquals("a2@company.com", emails.get(1).getValueAsString());
+
+      record = records.get(1);
+      Assert.assertTrue(record.has("/name"));
+      Assert.assertEquals("b", record.get("/name").getValueAsString());
+      Assert.assertTrue(record.has("/age"));
+      Assert.assertEquals(40, record.get("/age").getValueAsInteger());
+      Assert.assertTrue(record.has("/emails"));
+      Assert.assertTrue(record.get("/emails").getValueAsList() instanceof List);
+      emails = record.get("/emails").getValueAsList();
+      Assert.assertEquals(2, emails.size());
+      Assert.assertEquals("b@company.com", emails.get(0).getValueAsString());
+      Assert.assertEquals("b2@company.com", emails.get(1).getValueAsString());
+
+    } finally {
+      th.interrupt();
+    }
+  }
+
+  private byte[] createAvroData(String name, int age, List<String> emails)  throws IOException {
+    String AVRO_SCHEMA = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"name\", \"type\": \"string\"},\n"
+      +" {\"name\": \"age\", \"type\": \"int\"},\n"
+      +" {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}},\n"
+      +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
+      +"]}";
+    Schema schema = new Schema.Parser().parse(AVRO_SCHEMA);
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    GenericRecord e1 = new GenericData.Record(schema);
+    e1.put("name", name);
+    e1.put("age", age);
+    e1.put("emails", emails);
+    e1.put("boss", null);
+
+    DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
+    DataFileWriter<GenericRecord>dataFileWriter = new DataFileWriter<>(datumWriter);
+    dataFileWriter.create(schema, out);
+    dataFileWriter.append(e1);
+    dataFileWriter.close();
+    return out.toByteArray();
+  }
+
 
   private Thread createThreadForAddingBatch(final SourceRunner sourceRunner, final List<Map.Entry> list) {
     Thread sourceThread = new Thread() {
@@ -497,7 +601,7 @@ public class TestClusterHDFSSource {
         jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
         grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
         produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen,
-        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType);
+        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, avroSchema);
     }
   }
 
