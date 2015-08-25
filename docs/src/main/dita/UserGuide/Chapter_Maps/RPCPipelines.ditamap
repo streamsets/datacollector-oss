@@ -5,7 +5,10 @@
  <topicref href="../RPC_Pipelines/RPCpipelines_title.dita">
   <topicref href="../RPC_Pipelines/RPCpipeline.dita">
    <topicref href="../RPC_Pipelines/PipelineTypes.dita"/>
-   <topicref href="../RPC_Pipelines/Deployment_Architecture.dita"/>
   </topicref>
+  <topicref href="../RPC_Pipelines/Deployment_Architecture.dita"/>
+  <topicref href="../RPC_Pipelines/ConfiguringDeliveryGuarantee.dita"/>
+  <topicref href="../RPC_Pipelines/RPC_URI.dita"/>
+  <topicref href="../RPC_Pipelines/ConfiguringRPCPipelines.dita"/>
  </topicref>
 </map>

@@ -9,10 +9,9 @@
    to consider:<dl>
     <dlentry>
      <dt>Use multiple destination pipelines to improve downstream availability</dt>
-     <dd>To ensure downstream availability, you generally want to deploy the destination pipeline on
-      additional <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      />s. By deploying multiple destination pipelines, you can avoid bottlenecks with a high-volume
-      origin pipeline:</dd>
+     <dd>To ensure downstream availability, you generally want to deploy multiple destination
+            pipelines. By deploying multiple destination pipelines, you can avoid bottlenecks with a
+            high-volume origin pipeline:</dd>
      <dd><image href="../Graphics/RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
      <dd>If you have multiple data centers with similar data, you might deploy several sets of this
       model. This would allow you to process similar data from multiple data centers and store the

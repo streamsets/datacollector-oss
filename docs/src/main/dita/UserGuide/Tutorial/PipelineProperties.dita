@@ -3,9 +3,12 @@
 <task id="task_jmz_3dn_ls">
     <title>Creating a Pipeline and Defining Pipeline Properties</title>
     <shortdesc>When you configure a pipeline, you need to decide what to do with error records. You
-        can discard them, write them to file, or write them to Kafka. </shortdesc>
+        can discard them or - more productively - write them to file, another pipeline, or to Kafka. </shortdesc>
     <taskbody>
         <context>
+            <p>Write error records to one of these locations as a convenient way to deal with error
+                records without having to stop the pipeline. Allowing you to keep your operations
+                running. </p>
             <p>This tutorial writes the records to a local file, but if you prefer to write error
                 records to Kafka, feel free. </p>
         </context>
@@ -13,10 +16,17 @@
             <step>
                 <cmd>If you aren't already, log in to the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</cmd>
+                    />. </cmd>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/CreatePipeline1">
-                <cmd/>
+            <step>
+                <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
+                    page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
+                <info>If you are working on another pipeline in the <ph
+                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, use
+                    the <uicontrol>Toggle Library Pane</uicontrol> icon to display the pipeline
+                    library: <image href="../Graphics/icon_OverLibraryToggle.png"
+                        id="image_mtm_rc3_dt" scale="40"/> . Then click the <uicontrol>Create New
+                        Pipeline</uicontrol> icon.</info>
             </step>
             <step>
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
@@ -27,6 +37,14 @@
                     origin is missing and offers a list of origins to choose from. On the right, the
                     stage library displays a list of available origins. You can use the drop-down
                     menu to change the stages that display.</info>
+                <info>If the Pipeline Creation Help Bar does not display, you might have disabled
+                    it. To enable it, in the top right corner of the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> window, click the  <menucascade>
+                        <uicontrol>Help</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. Clear the <uicontrol>Hide Pipeline Creation Help Bar</uicontrol>
+                    option.</info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab. And

@@ -2,24 +2,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lnh_z3z_bt">
  <title>RPC Pipelines</title>
- <shortdesc>Remote Protocol Call pipelines, a.k.a. <term>RPC pipelines</term>, are pipelines that
-    pass data from one pipeline to another over the WAN without writing to an intermediary system.
-    Use RPC pipelines to securely transmit data across data centers.</shortdesc>
+ <shortdesc>Remote Protocol Call pipelines, a.k.a. <term>RPC pipelines</term>, are a set of
+    pipelines that pass data from one pipeline to another over the WAN without writing to an
+    intermediary system. Use RPC pipelines to securely transmit data across data
+    centers.</shortdesc>
  <conbody>
-  <p><indexterm>RPC
+    <p><indexterm>RPC
           pipelines<indexterm>overview</indexterm></indexterm><indexterm>pipelines<indexterm>RPC
           pipelines</indexterm></indexterm>Typically, a pipeline uses a standard origin such as
-      Directory or Kafka Consumer and writes to a standard destination such as HBase. An RPC
-      pipeline writes directly to another RPC pipeline using the RPC destination and RPC origin as
-      follows: </p>
-  <p>&lt;&lt;create graphic>><draft-comment author="Loretta">create graphic of two
-    pipelines</draft-comment></p>
-  <p>This allows you to process data from one data center and pass it from one data center securely.
-      Effectively, it's like creating a single pipeline that happens to span two data centers. </p>
-    <p>A set of RPC pipelines process data like a single pipeline: The origin pipeline creates a
-      batch, passes it through the pipeline, then passes it to the destination pipeline. Only when
-      the destination pipeline writes the data to its destination system does the origin pipeline
-      commit the offset. </p>
-    <p/>
- </conbody>
+      Directory and writes to a standard destination such as HBase. An RPC pipeline uses either an
+      RPC destination or origin to communicate with another RPC pipeline.</p>
+    <p>To use RPC pipelines, you create an RPC origin pipeline that uses an RPC destination to write
+      directly to an RPC origin in the RPC destination pipeline, as follows: </p>
+    <image href="../Graphics/RPCpipelines.png" id="image_gw4_mlb_dt" scale="75"/>
+    <p>RPC destination and origin stages enable you to pass data securely from one data center to
+      another, effectively like creating a single pipeline that spans two data centers.</p>
+  </conbody>
 </concept>

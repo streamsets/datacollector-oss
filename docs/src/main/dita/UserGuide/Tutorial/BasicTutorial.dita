@@ -2,9 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_phf_cjt_ls">
  <title>Basic Tutorial</title>
- <shortdesc>The basic tutorial creates a pipeline that processes data in two branches and writes all
-  data to a file system. You'll use data preview to help configure the pipeline, and you'll create a
-  data alert and run the pipeline. </shortdesc>
+ <shortdesc>The basic tutorial creates a pipeline that reads a file from a directory, processes the
+  data in two branches, and writes all data to a file system. You'll use data preview to help
+  configure the pipeline, and you'll create a data alert and run the pipeline. </shortdesc>
  <conbody>
   <p><indexterm>tutorial<indexterm>basic</indexterm></indexterm>Here are high level steps for
    building and running the basic pipeline:<ol id="ol_emy_rhp_ms">

@@ -1,0 +1,66 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="To create a valid set of RPC pipelines, some configuration options must be aligned. Use the following guidelines to configure RPC pipelines: RPC Origin Pipeline Configuration In the origin pipeline, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Configuration Guidelines for RPC Pipelines"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipelines_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_mhl_1jc_dt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Configuration Guidelines for RPC Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_mhl_1jc_dt">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../RPC_Pipelines/RPCpipelines_title.html" title="RPC Pipelines">RPC Pipelines</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../RPC_Pipelines/RPCpipelines_title.html" title="RPC Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">RPC Pipelines</span></a></span>  </div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Configuration Guidelines for RPC Pipelines</h1>
+
+ <div class="body conbody">
+  <p class="p">To create a
+   valid set of RPC pipelines, some configuration options must be aligned. Use the following
+   guidelines to configure RPC pipelines:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">RPC Origin Pipeline Configuration</dt>
+
+     <dd class="dd">In the origin pipeline, configure the following elements:<ol class="ol" id="concept_mhl_1jc_dt__ol_wkt_rrc_dt">
+       <li class="li">In the pipeline properties, set the Delivery Guarantee to the option you want to
+        use.</li>
+
+       <li class="li">For the destination, use the RPC destination.</li>
+
+       <li class="li">In the RPC destination, enter the RPC URI and other required properties.</li>
+
+      </ol>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">RPC Destination Pipeline Configuration</dt>
+
+     <dd class="dd">In the destination pipeline, configure the following elements:<ol class="ol" id="concept_mhl_1jc_dt__ol_e41_xrc_dt">
+       <li class="li">In the pipeline properties, set the Delivery Guarantee to the same option as the origin
+        pipeline. Using a different option causes the <span class="ph">Data
+                  Collector</span> to
+        default to At Least Once.</li>
+
+       <li class="li">For the origin, use the RPC origin.</li>
+
+       <li class="li">In the RPC origin, enter the same RPC URI used in the RPC destination. And configure
+        other required properties.</li>
+
+      </ol>
+</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../RPC_Pipelines/RPCpipelines_title.html" title="RPC Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">RPC Pipelines</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>
