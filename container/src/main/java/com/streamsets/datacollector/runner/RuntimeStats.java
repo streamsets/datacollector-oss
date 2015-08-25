@@ -5,7 +5,12 @@
  */
 package com.streamsets.datacollector.runner;
 
-public class RuntimeStats {
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.streamsets.datacollector.http.GaugeValue;
+
+import java.io.IOException;
+
+public class RuntimeStats implements GaugeValue {
 
   private long batchCount;
   private String currentSourceOffset;
@@ -76,4 +81,18 @@ public class RuntimeStats {
   public void setBatchStartTime(long batchStartTime) {
     this.batchStartTime = batchStartTime;
   }
+
+  @Override
+  public void serialize(JsonGenerator jg) throws IOException {
+    jg.writeStartObject();
+    jg.writeObjectField("batchCount", batchCount);
+    jg.writeObjectField("currentSourceOffset", currentSourceOffset);
+    jg.writeObjectField("currentBatchAge", currentBatchAge);
+    jg.writeObjectField("currentStage", currentStage);
+    jg.writeObjectField("timeInCurrentStage", timeInCurrentStage);
+    jg.writeObjectField("timeOfLastReceivedRecord", timeOfLastReceivedRecord);
+    jg.writeObjectField("batchStartTime", batchStartTime);
+    jg.writeEndObject();
+  }
+
 }
