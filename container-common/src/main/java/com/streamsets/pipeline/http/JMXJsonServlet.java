@@ -326,6 +326,8 @@ public class JMXJsonServlet extends HttpServlet {
           writeObject(jg, entry);
         }
         jg.writeEndArray();
+      } else if (value instanceof GaugeValue) {
+        ((GaugeValue)value).serialize(jg);
       } else {
         jg.writeString(value.toString());
       }
