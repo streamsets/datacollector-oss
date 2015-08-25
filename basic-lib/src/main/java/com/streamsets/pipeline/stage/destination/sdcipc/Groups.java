@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  DESTINATION_PIPELINE("Destination Pipeline"),
+  RPC("RPC"),
   ADVANCED("Advanced"),
   ;
 

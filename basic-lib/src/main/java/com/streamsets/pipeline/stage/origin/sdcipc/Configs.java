@@ -24,8 +24,9 @@ public class Configs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "20000",
       label = "RPC Listening Port",
+      description = "Port number to listen for data. Must match one of the port numbers used by the RPC destination of the origin pipeline.",
       displayPosition = 10,
-      group = "",
+      group = "RPC",
       min = 1,
       max = 65535
   )
@@ -35,9 +36,9 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "RPC ID",
-      description = "User-defined ID. Must match the RPC ID used in the RPC destination of the origin pipeline.",
+      description = "User-defined ID. Must match the RPC ID used by the RPC destination of the origin pipeline.",
       displayPosition = 20,
-      group = ""
+      group = "RPC"
   )
   public String appId;
 
@@ -48,7 +49,7 @@ public class Configs {
       label = "Batch Wait Time (secs)",
       description = " Maximum amount of time to wait for a batch before sending and empty one",
       displayPosition = 30,
-      group = "",
+      group = "RPC",
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -60,7 +61,7 @@ public class Configs {
       defaultValue = "false",
       label = "SSL Enabled",
       displayPosition = 40,
-      group = ""
+      group = "RPC"
   )
   public boolean sslEnabled;
 
@@ -71,7 +72,7 @@ public class Configs {
       label = "Certificate Key Store File",
       description = "The KeyStore file is looked under the data collector resources directory",
       displayPosition = 50,
-      group = "",
+      group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
   )
@@ -83,7 +84,7 @@ public class Configs {
       defaultValue = "",
       label = "Key Store Password",
       displayPosition = 60,
-      group = "",
+      group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
   )

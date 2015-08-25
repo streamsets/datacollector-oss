@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
+  RPC("RPC"),
   ADVANCED("Advanced"),
   ;
 

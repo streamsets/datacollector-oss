@@ -42,7 +42,7 @@ public class Configs {
       label = "RPC Connection",
       description = "Connection information for the destination pipeline. Use the format <host>:<port>.",
       displayPosition = 10,
-      group = "DESTINATION_PIPELINE"
+      group = "RPC"
   )
   public List<String> hostPorts;
 
@@ -52,7 +52,7 @@ public class Configs {
       label = "RPC ID",
       description = "User-defined ID. Must match the RPC ID used in the RPC origin of the destination pipeline.",
       displayPosition = 20,
-      group = "DESTINATION_PIPELINE"
+      group = "RPC"
   )
   public String appId;
 
@@ -62,7 +62,7 @@ public class Configs {
       defaultValue = "false",
       label = "SSL Enabled",
       displayPosition = 30,
-      group = "DESTINATION_PIPELINE"
+      group = "RPC"
   )
   public boolean sslEnabled;
 
@@ -73,7 +73,7 @@ public class Configs {
       label = "Trust Key Store File",
       description = "The KeyStore file is looked under the data collector resources directory. Leave empty if none",
       displayPosition = 40,
-      group = "DESTINATION_PIPELINE",
+      group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
   )
@@ -85,7 +85,7 @@ public class Configs {
       defaultValue = "",
       label = "Trust Key Store Password",
       displayPosition = 50,
-      group = "DESTINATION_PIPELINE",
+      group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
   )
@@ -98,7 +98,7 @@ public class Configs {
       label = "Verify Host In Server Certificate",
       description = "Disables server certificate hostname verification",
       displayPosition = 60,
-      group = "DESTINATION_PIPELINE",
+      group = "RPC",
       dependsOn = "sslEnabled",
       triggeredByValue = "true"
   )
@@ -150,7 +150,7 @@ public class Configs {
         try {
           sslSocketFactory = createSSLSocketFactory(context);
         } catch (Exception ex) {
-          issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "trustStoreFile",
+          issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
                                                Errors.IPC_DEST_10, ex.toString()));
           ok = false;
         }
@@ -165,39 +165,39 @@ public class Configs {
   boolean validateHostPorts(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean ok = true;
     if (hostPorts.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_00));
+      issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_00));
       ok = false;
     } else {
       Set<String> uniqueHostPorts = new HashSet<>();
       for (String hostPort : hostPorts) {
         if (hostPort == null) {
-          issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_01));
+          issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_01));
           ok = false;
         } else {
           hostPort = hostPort.toLowerCase().trim();
           uniqueHostPorts.add(hostPort);
           String[] split = hostPort.split(":");
           if (split.length != 2) {
-            issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_02,
+            issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_02,
                                                  hostPort));
             ok = false;
           } else {
             try {
               InetAddress.getByName(split[0]);
             } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_03,
+              issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_03,
                                                    split[0], ex.toString()));
               ok = false;
             }
             try {
               int port = Integer.parseInt(split[1]);
               if (port < 1 || port > 65535) {
-                issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_04,
+                issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_04,
                                                      hostPort));
                 ok = false;
               }
             } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_05,
+              issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_05,
                                                    hostPort, ex.toString()));
               ok = false;
             }
@@ -205,7 +205,7 @@ public class Configs {
         }
       }
       if (ok && uniqueHostPorts.size() != hostPorts.size()) {
-        issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "hostPorts", Errors.IPC_DEST_06));
+        issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_06));
         ok = false;
       }
     }
@@ -218,17 +218,17 @@ public class Configs {
       if (!trustStoreFile.isEmpty()) {
         File file = getTrustStoreFile(context);
         if (!file.exists()) {
-          issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "trustStoreFile",
+          issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
                                                Errors.IPC_DEST_07));
           ok = false;
         } else {
           if (!file.isFile()) {
-            issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "trustStoreFile",
+            issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
                                                  Errors.IPC_DEST_08));
             ok = false;
           } else {
             if (!file.canRead()) {
-              issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "trustStoreFile",
+              issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
                                                    Errors.IPC_DEST_09));
               ok = false;
             } else {
@@ -238,7 +238,7 @@ public class Configs {
                   keystore.load(is, trustStorePassword.toCharArray());
                 }
               } catch (Exception ex) {
-                issues.add(context.createConfigIssue(Groups.DESTINATION_PIPELINE.name(), "trustStoreFile",
+                issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
                                                      Errors.IPC_DEST_10, ex.toString()));
               }
             }
