@@ -108,7 +108,7 @@ public class ProductionPipeline {
           }
         } else {
           LOG.debug("Stopped due to validation error");
-          PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800,
+          PipelineRuntimeException e = new PipelineRuntimeException(ContainerError.CONTAINER_0800, name,
             issues.get(0).getMessage());
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("issues", new IssuesJson(new Issues(issues)));

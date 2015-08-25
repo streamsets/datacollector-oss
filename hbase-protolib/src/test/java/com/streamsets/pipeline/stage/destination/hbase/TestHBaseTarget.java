@@ -52,10 +52,12 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class TestHBaseTarget {
-
+  private static final Logger LOG = LoggerFactory.getLogger(TestHBaseTarget.class);
   private static HBaseTestingUtility utility;
   private static MiniZooKeeperCluster miniZK;
   private static final String tableName = "TestHBaseSink";
@@ -64,16 +66,21 @@ public class TestHBaseTarget {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    conf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, "/hbase");
-    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
-    conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
-    UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
-    utility = new HBaseTestingUtility(conf);
-    utility.startMiniCluster();
-    miniZK = utility.getZkCluster();
-    HTableDescriptor htd = new HTableDescriptor(TableName.valueOf(tableName));
-    htd.addFamily(new HColumnDescriptor(familyName));
-    utility.getHBaseAdmin().createTable(htd);
+    try {
+      conf.set(HConstants.ZOOKEEPER_ZNODE_PARENT, "/hbase");
+      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".hosts", "*");
+      conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
+      UserGroupInformation.createUserForTesting("foo", new String[]{"all"});
+      utility = new HBaseTestingUtility(conf);
+      utility.startMiniCluster();
+      miniZK = utility.getZkCluster();
+      HTableDescriptor htd = new HTableDescriptor(TableName.valueOf(tableName));
+      htd.addFamily(new HColumnDescriptor(familyName));
+      utility.getHBaseAdmin().createTable(htd);
+    } catch (Throwable throwable) {
+      LOG.error("Error in startup: " + throwable, throwable);
+      throw throwable;
+    }
   }
 
   @AfterClass

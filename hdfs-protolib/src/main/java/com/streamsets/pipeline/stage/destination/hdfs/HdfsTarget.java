@@ -60,7 +60,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
-
 public class HdfsTarget extends BaseTarget {
   private final static Logger LOG = LoggerFactory.getLogger(HdfsTarget.class);
   private final static int MEGA_BYTE = 1024 * 1024;
@@ -219,6 +218,7 @@ public class HdfsTarget extends BaseTarget {
         }
       }
     } catch (Exception ex) {
+      LOG.info("Validation Error: " + Errors.HADOOPFS_11.getMessage(), ex.toString(), ex);
       issues.add(getContext().createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.toString(),
                                                 ex));
     }
@@ -351,12 +351,15 @@ public class HdfsTarget extends BaseTarget {
 
       // forcing UGI to initialize with the security settings from the stage
       UserGroupInformation.setConfiguration(hdfsConfiguration);
-
-      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
-      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
-      // we now extract the UGI we just logged in as.
-      loginUgi = UserGroupInformation.getLoginUser();
-
+      Subject subject = Subject.getSubject(AccessController.getContext());
+      if (UserGroupInformation.isSecurityEnabled()) {
+        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
+      } else {
+        UserGroupInformation.loginUserFromSubject(subject);
+        loginUgi = UserGroupInformation.getLoginUser();
+      }
+      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
+        subject == null ? "null" : subject.getPrincipals(), loginUgi);
       if (hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
@@ -380,8 +383,9 @@ public class HdfsTarget extends BaseTarget {
         });
       }
     } catch (Exception ex) {
+      LOG.info("Validation Error: " + Errors.HADOOPFS_01.getMessage(), hdfsUri, ex.toString(), ex);
       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_01, hdfsUri,
-                                                String.valueOf(ex), ex));
+        String.valueOf(ex), ex));
     }
     LOG.info("Authentication Config: " + logMessage);
     return validHapoopFsUri;
@@ -428,6 +432,7 @@ public class HdfsTarget extends BaseTarget {
           }
         }
       } catch (Exception ex) {
+        LOG.info("Validation Error: " + Errors.HADOOPFS_44.getMessage(), ex.toString(), ex);
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_44,
                                                   ex.toString()));
         ok = false;

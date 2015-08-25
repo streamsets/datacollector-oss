@@ -213,12 +213,15 @@ public class HiveTarget extends BaseTarget {
     try {
       // forcing UGI to initialize with the security settings from the stage
       UserGroupInformation.setConfiguration(hiveConf);
-
-      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
-      UserGroupInformation.loginUserFromSubject(Subject.getSubject(AccessController.getContext()));
-
-      // we now extract the UGI we just logged in as.
-      loginUgi = UserGroupInformation.getLoginUser();
+      Subject subject = Subject.getSubject(AccessController.getContext());
+      if (UserGroupInformation.isSecurityEnabled()) {
+        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
+      } else {
+        UserGroupInformation.loginUserFromSubject(subject);
+        loginUgi = UserGroupInformation.getLoginUser();
+      }
+      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
+        subject == null ? "null" : subject.getPrincipals(), loginUgi);
       // Proxy users are not currently supported due to: https://issues.apache.org/jira/browse/HIVE-11089
     } catch (IOException e) {
       issues.add(getContext().createConfigIssue(Groups.HIVE.name(), null, Errors.HIVE_11, e.getMessage()));

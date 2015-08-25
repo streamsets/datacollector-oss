@@ -208,11 +208,13 @@ public class HBaseTarget extends BaseTarget {
       }
 
       UserGroupInformation.setConfiguration(hbaseConf);
-      // If Kerberos is enabled the SDC is already logged to the KDC, we need to UGI login using the SDC login context
       Subject subject = Subject.getSubject(AccessController.getContext());
-      UserGroupInformation.loginUserFromSubject(subject);
-      // we now extract the UGI we just logged in as.
-      loginUgi = UserGroupInformation.getLoginUser();
+      if (UserGroupInformation.isSecurityEnabled()) {
+        loginUgi = UserGroupInformation.getUGIFromSubject(subject);
+      } else {
+        UserGroupInformation.loginUserFromSubject(subject);
+        loginUgi = UserGroupInformation.getLoginUser();
+      }
       LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject, 
         subject == null ? "null" : subject.getPrincipals(), loginUgi);
       StringBuilder logMessage = new StringBuilder();

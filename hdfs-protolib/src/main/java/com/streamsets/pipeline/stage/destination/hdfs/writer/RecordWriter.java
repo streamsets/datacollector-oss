@@ -102,7 +102,9 @@ public class RecordWriter {
   }
 
   public void flush() throws IOException {
-    LOG.debug("Path[{}] - Flushing", path);
+    if (IS_TRACE_ENABLED) {
+      LOG.trace("Path[{}] - Flushing", path);
+    }
     if (generator != null) {
       generator.flush();
     } else if (seqWriter != null) {

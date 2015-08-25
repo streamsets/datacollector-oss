@@ -17,7 +17,6 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLClassLoader;
@@ -33,7 +32,6 @@ public class ClusterHelper {
   private final ClusterProvider clusterProvider;
   private final File tempDir;
   private final File clusterManagerFile;
-  private final @Nullable SecurityConfiguration securityConfiguration;
   private URLClassLoader apiCL;
   private URLClassLoader containerCL;
 
@@ -60,7 +58,6 @@ public class ClusterHelper {
     } else {
       this.apiCL = apiCL;
     }
-    this.securityConfiguration = securityConfiguration;
     Utils.checkState(tempDir.isDirectory(), errorString("Temp directory does not exist: {}", tempDir));
     Utils.checkState(clusterManagerFile.isFile(),
       errorString("_cluster-manager does not exist: {}", clusterManagerFile));

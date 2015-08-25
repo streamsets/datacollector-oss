@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.google.common.base.Joiner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -14,19 +15,25 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
 import javax.security.auth.kerberos.KerberosPrincipal;
+import javax.security.auth.kerberos.KerberosTicket;
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 import java.io.File;
-import java.net.InetAddress;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The <code>SecurityContext</code> allows to run a JVM within a client Kerberos session that is propagated to
@@ -35,15 +42,21 @@ import java.util.regex.Pattern;
  */
 public class SecurityContext {
   private static final Logger LOG = LoggerFactory.getLogger(SecurityContext.class);
-
+  private static final long THIRTY_SECONDS_MS = TimeUnit.SECONDS.toMillis(30);
   private final RuntimeInfo runtimeInfo;
   private final SecurityConfiguration securityConfiguration;
+  private final Random random;
   private LoginContext loginContext;
   private Subject subject;
+  private Thread renewalThread;
+  private double renewalWindow;
 
   public SecurityContext(RuntimeInfo runtimeInfo, Configuration serviceConf) {
     this.runtimeInfo = runtimeInfo;
-    securityConfiguration = new SecurityConfiguration(runtimeInfo, serviceConf);
+    this.securityConfiguration = new SecurityConfiguration(runtimeInfo, serviceConf);
+    this.random = new Random();
+    // choose a random window between 0.5 and 0.8
+    renewalWindow = (random.nextDouble() * 30 + 50)/100;
   }
 
   public SecurityConfiguration getSecurityConfiguration() {
@@ -51,19 +64,104 @@ public class SecurityContext {
   }
 
   /**
+   * Get the Kerberos TGT
+   * @return the user's TGT or null if none was found
+   */
+  private synchronized KerberosTicket getKerberosTicket() {
+    SortedSet<KerberosTicket> tickets = new TreeSet<>(new Comparator<KerberosTicket>() {
+      @Override
+      public int compare(KerberosTicket ticket1, KerberosTicket ticket2) {
+        return Long.compare(ticket1.getEndTime().getTime(), ticket2.getEndTime().getTime());
+      }
+    });
+    for (KerberosTicket ticket : subject.getPrivateCredentials(KerberosTicket.class)) {
+      KerberosPrincipal principal = ticket.getServer();
+      String principalName = Utils.format("krbtgt/{}@{}", principal.getRealm(), principal.getRealm());
+      if (principalName.equals(principal.getName())) {
+        tickets.add(ticket);
+        calculateRenewalTime(ticket);
+      }
+    }
+    if (tickets.isEmpty()) {
+      return null;
+    } else {
+      return tickets.last(); // most recent ticket
+    }
+  }
+
+  private synchronized long calculateRenewalTime(KerberosTicket kerberosTicket) {
+    long start = kerberosTicket.getStartTime().getTime();
+    long end = kerberosTicket.getEndTime().getTime();
+    long renewTime = start + (long) ((end - start) * renewalWindow);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Ticket: {}, numPrivateCredentials: {}, ticketStartTime: {}, ticketEndTime: {}, now: {}, renewalTime: {}",
+        System.identityHashCode(kerberosTicket), subject.getPrivateCredentials().size(), new Date(start), new Date(end),
+        new Date(), new Date(renewTime));
+    }
+    return Math.max(1, renewTime - System.currentTimeMillis());
+  }
+
+  private synchronized void relogin() {
+    LOG.info("Attempting re-login");
+    // do not logout old context, it may be in use
+    try {
+      loginContext = createLoginContext();
+    } catch (Exception ex) {
+      throw new RuntimeException(Utils.format("Could not get Kerberos credentials: {}", ex.toString()), ex);
+    }
+  }
+
+  /**
    * Logs in. If Kerberos is enabled it logs in against the KDC, otherwise is a NOP.
    */
-  public void login() {
+  public synchronized void login() {
     if (subject != null) {
       throw new IllegalStateException(Utils.format("Service already logged-in, Principal '{}'",
                                                    subject.getPrincipals()));
     }
     if (securityConfiguration.isKerberosEnabled()) {
       try {
-        loginContext = kerberosLogin(true);
+        loginContext = createLoginContext();
         subject = loginContext.getSubject();
       } catch (Exception ex) {
-        throw new RuntimeException(Utils.format("It could not get Kerberos credentials: {}", ex.toString()), ex);
+        throw new RuntimeException(Utils.format("Could not get Kerberos credentials: {}", ex.toString()), ex);
+      }
+      if (renewalThread == null) {
+        renewalThread = new Thread() {
+          public void run() {
+            while (true) {
+              try {
+                KerberosTicket kerberosTicket = getKerberosTicket();
+                if (kerberosTicket == null) {
+                  LOG.error("Could not obtain kerberos ticket");
+                  TimeUnit.MILLISECONDS.sleep(THIRTY_SECONDS_MS);
+                } else {
+                  long renewalTimeMs = calculateRenewalTime(kerberosTicket) - THIRTY_SECONDS_MS;
+                  if (renewalTimeMs > 0) {
+                    TimeUnit.MILLISECONDS.sleep(renewalTimeMs);
+                  }
+                  relogin();
+                }
+              } catch (InterruptedException ie) {
+                LOG.info("Interrupted, exiting renewal thread");
+                return;
+              } catch (Exception exception) {
+                LOG.error("Exception in renewal thread: " + exception, exception);
+              } catch (Throwable throwable) {
+                LOG.error("Error in renewal thread: " + throwable, throwable);
+                return;
+              }
+            }
+          }
+        };
+        List<String> principals = new ArrayList<>();
+        for (Principal p : subject.getPrincipals()) {
+          principals.add(p.getName());
+        }
+        renewalThread.setName("Kerberos-Renewal-Thread-" + Joiner.on(",").join(principals));
+        renewalThread.setContextClassLoader(Thread.currentThread().getContextClassLoader());
+        renewalThread.setDaemon(true);
+        renewalThread.start();
       }
     } else {
       subject = new Subject();
@@ -75,7 +173,7 @@ public class SecurityContext {
   /**
    * Logs out. If Keberos is enabled it logs out from the KDC, otherwise is a NOP.
    */
-  public void logout() {
+  public synchronized void logout() {
     if (subject != null) {
       LOG.debug("Logout. Kerberos enabled '{}', Principal '{}'", securityConfiguration.isKerberosEnabled(),
         subject.getPrincipals());
@@ -101,19 +199,20 @@ public class SecurityContext {
    *
    * @return the login <code>Subject</code>, or <code>null</code> if not logged in.
    */
-  public Subject getSubject() {
+  public synchronized Subject getSubject() {
     return subject;
   }
 
 
-  private LoginContext kerberosLogin(boolean isClient) throws Exception {
-    Subject subject;
+  private LoginContext createLoginContext() throws Exception {
     String principalName = securityConfiguration.getKerberosPrincipal();
-    Set<Principal> principals = new HashSet<>();
-    principals.add(new KerberosPrincipal(principalName));
-    subject = new Subject(false, principals, new HashSet<>(), new HashSet<>());
+    if (subject == null) {
+      Set<Principal> principals = new HashSet<>();
+      principals.add(new KerberosPrincipal(principalName));
+      subject = new Subject(false, principals, new HashSet<>(), new HashSet<>());
+    }
     LoginContext context = new LoginContext("", subject, null, new KeytabKerberosConfiguration(runtimeInfo,
-        principalName, new File(securityConfiguration.getKerberosKeytab()), isClient));
+        principalName, new File(securityConfiguration.getKerberosKeytab()), true));
     context.login();
     return context;
   }
