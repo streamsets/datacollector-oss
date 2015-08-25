@@ -96,6 +96,8 @@ public class PipelineMapper extends Mapper {
       while (hasNext) {
         List<Map.Entry> batch = new ArrayList<>();
         if (header != null) {
+          // we pass the header each time because the CSV parser operates
+          // on each record as if it were a file in batch mode
           batch.add(new Pair(header, null));
           // increment batch size as adding the first entry as header
           batchSize = batchSize + 1;

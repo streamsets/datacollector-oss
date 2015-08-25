@@ -38,7 +38,16 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hdfs.DFSConfigKeys;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
+import org.apache.hadoop.mapreduce.RecordReader;
+import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.TaskAttemptID;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.task.TaskAttemptContextImpl;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.slf4j.Logger;
@@ -188,26 +197,19 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
               } else if (getContext().isPreview() && previewBuffer.size() < PREVIEW_SIZE) {
                 for (FileStatus fileStatus : files) {
                   if (fileStatus.isFile()) {
-                    InputStream in = null;
-                    BufferedReader reader = null;
                     String path = fileStatus.getPath().toString();
                     try {
-                      in =  fs.open(fileStatus.getPath());
-                      reader = new BufferedReader(new InputStreamReader(in));
-                      String line;
-                      int offset = 0;
-                      while ((line = reader.readLine()) != null && previewBuffer.size() < PREVIEW_SIZE) {
-                        previewBuffer.put(path + "::" + offset + "::" + offset, line);
-                        offset += line.getBytes(StandardCharsets.UTF_8).length + 1; // byte length and newline
+                      List<Map.Entry> buffer = readPreviewBatch(fileStatus, PREVIEW_SIZE);
+                      for (int i = 0; i < buffer.size() && previewBuffer.size() < PREVIEW_SIZE; i++) {
+                        Map.Entry entry = buffer.get(i);
+                        previewBuffer.put(String.valueOf(entry.getKey()),
+                          entry.getValue() == null ? null : String.valueOf(entry.getValue()));
                       }
-                    } catch (IOException ex) {
+                    } catch (IOException | InterruptedException ex) {
                       String msg = "Error opening " + path + ": " + ex;
                       LOG.info(msg, ex);
                       issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hdfsDirLocations", Errors.HADOOPFS_16,
                         fileStatus.getPath()));
-                    } finally {
-                      IOUtils.closeQuietly(in);
-                      IOUtils.closeQuietly(reader);
                     }
                   }
                 }
@@ -256,6 +258,24 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     validateParserFactoryConfigs(issues);
     LOG.info("Issues: " + issues);
     return issues;
+  }
+
+  private List<Map.Entry> readPreviewBatch(FileStatus fileStatus, int batchSize)
+    throws IOException, InterruptedException {
+    TextInputFormat textInputFormat = new TextInputFormat();
+    InputSplit fileSplit = new FileSplit(fileStatus.getPath(), 0, fileStatus.getLen(), null);
+    TaskAttemptContext taskAttemptContext = new TaskAttemptContextImpl(hadoopConf,
+      TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
+    RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext);
+    recordReader.initialize(fileSplit, taskAttemptContext);
+    boolean hasNext = recordReader.nextKeyValue();
+    List<Map.Entry> batch = new ArrayList<>();
+    while (hasNext && batch.size() < batchSize) {
+      batch.add(new Pair(fileStatus.getPath().toUri().getPath() + "::" + recordReader.getCurrentKey(),
+        String.valueOf(recordReader.getCurrentValue())));
+      hasNext = recordReader.nextKeyValue(); // not like iterator.hasNext, actually advances
+    }
+    return batch;
   }
 
   @VisibleForTesting
@@ -463,13 +483,14 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       Iterator<String> keys = previewBuffer.keySet().iterator();
       while (count < maxBatchSize && count < previewBuffer.size() && keys.hasNext()) {
         String key =  keys.next();
+        String[] keyParts = key.split("::");
         if (count == 0 && DataFormat.DELIMITED == dataFormat && CsvHeader.NO_HEADER != csvHeader
-          && key.split("::")[1].equals("0") && key.split("::")[2].equals("0")) {
+          && keyParts.length > 1 && keyParts[1].equals("0")) {
           // add header
           if (CsvHeader.WITH_HEADER == csvHeader) {
             records.add(new Pair(previewBuffer.get(key), null));
           } else if (CsvHeader.IGNORE_HEADER == csvHeader) {
-            // this record will be ignored - dont increment the count
+            // this record will be ignored - don't increment the count
           }
         } else {
           records.add(new Pair(key, previewBuffer.get(key)));
@@ -500,7 +521,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             // ignore header by skipping this header string
             // [1] - startOffset - [2] - contextKey
             String[] offsetContextSplit = messageId.split("::");
-            if (offsetContextSplit[1].equals("0") && offsetContextSplit[2].equals("0")) {
+            if (offsetContextSplit.length > 1 && offsetContextSplit[1].equals("0")) {
               break;
             }
           case NO_HEADER:
@@ -509,8 +530,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           case WITH_HEADER:
             if (header == null) {
               header = messageId;
-              LOG.info("Header is: " + header);
-              Utils.checkState(message.getValue() == null, "Message value for header record should be null");
+              LOG.debug("Header is: {}", header);
+              Utils.checkState(message.getValue() == null, Utils.formatL("Message value for header record should be null, was: '{}'", message.getValue()));
             } else {
               listRecords = processMessage(messageId, header + "\n" + String.valueOf(message.getValue()));
             }
