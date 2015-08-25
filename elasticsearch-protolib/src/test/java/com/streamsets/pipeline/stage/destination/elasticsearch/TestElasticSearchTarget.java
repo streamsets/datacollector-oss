@@ -20,6 +20,7 @@ import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
+import org.elasticsearch.plugins.PluginsService;
 import org.elasticsearch.search.SearchHit;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -60,6 +61,7 @@ public class TestElasticSearchTarget {
     settings.put("path.conf", esDir.getAbsolutePath());
     settings.put("path.data", esDir.getAbsolutePath());
     settings.put("path.logs", esDir.getAbsolutePath());
+    settings.put("plugins." + PluginsService.LOAD_PLUGIN_FROM_CLASSPATH, false);
     esServer = NodeBuilder.nodeBuilder().settings(settings.build()).build();
     esServer.start();
   }
