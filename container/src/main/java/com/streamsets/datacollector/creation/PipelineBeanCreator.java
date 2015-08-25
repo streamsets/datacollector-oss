@@ -415,7 +415,7 @@ public abstract class PipelineBeanCreator {
               Type type = field.getGenericType();
               if (type instanceof ParameterizedType) {
                 Type type1 = ((ParameterizedType) type).getActualTypeArguments()[0];
-                if(((Class<?>)type1).isEnum()) {
+                if(type1 instanceof Class && ((Class<?>)type1).isEnum()) {
                   element = toEnum((Class<?>)type1, element, stageDef, stageName, groupName, configName, errors);
                 }
               }
