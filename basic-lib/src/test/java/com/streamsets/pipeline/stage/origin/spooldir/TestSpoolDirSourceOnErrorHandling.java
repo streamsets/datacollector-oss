@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
@@ -47,7 +48,7 @@ public class TestSpoolDirSourceOnErrorHandling {
                               FileCompression.NONE, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
                               5, '^', '^', '^', null, 0, 10, null, 0, null, 0, false, null, null, null, null, null,
-                              false, null, OnParseError.ERROR, -1, null);
+                              false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
   }
 
   @Test
@@ -130,7 +131,7 @@ public class TestSpoolDirSourceOnErrorHandling {
                               FileCompression.NONE, null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null, 5, '^', '^', '^',
                               JsonMode.ARRAY_OBJECTS, 100, 10, null, 0, null, 0, false, null, null, null, null,
-                              null, false, null, OnParseError.ERROR, -1, null);
+                              null, false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
   }
 
   @Test

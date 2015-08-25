@@ -13,6 +13,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.CsvRecordType;
+import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
@@ -147,6 +149,56 @@ public class DataFormatConfig {
     max = Integer.MAX_VALUE
   )
   public int csvMaxObjectLen;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "|",
+    label = "Delimiter Character",
+    displayPosition = 330,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomDelimiter;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\\",
+    label = "Escape Character",
+    displayPosition = 340,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomEscape;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\"",
+    label = "Quote Character",
+    displayPosition = 350,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomQuote;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "LIST",
+    label = "Record Type",
+    description = "",
+    displayPosition = 310,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(CsvRecordTypeChooserValues.class)
+  public CsvRecordType csvRecordType;
 
   @ConfigDef(
     required = false,

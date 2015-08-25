@@ -10,6 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -82,7 +83,8 @@ public class TestDelimitedDataParserFactory {
     Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD,
                                                                    Collections.<String>emptyList());
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
-    DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER).build();
+    DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER).
+      setMode(CsvRecordType.LIST).build();
     DataParser parser = factory.getParser("id", "A|\"B\"|\\|");
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -100,6 +102,7 @@ public class TestDelimitedDataParserFactory {
                                                                    Collections.<String>emptyList());
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
     DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER)
+                                       .setMode(CsvRecordType.LIST)
                                        .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, '^')
                                        .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, '!')
                                        .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, '\'').build();

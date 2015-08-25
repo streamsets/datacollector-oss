@@ -20,6 +20,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.CsvRecordType;
+import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.FileCompression;
@@ -38,7 +40,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import java.util.List;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
@@ -317,6 +319,21 @@ public class SpoolDirDSource extends DSource {
   )
   public char csvCustomQuote;
 
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "LIST",
+    label = "Record Type",
+    description = "",
+    displayPosition = 310,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(CsvRecordTypeChooserValues.class)
+  public CsvRecordType csvRecordType;
+
   // JSON Configuration
 
   @ConfigDef(
@@ -594,7 +611,8 @@ public class SpoolDirDSource extends DSource {
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
       jsonContent, jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,
-      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, avroSchema);
+      grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, avroSchema,
+      csvRecordType);
   }
 
 }

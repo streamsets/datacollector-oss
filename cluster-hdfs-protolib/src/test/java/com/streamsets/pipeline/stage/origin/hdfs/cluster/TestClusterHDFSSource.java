@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.streamsets.pipeline.config.CsvRecordType;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -281,6 +282,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("csvRecordType", CsvRecordType.LIST)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -349,6 +351,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.IGNORE_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("csvRecordType", CsvRecordType.LIST)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -407,6 +410,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("csvRecordType", CsvRecordType.LIST)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -492,7 +496,8 @@ public class TestClusterHDFSSource {
       return new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat, textMaxLineLen,
         jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
         grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-        produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomDelimiter, csvCustomDelimiter);
+        produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen,
+        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType);
     }
   }
 

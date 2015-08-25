@@ -19,8 +19,8 @@ public class TestSpoolDirSourceUpgrader {
   public void testSpoolDirSourceUpgrader() throws StageException {
     SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
 
-    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 2, new ArrayList<Config>());
-    Assert.assertEquals(4, upgrade.size());
+    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 3, new ArrayList<Config>());
+    Assert.assertEquals(5, upgrade.size());
     Assert.assertEquals("fileCompression", upgrade.get(0).getName());
     Assert.assertEquals("AUTOMATIC", upgrade.get(0).getValue());
     Assert.assertEquals("csvCustomDelimiter", upgrade.get(1).getName());
@@ -29,6 +29,8 @@ public class TestSpoolDirSourceUpgrader {
     Assert.assertEquals('\\', upgrade.get(2).getValue());
     Assert.assertEquals("csvCustomQuote", upgrade.get(3).getName());
     Assert.assertEquals('\"', upgrade.get(3).getValue());
+    Assert.assertEquals("csvRecordType", upgrade.get(4).getName());
+    Assert.assertEquals("LIST", upgrade.get(4).getValue());
 
   }
 

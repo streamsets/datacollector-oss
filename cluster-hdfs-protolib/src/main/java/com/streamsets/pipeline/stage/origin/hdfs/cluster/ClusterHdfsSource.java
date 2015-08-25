@@ -28,6 +28,7 @@ import com.streamsets.pipeline.cluster.Consumer;
 import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.impl.Pair;
 
 import org.apache.commons.io.IOUtils;
@@ -121,13 +122,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private final char csvCustomDelimiter;
   private final char csvCustomEscape;
   private final char csvCustomQuote;
+  private final CsvRecordType csvRecordType;
 
 
-  public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String, String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen,
-    int jsonMaxObjectLen, LogMode logMode, boolean retainOriginalLine, String customLogFormat, String regex,
+  public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String,
+    String> hdfsConfigs, DataFormat dataFormat, int textMaxLineLen, int jsonMaxObjectLen, LogMode logMode,
+    boolean retainOriginalLine, String customLogFormat, String regex,
     List<RegExConfig> fieldPathsToGroupName, String grokPatternDefinition, String grokPattern,
-    boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen, boolean produceSingleRecordPerMessage,
-    boolean hdfsKerberos, String hdfsUser, String hadoopConfDir, CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape, char csvCustomQuote) {
+    boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen,
+    boolean produceSingleRecordPerMessage, boolean hdfsKerberos, String hdfsUser, String hadoopConfDir,
+    CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
+    char csvCustomQuote, CsvRecordType csvRecordType) {
     controlChannel = new ControlChannel();
     dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
@@ -162,6 +167,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.csvCustomDelimiter = csvCustomDelimiter;
     this.csvCustomEscape = csvCustomEscape;
     this.csvCustomQuote = csvCustomQuote;
+    this.csvRecordType = csvRecordType;
   }
   @Override
   public List<ConfigIssue> init() {
@@ -454,10 +460,12 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
 
     switch (dataFormat) {
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode((csvHeader == CsvHeader.IGNORE_HEADER) ? CsvHeader.NO_HEADER: csvHeader)
-        .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
-        .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
-        .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
+        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat)
+          .setMode((csvHeader == CsvHeader.IGNORE_HEADER) ? CsvHeader.NO_HEADER: csvHeader)
+          .setMode(csvRecordType)
+          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
+          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
+          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
         break;
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);

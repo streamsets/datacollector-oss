@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
@@ -526,6 +527,7 @@ public class TestKafkaSource {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("csvRecordType", CsvRecordType.LIST)
       .addConfiguration("kafkaConsumerConfigs", null)
       .addConfiguration("produceSingleRecordPerMessage", true)
       .addConfiguration("regex", null)

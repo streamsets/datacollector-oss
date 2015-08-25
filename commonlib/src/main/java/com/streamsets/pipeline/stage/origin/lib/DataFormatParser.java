@@ -18,6 +18,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -122,8 +123,12 @@ public class DataFormatParser {
         builder.setMaxDataLen(dataFormatConfig.jsonMaxObjectLen);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(dataFormatConfig.csvMaxObjectLen);
-        builder.setMode(dataFormatConfig.csvFileFormat).setMode(dataFormatConfig.csvHeader);
+        builder.setMaxDataLen(dataFormatConfig.csvMaxObjectLen)
+          .setMode(dataFormatConfig.csvFileFormat).setMode(dataFormatConfig.csvHeader)
+          .setMode(dataFormatConfig.csvRecordType)
+          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
+          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
+          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(dataFormatConfig.xmlMaxObjectLen);

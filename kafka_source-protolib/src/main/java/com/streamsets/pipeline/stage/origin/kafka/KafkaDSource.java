@@ -20,6 +20,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.CsvRecordType;
+import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
@@ -35,11 +37,12 @@ import java.util.List;
 import java.util.Map;
 
 @StageDef(
-    version = 1,
-    label = "Kafka Consumer",
-    description = "Reads data from Kafka",
-    icon = "kafka.png",
-    recordsByRef = true
+  version = 2,
+  label = "Kafka Consumer",
+  description = "Reads data from Kafka",
+  icon = "kafka.png",
+  recordsByRef = true,
+  upgrader = KafkaSourceUpgrader.class
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)
@@ -262,6 +265,56 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       max = Integer.MAX_VALUE
   )
   public int csvMaxObjectLen;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "|",
+    label = "Delimiter Character",
+    displayPosition = 330,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomDelimiter;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\\",
+    label = "Escape Character",
+    displayPosition = 340,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomEscape;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.CHARACTER,
+    defaultValue = "\"",
+    label = "Quote Character",
+    displayPosition = 350,
+    group = "DELIMITED",
+    dependsOn = "csvFileFormat",
+    triggeredByValue = "CUSTOM"
+  )
+  public char csvCustomQuote;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "LIST",
+    label = "Record Type",
+    description = "",
+    displayPosition = 310,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(CsvRecordTypeChooserValues.class)
+  public CsvRecordType csvRecordType;
 
   @ConfigDef(
       required = false,
@@ -521,7 +574,8 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       csvMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode, logMaxObjectLen, retainOriginalLine,
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
       enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs,
-      schemaInMessage, avroSchema, binaryMaxObjectLen);
+      schemaInMessage, avroSchema, binaryMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
+      csvRecordType);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
       new ClusterKafkaSourceFactory(args));
     return delegatingKafkaSource;

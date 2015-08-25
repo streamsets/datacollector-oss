@@ -8,6 +8,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
@@ -55,7 +56,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
                               FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null, CsvRecordType.LIST);
   }
 
   @Test
@@ -248,7 +249,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
       "file-[0-9].log", 10, null, FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null);
+      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }

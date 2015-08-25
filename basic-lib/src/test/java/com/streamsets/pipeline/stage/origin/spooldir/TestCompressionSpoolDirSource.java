@@ -6,6 +6,7 @@
 package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.OnParseError;
@@ -64,7 +65,7 @@ public class TestCompressionSpoolDirSource {
                               null, compression, null, PostProcessingOptions.NONE, createTestDir(), 10,
                               null, null, 0,
                               ' ', ' ', ' ', null, 0, 10, null, 0, null, 0, false, null, null, null, null,
-                              null, false, null, OnParseError.ERROR, -1, null);
+                              null, false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
   }
 
   @Test

@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
@@ -54,7 +55,7 @@ public class TestLogSpoolDirSourceCombinedLogFormat {
                               FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.COMBINED_LOG_FORMAT, 1000, true, null, null, Collections.<RegExConfig>emptyList(), null, null, false,
-      null, OnParseError.ERROR, 0, null);
+      null, OnParseError.ERROR, 0, null, CsvRecordType.LIST);
   }
 
   @Test

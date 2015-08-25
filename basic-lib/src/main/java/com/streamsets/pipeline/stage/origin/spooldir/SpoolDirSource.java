@@ -13,6 +13,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
@@ -94,6 +95,7 @@ public class SpoolDirSource extends BaseSource {
   private final int maxStackTraceLines;
   private final OnParseError onParseError;
   private final String avroSchema;
+  private final CsvRecordType csvRecordType;
 
   public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
       String spoolDir, int batchSize, long poolingTimeoutSecs,
@@ -104,7 +106,8 @@ public class SpoolDirSource extends BaseSource {
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines, String avroSchema) {
+      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines, String avroSchema,
+      CsvRecordType csvRecordType) {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.removeCtrlChars = removeCtrlChars;
@@ -144,6 +147,7 @@ public class SpoolDirSource extends BaseSource {
     this.onParseError = onParseError;
     this.maxStackTraceLines = maxStackTraceLines;
     this.avroSchema = avroSchema;
+    this.csvRecordType = csvRecordType;
   }
 
   private Charset fileCharset;
@@ -327,7 +331,7 @@ public class SpoolDirSource extends BaseSource {
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader)
+        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
                .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
                .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
                .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);

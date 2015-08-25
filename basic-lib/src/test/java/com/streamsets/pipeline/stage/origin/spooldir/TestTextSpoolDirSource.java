@@ -7,6 +7,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.OnParseError;
@@ -46,10 +47,10 @@ public class TestTextSpoolDirSource {
 
   private SpoolDirSource createSource(String charset) {
     return new SpoolDirSource(DataFormat.TEXT, charset, false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null,
-                              FileCompression.NONE, null,
-                              PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-                              null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null);
+      FileCompression.NONE, null,
+      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
+      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
+      -1, null, CsvRecordType.LIST);
   }
 
   public void testProduceFullFile(String charset) throws Exception {

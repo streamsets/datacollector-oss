@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -480,6 +481,7 @@ public class TestClusterModeDataFormats {
       .addConfiguration("csvFileFormat", CsvMode.CSV)
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
+      .addConfiguration("csvRecordType", CsvRecordType.LIST)
       .addConfiguration("regex", null)
       .addConfiguration("grokPatternDefinition", null)
       .addConfiguration("enableLog4jCustomLogFormat", false)

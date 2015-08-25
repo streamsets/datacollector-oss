@@ -9,6 +9,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -18,6 +19,7 @@ import org.apache.commons.csv.CSVFormat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +29,14 @@ public class DelimitedCharDataParser implements DataParser {
   private final OverrunCsvParser parser;
   private List<Field> headers;
   private boolean eof;
+  private CsvRecordType recordType;
 
   public DelimitedCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                                 CSVFormat format, CsvHeader header, int maxObjectLen) throws IOException {
+                                 CSVFormat format, CsvHeader header, int maxObjectLen, CsvRecordType recordType)
+    throws IOException {
     this.context = context;
     this.readerId = readerId;
+    this.recordType = recordType;
     switch (header) {
       case WITH_HEADER:
         format = format.withHeader((String[])null).withSkipHeaderRecord(true);
@@ -71,18 +76,34 @@ public class DelimitedCharDataParser implements DataParser {
   protected Record createRecord(long offset, String[] columns) throws DataParserException {
     Record record = context.createRecord(readerId + "::" + offset);
 
-    List<Field> row = new ArrayList<>();
-    for (int i = 0; i < columns.length; i++) {
-      Map<String, Field> cell = new HashMap<>();
-      Field header = (headers != null) ? headers.get(i) : null;
-      if (header != null) {
-        cell.put("header", header);
+    if(recordType == CsvRecordType.LIST) {
+      List<Field> row = new ArrayList<>();
+      for (int i = 0; i < columns.length; i++) {
+        Map<String, Field> cell = new HashMap<>();
+        Field header = (headers != null) ? headers.get(i) : null;
+        if (header != null) {
+          cell.put("header", header);
+        }
+        Field value = Field.create(columns[i]);
+        cell.put("value", value);
+        row.add(Field.create(cell));
       }
-      Field value = Field.create(columns[i]);
-      cell.put("value", value);
-      row.add(Field.create(cell));
+      record.set(Field.create(row));
+    } else {
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      for (int i = 0; i < columns.length; i++) {
+        String key;
+        Field header = (headers != null) ? headers.get(i) : null;
+        if(header != null) {
+          key = header.getValueAsString();
+        } else {
+          key = i + "";
+        }
+        listMap.put(key, Field.create(columns[i]));
+      }
+      record.set(Field.createListMap(listMap));
     }
-    record.set(Field.create(row));
+
     return record;
   }
 

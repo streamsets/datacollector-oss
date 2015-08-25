@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
@@ -26,6 +27,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
+import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -76,6 +78,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private final boolean messageHasSchema;
   private final String avroSchema;
   private final int binaryMaxObjectLen;
+  private final char csvCustomDelimiter;
+  private final char csvCustomEscape;
+  private final char csvCustomQuote;
+  private final CsvRecordType csvRecordType;
 
   protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
@@ -118,7 +124,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.messageHasSchema = args.isSchemaInMessage();
     this.avroSchema = args.getAvroSchema();
     this.binaryMaxObjectLen = args.getBinaryMaxObjectLen();
-
+    this.csvCustomDelimiter = args.getCsvCustomDelimiter();
+    this.csvCustomEscape = args.getCsvCustomEscape();
+    this.csvCustomQuote = args.getCsvCustomQuote();
+    this.csvRecordType = args.getCsvRecordType();
   }
 
   @Override
@@ -254,8 +263,11 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         builder.setMaxDataLen(jsonMaxObjectLen);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen);
-        builder.setMode(csvFileFormat).setMode(csvHeader);
+        builder.setMaxDataLen(csvMaxObjectLen)
+          .setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
+          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
+          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
+          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen);

@@ -18,6 +18,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.CsvRecordType;
+import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
@@ -29,12 +31,13 @@ import java.util.Map;
 
 
 @StageDef(
-    version = 1,
-    label = "Hadoop FS",
-    description = "Reads data from Hadoop file system",
-    execution = ExecutionMode.CLUSTER,
-    icon = "hdfs.png",
-    privateClassLoader = true
+  version = 2,
+  label = "Hadoop FS",
+  description = "Reads data from Hadoop file system",
+  execution = ExecutionMode.CLUSTER,
+  icon = "hdfs.png",
+  privateClassLoader = true,
+  upgrader = ClusterHdfsSourceUpgrader.class
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
@@ -385,13 +388,27 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     triggeredByValue = "CUSTOM")
   public char csvCustomQuote;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "LIST",
+    label = "Record Type",
+    description = "",
+    displayPosition = 310,
+    group = "DELIMITED",
+    dependsOn = "dataFormat",
+    triggeredByValue = "DELIMITED"
+  )
+  @ValueChooser(CsvRecordTypeChooserValues.class)
+  public CsvRecordType csvRecordType;
+
   @Override
   protected Source createSource() {
      clusterHDFSSource = new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat,
       textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-       produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter,
-       csvCustomEscape, csvCustomQuote);
+       produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir, csvFileFormat, csvHeader, csvMaxObjectLen,
+       csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType);
      return clusterHDFSSource;
   }
 

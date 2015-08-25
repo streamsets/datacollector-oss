@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
@@ -95,7 +96,7 @@ public class TestAvroSpoolDirSource {
                               FileCompression.NONE, null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.COMMON_LOG_FORMAT, 100, true, null, null, Collections.<RegExConfig>emptyList(),
-      null, null, false, null, OnParseError.ERROR, 0, AVRO_SCHEMA);
+      null, null, false, null, OnParseError.ERROR, 0, AVRO_SCHEMA, CsvRecordType.LIST);
   }
 
   @Test

@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -31,7 +32,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
   public static final Map<String, Object> CONFIGS =
       ImmutableMap.<String, Object>of(DELIMITER_CONFIG, '|', ESCAPE_CONFIG, '\\', QUOTE_CONFIG, '"');
   public static final Set<Class<? extends Enum>> MODES =
-      ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class);
+      ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class, CsvRecordType.class);
 
   public DelimitedDataParserFactory(Settings settings) {
     super(settings);
@@ -58,7 +59,8 @@ public class DelimitedDataParserFactory extends DataParserFactory {
     }
     try {
       return new DelimitedCharDataParser(getSettings().getContext(), id, reader, offset, csvFormat,
-                                         getSettings().getMode(CsvHeader.class), getSettings().getMaxRecordLen());
+                                         getSettings().getMode(CsvHeader.class), getSettings().getMaxRecordLen(),
+                                         getSettings().getMode(CsvRecordType.class));
     } catch (IOException ex) {
       throw new DataParserException(Errors.DELIMITED_PARSER_00, id, offset, ex.toString(), ex);
     }
