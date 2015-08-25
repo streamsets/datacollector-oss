@@ -23,7 +23,7 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "20000",
-      label = "Listening Port",
+      label = "RPC Listening Port",
       displayPosition = 10,
       group = "",
       min = 1,
@@ -34,8 +34,8 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Application ID",
-      description = "UUID to validate the caller",
+      label = "RPC ID",
+      description = "User-defined ID. Must match the RPC ID used in the RPC destination of the origin pipeline.",
       displayPosition = 20,
       group = ""
   )

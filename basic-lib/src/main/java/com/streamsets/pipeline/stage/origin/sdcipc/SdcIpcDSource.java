@@ -14,8 +14,8 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 
 @StageDef(
     version = 1,
-    label = "Pipeline Origin",
-    description = "Receives records from a SDC pipeline using a Pipeline Destination",
+    label = "RPC",
+    description = "Receives records via RPC from a Data Collector pipeline that uses an RPC destination",
     icon="sdcipc.png"
 )
 @ConfigGroups(Groups.class)

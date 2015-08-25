@@ -14,8 +14,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "Pipeline Destination",
-    description = "Writes records to a SDC pipeline configured with a SDC Pipeline Origin",
+    label = "RPC",
+    description = "Sends records via RPC to a Data Collector pipeline that uses an RPC origin",
     icon="sdcipc.png"
 )
 @ConfigGroups(Groups.class)

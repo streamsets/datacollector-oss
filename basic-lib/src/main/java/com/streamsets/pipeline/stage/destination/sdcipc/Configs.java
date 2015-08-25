@@ -39,8 +39,8 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.LIST,
       defaultValue = "[]",
-      label = "Pipeline Origin HOST:PORT(s)",
-      description = "Comma separated list of <HOST>:<PORT>",
+      label = "RPC Connection",
+      description = "Connection information for the destination pipeline. Use the format <host>:<port>.",
       displayPosition = 10,
       group = "DESTINATION_PIPELINE"
   )
@@ -49,8 +49,8 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Application ID",
-      description = "UUID to validate the destination on the receiving end",
+      label = "RPC ID",
+      description = "User-defined ID. Must match the RPC ID used in the RPC origin of the destination pipeline.",
       displayPosition = 20,
       group = "DESTINATION_PIPELINE"
   )
@@ -108,7 +108,7 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "3",
-      label = "Retries Per Batch",
+      label = "Retries per Batch",
       displayPosition = 10,
       group = "ADVANCED",
       min = 0,
@@ -120,7 +120,7 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
-      label = "Connection Timeout (Millisecs)",
+      label = "Connection Timeout (ms)",
       displayPosition = 20,
       group = "ADVANCED",
       min = 100
@@ -131,7 +131,7 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "2000",
-      label = "Read Timeout (Millisecs)",
+      label = "Read Timeout (ms)",
       displayPosition = 30,
       group = "ADVANCED",
       min = 100
