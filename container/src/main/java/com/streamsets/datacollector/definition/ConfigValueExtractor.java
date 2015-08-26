@@ -59,7 +59,8 @@ public abstract class ConfigValueExtractor {
             break;
           case STRING:
           case MODEL:
-            if (!String.class.isAssignableFrom(field.getType()) && !field.getType().isEnum()) {
+            if (!String.class.isAssignableFrom(field.getType()) && !field.getType().isEnum() &&
+              !List.class.isAssignableFrom(field.getType())) {
               errors.add(new ErrorMessage(DefinitionError.DEF_003, contextMsg, field.getType()));
             }
             if (field.getType().isEnum()) {
@@ -150,8 +151,13 @@ public abstract class ConfigValueExtractor {
                 break;
               case STRING:
               case MODEL:
-                value = (field.getType() == String.class) ? valueStr
-                                                          : Enum.valueOf(((Class<Enum>)field.getType()), valueStr);
+                if(field.getType() == String.class) {
+                  value = valueStr;
+                } else if(field.getType().isEnum()){
+                  value = Enum.valueOf(((Class<Enum>)field.getType()), valueStr);
+                } else if(List.class.isAssignableFrom(field.getType())) {
+                  value = ObjectMapperFactory.get().readValue(valueStr, List.class);
+                }
                 break;
               case LIST:
                 value = ObjectMapperFactory.get().readValue(valueStr, List.class);

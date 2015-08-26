@@ -12,6 +12,7 @@ public enum ModelType {
   FIELD_SELECTOR_SINGLE_VALUED(new NopDefaultPreparer()),
   FIELD_VALUE_CHOOSER(new NopDefaultPreparer()),
   VALUE_CHOOSER(new NopDefaultPreparer()),
+  MULTI_VALUE_CHOOSER(new NopDefaultPreparer()),
   LANE_PREDICATE_MAPPING(new EmptyMapDefaultPreparer()),
   COMPLEX_FIELD(new EmptyListDefaultPreparer()),
 

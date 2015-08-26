@@ -75,6 +75,10 @@
       <ng-include src="'valueChooserConfigurationTemplate'"></ng-include>
     </div>
 
+    <div ng-switch-when="MULTI_VALUE_CHOOSER">
+      <ng-include src="'labelConfigurationTemplate'"></ng-include>
+      <ng-include src="'multiValueChooserConfigurationTemplate'"></ng-include>
+    </div>
 
     <div ng-switch-when="FIELD_SELECTOR_MULTI_VALUED"
          ng-click="onFieldSelectorFocus(detailPaneConfig)"

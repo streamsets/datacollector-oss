@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelector;
 import com.streamsets.pipeline.api.FieldValueChooser;
 import com.streamsets.pipeline.api.LanePredicateMapping;
+import com.streamsets.pipeline.api.MultiValueChooser;
 import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -44,12 +45,13 @@ public abstract class ModelDefinitionExtractor {
 
     private static final Map<Class<? extends Annotation>, ModelDefinitionExtractor> MODEL_EXTRACTOR =
         ImmutableMap.<Class<? extends Annotation>, ModelDefinitionExtractor>builder()
-                    .put(FieldSelector.class, new FieldSelectorExtractor())
-                    .put(FieldValueChooser.class, new FieldValueChooserExtractor())
-                    .put(ValueChooser.class, new ValueChooserExtractor())
-                    .put(LanePredicateMapping.class, new LanePredicateMappingExtractor())
-                    .put(ComplexField.class, new ComplexFieldExtractor())
-                    .build();
+          .put(FieldSelector.class, new FieldSelectorExtractor())
+          .put(FieldValueChooser.class, new FieldValueChooserExtractor())
+          .put(ValueChooser.class, new ValueChooserExtractor())
+          .put(MultiValueChooser.class, new MultiValueChooserExtractor())
+          .put(LanePredicateMapping.class, new LanePredicateMappingExtractor())
+          .put(ComplexField.class, new ComplexFieldExtractor())
+          .build();
 
     @Override
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
@@ -191,6 +193,40 @@ public abstract class ModelDefinitionExtractor {
           ChooserValues values = valueChooser.value().newInstance();
           return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
+        } catch (Exception ex) {
+          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
+        }
+      } else {
+        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
+      }
+    }
+  }
+
+  static class MultiValueChooserExtractor extends ModelDefinitionExtractor {
+
+    @Override
+    public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
+      List<ErrorMessage> errors = new ArrayList<>();
+      try {
+        MultiValueChooser multiValueChooser = field.getAnnotation(MultiValueChooser.class);
+        ChooserValues values = multiValueChooser.value().newInstance();
+        values.getValues();
+        values.getLabels();
+      } catch (Exception ex) {
+        errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.toString()));
+      }
+      return errors;
+    }
+
+    @Override
+    public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
+      List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
+      if (errors.isEmpty()) {
+        MultiValueChooser multiValueChooser = field.getAnnotation(MultiValueChooser.class);
+        try {
+          ChooserValues values = multiValueChooser.value().newInstance();
+          return new ModelDefinition(ModelType.MULTI_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
+            values.getLabels(), null, null);
         } catch (Exception ex) {
           throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
         }

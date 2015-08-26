@@ -1021,6 +1021,8 @@ public class BeanHelper {
         return ModelTypeJson.LANE_PREDICATE_MAPPING;
       case VALUE_CHOOSER:
         return ModelTypeJson.VALUE_CHOOSER;
+      case MULTI_VALUE_CHOOSER:
+        return ModelTypeJson.MULTI_VALUE_CHOOSER;
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }
@@ -1043,6 +1045,8 @@ public class BeanHelper {
         return com.streamsets.datacollector.config.ModelType.LANE_PREDICATE_MAPPING;
       case VALUE_CHOOSER:
         return com.streamsets.datacollector.config.ModelType.VALUE_CHOOSER;
+      case MULTI_VALUE_CHOOSER:
+        return com.streamsets.datacollector.config.ModelType.MULTI_VALUE_CHOOSER;
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }

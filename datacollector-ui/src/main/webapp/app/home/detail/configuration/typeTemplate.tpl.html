@@ -263,6 +263,23 @@
   </div>
 </script>
 
+<script type="text/ng-template" id="multiValueChooserConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+    <ui-select multiple
+               ng-disabled="isPipelineReadOnly || isPipelineRunning"
+               ng-model="detailPaneConfig.configuration[configIndex].value">
+      <ui-select-match>
+        {{$item}}
+      </ui-select-match>
+      <ui-select-choices repeat="listValue in configDefinition.model.values| filter:$select.search">
+        <div ng-bind-html="listValue | highlight: $select.search"></div>
+      </ui-select-choices>
+    </ui-select>
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
 <script type="text/ng-template" id="fieldSelectorMultiValuedConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <ui-select multiple
