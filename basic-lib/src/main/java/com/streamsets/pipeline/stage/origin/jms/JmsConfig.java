@@ -11,8 +11,8 @@ public class JmsConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "JMS Initial Conext Factory",
-    description = "e.g: org.apache.activemq.jndi.ActiveMQInitialContextFactory",
+    label = "JMS Initial Context Factory",
+    description = "ActiveMQ example: org.apache.activemq.jndi.ActiveMQInitialContextFactory",
     displayPosition = 10,
     group = "JMS"
   )
@@ -22,6 +22,7 @@ public class JmsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "JNDI Connection Factory",
+    description = "ActiveMQ example: GenericConnectionFactory",
     displayPosition = 12,
     group = "JMS"
   )
@@ -31,6 +32,7 @@ public class JmsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "JMS Provider URL",
+    description = "ActiveMQ example: tcp://mqserver:61616",
     displayPosition = 14,
     group = "JMS"
   )
@@ -54,16 +56,4 @@ public class JmsConfig {
     group = "JMS"
   )
   public String messageSelector;
-
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.NUMBER,
-    label = "JMS Message Selector",
-    displayPosition = 20,
-    group = "JMS",
-    min = 1,
-    max = Integer.MAX_VALUE,
-    defaultValue = "3"
-  )
-  public int maxTries;
 }

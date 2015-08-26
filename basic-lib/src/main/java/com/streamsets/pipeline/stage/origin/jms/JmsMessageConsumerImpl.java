@@ -129,7 +129,6 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       if (IS_TRACE_ENABLED) {
         LOG.trace("Attempting to take up to '{}' messages", (batchSize - numMessagesConsumed));
       }
-      int tries = 0;
       try {
         Message message = messageConsumer.receive(POLL_INTERVAL);
         if (message != null) {
@@ -139,11 +138,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
           numMessagesConsumed += jmsMessageConverter.convert(batchMaker, context, messageId, message);
         }
       } catch (JMSException ex) {
-        if (tries++ >= jmsConfig.maxTries) {
-          LOG.warn(JmsErrors.JMS_07.getMessage(), ex.toString(), ex);
-        } else {
-          throw new StageException(JmsErrors.JMS_07, ex.toString(), ex);
-        }
+        throw new StageException(JmsErrors.JMS_07, ex.toString(), ex);
       }
     }
     return numMessagesConsumed;
