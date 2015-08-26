@@ -63,13 +63,13 @@ public abstract  class AbstractRunner implements Runner {
 
     //register new one if required
     if(pipelineConfigBean.notifyOnStates != null && !pipelineConfigBean.notifyOnStates.isEmpty() &&
-      pipelineConfigBean.emails != null && !pipelineConfigBean.emails.isEmpty()) {
+      pipelineConfigBean.emailIDs != null && !pipelineConfigBean.emailIDs.isEmpty()) {
       Set<String> states = new HashSet<>();
       for(com.streamsets.datacollector.config.PipelineState s : pipelineConfigBean.notifyOnStates) {
         states.add(s.name());
       }
       EmailNotifier emailNotifier = new EmailNotifier(name, rev, runtimeInfo, new EmailSender(configuration),
-        pipelineConfigBean.emails, states);
+        pipelineConfigBean.emailIDs, states);
       eventListenerManager.addStateEventListener(emailNotifier);
     }
   }

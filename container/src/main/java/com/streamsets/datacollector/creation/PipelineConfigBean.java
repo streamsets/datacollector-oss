@@ -18,6 +18,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.MultiValueChooser;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooser;
@@ -107,26 +108,26 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDef(
     required = false,
-    type = ConfigDef.Type.LIST,
+    type = ConfigDef.Type.MODEL,
     defaultValue = "[\"RUN_ERROR\", \"STOPPED\", \"FINISHED\"]",
     label = "Notify on Pipeline State Changes",
     description = "Notifies via email when pipeline gets to the specified states",
     displayPosition = 75,
     group = ""
   )
-  @ValueChooser(PipelineStateChooserValues.class)
+  @MultiValueChooser(PipelineStateChooserValues.class)
   public List<PipelineState> notifyOnStates;
 
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.LIST,
     defaultValue = "",
-    label = "Email Addresses",
+    label = "Email IDs",
     description = "Email Addresses",
     displayPosition = 76,
     group = ""
   )
-  public List<String> emails;
+  public List<String> emailIDs;
 
   @ConfigDef(
       required = false,
