@@ -1,0 +1,24 @@
+<table border="0">
+<tbody>
+<tr>
+<td>Pipeline</td>
+<td>:&nbsp;${PIPELINE_NAME}</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>:&nbsp;${TIME}</td>
+</tr>
+<tr>
+<td>Error Code</td>
+<td>:&nbsp;${ERROR_CODE}</td>
+</tr>
+<tr>
+<td>Error Message &nbsp;&nbsp;</td>
+<td>:&nbsp;${DESCRIPTION}</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>:&nbsp;${URL}</td>
+</tr>
+</tbody>
+</table>

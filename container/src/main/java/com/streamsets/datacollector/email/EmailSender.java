@@ -108,7 +108,7 @@ public class EmailSender {
       List<InternetAddress> toAddrs = toAddress(addresses);
       message.addRecipients(Message.RecipientType.TO, toAddrs.toArray(new InternetAddress[toAddrs.size()]));
       message.setSubject(subject);
-      message.setContent(body, "text/plain; charset=UTF-8");
+      message.setContent(body, "text/html; charset=UTF-8");
       Transport.send(message);
     } catch (Exception ex) {
       session = null;

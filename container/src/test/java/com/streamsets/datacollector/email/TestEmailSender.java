@@ -9,9 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
-import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.util.Configuration;
-
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -54,7 +52,7 @@ public class TestEmailSender {
     Assert.assertTrue(headers.contains("To: foo, bar"));
     Assert.assertTrue(headers.contains("Subject: SUBJECT"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
-    Assert.assertTrue(headers.contains("Content-Type: text/plain; charset=UTF-8"));
+    Assert.assertTrue(headers.contains("Content-Type: text/html; charset=UTF-8"));
     Assert.assertEquals("BODY", GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
 

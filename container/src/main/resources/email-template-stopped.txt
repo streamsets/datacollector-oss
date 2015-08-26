@@ -1,0 +1,20 @@
+<table border="0">
+<tbody>
+<tr>
+<td>Pipeline</td>
+<td>:&nbsp;${PIPELINE_NAME}</td>
+</tr>
+<tr>
+<td>Message &nbsp;</td>
+<td>:&nbsp;${MESSAGE}</td>
+</tr>
+<tr>
+<td>Time</td>
+<td>:&nbsp;${TIME}</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>:&nbsp;${URL}</td>
+</tr>
+</tbody>
+</table>

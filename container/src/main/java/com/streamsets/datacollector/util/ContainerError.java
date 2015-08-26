@@ -121,6 +121,10 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0900("Error while upgrading stage configuration from version '{}' to version '{}': {}"),
   CONTAINER_0901("Could not find stage definition for '{}:{}'"),
   CONTAINER_0902("Stage definition '{}:{}' version '{}' is older than the version specified in the configuration '{}' for stage '{}'"),
+
+  //Email Notifier
+  CONTAINER_01000("Error loading email template, reason : {}"),
+
   ;
 
   private final String msg;

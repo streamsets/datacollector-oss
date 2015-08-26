@@ -5,12 +5,14 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 
 import java.util.EventListener;
 
 public interface StateEventListener extends EventListener {
 
-  void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage);
+  void onStateChange(PipelineState fromState, PipelineState toState, String toStateJson, ThreadUsage threadUsage)
+    throws PipelineException;
 
 }
