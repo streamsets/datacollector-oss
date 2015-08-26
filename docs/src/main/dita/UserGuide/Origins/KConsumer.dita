@@ -2,8 +2,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_msz_wnr_5q">
  <title>Kafka Consumer</title>
- <shortdesc>The Kafka Consumer origin reads data from an Apache Kafka cluster and processes the data
-    based on the type of data stored in the cluster. </shortdesc>
+ <shortdesc>The Kafka Consumer origin reads data from an Apache Kafka cluster.</shortdesc>
  <conbody>
   <p><indexterm>Kafka Consumer
      origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka

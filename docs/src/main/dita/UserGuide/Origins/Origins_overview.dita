@@ -13,8 +13,8 @@
           in the directory. </li>
         <li>HTTP Client - Reads data from a streaming HTTP resource URL.</li>
         <li>JDBC Consumer - Reads database data through a JDBC connection.</li>
-        <li>JMS - Reads messages from a JMS broker. <draft-comment author="Loretta">is this right?
-          </draft-comment></li>
+        <li>JMS Consumer - Reads messages from a JMS broker. <draft-comment author="Loretta">is this
+            right? </draft-comment></li>
         <li>Kafka Consumer - Reads messages from Kafka.</li>
         <li>Kinesis Consumer - Reads data from Kinesis.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>

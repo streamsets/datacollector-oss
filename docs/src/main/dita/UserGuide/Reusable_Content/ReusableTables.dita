@@ -49,8 +49,55 @@
          <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
           id="image_xwx_xrm_js"/></xref></entry>
        <entry>Removes all ASCII control characters except for the tab, line feed, and carriage
-        return characters.<draft-comment author="Loretta">from
-        ReusableTables.dita.</draft-comment></entry>
+        return characters.</entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
+   <draft-comment author="Loretta">The following MaxBatchSize and BatchWaitTime rows are used in
+    Configuring Kafka Consumer, JMS Consumer. See if the go anywhere else.</draft-comment>
+   <table frame="all" rowsep="1" colsep="1" id="table_tft_4jk_dt">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <tbody>
+      <row id="DataFormat_All">
+       <entry>Data Format <xref href="KConsumer-DataFormats.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+          id="image_bmy_h5q_ds"/></xref></entry>
+       <entry>Type of data to be read. Use one of the following options:<ul id="ul_qgm_tjw_yq">
+         <li>Text</li>
+         <li>JSON</li>
+         <li>Delimited</li>
+         <li>XML</li>
+         <li>SDC Record <xref href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+           <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_wjh_ycl_br"
+          /></xref></li>
+         <li>Log</li>
+         <li>Avro</li>
+         <li>Binary</li>
+        </ul></entry>
+      </row>
+      <row id="MaxBatchSize">
+       <entry>Max Batch Size (records)</entry>
+       <entry>Maximum number of records processed at one time. Honors values up to the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum
+        batch size. <p>Default is 1000. The <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> default
+         is 1000.</p></entry>
+      </row>
+      <row id="BatchWaitTime">
+       <entry>Batch Wait Time (ms) <xref href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_mgp_2q3_br"
+          placement="inline"/></xref></entry>
+       <entry>Number of milliseconds to wait before sending a partial or empty batch. </entry>
+      </row>
+      <row id="MessagesCharset">
+       <entry>Messages Charset</entry>
+       <entry>Character encoding of the messages to be processed.<p>Not used for the SDC Record,
+         Avro, or Binary data format.</p></entry>
       </row>
      </tbody>
     </tgroup>

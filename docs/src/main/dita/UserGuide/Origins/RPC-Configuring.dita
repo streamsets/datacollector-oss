@@ -14,7 +14,39 @@
                 <cmd/>
             </step>
             <step>
-                <cmd/>
+                <cmd>On the <wintitle>RPC</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_jrh_1fj_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>RPC Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>RPC Listening Port</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>RPC ID</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>SSL Enabled</entry>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

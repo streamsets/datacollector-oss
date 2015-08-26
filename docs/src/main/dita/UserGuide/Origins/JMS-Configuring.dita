@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_zp1_4ck_dt">
+    <title>Configuring a JMS Consumer Origin</title>
+    <shortdesc>Configure a JMS Consumer origin to read JMS messages.</shortdesc>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+        <steps id="steps_lsl_yck_dt">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>JMS</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_qzr_nfk_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JMS Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JMS Initial Context Factory</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>JNDI Connection Factory</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>JMS Provider URL</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>JMS Destination Name</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>JMS Message Selector</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record for records that include
+                                        multiple objects. <p>When not selected, the origin generates
+                                            multiple records when a record includes multiple
+                                            objects.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Uses JMS credentials.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/DataFormat_All">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
