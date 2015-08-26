@@ -122,10 +122,10 @@ public abstract class PipelineBeanCreator {
     if (stageDef != null) {
       if (stageDef.isErrorStage() != errorStage) {
         if (stageDef.isErrorStage()) {
-          errors.add(issueCreator.create(CreationError.CREATION_007, stageConf.getLibrary(), stageConf.getStageName(),
+          errors.add(issueCreator.create(CreationError.CREATION_007, stageDef.getLibraryLabel(), stageDef.getLabel(),
                                          stageConf.getStageVersion()));
         } else {
-          errors.add(issueCreator.create(CreationError.CREATION_008, stageConf.getLibrary(), stageConf.getStageName(),
+          errors.add(issueCreator.create(CreationError.CREATION_008, stageDef.getLibraryLabel(), stageDef.getLabel(),
                                          stageConf.getStageVersion()));
         }
       }
