@@ -53,9 +53,9 @@ public class ClusterResource {
   @PermitAll
   public Response callback(CallbackInfoJson callbackInfoJson) throws PipelineStoreException, PipelineManagerException {
     Runner runner = manager.getRunner(callbackInfoJson.getUser(), callbackInfoJson.getName(), callbackInfoJson.getRev());
-    if (runner.getState().getStatus() != PipelineStatus.RUNNING) {
-      throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not running, but is '{}'", callbackInfoJson.getName(), callbackInfoJson.getRev(),
-        runner.getState().getStatus()));
+    if (!runner.getState().getStatus().isActive()) {
+      throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",
+        callbackInfoJson.getName(), callbackInfoJson.getRev(), runner.getState().getStatus()));
     }
     runner.updateSlaveCallbackInfo(callbackInfoJson.getCallbackInfo());
     return Response.ok().build();
