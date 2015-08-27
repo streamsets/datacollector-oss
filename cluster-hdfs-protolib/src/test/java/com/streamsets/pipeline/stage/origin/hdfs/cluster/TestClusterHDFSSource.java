@@ -64,6 +64,8 @@ public class TestClusterHDFSSource {
   private static MiniDFSCluster miniDFS;
   private static Path dir;
   private static File dummyEtc;
+  private static String resourcesDir;
+  private static String hadoopConfDir;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
@@ -89,10 +91,14 @@ public class TestClusterHDFSSource {
       dummyConf.writeXml(out);
       out.close();
     }
+    resourcesDir = minidfsDir.getAbsolutePath();
+    hadoopConfDir = dummyEtc.getName();
+    System.setProperty("sdc.resources.dir", resourcesDir);;
   }
 
   @AfterClass
   public static void cleanUpClass() throws IOException {
+    System.clearProperty("sdc.resources.dir");
     if (miniDFS != null) {
       miniDFS.shutdown();
       miniDFS = null;
@@ -246,7 +252,8 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .addConfiguration("hdfsConfDir", hadoopConfDir)
+      .setResourcesDir(resourcesDir)
       .build();
       sourceRunner.runInit();
 
@@ -303,7 +310,8 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .addConfiguration("hdfsConfDir", hadoopConfDir)
+      .setResourcesDir(resourcesDir)
       .build();
       sourceRunner.runInit();
 
@@ -372,7 +380,8 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .addConfiguration("hdfsConfDir", hadoopConfDir)
+      .setResourcesDir(resourcesDir)
       .build();
       sourceRunner.runInit();
 
@@ -431,7 +440,8 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .addConfiguration("hdfsConfDir", hadoopConfDir)
+      .setResourcesDir(resourcesDir)
       .build();
       sourceRunner.runInit();
 
@@ -493,7 +503,8 @@ public class TestClusterHDFSSource {
       .addConfiguration("log4jCustomLogFormat", null)
       .addConfiguration("grokPattern", null)
       .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", dummyEtc.getAbsolutePath())
+      .addConfiguration("hdfsConfDir", hadoopConfDir)
+      .setResourcesDir(resourcesDir)
       .build();
       sourceRunner.runInit();
 

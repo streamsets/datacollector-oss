@@ -34,9 +34,8 @@ public enum Errors implements ErrorCode {
   HADOOPFS_27("Hadoop configuration file '{}'  is not a file"),
   HADOOPFS_28("Could not resolve the default Kerberos realm, you must set the 'dfs.namenode.kerberos.principal' " +
     "property to the HDFS principal name: {}"),
-  HADOOPFS_30("Max data object length cannot be less than 1"),
-
-
+  HADOOPFS_29("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
+  HADOOPFS_30("Max data object length cannot be less than 1")
   ;
   private final String msg;
 

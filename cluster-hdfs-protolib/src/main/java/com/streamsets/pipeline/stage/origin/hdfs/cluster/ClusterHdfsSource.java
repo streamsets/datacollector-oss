@@ -86,7 +86,6 @@ import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-
 import javax.security.auth.Subject;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
@@ -351,7 +350,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
     if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
       File hadoopConfigDir = new File(hadoopConfDir);
-      if (!hadoopConfigDir.isAbsolute()) {
+      if (hadoopConfigDir.isAbsolute()) {
+        // Do not allow absolute hadoop config directory in cluster mode
+        issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_29,
+          hadoopConfDir));
+      } else {
         hadoopConfigDir = new File(getContext().getResourcesDirectory(), hadoopConfDir).getAbsoluteFile();
       }
       if (!hadoopConfigDir.exists()) {

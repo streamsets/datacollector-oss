@@ -133,9 +133,6 @@ public class TestStandaloneRunner {
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    ((AsyncRunner)runner).getRunner().prepareForStop();
-    ((AsyncRunner)runner).getRunner().stop();
-    assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
   }
 
   @Test
