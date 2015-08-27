@@ -22,7 +22,7 @@ public class JmsConfig {
     required = true,
     type = ConfigDef.Type.STRING,
     label = "JNDI Connection Factory",
-    description = "ActiveMQ example: GenericConnectionFactory",
+    description = "ActiveMQ example: ConnectionFactory",
     displayPosition = 12,
     group = "JMS"
   )

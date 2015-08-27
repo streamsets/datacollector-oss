@@ -65,12 +65,12 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       }
     } catch (JMSException ex) {
       if (credentialsConfig.useCredentials) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "connectionFactory", JmsErrors.JMS_03,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_03,
           connectionFactory.getClass().getName(), credentialsConfig.username, ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_03.getMessage(), connectionFactory.getClass().getName(),
           credentialsConfig.username, ex.toString()), ex);
       } else {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "connectionFactory", JmsErrors.JMS_02,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_02,
           connectionFactory.getClass().getName(), ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_02.getMessage(), connectionFactory.getClass().getName(), ex.toString())
           , ex);
@@ -80,7 +80,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       try {
         connection.start();
       } catch (JMSException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "connectionFactory", JmsErrors.JMS_04,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_04,
           ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_04.getMessage(), ex.toString()), ex);
       }
@@ -89,7 +89,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       try {
         session = connection.createSession(true, Session.SESSION_TRANSACTED);;
       } catch (JMSException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "connectionFactory", JmsErrors.JMS_06,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_06,
           ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_06.getMessage(), ex.toString()), ex);
       }
@@ -98,7 +98,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
       try {
         destination = (Destination) initialContext.lookup(jmsConfig.destinationName);
       } catch (NamingException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "destinationName", JmsErrors.JMS_05,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.destinationName", JmsErrors.JMS_05,
           jmsConfig.destinationName, ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsConfig.destinationName, ex.toString()), ex);
       }
@@ -112,7 +112,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
         messageSelector = messageSelector.trim();
         messageConsumer = session.createConsumer(destination, messageSelector.isEmpty() ? null: messageSelector);
       } catch (JMSException ex) {
-        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "connectionFactory", JmsErrors.JMS_11,
+        issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.connectionFactory", JmsErrors.JMS_11,
           ex.toString()));
         LOG.info(Utils.format(JmsErrors.JMS_11.getMessage(), ex.toString()), ex);
       }

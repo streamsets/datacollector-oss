@@ -148,6 +148,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- jms-lib -->
+    <fileSet>
+      <directory>${basedir}/../jms-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- dev-lib -->
     <fileSet>
       <directory>${basedir}/../dev-lib/target/user-libs/</directory>

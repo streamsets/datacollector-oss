@@ -62,7 +62,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
     } catch (NamingException ex) {
       LOG.info(Utils.format(JmsErrors.JMS_00.getMessage(), jmsConfig.initialContextFactory,
         jmsConfig.providerURL, ex.toString()), ex);
-      issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "initialContextFactory", JmsErrors.JMS_00,
+      issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_00,
         jmsConfig.initialContextFactory, jmsConfig.providerURL, ex.toString()));
     }
     if (issues.isEmpty()) {
@@ -70,7 +70,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
         connectionFactory = (ConnectionFactory) initialContext.lookup(jmsConfig.connectionFactory);
       } catch (NamingException ex) {
         LOG.info(Utils.format(JmsErrors.JMS_01.getMessage(), jmsConfig.initialContextFactory, ex.toString()), ex);
-        issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "initialContextFactory", JmsErrors.JMS_01,
+        issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_01,
           jmsConfig.connectionFactory, ex.toString()));
       }
     }

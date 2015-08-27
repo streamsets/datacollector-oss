@@ -41,6 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+ * Instances of this object must be called 'dataFormatConfig' exactly for error
+ * messages to be placed in the correct location on the UI.
+ */
 public class DataFormatConfig {
 
   @ConfigDef(

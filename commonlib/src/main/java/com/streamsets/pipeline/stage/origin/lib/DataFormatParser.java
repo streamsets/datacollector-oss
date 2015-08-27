@@ -51,30 +51,30 @@ public class DataFormatParser {
     switch (dataFormatConfig.dataFormat) {
       case JSON:
         if (dataFormatConfig.jsonMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.JSON.name(), "maxJsonObjectLen", ParserErrors.PARSER_04));
+          issues.add(context.createConfigIssue(DataFormat.JSON.name(), "dataFormatConfig.maxJsonObjectLen", ParserErrors.PARSER_04));
         }
         break;
       case TEXT:
         if (dataFormatConfig.textMaxLineLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.TEXT.name(), "maxLogLineLength", ParserErrors.PARSER_04));
+          issues.add(context.createConfigIssue(DataFormat.TEXT.name(), "dataFormatConfig.maxLogLineLength", ParserErrors.PARSER_04));
         }
         break;
       case DELIMITED:
         if (dataFormatConfig.csvMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.DELIMITED.name(), "csvMaxObjectLen", ParserErrors.PARSER_04));
+          issues.add(context.createConfigIssue(DataFormat.DELIMITED.name(), "dataFormatConfig.csvMaxObjectLen", ParserErrors.PARSER_04));
         }
         break;
       case XML:
         if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
-          issues.add(context.createConfigIssue(parentName, "produceSingleRecordPerMessage",
+          issues.add(context.createConfigIssue(parentName, "messageConfig.produceSingleRecordPerMessage",
             ParserErrors.PARSER_06));
         }
         if (dataFormatConfig.xmlMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.XML.name(), "maxXmlObjectLen", ParserErrors.PARSER_04));
+          issues.add(context.createConfigIssue(DataFormat.XML.name(), "dataFormatConfig.maxXmlObjectLen", ParserErrors.PARSER_04));
         }
         if (dataFormatConfig.xmlRecordElement != null && !dataFormatConfig.xmlRecordElement.isEmpty() &&
           !XMLChar.isValidName(dataFormatConfig.xmlRecordElement)) {
-          issues.add(context.createConfigIssue(DataFormat.XML.name(), "xmlRecordElement", ParserErrors.PARSER_02,
+          issues.add(context.createConfigIssue(DataFormat.XML.name(), "dataFormatConfig.xmlRecordElement", ParserErrors.PARSER_02,
             dataFormatConfig.xmlRecordElement));
         }
         break;
@@ -91,7 +91,7 @@ public class DataFormatParser {
         break;
       case AVRO:
         if(!dataFormatConfig.schemaInMessage && (dataFormatConfig.avroSchema == null || dataFormatConfig.avroSchema.isEmpty())) {
-          issues.add(context.createConfigIssue(DataFormat.AVRO.name(), "avroSchema", ParserErrors.PARSER_07,
+          issues.add(context.createConfigIssue(DataFormat.AVRO.name(), "dataFormatConfig.avroSchema", ParserErrors.PARSER_07,
             dataFormatConfig.avroSchema));
         }
         break;

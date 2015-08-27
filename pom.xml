@@ -74,6 +74,8 @@
 
     <module>basic-lib</module>
 
+    <module>jms-lib</module>
+
     <module>hdfs-protolib</module>
     <module>hive-protolib</module>
 
