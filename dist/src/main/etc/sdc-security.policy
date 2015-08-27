@@ -30,6 +30,9 @@ grant codebase "file://${sdc.dist.dir}/streamsets-libs/-" {
 
 // User stage libraries code base:
 grant codebase "file://${sdc.dist.dir}/user-libs/-" {
+  permission java.util.PropertyPermission "*", "read";
+  permission java.lang.RuntimePermission "accessDeclaredMembers";
+  permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
 };
 
 // For JARs to be available to all stage libraries

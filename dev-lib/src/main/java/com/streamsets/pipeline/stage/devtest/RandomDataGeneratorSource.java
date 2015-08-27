@@ -31,7 +31,7 @@ import java.util.UUID;
   label="Dev Data Generator",
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
-  icon="random.png",
+  icon= "dev.png",
   upgrader = RandomDataGeneratorSourceUpgrader.class
 )
 public class RandomDataGeneratorSource extends BaseSource {

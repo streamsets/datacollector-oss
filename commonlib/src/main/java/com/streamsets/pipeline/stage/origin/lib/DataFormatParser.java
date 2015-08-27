@@ -162,7 +162,7 @@ public class DataFormatParser {
     } catch (IOException |DataParserException ex) {
       handleException(context, messageId, ex);
     }
-    if (messageConfig.produceSingleRecordPerMessage) {
+    if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
       for (Record record : records) {
         list.add(record.get());

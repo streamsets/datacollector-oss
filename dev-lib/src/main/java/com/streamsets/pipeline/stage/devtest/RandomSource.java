@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
   label = "Dev Random Record Source",
   description = "Generates records with the specified field names, using Long data. For development only.",
   execution = ExecutionMode.STANDALONE,
-  icon = "random.png")
+  icon = "dev.png")
 public class RandomSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(RandomSource.class);
   @ConfigDef(required = true, type = ConfigDef.Type.STRING,

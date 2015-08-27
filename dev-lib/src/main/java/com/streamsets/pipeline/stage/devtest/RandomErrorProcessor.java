@@ -11,7 +11,6 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
@@ -23,7 +22,7 @@ import java.util.Random;
   version = 2,
   label = "Dev Random Error",
   description = "Generates error records and silently discards records as specified.",
-  icon="random.png",
+  icon= "dev.png",
   upgrader = RandomErrorProcessorUpgrader.class
 )
 public class RandomErrorProcessor extends SingleLaneProcessor {
