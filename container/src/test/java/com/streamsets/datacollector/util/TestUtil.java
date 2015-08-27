@@ -315,7 +315,7 @@ public class TestUtil {
           pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineConf.getConfiguration().add(new Config("notifyOnTermination", true));
-          pipelineConf.getConfiguration().add(new Config("emails", Arrays.asList("foo", "bar")));
+          pipelineConf.getConfiguration().add(new Config("emailIDs", Arrays.asList("foo", "bar")));
           pipelineStoreTask.save("admin2", PIPELINE_WITH_EMAIL, ZERO_REV, "description"
             , pipelineConf);
         }
