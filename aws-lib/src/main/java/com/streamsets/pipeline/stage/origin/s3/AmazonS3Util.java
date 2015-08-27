@@ -7,23 +7,45 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.iterable.S3Objects;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ListObjectsRequest;
-import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
+import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
 public class AmazonS3Util {
 
-  static List<S3ObjectSummary> listObjectsChronologically(AmazonS3Client s3Client, S3Config config, int fetchSize)
+  public static final int BATCH_SIZE = 1000;
+
+  /**
+   * Lists objects from AmazonS3 in chronological order [lexicographical order if 2 files have same timestamp] which are
+   * later than or equal to the timestamp of the previous offset object
+   *
+   * @param s3Client
+   * @param s3ConfigBean
+   * @param pathMatcher glob patterns to match file name against
+   * @param s3Offset current offset which provides the timestamp of the previous object
+   * @param fetchSize number of objects to fetch in one go
+   * @return
+   * @throws AmazonClientException
+   */
+  static List<S3ObjectSummary> listObjectsChronologically(AmazonS3Client s3Client, S3ConfigBean s3ConfigBean,
+                                                          PathMatcher pathMatcher, AmazonS3Source.S3Offset s3Offset,
+                                                          int fetchSize)
     throws AmazonClientException {
 
+    //Algorithm:
+    // - Full scan all objects that match the file name pattern and which are later than the file in the offset
+    // - Select the oldest "fetchSize" number of files and return them.
     TreeSet<S3ObjectSummary> treeSet = new TreeSet<>(
       new Comparator<S3ObjectSummary>() {
         @Override
@@ -37,24 +59,36 @@ public class AmazonS3Util {
         }
       });
 
-    ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
-    listObjectsRequest
-      .withBucketName(config.bucket)
-      .withPrefix(config.folder + config.prefix)
-      .withDelimiter(config.delimiter);
-
-    ObjectListing objectListing;
-
-    do {
-      objectListing = s3Client.listObjects(listObjectsRequest);
-      treeSet.addAll(objectListing.getObjectSummaries());
-      while(treeSet.size() > fetchSize) {
-        treeSet.pollLast();
+    S3Objects s3ObjectSummaries = S3Objects
+      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.folder + s3ConfigBean.s3Config.prefix)
+      .withBatchSize(BATCH_SIZE);
+    for(S3ObjectSummary s : s3ObjectSummaries) {
+      String fileName = s.getKey().substring(s.getKey().lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
+      if(!fileName.isEmpty()) {
+        //fileName can be empty.
+        //If the user manually creates a folder "myFolder/mySubFolder" in bucket "myBucket" and uploads "myObject",
+        // then the first objects returned here are:
+        // myFolder/mySubFolder
+        // myFolder/mySubFolder/myObject
+        //
+        // All is good when pipeline is run but preview returns with no data. So we should ignore the empty file as it
+        // has no data
+        if (pathMatcher.matches(Paths.get(fileName)) && isEligible(s, s3Offset)) {
+          treeSet.add(s);
+        }
+        if (treeSet.size() > fetchSize) {
+          treeSet.pollLast();
+        }
       }
-      listObjectsRequest.setMarker(objectListing.getNextMarker());
-    } while (objectListing.isTruncated());
+    }
 
     return new ArrayList<>(treeSet);
+  }
+
+  private static boolean isEligible(S3ObjectSummary s, AmazonS3Source.S3Offset s3Offset) {
+    return (s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) > 0) ||
+      ((s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) &&
+          (s.getKey().compareTo(s3Offset.getKey()) > 0));
   }
 
   static void move(AmazonS3Client s3Client, String srcBucket, String sourceKey, String destBucket,
@@ -69,25 +103,22 @@ public class AmazonS3Util {
     return s3Client.getObject(bucket, objectKey);
   }
 
+  static S3Object getObjectRange(AmazonS3Client s3Client, String bucket, String objectKey, long range)
+    throws AmazonClientException {
+    GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, objectKey).withRange(0, range);
+    return s3Client.getObject(getObjectRequest);
+  }
+
   static S3ObjectSummary getObjectSummary(AmazonS3Client s3Client, String bucket, String objectKey) {
     S3ObjectSummary s3ObjectSummary = null;
-    ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucket).withPrefix(objectKey);
-    ObjectListing objectListing;
-
-    do {
-      objectListing = s3Client.listObjects(listObjectsRequest);
-      for (S3ObjectSummary s : objectListing.getObjectSummaries()) {
-        if(s.getKey().equals(objectKey)) {
-          s3ObjectSummary = s;
-          break;
-        }
-      }
-      if(s3ObjectSummary != null) {
+    S3Objects s3ObjectSummaries = S3Objects
+      .withPrefix(s3Client, bucket, objectKey);
+    for(S3ObjectSummary s : s3ObjectSummaries) {
+      if(s.getKey().equals(objectKey)) {
+        s3ObjectSummary = s;
         break;
       }
-      listObjectsRequest.setMarker(objectListing.getNextMarker());
-    } while (objectListing.isTruncated());
-
+    }
     return s3ObjectSummary;
   }
 }

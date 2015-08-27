@@ -7,6 +7,7 @@ package com.streamsets.pipeline.lib.data;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.common.DataFormatConstants;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -14,21 +15,17 @@ import java.util.Map;
 import java.util.Set;
 
 public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFactory, F extends DataFormat<DF>> {
-  private final static Charset UTF8 = Charset.forName("UTF-8");
-  // Max overrun limit is 1MB
-  private static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
-    System.getProperty("DataFactoryBuilder.OverRunLimit", "1048576"));
-
+  
   private final Stage.Context context;
   private final F format;
   private final Set<Class<? extends Enum>> expectedModes;
   private final Map<Class<? extends Enum>, Enum> modes;
   private final Map<String, Object> configs;
   private Compression compression = Compression.NONE;
-  private Charset charset = UTF8;
+  private Charset charset = DataFormatConstants.UTF8;
   private boolean removeCtrlChars;
   private int maxDataLen;
-  private int overRunLimit = MAX_OVERRUN_LIMIT;
+  private int overRunLimit = DataFormatConstants.MAX_OVERRUN_LIMIT;
 
   public DataFactoryBuilder(Stage.Context context, F format) {
     this.context = Utils.checkNotNull(context, "context");
@@ -90,8 +87,8 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   }
 
   public B setOverRunLimit(int overRunLimit) {
-    Utils.checkArgument(overRunLimit > 0 && overRunLimit <= MAX_OVERRUN_LIMIT, Utils.formatL(
-      "overRunLimit '{}' must be greater than 0 and less than or equal to " + MAX_OVERRUN_LIMIT, overRunLimit));
+    Utils.checkArgument(overRunLimit > 0 && overRunLimit <= DataFormatConstants.MAX_OVERRUN_LIMIT, Utils.formatL(
+      "overRunLimit '{}' must be greater than 0 and less than or equal to " + DataFormatConstants.MAX_OVERRUN_LIMIT, overRunLimit));
     this.overRunLimit = overRunLimit;
     return (B) this;
   }

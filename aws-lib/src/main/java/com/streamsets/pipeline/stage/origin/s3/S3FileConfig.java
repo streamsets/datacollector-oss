@@ -30,30 +30,24 @@ public class S3FileConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "10",
-    label = "Max Objects in Directory",
-    description = "Max number of files in the directory waiting to be processed. Additional files cause the " +
-      "pipeline to fail.",
-    displayPosition = 110,
-    group = "#0",
-    min = 1,
-    max = Integer.MAX_VALUE
+    type = ConfigDef.Type.STRING,
+    label = "File Name Pattern",
+    description = "A glob or regular expression that defines the pattern of the file names in the directory",
+    displayPosition = 120,
+    group = "#0"
   )
-  public int maxSpoolObjects;
+  public String filePattern;
 
-  public boolean validate(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    boolean valid = true;
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    validate(context, issues);
+  }
+
+  private void validate(Stage.Context context, List<Stage.ConfigIssue> issues) {
     if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit >= MAX_OVERRUN_LIMIT) {
-      issues.add(context.createConfigIssue(Groups.S3.name(), "overrunLimit", Errors.S3_SPOOLDIR_06));
-      valid = false;
+      issues.add(context.createConfigIssue(Groups.S3.name(), "overrunLimit", Errors.S3_SPOOLDIR_04));
     }
-
-    if (maxSpoolObjects < 1) {
-      issues.add(context.createConfigIssue(Groups.S3.name(), "maxSpoolObjects", Errors.S3_SPOOLDIR_13));
-      valid = false;
+    if(filePattern == null || filePattern.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.S3.name(), "filePattern", Errors.S3_SPOOLDIR_06));
     }
-
-    return valid;
   }
 }

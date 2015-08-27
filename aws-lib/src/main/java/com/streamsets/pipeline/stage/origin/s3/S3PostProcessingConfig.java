@@ -14,7 +14,7 @@ public class S3PostProcessingConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "ARCHIVE",
+    defaultValue = "NONE",
     label = "Post Processing Option",
     description = "Action to take after processing an object",
     displayPosition = 10,
@@ -38,7 +38,7 @@ public class S3PostProcessingConfig {
   public S3ArchivingOption archivingOption;
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     label = "Post Process Folder",
     description = "",

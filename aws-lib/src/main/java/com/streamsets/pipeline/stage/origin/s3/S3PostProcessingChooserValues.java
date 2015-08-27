@@ -6,7 +6,7 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 public class S3PostProcessingChooserValues extends BaseEnumChooserValues<PostProcessingOptions> {
 
   public S3PostProcessingChooserValues() {
-    super(PostProcessingOptions.ARCHIVE, PostProcessingOptions.DELETE);
+    super(PostProcessingOptions.class);
   }
 
 }

@@ -10,20 +10,22 @@ import com.streamsets.pipeline.api.ConfigDef;
 public class S3ErrorConfig {
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     label = "Error Bucket",
-    description = "",
+    description = "Move objects in error into this bucket if specified. " +
+      "One of 2 configurations, error bucket or error folder, must be specified to move objects in error",
     displayPosition = 10,
     group = "#0"
   )
   public String errorBucket;
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     label = "Error Folder",
-    description = "",
+    description = "Move objects in error into this folder if specified. " +
+      "One of 2 configurations, error bucket or error folder, must be specified to move objects in error",
     displayPosition = 20,
     group = "#0"
   )

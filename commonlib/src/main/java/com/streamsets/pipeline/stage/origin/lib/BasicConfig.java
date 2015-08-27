@@ -38,19 +38,16 @@ public class BasicConfig {
   )
   public int maxWaitTime = 2000;
 
-  public boolean validate(List<Stage.ConfigIssue> issues, String group, Stage.Context context) {
-    boolean valid = true;
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues, String group) {
+    validate(context, issues, group);
+  }
 
+  private void validate(Stage.Context context, List<Stage.ConfigIssue> issues, String group) {
     if (maxBatchSize < 1) {
       issues.add(context.createConfigIssue(group, "maxBatchSize", BasicErrors.BASIC_01, maxBatchSize));
-      valid = false;
     }
-
     if (maxWaitTime < 1) {
       issues.add(context.createConfigIssue(group, "maxWaitTime", BasicErrors.BASIC_02, maxWaitTime));
-      valid = false;
     }
-
-    return valid;
   }
 }
