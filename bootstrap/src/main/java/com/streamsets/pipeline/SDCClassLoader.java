@@ -123,7 +123,10 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       SystemPackage systemPackage, ApplicationPackage applicationPackage, String[] blacklistedPackages,
       boolean isPrivate, boolean parentIsAPIClassLoader) {
     super(type, name, urls, parent, blacklistedPackages);
-    this.urls = urls;
+
+    // we force protolib JARs to be first in the classpath, so the can override classes from its dependencies
+    // usecase: Hadoop native compression codecs replacement
+    this.urls = bringProtoLibsToFront(urls);
     if (debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": urls: " + Arrays.toString(urls.toArray()));
       System.err.println(getClass().getSimpleName() + " " + getName() + ": system classes: " + systemPackage);
@@ -149,6 +152,33 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     if(debug) {
       System.err.println(getClass().getSimpleName() + " " + getName() + ": application packages: " + this.applicationPackage);
     }
+  }
+
+  static List<URL> bringProtoLibsToFront(List<URL> urls) {
+    List<URL> noProtoLibJars = new ArrayList<>();
+    List<URL> allJars = new ArrayList<>();
+    for (URL url : urls) {
+      String str = url.toExternalForm();
+      if (str.endsWith(".jar")) {
+        int nameIdx = str.lastIndexOf("/");
+        if (nameIdx > -1) {
+          String jarName = str.substring(nameIdx + 1);
+          if (jarName.contains("-protolib-")) {
+            // adding only protolib jars
+            allJars.add(url);
+          } else {
+            noProtoLibJars.add(url);
+          }
+        } else {
+          noProtoLibJars.add(url);
+        }
+      } else {
+        noProtoLibJars.add(url);
+      }
+    }
+    // adding all non-protolib jars
+    allJars.addAll(noProtoLibJars);
+    return allJars;
   }
 
   public SDCClassLoader(String type, String name, List<URL> urls, ClassLoader parent,

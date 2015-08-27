@@ -5,6 +5,7 @@
  */
 package com.streamsets.pipeline;
 
+import com.google.common.collect.ImmutableList;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.TreeSet;
@@ -153,4 +155,23 @@ public class TestSDCClassloader {
     cl.loadClass("x.y.Dummy");
   }
 
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testBringProtoLibsToFront() throws Exception {
+    Assert.assertEquals(Collections.EMPTY_LIST, SDCClassLoader.bringProtoLibsToFront(Collections.EMPTY_LIST));
+
+    List<URL> urls = ImmutableList.of(new URL("file:///tmp/foo-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+
+    urls = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+
+    urls = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"), new URL("file:///tmp/foo-1.jar"));
+    Assert.assertEquals(urls, SDCClassLoader.bringProtoLibsToFront(urls));
+
+    urls = ImmutableList.of(new URL("file:///tmp/foo-1.jar"), new URL("file:///tmp/foo-protolib-1.jar"));
+    List<URL> expected = ImmutableList.of(new URL("file:///tmp/foo-protolib-1.jar"), new URL("file:///tmp/foo-1.jar"));
+    Assert.assertEquals(expected, SDCClassLoader.bringProtoLibsToFront(urls));
+
+  }
 }
