@@ -43,11 +43,12 @@
                                 </row>
                                 <row>
                                     <entry>SSL Enabled</entry>
-                                    <entry>Enables the origin to read data over HTTPS. </entry>
+                                    <entry>Enables the secure transfer of data over the WAN using
+                                        SSL.</entry>
                                 </row>
                                 <row>
                                     <entry>Certificate Keystore File <xref
-                                            href="RPC-EnabingSecurity.dita">
+                                            href="RPC-EnablingSSL.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bmy_h5q_ds"
                                         /></xref></entry>

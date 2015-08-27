@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="= The RPC destination writes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline. When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC"></meta><meta name="abstract" content="= The RPC destination writes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline."></meta><meta name="description" content="= The RPC destination writes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lfk_hx2_ct"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline. When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC"></meta><meta name="abstract" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline."></meta><meta name="description" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lfk_hx2_ct"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,13 +14,11 @@
  <h1 class="title topictitle1">RPC</h1>
 
  
- <div class="body conbody"><p class="shortdesc">= The RPC destination writes data over the WAN to an RPC origin. Use the RPC destination
+ <div class="body conbody"><p class="shortdesc">The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination
   as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline. </p>
 
-  <p class="p">When you configure the RPC destination, you specify the RPC ID and RPC connections to use.
-    </p>
-
-  <p class="p"></p>
+  <p class="p">When you configure the RPC destination, you specify the RPC ID and RPC connections to use. You
+      can optiionally enable SSL to pass data securely and define retry and timeout properties. </p>
 
  </div>
 
@@ -40,6 +38,171 @@
    pipelines.</p>
 
  </div>
+
+</div>
+<div class="topic task nested1" id="task_nbl_r2x_dt">
+    <h2 class="title topictitle2">Configuring an RPC Destination</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <div class="section context">Configure
+            an RPC destination to pass data to an RPC origin in an RPC destination
+            pipeline.</div>
+
+        <ol class="ol steps" id="task_nbl_r2x_dt__steps_lmk_v2x_dt"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__d878e471" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d15277e103">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d15277e106">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d15277e103 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15277e106 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d15277e103 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15277e106 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d15277e103 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15277e106 ">Error record handling for the stage: <ul class="ul" id="task_nbl_r2x_dt__d878e518">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d15277e103 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_nbl_r2x_dt__d878e537" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15277e106 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d15277e103 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_nbl_r2x_dt__d878e551" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15277e106 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">RPC</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_nbl_r2x_dt__table_pcc_mgx_dt" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d15277e215">RPC Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d15277e218">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15277e215 ">RPC Connection </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15277e218 ">Connection information for the RPC destination pipeline
+                                        to continue processing data. Use the following format:
+                                            <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">Use a single
+                                            RPC connection for each destination pipeline. Add
+                                            additional connections as needed.</p>
+<p class="p">Use the port
+                                            number when you configure the RPC origin in the
+                                            destination pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15277e215 ">RPC ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15277e218 ">User-defined ID to allow the destination to pass data to
+                                        an RPC origin.  Use this ID in all RPC origins to process
+                                        data from the destination.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15277e215 ">SSL Enabled</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15277e218 ">Enables the secure transfer of data over the WAN using
+                                        SSL.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15277e215 ">Trust Keystore File</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15277e218 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15277e215 "> </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15277e218 "> </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
 
 </div>
 </div>

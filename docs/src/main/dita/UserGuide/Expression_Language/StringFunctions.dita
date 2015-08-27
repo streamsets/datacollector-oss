@@ -32,7 +32,7 @@
           <dd>For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
         </dlentry>
         <dlentry>
-          <dt>str:regexCapture("&lt;string>", &lt;regEx>, &lt;group>)</dt>
+          <dt>str:regExCapture("&lt;string>", &lt;regEx>, &lt;group>)</dt>
           <dd>Parses a complex string into groups based on a Java regex pattern and returns the
             specified group.</dd>
           <dd>Uses the following arguments:<ul id="ul_fy1_qbx_1r">

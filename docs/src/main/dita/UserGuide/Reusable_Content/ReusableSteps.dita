@@ -191,8 +191,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use for origins that ARE cluster
-                        origins:</draft-comment>
+                    <draft-comment author="Loretta">Use for origins that ARE cluster origins -
+                        points out stop pipeline is not valid.</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ClusterOrigin">
@@ -225,8 +225,8 @@
                                             <li>Discard - Discards the record.</li>
                                             <li>Send to Error - Sends the record to the pipeline for
                                                 error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline. Not valid for a
-                                                cluster pipeline.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
                                         </ul></entry>
                                 </row>
                             </tbody>
@@ -264,6 +264,17 @@
                                     <entry>Optional description.</entry>
                                 </row>
                                 <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_swp_lfh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>Required Fields <xref
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -281,17 +292,6 @@
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
-                                </row>
-                                <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>Error record handling for the stage: <ul
-                                            id="ul_swp_lfh_hr">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline. Not valid for a
-                                                cluster pipeline.</li>
-                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -386,6 +386,17 @@
                                     <entry>Library version that you want to use. </entry>
                                 </row>
                                 <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_kwy_43h_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>Required Fields <xref
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -403,17 +414,6 @@
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
-                                </row>
-                                <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>Error record handling for the stage: <ul
-                                            id="ul_kwy_43h_hr">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline. Not valid for a
-                                                cluster pipeline.</li>
-                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

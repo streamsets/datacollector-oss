@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_nbl_r2x_dt">
+    <title>Configuring an RPC Destination</title>
+    <shortdesc/>
+    <taskbody>
+        <context><indexterm>RPC destinations<indexterm>configuring</indexterm></indexterm>Configure
+            an RPC destination to pass data to an RPC origin in an RPC destination
+            pipeline.</context>
+        <steps id="steps_lmk_v2x_dt">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>RPC</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pcc_mgx_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>RPC Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>RPC Connection </entry>
+                                    <entry>Connection information for the RPC destination pipeline
+                                        to continue processing data. Use the following format:
+                                            <codeph>&lt;host>:&lt;port></codeph>. <p>Use a single
+                                            RPC connection for each destination pipeline. Add
+                                            additional connections as needed.</p><p>Use the port
+                                            number when you configure the RPC origin in the
+                                            destination pipeline.<draft-comment author="Loretta"
+                                                >discuss as pipeline or
+                                        origin?</draft-comment></p></entry>
+                                </row>
+                                <row>
+                                    <entry>RPC ID</entry>
+                                    <entry>User-defined ID to allow the destination to pass data to
+                                        an RPC origin.  Use this ID in all RPC origins to process
+                                        data from the destination.</entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Enabled</entry>
+                                    <entry>Enables the secure transfer of data over the WAN using
+                                        SSL.</entry>
+                                </row>
+                                <row>
+                                    <entry>Trust Keystore File</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry/>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

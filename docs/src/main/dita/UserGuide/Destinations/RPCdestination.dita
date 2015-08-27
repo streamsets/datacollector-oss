@@ -5,9 +5,8 @@
  <shortdesc>The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination
   as part of an RPC origin pipeline that passes data to an RPC origin in the destination pipeline. </shortdesc>
  <conbody>
-  <p>When you configure the RPC destination, you specify the RPC ID and RPC connections to use.
-    <draft-comment author="Loretta">stopped here!</draft-comment></p>
-  <p/>
+  <p>When you configure the RPC destination, you specify the RPC ID and RPC connections to use. You
+      can optiionally enable SSL to pass data securely and define retry and timeout properties. </p>
  </conbody>
  <related-links>
   <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>

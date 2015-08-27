@@ -75,6 +75,7 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Destinations/RPC-Connections.dita"/>
+   <topicref href="../Destinations/RPCdestination-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>
