@@ -265,7 +265,6 @@ public class ClusterRunner extends AbstractRunner {
         validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Node is shutting down, disconnecting from the "
           + "pipeline in cluster mode");
       } else {
-        validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline in cluster mode");
         ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
         if (appState.getId() == null) {
           throw new PipelineRunnerException(ContainerError.CONTAINER_0101, "for cluster application");
@@ -311,6 +310,12 @@ public class ClusterRunner extends AbstractRunner {
     }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
     validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
+  }
+
+  @Override
+  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+    LOG.info("Preparing to stop pipeline '{}::{}'", name, rev);
+    validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping pipeline in cluster mode");
   }
 
   @Override

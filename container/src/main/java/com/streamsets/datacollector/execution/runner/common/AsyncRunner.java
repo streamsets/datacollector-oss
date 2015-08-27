@@ -93,8 +93,16 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public synchronized void stop() throws PipelineException {
-    runner.stop();
+  public void stop() throws PipelineException {
+    runner.prepareForStop();
+    Callable<Object> callable = new Callable<Object>() {
+      @Override
+      public Object call() throws PipelineException {
+        runner.stop();
+        return null;
+      }
+    };
+    runnerExecutor.submit(callable);
   }
 
   @Override
@@ -215,5 +223,10 @@ public class AsyncRunner implements Runner, PipelineInfo {
   @Override
   public String getToken() {
     return runner.getToken();
+  }
+
+  @Override
+  public void prepareForStop() {
+    throw new UnsupportedOperationException("This method is not supported for AsyncRunner. Call stop() instead.");
   }
 }

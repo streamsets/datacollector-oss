@@ -213,5 +213,13 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
     return standaloneRunner.getToken();
   }
 
+  @Override
+  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+    // no need for clear since slaves never run more than one pipeline
+    MDC.put(LogConstants.USER, getUser());
+    MDC.put(LogConstants.ENTITY, getName());
+    standaloneRunner.prepareForStop();
+  }
+
 
 }

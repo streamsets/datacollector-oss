@@ -84,7 +84,8 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
     waitAndAssertState(runner, PipelineStatus.RUNNING);
-    runner.stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
     waitAndAssertState(runner, PipelineStatus.STOPPED);
   }
 
@@ -132,7 +133,8 @@ public class TestStandaloneRunner {
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
-    runner.stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
     assertEquals(PipelineStatus.STOPPED, runner.getState().getStatus());
   }
 
@@ -206,6 +208,7 @@ public class TestStandaloneRunner {
 
     runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     waitAndAssertState(runner, PipelineStatus.RUNNING);
+    ((AsyncRunner)runner).getRunner().prepareForStop();
     ((AsyncRunner)runner).getRunner().stop();
     Assert.assertTrue(runner.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner.getState().getMetrics());
@@ -247,8 +250,10 @@ public class TestStandaloneRunner {
     waitAndAssertState(runner1, PipelineStatus.RUNNING);
     waitAndAssertState(runner2, PipelineStatus.RUNNING);
 
-    runner1.stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop();
+    ((AsyncRunner)runner1).getRunner().stop();
     waitAndAssertState(runner1, PipelineStatus.STOPPED);
+    ((AsyncRunner)runner2).getRunner().prepareForStop();
     ((AsyncRunner)runner2).getRunner().stop();
     Assert.assertTrue(runner2.getState().getStatus() == PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
@@ -299,8 +304,10 @@ public class TestStandaloneRunner {
     waitAndAssertState(runner1, PipelineStatus.RUNNING);
     waitAndAssertState(runner2, PipelineStatus.RUNNING);
 
-    runner1.stop();
-    runner2.stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop();
+    ((AsyncRunner)runner1).getRunner().stop();
+    ((AsyncRunner)runner2).getRunner().prepareForStop();
+    ((AsyncRunner)runner2).getRunner().stop();
     waitAndAssertState(runner1, PipelineStatus.STOPPED);
     waitAndAssertState(runner2, PipelineStatus.STOPPED);
     assertNotNull(runner1.getState().getMetrics());
@@ -357,11 +364,12 @@ public class TestStandaloneRunner {
     assertNull(snapshot.getInfo());
     assertNull(snapshot.getOutput());
 
-    runner.stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
     waitAndAssertState(runner, PipelineStatus.STOPPED);
   }
 
-  @Test
+  @Test (timeout = 60000)
   public void testRunningMaxPipelines() throws Exception {
     ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule(), ConfigModule.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
@@ -380,7 +388,8 @@ public class TestStandaloneRunner {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    runner1.stop();
+    ((AsyncRunner)runner1).getRunner().prepareForStop();
+    ((AsyncRunner)runner1).getRunner().stop();
     waitAndAssertState(runner1, PipelineStatus.STOPPED);
 
     runner2.start();
@@ -393,7 +402,8 @@ public class TestStandaloneRunner {
       Assert.assertEquals(ContainerError.CONTAINER_0166, e.getErrorCode());
     }
 
-    runner2.stop();
+    ((AsyncRunner)runner2).getRunner().prepareForStop();
+    ((AsyncRunner)runner2).getRunner().stop();
     waitAndAssertState(runner2, PipelineStatus.STOPPED);
   }
 
@@ -402,7 +412,8 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.PIPELINE_WITH_EMAIL, "0");
     runner.start();
     waitAndAssertState(runner, PipelineStatus.RUNNING);
-    runner.stop();
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
     waitAndAssertState(runner, PipelineStatus.STOPPED);
     //wait for email
     GreenMail mailServer = TestUtil.TestRuntimeModule.getMailServer();

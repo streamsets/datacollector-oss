@@ -253,6 +253,7 @@ public class TestClusterRunner {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStop();
     clusterRunner.stop();
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
@@ -263,9 +264,11 @@ public class TestClusterRunner {
     setState(PipelineStatus.RUNNING);
     Runner clusterRunner = createClusterRunner();
     clusterProvider.killTimesOut = true;
+    clusterRunner.prepareForStop();
     clusterRunner.stop();
     Assert.assertEquals(PipelineStatus.CONNECT_ERROR, clusterRunner.getState().getStatus());
     clusterProvider.killTimesOut = false;
+    clusterRunner.prepareForStop();
     clusterRunner.stop();
     Assert.assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
   }
@@ -304,6 +307,7 @@ public class TestClusterRunner {
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertEquals(APPID, appState.getId());
+    clusterRunner.prepareForStop();
     clusterRunner.stop();
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().

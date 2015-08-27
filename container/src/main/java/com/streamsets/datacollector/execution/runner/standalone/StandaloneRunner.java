@@ -9,7 +9,6 @@ import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -314,7 +313,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void stop() throws PipelineException {
-    validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping the pipeline", null);
     stopPipeline(false);
   }
 
@@ -537,8 +535,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
     validateAndSetStateTransition(PipelineStatus.STARTING, null, null);
     token = UUID.randomUUID().toString();
-
   }
+
+  @Override
+  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
+    LOG.info("Preparing to stop pipeline '{}::{}'", name, rev);
+    validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
+  }
+
 
   @Override
   public void start() throws PipelineStoreException, PipelineRunnerException, PipelineRuntimeException, StageException {
@@ -654,39 +658,24 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   private void stopPipeline(boolean sdcShutting) throws PipelineException {
     if (getState().getStatus() == PipelineStatus.RETRY) {
-      LOG.info("Pipeline '{}'::'{}' is in retry", name , rev);
+      LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
       retryFuture.cancel(true);
       validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
       return;
     }
-    synchronized (this) {
-      if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
-        LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
-        pipelineRunnable.stop(sdcShutting);
-        pipelineRunnable = null;
-
-      }
-      if (metricsEventRunnable != null) {
-        metricsEventRunnable.setThreadHealthReporter(null);
-        metricsEventRunnable = null;
-      }
-      if (threadHealthReporter != null) {
-        threadHealthReporter.destroy();
-        threadHealthReporter = null;
-      }
+    if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
+      LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
+      // this is sync call, will wait till pipeline is in terminal state
+      pipelineRunnable.stop(sdcShutting);
+      pipelineRunnable = null;
     }
-    Stopwatch stopWatch = Stopwatch.createStarted();
-    while (getState().getStatus() != PipelineStatus.DISCONNECTED && getState().getStatus().isActive()) {
-      if (stopWatch.elapsed(TimeUnit.MINUTES) > 2) {
-        break;
-      }
-      ThreadUtil.sleep(500);
+    if (metricsEventRunnable != null) {
+      metricsEventRunnable.setThreadHealthReporter(null);
+      metricsEventRunnable = null;
     }
-    PipelineStatus pipelineStatus = getState().getStatus();
-    if (pipelineStatus.isActive() && pipelineStatus != PipelineStatus.DISCONNECTED) {
-      LOG.warn(Utils.format("Pipeline couldn't be stopped properly, it is in non terminal state: {}", pipelineStatus));
-    } else {
-      LOG.debug("Stopped pipeline");
+    if (threadHealthReporter != null) {
+      threadHealthReporter.destroy();
+      threadHealthReporter = null;
     }
   }
 

@@ -75,6 +75,9 @@ public interface Runner {
   // Sets the state to STARTING. Should be called before doing a start on async runners.
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException;
 
+  // Sets the state to STOPPING. Should be called before doing a stop on async runners.
+  public void prepareForStop() throws PipelineStoreException, PipelineRunnerException;
+
   // starts the pipeline
   public void start() throws PipelineRunnerException, PipelineStoreException, PipelineRuntimeException, StageException;
 

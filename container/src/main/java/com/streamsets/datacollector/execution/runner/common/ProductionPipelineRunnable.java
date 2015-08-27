@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class ProductionPipelineRunnable implements Runnable {
 
@@ -29,6 +31,7 @@ public class ProductionPipelineRunnable implements Runnable {
   private volatile boolean nodeProcessShutdown;
   private final List<Future<?>> relatedTasks;
   private volatile boolean isStopped;
+  private final CountDownLatch countDownLatch;
 
   public ProductionPipelineRunnable(ThreadHealthReporter threadHealthReporter,
                                     StandaloneRunner runner, ProductionPipeline pipeline,
@@ -39,6 +42,7 @@ public class ProductionPipelineRunnable implements Runnable {
     this.name = name;
     this.relatedTasks = relatedTasks;
     this.pipeline.setThreadHealthReporter(threadHealthReporter);
+    this.countDownLatch = new CountDownLatch(1);
   }
 
   @Override
@@ -90,7 +94,9 @@ public class ProductionPipelineRunnable implements Runnable {
       }
     } finally {
       Thread.currentThread().setName(originalThreadName);
+      countDownLatch.countDown();
     }
+
   }
 
   public void stop(boolean nodeProcessShutdown) throws PipelineException {
@@ -104,6 +110,18 @@ public class ProductionPipelineRunnable implements Runnable {
       thread.interrupt();
       LOG.info("Pipeline stopped, thread '{}' running the pipeline", thread.getName());
     }
+    boolean isDone = false;
+    try {
+      isDone = countDownLatch.await(5, TimeUnit.MINUTES);
+    } catch (InterruptedException e) {
+      LOG.info("Thread interrupted: {}", e.toString(), e);
+    }
+    if (!isDone) {
+      LOG.warn("Pipeline is not done yet");
+    } else {
+      LOG.info("Pipeline is in terminal state");
+    }
+
   }
 
   public String getRev() {
