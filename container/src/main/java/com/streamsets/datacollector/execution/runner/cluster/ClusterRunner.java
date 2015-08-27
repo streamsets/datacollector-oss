@@ -543,7 +543,7 @@ public class ClusterRunner extends AbstractRunner {
     StageException {
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(name, rev, configuration, runtimeInfo, new MetricRegistry(),
-        null, null, null);
+        null, null);
     ProductionPipelineBuilder builder =
       new ProductionPipelineBuilder(name, rev, configuration, runtimeInfo, stageLibrary,  runner, null);
     return builder.build(pipelineConfiguration);

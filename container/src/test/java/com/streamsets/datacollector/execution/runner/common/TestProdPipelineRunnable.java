@@ -153,7 +153,7 @@ public class TestProdPipelineRunnable {
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", conf, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null, null);
+        null);
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);

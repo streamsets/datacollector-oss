@@ -306,8 +306,7 @@ public class TestProductionPipeline {
     config.set("monitor.memory", true);
     ProductionPipelineRunner runner =
       new ProductionPipelineRunner(PIPELINE_NAME, REVISION, config, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null, null);
-    runner.setOffsetTracker(tracker);
+        null);
     runner.setObserveRequests(productionObserveRequests);
     runner.setMemoryLimitConfiguration(memoryLimit);
     runner.setDeliveryGuarantee(deliveryGuarantee);
@@ -318,6 +317,7 @@ public class TestProductionPipeline {
     ProductionPipeline pipeline =
       new ProductionPipelineBuilder(PIPELINE_NAME, REVISION, config, runtimeInfo, MockStages.createStageLibrary(), runner, null)
         .build(pConf);
+    runner.setOffsetTracker(tracker);
 
     if (captureNextBatch) {
       runner.capture("snapshot", 1, 1);

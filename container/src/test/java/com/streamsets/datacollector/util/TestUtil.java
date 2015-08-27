@@ -519,7 +519,7 @@ public class TestUtil {
                                                                     ThreadHealthReporter threadHealthReporter,
                                                                     SourceOffsetTracker sourceOffsetTracker) {
       return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner(name, rev, configuration, runtimeInfo, metrics, snapshotStore,
-        threadHealthReporter, sourceOffsetTracker);
+        threadHealthReporter);
     }
 
     @Provides @Singleton

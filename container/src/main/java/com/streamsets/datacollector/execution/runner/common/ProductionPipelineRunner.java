@@ -115,7 +115,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   public ProductionPipelineRunner(@Named("name") String pipelineName, @Named ("rev") String revision,
                                   com.streamsets.datacollector.util.Configuration configuration,
                                   RuntimeInfo runtimeInfo, MetricRegistry metrics, SnapshotStore snapshotStore,
-                                  ThreadHealthReporter threadHealthReporter, SourceOffsetTracker offsetTracker) {
+                                  ThreadHealthReporter threadHealthReporter) {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.metrics = metrics;
@@ -123,8 +123,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
     this.snapshotStore = snapshotStore;
     this.pipelineName = pipelineName;
     this.revision = revision;
-    this.offsetTracker = offsetTracker;
-
     stageToErrorRecordsMap = new HashMap<>();
     stageToErrorMessagesMap = new HashMap<>();
     errorRecordsMutex = new Object();
@@ -165,7 +163,6 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   public void setOffsetTracker(SourceOffsetTracker offsetTracker) {
-    //This setter is need to override offsetTracker in case of some sources which don't want sdc to keep track of offsets
     this.offsetTracker = offsetTracker;
   }
 

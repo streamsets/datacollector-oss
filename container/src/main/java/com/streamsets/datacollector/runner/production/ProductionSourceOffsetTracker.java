@@ -74,8 +74,8 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
   public SourceOffset getSourceOffset(String pipelineName, String rev) {
     File pipelineOffsetFile = OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, pipelineName, rev);
     SourceOffset sourceOffset;
-    if(pipelineOffsetFile.exists()) {
-      //offset file exists, read from it
+    if (pipelineOffsetFile.exists() && pipelineOffsetFile.length() != 0) {
+      // offset file exists, read from it
       try (InputStream is = new DataStore(pipelineOffsetFile).getInputStream()) {
         SourceOffsetJson sourceOffsetJson = ObjectMapperFactory.get().readValue(is, SourceOffsetJson.class);
         sourceOffset = BeanHelper.unwrapSourceOffset(sourceOffsetJson);

@@ -68,7 +68,7 @@ public class TestFailedProdRun {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo,
-      new MetricRegistry(), Mockito.mock(FileSnapshotStore.class), null, null);
+      new MetricRegistry(), Mockito.mock(FileSnapshotStore.class), null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
@@ -116,7 +116,7 @@ public class TestFailedProdRun {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner = new ProductionPipelineRunner(PIPELINE_NAME, REVISION, conf, runtimeInfo, new MetricRegistry(), Mockito.mock(FileSnapshotStore.class),
-      null, null);
+      null);
     runner.setMemoryLimitConfiguration(new MemoryLimitConfiguration());
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
