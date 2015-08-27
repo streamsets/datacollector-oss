@@ -17,24 +17,29 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.api.impl.Utils;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JDBC("JDBC"),
-  CREDENTIALS("Credentials"),
-  CDC("Change Data Capture"),
-  LEGACY("Legacy Drivers")
-  ;
+import java.util.List;
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
+/** {@inheritDoc} */
+public class JdbcSourceUpgrader implements StageUpgrader {
+  @Override
+  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
+    switch(fromVersion) {
+      case 1:
+        upgradeV1ToV2(configs);
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
+    }
+    return configs;
   }
 
-  public String getLabel() {
-    return this.label;
+  private void upgradeV1ToV2(List<Config> configs) {
+    configs.add(new Config("txnIdColumnName", ""));
+    configs.add(new Config("txnMaxSize", 10000));
   }
 }

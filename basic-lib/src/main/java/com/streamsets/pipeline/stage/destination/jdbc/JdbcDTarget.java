@@ -17,23 +17,27 @@
  */
 package com.streamsets.pipeline.stage.destination.jdbc;
 
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 
 import java.util.List;
 import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JDBC Producer",
     description = "Writes data to a JDBC destination.",
-    icon = "rdbms.png")
+    upgrader = JdbcTargetUpgrader.class,
+    icon = "rdbms.png"
+)
 @ConfigGroups(value = Groups.class)
 public class JdbcDTarget extends DTarget {
 
@@ -61,7 +65,7 @@ public class JdbcDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Credentials",
-      defaultValue = "false",
+      defaultValue = "true",
       displayPosition = 25,
       group = "JDBC"
   )
@@ -95,24 +99,37 @@ public class JdbcDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
-      label = "Fully Qualified Table Name",
-      description = "Table write to, e.g. <schema>.<table_name>",
+      label = "Table Name",
+      description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema " +
+          "be specified separately in the connection string.",
       displayPosition = 30,
       group = "JDBC"
   )
-  public String qualifiedTableName;
+  public String tableName;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
+      defaultValue = "",
       label = "Field to Column Mapping",
-      description = "Fields to map to RDBMS columns. To avoid errors, field data types must match.",
+      description = "Use to specify additional field mappings when input field name and column name don't match.",
       displayPosition = 40,
       group = "JDBC"
   )
   @ListBeanModel
   public List<JdbcFieldMappingConfig> columnNames;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "Change Log Format",
+      defaultValue = "NONE",
+      description = "If input is a change data capture log, specify the format.",
+      displayPosition = 50,
+      group = "JDBC"
+  )
+  @ValueChooserModel(ChangeLogFormatChooserValues.class)
+  public ChangeLogFormat changeLogFormat;
 
   @ConfigDef(
       required = true,
@@ -149,7 +166,17 @@ public class JdbcDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new JdbcTarget(connectionString, username, password, qualifiedTableName, columnNames,
-        rollbackOnError, driverProperties, driverClassName, connectionTestQuery);
+    return new JdbcTarget(
+        connectionString,
+        username,
+        password,
+        tableName,
+        columnNames,
+        rollbackOnError,
+        driverProperties,
+        changeLogFormat,
+        driverClassName,
+        connectionTestQuery
+    );
   }
 }

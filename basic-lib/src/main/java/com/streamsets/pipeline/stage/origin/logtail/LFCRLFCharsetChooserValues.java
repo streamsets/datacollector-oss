@@ -23,13 +23,15 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 /**
- * Charset chooser-values that returns charsets that use single byte LF & CR as EOL characters.
- * <p/>
- * we accept only charsets that do so via the filter (see super-class for loop/filtering)
- * <p/>
- * we may be losing some charsets that have single byte LF & CR if the charset cannot encode (it is fro reading only).
+ * <p>
+ * Charset chooser-values that returns charsets that use single byte LF &amp; CR as EOL characters.
+ * </p>
+ * We accept only charsets that do so via the filter (see super-class for loop/filtering)
+ * <p>
+ * we may be losing some charsets that have single byte LF &amp; CR if the charset cannot encode (it is fro reading only).
  * this is because the test requires encoding \n and \r.
  * if we run into this situation we can explicitly whitelist such charsets.
+ * </p>
  */
 public class LFCRLFCharsetChooserValues extends CharsetChooserValues {
 

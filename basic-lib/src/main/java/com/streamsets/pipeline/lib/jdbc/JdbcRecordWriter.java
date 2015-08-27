@@ -15,26 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc;
+package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JDBC("JDBC"),
-  CREDENTIALS("Credentials"),
-  CDC("Change Data Capture"),
-  LEGACY("Legacy Drivers")
-  ;
+import java.util.List;
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return this.label;
-  }
+/**
+ * Interface for a record writer implementation that writes records to a JDBC destination.
+ * Implementations may support the inserting of records, or even change log resolution into
+ * inserts, updates, and deletes.
+ */
+public interface JdbcRecordWriter {
+  /**
+   * Accepts a batch of records to write to a JDBC destination.
+   * @param batch batch of SDC records
+   * @return any records that failed to be written to the destination
+   * @throws StageException
+   */
+  List<OnRecordErrorException> writeBatch(Batch batch) throws StageException;
 }

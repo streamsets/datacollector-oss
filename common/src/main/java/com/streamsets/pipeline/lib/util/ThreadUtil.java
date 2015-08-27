@@ -20,21 +20,23 @@ package com.streamsets.pipeline.lib.util;
 public class ThreadUtil {
 
   /**
-   * Puts the current thread to sleep for the specified number of milliseconds.
-   * <p/>
-   * If the thread was interrupted before the sleep method is called, the sleep method wont sleep.
-   * <p/>
-   * @param millisecs number of milliseconds to sleep.
+   * <p>
+   *   Puts the current thread to sleep for the specified number of milliseconds.
+   * </p>
+   * <p>
+   *   If the thread was interrupted before the sleep method is called, the sleep method wont sleep.
+   * </p>
+   * @param milliseconds number of milliseconds to sleep.
    *
    * @return <code>true</code> if the thread slept uninterrupted for the specified milliseconds, <code>false</code> if
    * it was interrupted.
    */
-  public static boolean sleep(long millisecs) {
+  public static boolean sleep(long milliseconds) {
     //checking if we got pre-interrupted.
     boolean interrupted = Thread.interrupted();
     if (!interrupted) {
       try {
-        Thread.sleep(millisecs);
+        Thread.sleep(milliseconds);
       } catch (InterruptedException ex) {
         interrupted = true;
         // clearing the interrupt flag

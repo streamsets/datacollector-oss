@@ -29,11 +29,12 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import java.util.Map;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,
+    upgrader = JdbcSourceUpgrader.class,
     recordsByRef = true
 )
 @ConfigGroups(value = Groups.class)
@@ -171,6 +172,27 @@ public class JdbcDSource extends DSource {
   )
   public String connectionTestQuery;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Transaction ID Column Name",
+      description = "When reading a change data table, column identifying the transaction the change belongs to.",
+      displayPosition = 160,
+      group = "CDC"
+  )
+  public String txnIdColumnName;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Max Transaction Size",
+      description = "If transactions exceed this size, they will be applied in multiple batches.",
+      defaultValue = "10000",
+      displayPosition = 170,
+      group = "CDC"
+  )
+  public int txnMaxSize;
+
   @Override
   protected Source createSource() {
     return new JdbcSource(
@@ -184,7 +206,9 @@ public class JdbcDSource extends DSource {
         password,
         driverProperties,
         driverClassName,
-        connectionTestQuery
+        connectionTestQuery,
+        txnIdColumnName,
+        txnMaxSize
       );
   }
 }

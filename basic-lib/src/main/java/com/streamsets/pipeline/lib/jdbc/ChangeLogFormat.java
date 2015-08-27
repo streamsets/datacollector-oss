@@ -15,22 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc;
+package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JDBC("JDBC"),
-  CREDENTIALS("Credentials"),
-  CDC("Change Data Capture"),
-  LEGACY("Legacy Drivers")
+public enum ChangeLogFormat implements Label {
+  NONE("None"),
+  MSSQL("Microsoft SQL Server"),
   ;
 
   private final String label;
 
-  private Groups(String label) {
+  ChangeLogFormat(String label) {
     this.label = label;
   }
 

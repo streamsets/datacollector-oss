@@ -106,7 +106,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -161,7 +163,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -228,7 +232,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -253,7 +259,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -278,7 +286,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -306,7 +316,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -331,7 +343,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -356,7 +370,9 @@ public class TestJdbcSource {
         password,
         new HashMap<String, String>(),
         "",
-        ""
+        "",
+        "",
+        1000
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -376,6 +392,93 @@ public class TestJdbcSource {
 
         statement.executeBatch();
       }
+    }
+  }
+
+  @Test
+  public void testCdcMode() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1000
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(2, parsedRecords.size());
+
+      assertEquals("3", output.getNewOffset());
+
+      // Check that the next 'transaction' of 1 row is read.
+      output = runner.runProduce(output.getNewOffset(), 1000);
+      parsedRecords = output.getRecords().get("lane");
+      assertEquals(1, parsedRecords.size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testCdcSplitTransactionMode() throws Exception {
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertEquals("2", output.getNewOffset());
+
+      // Check that the next 'transaction' of 1 row is read.
+      output = runner.runProduce(output.getNewOffset(), 1000);
+      parsedRecords = output.getRecords().get("lane");
+
+      assertEquals(1, parsedRecords.size());
+      assertEquals("3", output.getNewOffset());
+
+    } finally {
+      runner.runDestroy();
     }
   }
 }

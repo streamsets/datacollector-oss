@@ -15,26 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jdbc;
+package com.streamsets.pipeline.stage.destination.jdbc;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  JDBC("JDBC"),
-  CREDENTIALS("Credentials"),
-  CDC("Change Data Capture"),
-  LEGACY("Legacy Drivers")
-  ;
+public class ChangeLogFormatChooserValues extends BaseEnumChooserValues {
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
+  public ChangeLogFormatChooserValues() {
+    super(ChangeLogFormat.class);
   }
 
-  public String getLabel() {
-    return this.label;
-  }
 }

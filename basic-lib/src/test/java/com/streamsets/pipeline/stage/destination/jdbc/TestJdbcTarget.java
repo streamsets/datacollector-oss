@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.joda.time.Instant;
@@ -66,7 +68,8 @@ public class TestJdbcTarget {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-          "(p_id INT NOT NULL, first_name VARCHAR(255), last_name VARCHAR(255), ts TIMESTAMP, UNIQUE(p_id));"
+          "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+          "PRIMARY KEY(P_ID));"
       );
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
@@ -89,20 +92,21 @@ public class TestJdbcTarget {
   @Test
   public void testEmptyBatch() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     List<Record> emptyBatch = ImmutableList.of();
@@ -114,20 +118,21 @@ public class TestJdbcTarget {
   @Test
   public void testSingleRecord() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     Record record = RecordCreator.create();
@@ -153,10 +158,10 @@ public class TestJdbcTarget {
   @Test
   public void testRecordWithBatchUpdateException() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
@@ -164,10 +169,11 @@ public class TestJdbcTarget {
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     Record record1 = RecordCreator.create();
@@ -209,12 +215,71 @@ public class TestJdbcTarget {
   }
 
   @Test
+  public void testRollback() throws Exception {
+    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addConfiguration("connectionString", h2ConnectionString)
+        .addConfiguration("useCredentials", true)
+        .addConfiguration("rollbackOnError", true)
+        .addConfiguration("tableName", tableName)
+        .addConfiguration("columnNames", fieldMappings)
+        .addConfiguration("username", username)
+        .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
+        .build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(1));
+    fields1.add(Field.create("Adam"));
+    fields1.add(Field.create("Kunicki"));
+    fields1.add(Field.createDatetime(new Instant().toDate()));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    fields2.add(Field.create(1));
+    fields2.add(Field.create("Jon"));
+    fields2.add(Field.create("Natkins"));
+    fields2.add(Field.createDatetime(new Instant().toDate()));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    List<Field> fields3 = new ArrayList<>();
+    fields3.add(Field.create(2));
+    fields3.add(Field.create("Jon"));
+    fields3.add(Field.create("Daulton"));
+    fields3.add(Field.createDatetime(new Instant().toDate()));
+    record3.set(Field.create(fields3));
+
+    List<Record> records = ImmutableList.of(record1, record2, record3);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
+      rs.next();
+      assertEquals(0, rs.getInt(1));
+    }
+
+    assertEquals(3, targetRunner.getErrorRecords().size());
+  }
+
+  @Test
   public void testRecordWithDataTypeException() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
@@ -222,10 +287,11 @@ public class TestJdbcTarget {
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     Record record1 = RecordCreator.create();
@@ -268,11 +334,13 @@ public class TestJdbcTarget {
 
   @Test
   public void testRecordWithBadPermissions() throws Exception {
+    thrown.expect(StageException.class);
+
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
@@ -280,10 +348,11 @@ public class TestJdbcTarget {
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", unprivUser)
         .addConfiguration("password", unprivPassword)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     Record record1 = RecordCreator.create();
@@ -320,24 +389,22 @@ public class TestJdbcTarget {
       rs.next();
       assertEquals(0, rs.getInt(1));
     }
-
-    assertEquals(3, targetRunner.getErrorRecords().size());
   }
 
   @Test
   public void testBadConnectionString() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
         .addConfiguration("connectionString", "bad connection string")
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -350,17 +417,17 @@ public class TestJdbcTarget {
   @Test
   public void testBadCredentials() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first_name"),
-        new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", "foo")
         .addConfiguration("password", "bar")
@@ -373,23 +440,24 @@ public class TestJdbcTarget {
   @Test
   public void testBadColumnMapping() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
-        new JdbcFieldMappingConfig("[0]", "p_id"),
-        new JdbcFieldMappingConfig("[1]", "first"),
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST"),
         new JdbcFieldMappingConfig("[2]", "last_name"),
-        new JdbcFieldMappingConfig("[3]", "ts")
+        new JdbcFieldMappingConfig("[3]", "TS")
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
         .addConfiguration("connectionString", h2ConnectionString)
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
-        .addConfiguration("qualifiedTableName", tableName)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
+        .addConfiguration("tableName", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
         .build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
-    assertEquals(1, issues.size());
+    assertEquals(2, issues.size());
   }
 }

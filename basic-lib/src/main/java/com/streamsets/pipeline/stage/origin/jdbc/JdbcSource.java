@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.zaxxer.hikari.HikariConfig;
@@ -64,7 +65,9 @@ public class JdbcSource extends BaseSource {
   private final Properties driverProperties = new Properties();
   private final String driverClassName;
   private final String connectionTestQuery;
-  
+  private final String txnColumnName;
+  private final int txnMaxSize;
+
   private long queryIntervalMillis = Long.MIN_VALUE;
 
   private HikariDataSource dataSource = null;
@@ -85,7 +88,9 @@ public class JdbcSource extends BaseSource {
       String password,
       Map<String, String> driverPropertyMap,
       String driverClassName,
-      String connectionTestQuery
+      String connectionTestQuery,
+      String txnColumnName,
+      int txnMaxSize
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.connectionString = connectionString;
@@ -98,6 +103,8 @@ public class JdbcSource extends BaseSource {
     driverProperties.putAll(driverPropertyMap);
     this.driverClassName = driverClassName;
     this.connectionTestQuery = connectionTestQuery;
+    this.txnColumnName = txnColumnName;
+    this.txnMaxSize = txnMaxSize;
   }
 
   @Override
@@ -140,21 +147,25 @@ public class JdbcSource extends BaseSource {
             try {
               resultSet.findColumn(offsetColumn);
             } catch (SQLException e) {
-              logSQLException(e);
+              LOG.error(JdbcUtil.formatSqlException(e));
               issues.add(
                   context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_02, offsetColumn, query)
               );
             }
           } catch (SQLException e) {
-            logSQLException(e);
+            String formattedError = JdbcUtil.formatSqlException(e);
+            LOG.error(formattedError);
+            LOG.debug(formattedError, e);
             issues.add(
-                context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, e.toString())
+                context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, formattedError)
             );
           }
         }
       } catch (SQLException e) {
-        logSQLException(e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
+        String formattedError = JdbcUtil.formatSqlException(e);
+        LOG.error(formattedError);
+        LOG.debug(formattedError, e);
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, formattedError));
       }
     }
     catch (StageException e) {
@@ -180,9 +191,9 @@ public class JdbcSource extends BaseSource {
     LOG.debug("Sleeping for {}ms", delay);
     if (ThreadUtil.sleep(delay)) {
       try {
-        if (null == resultSet || resultSet.isClosed()) {
+        if (null == resultSet || resultSet.isClosed() ) {
           connection = dataSource.getConnection();
-          statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+          statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
           int fetchSize = maxBatchSize;
           // MySQL does not support cursors or fetch size except 0 and "streaming" (1 at a time).
@@ -200,10 +211,27 @@ public class JdbcSource extends BaseSource {
         }
         // Read Data and track last offset
         int rowCount = 0;
-        while (rowCount < maxBatchSize && resultSet.next()) {
+        String lastTransactionId = "";
+        while (continueReading(rowCount, maxBatchSize) && resultSet.next()) {
           final Record record = processRow(resultSet);
+
           if (null != record) {
-            batchMaker.addRecord(record);
+            if (!txnColumnName.isEmpty()) {
+              String newTransactionId = resultSet.getString(txnColumnName);
+              if (lastTransactionId.isEmpty()) {
+                lastTransactionId = newTransactionId;
+                batchMaker.addRecord(record);
+              } else if (lastTransactionId.equals(newTransactionId)) {
+                batchMaker.addRecord(record);
+              } else {
+                // The Transaction ID Column Name config should not be used with MySQL as it
+                // does not provide a change log table and the JDBC driver may not support scrollable cursors.
+                resultSet.relative(-1);
+                break; // Complete this batch without including the new record.
+              }
+            } else {
+              batchMaker.addRecord(record);
+            }
           }
 
           // Get the offset column value for this record
@@ -213,6 +241,7 @@ public class JdbcSource extends BaseSource {
             nextSourceOffset = initialOffset;
           }
           ++rowCount;
+
         }
         // isAfterLast is not required to be implemented if using FORWARD_ONLY cursor.
         if (resultSet.isAfterLast() || rowCount == 0) {
@@ -222,14 +251,24 @@ public class JdbcSource extends BaseSource {
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
         }
       } catch (SQLException e) {
-        logSQLException(e);
+        String formattedError = JdbcUtil.formatSqlException(e);
+        LOG.error(formattedError);
+        LOG.debug(formattedError, e);
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
-        handleError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), e.toString());
+        handleError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), formattedError);
       }
     }
     return nextSourceOffset;
+  }
+
+  private boolean continueReading(int rowCount, int maxBatchSize) {
+    if (txnColumnName.isEmpty()) {
+      return rowCount < maxBatchSize;
+    } else {
+      return rowCount < txnMaxSize;
+    }
   }
 
   private void closeQuietly(AutoCloseable c) {
@@ -312,14 +351,6 @@ public class JdbcSource extends BaseSource {
       default:
         throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
             context.getOnErrorRecord()));
-    }
-  }
-  
-  static void logSQLException(SQLException e) {
-    LOG.error("SQLException: {}", e.toString());
-    SQLException next = e.getNextException();
-    if (null != next) {
-      logSQLException(e.getNextException());
     }
   }
 }
