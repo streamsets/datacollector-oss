@@ -53,17 +53,17 @@ public class SpoolDirSource extends BaseSource {
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
-  private static final int MIN_OVERRUN_LIMIT = 64 * 1000;
-  private static final int MAX_OVERRUN_LIMIT = 1000 * 1000;
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
+  private static final int MAX_OVERRUN_LIMIT = 1024 * 1024;
 
   private final DataFormat dataFormat;
-  private String charset;
-  private boolean removeCtrlChars;
+  private final String charset;
+  private final boolean removeCtrlChars;
   private final int overrunLimit;
   final String spoolDir;
   private final int batchSize;
   private long poolingTimeoutSecs;
-  private String filePattern;
+  private final String filePattern;
   private int maxSpoolFiles;
   private String initialFileToProcess;
   private final FileCompression fileCompression;
@@ -111,7 +111,7 @@ public class SpoolDirSource extends BaseSource {
     this.dataFormat = dataFormat;
     this.charset = charset;
     this.removeCtrlChars = removeCtrlChars;
-    this.overrunLimit = overrunLimit * 1000;
+    this.overrunLimit = overrunLimit * 1024;
     this.spoolDir = spoolDir;
     this.batchSize = batchSize;
     this.poolingTimeoutSecs = poolingTimeoutSecs;
@@ -163,7 +163,7 @@ public class SpoolDirSource extends BaseSource {
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
-    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit >= MAX_OVERRUN_LIMIT) {
+    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit > MAX_OVERRUN_LIMIT) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06));
     }
 
@@ -242,14 +242,13 @@ public class SpoolDirSource extends BaseSource {
                                                   dataFormat));
         break;
     }
-
-    validateDataParser(issues);
-
-    if (getContext().isPreview()) {
-      poolingTimeoutSecs = 1;
-    }
-
     if (issues.isEmpty()) {
+      validateDataParser(issues);
+
+      if (getContext().isPreview()) {
+        poolingTimeoutSecs = 1;
+      }
+
       DirectorySpooler.Builder builder =
           DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern)
                           .setMaxSpoolFiles(maxSpoolFiles)

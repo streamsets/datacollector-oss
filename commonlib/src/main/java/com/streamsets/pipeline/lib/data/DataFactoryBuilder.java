@@ -15,8 +15,9 @@ import java.util.Set;
 
 public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFactory, F extends DataFormat<DF>> {
   private final static Charset UTF8 = Charset.forName("UTF-8");
+  // Max overrun limit is 1MB
   private static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
-    System.getProperty("DataFactoryBuilder.OverRunLimit", "1000000"));
+    System.getProperty("DataFactoryBuilder.OverRunLimit", "1048576"));
 
   private final Stage.Context context;
   private final F format;

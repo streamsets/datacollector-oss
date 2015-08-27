@@ -18,7 +18,7 @@ public enum Errors implements ErrorCode {
 
   SPOOLDIR_05("Unsupported charset '{}'"),
 
-  SPOOLDIR_06("Buffer Limit must be equal or greater than 64KB and equal or less than 1024MB"),
+  SPOOLDIR_06("Buffer Limit must be equal or greater than 64KB and equal or less than 1024KB"),
 
   SPOOLDIR_10("Unsupported data format '{}'"),
   SPOOLDIR_11("Directory path cannot be empty"),
