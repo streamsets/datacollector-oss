@@ -17,7 +17,6 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,10 +105,11 @@ public class JdbcSource extends BaseSource {
       }
     }
 
+    final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
     Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
         String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b\\s+\\b%s\\b.*",
-            offsetColumn.toUpperCase(),
-            offsetColumn.toUpperCase()
+            formattedOffsetColumn,
+            formattedOffsetColumn
         )
     );
 
