@@ -33,6 +33,11 @@ public class TestYARNStatusParser {
     assertValidOutput("/yarn-status-killed.txt", "KILLED");
   }
 
+  @Test
+  public void testNewOutput() throws Exception {
+    assertValidOutput("/yarn-status-new.txt", "RUNNING");
+  }
+
   private static void assertValidOutput(String name, String output) throws Exception {
     YARNStatusParser parser = new YARNStatusParser();
     Assert.assertEquals(output, parser.parseStatus(readFile(name)));

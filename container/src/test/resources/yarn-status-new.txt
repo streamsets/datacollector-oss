@@ -1,0 +1,16 @@
+15/08/25 17:48:32 INFO impl.TimelineClientImpl: Timeline service address: http://hdp-streamsets-02.streamsets.net:8188/ws/v1/timeline/
+15/08/25 17:48:33 INFO client.ConfiguredRMFailoverProxyProvider: Failing over to rm2 Application Report :
+    Application-Id : application_1440195722074_0016
+    Application-Name : StreamSets Data Collector - Batch Execution Mode
+    Application-Type : MAPREDUCE User : centos
+    Queue : default
+    Start-Time : 1440524908481
+    Finish-Time : 0
+    Progress : 0%
+    State : NEW
+    Final-State : UNDEFINED
+    Tracking-URL : N/A
+    RPC Port : -1
+    AM Host : N/A
+    Aggregate Resource Allocation : 0 MB-seconds, 0 vcore-seconds
+    Log Aggregation Status : N/A Diagnostics :

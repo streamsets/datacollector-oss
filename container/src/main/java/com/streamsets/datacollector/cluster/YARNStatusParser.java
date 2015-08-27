@@ -20,28 +20,38 @@ import java.util.regex.Pattern;
 public class YARNStatusParser {
   private static final Logger LOG = LoggerFactory.getLogger(YARNStatusParser.class);
 
+  private static final String NEW = "NEW";
+  private static final String SUBMITTED = "SUBMITTED";
   private static final String ACCEPTED = "ACCEPTED";
   private static final String RUNNING = "RUNNING";
   private static final String SUCCEEDED = "SUCCEEDED";
   private static final String FAILED = "FAILED";
   private static final String KILLED = "KILLED";
-  private static final Pattern ACCEPTED_PATTERN = Pattern.compile("^\\s+State : (ACCEPTED).*$");
-  private static final Pattern RUNNING_PATTERN = Pattern.compile("^\\s+State : (RUNNING).*$");
-  private static final Pattern SUCCEEDED_PATTERN = Pattern.compile("^\\s+Final-State : (SUCCEEDED).*$");
-  private static final Pattern FAILED_PATTERN = Pattern.compile("^\\s+Final-State : (FAILED).*$");
-  private static final Pattern KILLED_PATTERN = Pattern.compile("^\\s+Final-State : (KILLED).*$");
 
+  private static Pattern patternForState(String state) {
+    return Pattern.compile("^\\s+State : (" + state + ").*$");
+  }
+  private static Pattern patternForFinalState(String state) {
+    return Pattern.compile("^\\s+Final-State : (" + state + ").*$");
+  }
 
-  private static final ImmutableMap<String, String> STATE_MAP = ImmutableMap.of(
-    ACCEPTED, RUNNING,
-    RUNNING, RUNNING,
-    SUCCEEDED, SUCCEEDED,
-    FAILED, FAILED,
-    KILLED, KILLED
+  private static final ImmutableMap<String, String> STATE_MAP = ImmutableMap.<String, String>builder()
+    .put(NEW, RUNNING)
+    .put(ACCEPTED, RUNNING)
+    .put(RUNNING, RUNNING)
+    .put(SUCCEEDED, SUCCEEDED)
+    .put(FAILED, FAILED)
+    .put(KILLED, KILLED).build();
+
+  private static final List<Pattern> PATTERNS = Arrays.asList(
+    patternForState(NEW),
+    patternForState(SUBMITTED),
+    patternForState(ACCEPTED),
+    patternForState(RUNNING),
+    patternForFinalState(SUCCEEDED),
+    patternForFinalState(FAILED),
+    patternForFinalState(KILLED)
   );
-
-  private static final List<Pattern> PATTERNS = Arrays.asList(RUNNING_PATTERN, ACCEPTED_PATTERN, SUCCEEDED_PATTERN,
-    FAILED_PATTERN, KILLED_PATTERN);
 
   public String parseStatus(Collection<String> lines) {
     for (String line : lines) {
@@ -56,6 +66,8 @@ public class YARNStatusParser {
         }
       }
     }
-    throw new IllegalStateException("Could not match any status lines: " + Joiner.on("\n").join(lines));
+    String msg = "Could not match any YARN status";
+    LOG.error(msg + ":" + Joiner.on("\n").join(lines));
+    throw new IllegalStateException(msg + ". See logs.");
   }
 }
