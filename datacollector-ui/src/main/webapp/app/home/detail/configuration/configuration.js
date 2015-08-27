@@ -75,13 +75,13 @@ angular
           elConstantDefinitions = [];
 
         if(configDefinition.elFunctionDefinitionsIdx) {
-          angular.forEach(configDefinition.elFunctionDefinitionsIdx, function(idx) {
+          angular.forEach(_.uniq(configDefinition.elFunctionDefinitionsIdx), function(idx) {
             elFunctionDefinitions.push(elCatalog.elFunctionDefinitions[parseInt(idx)]);
           });
         }
 
         if(configDefinition.elConstantDefinitionsIdx) {
-          angular.forEach(configDefinition.elConstantDefinitionsIdx, function(idx) {
+          angular.forEach(_.uniq(configDefinition.elConstantDefinitionsIdx), function(idx) {
             elConstantDefinitions.push(elCatalog.elConstantDefinitions[parseInt(idx)]);
           });
         }
