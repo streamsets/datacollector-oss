@@ -2,14 +2,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_yw2_pj1_ct">
  <title>Enabling SSL</title>
- <shortdesc>You can use HTTPS to securely transfer data to the RPC origin. To use HTTPS you need a
-  valid keystore file and password.</shortdesc>
+ <shortdesc>You can configure the RPC origin to use SSL. To use SSL you need a valid keystore file
+    and password.</shortdesc>
  <conbody>
-  <p><indexterm>RPC origins<indexterm>enabling HTTPS</indexterm></indexterm>To use HTTPS for
-   incoming data:<ol id="ol_tlg_kv2_ct">
+  <p><indexterm>RPC origins<indexterm>enabling HTTPS</indexterm></indexterm>To enable security:<ol
+    id="ol_tlg_kv2_ct">
     <li>Save the keystore file in the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> resources
-     directory: &lt;SDCinstalldir>/resources.</li>
+     directory: <filepath>&lt;SDCinstalldir>/resources</filepath>.</li>
     <li>In the RPC origin, enter the filename and password.</li>
    </ol></p>
  </conbody>

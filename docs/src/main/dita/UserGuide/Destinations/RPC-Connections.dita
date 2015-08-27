@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_icz_wzw_dt">
+ <title>RPC Connections</title>
+ <shortdesc>When you configure an RPC destination, you configure RPC connections to define where to
+  pass data. </shortdesc>
+ <conbody>
+  <p>The RPC connection is the host and port number of the RPC origin to receive the data. You can
+   pass data to multiple RPC origins to allow processing of data by multiple destination
+   pipelines.</p>
+ </conbody>
+</concept>

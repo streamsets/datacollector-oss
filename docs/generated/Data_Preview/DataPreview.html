@@ -1,0 +1,96 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Preview"></meta><meta name="abstract" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage."></meta><meta name="description" content="You can preview data to help build or fine-tune a pipeline. When you preview data, the Data Collector passes data through the pipeline and allows you to review how the data passes through each stage."></meta><meta name="DC.Relation" scheme="URI" content="../Data_Preview/DataPreview_Title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_jtn_s3m_lq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Preview</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Data_Preview/DataPreview_Title.html" title="Data Preview">Data Preview</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Data_Preview/DataPreview_Title.html" title="Data Preview"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_jtn_s3m_lq">
+ <h1 class="title topictitle1">Data Preview</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can preview data to help build or fine-tune a pipeline. When you preview data, the
+            <span class="ph">Data
+                  Collector</span>
+        passes data through the pipeline and allows you to review how the data passes through each
+        stage. </p>
+
+    <p class="p">You can use data preview to
+            help you configure the pipeline. After you configure the origin and link the stages that
+            you want to review, you start the data preview. </p>
+
+        <p class="p">In preview mode, you cannot add or delete stages, but you can edit stage properties and
+            run the preview again to see how your changes affect preview data. Similarly, you can
+            edit preview data to test and tune pipeline configuration. </p>
+
+        <p class="p">You can preview data for one stage at a time or for a group of stages. You can view the
+            data in list or table view. You can also refresh the preview data.</p>
+
+  </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ksb_hjj_br">
+ <h2 class="title topictitle2">Data Preview Availability</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can preview complete and incomplete pipelines. The Data Preview icon becomes active
+  when data preview is available.</p>
+
+  <div class="p">You can preview data
+   under the following conditions:<ul class="ul" id="concept_ksb_hjj_br__ul_flp_4jj_br">
+    <li class="li">All stages in the pipeline are connected</li>
+
+    <li class="li">All required properties are defined</li>
+
+   </ul>
+</div>
+
+  <div class="p">
+   <div class="note tip"><span class="tiptitle">Tip:</span> Stage configuration does not have to be accurate or complete to
+    preview data. After you connect all stages, you can enable data preview by entering any valid
+    value for required properties.</div>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rry_fkc_pr">
+ <h2 class="title topictitle2">Source Data for Data Preview</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use the following
+   types of data for a data preview:<ul class="ul" id="concept_rry_fkc_pr__ul_n5r_22k_5r">
+    <li class="li">Data from the origin - Use available data from the origin. </li>
+
+    <li class="li">Data from a snapshot - Use snapshot data from same pipeline or another pipeline. </li>
+
+   </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_zjn_3tr_xr">
+ <h2 class="title topictitle2">Writing to Destinations</h2>
+
+ <div class="body conbody">
+  <p class="p">As a tool for
+      development, data preview does not write data to destinations by default. </p>
+
+    <p class="p">If you like, you can configure the preview to write data to destinations. We advise against
+      writing preview data to production destinations.</p>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Data_Preview/DataPreview_Title.html" title="Data Preview"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Data Preview</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

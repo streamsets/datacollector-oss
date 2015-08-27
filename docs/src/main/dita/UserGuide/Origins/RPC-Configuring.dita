@@ -2,11 +2,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_lxh_1w2_ct">
     <title>Configuring an RPC Origin</title>
-    <shortdesc>Configure an RPC origin to process data from an RPC destination.<draft-comment
-            author="Loretta">come back to this after Tucu cleans it up.</draft-comment></shortdesc>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>RPC origin<indexterm>configuring</indexterm></indexterm>Configure an RPC
+                origin to process data from an RPC destination.</p>
         </context>
         <steps id="steps_tfp_vw2_ct">
             <step
@@ -29,19 +28,37 @@
                             <tbody>
                                 <row>
                                     <entry>RPC Listening Port</entry>
-                                    <entry/>
+                                    <entry>Port number to listen to for data. Must match one of the
+                                        port numbers associated with the RPC destination that
+                                        provides the data.</entry>
                                 </row>
                                 <row>
                                     <entry>RPC ID</entry>
-                                    <entry/>
+                                    <entry>User-defined ID. Must match the RPC ID defined in the RPC
+                                        destination.</entry>
                                 </row>
-                                <row>
-                                    <entry>Batch Wait Time</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
                                     <entry/>
                                 </row>
                                 <row>
                                     <entry>SSL Enabled</entry>
-                                    <entry/>
+                                    <entry>Enables the origin to read data over HTTPS. </entry>
+                                </row>
+                                <row>
+                                    <entry>Certificate Keystore File <xref
+                                            href="RPC-EnabingSecurity.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Keystore file for SSL. Must be stored in the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory:
+                                        &lt;SDCinstalldir>/resources.</entry>
+                                </row>
+                                <row>
+                                    <entry>Keystore Password</entry>
+                                    <entry>Password for the keystore file.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -50,4 +67,7 @@
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="../RPC_Pipelines/ConfiguringRPCPipelines.dita#concept_mhl_1jc_dt"/>
+    </related-links>
 </task>

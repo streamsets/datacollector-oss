@@ -5,7 +5,9 @@
  <shortdesc>When you use an origin to read log data, you define the format of the log files to be
   read. </shortdesc>
  <conbody>
-  <p>You can read log files that use the following log formats:</p>
+  <p><draft-comment author="Loretta">This topic is used for Directory, File Tail, JMS Consumer,
+    Kafka Consumer. Hadoop FS has a slightly different version. </draft-comment>You can read log
+   files that use the following log formats:</p>
   <p>
    <dl>
     <dlentry>

@@ -11,7 +11,7 @@
           pipelines<indexterm>overview</indexterm></indexterm><indexterm>pipelines<indexterm>RPC
           pipelines</indexterm></indexterm>Typically, a pipeline uses a standard origin such as
       Directory and writes to a standard destination such as HBase. An RPC pipeline uses either an
-      RPC destination or origin to communicate with another RPC pipeline.</p>
+      RPC destination or RPC origin to communicate with another RPC pipeline.</p>
     <p>To use RPC pipelines, you create an RPC origin pipeline that uses an RPC destination to write
       directly to an RPC origin in the RPC destination pipeline, as follows: </p>
     <image href="../Graphics/RPCpipelines.png" id="image_gw4_mlb_dt" scale="75"/>

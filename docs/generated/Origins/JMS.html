@@ -1,0 +1,448 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also supports reading Advanced Message Queuing Protocol (AMQP) messages. When you configure a JMS Consumer, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="JMS Consumer"></meta><meta name="abstract" content="The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also supports reading Advanced Message Queuing Protocol (AMQP) messages."></meta><meta name="description" content="The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also supports reading Advanced Message Queuing Protocol (AMQP) messages."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_rhh_4nj_dt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>JMS Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_rhh_4nj_dt">
+ <h1 class="title topictitle1">JMS Consumer</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also
+  supports reading Advanced Message Queuing Protocol (AMQP) messages.</p>
+
+  <p class="p">When you configure a JMS Consumer, you configure the connection
+   information and the queue or topic name. You can optionally use JMS credentials and remove
+   control characters. You can also define a JMS message selector to specify the messages that the
+   origin reads. By default, the JMS Consumer reads all messages.</p>
+
+  <p class="p">The <span class="ph">Data
+                  Collector</span> does
+   not store the offset for the JMS Consumer. JMS stores the offset with the JMS server. You cannot
+   reset the offset for the JMS Consumer</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tzl_zzj_dt">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">The JMS Consumer origin processes data
+   differently based on the data format. JMS Consumer can process the following types of
+    data:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Text</dt>
+
+     <dd class="dd">Generates a record for each line of text. Reads text data of the BytesMessage format. </dd>
+
+     <dd class="dd">When a line exceeds the maximum line length defined for the origin, the origin truncates
+      the line.</dd>
+
+    
+    
+     <dt class="dt dlterm">JSON</dt>
+
+     <dd class="dd">Generates a record for each JSON object. You can use JSON files that include multiple JSON
+      objects or a single JSON array.</dd>
+
+     <dd class="dd">When an object exceeds the maximum object length defined for the origin, JMS Consumer
+      processes the object based on the error handling configured for the origin. </dd>
+
+    
+    
+     <dt class="dt dlterm">Delimited</dt>
+
+     <dd class="dd">Generates a record for each delimited line. You can use the following delimited format
+       types:<ul class="ul" id="concept_tzl_zzj_dt__ul_a51_wzk_5q">
+       <li class="li">Default CSV (ignores empty lines)</li>
+
+       <li class="li">RFC4180 CSV</li>
+
+       <li class="li">Microsoft Excel CSV</li>
+
+       <li class="li">MySQL CSV</li>
+
+       <li class="li">Tab-separated values</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">When a record exceeds the maximum record length defined for the origin, JMS Consumer
+      processes the object based on the error handling configured for the origin. </dd>
+
+     <dd class="dd">The resulting record is a List with header and value maps. the origin can convert a file to
+      a map based on the header line of the file. If the file does not include a header, the origin
+      creates the map based on column number.</dd>
+
+     <dd class="dd">For more information about the delimited data record structure, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordStructure.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">XML</dt>
+
+     <dd class="dd">Generates records based on the location of the XML element that you define as the record
+      delimiter. If you do not define a delimiter element, JMS Consumer treats the XML file as a
+      single record.</dd>
+
+     <dd class="dd">When a record exceeds the maximum record length defined for the origin, the origin skips
+      the record and continues processing with the next record. It sends the skipped record to the
+      pipeline for error handling.</dd>
+
+    
+    
+     <dt class="dt dlterm">SDC Records</dt>
+
+     <dd class="dd">Generates a record for every record. Use to process records generated by a <span class="ph">Data
+                  Collector</span> pipeline
+      using the SDC Record data format.</dd>
+
+     <dd class="dd">For error records, JMS Consumer provides the original record as read from the origin in the
+      original pipeline, as well as error information that you can use to correct the record. </dd>
+
+     <dd class="dd">When processing error records, the origin expects the error file names and contents as
+      generated by the original pipeline.</dd>
+
+    
+    
+     <dt class="dt dlterm">Log</dt>
+
+     <dd class="dd">Generates a record for every log line. </dd>
+
+     <dd class="dd">When a line exceeds the maximum line length defined for the origin, JMS Consumer truncates
+      longer lines. </dd>
+
+     <dd class="dd">You can include the processed log line as a field in the record. If the log line is
+      truncated, and you request the log line in the record, the origin includes the truncated
+      line.</dd>
+
+     <dd class="dd">You can define the log format or type to be read.</dd>
+
+    
+    
+     <dt class="dt dlterm">Avro</dt>
+
+     <dd class="dd">Generates a record for every message. </dd>
+
+     <dd class="dd">To ensure proper data processing, indicate if the message includes an Avro schema. </dd>
+
+     <dd class="dd">You can use the schema associated with the message or provide an alternate schema
+      definition. Providing an alternate schema can improve performance.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+<div class="topic concept nested2" id="concept_tr1_spd_sr">
+ <h3 class="title topictitle3">Log Formats</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you use an origin to read log data, you define the format of the log files to be
+  read. </p>
+
+  <p class="p">You can read log
+   files that use the following log formats:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Common Log Format</dt>
+
+     <dd class="dd">A standardized text format used by web servers to generate log files. Also known as the
+      NCSA (National Center for Supercomputing Applications) Common Log format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Combined Log Format</dt>
+
+     <dd class="dd">A standardized text format based on the common log format that includes additional
+      information. Also known as the Apache/NCSA Combined Log Format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Error Log Format</dt>
+
+     <dd class="dd">The standardized error log format generated by the Apache HTTP Server 2.2.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Access Log Custom Format</dt>
+
+     <dd class="dd">A customizable access log generated by the Apache HTTP Server 2.2. Use the Apache HTTP
+      Server version 2.2 syntax to define the format of the log file. </dd>
+
+    
+    
+     <dt class="dt dlterm">Regular Expression</dt>
+
+     <dd class="dd">Use a regular expression to define the structure of log data, and then assign the field or
+      fields represented by each group.  </dd>
+
+     <dd class="dd">Use any valid regular expression.</dd>
+
+    
+    
+     <dt class="dt dlterm">Grok Pattern</dt>
+
+     <dd class="dd">Use a grok pattern to define the structure of log data. You can use the grok patterns
+      supported by the <span class="ph">Data
+                  Collector</span>. You can
+      also define a custom grok pattern and then use it as part of the log format. </dd>
+
+     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data. You can use a single pattern or use several patterns to define a larger pattern. You can also use valid sections of patterns to define a custom pattern.">Grok Patterns</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">log4j</dt>
+
+     <dd class="dd">A customizable format generated by the Apache Log4j 1.2 logging utility. You can use the
+      default format or specify a custom format. Use the Apache Log4j version 1.2 syntax to define
+      the format of the log file.</dd>
+
+     <dd class="dd">You can also specify the action to take when the origin encounters an error when parsing a
+      line. You can skip the line and optionally log an error. If you know that the unparsable
+      information is part of a stack trace, you can have the origin include the unparsable
+      information as a stack trace to the previous parsable line.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+</div>
+<div class="topic task nested1" id="task_zp1_4ck_dt">
+    <h2 class="title topictitle2">Configuring a JMS Consumer Origin</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Configure a JMS Consumer origin to read JMS messages.</p>
+
+        <div class="section context">
+            <p class="p"></p>
+
+        </div>
+
+        <ol class="ol steps" id="task_zp1_4ck_dt__steps_lsl_yck_dt"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_zp1_4ck_dt__d2897e302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d29791e358">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d29791e361">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29791e358 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29791e361 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29791e358 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29791e361 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d29791e358 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d29791e361 ">Error record handling for the stage: <ul class="ul" id="task_zp1_4ck_dt__d2897e349">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">JMS</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_zp1_4ck_dt__table_qzr_nfk_dt" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d29791e433">JMS Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d29791e436">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">JMS Initial Context Factory</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">JNDI Connection Factory</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">JMS Provider URL</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">JMS Destination Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">JMS Message Selector</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">Produce Single Record</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 ">Generates a single record for records that include
+                                        multiple objects. <p class="p">When not selected, the origin generates
+                                            multiple records when a record includes multiple
+                                            objects.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 ">Uses JMS credentials.</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d29791e433 ">Max Batch Size (records)</td>
+
+       <td class="entry" valign="top" width="70%" headers="d29791e436 ">Maximum number of records processed at one time. Honors values up to the <span class="ph">Data
+                  Collector</span> maximum
+        batch size. <p class="p">Default is 1000. The <span class="ph">Data
+                  Collector</span> default
+         is 1000.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d29791e433 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_zp1_4ck_dt__d2906e143" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d29791e436 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d29791e433 ">Data Format <a class="xref" href="JMS.html#concept_tzl_zzj_dt" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                            <img class="image" id="task_zp1_4ck_dt__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d29791e436 ">Type of data to be read. Use one of the following
+                                            options:<ul class="ul" id="task_zp1_4ck_dt__ul_qgm_tjw_yq">
+                                            <li class="li">Text</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">XML</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_zp1_4ck_dt__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+
+                                            <li class="li">Log</li>
+
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Binary</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d29791e433 ">Messages Charset</td>
+
+       <td class="entry" valign="top" width="70%" headers="d29791e436 ">Character encoding of the messages to be processed.<p class="p">Not used for the SDC Record,
+         Avro, or Binary data format.</p>
+</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d29791e433 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_zp1_4ck_dt__d2906e97" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d29791e436 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

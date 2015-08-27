@@ -22,9 +22,9 @@
                 <cmd>From the <wintitle>Home</wintitle> page or <wintitle>Getting Started</wintitle>
                     page, click <uicontrol>Create New Pipeline</uicontrol>. </cmd>
                 <info>If you are working on another pipeline in the <ph
-                        conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console, use
-                    the <uicontrol>Toggle Library Pane</uicontrol> icon to display the pipeline
-                    library: <image href="../Graphics/icon_OverLibraryToggle.png"
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> console, use the <uicontrol>Toggle Library Pane</uicontrol> icon to display
+                    the pipeline library: <image href="../Graphics/icon_OverLibraryToggle.png"
                         id="image_mtm_rc3_dt" scale="40"/> . Then click the <uicontrol>Create New
                         Pipeline</uicontrol> icon.</info>
             </step>

@@ -3,18 +3,21 @@
 <map>
  <title>Pipeline Design</title>
  <topicref href="../Pipeline_Design/PipelineDesign_title.dita">
-  <topicref href="../Pipeline_Design/What_isa_Pipeline.dita"/>
-  <topicref href="../Pipeline_Design/DatainMotion.dita">
+  <topicref href="../Pipeline_Design/What_isa_Pipeline.dita">
+   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../Pipeline_Design/DatainMotion.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Design/DeliveryGuarantee.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/DesigningDataFlow.dita">
+  <topicref href="../Pipeline_Design/DesigningDataFlow.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Design/BranchingStreams.dita"/>
    <topicref href="../Pipeline_Design/MergingStreams.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/DroppingUnwantedRecords.dita">
+  <topicref href="../Pipeline_Design/DroppingUnwantedRecords.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Pipeline_Design/RequiredFields.dita"/>
-   <topicref href="../Pipeline_Design/Preconditions.dita"/>
-  </topicref>
+   <topicref href="../Pipeline_Design/Preconditions.dita"/></topicref>
   <topicref href="../Pipeline_Configuration/ErrorHandling.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -31,6 +34,10 @@
   <topicref href="../Pipeline_Design/DelimitedDataRecordStructure.dita">
    <topicref href="../Pipeline_Design/DelimitedData-Processing.dita"/>
   </topicref>
-  <topicref href="../Pipeline_Design/ControlCharacters.dita"/>
- </topicref>
+  <topicref href="../Pipeline_Design/ControlCharacters.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  </topicref>
 </map>

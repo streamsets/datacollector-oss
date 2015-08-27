@@ -1,0 +1,56 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="To process delimited data, you can use delimited data functions or standard record functions. The expression language provides delimited data functions to enable easier access to record details, such ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Processing Delimited Data"></meta><meta name="abstract" content="To process delimited data, you can use delimited data functions or standard record functions."></meta><meta name="description" content="To process delimited data, you can use delimited data functions or standard record functions."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/DelimitedDataRecordStructure.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hrt_tt4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Processing Delimited Data</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_hrt_tt4_fs">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a> / <a class="navheader_parent_path" href="../Pipeline_Design/DelimitedDataRecordStructure.html" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Design/DelimitedDataRecordStructure.html" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Delimited Data Record Structure</span></a></span>  </div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Processing Delimited Data</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">To process delimited data, you can use delimited data functions or standard record
+  functions. </p>
+
+  <p class="p">The expression language
+   provides delimited data functions to enable easier access to record details, such as the value of
+   a header or whether the record includes duplicate headers. </p>
+
+  <p class="p">For example, you can use the <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data
+      function to return the value associated with the specified header. Continuing with the example
+      above, the following function returns user ID information:</p>
+
+  <pre class="pre codeblock">${record:dValue('UserID')}</pre>
+
+  <div class="p">With the User ID header index, you can use the <samp class="ph codeph">record:dValueAt(&lt;header
+                index&gt;)</samp> function to return the same information, as
+            follows:<pre class="pre codeblock">${record:dValueAt(2)}</pre>
+</div>
+
+  <div class="p">But if you prefer, you can use the field path to the data with the standard record function,
+                <samp class="ph codeph">record:value('&lt;field
+            path&gt;')</samp>:<pre class="pre codeblock">${record:value('[2]/value')}</pre>
+</div>
+
+  <p class="p">Note that the field path references the column index and the "value" key.</p>
+
+  <div class="p">
+   <div class="note tip"><span class="tiptitle">Tip:</span> You can use the <samp class="ph codeph">record:dToMap()</samp> function to convert the record
+    to a map, and then use standard functions for record processing.</div>
+
+  </div>
+
+  <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="When reading delimited data, the Data Collector generates records of the List data format with a map of the header and value. Use delimited data record functions to process delimited data, such as returning the value associated with a header or checking for duplicate headers.">Delimited Data Record Functions</a>.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Design/DelimitedDataRecordStructure.html" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions."><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Delimited Data Record Structure</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

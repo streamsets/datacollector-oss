@@ -55,6 +55,13 @@
    <topicref href="../Origins/JDBC-SQLQuery.dita"/>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Origins/JMS.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/JMS-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/JMS-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/KConsumer.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KConsumer-Offsets.dita"/>
@@ -78,7 +85,8 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/RPC.dita">
+  <topicref href="../Origins/RPCorigin.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/RPC-EnabingSecurity.dita"/>
    <topicref href="../Origins/RPC-Configuring.dita"/>
   </topicref>

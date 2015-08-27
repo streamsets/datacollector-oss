@@ -63,23 +63,6 @@
      <colspec colname="c1" colnum="1" colwidth="1*"/>
      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <tbody>
-      <row id="DataFormat_All">
-       <entry>Data Format <xref href="KConsumer-DataFormats.dita">
-         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
-          id="image_bmy_h5q_ds"/></xref></entry>
-       <entry>Type of data to be read. Use one of the following options:<ul id="ul_qgm_tjw_yq">
-         <li>Text</li>
-         <li>JSON</li>
-         <li>Delimited</li>
-         <li>XML</li>
-         <li>SDC Record <xref href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-           <image href="../Graphics/icon_moreInfo.png" scale="11" id="image_wjh_ycl_br"
-          /></xref></li>
-         <li>Log</li>
-         <li>Avro</li>
-         <li>Binary</li>
-        </ul></entry>
-      </row>
       <row id="MaxBatchSize">
        <entry>Max Batch Size (records)</entry>
        <entry>Maximum number of records processed at one time. Honors values up to the <ph
@@ -89,7 +72,7 @@
          is 1000.</p></entry>
       </row>
       <row id="BatchWaitTime">
-       <entry>Batch Wait Time (ms) <xref href="BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
+       <entry>Batch Wait Time (ms) <xref href="../Origins/BatchSizeWaitTime.dita#concept_ypd_vgr_5q">
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_mgp_2q3_br"
           placement="inline"/></xref></entry>
        <entry>Number of milliseconds to wait before sending a partial or empty batch. </entry>

@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC origin as part of an RPC destination pipeline that reads data from an RPC destination in the origin pipeline. When ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC"></meta><meta name="abstract" content="The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC origin as part of an RPC destination pipeline that reads data from an RPC destination in the origin pipeline."></meta><meta name="description" content="The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC origin as part of an RPC destination pipeline that reads data from an RPC destination in the origin pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_agb_5c1_ct"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_agb_5c1_ct">
+ <h1 class="title topictitle1">RPC </h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC
+    origin as part of an RPC destination pipeline that reads data from an RPC destination in the
+    origin pipeline. </p>
+
+  <p class="p">When you configure the RPC origin, you
+      define the port that the origin listens to for data. The port number must be one of the
+      &lt;host&gt;:&lt;port&gt; combinations defined in the RPC destination that provides the data. </p>
+
+    <p class="p">Similarly, the RPC ID in the RPC origin must match the RPC ID used in the RPC destination. </p>
+
+    <p class="p">You can configure the origin to use HTTPS to securely transfer data. </p>
+
+ </div>
+
+  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt" title="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the WAN without writing to an intermediary system. Use RPC pipelines to securely transmit data across data centers.">RPC Pipelines</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_yw2_pj1_ct">
+ <h2 class="title topictitle2">Enabling SSL</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the RPC origin to use SSL. To use SSL you need a valid keystore file
+    and password.</p>
+
+  <div class="p">To enable security:<ol class="ol" id="concept_yw2_pj1_ct__ol_tlg_kv2_ct">
+    <li class="li">Save the keystore file in the <span class="ph">Data
+                  Collector</span> resources
+     directory: <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>.</li>
+
+    <li class="li">In the RPC origin, enter the filename and password.</li>
+
+   </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_lxh_1w2_ct">
+    <h2 class="title topictitle2">Configuring an RPC Origin</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure an RPC
+                origin to process data from an RPC destination.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_lxh_1w2_ct__steps_tfp_vw2_ct"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxh_1w2_ct__d2897e302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d34450e136">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d34450e139">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d34450e136 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d34450e139 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d34450e136 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d34450e139 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d34450e136 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d34450e139 ">Error record handling for the stage: <ul class="ul" id="task_lxh_1w2_ct__d2897e349">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">RPC</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_lxh_1w2_ct__table_jrh_1fj_dt" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d34450e211">RPC Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d34450e214">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d34450e211 ">RPC Listening Port</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d34450e214 ">Port number to listen to for data. Must match one of the
+                                        port numbers associated with the RPC destination that
+                                        provides the data.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d34450e211 ">RPC ID</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d34450e214 ">User-defined ID. Must match the RPC ID defined in the RPC
+                                        destination.</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="30%" headers="d34450e211 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+         <img class="image" id="task_lxh_1w2_ct__d2906e143" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="70%" headers="d34450e214 ">Number of milliseconds to wait before sending a partial or empty batch. </td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d34450e211 ">SSL Enabled</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d34450e214 ">Enables the origin to read data over HTTPS. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d34450e211 ">Certificate Keystore File <a class="xref" href="RPCorigin.html#concept_yw2_pj1_ct" title="You can configure the RPC origin to use SSL. To use SSL you need a valid keystore file and password.">
+                                            <img class="image" id="task_lxh_1w2_ct__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d34450e214 ">Keystore file for SSL. Must be stored in the <span class="ph">Data
+                  Collector</span> resources directory:
+                                        &lt;SDCinstalldir&gt;/resources.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d34450e211 ">Keystore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d34450e214 ">Password for the keystore file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../RPC_Pipelines/ConfiguringRPCPipelines.html#concept_mhl_1jc_dt" title="Configuration Guidelines for RPC Pipelines">Configuration Guidelines for RPC Pipelines</a></div>
+</div>
+</div>
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

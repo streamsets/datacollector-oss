@@ -1,0 +1,220 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document. When you configure the Elasticsearch ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Elasticsearch"></meta><meta name="abstract" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_u5t_vpv_4r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Elasticsearch</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_u5t_vpv_4r">
+ <h1 class="title topictitle1">Elasticsearch</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch
+  destination writes each record to Elasticsearch as a document.</p>
+
+  <p class="p">When
+   you configure the Elasticsearch destination, you configure the cluster name, node URI, and
+   document-related information. You can add advanced Elasticsearch properties as needed. </p>
+
+  <p class="p">By default, the Elasticsearch destination accesses the cluster through the node URI that you
+   provide, then accesses other available nodes in the cluster. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_uns_gtv_4r">
+    <h2 class="title topictitle2">Configuring an Elasticsearch Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure an Elasticsearch
+            destination to write data to an Elasticsearch cluster.</div>
+
+        <ol class="ol steps" id="task_uns_gtv_4r__steps_tgy_3tv_4r"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__d878e471" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d8642e83">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d8642e86">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e83 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e86 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e83 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e86 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e83 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_uns_gtv_4r__d878e517" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e86 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e83 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_uns_gtv_4r__d878e531" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e86 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e83 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e86 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d878e547">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for a
+                                                cluster pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Elasticsearch</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__table_ht4_x5v_4r" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d8642e195">Elasticsearch Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d8642e198">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Cluster Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">Elasticsearch cluster name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Cluster URIs</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">URI of one or more nodes in the cluster. <p class="p">To ensure a
+                                            connection, enter additional URIs.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Additional Configuration</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">Additional Elasticsearch properties that you want to use.
+                                        Enter the exact property name and value expected by
+                                            Elasticsearch.<p class="p">By default, the client.transport.sniff
+                                            property is set to True. This allows the <span class="ph">Data
+                  Collector</span> to write to nodes in the cluster that are not listed
+                                            in the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Index</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">Index information for the generated documents. You can
+                                        use a constant or a field that includes the index
+                                        information. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Mapping</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">Mapping information for the generated documents. You can
+                                        use a constant or a field that includes the mapping
+                                        information. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Document ID</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">ID for the record. Use to specify the ID for the
+                                        generated documents. When you do not specify an ID,
+                                        Elasticsearch creates an ID for each document.<p class="p">By default,
+                                            the destination allows Elasticsearch to create the
+                                            ID.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d8642e195 ">Data Charset</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d8642e198 ">
+                                        <p class="p">Character encoding of the data to be processed. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>

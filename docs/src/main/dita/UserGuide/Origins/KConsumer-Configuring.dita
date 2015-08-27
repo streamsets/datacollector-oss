@@ -91,10 +91,27 @@
                                     <entry>Topic</entry>
                                     <entry>Kafka topic to read.</entry>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/DataFormat_All">
-                                    <entry/>
+                                <row>
+                                    <entry>Data Format  <xref href="KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Type of data to be read. Use one of the following
+                                            options:<ul id="ul_qgm_tjw_yq">
+                                            <li>Text</li>
+                                            <li>JSON</li>
+                                            <li>Delimited</li>
+                                            <li>XML</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
+                                            <li>Log</li>
+                                            <li>Avro</li>
+                                            <li>Binary</li>
+                                        </ul></entry>
                                 </row>
+                               
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
                                     <entry/>

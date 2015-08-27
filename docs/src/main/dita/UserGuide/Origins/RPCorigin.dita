@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_agb_5c1_ct">
+ <title>RPC </title>
+ <shortdesc>The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC
+    origin as part of an RPC destination pipeline that reads data from an RPC destination in the
+    origin pipeline. </shortdesc>
+ <conbody>
+  <p><indexterm>origins<indexterm>RPC</indexterm></indexterm><indexterm>RPC
+          origins<indexterm>overview</indexterm></indexterm>When you configure the RPC origin, you
+      define the port that the origin listens to for data. The port number must be one of the
+      &lt;host>:&lt;port> combinations defined in the RPC destination that provides the data. </p>
+    <p>Similarly, the RPC ID in the RPC origin must match the RPC ID used in the RPC destination. </p>
+    <p>You can configure the origin to use HTTPS to securely transfer data. </p>
+ </conbody>
+  <related-links>
+    <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>
+  </related-links>
+</concept>

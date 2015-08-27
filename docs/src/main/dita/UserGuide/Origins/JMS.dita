@@ -3,14 +3,16 @@
 <concept id="concept_rhh_4nj_dt">
  <title>JMS Consumer</title>
  <shortdesc>The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also
-  supports messages written in the Advanced Message Queuing Protocol (AMQP).</shortdesc>
+  supports reading Advanced Message Queuing Protocol (AMQP) messages.</shortdesc>
  <conbody>
   <p><indexterm>JMS Consumer
      origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>JMS
      Consumer</indexterm></indexterm>When you configure a JMS Consumer, you configure the connection
-   information and the queue or topic name. You can optionally use JMS credentials to access JMS,
-   and remove control characters. You can optionally define a JMS message selector to specify the
-   messages that the origin reads. </p>
-  <p>For text data, the JMS Consumer supports reading the BytesMessage message format.</p>
+   information and the queue or topic name. You can optionally use JMS credentials and remove
+   control characters. You can also define a JMS message selector to specify the messages that the
+   origin reads. By default, the JMS Consumer reads all messages.</p>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
+   not store the offset for the JMS Consumer. JMS stores the offset with the JMS server. You cannot
+   reset the offset for the JMS Consumer</p>
  </conbody>
 </concept>

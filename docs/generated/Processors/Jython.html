@@ -1,0 +1,316 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7. The Jython ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Jython Evaluator"></meta><meta name="abstract" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7."></meta><meta name="description" content="The Jython Evaluator processes data based on custom Jython code. Use the Jython Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython version 2.7."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_a1h_lkf_lr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Jython Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_a1h_lkf_lr">
+ <h1 class="title topictitle1">Jython Evaluator</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Jython Evaluator processes data based on custom Jython code. Use the Jython
+  Evaluator to incorporate custom Jython code in a pipeline. The Jython Evaluator supports Jython
+  version 2.7.</p>
+
+  <p class="p">The Jython Evaluator can process data one record at a
+      time or one batch at a time. </p>
+
+  <p class="p">When you use a Jython Evaluator in a pipeline, the <span class="ph">Data
+                  Collector</span> passes a
+      batch of data to the processor and converts the data to a scripting-friendly data structure
+      for processing.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_j1t_ntc_pr">
+ <h2 class="title topictitle2">Processing Mode</h2>
+
+  
+ <div class="body conbody"><p class="shortdesc">You can choose the processing mode to use with the Jython Evaluator. You can use the
+    same script in each processing mode. However, you should include error handling in the script
+    before you run in batch mode.</p>
+
+    <div class="p">The Jython Evaluator provides the following processing modes:<dl class="dl">
+        
+          <dt class="dt dlterm">Record by Record</dt>
+
+          <dd class="dd">The processor calls the script for each record. The processor passes the record to the
+            script as a map and processes each record individually. </dd>
+
+          <dd class="dd">The script does not require error handling logic. Error records are passed to the
+            processor for error handling. The processor handles error records based on the On Record
+            Error property.</dd>
+
+          <dd class="dd">Use this mode to avoid including error handling logic in the code. Since this mode
+            calls the script for each record, pipeline performance will be negatively affected. </dd>
+
+        
+        
+          <dt class="dt dlterm">Record Batch</dt>
+
+          <dd class="dd">The processor calls the script for each batch. The processor passes the batch to the
+            script as a list and processes the batch at one time. </dd>
+
+          <dd class="dd">Include error handling logic in the script. Without error handling logic, a single
+            error records sends the entire batch to the processor for error handling. The processor
+            handles error records based on the On Record Error property.</dd>
+
+          <dd class="dd">Use this mode to improve performance by processing a batch of data at a time.</dd>
+
+        
+      </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_mqn_5vk_sr">
+ <h2 class="title topictitle2">Jython Scripting Objects</h2>
+
+ <div class="body conbody">
+  <div class="p">You can use the following scripting objects in the Jython
+        Evaluator:<dl class="dl">
+        
+          <dt class="dt dlterm">records array</dt>
+
+          <dd class="dd">An array of records to process. The records object includes different elements based
+            on the processing mode that you use:<ul class="ul" id="concept_mqn_5vk_sr__ul_fdm_5yk_sr">
+              <li class="li">Record by Record - The records array includes one record element.</li>
+
+              <li class="li">Batch by Batch - The records array includes all records in the batch.</li>
+
+            </ul>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">record</dt>
+
+          <dd class="dd">An object that represents a single record. Includes a single <samp class="ph codeph">value</samp>
+            element. The <samp class="ph codeph">value</samp> element contains the data for the record. </dd>
+
+          <dd class="dd">Map and list record fields are mapped to Jython dictionaries and lists,
+            respectively.</dd>
+
+          <dd class="dd">Data types are preserved for values that are not modified. For values that are
+            modified, the scripting engine might change the original type.</dd>
+
+        
+        
+          <dt class="dt dlterm">log</dt>
+
+          <dd class="dd">An object to write messages to the log. Includes four methods:
+            <samp class="ph codeph">info()</samp>, <samp class="ph codeph">warn()</samp>, <samp class="ph codeph">debug()</samp>, and
+              <samp class="ph codeph">trace()</samp>. </dd>
+
+          <dd class="dd">The signature of the 4 methods is as follows:
+            <pre class="pre codeblock">(message-template, arguments…) </pre>
+The message template can have
+            positional variables denoted by curly brackets: { }. The arguments are replaced in the
+            message template curly brackets in positional manner, i.e., this is the first argument
+            in the first { } occurrence, and so on.</dd>
+
+        
+        
+          <dt class="dt dlterm">out</dt>
+
+          <dd class="dd">An object that writes the record to the output batch. Includes a
+              <samp class="ph codeph">write(Record)</samp> method.</dd>
+
+        
+        
+          <dt class="dt dlterm">err</dt>
+
+          <dd class="dd">An object that passes error records to the processor for error handling. Includes a
+              <samp class="ph codeph">write(Record, message)</samp> method.</dd>
+
+        
+      </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_szj_slw_tr">
+ <h2 class="title topictitle2">Type Handling</h2>
+
+ <div class="body conbody">
+  <p class="p">Though Jython does not use type information when
+      processing data, passing data to the rest of the pipeline requires data types. </p>
+
+    <div class="p">Note the following type information before you configure the remainder of the pipeline: <ul class="ul" id="concept_szj_slw_tr__ul_e3h_1qc_5r">
+        <li class="li">Null values convert to String.<p class="p">Regardless of the original data type of a field, when a
+            null value is processed by the Jython Evaluator it returns to the pipeline as a string.
+            Because Jython does not associate nulls with a data type, the processor uses the String
+            data type.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> To avoid type errors in downstream processing, you might
+            use a Type Converter to ensure that fields have data of the appropriate type.
+          </div>
+</li>
+
+        <li class="li">Non-null values that are not modified in the processor retain their original type.</li>
+
+        <li class="li">Numeric data that is modified becomes a Double, other types of data retain their
+          original type.</li>
+
+      </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_fty_jwx_nr">
+    <h2 class="title topictitle2">Configuring a Jython Evaluator</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Jython Evaluator
+                to use custom Jython code in a pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_fty_jwx_nr__steps_q2n_hxx_nr"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__d4519e471" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d46760e302">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d46760e305">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e302 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e305 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e302 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e305 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e302 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d4519e517" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e305 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e302 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_fty_jwx_nr__d4519e531" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e305 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e302 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e305 ">Error record handling for the stage: <ul class="ul" id="task_fty_jwx_nr__d4519e547">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for a
+                                                cluster pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Jython</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_fty_jwx_nr__table_wvy_4xx_nr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d46760e414">Jython Evaluator Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d46760e417">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e414 ">Record Processing Mode</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e417 ">Determines how the Jython Evaluator processes data:<ul class="ul" id="task_fty_jwx_nr__ul_tzg_vzx_nr">
+                                            <li class="li">Record by Record - Processes records individually.
+                                                Performs error handling.</li>
+
+                                            <li class="li">Batch by Batch - Processes records in batches.
+                                                Requires error handling code in the script.</li>
+
+                                        </ul>
+<p class="p">Default is Batch by Batch.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d46760e414 ">Script</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d46760e417 ">Jython code to use in the processor.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+</body>
+</html>
