@@ -143,7 +143,7 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         if(newValue === '') {
           newValue = 0;
         } else if(!isNaN(newValue)) {
-          newValue = parseInt(newValue);
+          newValue = parseFloat(newValue);
         }
       }
 
