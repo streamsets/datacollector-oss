@@ -6,10 +6,12 @@
 package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 
 import java.util.Iterator;
@@ -17,15 +19,25 @@ import java.util.List;
 import java.util.Random;
 
 @GenerateResourceBundle
-@StageDef(version = 1, label = "Dev Random Error",
-          description = "Randomly do something with the record, output, error, vanish, the threshold for what to do " +
-                        "is randomly selected per batch",
-          icon="random.png")
+@StageDef(
+  version = 2,
+  label = "Dev Random Error",
+  description = "Generates error records and silently discards records as specified.",
+  icon="random.png",
+  upgrader = RandomErrorProcessorUpgrader.class
+)
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;
   private int batchCount;
   private double batchThreshold1;
   private double batchThreshold2;
+
+  @ConfigDef(label = "Discard Some Records",
+    required = false,
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    description = "Silently discard some records ")
+  public boolean discardSomeRecords;
 
   @Override
   protected List<ConfigIssue> init() {
@@ -44,13 +56,21 @@ public class RandomErrorProcessor extends SingleLaneProcessor {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       double action = random.nextDouble();
-      if (action < batchThreshold1) {
-        batchMaker.addRecord(it.next());
-      } else if (action < batchThreshold2) {
-        getContext().toError(it.next(), "Random error");
+      if(discardSomeRecords) {
+        if (action < batchThreshold1) {
+          batchMaker.addRecord(it.next());
+        } else if (action < batchThreshold2) {
+          getContext().toError(it.next(), "Random error");
+        } else {
+          // we eat the record
+          it.next();
+        }
       } else {
-        // we eat the record
-        it.next();
+        if (action < batchThreshold1) {
+          batchMaker.addRecord(it.next());
+        } else {
+          getContext().toError(it.next(), "Random error");
+        }
       }
     }
 
