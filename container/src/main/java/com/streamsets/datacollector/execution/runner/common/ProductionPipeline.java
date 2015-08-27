@@ -120,10 +120,6 @@ public class ProductionPipeline {
 
         try {
           pipeline.destroy();
-          if (isExecutingInSlave) {
-            LOG.debug("Calling cluster source post destroy");
-            ((ClusterSource) pipeline.getSource()).postDestroy();
-          }
         } catch (Throwable e) {
           LOG.warn("Error while calling destroy: " + e, e);
           throw e;
@@ -140,6 +136,10 @@ public class ProductionPipeline {
             } else {
               stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
             }
+          }
+          if (isExecutingInSlave) {
+            LOG.debug("Calling cluster source post destroy");
+            ((ClusterSource) pipeline.getSource()).postDestroy();
           }
         }
       }

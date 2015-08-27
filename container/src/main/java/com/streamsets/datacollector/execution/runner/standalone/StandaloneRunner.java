@@ -480,6 +480,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           } catch (JsonProcessingException e) {
             throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
           }
+          eventListenerManager.broadcastMetrics(name, metricString);
         }
         if (metricString == null) {
           metricString = getState().getMetrics();
