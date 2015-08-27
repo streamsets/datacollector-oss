@@ -314,7 +314,7 @@ public class Field implements Cloneable {
    */
   @Override
   public Field clone() {
-    return (type != Type.MAP && type != Type.LIST) ? this : new Field(type, value);
+    return (type != Type.MAP && type != Type.LIST && type != Type.LIST_MAP) ? this : new Field(type, value);
   }
 
   public void set(Type type, Object value) {

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,17 @@ public class TestFieldDeepCopy {
     Assert.assertNotSame(map.get("list"), cMap.get("list"));
     Assert.assertEquals(map.get("list").getValueAsList().get(0), cMap.get("list").getValueAsList().get(0));
     Assert.assertNotSame(map.get("list").getValueAsList().get(0), cMap.get("list").getValueAsList().get(0));
+
+    LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+    listMap.put("list", Field.create(listX));
+    ListMapTypeSupport listMapTypeSupport = new ListMapTypeSupport();
+    LinkedHashMap<String, Field> listMapClone = (LinkedHashMap) listMapTypeSupport.clone(listMap);
+    Assert.assertEquals(listMap, listMapClone);
+    Assert.assertNotSame(listMap, listMapClone);
+    Assert.assertEquals(map.get("list"), listMapClone.get("list"));
+    Assert.assertNotSame(map.get("list"), listMapClone.get("list"));
+    Assert.assertEquals(map.get("list").getValueAsList().get(0), listMapClone.get("list").getValueAsList().get(0));
+    Assert.assertNotSame(map.get("list").getValueAsList().get(0), listMapClone.get("list").getValueAsList().get(0));
   }
 
 }
