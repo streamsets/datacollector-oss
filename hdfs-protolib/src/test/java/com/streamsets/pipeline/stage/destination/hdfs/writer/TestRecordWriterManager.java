@@ -161,7 +161,7 @@ public class TestRecordWriterManager {
 
   @Test
   public void testCompressionCodec() throws Exception {
-    testPath(new SnappyCodec());
+    testPath(new DefaultCodec());
   }
 
   private void testPath(CompressionCodec compressionCodec) throws Exception {

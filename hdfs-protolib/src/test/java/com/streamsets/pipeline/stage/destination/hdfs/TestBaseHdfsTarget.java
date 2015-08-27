@@ -30,6 +30,8 @@ import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.Compressor;
 import org.apache.hadoop.io.compress.DeflateCodec;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.After;
@@ -301,6 +303,14 @@ public class TestBaseHdfsTarget {
     } finally {
       target.destroy();
     }
+  }
+
+  @Test
+  public void testSDCSnappyCompressionCodec() throws Exception {
+    Assert.assertNotNull(CompressionMode.SNAPPY.getCodec().getField("SDC"));
+    CompressionCodec codec = CompressionMode.SNAPPY.getCodec().newInstance();
+    Assert.assertNotNull(codec.getCompressorType().getField("SDC"));
+    Assert.assertNotNull(codec.getDecompressorType().getField("SDC"));
   }
 
   @Test

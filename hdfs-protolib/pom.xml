@@ -23,9 +23,9 @@
 
   <properties>
     <hadoop.version>2.6.0</hadoop.version>
-    <hadoop.version>2.3.0</hadoop.version>
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
+    <snappy.version>0.4</snappy.version>
   </properties>
 
   <dependencies>
@@ -33,7 +33,7 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>11.0.2</version>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -104,6 +104,13 @@
       <type>test-jar</type>
       <version>${project.version}</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>${snappy.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
