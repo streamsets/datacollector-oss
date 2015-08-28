@@ -138,6 +138,8 @@
                                             <li>Discard - Discards error records.</li>
                                             <li>Write to File - Writes error records to a file in
                                                 the specified directory. </li>
+                                            <li>Write to Another Pipeline - Writes error records to
+                                                an RPC destination pipeline.</li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
                                         </ul><p>For cluster mode, use Discard or Write to Kafka.
@@ -259,6 +261,15 @@
                             </tbody>
                         </tgroup>
                     </table>
+                </info>
+            </step>
+            <step>
+                <cmd>When writing error records to an RPC pipeline, click the <wintitle>Error
+                        Records - Write to Another Pipeline</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <draft-comment author="Loretta">add table with properties from SDC
+                        destination.</draft-comment>
                 </info>
             </step>
             <step>

@@ -11,8 +11,7 @@
    information and the queue or topic name. You can optionally use JMS credentials and remove
    control characters. You can also define a JMS message selector to specify the messages that the
    origin reads. By default, the JMS Consumer reads all messages.</p>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
-   not store the offset for the JMS Consumer. JMS stores the offset with the JMS server. You cannot
-   reset the offset for the JMS Consumer</p>
+  <p>JMS stores the offset with the JMS server. You cannot reset the offset for the JMS
+      Consumer.</p>
  </conbody>
 </concept>

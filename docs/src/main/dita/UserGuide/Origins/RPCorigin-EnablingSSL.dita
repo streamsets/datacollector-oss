@@ -2,8 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_yw2_pj1_ct">
  <title>Enabling SSL</title>
- <shortdesc>You can configure the RPC origin to use SSL. To use SSL you need a valid keystore file
-    and password.</shortdesc>
+ <shortdesc>You can configure the RPC origin to enable the secure transfer of data with SSL. To
+    enable SSL, you need a keystore with the private keys of the SSL certificate and the associated
+    password.</shortdesc>
  <conbody>
   <p><indexterm>RPC origins<indexterm>enabling HTTPS</indexterm></indexterm>To enable security:<ol
     id="ol_tlg_kv2_ct">

@@ -4,38 +4,6 @@
  <title>Reusable Tables of Information</title>
  <shortdesc></shortdesc>
  <conbody>
-  <p>The following table is used in "Configuring a Directory" and "Configuring a Kafka Consumer"--
-   no longer used by Kafka Consumer:</p>
-  <p>
-   <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
-    <tgroup cols="2">
-     <colspec colname="c1" colnum="1" colwidth="1*"/>
-     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-     <thead>
-      <row>
-       <entry>JSON Property</entry>
-       <entry>Description</entry>
-      </row>
-     </thead>
-     <tbody>
-      <row>
-       <entry>JSON Content</entry>
-       <entry>Type of content in JSON files. Use one of the following options: <p>
-         <ul id="ul_atw_krl_5q">
-          <li>Array of Objects </li>
-          <li>Multiple Objects</li>
-         </ul>
-        </p></entry>
-      </row>
-      <row>
-       <entry>Maximum Object Length (chars)</entry>
-       <entry>Maximum number of characters in a JSON object. <p>Longer objects are diverted to the
-         pipeline for error handling. </p></entry>
-      </row>
-     </tbody>
-    </tgroup>
-   </table>
-  </p>
   <p>
    <draft-comment author="Loretta">The following IgnoreControlChar-row is used in Configuring a -
     Directory, File Tail, Kafka Consumer, JSON Parser, Log Parser:</draft-comment>

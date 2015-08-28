@@ -87,7 +87,7 @@
   </topicref>
   <topicref href="../Origins/RPCorigin.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Origins/RPC-EnablingSSL.dita"/>
+   <topicref href="../Origins/RPCorigin-EnablingSSL.dita"/>
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/UDP.dita" chunk="to-content">

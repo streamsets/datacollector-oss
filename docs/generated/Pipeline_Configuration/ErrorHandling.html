@@ -72,18 +72,18 @@
 
         
         
-          <dt class="dt dlterm">Write to Pipeline via RPC</dt>
+          <dt class="dt dlterm">Write to Another Pipeline</dt>
 
           <dd class="dd">The
             pipeline writes error records to an RPC pipeline. The <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
-          <dd class="dd">To write to another pipeline, you need to create an RPC pipeline to process the error
-            records. The pipeline must include an RPC origin configured to read error records from
-            this pipeline.</dd>
+          <dd class="dd">To write to another pipeline, you need to create an RPC destination pipeline to
+            process the error records. The pipeline must include an RPC origin configured to read
+            error records from this pipeline. </dd>
 
-          <dd class="dd">Write to Pipeline via RPC is not supported for cluster pipelines at this time. </dd>
+          <dd class="dd">Write to Another Pipeline is not supported for cluster pipelines at this time. </dd>
 
         
         

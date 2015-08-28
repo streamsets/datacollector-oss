@@ -70,12 +70,13 @@
   </topicmeta>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/RPCdestination.dita" chunk="to-content"> 
+  <topicref href="../Destinations/RPCdest.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>
   </topicmeta>
-   <topicref href="../Destinations/RPC-Connections.dita"/>
-   <topicref href="../Destinations/RPCdestination-Configuring.dita"/>
+   <topicref href="../Destinations/RPCdest-Connections.dita"/>
+   <topicref href="../Destinations/RPCdest-EnablingSSL.dita"/>
+   <topicref href="../Destinations/RPCdest-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>
    <shortdesc/>

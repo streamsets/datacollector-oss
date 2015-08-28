@@ -9,7 +9,6 @@
           RPC origins and destinations</indexterm></indexterm>To enable the RPC destination to write
       directly to the RPC origin, create a single RPC ID and use it in both stages. </p>
       <p>When using the RPC destination to write to multiple pipelines, use the RPC ID in the
-         destination and all RPC origins in the destination pipelines.<draft-comment
-            author="Loretta">review this for clarity.</draft-comment></p>
+         destination and all RPC origins in the destination pipelines.</p>
  </conbody>
 </concept>

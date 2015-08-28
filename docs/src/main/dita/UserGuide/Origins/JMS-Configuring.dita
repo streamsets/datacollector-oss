@@ -4,9 +4,7 @@
     <title>Configuring a JMS Consumer Origin</title>
     <shortdesc>Configure a JMS Consumer origin to read JMS messages.</shortdesc>
     <taskbody>
-        <context>
-            <p></p>
-        </context>
+        <context/>
         <steps id="steps_lsl_yck_dt">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
@@ -28,30 +26,24 @@
                             <tbody>
                                 <row>
                                     <entry>JMS Initial Context Factory</entry>
-                                    <entry/>
+                                    <entry>JMS initial context factory. </entry>
                                 </row>
                                 <row>
                                     <entry>JNDI Connection Factory</entry>
-                                    <entry/>
+                                    <entry>JNDI connection factory.</entry>
                                 </row>
                                 <row>
                                     <entry>JMS Provider URL</entry>
-                                    <entry/>
+                                    <entry>URL for the JMS provider.</entry>
                                 </row>
                                 <row>
                                     <entry>JMS Destination Name</entry>
-                                    <entry/>
+                                    <entry>JMS queue or topic name. </entry>
                                 </row>
                                 <row>
                                     <entry>JMS Message Selector</entry>
-                                    <entry/>
-                                </row>
-                                <row>
-                                    <entry>Produce Single Record</entry>
-                                    <entry>Generates a single record for records that include
-                                        multiple objects. <p>When not selected, the origin generates
-                                            multiple records when a record includes multiple
-                                            objects.</p></entry>
+                                    <entry>Optional message selector to limit the messages read by
+                                        the origin. By default, reads all messages. </entry>
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>
@@ -93,10 +85,88 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
+                                <row>
+                                    <entry>Produce Single Record</entry>
+                                    <entry>Generates a single record for records that include
+                                        multiple objects. <p>When not selected, the origin generates
+                                            multiple records when a record includes multiple
+                                            objects.</p></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>When using JMS credentials, on the <wintitle>Credentials</wintitle> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gqq_3vy_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>JMS user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>JMS password.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>For text data, on the <wintitle>Text</wintitle> tab, configure the following
+                    property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_r5k_4xy_dt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>
+                                        <p>Maximum number of characters in a record, including
+                                            end-of-line characters. </p>
+                                        <p>Longer lines are truncated. </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/XMLprops">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

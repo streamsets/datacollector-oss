@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_mgc_xfy_dt">
+ <title>Enabling SSL</title>
+ <shortdesc>You can configure the RPC destination to enable the secure transfer of data with SSL. To
+  enable SSL, you need a truststore, or trusted keystore, that includes the public key of the SSL
+  certificate of the RPC origin, and the associated password.<draft-comment author="Loretta">Tucu -
+   is this all correct? </draft-comment></shortdesc>
+ <conbody>
+  <p><indexterm>RPC destinations<indexterm>enabling HTTPS</indexterm></indexterm>To enable
+    security:<ol id="ol_tlg_kv2_ct">
+    <li>Save the truststore file in the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> resources
+     directory: <filepath>&lt;SDCinstalldir>/resources</filepath>.</li>
+    <li>In the RPC destination, enter the filename and password.</li>
+   </ol></p>
+ </conbody>
+</concept>

@@ -25,15 +25,15 @@
           <dd>Write to file is not supported for cluster pipelines at this time.</dd>
         </dlentry>
         <dlentry>
-          <dt>Write to Pipeline via RPC</dt>
+          <dt>Write to Another Pipeline</dt>
           <dd><draft-comment author="Loretta">Check Tucu's changes here. </draft-comment>The
             pipeline writes error records to an RPC pipeline. The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>To write to another pipeline, you need to create an RPC pipeline to process the error
-            records. The pipeline must include an RPC origin configured to read error records from
-            this pipeline.</dd>
-          <dd>Write to Pipeline via RPC is not supported for cluster pipelines at this time. </dd>
+          <dd>To write to another pipeline, you need to create an RPC destination pipeline to
+            process the error records. The pipeline must include an RPC origin configured to read
+            error records from this pipeline. </dd>
+          <dd>Write to Another Pipeline is not supported for cluster pipelines at this time. </dd>
         </dlentry>
         <dlentry>
           <dt>Write to Kafka</dt>

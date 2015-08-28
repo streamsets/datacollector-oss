@@ -8,6 +8,12 @@
         <context/>
         <steps id="steps_pf2_wvz_sq">
             <step>
+                <cmd id="PIPE_PROPS">
+                    <draft-comment author="Loretta"><uicontrol>PIPELINE
+                        PROPERTIES</uicontrol></draft-comment>
+                </cmd>
+            </step>
+            <step>
                 <cmd>
                     <draft-comment author="Loretta">The following two step are used in Configuring a
                         Pipeline and the tutorial pipeline config topic.</draft-comment>
@@ -30,6 +36,8 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>DATA
+                        PREVIEW</uicontrol></draft-comment>
                     <draft-comment author="Loretta">The steps below are for data preview. They are
                         used in "Previewing a Single Stage" and "Previewing Multiple
                         Stages."</draft-comment>
@@ -135,15 +143,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">The following step is used at the beginning of
-                        "Starting a Pipeline" "Resetting the Origin" and "Stopping a
-                        Pipeline".</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol id="ORIGIN_INFO"
+                        >ORIGINS</uicontrol></draft-comment>
                 </cmd>
-            </step>
-            <step id="PickPipeline">
-                <cmd>Verify that the pipeline that you want to use appears in the pipeline canvas. </cmd>
-                <info>If it does not, select the pipeline from the <wintitle>Pipeline</wintitle>
-                    library or the <wintitle>Home</wintitle> page.</info>
             </step>
             <step>
                 <cmd>
@@ -233,6 +235,340 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>Avro</uicontrol> data - The following
+                        step is used by Kafka Consumer. Hadoop FS and Flume have their own
+                        thing.</draft-comment>
+                </cmd>
+            </step>
+            <step id="AvroProps">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each message. <note>Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> -
+                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="DelimFILE">
+                <cmd>For delimited data, on the <uicontrol>Delimited</uicontrol> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.85*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Format Type</entry>
+                                    <entry>Delimiter format type. Use one of the following options:
+                                            <ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_s5z_b3z_3r">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether a file contains a header line, and
+                                        whether to use the header line.</entry>
+                                </row>
+                                <row>
+                                    <entry>Record Type</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">Come back to
+                                            this</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Record Length (chars)</entry>
+                                    <entry>Maximum length of a record in characters. Longer records
+                                        are not read. </entry>
+                                </row>
+                                <row>
+                                    <entry>Delimiter Character</entry>
+                                    <entry>Delimiter character for a custom file type.</entry>
+                                </row>
+                                <row>
+                                    <entry>Escape Character</entry>
+                                    <entry>Escape character for a custom file type.</entry>
+                                </row>
+                                <row>
+                                    <entry>Quote Character</entry>
+                                    <entry>Quote character for a custom file type.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">JSON data - Kafka Consumer, JMS Consumer, Hadoop
+                        FS takes</draft-comment>
+                </cmd>
+            </step>
+            <step id="JSON-2props">
+                <cmd>For JSON data, on the <wintitle>JSON</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JSON Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JSON Content</entry>
+                                    <entry>Type of JSON content. Use one of the following options: <p>
+                                            <ul id="ul_atw_krl_5q">
+                                                <li>Array of Objects </li>
+                                                <li>Multiple Objects</li>
+                                            </ul>
+                                        </p></entry>
+                                </row>
+                                <row id="ROW-MaxObject">
+                                    <entry>Maximum Object Length (chars)</entry>
+                                    <entry>Maximum number of characters in a JSON object. <p>Longer
+                                            objects are diverted to the pipeline for error handling.
+                                        </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>LOG data </uicontrol> - Used in JMS
+                        Consumer, Kafka Consumer, Hadoop FS, probably Directory. Use the following
+                        for origins that use the Log data format. UL in first row is also being
+                        conrefed in Log Parser. </draft-comment>
+                </cmd>
+            </step>
+            <step id="LogData_Log4j">
+                <cmd>For log data, click the <wintitle>Log</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Log Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Log Format</entry>
+                                    <entry>Format of the log files. Use one of the following
+                                            options:<ul id="ul-LogFormatList">
+                                            <li>Common Log Format</li>
+                                            <li>Combined Log Format</li>
+                                            <li>Apache Error Log Format</li>
+                                            <li>Apache Access Log Custom Format</li>
+                                            <li>Regular Expression</li>
+                                            <li>Grok Pattern</li>
+                                            <li>Log4j</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum length of a log line. The origin truncates longer
+                                        lines. </entry>
+                                </row>
+                                <row>
+                                    <entry>Retain Original Line</entry>
+                                    <entry>Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p>By default, the original line is
+                                            discarded.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                    <ul id="ul_mdk_djs_sr">
+                        <li><draft-comment author="Loretta">For any changes to these bullets, update
+                                Log Parser as well. Everything except the Log4j table/bullet point
+                                is copied from here. </draft-comment>When you select
+                                <uicontrol>Apache Access Log Custom Format</uicontrol>, use Apache
+                            log format strings to define the <uicontrol>Custom Log
+                                Format</uicontrol>.</li>
+                        <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+                        <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
+                            custom grok patterns that you want to use in the <uicontrol>Grok Pattern
+                                Definition</uicontrol> field, and then enter the grok pattern log
+                            file description in the <uicontrol>Grok Pattern</uicontrol> field.<p>For
+                                more information about supported grok patterns, see <xref
+                                    href="../Apx-GrokPatterns/GrokPatterns.dita#concept_vdk_xjb_wr"
+                                />.</p></li>
+                        <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>
+                                <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
+                                    <tgroup cols="2">
+                                        <colspec colname="c1" colnum="1" colwidth="1*"/>
+                                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                        <thead>
+                                            <row>
+                                                <entry>Log4j Property</entry>
+                                                <entry>Description</entry>
+                                            </row>
+                                        </thead>
+                                        <tbody>
+                                            <row>
+                                                <entry>On Parse Error</entry>
+                                                <entry>Determines how to handle information that
+                                                  cannot be parsed:<ul id="ul_bvm_5bt_sr">
+                                                  <li>Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+                                                  <li>Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+                                                  <li>Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is added
+                                                  to the message field for the last valid log
+                                                  line.</li>
+                                                  </ul></entry>
+                                            </row>
+                                            <row>
+                                                <entry>Use Custom Log Format</entry>
+                                                <entry>Allows you to define a custom log
+                                                  format.</entry>
+                                            </row>
+                                            <row>
+                                                <entry>Custom Format</entry>
+                                                <entry>Use log4j variables to define a custom log
+                                                  format. </entry>
+                                            </row>
+                                        </tbody>
+                                    </tgroup>
+                                </table>
+                            </p></li>
+                    </ul>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
+                        Kafka Consumer, JMS Consumer, Hadoop FS</draft-comment>
+                </cmd>
+            </step>
+            <step id="Text">
+                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_LogData">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p>Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
+                        JMS Consumer, Kafka Consumer, Hadoop FS</draft-comment>
+                </cmd>
+            </step>
+            <step id="XMLprops">
+                <cmd>For XML data, on the XML tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_nxh_bc2_2t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>XML Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Element</entry>
+                                    <entry>
+                                        <p>XML element that acts as a delimiter. Omit a delimiter to
+                                            treat the entire XML document as one record.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Max Record Length (chars)</entry>
+                                    <entry>
+                                        <p>The maximum number of characters in a record. Longer
+                                            records are diverted to the pipeline for error handling.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"
+                        ><uicontrol>PROCESSORS</uicontrol></draft-comment>
+                </cmd>
             </step>
             <step>
                 <cmd>
@@ -351,6 +687,12 @@
                     </table>
                 </info>
             </step>
+            <step id="DEST_INFO">
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>DESTINATION
+                        INFO</uicontrol></draft-comment>
+                </cmd>
+            </step>
             <step>
                 <cmd>
                     <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH">Use this step
@@ -429,117 +771,6 @@
             <step id="1stStep-NameDescOnly">
                 <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, optionally
                     enter a name and description for the destination.</cmd>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta">Use the following for origins that use the Log
-                        data format. UL in first row is also being conrefed in Log Parser. </draft-comment>
-                </cmd>
-            </step>
-            <step id="LogData_Log4j">
-                <cmd>For log data, click the <wintitle>Log</wintitle> tab and configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Log Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Log Format</entry>
-                                    <entry>Format of the log files. Use one of the following
-                                            options:<ul id="ul-LogFormatList">
-                                            <li>Common Log Format</li>
-                                            <li>Combined Log Format</li>
-                                            <li>Apache Error Log Format</li>
-                                            <li>Apache Access Log Custom Format</li>
-                                            <li>Regular Expression</li>
-                                            <li>Grok Pattern</li>
-                                            <li>Log4j</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Max Line Length</entry>
-                                    <entry>Maximum length of a log line. The origin truncates longer
-                                        lines. </entry>
-                                </row>
-                                <row>
-                                    <entry>Retain Original Line</entry>
-                                    <entry>Determines how to treat the original log line. Select to
-                                        include the original log line as a field in the resulting
-                                            record.<p>By default, the original line is
-                                            discarded.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                    <ul id="ul_mdk_djs_sr">
-                        <li><draft-comment author="Loretta">For any changes to these bullets, update
-                                Log Parser as well. Everything except the Log4j table/bullet point
-                                is copied from here. </draft-comment>When you select
-                                <uicontrol>Apache Access Log Custom Format</uicontrol>, use Apache
-                            log format strings to define the <uicontrol>Custom Log
-                                Format</uicontrol>.</li>
-                        <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
-                            regular expression that describes the log format, and then map the
-                            fields that you want to include to each regular expression group.</li>
-                        <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can define any
-                            custom grok patterns that you want to use in the <uicontrol>Grok Pattern
-                                Definition</uicontrol> field, and then enter the grok pattern log
-                            file description in the <uicontrol>Grok Pattern</uicontrol> field.<p>For
-                                more information about supported grok patterns, see <xref
-                                    href="../Apx-GrokPatterns/GrokPatterns.dita#concept_vdk_xjb_wr"
-                                />.</p></li>
-                        <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>
-                                <table frame="all" rowsep="1" colsep="1" id="table_pzm_rbt_sr">
-                                    <tgroup cols="2">
-                                        <colspec colname="c1" colnum="1" colwidth="1*"/>
-                                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                                        <thead>
-                                            <row>
-                                                <entry>Log4j Property</entry>
-                                                <entry>Description</entry>
-                                            </row>
-                                        </thead>
-                                        <tbody>
-                                            <row>
-                                                <entry>On Parse Error</entry>
-                                                <entry>Determines how to handle information that
-                                                  cannot be parsed:<ul id="ul_bvm_5bt_sr">
-                                                  <li>Skip and Log Error - Skips reading the line
-                                                  and logs a stage error.</li>
-                                                  <li>Skip, No Error - Skips reading the line and
-                                                  does not log an error.</li>
-                                                  <li>Include as Stack Trace - Includes information
-                                                  that cannot be parsed as a stack trace to the
-                                                  previously-read log line. The information is added
-                                                  to the message field for the last valid log
-                                                  line.</li>
-                                                  </ul></entry>
-                                            </row>
-                                            <row>
-                                                <entry>Use Custom Log Format</entry>
-                                                <entry>Allows you to define a custom log
-                                                  format.</entry>
-                                            </row>
-                                            <row>
-                                                <entry>Custom Format</entry>
-                                                <entry>Use log4j variables to define a custom log
-                                                  format.</entry>
-                                            </row>
-                                        </tbody>
-                                    </tgroup>
-                                </table>
-                            </p>
-                        </li>
-                    </ul>
-                </info>
             </step>
             <step>
                 <cmd>
@@ -657,43 +888,6 @@
                                     <entry>Removes new line characters from within a record.
                                             <p>Recommended when writing data as a single line of
                                             text.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta">The following step is used by Kafka Consumer.
-                        Hadoop FS and Flume have their own thing.</draft-comment>
-                </cmd>
-            </step>
-            <step id="AvroProps">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Avro Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
-                                </row>
-                                <row>
-                                    <entry>Include Schema</entry>
-                                    <entry>Includes the schema in each message. <note>Omitting the
-                                            schema definition can improve performance, but requires
-                                            the appropriate schema management to avoid losing track
-                                            of the schema associated with the data.</note></entry>
                                 </row>
                             </tbody>
                         </tgroup>

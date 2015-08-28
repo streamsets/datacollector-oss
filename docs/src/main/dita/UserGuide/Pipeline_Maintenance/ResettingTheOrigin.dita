@@ -27,8 +27,10 @@
                 remaining origin stages process transient data where resetting the origin has no
                 effect.</p><p>To reset the origin:</p></context>
         <steps id="steps_hvb_y1s_5q">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/PickPipeline">
-                <cmd/>
+            <step>
+                <cmd>Verify that the pipeline that you want to use appears in the pipeline canvas. </cmd>
+                <info>If it does not, select the pipeline from the <wintitle>Pipeline</wintitle>
+                    library or the <wintitle>Home</wintitle> page.</info>
             </step>
             <step>
                 <cmd>To reset the origin, click the <uicontrol>More</uicontrol> icon.</cmd>

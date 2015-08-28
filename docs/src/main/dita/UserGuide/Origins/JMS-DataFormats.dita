@@ -15,7 +15,8 @@
      <dt>Text</dt>
      <dd>Generates a record for each line of text. Reads text data of the BytesMessage format. </dd>
      <dd>When a line exceeds the maximum line length defined for the origin, the origin truncates
-      the line.</dd>
+            the line. The origin adds a boolean field named Truncated to indicate if the line was
+            truncated.</dd>
     </dlentry>
     <dlentry>
      <dt>JSON</dt>
@@ -76,7 +77,8 @@
      <dd>Generates a record for every message. </dd>
      <dd>To ensure proper data processing, indicate if the message includes an Avro schema. </dd>
      <dd>You can use the schema associated with the message or provide an alternate schema
-      definition. Providing an alternate schema can improve performance.</dd>
+            definition. Providing an alternate schema can improve performance.<draft-comment
+              author="Loretta">Add Binary data format when ready.</draft-comment></dd>
     </dlentry>
    </dl>
   </p>

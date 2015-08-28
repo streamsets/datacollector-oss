@@ -14,7 +14,8 @@
     <dt>Text</dt>
     <dd>Generates a record for each line in the file. </dd>
     <dd>When a line exceeds the maximum line length defined for the origin, the origin truncates the
-          line.</dd>
+          line. The origin adds a boolean field named Truncated to indicate if the line was
+          truncated.</dd>
    </dlentry>
    <dlentry>
     <dt>JSON</dt>
