@@ -11,6 +11,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -34,8 +37,18 @@ public @interface ConfigDef {
       this.defaultValue = defaultValue;
     }
 
-    public Object getDefault() {
-      return defaultValue;
+    public Object getDefault(Class variableClass) {
+      Object value;
+      if (variableClass.isEnum()) {
+        value = variableClass.getEnumConstants()[0];
+      } else if (Map.class.isAssignableFrom(variableClass)) {
+        value = Collections.emptyMap();
+      } else if (List.class.isAssignableFrom(variableClass)) {
+        value = Collections.emptyList();
+      } else {
+        value = defaultValue;
+      }
+      return value;
     }
   }
 

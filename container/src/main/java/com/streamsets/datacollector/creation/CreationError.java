@@ -34,6 +34,8 @@ public enum CreationError implements ErrorCode {
   CREATION_014("Configuration value '{}' is not number, it is a '{}'"),
   CREATION_015("Configuration value '{}' cannot be converted to '{}': {}"),
 
+  CREATION_016("Could not obtain Java default value: {}"),
+
   CREATION_020("Configuration value is not a LIST"),
   CREATION_021("LIST configuration has a NULL value"),
 

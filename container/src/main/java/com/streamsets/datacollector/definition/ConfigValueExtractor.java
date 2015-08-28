@@ -14,6 +14,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,6 +70,20 @@ public abstract class ConfigValueExtractor {
               } catch (IllegalArgumentException ex) {
                 errors.add(new ErrorMessage(DefinitionError.DEF_004, contextMsg, field.getType(), valueStr));
               }
+            } else if(List.class.isAssignableFrom(field.getType())) {
+
+              try {
+                List list = ObjectMapperFactory.get().readValue(valueStr, List.class);
+                try {
+                  // convert to enum if necessary to validate
+                  convertElementsToEnum(field, list);
+                } catch (Exception ex) {
+                  errors.add(new ErrorMessage(DefinitionError.DEF_012, contextMsg, getListType(field).getSimpleName(),
+                                              ex.toString()));
+                }
+              } catch (Exception ex) {
+                errors.add(new ErrorMessage(DefinitionError.DEF_006, contextMsg, valueStr, ex.toString()));
+              }
             }
             break;
           case LIST:
@@ -76,9 +91,16 @@ public abstract class ConfigValueExtractor {
               errors.add(new ErrorMessage(DefinitionError.DEF_005, contextMsg, field.getType()));
             }
             try {
-              ObjectMapperFactory.get().readValue(valueStr, List.class);
+              List list = ObjectMapperFactory.get().readValue(valueStr, List.class);
+              try {
+                // convert to enum if necessary to validate
+                convertElementsToEnum(field, list);
+              } catch (Exception ex) {
+                errors.add(new ErrorMessage(DefinitionError.DEF_012, contextMsg, getListType(field).getSimpleName(),
+                                            ex.toString()));
+              }
             } catch (Exception ex) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_006, contextMsg, valueStr));
+              errors.add(new ErrorMessage(DefinitionError.DEF_006, contextMsg, valueStr, ex.toString()));
             }
             break;
           case MAP:
@@ -124,7 +146,7 @@ public abstract class ConfigValueExtractor {
     if (errors.isEmpty()) {
       Object value = null;
       if (valueStr == null || valueStr.isEmpty()) {
-        value = type.getDefault();
+        value = null;
       } else {
         if (ElUtil.isElString(valueStr)) {
           value = valueStr;
@@ -157,10 +179,14 @@ public abstract class ConfigValueExtractor {
                   value = Enum.valueOf(((Class<Enum>)field.getType()), valueStr);
                 } else if(List.class.isAssignableFrom(field.getType())) {
                   value = ObjectMapperFactory.get().readValue(valueStr, List.class);
+                  // convert to enum if necessary
+                  value = convertElementsToEnum(field, (List) value);
                 }
                 break;
               case LIST:
                 value = ObjectMapperFactory.get().readValue(valueStr, List.class);
+                // convert to enum if necessary
+                value = convertElementsToEnum(field, (List) value);
                 break;
               case MAP:
                 Map<String, ?> map = ObjectMapperFactory.get().readValue(valueStr, LinkedHashMap.class);
@@ -186,6 +212,20 @@ public abstract class ConfigValueExtractor {
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid configuration value: {}", errors));
     }
+  }
+
+  Class getListType(Field listField) {
+    return (Class)((ParameterizedType)listField.getGenericType()).getActualTypeArguments()[0];
+  }
+
+  List convertElementsToEnum(Field listField, List list) {
+    Class elementClass = getListType(listField);
+    if (elementClass.isEnum()) {
+      for (int i = 0; i < list.size(); i++) {
+          list.set(i, Enum.valueOf(elementClass, (String) list.get(i)));
+      }
+    }
+    return list;
   }
 
 }

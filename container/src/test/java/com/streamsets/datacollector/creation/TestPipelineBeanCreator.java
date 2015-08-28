@@ -12,6 +12,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -23,8 +24,11 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.MultiValueChooser;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import org.junit.Assert;
 import org.junit.Test;
@@ -188,6 +192,12 @@ public class TestPipelineBeanCreator {
 
   }
 
+  public static class EValueChooser extends BaseEnumChooserValues<E> {
+    public EValueChooser() {
+      super(E.class);
+    }
+  }
+
   @StageDef(version = 1, label = "L")
   public static class MyTarget extends BaseTarget {
 
@@ -235,6 +245,45 @@ public class TestPipelineBeanCreator {
     )
     @ComplexField
     public List<Bean> complexField;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.STRING,
+        required = true
+    )
+    public String stringJavaDefault = "Hello";
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.NUMBER,
+        required = true
+    )
+    public int intJavaDefault = 5;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @ValueChooser(EValueChooser.class)
+    public E enumSJavaDefault = E.B;
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @MultiValueChooser(EValueChooser.class)
+    public List<E> enumMJavaDefault = Arrays.asList(E.A);
+
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @ValueChooser(EValueChooser.class)
+    public E enumSNoDefaultAlAll;
 
     @Override
     public void write(Batch batch) throws StageException {
@@ -505,4 +554,43 @@ public class TestPipelineBeanCreator {
 
   }
 
+
+  @Test
+  public void testConfigsWithJavaDefaults() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+    StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
+    StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
+    StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq(false)))
+           .thenReturn(stageDef);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq(false)))
+           .thenReturn(errorStageDef);
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+
+    List<Config> pipelineConfigs = ImmutableList.of(
+        new Config("executionMode", ExecutionMode.CLUSTER.name()),
+        new Config("memoryLimit", 1000)
+    );
+
+    StageConfiguration stageConf = new StageConfiguration("si", "l", "s", 1,
+        ImmutableList.of(new Config("list", ImmutableList.of("S"))),
+        Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+    StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
+         ImmutableList.of(new Config("list", ImmutableList.of("E"))),
+         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, UUID.randomUUID(),
+         "D", pipelineConfigs, Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
+
+    List<Issue> issues = new ArrayList<>();
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
+
+    MyTarget target = (MyTarget) bean.getStages().get(0).getStage();
+
+    Assert.assertEquals("Hello", target.stringJavaDefault);
+    Assert.assertEquals(E.B, target.enumSJavaDefault);
+    Assert.assertEquals(ImmutableList.of(E.A), target.enumMJavaDefault);
+    Assert.assertEquals(5, target.intJavaDefault);
+    Assert.assertEquals(E.A, target.enumSNoDefaultAlAll);
+  }
 }

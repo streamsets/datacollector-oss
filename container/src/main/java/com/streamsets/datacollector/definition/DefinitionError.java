@@ -17,12 +17,14 @@ public enum DefinitionError implements ErrorCode {
   DEF_003("{}, configuration field is '{}', it must be 'String' or an enum"),
   DEF_004("{}, configuration field is '{}', the value '{}' is an invalid enum"),
   DEF_005("{}, configuration field is '{}', it must be 'java.lang.List'"),
-  DEF_006("{}, could not parse default value '{}' as a JSON array"),
+  DEF_006("{}, could not parse default value '{}' as a JSON array: {}"),
   DEF_007("{}, configuration field is '{}', it must be 'java.lang.Map'"),
   DEF_008("{}, could not parse default value '{}' as a JSON map"),
   DEF_009("{}, configuration field is not a character type"),
   DEF_010("{}, the value '{}' is not a character"),
   DEF_011("{}, configuration field is '{}', it must be 'String'"),
+
+  DEF_012("{}, configuration field is a '{}' enum, the list has an invalid enum value: {}"),
 
   //ELDefinitionExtractor
   DEF_050("{} Class='{}' Method='{}', method must be public to be an EL function"),

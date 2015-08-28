@@ -142,7 +142,7 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(1, configs.size());
     ConfigDefinition config = configs.get(0);
     Assert.assertEquals(ConfigDef.Type.BOOLEAN, config.getType());
-    Assert.assertEquals(false, config.getDefaultValue());
+    Assert.assertNull(config.getDefaultValue());
     Assert.assertTrue(config.getElFunctionDefinitions().isEmpty());
     Assert.assertTrue(config.getElConstantDefinitions().isEmpty());
   }

@@ -10,14 +10,26 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.pipeline.api.ConfigDef;
 
+import com.streamsets.pipeline.api.MultiValueChooser;
+import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class TestConfigValueExtractor {
+
+  public enum FooEnum { A, B, C }
+
+  public static class FooEnumValueChooser extends BaseEnumChooserValues<FooEnum> {
+    public FooEnumValueChooser() {
+      super(FooEnum.class);
+    }
+  }
 
   public static class Configs {
 
@@ -106,7 +118,7 @@ public class TestConfigValueExtractor {
         required = true,
         defaultValue = "[ 1 ]"
     )
-    public List listL;
+    public List<Integer> listL;
 
     @ConfigDef(
         label = "L",
@@ -138,6 +150,25 @@ public class TestConfigValueExtractor {
         defaultValue = "${x}"
     )
     public int elEL;
+
+    @ConfigDef(
+        label = "L",
+        defaultValue = "A",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @ValueChooser(FooEnumValueChooser.class)
+    public FooEnum enumS;
+
+    @ConfigDef(
+        label = "L",
+        defaultValue = "[ \"A\" ]",
+        type = ConfigDef.Type.MODEL,
+        required = true
+    )
+    @MultiValueChooser(FooEnumValueChooser.class)
+    public List<FooEnum> enumM;
+
   }
 
   @Test
@@ -193,10 +224,20 @@ public class TestConfigValueExtractor {
 
     field = Configs.class.getField("modelM");
     configDef = field.getAnnotation(ConfigDef.class);
-    Assert.assertEquals("", ConfigValueExtractor.get().extract(field, configDef, "x"));
+    // we get null here but the bean creator will inject the type default
+    Assert.assertEquals(null, ConfigValueExtractor.get().extract(field, configDef, "x"));
 
     field = Configs.class.getField("elEL");
     configDef = field.getAnnotation(ConfigDef.class);
     Assert.assertEquals("${x}", ConfigValueExtractor.get().extract(field, configDef, "x"));
+
+    field = Configs.class.getField("enumS");
+    configDef = field.getAnnotation(ConfigDef.class);
+    Assert.assertEquals(FooEnum.A, ConfigValueExtractor.get().extract(field, configDef, "x"));
+
+    field = Configs.class.getField("enumM");
+    configDef = field.getAnnotation(ConfigDef.class);
+    Assert.assertEquals(ImmutableList.of(FooEnum.A), ConfigValueExtractor.get().extract(field, configDef, "x"));
+
   }
 }

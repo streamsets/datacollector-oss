@@ -286,9 +286,20 @@ public abstract class PipelineBeanCreator {
 
   void injectDefaultValue(Object obj, Field field, StageDefinition stageDef, StageConfiguration stageConf,
       ConfigDefinition configDef, Map<String, Object> pipelineConstants, String stageName, List<Issue> errors) {
-    Object value = configDef.getDefaultValue();
-    if (value != null) {
-      injectConfigValue(obj, field, value, stageDef, stageConf, configDef, null, pipelineConstants, errors);
+    Object defaultValue = configDef.getDefaultValue();
+    if (defaultValue != null) {
+      injectConfigValue(obj, field, defaultValue, stageDef, stageConf, configDef, null, pipelineConstants, errors);
+    } else if (!hasJavaDefault(obj, field)) {
+      defaultValue = configDef.getType().getDefault(field.getType());
+      injectConfigValue(obj, field, defaultValue, stageDef, stageConf, configDef, null, pipelineConstants, errors);
+    }
+  }
+
+  boolean hasJavaDefault(Object obj, Field field) {
+    try {
+      return field.get(obj) != null;
+    } catch (Exception ex) {
+      throw new RuntimeException(Utils.format("This should never happen: {}", ex.toString()), ex);
     }
   }
 
@@ -545,9 +556,11 @@ public abstract class PipelineBeanCreator {
       List<Issue> errors) {
     Object value = configConf.getValue();
     if (value == null) {
-      value = configDef.getDefaultValue();
+      injectDefaultValue(obj, field, stageDef, stageConf, configDef, pipelineConstants, stageConf.getInstanceName(),
+                         errors);
+    } else {
+      injectConfigValue(obj, field, value, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
     }
-    injectConfigValue(obj, field, value, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
   }
 
 

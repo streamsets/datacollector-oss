@@ -131,6 +131,7 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDef(
       required = false,
+      defaultValue = "{}",
       type = ConfigDef.Type.MAP,
       label = "Constants",
       displayPosition = 80,
@@ -180,6 +181,7 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
+    defaultValue = "{}",
     label = "Launcher ENV",
     description = "Sets additional environment variables for the cluster launcher",
     displayPosition = 120,
