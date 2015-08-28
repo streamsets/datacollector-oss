@@ -333,7 +333,7 @@ public class FlumeTarget extends BaseTarget {
         return;
       } catch (EventDeliveryException e) {
         ex = e;
-        if(!Thread.interrupted()) {
+        if(!getContext().isStopped()) {
           LOG.info("Encountered exception while sending data to flume : {}", e.toString(), e);
           retries++;
         } else {
