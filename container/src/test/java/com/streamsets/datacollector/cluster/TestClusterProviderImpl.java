@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -114,6 +115,32 @@ public class TestClusterProviderImpl {
   @After
   public void tearDown() {
     FileUtils.deleteQuietly(tempDir);
+  }
+
+  @Test
+  public void testCopyDirectory() throws Exception {
+    File copyTempDir = new File(tempDir, "copy");
+    File srcDir = new File(copyTempDir, "somedir");
+    File dstDir = new File(copyTempDir, "dst");
+    Assert.assertTrue(srcDir.mkdirs());
+    Assert.assertTrue(dstDir.mkdirs());
+    File link1 = new File(copyTempDir, "link1");
+    File link2 = new File(copyTempDir, "link2");
+    File dir1 = new File(copyTempDir, "dir1");
+    File file1 = new File(dir1, "f1");
+    File file2 = new File(dir1, "f2");
+    Assert.assertTrue(dir1.mkdirs());
+    Assert.assertTrue(file1.createNewFile());
+    Assert.assertTrue(file2.createNewFile());
+    file2.setReadable(false);
+    file2.setWritable(false);
+    file2.setExecutable(false);
+    Files.createSymbolicLink(link1.toPath(), dir1.toPath());
+    Files.createSymbolicLink(link2.toPath(), link1.toPath());
+    Files.createSymbolicLink(new File(srcDir, "dir1").toPath(), link2.toPath());
+    File clone = ClusterProviderImpl.createDirectoryClone(srcDir, dstDir);
+    File cloneF1 = new File(new File(clone, "dir1"), "f1");
+    Assert.assertTrue(cloneF1.isFile());
   }
 
   @Test(expected = IllegalStateException.class)

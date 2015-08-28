@@ -252,13 +252,49 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private static File createDirectoryClone(File srcDir, File tempDir) throws IOException {
+  static File createDirectoryClone(File srcDir, File tempDir) throws IOException {
     File tempSrcDir = new File(tempDir, srcDir.getName());
     FileUtils.deleteQuietly(tempSrcDir);
     Utils.checkState(tempSrcDir.mkdir(), Utils.formatL("Could not create {}", tempSrcDir));
-    FileUtils.copyDirectory(srcDir, tempSrcDir);
+    doCopyDirectory(srcDir, tempSrcDir);
     return tempSrcDir;
   }
+  private static void doCopyDirectory(final File srcDir, final File destDir)
+    throws IOException {
+    // code copied from commons-io FileUtils to work around files which cannot be read
+    // recurse
+    final File[] srcFiles = srcDir.listFiles();
+    if (srcFiles == null) {  // null if abstract pathname does not denote a directory, or if an I/O error occurs
+      throw new IOException("Failed to list contents of " + srcDir);
+    }
+    if (destDir.exists()) {
+      if (destDir.isDirectory() == false) {
+        throw new IOException("Destination '" + destDir + "' exists but is not a directory");
+      }
+    } else {
+      if (!destDir.mkdirs() && !destDir.isDirectory()) {
+        throw new IOException("Destination '" + destDir + "' directory cannot be created");
+      }
+    }
+    if (destDir.canWrite() == false) {
+      throw new IOException("Destination '" + destDir + "' cannot be written to");
+    }
+    for (final File srcFile : srcFiles) {
+      final File dstFile = new File(destDir, srcFile.getName());
+      if (srcFile.canRead()) { // ignore files which cannot be read
+        if (srcFile.isDirectory()) {
+          doCopyDirectory(srcFile, dstFile);
+        } else {
+          try (InputStream in = new FileInputStream((srcFile))) {
+            try (OutputStream out = new FileOutputStream((dstFile))) {
+              IOUtils.copy(in, out);
+            }
+          }
+        }
+      }
+    }
+  }
+
 
   static boolean exclude(List<String> blacklist, String name) {
     for (String pattern : blacklist) {
