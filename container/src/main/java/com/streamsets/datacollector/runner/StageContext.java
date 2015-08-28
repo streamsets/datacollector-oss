@@ -69,6 +69,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final String resourcesDir;
   private final String pipelineName;
   private final String rev;
+  private volatile boolean stop;
 
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview,
@@ -298,6 +299,15 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   @Override
   public String getResourcesDirectory() {
     return resourcesDir;
+  }
+
+  @Override
+  public boolean isStopped() {
+    return stop;
+  }
+
+  public void setStop(boolean stop) {
+    this.stop = stop;
   }
 
   public void setLastBatchTime(long lastBatchTime) {

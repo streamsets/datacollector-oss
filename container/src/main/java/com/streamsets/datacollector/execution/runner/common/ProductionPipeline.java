@@ -158,6 +158,7 @@ public class ProductionPipeline {
 
   public void stop() throws PipelineException {
     pipelineRunner.stop();
+    pipeline.stop();
   }
 
   public boolean wasStopped() {

@@ -166,6 +166,12 @@ public class Pipeline {
     return running;
   }
 
+  public void stop() {
+    for(Pipe p : pipes) {
+      ((StageContext)p.getStage().getContext()).setStop(true);
+    }
+  }
+
   public static class Builder {
     private static final String EXECUTION_MODE_CONFIG_KEY = "executionMode";
     private static final String EXECUTION_MODE_CLUSTER = "CLUSTER";

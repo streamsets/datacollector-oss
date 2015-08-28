@@ -88,6 +88,8 @@ public interface Stage<C extends Stage.Context> {
 
     public String getResourcesDirectory();
 
+    public boolean isStopped();
+
   }
 
   public interface ConfigIssue {
