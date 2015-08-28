@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -66,6 +67,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   public static final String PIPELINE_FILE = "pipeline.json";
   public static final String UI_INFO_FILE = "uiinfo.json";
   public static final String RULES_FILE = "rules.json";
+  public static final String STATE = "state";
 
   private final StageLibraryTask stageLibrary;
   private final RuntimeInfo runtimeInfo;
@@ -173,6 +175,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private boolean cleanUp(String name) throws PipelineStoreException {
     boolean deleted = PipelineDirectoryUtil.deleteAll(getPipelineDir(name));
     deleted &= PipelineDirectoryUtil.deletePipelineDir(runtimeInfo, name);
+    if(deleted) {
+      LogUtil.resetRollingFileAppender(name, "0", STATE);
+    }
     return deleted;
   }
 
