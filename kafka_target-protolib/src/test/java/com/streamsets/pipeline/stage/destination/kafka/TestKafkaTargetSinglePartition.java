@@ -48,6 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Ignore
 public class TestKafkaTargetSinglePartition {
 
   private static EmbeddedZookeeper zkServer;
