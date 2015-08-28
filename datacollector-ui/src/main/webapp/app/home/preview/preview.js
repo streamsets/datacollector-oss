@@ -26,6 +26,7 @@ angular
       stepExecuted: false,
       dirtyLanes: [],
       snapshotsInfo: [],
+      rawDataConfigIndex: undefined,
 
       /**
        * Preview Data for previous stage instance.
@@ -239,6 +240,26 @@ angular
         });
       } else {
         $scope.nextStageInstances = [];
+      }
+
+
+      if(stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE &&
+        stageInstance.stageName.indexOf('RawDataDSource') !== -1) {
+        angular.forEach(stageInstance.configuration, function(configObj, index) {
+          if(configObj.name === 'rawData') {
+            $scope.rawDataConfigIndex = index;
+          } else if(configObj.name === 'dataFormatConfig.dataFormat') {
+            $scope.dataFormatConfigIndex = index;
+          }
+        });
+
+        $scope.refreshCodemirror = true;
+        $timeout(function () {
+          $scope.refreshCodemirror = false;
+        }, 100);
+
+      } else {
+        $scope.rawDataConfigIndex = undefined;
       }
     };
 

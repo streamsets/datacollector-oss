@@ -20,34 +20,54 @@
               ng-click="onCollapseAllOutputData(stagePreviewData)"></span>
         <span translate="home.previewPane.outputData">Output Data</span>
       </th>
-
-
     </tr>
   </thead>
   <tbody ng-switch="detailPaneConfig.uiInfo.stageType">
 
-    <tr ng-switch-when="SOURCE"
-        ng-repeat="record in stagePreviewData.output">
+    <tr ng-switch-when="SOURCE">
       <td>
+        <div ui-codemirror
+             class="codemirror-editor"
+             ng-if="rawDataConfigIndex"
+             ng-model="detailPaneConfig.configuration[rawDataConfigIndex].value"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="{
+              mode: detailPaneConfig.configuration[dataFormatConfigIndex].value == 'XML' ? 'text/html' : 'javascript',
+              inputStyle: 'contenteditable',
+              showCursorWhenSelecting: true,
+              lineNumbers: true,
+              matchBrackets: true
+             }">
+        </div>
+      </td>
+
+      <td>
+
+        <table class="table preview-table">
+          <tbody>
+          <tr ng-repeat="record in stagePreviewData.output">
+            <td>
+              <div class="pull-right delete-preview-record"
+                   ng-if="previewMode"
+                   ng-click="removeRecord(detailPaneConfig, stagePreviewData.output, record, $index)">
+                <i class="fa fa-trash"></i>
+              </div>
+
+              <record-tree
+                record="record"
+                record-value="record.value"
+                field-name="('global.form.record' | translate)+($index+1)"
+                is-root="true"
+                editable="previewMode"
+                show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
+                show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
+              </record-tree>
+            </td>
+          </tr>
+          </tbody>
+        </table>
 
       </td>
-      <td>
-        <div class="pull-right delete-preview-record"
-             ng-if="previewMode"
-             ng-click="removeRecord(detailPaneConfig, stagePreviewData.output, record, $index)">
-          <i class="fa fa-trash"></i>
-        </div>
-
-        <record-tree
-          record="record"
-          record-value="record.value"
-          field-name="('global.form.record' | translate)+($index+1)"
-          is-root="true"
-          editable="previewMode"
-          show-header="snapshotMode || pipelineConfig.uiInfo.previewConfig.showHeader"
-          show-field-type="snapshotMode || pipelineConfig.uiInfo.previewConfig.showFieldType">
-        </record-tree>
-     </td>
     </tr>
 
     <tr ng-switch-when="PROCESSOR"
