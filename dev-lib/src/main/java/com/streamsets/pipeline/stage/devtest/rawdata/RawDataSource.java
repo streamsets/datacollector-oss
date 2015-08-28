@@ -37,7 +37,7 @@ public class RawDataSource extends BaseSource  {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    List<Record> records = parser.parse(this.getContext(), "messageId", rawData.getBytes());
+    List<Record> records = parser.parse(this.getContext(), "rawData", rawData.getBytes());
     for(Record record: records) {
       batchMaker.addRecord(record);
     }

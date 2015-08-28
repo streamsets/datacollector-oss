@@ -208,6 +208,16 @@ angular
         }
         $scope.closePreview();
         $scope.showLoading = false;
+      },
+
+      /**
+       * On selecting records tab callback
+       */
+      onRecordsTabSelect: function() {
+        $scope.refreshCodemirror = true;
+        $timeout(function () {
+          $scope.refreshCodemirror = false;
+        }, 100);
       }
     });
 
