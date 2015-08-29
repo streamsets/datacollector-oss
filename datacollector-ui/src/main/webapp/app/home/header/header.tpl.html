@@ -44,6 +44,37 @@
       </div>
 
       <div class="panel-title pull-left"
+           ng-switch-when="FINISHING">
+        <h3 class="pull-left" translate="home.header.finishingPipeline">Finishing Pipeline</h3>
+        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
+           ng-switch-when="CONNECTING">
+        <h3 class="pull-left" translate="home.header.connectingPipeline">Connecting ...</h3>
+        <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
+           ng-switch-when="DISCONNECTING">
+        <h3 class="pull-left" translate="home.header.disconnectingPipeline">Disconnecting ...</h3>
+        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
+           ng-switch-when="CONNECT_ERROR">
+        <h3 class="pull-left" translate="home.header.connectErrorPipeline">Failed to Connect ...</h3>
+        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
+           ng-switch-when="RETRY">
+        <h3 class="pull-left" translate="home.header.retryPipeline">Retrying to start Pipeline in </h3>
+        <h3 class="pull-left">{{retryCountDown | number:0}} seconds ...</h3>
+        <i class="fa fa-spinner fa-spin fa-2x red-color"></i>
+      </div>
+
+      <div class="panel-title pull-left"
            ng-switch-default>
         <h3 class="pull-left" translate="home.header.definePipeline">Define Pipeline:</h3>
         <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}</h3>
@@ -52,7 +83,7 @@
     </div>
 
 
-    <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING'">
+    <div class="pull-right" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING' && activeConfigStatus.status !== 'CONNECTING' && activeConfigStatus.status !== 'DISCONNECTING'">
 
       <div class="pull-left" ng-cloak
            ng-if="!isPipelineReadOnly && activeConfigStatus.executionMode != pipelineConstant.SLAVE"
@@ -204,7 +235,7 @@
           tooltip-placement="bottom" tooltip="{{'home.header.snapshots' | translate}}"
           tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
           tooltip-popup-delay="500"
-          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER && isPipelineRunning && !snapshotMode"
+          ng-if="isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER && isPipelineRunning && !snapshotMode && activeConfigStatus.status != 'CONNECT_ERROR' && activeConfigStatus.status != 'RETRY'"
           ng-click="viewSnapshots()">
         <span class="glyphicon glyphicon-camera fa-14x"></span>
       </a>

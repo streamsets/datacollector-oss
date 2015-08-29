@@ -44,7 +44,8 @@ angular
       archive = [],
       currArchivePos = null,
       archiveOp = false,
-      reloadingNew = false;
+      reloadingNew = false,
+      retryCountDownTimer;
 
     angular.extend($scope, {
       _: _,
@@ -685,6 +686,10 @@ angular
             refreshPipelineMetrics();
           }
 
+          if($rootScope.common.pipelineStatusMap[routeParamPipelineName].status === 'RETRY') {
+            updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
+          }
+
           updateGraph(config, rules);
           updateDetailPane({
             selectedObject: undefined,
@@ -1275,7 +1280,7 @@ angular
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
       return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
-      (pipelineStatus.status === 'RUNNING' || pipelineStatus.status === 'STARTING'));
+      _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY'], pipelineStatus.status));
     };
 
     /**
@@ -1336,6 +1341,23 @@ angular
           $rootScope.common.saveOperationInProgress--;
           $rootScope.common.errors = [data];
         });
+    };
+
+    var updateRetryCountdown = function(nextRetryTimeStamp) {
+      $scope.retryCountDown = (nextRetryTimeStamp - (new Date()).getTime())/1000;
+
+      if(retryCountDownTimer) {
+        $timeout.cancel(retryCountDownTimer);
+      }
+
+      var retryCountDownCallback = function(){
+        $scope.retryCountDown--;
+        if($scope.retryCountDown > 0) {
+          retryCountDownTimer = $timeout(retryCountDownCallback,1000);
+        }
+      };
+      retryCountDownTimer = $timeout(retryCountDownCallback, 1000);
+
     };
 
     //Event Handling
@@ -1484,6 +1506,11 @@ angular
         }
 
       }
+
+      if($scope.activeConfigStatus.status === 'RETRY') {
+        updateRetryCountdown($scope.activeConfigStatus.nextRetryTimeStamp);
+      }
+
     });
 
     $rootScope.$watch('common.pipelineMetrics', function() {
