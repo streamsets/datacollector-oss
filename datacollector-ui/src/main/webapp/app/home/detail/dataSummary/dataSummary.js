@@ -145,6 +145,8 @@ angular
     angular.extend($scope, {
       showRecordsLoading: false,
       samplingRecords: [],
+      conditionMatchedHTML: '<span class="lane-label"> ( Condition Matched: </span><span class="condition-matched"> true ) </span>',
+      conditionNotMatchedHTML: '<span class="lane-label"> ( Condition Matched:</span><span class="condition-not-matched"> false ) </span>',
 
       refreshSamplingRecords: function() {
         updateSamplingRecords();
@@ -153,7 +155,8 @@ angular
 
     function updateSamplingRecords() {
       $scope.showRecordsLoading = true;
-      api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.name, $scope.dataRuleDefn.id)
+      api.pipelineAgent.getSampledRecords($scope.pipelineConfig.info.name, $scope.dataRuleDefn.id,
+        $scope.dataRuleDefn.samplingRecordsToRetain)
         .success(function(res) {
           $scope.showRecordsLoading = false;
           if(res && res.length) {

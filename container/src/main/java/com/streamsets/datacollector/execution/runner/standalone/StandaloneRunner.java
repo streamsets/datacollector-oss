@@ -43,6 +43,7 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBu
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunnable;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -385,7 +386,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
+  public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException {
     checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
     return observerRunnable.getSampledRecords(sampleId, max);
   }

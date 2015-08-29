@@ -16,6 +16,7 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -168,7 +169,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException,
+  public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException,
     PipelineStoreException {
     return standaloneRunner.getSampledRecords(sampleId, max);
   }

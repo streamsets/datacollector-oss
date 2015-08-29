@@ -3,7 +3,6 @@
   <div class="row"
        ng-repeat="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane, enabled: true})">
 
-
     <div class="col-sm-12 col-md-12 col-lg-12">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -61,12 +60,12 @@
               </tr>
               </thead>
               <tbody ng-hide="showBadRecordsLoading">
-              <tr ng-repeat="record in samplingRecords">
+              <tr ng-repeat="sampledRecord in samplingRecords">
                 <td>
                   <record-tree
-                    record="record"
-                    record-value="record.value"
-                    field-name="('global.form.record' | translate)+($index+1)"
+                    record="sampledRecord.record"
+                    record-value="sampledRecord.record.value"
+                    field-name="('global.form.record' | translate)+($index+1) + ( sampledRecord.matchedCondition ? conditionMatchedHTML : conditionNotMatchedHTML)"
                     is-root="true"
                     editable="false">
                   </record-tree>
@@ -98,23 +97,6 @@
             </ul>
 
             <nvd3 options="chartOptions" data="chartData" config="{ refreshDataOnly: true }"></nvd3>
-
-            <!--nvd3-discrete-bar-chart
-              data="chartData"
-              id="{{dataRuleDefn.id}}"
-              height="250"
-              staggerLabels="true"
-              showXAxis="true"
-              showYAxis="true"
-              showValues="true"
-              showLegend="true"
-              yaxislabel="{{'home.detailPane.recordsPerSecond' | translate}}"
-              yaxislabeldistance="30"
-              tooltips="true"
-              tooltipcontent="getTooltipContent()"
-              margin="{left:65,top:10,bottom:40,right:20}">
-            </nvd3-discrete-bar-chart-->
-
           </div>
 
         </div>

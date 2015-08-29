@@ -170,7 +170,7 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException,
+  public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException,
     PipelineStoreException {
     return runner.getSampledRecords(sampleId, max);
   }

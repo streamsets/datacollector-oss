@@ -19,6 +19,7 @@ import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.datacollector.execution.runner.common.Constants;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.datacollector.util.Configuration;
@@ -82,11 +83,11 @@ public class DataRuleEvaluator {
   }
 
   public void evaluateRule(List<Record> sampleRecords, String lane,
-      Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap) {
+      Map<String, EvictingQueue<SampledRecord>> ruleToSampledRecordsMap) {
 
     if (dataRuleDefinition.isEnabled() && sampleRecords != null && sampleRecords.size() > 0) {
       //cache all sampled records for this data rule definition in an evicting queue
-      EvictingQueue<Record> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
+      EvictingQueue<SampledRecord> sampledRecords = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
       if (sampledRecords == null) {
         int maxSize = configuration.get(
             Constants.SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY,
@@ -107,8 +108,10 @@ public class DataRuleEvaluator {
         //evaluate
         boolean success = evaluate(r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
         if (success) {
-          sampledRecords.add(r);
+          sampledRecords.add(new SampledRecord(r, true));
           matchingRecordCount++;
+        } else {
+          sampledRecords.add(new SampledRecord(r, false));
         }
       }
 

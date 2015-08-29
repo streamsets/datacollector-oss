@@ -360,7 +360,7 @@ angular
         });
       } else if($scope.detailPaneTabs.length > 1) {
         angular.forEach(tabs, function(tab) {
-          tab.active = (tab.name === 'configuration');
+          tab.active = (tab.name === 'configuration' || tab.name === 'dataRules');
         });
       }
     });

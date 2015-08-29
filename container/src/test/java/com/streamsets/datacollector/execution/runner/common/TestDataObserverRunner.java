@@ -124,9 +124,17 @@ public class TestDataObserverRunner {
     dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
     dataObserverRunner.handleDataRulesEvaluationRequest(createProductionObserverRequest());
 
-    List<Record> sampleRecords = dataObserverRunner.getSampledRecords("myId", 5);
+    List<SampledRecord> sampleRecords = dataObserverRunner.getSampledRecords("myId", 5);
     Assert.assertNotNull(sampleRecords);
-    Assert.assertEquals(3, sampleRecords.size());
+    Assert.assertEquals(5, sampleRecords.size());
+
+    int matchedSampledRecords  = 0;
+    for(SampledRecord sampledRecord: sampleRecords) {
+      if(sampledRecord.isMatchedCondition()) {
+        matchedSampledRecords++;
+      }
+    }
+    Assert.assertEquals(3, matchedSampledRecords);
 
     Assert.assertTrue(rulesConfigurationChangeRequest.getRulesToRemove().isEmpty());
     //Create rule configuration change request where the previous rule is removed.

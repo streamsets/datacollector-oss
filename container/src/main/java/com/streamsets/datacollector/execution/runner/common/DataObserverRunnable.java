@@ -72,7 +72,7 @@ public class DataObserverRunnable implements Runnable {
     }
   }
 
-  public List<Record> getSampledRecords(String ruleId, int size) {
+  public List<SampledRecord> getSampledRecords(String ruleId, int size) {
     return this.dataObserverRunner.getSampledRecords(ruleId, size);
   }
 

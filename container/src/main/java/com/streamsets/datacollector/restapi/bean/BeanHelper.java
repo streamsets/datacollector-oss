@@ -11,6 +11,7 @@ import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.production.SourceOffset;
@@ -1135,5 +1136,16 @@ public class BeanHelper {
     }
 
     return alertInfoJsonList;
+  }
+
+  public static List<SampledRecordJson> wrapSampledRecords(List<SampledRecord> sampledRecords) {
+    if(sampledRecords == null) {
+      return null;
+    }
+    List<SampledRecordJson> recordJsonList = new ArrayList<>(sampledRecords.size());
+    for(SampledRecord sampledRecord : sampledRecords) {
+      recordJsonList.add(new SampledRecordJson(sampledRecord));
+    }
+    return recordJsonList;
   }
 }

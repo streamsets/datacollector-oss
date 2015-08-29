@@ -17,6 +17,7 @@ import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -262,7 +263,7 @@ public class TestDataRuleEvaluator {
   private void evaluateRule(DataRuleEvaluator dataRuleEvaluator, String lane) {
     dataRuleEvaluator.evaluateRule(TestUtil.createSnapshot(lane, dataRuleEvaluator.getDataRuleDefinition().getId())
       .get(LaneResolver.getPostFixedLaneForObserver(lane)).get(dataRuleEvaluator.getDataRuleDefinition().getId()),
-      lane, new HashMap<String,EvictingQueue<Record>>());
+      lane, new HashMap<String,EvictingQueue<SampledRecord>>());
   }
 
 }

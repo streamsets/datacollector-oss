@@ -11,6 +11,7 @@ import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -114,7 +115,7 @@ public interface Runner {
   // delegates to the ErrorStore
   public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException;
 
-  public List<Record> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException;
+  public List<SampledRecord> getSampledRecords(String sampleId, int max) throws PipelineRunnerException, PipelineStoreException;
 
   public List<AlertInfo> getAlerts() throws PipelineStoreException;
 

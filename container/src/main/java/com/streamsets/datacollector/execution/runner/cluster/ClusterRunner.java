@@ -34,6 +34,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineRunnerExcept
 import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
+import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
@@ -391,7 +392,7 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   @Override
-  public List<Record> getSampledRecords(String sampleId, int max) {
+  public List<SampledRecord> getSampledRecords(String sampleId, int max) {
     throw new UnsupportedOperationException();
   }
 

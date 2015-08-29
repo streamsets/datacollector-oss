@@ -19,6 +19,7 @@ import com.streamsets.datacollector.restapi.bean.ErrorMessageJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.restapi.bean.PipelineStateJson;
 import com.streamsets.datacollector.restapi.bean.RecordJson;
+import com.streamsets.datacollector.restapi.bean.SampledRecordJson;
 import com.streamsets.datacollector.restapi.bean.SnapshotDataJson;
 import com.streamsets.datacollector.restapi.bean.SnapshotInfoJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -385,7 +386,7 @@ public class ManagerResource {
 
   @Path("/pipeline/{pipelineName}/sampledRecords")
   @GET
-  @ApiOperation(value = "Returns Sampled records by sample ID and size", response = RecordJson.class,
+  @ApiOperation(value = "Returns Sampled records by sample ID and size", response = SampledRecordJson.class,
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
@@ -400,7 +401,7 @@ public class ManagerResource {
     Runner runner = manager.getRunner(user, pipelineName, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
-        BeanHelper.wrapRecords(runner.getSampledRecords(sampleId, sampleSize))).build();
+        BeanHelper.wrapSampledRecords(runner.getSampledRecords(sampleId, sampleSize))).build();
     }
     return Response.noContent().build();
   }

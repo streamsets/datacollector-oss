@@ -716,10 +716,12 @@ angular.module('dataCollectorApp.common')
        *
        * @param pipelineName
        * @param samplingRuleId
+       * @param sampleSize
        * @returns {*}
        */
-      getSampledRecords: function(pipelineName, samplingRuleId) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/sampledRecords?sampleId=' + samplingRuleId ;
+      getSampledRecords: function(pipelineName, samplingRuleId, sampleSize) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/sampledRecords?sampleId=' + samplingRuleId +
+          '&sampleSize=' + sampleSize;
         return $http({
           method: 'GET',
           url: url

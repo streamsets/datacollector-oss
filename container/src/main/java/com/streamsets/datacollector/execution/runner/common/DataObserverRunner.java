@@ -33,7 +33,7 @@ public class DataObserverRunner {
   private static final String USER_PREFIX = "user.";
 
   private RulesConfigurationChangeRequest rulesConfigurationChangeRequest;
-  private final Map<String, EvictingQueue<Record>> ruleToSampledRecordsMap;
+  private final Map<String, EvictingQueue<SampledRecord>> ruleToSampledRecordsMap;
   private final MetricRegistry metrics;
   private final AlertManager alertManager;
   private final Configuration configuration;
@@ -71,7 +71,7 @@ public class DataObserverRunner {
             dataRuleEvaluator.evaluateRule(sampledRecords, lane, ruleToSampledRecordsMap);
           } else if (!dataRuleDefinition.isEnabled()) {
             //If data rule is disabled, clear the sampled records for that rule
-            EvictingQueue<Record> records = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
+            EvictingQueue<SampledRecord> records = ruleToSampledRecordsMap.get(dataRuleDefinition.getId());
             if(records != null) {
               records.clear();
             }
@@ -89,7 +89,7 @@ public class DataObserverRunner {
     for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
       MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId, name, rev);
       MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId, name, rev);
-      EvictingQueue<Record> records = ruleToSampledRecordsMap.get(ruleId);
+      EvictingQueue<SampledRecord> records = ruleToSampledRecordsMap.get(ruleId);
       if(records != null) {
         records.clear();
       }
@@ -99,7 +99,7 @@ public class DataObserverRunner {
     for(Map.Entry<String, Integer> e :
       rulesConfigurationChangeRequest.getRulesWithSampledRecordSizeChanges().entrySet()) {
       if(ruleToSampledRecordsMap.get(e.getKey()) != null) {
-        EvictingQueue<Record> records = ruleToSampledRecordsMap.get(e.getKey());
+        EvictingQueue<SampledRecord> records = ruleToSampledRecordsMap.get(e.getKey());
         int newSize = e.getValue();
 
         int maxSize = configuration.get(
@@ -109,7 +109,7 @@ public class DataObserverRunner {
           newSize = maxSize;
         }
 
-        EvictingQueue<Record> newQueue = EvictingQueue.create(newSize);
+        EvictingQueue<SampledRecord> newQueue = EvictingQueue.create(newSize);
         //this will retain only the last 'newSize' number of elements
         newQueue.addAll(records);
         ruleToSampledRecordsMap.put(e.getKey(), newQueue);
@@ -130,7 +130,7 @@ public class DataObserverRunner {
     }
   }
 
-  public List<Record> getSampledRecords(String ruleId, int size) {
+  public List<SampledRecord> getSampledRecords(String ruleId, int size) {
     if(ruleToSampledRecordsMap.get(ruleId) != null) {
       if(ruleToSampledRecordsMap.get(ruleId).size() > size) {
         return new CopyOnWriteArrayList<>(ruleToSampledRecordsMap.get(ruleId)).subList(0, size);
