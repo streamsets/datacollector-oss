@@ -98,7 +98,9 @@
         </div>
       </div>
 
-      <div class="btn-group" dropdown ng-hide="previewMode || snapshotMode">
+      <div class="btn-group" dropdown
+           ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
+           ng-hide="previewMode || snapshotMode">
        <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
              tooltip-placement="bottom" tooltip="{{'home.header.more' | translate}}"
              tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
@@ -304,7 +306,7 @@
          tooltip-placement="bottom" tooltip="{{'home.header.stageLibrary' | translate}}"
          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
          tooltip-popup-delay="500"
-         ng-if="activeConfigStatus.executionMode != pipelineConstant.SLAVE"
+         ng-if="activeConfigStatus.executionMode != pipelineConstant.SLAVE && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
          ng-class="{'btn-selected': $storage.hideStageLibraryPanel}"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
