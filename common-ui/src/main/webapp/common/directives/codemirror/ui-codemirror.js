@@ -64,6 +64,11 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     if (angular.isFunction(codemirrorOptions.onLoad)) {
       codemirrorOptions.onLoad(codemirror);
     }
+
+    // Hack to fix bug. ngClick is not triggered when it is clicked inside ${} or during selecting text
+    codemirror.on('focus', function(instance) {
+      $(iElement).click();
+    });
   }
 
   function newCodemirrorEditor(iElement, codemirrorOptions) {
