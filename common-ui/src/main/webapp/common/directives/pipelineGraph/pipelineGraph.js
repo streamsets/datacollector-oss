@@ -470,7 +470,7 @@ angular.module('pipelineGraphDirectives', [])
 
         case consts.COPY_KEY:
           if((d3.event.metaKey || d3.event.ctrlKey) && selectedNode) {
-            state.copiedStage = selectedNode;
+            $rootScope.common.copiedStage = selectedNode;
           }
           break;
 
@@ -479,9 +479,9 @@ angular.module('pipelineGraphDirectives', [])
           if(thisGraph.isReadOnly) {
             return;
           }
-          if((d3.event.metaKey || d3.event.ctrlKey) && state.copiedStage) {
+          if((d3.event.metaKey || d3.event.ctrlKey) && $rootScope.common.copiedStage) {
             $scope.$apply(function() {
-              $scope.$emit('onPasteNode', state.copiedStage);
+              $scope.$emit('onPasteNode', $rootScope.common.copiedStage);
             });
           }
           break;
