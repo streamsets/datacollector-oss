@@ -330,17 +330,18 @@ public abstract class PipelineBeanCreator {
   Object toChar(Object value, StageDefinition stageDef, String stageName, String groupName, String configName,
       List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageName);
-    if (!(value instanceof String)) {
-      errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value));
-      value = null;
-    } else {
+    if (value instanceof String) {
       String strValue = value.toString();
       if (strValue.isEmpty() || strValue.length() > 1) {
-        errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value));
+        errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value, strValue));
         value = null;
       } else {
         value = strValue.charAt(0);
       }
+    } else if (!(value instanceof Character)) {
+      String valueType = value == null ? "null" : value.getClass().getName();
+      errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_012, value, valueType));
+      value = null;
     }
     return value;
   }
