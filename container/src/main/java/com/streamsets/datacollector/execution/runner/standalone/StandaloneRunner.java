@@ -255,8 +255,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       if (getState().getStatus() == PipelineStatus.RETRY) {
         LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
         retryFuture.cancel(true);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, "Disconnecting as SDC is shutting down", null);
-        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Disconnected", null);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTING, null, null);
+        validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Disconnected as SDC is shutting down", null);
         return;
       }
       if (!getState().getStatus().isActive() || getState().getStatus() == PipelineStatus.DISCONNECTED) {
@@ -540,8 +540,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
-    LOG.info("Preparing to stop pipeline '{}::{}'", name, rev);
-    validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
+    LOG.info("Preparing to stop pipeline");
+    if (getState().getStatus() == PipelineStatus.RETRY) {
+      retryFuture.cancel(true);
+      validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
+      validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
+    } else {
+      validateAndSetStateTransition(PipelineStatus.STOPPING, null, null);
+    }
   }
 
 
@@ -658,12 +664,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   private void stopPipeline(boolean sdcShutting) throws PipelineException {
-    if (getState().getStatus() == PipelineStatus.RETRY) {
-      LOG.info("Pipeline '{}'::'{}' is in retry", name, rev);
-      retryFuture.cancel(true);
-      validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped while the pipeline was in RETRY state", null);
-      return;
-    }
     if (pipelineRunnable != null && !pipelineRunnable.isStopped()) {
       LOG.info("Stopping pipeline {} {}", pipelineRunnable.getName(), pipelineRunnable.getRev());
       // this is sync call, will wait till pipeline is in terminal state

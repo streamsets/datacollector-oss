@@ -60,7 +60,7 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
+    defaultValue = "true",
     label = "Retry Pipeline on Error",
     displayPosition = 30)
   public boolean shouldRetry;
