@@ -252,8 +252,8 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  static File createDirectoryClone(File srcDir, File tempDir) throws IOException {
-    File tempSrcDir = new File(tempDir, srcDir.getName());
+  static File createDirectoryClone(File srcDir, String dirName, File tempDir) throws IOException {
+    File tempSrcDir = new File(tempDir, dirName);
     FileUtils.deleteQuietly(tempSrcDir);
     Utils.checkState(tempSrcDir.mkdir(), Utils.formatL("Could not create {}", tempSrcDir));
     doCopyDirectory(srcDir, tempSrcDir);
@@ -509,7 +509,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     File resourcesTarGz = new File(stagingDir, "resources.tar.gz");
     try {
-      resourcesDir = createDirectoryClone(resourcesDir, stagingDir);
+      resourcesDir = createDirectoryClone(resourcesDir, "resources", stagingDir);
       TarFileCreator.createTarGz(resourcesDir, resourcesTarGz);
     } catch (Exception ex) {
       String msg = errorString("Serializing resources directory: '{}'", resourcesDir.getName(), ex);
@@ -518,7 +518,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     File etcTarGz = new File(stagingDir, "etc.tar.gz");
     File sdcPropertiesFile;
     try {
-      etcDir = createDirectoryClone(etcDir, stagingDir);
+      etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getName();
       File rootDataDir = new File(etcDir, "data");

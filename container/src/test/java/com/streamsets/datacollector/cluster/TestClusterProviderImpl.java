@@ -138,7 +138,7 @@ public class TestClusterProviderImpl {
     Files.createSymbolicLink(link1.toPath(), dir1.toPath());
     Files.createSymbolicLink(link2.toPath(), link1.toPath());
     Files.createSymbolicLink(new File(srcDir, "dir1").toPath(), link2.toPath());
-    File clone = ClusterProviderImpl.createDirectoryClone(srcDir, dstDir);
+    File clone = ClusterProviderImpl.createDirectoryClone(srcDir, srcDir.getName(), dstDir);
     File cloneF1 = new File(new File(clone, "dir1"), "f1");
     Assert.assertTrue(cloneF1.isFile());
   }
