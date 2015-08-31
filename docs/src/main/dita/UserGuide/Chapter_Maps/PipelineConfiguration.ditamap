@@ -5,8 +5,20 @@
  <topicref href="../Pipeline_Configuration/PipelineConfiguration_title.dita">
   <topicref href="../Pipeline_Configuration/DataCollectorWindow-Config.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
-  <topicref href="../Pipeline_Configuration/PipelineMemory.dita"/>
-  <topicref href="../Pipeline_Configuration/PipelineConstants.dita"/>
+  <topicref href="../Pipeline_Configuration/Retry.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
+  <topicref href="../Pipeline_Configuration/PipelineMemory.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta></topicref>
+  <topicref href="../Pipeline_Configuration/PipelineConstants.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Pipeline_Configuration/Validation.dita">
    <topicmeta>
     <shortdesc/>

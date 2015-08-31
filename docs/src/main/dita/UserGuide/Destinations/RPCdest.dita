@@ -3,12 +3,12 @@
 <concept id="concept_lfk_hx2_ct">
  <title>RPC</title>
  <shortdesc>The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination
-  as part of an RPC origin pipeline. </shortdesc>
+    as part of an origin pipeline. </shortdesc>
  <conbody>
   <p><indexterm>RPC
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>RPC</indexterm></indexterm>When
    you configure the RPC destination, you specify the RPC ID and RPC connections to use. You can
-   optiionally enable SSL to pass data securely and define retry and timeout properties. </p>
+   optionally enable SSL to pass data securely and define retry and timeout properties.</p>
  </conbody>
  <related-links>
   <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>

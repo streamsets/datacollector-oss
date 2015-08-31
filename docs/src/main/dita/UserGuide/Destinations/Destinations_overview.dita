@@ -14,6 +14,7 @@
         <li>HBase - Writes data to an HBase cluster.</li>
         <li>Kafka Producer - Writes data to a Kafka cluster.</li>
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
+        <li>RPC - Passes data to an RPC origin in an RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
         <li>Trash - Removes records from the pipeline.</li>

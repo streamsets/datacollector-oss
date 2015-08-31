@@ -75,7 +75,6 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Destinations/RPCdest-Connections.dita"/>
-   <topicref href="../Destinations/RPCdest-EnablingSSL.dita"/>
    <topicref href="../Destinations/RPCdest-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>

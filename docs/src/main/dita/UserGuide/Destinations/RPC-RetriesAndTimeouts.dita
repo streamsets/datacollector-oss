@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ahx_pr1_ft">
+ <title>Write Retries and Timeouts</title>
+ <shortdesc>You can configure the number of retries the RPC destination attempts for each write, as
+  well as the connection and read timeouts. These properties define the behavior of the destination
+  when writing data.</shortdesc>
+ <conbody>
+  <p>When writing data, the RPC destination</p>
+ </conbody>
+</concept>

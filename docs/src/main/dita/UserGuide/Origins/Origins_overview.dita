@@ -18,7 +18,7 @@
         <li>Kinesis Consumer - Reads data from Kinesis.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
-        <li>RPC - Reads data from an RPC destination in an RPC origin pipeline.</li>
+        <li>RPC - Reads data from an RPC destination in an RPC pipeline.</li>
         <li>UDP Source - Reads messages from one or more UDP ports. </li>
       </ul></p>
     <p>In cluster pipelines, you can use the following origins:<ul id="ul_unr_xhb_ws">

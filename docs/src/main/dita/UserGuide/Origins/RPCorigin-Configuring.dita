@@ -42,24 +42,24 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>SSL Enabled</entry>
-                                    <entry>Enables the secure transfer of data over the WAN using
-                                        SSL.</entry>
-                                </row>
-                                <row>
-                                    <entry>Certificate Keystore File <xref
-                                            href="RPCorigin-EnablingSSL.dita">
+                                    <entry>SSL Enabled  <xref href="../RPC_Pipelines/EnableSSL.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_bmy_h5q_ds"
+                                                placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Keystore file for SSL. Must be stored in the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory:
-                                        &lt;SDCinstalldir>/resources.</entry>
+                                    <entry>Enables the secure transfer of data using SSL. <p>To use
+                                            SSL, both the RPC origin and RPC destination must be
+                                            enabled for SSL.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Keystore Password</entry>
-                                    <entry>Password for the keystore file.</entry>
+                                    <entry>Certificate KeyStore File</entry>
+                                    <entry>KeyStore file for SSL. <p>Must be stored in the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> resources directory:
+                                                <filepath>&lt;SDCinstalldir>/resources</filepath>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>KeyStore Password</entry>
+                                    <entry>Password for the KeyStore file.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

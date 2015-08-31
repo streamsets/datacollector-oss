@@ -133,9 +133,7 @@
                             </row>
                             <row>
                                 <entry>max.webSockets.current.requests</entry>
-                                <entry>Maximum number of WebSocket calls allowed.<draft-comment
-                                        author="Loretta">say more than this?</draft-comment>
-                                </entry>
+                                <entry>Maximum number of WebSocket calls allowed. </entry>
                             </row>
                             <row>
                                 <entry>ui.help.base.url</entry>
@@ -166,9 +164,13 @@
                             <row>
                                 <entry>ui.enable.usage.data.collection</entry>
                                 <entry>Allows anonymous Google Analytics information to be sent
-                                    StreamSets. <p>Default is true. <draft-comment author="Loretta"
-                                            >Tucu says ok to skip doc'ing ui.enable.webSocket.
-                                            6/23/15. Add? LC 8/10.</draft-comment></p></entry>
+                                    StreamSets. <p>Default is true. </p></entry>
+                            </row>
+                            <row>
+                                <entry>ui.enable.webSocket</entry>
+                                <entry>Enables the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> to use WebSocket to gather pipeline information.</entry>
                             </row>
                             <row>
                                 <entry>ui.undo.limit</entry>
@@ -279,9 +281,7 @@
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. <p>When you define runtime properties in a separate
                                             file, do not prefix the property names with
-                                            runtime.conf_ .<draft-comment author="Loretta">Tucu says
-                                                not to doc the observer properties.
-                                                6/23/15.</draft-comment></p></li>
+                                            runtime.conf_ .</p></li>
                                 </ul></entry>
                         </row>
                     </tbody>

@@ -3,7 +3,7 @@
 <concept id="concept_drd_wqb_dt">
  <title>Configuring the Delivery Guarantee</title>
  <shortdesc>The delivery guarantee determines when a pipeline commits the offset. When configuring
-  the delivery guarantee for RPC pipelines, use the same option in both origin and destination
+  the delivery guarantee for RPC pipelines, use the same option in origin and destination
   pipelines.</shortdesc>
  <conbody>
   <p><indexterm>RPC Pipelines<indexterm>delivery
@@ -15,12 +15,17 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commit the
    offset. As with standard pipelines, you can use the delivery guarantee property to define how the
     <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commits
-   the offset.</p>
-  <p>Use At Least Once in both pipelines to ensure the RPC pipelines process all data. Use At Most
-   Once in both pipelines to avoid the possible duplication of data. <note>If the RPC pipelines are
-    configured to use different delivery guarantees, the <ph
+   the offset: <ul id="ul_rfc_23b_ft">
+    <li>Use <uicontrol>At Least Once </uicontrol>in both pipelines to ensure the pipelines process
+     all data.</li>
+    <li>Use <uicontrol>At Most Once</uicontrol> in both pipelines to avoid the possible duplication
+     of data. </li>
+   </ul></p>
+  <p>
+   <note>If the RPC pipelines are configured to use different delivery guarantees, the <ph
      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses At Least
-    Once.</note></p>
+    Once.</note>
+  </p>
  </conbody>
  <related-links>
   <link href="../Pipeline_Design/DeliveryGuarantee.dita#concept_ffz_hhw_kq"/>

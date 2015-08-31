@@ -13,6 +13,8 @@
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
   <topicref href="../RPC_Pipelines/RPC_ID.dita">
   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
+  <topicref href="../RPC_Pipelines/EnableSSL.dita">
+   <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  <topicref href="../RPC_Pipelines/ConfiguringRPCPipelines.dita">
    <topicmeta><shortdesc></shortdesc></topicmeta></topicref>
  </topicref>
