@@ -73,6 +73,9 @@ public class WebServerTask extends AbstractTask {
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String REALM_POSIX_DEFAULT = "-realm";
 
+  private static final String REALM_FILE_PERMISSION_CHECK = "http.realm.file.permission.check";
+  private static final boolean REALM_FILE_PERMISSION_CHECK_DEFAULT = true;
+
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
@@ -164,6 +167,11 @@ public class WebServerTask extends AbstractTask {
                                                                                     PosixFilePermission.OWNER_WRITE);
 
   private void validateRealmFile(File realmFile) {
+    boolean checkRealmFilePermission = conf.get(REALM_FILE_PERMISSION_CHECK, REALM_FILE_PERMISSION_CHECK_DEFAULT);
+    if(!checkRealmFilePermission) {
+      return;
+    }
+
     if (!realmFile.exists()) {
       throw new RuntimeException(Utils.format("Realm file '{}' does not exists", realmFile));
     }
