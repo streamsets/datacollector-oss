@@ -120,7 +120,7 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.LIST,
-    defaultValue = "",
+    defaultValue = "[]",
     label = "Email IDs",
     description = "Email Addresses",
     displayPosition = 76,
