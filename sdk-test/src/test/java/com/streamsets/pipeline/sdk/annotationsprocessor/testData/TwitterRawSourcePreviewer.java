@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TwitterRawSourcePreviewer implements RawSourcePreviewer{
 
-  @FieldSelector
+  @FieldSelectorModel
   @ConfigDef(
       defaultValue = "admin",
       label = "username",

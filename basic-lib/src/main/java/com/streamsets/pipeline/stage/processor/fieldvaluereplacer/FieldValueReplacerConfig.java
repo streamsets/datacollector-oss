@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class FieldValueReplacerConfig {
       description = "You can enter multiple fields to replace with the same value",
       displayPosition = 10
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fields;
 
   @ConfigDef(

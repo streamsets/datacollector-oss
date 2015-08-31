@@ -12,22 +12,21 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
-import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.MultiValueChooser;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import org.junit.Assert;
@@ -243,7 +242,7 @@ public class TestPipelineBeanCreator {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField
+    @ListBeanModel
     public List<Bean> complexField;
 
     @ConfigDef(
@@ -265,7 +264,7 @@ public class TestPipelineBeanCreator {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ValueChooser(EValueChooser.class)
+    @ValueChooserModel(EValueChooser.class)
     public E enumSJavaDefault = E.B;
 
     @ConfigDef(
@@ -273,7 +272,7 @@ public class TestPipelineBeanCreator {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @MultiValueChooser(EValueChooser.class)
+    @MultiValueChooserModel(EValueChooser.class)
     public List<E> enumMJavaDefault = Arrays.asList(E.A);
 
 
@@ -282,7 +281,7 @@ public class TestPipelineBeanCreator {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ValueChooser(EValueChooser.class)
+    @ValueChooserModel(EValueChooser.class)
     public E enumSNoDefaultAlAll;
 
     @Override

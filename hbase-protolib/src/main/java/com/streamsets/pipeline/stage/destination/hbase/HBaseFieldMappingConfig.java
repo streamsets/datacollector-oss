@@ -6,8 +6,8 @@ package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class HBaseFieldMappingConfig {
 
@@ -31,7 +31,7 @@ public class HBaseFieldMappingConfig {
       label = "Field Path",
       description = "The field path in the incoming record to output",
       displayPosition = 10)
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String columnValue;
 
   @ConfigDef(
@@ -51,6 +51,6 @@ public class HBaseFieldMappingConfig {
       label = "Storage Type",
       description = "The storage type for column",
       displayPosition = 30)
-  @ValueChooser(StorageTypeChooserValues.class)
+  @ValueChooserModel(StorageTypeChooserValues.class)
   public StorageType columnStorageType;
 }

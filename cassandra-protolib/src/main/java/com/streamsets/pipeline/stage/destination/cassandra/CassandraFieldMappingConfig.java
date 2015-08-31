@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.destination.cassandra;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 
 public class CassandraFieldMappingConfig {
 
@@ -33,7 +33,7 @@ public class CassandraFieldMappingConfig {
       description = "The field in the incoming record to output.",
       displayPosition = 10
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String field;
 
   @ConfigDef(

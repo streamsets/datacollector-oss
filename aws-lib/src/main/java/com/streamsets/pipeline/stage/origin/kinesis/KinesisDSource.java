@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
@@ -36,7 +36,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       displayPosition = 10,
       group = "KINESIS"
   )
-  @ValueChooser(AWSRegionChooserValues.class)
+  @ValueChooserModel(AWSRegionChooserValues.class)
   public Regions region;
 
   @ConfigDef(
@@ -67,7 +67,7 @@ public class KinesisDSource extends DSourceOffsetCommitter {
       displayPosition = 40,
       group = "KINESIS"
   )
-  @ValueChooser(InputRecordFormatChooserValues.class)
+  @ValueChooserModel(InputRecordFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(

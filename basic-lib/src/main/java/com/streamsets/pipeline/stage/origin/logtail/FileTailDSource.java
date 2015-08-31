@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
@@ -47,7 +47,7 @@ public class FileTailDSource extends DSource {
       displayPosition = 10,
       group = "FILES"
   )
-  @ValueChooser(DataFormatChooserValues.class)
+  @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -73,7 +73,7 @@ public class FileTailDSource extends DSource {
       displayPosition = 20,
       group = "FILES"
   )
-  @ValueChooser(LFCRLFCharsetChooserValues.class)
+  @ValueChooserModel(LFCRLFCharsetChooserValues.class)
   public String charset;
 
   @ConfigDef(
@@ -135,7 +135,7 @@ public class FileTailDSource extends DSource {
       group = "FILES",
       elDefs = PatternEL.class
   )
-  @ComplexField
+  @ListBeanModel
   public List<FileInfo> fileInfos;
 
   // Post processing
@@ -149,7 +149,7 @@ public class FileTailDSource extends DSource {
       displayPosition = 110,
       group = "POST_PROCESSING"
   )
-  @ValueChooser(PostProcessingOptionsChooserValues.class)
+  @ValueChooserModel(PostProcessingOptionsChooserValues.class)
   public PostProcessingOptions postProcessing;
 
   @ConfigDef(
@@ -178,7 +178,7 @@ public class FileTailDSource extends DSource {
     dependsOn = "dataFormat",
     triggeredByValue = "LOG"
   )
-  @ValueChooser(LogModeChooserValues.class)
+  @ValueChooserModel(LogModeChooserValues.class)
   public LogMode logMode;
 
   @ConfigDef(
@@ -234,7 +234,7 @@ public class FileTailDSource extends DSource {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ListBeanModel
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

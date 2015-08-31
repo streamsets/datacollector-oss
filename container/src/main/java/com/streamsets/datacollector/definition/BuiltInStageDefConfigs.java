@@ -8,12 +8,12 @@ package com.streamsets.datacollector.definition;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public abstract class BuiltInStageDefConfigs implements Stage {
       description = "Action to take with records sent to error",
       displayPosition = 10
   )
-  @ValueChooser(OnRecordErrorChooserValues.class)
+  @ValueChooserModel(OnRecordErrorChooserValues.class)
   public OnRecordError stageOnRecordError;
 
   public static final String STAGE_REQUIRED_FIELDS_CONFIG = "stageRequiredFields";
@@ -41,7 +41,7 @@ public abstract class BuiltInStageDefConfigs implements Stage {
       description = "Records without any of these fields are sent to error",
       displayPosition = 20
   )
-  @FieldSelector(singleValued = false)
+  @FieldSelectorModel(singleValued = false)
   public List<String> stageRequiredFields;
 
   public static final String STAGE_PRECONDITIONS_CONFIG = "stageRecordPreconditions";

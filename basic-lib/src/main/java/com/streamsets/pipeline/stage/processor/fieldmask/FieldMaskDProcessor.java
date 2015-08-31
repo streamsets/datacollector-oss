@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldmask;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -34,7 +34,7 @@ public class FieldMaskDProcessor extends DProcessor {
       displayPosition = 10,
       group = "MASKING"
   )
-  @ComplexField
+  @ListBeanModel
   public List<FieldMaskConfig> fieldMaskConfigs;
 
   @Override

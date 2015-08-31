@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.processor.geolocation;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class GeolocationFieldConfig {
 
@@ -38,7 +38,7 @@ public class GeolocationFieldConfig {
       description = "",
       displayPosition = 10
   )
-  @ValueChooser(GeolocationFieldEnumChooserValues.class)
+  @ValueChooserModel(GeolocationFieldEnumChooserValues.class)
   public GeolocationField targetType;
 
   @Override

@@ -4,13 +4,13 @@
  */
 package com.streamsets.pipeline.stage.destination.hbase;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.List;
@@ -87,7 +87,7 @@ public class HBaseDTarget extends DTarget {
       description = "The storage type for row key",
       displayPosition = 60,
       group = "HBASE")
-  @ValueChooser(RowKeyStorageTypeChooserValues.class)
+  @ValueChooserModel(RowKeyStorageTypeChooserValues.class)
   public StorageType rowKeyStorageType;
 
   @ConfigDef(required = true,
@@ -97,7 +97,7 @@ public class HBaseDTarget extends DTarget {
       description = "Column names, their values and storage type",
       displayPosition = 70,
       group = "HBASE")
-  @ComplexField
+  @ListBeanModel
   public List<HBaseFieldMappingConfig> hbaseFieldColumnMapping;
 
   @ConfigDef(required = true,

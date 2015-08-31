@@ -9,13 +9,13 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.pipeline.api.ChooserValues;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.FieldValueChooser;
-import com.streamsets.pipeline.api.LanePredicateMapping;
-import com.streamsets.pipeline.api.MultiValueChooser;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
+import com.streamsets.pipeline.api.PredicateModel;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -45,12 +45,12 @@ public abstract class ModelDefinitionExtractor {
 
     private static final Map<Class<? extends Annotation>, ModelDefinitionExtractor> MODEL_EXTRACTOR =
         ImmutableMap.<Class<? extends Annotation>, ModelDefinitionExtractor>builder()
-          .put(FieldSelector.class, new FieldSelectorExtractor())
-          .put(FieldValueChooser.class, new FieldValueChooserExtractor())
-          .put(ValueChooser.class, new ValueChooserExtractor())
-          .put(MultiValueChooser.class, new MultiValueChooserExtractor())
-          .put(LanePredicateMapping.class, new LanePredicateMappingExtractor())
-          .put(ComplexField.class, new ComplexFieldExtractor())
+          .put(FieldSelectorModel.class, new FieldSelectorExtractor())
+          .put(FieldValueChooserModel.class, new FieldValueChooserExtractor())
+          .put(ValueChooserModel.class, new ValueChooserExtractor())
+          .put(MultiValueChooserModel.class, new MultiValueChooserExtractor())
+          .put(PredicateModel.class, new PredicateExtractor())
+          .put(ListBeanModel.class, new ListBeanExtractor())
           .build();
 
     @Override
@@ -124,8 +124,8 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        FieldSelector fieldSelector = field.getAnnotation(FieldSelector.class);
-        ModelType modelType = (fieldSelector.singleValued()) ? ModelType.FIELD_SELECTOR_SINGLE_VALUED
+        FieldSelectorModel fieldSelectorModel = field.getAnnotation(FieldSelectorModel.class);
+        ModelType modelType = (fieldSelectorModel.singleValued()) ? ModelType.FIELD_SELECTOR_SINGLE_VALUED
                                                              : ModelType.FIELD_SELECTOR_MULTI_VALUED;
         return new ModelDefinition(modelType, null, null, null, null, null);
       } else {
@@ -140,8 +140,8 @@ public abstract class ModelDefinitionExtractor {
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = new ArrayList<>();
       try {
-        FieldValueChooser fieldValueChooser = field.getAnnotation(FieldValueChooser.class);
-        ChooserValues values = fieldValueChooser.value().newInstance();
+        FieldValueChooserModel fieldValueChooserModel = field.getAnnotation(FieldValueChooserModel.class);
+        ChooserValues values = fieldValueChooserModel.value().newInstance();
         values.getValues();
         values.getLabels();
       } catch (Exception ex) {
@@ -154,9 +154,9 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        FieldValueChooser fieldValueChooser = field.getAnnotation(FieldValueChooser.class);
+        FieldValueChooserModel fieldValueChooserModel = field.getAnnotation(FieldValueChooserModel.class);
         try {
-          ChooserValues values = fieldValueChooser.value().newInstance();
+          ChooserValues values = fieldValueChooserModel.value().newInstance();
           return new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
         } catch (Exception ex) {
@@ -174,8 +174,8 @@ public abstract class ModelDefinitionExtractor {
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = new ArrayList<>();
       try {
-        ValueChooser valueChooser = field.getAnnotation(ValueChooser.class);
-        ChooserValues values = valueChooser.value().newInstance();
+        ValueChooserModel valueChooserModel = field.getAnnotation(ValueChooserModel.class);
+        ChooserValues values = valueChooserModel.value().newInstance();
         values.getValues();
         values.getLabels();
       } catch (Exception ex) {
@@ -188,9 +188,9 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        ValueChooser valueChooser = field.getAnnotation(ValueChooser.class);
+        ValueChooserModel valueChooserModel = field.getAnnotation(ValueChooserModel.class);
         try {
-          ChooserValues values = valueChooser.value().newInstance();
+          ChooserValues values = valueChooserModel.value().newInstance();
           return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
         } catch (Exception ex) {
@@ -208,8 +208,8 @@ public abstract class ModelDefinitionExtractor {
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = new ArrayList<>();
       try {
-        MultiValueChooser multiValueChooser = field.getAnnotation(MultiValueChooser.class);
-        ChooserValues values = multiValueChooser.value().newInstance();
+        MultiValueChooserModel multiValueChooserModel = field.getAnnotation(MultiValueChooserModel.class);
+        ChooserValues values = multiValueChooserModel.value().newInstance();
         values.getValues();
         values.getLabels();
       } catch (Exception ex) {
@@ -222,9 +222,9 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        MultiValueChooser multiValueChooser = field.getAnnotation(MultiValueChooser.class);
+        MultiValueChooserModel multiValueChooserModel = field.getAnnotation(MultiValueChooserModel.class);
         try {
-          ChooserValues values = multiValueChooser.value().newInstance();
+          ChooserValues values = multiValueChooserModel.value().newInstance();
           return new ModelDefinition(ModelType.MULTI_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
             values.getLabels(), null, null);
         } catch (Exception ex) {
@@ -236,7 +236,7 @@ public abstract class ModelDefinitionExtractor {
     }
   }
 
-  static class LanePredicateMappingExtractor extends ModelDefinitionExtractor {
+  static class PredicateExtractor extends ModelDefinitionExtractor {
 
     @Override
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
@@ -254,7 +254,7 @@ public abstract class ModelDefinitionExtractor {
     }
   }
 
-  static class ComplexFieldExtractor extends ModelDefinitionExtractor {
+  static class ListBeanExtractor extends ModelDefinitionExtractor {
 
     @Override
     public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
@@ -263,8 +263,8 @@ public abstract class ModelDefinitionExtractor {
         errors.add(new ErrorMessage(DefinitionError.DEF_230, contextMsg));
       } else {
         configPrefix += field.getName() + ".";
-        Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", complexFieldClass,
+        Class listBeanClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
+        errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", listBeanClass,
                                                                            Collections.<String>emptyList(),contextMsg));
       }
       return errors;
@@ -274,9 +274,9 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        Class complexFieldClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, complexFieldClass,
-                                   ConfigDefinitionExtractor.get().extract("", complexFieldClass,
+        Class listBeanClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
+        return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, listBeanClass,
+                                   ConfigDefinitionExtractor.get().extract("", listBeanClass,
                                                                            Collections.<String>emptyList(), contextMsg));
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));

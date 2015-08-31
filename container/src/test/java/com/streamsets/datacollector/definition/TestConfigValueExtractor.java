@@ -7,17 +7,15 @@ package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.definition.ConfigValueExtractor;
 import com.streamsets.pipeline.api.ConfigDef;
 
-import com.streamsets.pipeline.api.MultiValueChooser;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -157,7 +155,7 @@ public class TestConfigValueExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ValueChooser(FooEnumValueChooser.class)
+    @ValueChooserModel(FooEnumValueChooser.class)
     public FooEnum enumS;
 
     @ConfigDef(
@@ -166,7 +164,7 @@ public class TestConfigValueExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @MultiValueChooser(FooEnumValueChooser.class)
+    @MultiValueChooserModel(FooEnumValueChooser.class)
     public List<FooEnum> enumM;
 
   }

@@ -9,7 +9,6 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
-import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -17,7 +16,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
@@ -110,7 +109,7 @@ public class TestStageDefinitionExtractor {
       privateClassLoader = true, upgrader = Source2Upgrader.class)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
-  @HideConfig(value = "config2", preconditions = true, onErrorRecord = true)
+  @HideConfigs(value = "config2", preconditions = true, onErrorRecord = true)
   public static class Source2 extends Source1 {
 
     @ConfigDef(
@@ -146,7 +145,7 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = 1, label = "L")
-  @HideConfig(preconditions = true)
+  @HideConfigs(preconditions = true)
   public static class Target1 extends BaseTarget {
     @Override
     public void write(Batch batch) throws StageException {

@@ -8,12 +8,11 @@ package com.streamsets.pipeline.stage.processor.selector;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.LanePredicateMapping;
+import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,7 @@ public class SelectorDProcessor extends DProcessor {
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
   )
-  @LanePredicateMapping
+  @PredicateModel
   public List<Map<String, String>> lanePredicates;
 
   @Override

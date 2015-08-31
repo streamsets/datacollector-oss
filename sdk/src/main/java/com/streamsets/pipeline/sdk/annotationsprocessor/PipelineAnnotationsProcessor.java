@@ -16,20 +16,20 @@ import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.ElUtil;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ElDef;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
-import com.streamsets.pipeline.api.LanePredicateMapping;
+import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -317,9 +317,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private List<ConfigDefinition> getConfigDefsFromTypeElement(TypeElement typeElement) {
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
     Set<String> configPropsToSkip = new HashSet<>();
-    HideConfig hideConfigAnnotation = typeElement.getAnnotation(HideConfig.class);
-    if(hideConfigAnnotation != null) {
-      for(String config : hideConfigAnnotation.value()) {
+    HideConfigs hideConfigsAnnotation = typeElement.getAnnotation(HideConfigs.class);
+    if(hideConfigsAnnotation != null) {
+      for(String config : hideConfigsAnnotation.value()) {
         configPropsToSkip.add(config);
       }
     }
@@ -338,33 +338,33 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         ModelDefinition model = null;
 
         if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
-          FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-          if(fieldSelector != null) {
+          FieldSelectorModel fieldSelectorModel = variableElement.getAnnotation(FieldSelectorModel.class);
+          if(fieldSelectorModel != null) {
             ModelType modelType = ModelType.FIELD_SELECTOR_MULTI_VALUED;
-            if(fieldSelector.singleValued()) {
+            if(fieldSelectorModel.singleValued()) {
               modelType = ModelType.FIELD_SELECTOR_SINGLE_VALUED;
             }
             model = new ModelDefinition(modelType, null, null, null, null, null);
           }
-          FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
+          FieldValueChooserModel fieldValueChooserModel = variableElement.getAnnotation(FieldValueChooserModel.class);
           //processingEnv.
-          if (fieldValueChooser != null) {
+          if (fieldValueChooserModel != null) {
             model = new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER,
-                                        getValuesProvider(fieldValueChooser)
+                                        getValuesProvider(fieldValueChooserModel)
                 , null, null, null, null);
           }
-          ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
-          if(valueChooser != null) {
+          ValueChooserModel valueChooserModel = variableElement.getAnnotation(ValueChooserModel.class);
+          if(valueChooserModel != null) {
             model = new ModelDefinition(ModelType.VALUE_CHOOSER,
-                                        getValuesProvider(valueChooser)
+                                        getValuesProvider(valueChooserModel)
                 , null, null, null, null);
           }
-          LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
-          if (lanePredicateMapping != null) {
+          PredicateModel predicateModel = variableElement.getAnnotation(PredicateModel.class);
+          if (predicateModel != null) {
             model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
           }
-          ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
-          if(complexField != null) {
+          ListBeanModel listBeanModel = variableElement.getAnnotation(ListBeanModel.class);
+          if(listBeanModel != null) {
             String typeName = getTypeNameFromComplexField(variableElement);
             model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, null,
               getConfigDefsFromTypeElement(getTypeElementFromName(typeName)));
@@ -647,12 +647,12 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
       Utils.format(template, args));
   }
 
-  private String getValuesProvider(FieldValueChooser fieldValueChooser) {
+  private String getValuesProvider(FieldValueChooserModel fieldValueChooserModel) {
     //Not the best way of getting the TypeMirror of the ChooserValues implementation
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      fieldValueChooser.value();
+      fieldValueChooserModel.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }
@@ -690,12 +690,12 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return sb.toString();
   }
 
-  private String getValuesProvider(ValueChooser valueChooser) {
+  private String getValuesProvider(ValueChooserModel valueChooserModel) {
     //Not the best way of getting the TypeMirror of the ChooserValues implementation
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      valueChooser.value();
+      valueChooserModel.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }
@@ -857,11 +857,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private boolean validateModelAnnotationsAreNotPresent(Element typeElement, VariableElement variableElement) {
-    FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
-    FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-    ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
+    FieldValueChooserModel fieldValueChooserModel = variableElement.getAnnotation(FieldValueChooserModel.class);
+    FieldSelectorModel fieldSelectorModel = variableElement.getAnnotation(FieldSelectorModel.class);
+    ValueChooserModel valueChooserModel = variableElement.getAnnotation(ValueChooserModel.class);
 
-    if(fieldValueChooser != null || fieldSelector != null || valueChooser != null) {
+    if(fieldValueChooserModel != null || fieldSelectorModel != null || valueChooserModel != null) {
       printError("field.validation.model.annotations.present",
           "The type of field {} is not declared as \"MODEL\". 'FieldSelector' or 'FieldValueChooser' or " +
               "'ValueChooser' annotation is not expected, but is present.",
@@ -964,11 +964,11 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   private static final Set<String> MODEL_ANNOTATIONS_NAMES = new LinkedHashSet<>();
 
   static {
-    MODEL_ANNOTATIONS.add(FieldValueChooser.class);
-    MODEL_ANNOTATIONS.add(FieldSelector.class);
-    MODEL_ANNOTATIONS.add(ValueChooser.class);
-    MODEL_ANNOTATIONS.add(LanePredicateMapping.class);
-    MODEL_ANNOTATIONS.add(ComplexField.class);
+    MODEL_ANNOTATIONS.add(FieldValueChooserModel.class);
+    MODEL_ANNOTATIONS.add(FieldSelectorModel.class);
+    MODEL_ANNOTATIONS.add(ValueChooserModel.class);
+    MODEL_ANNOTATIONS.add(PredicateModel.class);
+    MODEL_ANNOTATIONS.add(ListBeanModel.class);
     for (Class<?> klass : MODEL_ANNOTATIONS) {
       MODEL_ANNOTATIONS_NAMES.add(klass.getSimpleName());
     }
@@ -1006,28 +1006,28 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
 
     //Validate model annotations
 
-    FieldValueChooser fieldValueChooser = variableElement.getAnnotation(FieldValueChooser.class);
-    if (fieldValueChooser != null) {
-      valid &= validateFieldModifier(typeElement, variableElement, fieldValueChooser);
+    FieldValueChooserModel fieldValueChooserModel = variableElement.getAnnotation(FieldValueChooserModel.class);
+    if (fieldValueChooserModel != null) {
+      valid &= validateFieldModifier(typeElement, variableElement, fieldValueChooserModel);
     }
 
-    ValueChooser valueChooser = variableElement.getAnnotation(ValueChooser.class);
-    if (valueChooser != null) {
-      valid &= validateDropDown(typeElement, variableElement, valueChooser);
+    ValueChooserModel valueChooserModel = variableElement.getAnnotation(ValueChooserModel.class);
+    if (valueChooserModel != null) {
+      valid &= validateDropDown(typeElement, variableElement, valueChooserModel);
     }
 
-    FieldSelector fieldSelector = variableElement.getAnnotation(FieldSelector.class);
-    if (fieldSelector != null) {
-      valid &= validateFieldSelector(typeElement, variableElement, fieldSelector);
+    FieldSelectorModel fieldSelectorModel = variableElement.getAnnotation(FieldSelectorModel.class);
+    if (fieldSelectorModel != null) {
+      valid &= validateFieldSelector(typeElement, variableElement, fieldSelectorModel);
     }
 
-    LanePredicateMapping lanePredicateMapping = variableElement.getAnnotation(LanePredicateMapping.class);
-    if (lanePredicateMapping != null) {
+    PredicateModel predicateModel = variableElement.getAnnotation(PredicateModel.class);
+    if (predicateModel != null) {
       valid &= validateLanePredicateMapping(typeElement, variableElement);
     }
 
-    ComplexField complexField = variableElement.getAnnotation(ComplexField.class);
-    if (complexField != null) {
+    ListBeanModel listBeanModel = variableElement.getAnnotation(ListBeanModel.class);
+    if (listBeanModel != null) {
       valid &= validateComplexField(typeElement, variableElement);
     }
     return valid;
@@ -1059,8 +1059,8 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     }
 
     for (VariableElement v : getAllFields(t).values()) {
-      ComplexField complexField = v.getAnnotation(ComplexField.class);
-      if(complexField != null) {
+      ListBeanModel listBeanModel = v.getAnnotation(ListBeanModel.class);
+      if(listBeanModel != null) {
         printError("ComplexField.type.declares.complex.fields",
           "Complex Field type '{}' has configuration properties which are complex fields." +
             "Complex Field types must not define fields which are complex types.",
@@ -1077,16 +1077,16 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private boolean validateFieldSelector(Element typeElement, VariableElement variableElement,
-                                        FieldSelector fieldSelector) {
+                                        FieldSelectorModel fieldSelectorModel) {
     boolean valid = true;
-    if (!fieldSelector.singleValued() &&
+    if (!fieldSelectorModel.singleValued() &&
       !variableElement.asType().toString().equals("java.util.List<java.lang.String>")) {
       printError("field.validation.type.is.not.list",
           "Field {} is annotated as multi valued FieldSelector. The type of the field {} expected to be List<String>.",
           typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
       valid = false;
     }
-    if (fieldSelector.singleValued() && !variableElement.asType().toString().equals("java.lang.String")) {
+    if (fieldSelectorModel.singleValued() && !variableElement.asType().toString().equals("java.lang.String")) {
       printError("field.validation.type.is.not.String",
         "Field {} is annotated as single valued FieldSelector. The type of the field is expected to be String.",
         typeElement.getSimpleName().toString() + SEPARATOR + variableElement.getSimpleName().toString());
@@ -1107,7 +1107,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     return valid;
   }
 
-  private boolean validateDropDown(Element typeElement, VariableElement variableElement, ValueChooser valueChooser) {
+  private boolean validateDropDown(Element typeElement, VariableElement variableElement, ValueChooserModel valueChooserModel) {
     boolean valid = true;
 
     //The type of could be string or an enum
@@ -1118,7 +1118,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      valueChooser.value();
+      valueChooserModel.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }
@@ -1127,7 +1127,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
   }
 
   private boolean validateFieldModifier(Element typeElement, VariableElement variableElement,
-                                        FieldValueChooser fieldValueChooser) {
+                                        FieldValueChooserModel fieldValueChooserModel) {
     boolean valid = true;
     TypeMirror fieldType = variableElement.asType();
     String type = fieldType.toString();
@@ -1160,7 +1160,7 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
     //Find a better solution
     TypeMirror valueProviderTypeMirror = null;
     try {
-      fieldValueChooser.value();
+      fieldValueChooserModel.value();
     } catch (MirroredTypeException e) {
       valueProviderTypeMirror = e.getTypeMirror();
     }

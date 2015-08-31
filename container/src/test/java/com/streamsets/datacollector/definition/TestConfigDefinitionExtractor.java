@@ -15,8 +15,8 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.LanePredicateMapping;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.PredicateModel;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -91,7 +91,7 @@ public class TestConfigDefinitionExtractor {
         required = true,
         elDefs = ELs.class
     )
-    @LanePredicateMapping
+    @PredicateModel
     public List<String> predicates;
   }
 
@@ -104,7 +104,7 @@ public class TestConfigDefinitionExtractor {
         required = true,
         elDefs = ELs.class
     )
-    @FieldSelector
+    @FieldSelectorModel
     public String selector;
   }
 
@@ -195,7 +195,7 @@ public class TestConfigDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @FieldSelector
+    @FieldSelectorModel
     public String config;
   }
 

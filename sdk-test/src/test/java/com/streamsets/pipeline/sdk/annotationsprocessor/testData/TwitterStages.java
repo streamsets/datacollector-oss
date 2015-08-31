@@ -9,8 +9,8 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
@@ -30,7 +30,7 @@ public class TwitterStages {
     , version = 1)
   public class TwitterSource extends BaseSource{
 
-    @FieldSelector
+    @FieldSelectorModel
     @ConfigDef(
       defaultValue = "admin",
       label = "username",
@@ -70,7 +70,7 @@ public class TwitterStages {
     , version = 1)
   public class TwitterProcessor extends BaseProcessor {
 
-    @FieldValueChooser(TypesProvider.class)
+    @FieldValueChooserModel(TypesProvider.class)
     @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "regEx",

@@ -7,8 +7,8 @@ package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DateFormat;
 import com.streamsets.pipeline.config.LocaleChooserValues;
 import com.streamsets.pipeline.config.DateFormatChooserValues;
@@ -27,7 +27,7 @@ public class FieldTypeConverterConfig {
       description = "You can convert multiple fields to the same type",
       displayPosition = 10
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fields;
 
   @ConfigDef(
@@ -38,7 +38,7 @@ public class FieldTypeConverterConfig {
       description = "Select a compatible data type",
       displayPosition = 10
   )
-  @ValueChooser(PrimitiveFieldTypeChooserValues.class)
+  @ValueChooserModel(PrimitiveFieldTypeChooserValues.class)
   public Field.Type targetType;
 
   @ConfigDef(
@@ -52,7 +52,7 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"BYTE", "INTEGER", "LONG", "DOUBLE", "DECIMAL", "FLOAT", "SHORT"}
   )
-  @ValueChooser(LocaleChooserValues.class)
+  @ValueChooserModel(LocaleChooserValues.class)
   public String dataLocale;
 
   private Locale locale;
@@ -74,7 +74,7 @@ public class FieldTypeConverterConfig {
       dependsOn = "targetType",
       triggeredByValue = {"DATE", "DATETIME"}
   )
-  @ValueChooser(DateFormatChooserValues.class)
+  @ValueChooserModel(DateFormatChooserValues.class)
   public DateFormat dateFormat;
 
   @ConfigDef(

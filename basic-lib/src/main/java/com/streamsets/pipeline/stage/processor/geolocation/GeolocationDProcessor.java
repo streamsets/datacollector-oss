@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.processor.geolocation;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -45,7 +45,7 @@ public class GeolocationDProcessor extends DProcessor {
     displayPosition = 10,
     group = "GEOLOCATION"
   )
-  @ComplexField
+  @ListBeanModel
   public List<GeolocationFieldConfig> fieldTypeConverterConfigs;
 
   @Override

@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.stage.processor.fieldmask;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class FieldMaskConfig {
       description="Mask string fields. You can enter multiple fields for the same mask type.",
       displayPosition = 10
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fields;
 
   @ConfigDef(
@@ -32,7 +32,7 @@ public class FieldMaskConfig {
       description="",
       displayPosition = 20
   )
-  @ValueChooser(MaskTypeChooseValues.class)
+  @ValueChooserModel(MaskTypeChooseValues.class)
   public MaskType maskType;
 
   @ConfigDef(

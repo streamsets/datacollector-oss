@@ -6,8 +6,8 @@
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class FieldHasherConfig {
       description = "Hash string fields. You can enter multiple fields for the same hash type.",
       displayPosition = 10
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fieldsToHash;
 
   @ConfigDef(
@@ -31,6 +31,6 @@ public class FieldHasherConfig {
       description="",
       displayPosition = 20
   )
-  @ValueChooser(HashTypeChooserValues.class)
+  @ValueChooserModel(HashTypeChooserValues.class)
   public HashType hashType;
 }

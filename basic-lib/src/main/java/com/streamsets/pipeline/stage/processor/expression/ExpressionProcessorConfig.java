@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 
 public class ExpressionProcessorConfig {
@@ -22,7 +22,7 @@ public class ExpressionProcessorConfig {
       group = "EXPRESSIONS"
 
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String fieldToSet;
 
   @ConfigDef(

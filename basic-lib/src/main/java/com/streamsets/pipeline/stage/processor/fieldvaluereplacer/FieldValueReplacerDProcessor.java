@@ -5,15 +5,15 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldvaluereplacer;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
@@ -39,7 +39,7 @@ public class FieldValueReplacerDProcessor extends DProcessor {
       displayPosition = 10,
       group = "REPLACE"
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fieldsToNull;
 
   @ConfigDef(
@@ -50,7 +50,7 @@ public class FieldValueReplacerDProcessor extends DProcessor {
       displayPosition = 20,
       group = "REPLACE"
   )
-  @ComplexField
+  @ListBeanModel
   public List<FieldValueReplacerConfig> fieldsToReplaceIfNull;
 
   @ConfigDef(
@@ -62,7 +62,7 @@ public class FieldValueReplacerDProcessor extends DProcessor {
     displayPosition = 30,
     group = "REPLACE"
   )
-  @ValueChooser(OnStagePreConditionFailureChooserValues.class)
+  @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @Override

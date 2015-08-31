@@ -5,13 +5,11 @@
  */
 package com.streamsets.pipeline.api;
 
-
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target(ElementType.TYPE)
-public @interface HideConfig {
-  boolean preconditions() default false;
-  boolean onErrorRecord() default false;
-  String[] value() default {};
+@java.lang.annotation.Target(ElementType.FIELD)
+public @interface PredicateModel {
 }

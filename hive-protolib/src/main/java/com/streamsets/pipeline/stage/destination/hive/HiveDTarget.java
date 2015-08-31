@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.destination.hive;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -78,7 +78,7 @@ public class HiveDTarget extends DTarget {
       displayPosition = 50,
       group = "HIVE"
   )
-  @ComplexField
+  @ListBeanModel
   public List<FieldMappingConfig> columnMappings;
 
   @ConfigDef(

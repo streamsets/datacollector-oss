@@ -8,7 +8,7 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
@@ -24,7 +24,7 @@ import java.util.List;
 @ConfigGroups(TwitterSource.TwitterConfigGroups.class)
 public class TwitterSource extends BaseSource {
 
-  @FieldSelector
+  @FieldSelectorModel
   @ConfigDef(
     defaultValue = "admin",
     label = "username",

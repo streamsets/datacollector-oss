@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.hdfs.cluster;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -97,7 +97,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     displayPosition = 30,
     group = "HADOOP_FS"
    )
-  @ValueChooser(DataFormatChooserValues.class)
+  @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -159,7 +159,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     dependsOn = "dataFormat",
     triggeredByValue = "LOG"
   )
-  @ValueChooser(LogModeChooserValues.class)
+  @ValueChooserModel(LogModeChooserValues.class)
   public LogMode logMode;
 
   @ConfigDef(
@@ -214,7 +214,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ListBeanModel
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK
@@ -338,7 +338,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
    )
-   @ValueChooser(CsvModeChooserValues.class)
+   @ValueChooserModel(CsvModeChooserValues.class)
    public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -351,7 +351,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     group = "DELIMITED",
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED")
-  @ValueChooser(CsvHeaderChooserValues.class)
+  @ValueChooserModel(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -412,7 +412,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvRecordTypeChooserValues.class)
+  @ValueChooserModel(CsvRecordTypeChooserValues.class)
   public CsvRecordType csvRecordType;
 
   @Override

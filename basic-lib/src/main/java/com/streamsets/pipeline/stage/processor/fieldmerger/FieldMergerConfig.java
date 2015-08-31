@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.processor.fieldmerger;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 
 public class FieldMergerConfig {
 
@@ -23,7 +23,7 @@ public class FieldMergerConfig {
       description = "The field in the incoming record to merge.",
       displayPosition = 10
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String fromField;
 
   @ConfigDef(

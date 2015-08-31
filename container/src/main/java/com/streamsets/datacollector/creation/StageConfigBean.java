@@ -8,12 +8,11 @@ package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -34,7 +33,7 @@ public class StageConfigBean {
       displayPosition = 30,
       group = ""
   )
-  @ValueChooser(OnRecordErrorChooserValues.class)
+  @ValueChooserModel(OnRecordErrorChooserValues.class)
   public OnRecordError stageOnRecordError;
 
   @ConfigDef(
@@ -46,7 +45,7 @@ public class StageConfigBean {
       displayPosition = 10,
       group = ""
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> stageRequiredFields;
 
   @ConfigDef(

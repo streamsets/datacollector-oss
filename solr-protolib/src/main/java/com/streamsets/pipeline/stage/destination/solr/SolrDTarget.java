@@ -5,13 +5,13 @@
  */
 package com.streamsets.pipeline.stage.destination.solr;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
@@ -37,7 +37,7 @@ public class SolrDTarget extends DTarget {
     displayPosition = 10,
     group = "SOLR"
   )
-  @ValueChooser(InstanceTypeOptionsChooserValues.class)
+  @ValueChooserModel(InstanceTypeOptionsChooserValues.class)
   public InstanceTypeOptions instanceType;
 
   @ConfigDef(
@@ -77,7 +77,7 @@ public class SolrDTarget extends DTarget {
     displayPosition = 40,
     group = "SOLR"
   )
-  @ValueChooser(ProcessingModeChooserValues.class)
+  @ValueChooserModel(ProcessingModeChooserValues.class)
   public ProcessingMode indexingMode;
 
   @ConfigDef(
@@ -89,7 +89,7 @@ public class SolrDTarget extends DTarget {
     displayPosition = 50,
     group = "SOLR"
   )
-  @ComplexField
+  @ListBeanModel
   public List<SolrFieldMappingConfig> fieldNamesMap;
 
   @Override

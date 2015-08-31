@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.FIELD)
-public @interface FieldValueChooser {
+public @interface FieldValueChooserModel {
 
   Class<? extends ChooserValues> value();
 

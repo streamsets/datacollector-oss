@@ -8,14 +8,13 @@ package com.streamsets.datacollector.definition;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
-import com.streamsets.datacollector.definition.ModelDefinitionExtractor;
 import com.streamsets.pipeline.api.ChooserValues;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.FieldValueChooser;
-import com.streamsets.pipeline.api.LanePredicateMapping;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
+import com.streamsets.pipeline.api.PredicateModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -66,8 +65,8 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @FieldSelector
-    @FieldValueChooser(CV.class)
+    @FieldSelectorModel
+    @FieldValueChooserModel(CV.class)
     public String invalid2;
 
     @ConfigDef(
@@ -75,7 +74,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField
+    @ListBeanModel
     public Bean invalid3;
 
     @ConfigDef(
@@ -83,7 +82,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @FieldSelector
+    @FieldSelectorModel
     public String fieldSelectorM;
 
     @ConfigDef(
@@ -91,7 +90,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @FieldSelector(singleValued = true)
+    @FieldSelectorModel(singleValued = true)
     public String fieldSelectorS;
 
     @ConfigDef(
@@ -100,7 +99,7 @@ public class TestModelDefinitionExtractor {
         required = true
     )
 
-    @FieldValueChooser(CV.class)
+    @FieldValueChooserModel(CV.class)
     public String fieldChooserValue;
 
     @ConfigDef(
@@ -108,7 +107,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ValueChooser(CV.class)
+    @ValueChooserModel(CV.class)
     public String valueChooser;
 
     @ConfigDef(
@@ -116,7 +115,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @LanePredicateMapping
+    @PredicateModel
     public Map lanePredicateMapping;
 
     @ConfigDef(
@@ -124,7 +123,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField
+    @ListBeanModel
     public List<Bean> complexField;
   }
 
@@ -134,7 +133,7 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @ComplexField
+    @ListBeanModel
     public List<Configs> complexField;
   }
 

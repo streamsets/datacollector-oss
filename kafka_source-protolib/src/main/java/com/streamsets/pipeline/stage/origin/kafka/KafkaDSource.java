@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -104,7 +104,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     displayPosition = 40,
     group = "KAFKA"
   )
-  @ValueChooser(DataFormatChooserValues.class)
+  @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -117,7 +117,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
 
   @ConfigDef(
@@ -205,7 +205,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(JsonModeChooserValues.class)
+  @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonContent;
 
   @ConfigDef(
@@ -234,7 +234,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvModeChooserValues.class)
+  @ValueChooserModel(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -248,7 +248,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvHeaderChooserValues.class)
+  @ValueChooserModel(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -313,7 +313,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvRecordTypeChooserValues.class)
+  @ValueChooserModel(CsvRecordTypeChooserValues.class)
   public CsvRecordType csvRecordType;
 
   @ConfigDef(
@@ -357,7 +357,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     dependsOn = "dataFormat",
     triggeredByValue = "LOG"
   )
-  @ValueChooser(LogModeChooserValues.class)
+  @ValueChooserModel(LogModeChooserValues.class)
   public LogMode logMode;
 
   @ConfigDef(
@@ -428,7 +428,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ListBeanModel
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK
@@ -473,7 +473,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
     dependsOn = "logMode",
     triggeredByValue = "LOG4J"
   )
-  @ValueChooser(OnParseErrorChooserValues.class)
+  @ValueChooserModel(OnParseErrorChooserValues.class)
   public OnParseError onParseError;
 
   @ConfigDef(

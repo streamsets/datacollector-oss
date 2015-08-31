@@ -502,7 +502,7 @@ public abstract class PipelineBeanCreator {
         // we need to use the classloader fo the stage to instatiate the ComplexField so if the stage has a private
         // classloader we use the same one.
         Class klass = Thread.currentThread().getContextClassLoader()
-                            .loadClass(configDef.getModel().getComplexFieldClass().getName());
+                            .loadClass(configDef.getModel().getListBeanClass().getName());
         List listValue = (List) value;
         for (int i = 0; i < listValue.size(); i++) {
           Map<String, Object> configElement;

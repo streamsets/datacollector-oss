@@ -5,8 +5,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
-import com.streamsets.datacollector.el.RuntimeEL;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.StringEL;
 
@@ -24,7 +23,7 @@ class ElUtil {
       if (field.isAnnotationPresent(ConfigDef.class)) {
         ConfigDef configDef = field.getAnnotation(ConfigDef.class);
         configToElDefMap.put(field.getName(), getElDefClasses(configDef.elDefs()));
-        if(field.getAnnotation(ComplexField.class) != null) {
+        if(field.getAnnotation(ListBeanModel.class) != null) {
           Type genericType = field.getGenericType();
           Class<?> klass;
           if (genericType instanceof ParameterizedType) {

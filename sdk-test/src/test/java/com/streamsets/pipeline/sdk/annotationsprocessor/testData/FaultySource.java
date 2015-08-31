@@ -7,16 +7,16 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserValues;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
-import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.List;
 
@@ -88,7 +88,7 @@ public class FaultySource {
   public int zip;
 
   //9. Field modifier should be modeled as Map<String, String>
-  @FieldValueChooser(MyChooserValues.class)
+  @FieldValueChooserModel(MyChooserValues.class)
   @ConfigDef(
     defaultValue = "180 Sansome",
     label = "street_address",
@@ -98,8 +98,8 @@ public class FaultySource {
   public String streetAddress;
 
   //10. Both FieldSelector and FieldValueChooser present
-  @FieldSelector
-  @FieldValueChooser(TypesProvider.class)
+  @FieldSelectorModel
+  @FieldValueChooserModel(TypesProvider.class)
   @ConfigDef(
     defaultValue = "400",
     label = "ste",
@@ -110,7 +110,7 @@ public class FaultySource {
 
   //11. Drop down should be modeled as 'java.lang.String'
   //12. The ConfigDef.Type for ValueChooser should be 'MODEL'
-  @ValueChooser(TypesProvider.class)
+  @ValueChooserModel(TypesProvider.class)
   @ConfigDef(
       defaultValue = "4",
       label = "floor",
@@ -166,7 +166,7 @@ public class FaultySource {
     description = "The user name of the twitter user",
     type = ConfigDef.Type.MODEL
   )
-  @ComplexField
+  @ListBeanModel
   public List<PhoneConfig> phoneConfigs;
 
 
@@ -180,7 +180,7 @@ public class FaultySource {
       required = true,
       description = "The domain of the twitter user",
       type = ConfigDef.Type.MODEL)
-    @FieldSelector(singleValued = true)
+    @FieldSelectorModel(singleValued = true)
     public List<String> phone;
 
     //27. Non number type but has non default min and max

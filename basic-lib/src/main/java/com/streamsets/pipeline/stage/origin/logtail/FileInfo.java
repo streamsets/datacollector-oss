@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.FileRollModeChooserValues;
 
@@ -43,7 +43,7 @@ public class FileInfo {
       displayPosition = 20,
       group = "FILE"
   )
-  @ValueChooser(FileRollModeChooserValues.class)
+  @ValueChooserModel(FileRollModeChooserValues.class)
   public FileRollMode fileRollMode;
 
   @ConfigDef(

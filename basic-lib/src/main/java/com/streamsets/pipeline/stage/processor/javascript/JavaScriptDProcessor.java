@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
@@ -35,7 +35,7 @@ public class JavaScriptDProcessor extends DProcessor {
       displayPosition = 10,
       group = "JAVASCRIPT"
   )
-  @ValueChooser(ProcessingModeChooserValues.class)
+  @ValueChooserModel(ProcessingModeChooserValues.class)
   public ProcessingMode processingMode;
 
   private static final String DEFAULT_SCRIPT =

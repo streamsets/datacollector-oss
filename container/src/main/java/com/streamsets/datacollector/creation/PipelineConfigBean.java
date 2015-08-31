@@ -18,10 +18,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.MultiValueChooser;
+import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +44,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue= "STANDALONE",
       displayPosition = 10
   )
-  @ValueChooser(ExecutionModeChooserValues.class)
+  @ValueChooserModel(ExecutionModeChooserValues.class)
   public ExecutionMode executionMode;
 
   @ConfigDef(
@@ -54,7 +54,7 @@ public class PipelineConfigBean implements Stage {
       label = "Delivery Guarantee",
       displayPosition = 20
   )
-  @ValueChooser(DeliveryGuaranteeChooserValues.class)
+  @ValueChooserModel(DeliveryGuaranteeChooserValues.class)
   public DeliveryGuarantee deliveryGuarantee;
 
   @ConfigDef(
@@ -101,7 +101,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 70,
       group = ""
   )
-  @ValueChooser(MemoryLimitExceededChooserValues.class)
+  @ValueChooserModel(MemoryLimitExceededChooserValues.class)
   public MemoryLimitExceeded memoryLimitExceeded;
 
 
@@ -114,7 +114,7 @@ public class PipelineConfigBean implements Stage {
     displayPosition = 75,
     group = ""
   )
-  @MultiValueChooser(PipelineStateChooserValues.class)
+  @MultiValueChooserModel(PipelineStateChooserValues.class)
   public List<PipelineState> notifyOnStates;
 
   @ConfigDef(
@@ -146,7 +146,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 90,
       group = "BAD_RECORDS"
   )
-  @ValueChooser(ErrorHandlingChooserValues.class)
+  @ValueChooserModel(ErrorHandlingChooserValues.class)
   public String badRecordsHandling;
 
 

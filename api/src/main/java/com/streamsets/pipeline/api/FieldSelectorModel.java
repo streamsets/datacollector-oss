@@ -5,11 +5,20 @@
  */
 package com.streamsets.pipeline.api;
 
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.FIELD)
-public @interface LanePredicateMapping {
+/**
+ * Marker annotation to be applied on a field which shall hold the names of
+ * all the selected fields.
+ *
+ * The type of the field on which this annotation is applied should be "List<String>"
+ */
+public @interface FieldSelectorModel {
+
+  boolean singleValued() default false;
 }

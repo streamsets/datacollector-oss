@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.destination.jdbc;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -99,7 +99,7 @@ public class JdbcDTarget extends DTarget {
       displayPosition = 40,
       group = "JDBC"
   )
-  @ComplexField
+  @ListBeanModel
   public List<JdbcFieldMappingConfig> columnNames;
 
   @ConfigDef(

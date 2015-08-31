@@ -7,11 +7,11 @@ package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
@@ -118,7 +118,7 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 30,
     group = "KAFKA"
   )
-  @ValueChooser(PartitionStrategyChooserValues.class)
+  @ValueChooserModel(PartitionStrategyChooserValues.class)
   public PartitionStrategy partitionStrategy;
 
   @ConfigDef(
@@ -145,7 +145,7 @@ public class KafkaDTarget extends DTarget {
     displayPosition = 50,
     group = "KAFKA"
   )
-  @ValueChooser(ProducerDataFormatChooserValues.class)
+  @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -158,7 +158,7 @@ public class KafkaDTarget extends DTarget {
     dependsOn = "dataFormat",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
 
   @ConfigDef(
@@ -185,7 +185,7 @@ public class KafkaDTarget extends DTarget {
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvModeChooserValues.class)
+  @ValueChooserModel(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -210,7 +210,7 @@ public class KafkaDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvHeaderChooserValues.class)
+  @ValueChooserModel(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -239,7 +239,7 @@ public class KafkaDTarget extends DTarget {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(JsonModeChooserValues.class)
+  @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonMode;
 
   /********  For TEXT Content  ***********/
@@ -256,7 +256,7 @@ public class KafkaDTarget extends DTarget {
     triggeredByValue = "TEXT",
     elDefs = {StringEL.class}
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String textFieldPath;
 
   @ConfigDef(
@@ -315,7 +315,7 @@ public class KafkaDTarget extends DTarget {
     triggeredByValue = "BINARY",
     elDefs = {StringEL.class}
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String binaryFieldPath;
 
   @Override

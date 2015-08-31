@@ -44,11 +44,11 @@ public class TestFaultyStage extends TestPipelineAnnotationProcessorBase {
     expectedSet.add("The field FaultySource.username has \"ConfigDef\" annotation and is declared final. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.password has \"ConfigDef\" annotation and is declared static. Configuration fields must not be declared final.");
     expectedSet.add("The field FaultySource.streetAddress2 has \"ConfigDef\" annotation but is not declared public. Configuration fields must be declared public.");
-    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of '[FieldValueChooser, FieldSelector, ValueChooser, LanePredicateMapping, ComplexField]' annotations is expected.");
+    expectedSet.add("The type of field FaultySource.company is declared as \"MODEL\". Exactly one of '[FieldValueChooserModel, FieldSelectorModel, ValueChooserModel, PredicateModel, ListBeanModel]' annotations is expected.");
     expectedSet.add("The type of the field FaultySource.zip is expected to be String.");
     expectedSet.add("The type of the field FaultySource.streetAddress is expected to be Map<String, String> or Map<String, Enum>.");
     expectedSet.add("ChooserValues implementation 'com.streamsets.pipeline.sdk.annotationsprocessor.testData.FaultySource$MyChooserValues' is an inner class but is not declared as static. Inner class ChooserValues implementations must be declared static.");
-    expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of '[FieldValueChooser, FieldSelector, ValueChooser, LanePredicateMapping, ComplexField]' annotations is expected.");
+    expectedSet.add("The type of field FaultySource.ste is declared as \"MODEL\". Exactly one of '[FieldValueChooserModel, FieldSelectorModel, ValueChooserModel, PredicateModel, ListBeanModel]' annotations is expected.");
     expectedSet.add("The type of the field FaultySource.ste is expected to be Map<String, String> or Map<String, Enum>.");
     expectedSet.add("The type of the field FaultySource.floor is expected to be String.");
     expectedSet.add("The type of the field FaultySource.extension is Integer but the default value supplied is not Integer.");

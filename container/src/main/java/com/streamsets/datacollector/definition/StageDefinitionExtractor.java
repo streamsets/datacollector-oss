@@ -17,7 +17,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -105,7 +105,7 @@ public abstract class StageDefinitionExtractor {
       if (type != null && errorStage && type == StageType.SOURCE) {
         errors.add(new ErrorMessage(DefinitionError.DEF_303, contextMsg));
       }
-      HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
+      HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
 
       List<String> stageGroups = getGroups(klass);
 
@@ -181,7 +181,7 @@ public abstract class StageDefinitionExtractor {
       String icon = sDef.icon();
       StageType type = extractStageType(klass);
       boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
-      HideConfig hideConfigs = klass.getAnnotation(HideConfig.class);
+      HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
       boolean preconditions = !errorStage && type != StageType.SOURCE &&
                               ((hideConfigs == null) || !hideConfigs.preconditions());
       boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
@@ -229,7 +229,7 @@ public abstract class StageDefinitionExtractor {
   }
 
   private List<ConfigDefinition> extractConfigDefinitions(StageLibraryDefinition libraryDef,
-      Class<? extends Stage> klass, HideConfig hideConfigs, Object contextMsg) {
+      Class<? extends Stage> klass, HideConfigs hideConfigs, Object contextMsg) {
 
     List<String> stageGroups = getGroups(klass);
 

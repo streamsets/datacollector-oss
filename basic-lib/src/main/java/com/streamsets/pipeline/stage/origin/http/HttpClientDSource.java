@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
@@ -41,7 +41,7 @@ public class HttpClientDSource extends DSource {
     displayPosition = 0,
     group = "HTTP"
   )
-  @ValueChooser(DataFormatChooserValues.class)
+  @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -64,7 +64,7 @@ public class HttpClientDSource extends DSource {
     displayPosition = 11,
     group = "HTTP"
   )
-  @ValueChooser(HttpMethodChooserValues.class)
+  @ValueChooserModel(HttpMethodChooserValues.class)
   public HttpMethod httpMethod;
 
   @ConfigDef(
@@ -100,7 +100,7 @@ public class HttpClientDSource extends DSource {
     displayPosition = 25,
     group = "HTTP"
   )
-  @ValueChooser(HttpClientModeChooserValues.class)
+  @ValueChooserModel(HttpClientModeChooserValues.class)
   public HttpClientMode httpMode;
 
   @ConfigDef(
@@ -207,7 +207,7 @@ public class HttpClientDSource extends DSource {
     dependsOn = "dataFormat",
     triggeredByValue = "JSON"
   )
-  @ValueChooser(JsonModeChooserValues.class)
+  @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonMode;
 
   @ConfigDef(

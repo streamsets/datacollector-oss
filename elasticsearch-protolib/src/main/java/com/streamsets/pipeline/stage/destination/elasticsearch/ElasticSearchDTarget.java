@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
@@ -110,7 +110,7 @@ public class ElasticSearchDTarget extends DTarget {
     displayPosition = 55,
     group = "ELASTIC_SEARCH"
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
 
   @Override

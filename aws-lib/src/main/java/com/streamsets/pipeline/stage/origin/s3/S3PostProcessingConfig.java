@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 
 public class S3PostProcessingConfig {
@@ -20,7 +20,7 @@ public class S3PostProcessingConfig {
     displayPosition = 10,
     group = "#0"
   )
-  @ValueChooser(S3PostProcessingChooserValues.class)
+  @ValueChooserModel(S3PostProcessingChooserValues.class)
   public PostProcessingOptions postProcessing;
 
   @ConfigDef(
@@ -34,7 +34,7 @@ public class S3PostProcessingConfig {
     dependsOn = "postProcessing",
     triggeredByValue = { "ARCHIVE" }
   )
-  @ValueChooser(S3ArchivingOptionChooserValues.class)
+  @ValueChooserModel(S3ArchivingOptionChooserValues.class)
   public S3ArchivingOption archivingOption;
 
   @ConfigDef(

@@ -1,5 +1,5 @@
 /**
- * (c) 2015 StreamSets, Inc. All rights reserved. May not
+ * (c) 2014 StreamSets, Inc. All rights reserved. May not
  * be copied, modified, or distributed in whole or part without
  * written consent of StreamSets, Inc.
  */
@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target(ElementType.FIELD)
-public @interface MultiValueChooser {
+public @interface ValueChooserModel {
 
   Class<? extends ChooserValues> value();
 

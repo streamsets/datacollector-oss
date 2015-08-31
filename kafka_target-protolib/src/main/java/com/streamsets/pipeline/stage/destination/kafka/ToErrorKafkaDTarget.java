@@ -8,7 +8,7 @@ package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
@@ -19,7 +19,7 @@ import com.streamsets.pipeline.config.DataFormat;
     description = "Writes records to Kafka as SDC Records",
     icon = "")
 @ErrorStage
-@HideConfig(preconditions = true, onErrorRecord = true, value = {"dataFormat", "charset"})
+@HideConfigs(preconditions = true, onErrorRecord = true, value = {"dataFormat", "charset"})
 @GenerateResourceBundle
 public class ToErrorKafkaDTarget extends KafkaDTarget {
 

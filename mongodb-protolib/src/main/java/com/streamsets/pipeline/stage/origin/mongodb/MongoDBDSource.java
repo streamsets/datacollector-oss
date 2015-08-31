@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
@@ -118,7 +118,7 @@ public class MongoDBDSource extends DSource {
       group = "CREDENTIALS",
       displayPosition = 80
   )
-  @ValueChooser(AuthenticationTypeChooserValues.class)
+  @ValueChooserModel(AuthenticationTypeChooserValues.class)
   public AuthenticationType authenticationType;
 
   @ConfigDef(
@@ -151,7 +151,7 @@ public class MongoDBDSource extends DSource {
       group = "ADVANCED",
       displayPosition = 150
   )
-  @ValueChooser(ReadPreferenceChooserValues.class)
+  @ValueChooserModel(ReadPreferenceChooserValues.class)
   public ReadPreferenceLabel readPreference;
 
   @Override

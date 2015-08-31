@@ -5,13 +5,13 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 import java.util.List;
@@ -58,7 +58,7 @@ public class CassandraDTarget extends DTarget {
       displayPosition = 30,
       group = "CASSANDRA"
   )
-  @ValueChooser(CompressionChooserValues.class)
+  @ValueChooserModel(CompressionChooserValues.class)
   public CassandraCompressionCodec compression;
 
   @ConfigDef(
@@ -91,7 +91,7 @@ public class CassandraDTarget extends DTarget {
       displayPosition = 60,
       group = "CASSANDRA"
   )
-  @ComplexField
+  @ListBeanModel
   public List<CassandraFieldMappingConfig> columnNames;
 
   @ConfigDef(

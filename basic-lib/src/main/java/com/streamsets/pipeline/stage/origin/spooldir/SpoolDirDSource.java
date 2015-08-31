@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -13,7 +13,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -61,7 +61,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 0,
       group = "FILES"
   )
-  @ValueChooser(DataFormatChooserValues.class)
+  @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
@@ -74,7 +74,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
 
   @ConfigDef(
@@ -186,7 +186,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = { "TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG" }
   )
-  @ValueChooser(FileCompressionChooserValues.class)
+  @ValueChooserModel(FileCompressionChooserValues.class)
   public FileCompression fileCompression;
 
 
@@ -209,7 +209,7 @@ public class SpoolDirDSource extends DSource {
       displayPosition = 110,
       group = "POST_PROCESSING"
   )
-  @ValueChooser(PostProcessingOptionsChooserValues.class)
+  @ValueChooserModel(PostProcessingOptionsChooserValues.class)
   public PostProcessingOptions postProcessing;
 
   @ConfigDef(
@@ -251,7 +251,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvModeChooserValues.class)
+  @ValueChooserModel(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
@@ -265,7 +265,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvHeaderChooserValues.class)
+  @ValueChooserModel(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
@@ -331,7 +331,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "dataFormat",
     triggeredByValue = "DELIMITED"
   )
-  @ValueChooser(CsvRecordTypeChooserValues.class)
+  @ValueChooserModel(CsvRecordTypeChooserValues.class)
   public CsvRecordType csvRecordType;
 
   // JSON Configuration
@@ -347,7 +347,7 @@ public class SpoolDirDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "JSON"
   )
-  @ValueChooser(JsonModeChooserValues.class)
+  @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonContent;
 
   @ConfigDef(
@@ -425,7 +425,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "dataFormat",
     triggeredByValue = "LOG"
   )
-  @ValueChooser(LogModeChooserValues.class)
+  @ValueChooserModel(LogModeChooserValues.class)
   public LogMode logMode;
 
   @ConfigDef(
@@ -496,7 +496,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ListBeanModel
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK
@@ -541,7 +541,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "logMode",
     triggeredByValue = "LOG4J"
   )
-  @ValueChooser(OnParseErrorChooserValues.class)
+  @ValueChooserModel(OnParseErrorChooserValues.class)
   public OnParseError onParseError;
 
   @ConfigDef(

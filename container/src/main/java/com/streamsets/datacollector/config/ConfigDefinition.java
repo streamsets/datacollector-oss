@@ -254,12 +254,12 @@ public class ConfigDefinition {
           }
           break;
         case COMPLEX_FIELD:
-          List<ConfigDefinition> complexField = model.getConfigDefinitions();
-          List<ConfigDefinition> complexFieldLocalized = new ArrayList<>(complexField.size());
-          for (ConfigDefinition def : complexField) {
-            complexFieldLocalized.add(def.localize(classLoader, bundle));
+          List<ConfigDefinition> listBean = model.getConfigDefinitions();
+          List<ConfigDefinition> listBeanLocalize = new ArrayList<>(listBean.size());
+          for (ConfigDefinition def : listBean) {
+            listBeanLocalize.add(def.localize(classLoader, bundle));
           }
-          model = ModelDefinition.localizedComplexField(model, complexFieldLocalized);
+          model = ModelDefinition.localizedComplexField(model, listBeanLocalize);
           break;
       }
     }

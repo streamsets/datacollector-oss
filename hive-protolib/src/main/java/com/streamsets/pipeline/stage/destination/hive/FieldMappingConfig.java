@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.destination.hive;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 
 public class FieldMappingConfig {
 
@@ -33,7 +33,7 @@ public class FieldMappingConfig {
       description = "The field in the incoming record to output.",
       displayPosition = 10
   )
-  @FieldSelector(singleValued = true)
+  @FieldSelectorModel(singleValued = true)
   public String field;
 
   @ConfigDef(

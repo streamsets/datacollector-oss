@@ -8,11 +8,11 @@ package com.streamsets.pipeline.sdk.annotationsprocessor.testData;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 
 import java.util.Map;
@@ -21,7 +21,7 @@ import java.util.Map;
 , version = 1)
 public class TwitterProcessor extends BaseProcessor{
 
-  @FieldValueChooser(TypesProvider.class)
+  @FieldValueChooserModel(TypesProvider.class)
   @ConfigDef(
     defaultValue = "[a-z][A-Z][0-9]",
     label = "regEx",
@@ -31,7 +31,7 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public Map<String, String> regEx;
 
-  @ValueChooser(TweetTypeProvider.class)
+  @ValueChooserModel(TweetTypeProvider.class)
   @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "tweetType1",
@@ -41,7 +41,7 @@ public class TwitterProcessor extends BaseProcessor{
   )
   public TweetType tweetType1;
 
-  @FieldValueChooser(TweetTypeProvider.class)
+  @FieldValueChooserModel(TweetTypeProvider.class)
   @ConfigDef(
       defaultValue = "[a-z][A-Z][0-9]",
       label = "tweetType2",

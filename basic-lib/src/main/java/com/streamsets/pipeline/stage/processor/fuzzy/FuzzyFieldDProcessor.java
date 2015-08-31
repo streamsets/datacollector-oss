@@ -2,7 +2,7 @@ package com.streamsets.pipeline.stage.processor.fuzzy;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
@@ -27,7 +27,7 @@ public class FuzzyFieldDProcessor extends DProcessor {
       displayPosition = 10,
       group = "FUZZY"
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> rootFieldPaths;
 
   @ConfigDef(

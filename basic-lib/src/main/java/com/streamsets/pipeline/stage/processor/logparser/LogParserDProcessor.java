@@ -5,13 +5,13 @@
  */
 package com.streamsets.pipeline.stage.processor.logparser;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
@@ -71,7 +71,7 @@ public class LogParserDProcessor extends DProcessor {
     displayPosition = 40,
     group = "LOG"
   )
-  @ValueChooser(LogModeChooserValues.class)
+  @ValueChooserModel(LogModeChooserValues.class)
   public LogMode logMode;
 
   //APACHE_CUSTOM_LOG_FORMAT
@@ -114,7 +114,7 @@ public class LogParserDProcessor extends DProcessor {
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
   )
-  @ComplexField
+  @ListBeanModel
   public List<RegExConfig> fieldPathsToGroupName;
 
   //GROK

@@ -11,7 +11,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.configurablestage.DSource;
@@ -58,7 +58,7 @@ public class UDPDSource extends DSource {
       group = "UDP",
       displayPosition = 20
   )
-  @ValueChooser(UDPDataFormatChooserValues.class)
+  @ValueChooserModel(UDPDataFormatChooserValues.class)
   public UDPDataFormat dataFormat;
 
   @ConfigDef(
@@ -96,7 +96,7 @@ public class UDPDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "SYSLOG"
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String syslogCharset;
 
   @ConfigDef(
@@ -159,7 +159,7 @@ public class UDPDSource extends DSource {
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
   )
-  @ValueChooser(CharsetChooserValues.class)
+  @ValueChooserModel(CharsetChooserValues.class)
   public String collectdCharset;
 
   @Override

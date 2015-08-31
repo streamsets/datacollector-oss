@@ -5,7 +5,7 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldtypeconverter;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -35,7 +35,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       displayPosition = 10,
       group = "TYPE_CONVERSION"
   )
-  @ComplexField
+  @ListBeanModel
   public List<FieldTypeConverterConfig> fieldTypeConverterConfigs;
 
   @Override

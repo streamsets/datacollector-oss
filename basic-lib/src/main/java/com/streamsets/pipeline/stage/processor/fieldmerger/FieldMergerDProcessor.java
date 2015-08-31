@@ -5,14 +5,14 @@
  */
 package com.streamsets.pipeline.stage.processor.fieldmerger;
 
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
 import com.streamsets.pipeline.configurablestage.DProcessor;
@@ -38,7 +38,7 @@ public class FieldMergerDProcessor extends DProcessor {
       displayPosition = 40,
       group = "MERGE"
   )
-  @ComplexField
+  @ListBeanModel
   public List<FieldMergerConfig> mergeMapping;
 
   @ConfigDef(
@@ -50,7 +50,7 @@ public class FieldMergerDProcessor extends DProcessor {
     displayPosition = 30,
     group = "MERGE"
   )
-  @ValueChooser(OnStagePreConditionFailureChooserValues.class)
+  @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
   public OnStagePreConditionFailure onStagePreConditionFailure;
 
   @ConfigDef(

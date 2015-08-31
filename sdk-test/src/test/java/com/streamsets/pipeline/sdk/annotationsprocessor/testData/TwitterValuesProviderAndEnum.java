@@ -9,7 +9,7 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.FieldValueChooser;
+import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
@@ -23,7 +23,7 @@ import java.util.Map;
 @StageDef(description = "Produces twitter feeds", label = "twitter_source", version = 1)
 public class TwitterValuesProviderAndEnum extends BaseSource {
 
-  @FieldValueChooser(Misc.TwitterTypesProvider.class)
+  @FieldValueChooserModel(Misc.TwitterTypesProvider.class)
   @ConfigDef(
       defaultValue = "admin",
       label = "username",

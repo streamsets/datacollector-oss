@@ -12,7 +12,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
@@ -72,7 +72,7 @@ public class OmnitureDSource extends DSource {
       displayPosition = 25,
       group = "OMNITURE"
   )
-  @ValueChooser(HttpClientModeChooserValues.class)
+  @ValueChooserModel(HttpClientModeChooserValues.class)
   public HttpClientMode httpMode;
 
   @ConfigDef(

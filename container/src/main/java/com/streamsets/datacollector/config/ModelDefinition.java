@@ -18,20 +18,20 @@ public class ModelDefinition {
   private final Map<String, ConfigDefinition> configDefinitionsAsMap;
   private List<String> values;
   private List<String> labels;
-  private final Class complexFieldClass;
+  private final Class listBeanClass;
 
   public static ModelDefinition localizedValueChooser(ModelDefinition model, List<String> values, List<String> labels) {
     return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), values, labels,
-                        model.getComplexFieldClass(), model.getConfigDefinitions());
+                        model.getListBeanClass(), model.getConfigDefinitions());
   }
 
   public static ModelDefinition localizedComplexField(ModelDefinition model, List<ConfigDefinition> configDefs) {
     return new ModelDefinition(model.getModelType(), model.getValuesProviderClass(), model.getValues(),
-                               model.getLabels(), model.getComplexFieldClass(), configDefs);
+                               model.getLabels(), model.getListBeanClass(), configDefs);
   }
 
   public ModelDefinition(ModelType modelType, String valuesProviderClass, List<String> values,
-      List<String> labels, Class complexFieldClass, List<ConfigDefinition> configDefinitions) {
+      List<String> labels, Class listBeanClass, List<ConfigDefinition> configDefinitions) {
     this.modelType = modelType;
     this.valuesProviderClass = valuesProviderClass;
     this.configDefinitions = configDefinitions;
@@ -43,7 +43,7 @@ public class ModelDefinition {
     }
     this.values = values;
     this.labels = labels;
-    this.complexFieldClass = complexFieldClass;
+    this.listBeanClass = listBeanClass;
   }
 
   public ModelType getModelType() {
@@ -70,8 +70,8 @@ public class ModelDefinition {
     this.labels = labels;
   }
 
-  public Class getComplexFieldClass() {
-    return complexFieldClass;
+  public Class getListBeanClass() {
+    return listBeanClass;
   }
 
   public List<ConfigDefinition> getConfigDefinitions() {

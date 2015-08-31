@@ -6,7 +6,7 @@
 package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
@@ -14,7 +14,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 
@@ -40,7 +40,7 @@ public class RandomDataGeneratorSource extends BaseSource {
 
   @ConfigDef(label = "Fields to Generate", required = false, type = ConfigDef.Type.MODEL, defaultValue="",
     description="Fields to generate of the indicated type")
-  @ComplexField
+  @ListBeanModel
   public List<DataGeneratorConfig> dataGenConfigs;
 
   @ConfigDef(label = "Root Field Type",
@@ -48,7 +48,7 @@ public class RandomDataGeneratorSource extends BaseSource {
     type = ConfigDef.Type.MODEL,
     defaultValue = "MAP",
     description = "Field Type for root object")
-  @ValueChooser(RootTypeChooserValueProvider.class)
+  @ValueChooserModel(RootTypeChooserValueProvider.class)
   public RootType rootFieldType;
 
   @Override
@@ -146,7 +146,7 @@ public class RandomDataGeneratorSource extends BaseSource {
     @ConfigDef(required = true, type = ConfigDef.Type.MODEL,
       label = "Field Type",
       defaultValue = "STRING")
-    @ValueChooser(TypeChooserValueProvider.class)
+    @ValueChooserModel(TypeChooserValueProvider.class)
     public Type type;
   }
 

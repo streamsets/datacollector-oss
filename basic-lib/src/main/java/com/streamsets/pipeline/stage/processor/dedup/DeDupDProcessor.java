@@ -8,12 +8,12 @@ package com.streamsets.pipeline.stage.processor.dedup;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
     execution = ExecutionMode.STANDALONE
 )
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
+@HideConfigs(onErrorRecord = true)
 @GenerateResourceBundle
 public class DeDupDProcessor extends DProcessor {
 
@@ -64,7 +64,7 @@ public class DeDupDProcessor extends DProcessor {
       displayPosition = 30,
       group = "DE_DUP"
   )
-  @ValueChooser(SelectFieldsChooserValues.class)
+  @ValueChooserModel(SelectFieldsChooserValues.class)
   public SelectFields compareFields;
 
   @ConfigDef(
@@ -76,7 +76,7 @@ public class DeDupDProcessor extends DProcessor {
       dependsOn = "compareFields",
       triggeredByValue = "SPECIFIED_FIELDS"
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fieldsToCompare;
 
   @Override

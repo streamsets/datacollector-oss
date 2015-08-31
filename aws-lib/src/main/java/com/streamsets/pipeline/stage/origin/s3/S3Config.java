@@ -15,7 +15,7 @@ import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class S3Config {
     displayPosition = 10,
     group = "#0"
   )
-  @ValueChooser(AWSRegionChooserValues.class)
+  @ValueChooserModel(AWSRegionChooserValues.class)
   public Regions region;
 
   @ConfigDef(

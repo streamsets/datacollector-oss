@@ -12,7 +12,7 @@ import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
-import com.streamsets.pipeline.api.ComplexField;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
@@ -228,7 +228,7 @@ public abstract class ConfigDefinitionExtractor {
     List<ErrorMessage> errors = new ArrayList<>();
     ConfigDef annotation = field.getAnnotation(ConfigDef.class);
     errors.addAll(ConfigValueExtractor.get().validate(field, annotation, contextMsg));
-    if (annotation.type() == ConfigDef.Type.MODEL && field.getAnnotation(ComplexField.class) != null && isComplexField) {
+    if (annotation.type() == ConfigDef.Type.MODEL && field.getAnnotation(ListBeanModel.class) != null && isComplexField) {
       errors.add(new ErrorMessage(DefinitionError.DEF_161, contextMsg,  field.getName()));
     } else {
       List<ErrorMessage> modelErrors = ModelDefinitionExtractor.get().validate(configPrefix + field.getName() + ".",

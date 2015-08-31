@@ -7,7 +7,7 @@ package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
@@ -16,7 +16,7 @@ import com.streamsets.pipeline.api.StageDef;
     description = "",
     icon = "")
 @ErrorStage
-@HideConfig(preconditions = true, onErrorRecord = true)
+@HideConfigs(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle
 public class ToErrorSdcIpcDTarget extends SdcIpcDTarget {
 

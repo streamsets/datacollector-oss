@@ -8,12 +8,12 @@ package com.streamsets.pipeline.stage.processor.fieldfilter;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
 import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.FieldSelector;
+import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfig;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.ValueChooser;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DProcessor;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
     icon="filter.png"
 )
 @ConfigGroups(Groups.class)
-@HideConfig(onErrorRecord = true)
+@HideConfigs(onErrorRecord = true)
 @GenerateResourceBundle
 public class FieldFilterDProcessor extends DProcessor {
 
@@ -38,7 +38,7 @@ public class FieldFilterDProcessor extends DProcessor {
       displayPosition = 10,
       group = "FILTER"
   )
-  @ValueChooser(FilterOperationChooserValues.class)
+  @ValueChooserModel(FilterOperationChooserValues.class)
   public FilterOperation filterOperation;
 
   @ConfigDef(
@@ -50,7 +50,7 @@ public class FieldFilterDProcessor extends DProcessor {
       displayPosition = 20,
       group = "FILTER"
   )
-  @FieldSelector
+  @FieldSelectorModel
   public List<String> fields;
 
   @Override
