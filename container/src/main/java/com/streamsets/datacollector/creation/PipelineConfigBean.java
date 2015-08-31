@@ -61,7 +61,7 @@ public class PipelineConfigBean implements Stage {
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Retry pipeline on error",
+    label = "Retry Pipeline on Error",
     displayPosition = 30)
   public boolean shouldRetry;
 
@@ -69,12 +69,11 @@ public class PipelineConfigBean implements Stage {
     required = false,
     type = ConfigDef.Type.NUMBER,
     defaultValue = "-1",
-    label = "Retry attempts",
+    label = "Retry Attempts",
     dependsOn = "shouldRetry",
     triggeredByValue = "true",
-    description = "Max no of retries for a pipeline. The default value is -1 which causes the "
-      + "retry to happen infinitely. The interval for first retry "
-      + "is 15 secs and then it increases exponentially flattening at 5 mins",
+    description = "Max no of retries. To retry indefinitely, use -1. The wait time between retries starts at 15 seconds"
+      + " and doubles until reaching 5 minutes.",
     displayPosition = 30)
   public int retryAttempts;
 
