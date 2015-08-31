@@ -59,7 +59,47 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>release-tar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <echo file="${project.build.directory}/renametarball.sh">#!/bin/bash
+                  run() {
+                    echo "\$ ${@}"
+                    "${@}"
+                    res=$?
+                    if [ $res != 0 ]; then
+                      echo
+                      echo "Failed!"
+                      echo
+                      exit $res
+                    fi
+                  }
+
+                  targetDir=`pwd`
+                  run cd ../../dist/target/streamsets-datacollector-${project.version}
+                  run mv ${targetDir}/streamsets-datacollector-${project.version}.tar.gz ${targetDir}/streamsets-datacollector-${project.version}.tgz
+                  echo
+                  echo "StreamSets Data Collector tar available at:  ${targetDir}/streamsets-datacollector-${project.version}.tgz"
+                  echo
+                </echo>
+                <exec executable="/bin/bash" dir="${project.build.directory}" failonerror="true">
+                  <arg line="./renametarball.sh"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    </plugins>
   </build>
 
   <profiles>
