@@ -17,6 +17,7 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.destination.sdcipc.Constants;
 import com.streamsets.pipeline.stage.destination.sdcipc.SSLTestUtils;
+import org.iq80.snappy.SnappyFramedOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class TestSdcIpcSource {
     }
   }
 
-  private void testReceiveRecords(final boolean ssl) throws Exception {
+  private void testReceiveRecords(final boolean ssl, final boolean compressed) throws Exception {
     String hostname = SSLTestUtils.getHostname();
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     File keyStore = new File(testDir, "keystore.jks");
@@ -80,7 +81,7 @@ public class TestSdcIpcSource {
           r2.set(Field.create(false));
           List<Record> records = ImmutableList.of(r1, r2);
           return sendRecords(configs.appId, runner.getContext(), SSLTestUtils.getHostname() + ":" + configs.port, ssl,
-                             trustStore.toString(), "truststore", records);
+                             trustStore.toString(), "truststore", compressed, records);
         }
       });
       StageRunner.Output output = runner.runProduce(null, 10);
@@ -103,7 +104,7 @@ public class TestSdcIpcSource {
           r2.set(Field.create(false));
           List<Record> records = ImmutableList.of(r1, r2);
           return sendRecords("invalid", runner.getContext(), SSLTestUtils.getHostname() + ":" + configs.port, ssl,
-                             trustStore.toString(), "truststore", records);
+                             trustStore.toString(), "truststore", compressed, records);
         }
       });
 
@@ -144,7 +145,7 @@ public class TestSdcIpcSource {
   }
 
   private boolean sendRecords(String appId, Stage.Context context, String hostPort, boolean ssl, String trustStoreFile,
-      String trustStorePassword,  List<Record> records)
+      String trustStorePassword, boolean compressed,  List<Record> records)
       throws Exception {
     try {
       ContextExtensions ext = (ContextExtensions) context;
@@ -152,10 +153,16 @@ public class TestSdcIpcSource {
                                              trustStorePassword);
       conn.setRequestMethod("POST");
       conn.setRequestProperty(Constants.CONTENT_TYPE_HEADER, Constants.APPLICATION_BINARY);
+      if (compressed) {
+        conn.setRequestProperty(Constants.X_SDC_COMPRESSION_HEADER, Constants.SNAPPY_COMPRESSION);
+      }
       conn.setDefaultUseCaches(false);
       conn.setDoOutput(true);
       conn.setDoInput(true);
       OutputStream os = conn.getOutputStream();
+      if (compressed) {
+        os = new SnappyFramedOutputStream(os);
+      }
       RecordWriter writer = ext.createRecordWriter(os);
       for (Record record : records) {
         writer.write(record);
@@ -170,12 +177,14 @@ public class TestSdcIpcSource {
 
   @Test
   public void testReceiveRecordsHttp() throws Exception {
-    testReceiveRecords(false);
+    testReceiveRecords(false, false);
+    testReceiveRecords(false, true);
   }
 
   @Test
   public void testReceiveRecordsHttps() throws Exception {
-    testReceiveRecords(true);
+    testReceiveRecords(true, false);
+    testReceiveRecords(true, true);
   }
 
 }

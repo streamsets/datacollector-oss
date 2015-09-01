@@ -7,6 +7,8 @@ package com.streamsets.pipeline.stage.destination.sdcipc;
 
 public interface Constants {
   String X_SDC_APPLICATION_ID_HEADER = "X-SDC-APPLICATION-ID";
+  String X_SDC_COMPRESSION_HEADER = "X-SDC-COMPRESSION";
+  String SNAPPY_COMPRESSION = "snappy";
   String CONTENT_TYPE_HEADER = "Content-Type";
   String APPLICATION_BINARY = "application/binary";
 

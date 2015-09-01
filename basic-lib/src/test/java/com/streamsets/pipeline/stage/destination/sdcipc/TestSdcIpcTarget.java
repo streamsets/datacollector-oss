@@ -264,6 +264,7 @@ public class TestSdcIpcTarget {
   }
 
   private static class ReceiverServlet extends HttpServlet {
+    boolean compressedData;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -284,6 +285,8 @@ public class TestSdcIpcTarget {
       } else if (appId == null || !appId.equals("appId")) {
         resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
       } else {
+        compressedData = req.getHeader(Constants.X_SDC_COMPRESSION_HEADER) != null &&
+                         req.getHeader(Constants.X_SDC_COMPRESSION_HEADER).equals(Constants.SNAPPY_COMPRESSION);
         InputStream is = req.getInputStream();
         while (is.read() > 1);
         resp.setStatus(HttpServletResponse.SC_OK);
@@ -296,7 +299,8 @@ public class TestSdcIpcTarget {
   public void testHttp() throws Exception {
     Server server = new Server(0);
     ServletContextHandler context = new ServletContextHandler();
-    context.addServlet(new ServletHolder(new ReceiverServlet()), Constants.IPC_PATH);
+    ReceiverServlet servlet = new ReceiverServlet();
+    context.addServlet(new ServletHolder(servlet), Constants.IPC_PATH);
     context.setContextPath("/");
     server.setHandler(context);
     try {
@@ -312,8 +316,9 @@ public class TestSdcIpcTarget {
       config.trustStoreFile = "";
       config.trustStorePassword = "";
       config.hostVerification = true;
+      config.compression = false;
 
-      // test OK
+      // test OK without compression
       SdcIpcTarget target = new SdcIpcTarget(config);
 
       TargetRunner runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
@@ -322,6 +327,24 @@ public class TestSdcIpcTarget {
         runner.runInit();
         List<Record> records = ImmutableList.of(RecordCreator.create(), RecordCreator.create());
         runner.runWrite(records);
+        Assert.assertFalse(servlet.compressedData);
+        Assert.assertTrue(runner.getErrorRecords().isEmpty());
+        Assert.assertTrue(runner.getErrors().isEmpty());
+      } finally {
+        runner.runDestroy();
+      }
+
+      // test OK with compression
+
+      config.compression = false;
+      target = new SdcIpcTarget(config);
+      runner = new TargetRunner.Builder(SdcIpcTarget.class, target)
+          .setOnRecordError(OnRecordError.TO_ERROR).build();
+      try {
+        runner.runInit();
+        List<Record> records = ImmutableList.of(RecordCreator.create(), RecordCreator.create());
+        runner.runWrite(records);
+        Assert.assertFalse(servlet.compressedData);
         Assert.assertTrue(runner.getErrorRecords().isEmpty());
         Assert.assertTrue(runner.getErrors().isEmpty());
       } finally {

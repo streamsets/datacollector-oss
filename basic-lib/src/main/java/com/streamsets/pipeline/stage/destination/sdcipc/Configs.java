@@ -138,6 +138,16 @@ public class Configs {
   )
   public int readTimeOutMs;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Compression",
+      displayPosition = 40,
+      group = "ADVANCED"
+  )
+  public boolean compression;
+
   private SSLSocketFactory sslSocketFactory;
 
   public List<Stage.ConfigIssue> init(Stage.Context context) {

@@ -11,6 +11,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
+import org.iq80.snappy.SnappyFramedOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,7 +118,13 @@ public class SdcIpcTarget extends BaseTarget {
       LOG.debug("Writing out batch '{}' retry '{}'", batch.getSourceOffset(), retryCount);
       try {
         conn = createWriteConnection(retryCount > 0);
+        if (config.compression) {
+          conn.setRequestProperty(Constants.X_SDC_COMPRESSION_HEADER, Constants.SNAPPY_COMPRESSION);
+        }
         OutputStream os = conn.getOutputStream();
+        if (config.compression) {
+          os = new SnappyFramedOutputStream(os);
+        }
         RecordWriter writer = ext.createRecordWriter(os);
         Iterator<Record> it = batch.getRecords();
         while (it.hasNext()) {

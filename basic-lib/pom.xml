@@ -35,6 +35,7 @@
     <xerces.version>2.11.0</xerces.version>
     <bouncycastle.version>1.46</bouncycastle.version>
     <jetty.version>9.2.3.v20140905</jetty.version>
+    <snappy.version>0.4</snappy.version>
   </properties>
 
   <dependencies>
@@ -171,6 +172,13 @@
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
       <version>${jetty.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.iq80.snappy</groupId>
+      <artifactId>snappy</artifactId>
+      <version>${snappy.version}</version>
       <scope>compile</scope>
     </dependency>
 
