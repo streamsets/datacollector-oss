@@ -18,6 +18,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -44,6 +45,7 @@ public class Pipeline {
   private final BadRecordsHandler badRecordsHandler;
   private final ResourceControlledScheduledExecutor scheduledExecutorService;
   private volatile boolean running;
+  private boolean shouldStopOnStageError = false;
 
   private Pipeline(String name, String rev, Configuration configuration, PipelineBean pipelineBean, Pipe[] pipes,
                    Observer observer, BadRecordsHandler badRecordsHandler, PipelineRunner runner,
@@ -58,6 +60,12 @@ public class Pipeline {
     this.runner = runner;
     this.scheduledExecutorService = scheduledExecutorService;
     this.running = false;
+    for (Pipe pipe : pipes) {
+      StageContext stageContext = (StageContext) pipe.getStage().getContext();
+      if (stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE) {
+        shouldStopOnStageError = true;
+      }
+    }
   }
 
   PipelineConfigBean getPipelineConfig() {
@@ -67,6 +75,10 @@ public class Pipeline {
   @VisibleForTesting
   Pipe[] getPipes() {
     return pipes;
+  }
+
+  public boolean shouldStopOnStageError() {
+    return shouldStopOnStageError;
   }
 
   public Source getSource() {

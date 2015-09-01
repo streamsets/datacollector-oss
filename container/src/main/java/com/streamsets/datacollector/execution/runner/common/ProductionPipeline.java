@@ -131,7 +131,7 @@ public class ProductionPipeline {
             stateChanged(PipelineStatus.FINISHED, null, null);
           } else if (errorWhileRunning) {
             LOG.debug("Stopped due to an error");
-            if (shouldRetry && !isExecutingInSlave) {
+            if (shouldRetry && !pipeline.shouldStopOnStageError() && !isExecutingInSlave) {
               stateChanged(PipelineStatus.RETRY, runningErrorMsg, null);
             } else {
               stateChanged(PipelineStatus.RUN_ERROR, runningErrorMsg, null);
