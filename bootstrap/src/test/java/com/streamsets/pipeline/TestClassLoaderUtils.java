@@ -8,9 +8,9 @@ package com.streamsets.pipeline;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Properties;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -79,6 +79,15 @@ public class TestClassLoaderUtils {
   @Test
   public void testGetTrimmedStrings() throws Exception {
     Assert.assertArrayEquals(new String[]{"a", "b"}, ClassLoaderUtil.getTrimmedStrings("a , b"));
+    Assert.assertArrayEquals(new String[]{"a", "b"}, ClassLoaderUtil.getTrimmedStrings("\na\n ,\n b"));
+    Properties properties = new Properties();
+    InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("api-classloader.properties");
+    properties.load(is);
+    is.close();
+    String[] classes = ClassLoaderUtil.getTrimmedStrings(properties.getProperty("system.classes.default"));
+    Assert.assertEquals(String.valueOf(properties), "java.", classes[0]);
+    Assert.assertEquals(String.valueOf(properties), "-java.sql.Driver", classes[1]);
+    Assert.assertEquals(String.valueOf(properties), "jdk.", classes[2]);
   }
 
   @Test

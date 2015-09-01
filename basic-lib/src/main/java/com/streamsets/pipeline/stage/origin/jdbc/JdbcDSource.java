@@ -54,6 +54,7 @@ public class JdbcDSource extends DSource {
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       label = "SQL Query",
+      description = "SELECT <offset column>, ... FROM <table name> WHERE <offset column>  >  ${OFFSET} ORDER BY <offset column>",
       elDefs = {OffsetEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 20,
