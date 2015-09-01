@@ -83,7 +83,7 @@ public class PipelineConfigBean implements Stage {
     label = "Max Pipeline Memory (MB)",
     defaultValue = "${jvm:maxMemoryMB() * 0.65}",
     description = "Maximum amount of memory the pipeline can use. Configure in relationship to the SDC Java heap " +
-      "size. Default is 668.",
+      "size. The default is 650 and a value of 0 or less disables the limit.",
     displayPosition = 60,
     min = 128,
     group = ""

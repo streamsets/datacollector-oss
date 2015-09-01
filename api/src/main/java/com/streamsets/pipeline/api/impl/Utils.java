@@ -126,7 +126,7 @@ public final class Utils {
   public static String humanReadableInt(long number) {
     DecimalFormat oneDecimal = new DecimalFormat("0.0");
     long absNumber = Math.abs(number);
-    double result = number;
+    double result;
     String prefix = number < 0 ? "-" : "";
     String suffix = "";
     if (absNumber < 1000) {

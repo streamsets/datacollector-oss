@@ -401,12 +401,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
           largestConsumed = entry.getValue();
           largestConsumer = entry.getKey();
         }
-        humanReadbleMemoryConsumptionByStage.put(entry.getKey(), Utils.humanReadableInt(entry.getValue()));
+        humanReadbleMemoryConsumptionByStage.put(entry.getKey(), entry.getValue() + " MB");
       }
       humanReadbleMemoryConsumptionByStage.remove(largestConsumer);
-      PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0011,
-        Utils.humanReadableInt(totalMemoryConsumed), Utils.humanReadableInt(memoryLimit),
-        largestConsumer, Utils.humanReadableInt(largestConsumed), humanReadbleMemoryConsumptionByStage);
+      PipelineRuntimeException ex = new PipelineRuntimeException(ContainerError.CONTAINER_0011, totalMemoryConsumed,
+        memoryLimit, largestConsumer, largestConsumed, humanReadbleMemoryConsumptionByStage);
       String msg = "Pipeline memory limit exceeded: " + ex;
       long elapsedTimeSinceLastTriggerMins = TimeUnit.MILLISECONDS.
         toMinutes(System.currentTimeMillis() - lastMemoryLimitNotification);

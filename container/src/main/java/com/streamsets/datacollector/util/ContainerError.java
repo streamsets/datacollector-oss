@@ -21,7 +21,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0002("{}"),
 
   CONTAINER_0010("Stage configuration validation error: {}"),
-  CONTAINER_0011("Pipeline memory consumption {} exceeded allowed memory {}. Largest consumer is {} at {}. " +
+  CONTAINER_0011("Pipeline memory consumption {} MB exceeded allowed memory {} MB. Largest consumer is {} at {} MB. " +
     "Remaining stages: {}"),
 
   // RequiredFieldsErrorPredicateSink
