@@ -305,7 +305,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "LIST",
+    defaultValue = "LIST_MAP",
     label = "Record Type",
     description = "",
     displayPosition = 310,

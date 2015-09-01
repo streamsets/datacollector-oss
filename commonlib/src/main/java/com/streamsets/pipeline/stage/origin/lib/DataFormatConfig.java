@@ -207,7 +207,7 @@ public class DataFormatConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    defaultValue = "LIST",
+    defaultValue = "LIST_MAP",
     label = "Record Type",
     description = "",
     displayPosition = 310,
