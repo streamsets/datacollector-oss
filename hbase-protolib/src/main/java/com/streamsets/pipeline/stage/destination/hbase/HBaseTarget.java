@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.Subject;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -67,7 +68,7 @@ public class HBaseTarget extends BaseTarget {
   private final StorageType rowKeyStorageType;
   private final String hbaseConfDir;
   private final String hbaseUser;
-  
+
   private Configuration hbaseConf;
   private UserGroupInformation loginUgi;
 
@@ -215,7 +216,7 @@ public class HBaseTarget extends BaseTarget {
         UserGroupInformation.loginUserFromSubject(subject);
         loginUgi = UserGroupInformation.getLoginUser();
       }
-      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject, 
+      LOG.info("Subject = {}, Principals = {}, Login UGI = {}", subject,
         subject == null ? "null" : subject.getPrincipals(), loginUgi);
       StringBuilder logMessage = new StringBuilder();
       if (kerberosAuth) {
@@ -328,6 +329,9 @@ public class HBaseTarget extends BaseTarget {
   private byte[] getBytesForRowKey(Record record) throws OnRecordErrorException {
     byte[] value;
     Field field = record.get(this.hbaseRowKey);
+    if (field == null) {
+      throw new OnRecordErrorException(Errors.HBASE_27, this.hbaseRowKey);
+    }
     if (rowKeyStorageType == StorageType.TEXT) {
       value = Bytes.toBytes(field.getValueAsString());
     } else {
@@ -346,12 +350,19 @@ public class HBaseTarget extends BaseTarget {
           return null;
         }
       });
-    } catch (IOException e) {
-      throw new StageException(Errors.HBASE_02, e);
-    } catch (InterruptedException e) {
-      LOG.warn("Interrupted while processing batch of records at HBase destination", e);
-      throw new RuntimeException(e);
+    } catch (Exception e) {
+      throw throwStageException(e);
     }
+  }
+
+  private static StageException throwStageException(Exception e) {
+    if (e instanceof RuntimeException) {
+      Throwable cause = e.getCause();
+      if (cause != null) {
+        return new StageException(Errors.HBASE_26, cause, cause);
+      }
+    }
+    return new StageException(Errors.HBASE_26, e, e);
   }
 
   private void writeBatch(Batch batch) throws StageException {
@@ -454,6 +465,9 @@ public class HBaseTarget extends BaseTarget {
     String index = columnInfo.columnValue;
     StorageType columnStorageType = columnInfo.storageType;
     Field field = record.get(index);
+    if (field == null) {
+      throw new OnRecordErrorException(Errors.HBASE_25, index);
+    }
     // Figure the storage type and convert appropriately
     if (columnStorageType == (StorageType.TEXT)) {
       value = Bytes.toBytes(field.getValueAsString());
@@ -537,14 +551,14 @@ public class HBaseTarget extends BaseTarget {
       this.storageType = hbaseStorageType;
     }
 
-    private String columnValue;
-    private StorageType storageType;
+    private final String columnValue;
+    private final StorageType storageType;
   }
 
   private static class WriteErrorInfo {
-    private Throwable t;
-    private Row row;
-    private String server;
+    private final Throwable t;
+    private final Row row;
+    private final String server;
 
     private WriteErrorInfo(Throwable t, Row row, String server) {
       this.t = t;

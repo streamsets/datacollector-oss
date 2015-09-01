@@ -36,6 +36,9 @@ public enum Errors implements ErrorCode {
   HBASE_23("Could not resolve the default Kerberos realm, you must set the 'hbase.regionserver.kerberos.principal' " +
     "property to the HBase Regionserver principal name: {}"),
   HBASE_24("HBase Configuration Directory '{}' must be relative to SDC resources directory in cluster mode"),
+  HBASE_25("Missing column field '{}' in record"),
+  HBASE_26("Errors while writing to HBase: '{}'"),
+  HBASE_27("Missing row key field '{}' in record")
   ;
   private final String msg;
 
