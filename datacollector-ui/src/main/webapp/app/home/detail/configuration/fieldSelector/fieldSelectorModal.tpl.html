@@ -12,15 +12,6 @@
     <div show-loading="showLoading"></div>
 
     <div ng-hide="showLoading">
-
-      <!--ul class="record-list">
-        <li class="record-list-item"
-            ng-repeat="(fieldName, recordValue) in recordObject.value.value"
-            ng-include="'recordTree'"
-            onload="selectable=true;selectedPath=selectedPath;isRoot=false">
-        </li>
-      </ul-->
-
       <record-tree
         record="recordObject"
         record-value="recordObject.value"
@@ -30,7 +21,6 @@
         selectable="true"
         selected-path="selectedPath">
       </record-tree>
-
     </div>
 
     <label class="label-warning"
@@ -39,11 +29,9 @@
 
   </div>
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary" ng-hide="showLoading || noPreviewRecord" ng-click="save()" translate="global.form.save">
-      Save
-    </button>
-    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">
-      Close
-    </button>
+    <button type="submit" class="btn btn-primary"
+            ng-hide="showLoading || noPreviewRecord" ng-click="save()" translate="global.form.save">Save</button>
+    <button type="reset" class="btn btn-default"
+            ng-click="close()" translate="global.form.close">Close</button>
   </div>
 </script>
