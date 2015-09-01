@@ -60,7 +60,7 @@
                 <provide>streamsets-datacollector</provide>
               </provides>
               <requires>
-                <require>java</require>
+                <require>jre &gt;= 1.7</require>
               </requires>
               <defineStatements>
                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
