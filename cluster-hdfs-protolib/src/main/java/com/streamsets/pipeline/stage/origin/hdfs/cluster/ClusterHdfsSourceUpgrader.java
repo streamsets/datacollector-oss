@@ -28,5 +28,12 @@ public class ClusterHdfsSourceUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("csvRecordType", "LIST"));
+    configs.add(new Config("avroSchema", null));
+    configs.add(new Config("csvFileFormat", "CSV"));
+    configs.add(new Config("csvHeader", "NO_HEADER"));
+    configs.add(new Config("csvMaxObjectLen", 1024));
+    configs.add(new Config("csvCustomDelimiter", "|"));
+    configs.add(new Config("csvCustomEscape", "\\"));
+    configs.add(new Config("csvCustomQuote", "\""));
   }
 }

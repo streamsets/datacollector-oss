@@ -158,6 +158,7 @@ public class PipelineConfigurationUpgrader {
     } catch (StageException ex) {
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ex.getErrorCode(), ex.getParams()));
     } catch (Exception ex) {
+      LOG.error("Unknown exception during upgrade: " + ex, ex);
       issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ContainerError.CONTAINER_0900, fromVersion,
                                                                       toVersion, ex.toString()));
     } finally {
