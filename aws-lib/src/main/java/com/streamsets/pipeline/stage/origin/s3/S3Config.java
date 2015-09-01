@@ -74,16 +74,6 @@ public class S3Config {
   public String folder;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Object Name Prefix",
-    description = "",
-    displayPosition = 60,
-    group = "#0"
-  )
-  public String prefix;
-
-  @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Object Path delimiter",
@@ -93,6 +83,13 @@ public class S3Config {
     group = "#0"
   )
   public String delimiter;
+
+  //Undocumented configuration used only by the unit tests to point AmazonS3Client to the fakes3 server
+  private String endPoint;
+
+  public void setEndPointForTest(String endPoint) {
+    this.endPoint = endPoint;
+  }
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     validateConnection(context, issues);
@@ -120,7 +117,11 @@ public class S3Config {
     AWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
     s3Client = new AmazonS3Client(credentials, new ClientConfiguration());
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
-    s3Client.setRegion(Region.getRegion(region));
+    if(endPoint != null && !endPoint.isEmpty()) {
+      s3Client.setEndpoint(endPoint);
+    } else {
+      s3Client.setRegion(Region.getRegion(region));
+    }
     try {
       //check if the credentials are right by trying to list buckets
       s3Client.listBuckets();

@@ -56,45 +56,47 @@ public class S3ConfigBean {
       validateBucket(context, issues, s3Config.getS3Client(), s3Config.bucket, Groups.S3.name(), "bucket");
     }
 
+    //post process config options
+    postProcessingConfig.postProcessBucket = validatePostProcessing(context, postProcessingConfig.postProcessing,
+      postProcessingConfig.archivingOption, postProcessingConfig.postProcessBucket,
+      postProcessingConfig.postProcessFolder, Groups.POST_PROCESSING.name(), "postProcessBucket", "postProcessFolder",
+      issues);
+
+    //error handling config options
+    errorConfig.errorBucket = validatePostProcessing(context, errorConfig.errorHandlingOption,
+      errorConfig.archivingOption, errorConfig.errorBucket, errorConfig.errorFolder, Groups.ERROR_HANDLING.name(),
+      "errorBucket", "errorFolder",issues);
+
+  }
+
+  private String validatePostProcessing(Stage.Context context, PostProcessingOptions postProcessingOptions,
+                                      S3ArchivingOption s3ArchivingOption, String postProcessBucket,
+                                      String postProcessFolder, String groupName, String bucketConfig,
+                                      String folderConfig, List<Stage.ConfigIssue> issues) {
     //validate post processing options
     //In case of post processing option archive user could choose move to bucket or move to folder [within same bucket]
-    if(postProcessingConfig.postProcessing == PostProcessingOptions.ARCHIVE) {
+    if(postProcessingOptions == PostProcessingOptions.ARCHIVE) {
       //If "move to bucket" then valid bucket name must be specified and folder name may or may not be specified
       //If the bucket name is same as the source bucket then a folder must be specified must it must be different from
       // source folder
-      if(postProcessingConfig.archivingOption == S3ArchivingOption.MOVE_TO_BUCKET) {
+      if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_BUCKET) {
         //If archive option is move to bucket, then bucket must be specified.
-        validateBucket(context, issues, s3Config.getS3Client(), postProcessingConfig.postProcessBucket,
-          Groups.POST_PROCESSING.name(),"postProcessBucket");
+        validateBucket(context, issues, s3Config.getS3Client(), postProcessBucket,groupName, bucketConfig);
         //If the specified bucket is same as the source bucket then folder must be specified
-        if(postProcessingConfig.postProcessBucket != null && !postProcessingConfig.postProcessBucket.isEmpty() &&
-          postProcessingConfig.postProcessBucket.equals(s3Config.bucket)) {
-          validatePostProcessingFolder(context, issues);
+        if(postProcessBucket != null && !postProcessBucket.isEmpty() &&postProcessBucket.equals(s3Config.bucket)) {
+          validatePostProcessingFolder(context, postProcessBucket, postProcessFolder, groupName, folderConfig, issues);
         }
       }
 
       //In case of move to directory, bucket is same as the source bucket and folder must be non-null, non empty and
       //different from source folder.
-      if(postProcessingConfig.archivingOption == S3ArchivingOption.MOVE_TO_DIRECTORY) {
+      if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_DIRECTORY) {
         //same bucket as source bucket
-        postProcessingConfig.postProcessBucket = s3Config.bucket;
-        validatePostProcessingFolder(context, issues);
+        postProcessBucket = s3Config.bucket;
+        validatePostProcessingFolder(context, postProcessBucket, postProcessFolder, groupName, folderConfig, issues);
       }
     }
-
-    //validate error config
-    //Error config is optional, check bucket exists if specified
-    if(errorConfig.errorBucket != null && !errorConfig.errorBucket.isEmpty() &&
-      !errorConfig.errorBucket.equals(s3Config.bucket)) {
-      validateBucket(context, issues, s3Config.getS3Client(), errorConfig.errorBucket, Groups.ERROR_HANDLING.name(),
-        "errorBucket");
-    } else {
-      if(errorConfig.errorFolder != null && !errorConfig.errorFolder.isEmpty() &&
-        !errorConfig.errorFolder.equals(s3Config.folder)) {
-        //folder is specified, bucket is not. move to another folder in same bucket
-        errorConfig.errorBucket = s3Config.bucket;
-      }
-    }
+    return postProcessBucket;
   }
 
   public void destroy() {
@@ -110,13 +112,14 @@ public class S3ConfigBean {
     }
   }
 
-  private void validatePostProcessingFolder(Stage.Context context, List<Stage.ConfigIssue> issues) {
+  private void validatePostProcessingFolder(Stage.Context context, String postProcessBucket, String postProcessFolder,
+                                            String groupName, String configName, List<Stage.ConfigIssue> issues) {
     //should be non null, non-empty and different from source folder
-    if (postProcessingConfig.postProcessFolder == null || postProcessingConfig.postProcessFolder.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.POST_PROCESSING.name(), "postProcessFolder", Errors.S3_SPOOLDIR_13));
-    } else if((postProcessingConfig.postProcessBucket + s3Config.delimiter + postProcessingConfig.postProcessFolder)
+    if (postProcessFolder == null || postProcessFolder.isEmpty()) {
+      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_13));
+    } else if((postProcessBucket + s3Config.delimiter + postProcessFolder)
       .equals(s3Config.bucket + s3Config.delimiter + s3Config.folder)) {
-      issues.add(context.createConfigIssue(Groups.POST_PROCESSING.name(), "postProcessFolder", Errors.S3_SPOOLDIR_14,
+      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_14,
         s3Config.bucket + s3Config.delimiter + s3Config.folder));
     }
   }

@@ -60,10 +60,10 @@ public class AmazonS3Util {
       });
 
     S3Objects s3ObjectSummaries = S3Objects
-      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.folder + s3ConfigBean.s3Config.prefix)
+      .withPrefix(s3Client, s3ConfigBean.s3Config.bucket, s3ConfigBean.s3Config.folder)
       .withBatchSize(BATCH_SIZE);
     for(S3ObjectSummary s : s3ObjectSummaries) {
-      String fileName = s.getKey().substring(s.getKey().lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
+      String fileName = s.getKey().substring(s3ConfigBean.s3Config.folder.length(), s.getKey().length());
       if(!fileName.isEmpty()) {
         //fileName can be empty.
         //If the user manually creates a folder "myFolder/mySubFolder" in bucket "myBucket" and uploads "myObject",

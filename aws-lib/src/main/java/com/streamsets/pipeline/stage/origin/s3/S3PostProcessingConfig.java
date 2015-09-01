@@ -28,7 +28,6 @@ public class S3PostProcessingConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "MOVE_TO_DIRECTORY",
     label = "Archiving Option",
-    description = "Action to take after processing an object",
     displayPosition = 20,
     group = "#0",
     dependsOn = "postProcessing",

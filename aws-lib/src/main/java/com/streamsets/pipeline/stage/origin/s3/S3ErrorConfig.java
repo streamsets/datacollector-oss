@@ -6,29 +6,58 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 
 public class S3ErrorConfig {
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Error Bucket",
-    description = "Move objects in error into this bucket if specified. " +
-      "One of 2 configurations, error bucket or error folder, must be specified to move objects in error",
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "NONE",
+    label = "Error Handling Option",
+    description = "Action to take when an error is encountered",
     displayPosition = 10,
     group = "#0"
   )
-  public String errorBucket;
+  @ValueChooserModel(S3PostProcessingChooserValues.class)
+  public PostProcessingOptions errorHandlingOption;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "MOVE_TO_DIRECTORY",
+    label = "Archiving Option",
+    displayPosition = 20,
+    group = "#0",
+    dependsOn = "errorHandlingOption",
+    triggeredByValue = { "ARCHIVE" }
+  )
+  @ValueChooserModel(S3ArchivingOptionChooserValues.class)
+  public S3ArchivingOption archivingOption;
 
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.STRING,
     label = "Error Folder",
-    description = "Move objects in error into this folder if specified. " +
-      "One of 2 configurations, error bucket or error folder, must be specified to move objects in error",
-    displayPosition = 20,
-    group = "#0"
+    description = "Files in error will be moved into this folder",
+    displayPosition = 30,
+    group = "#0",
+    dependsOn = "errorHandlingOption",
+    triggeredByValue = { "ARCHIVE" }
   )
   public String errorFolder;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.STRING,
+    label = "Error Bucket",
+    description = "Files in error will be moved into this bucket",
+    displayPosition = 40,
+    group = "#0",
+    dependsOn = "archivingOption",
+    triggeredByValue = { "MOVE_TO_BUCKET" }
+  )
+  public String errorBucket;
 
 }

@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,15 +116,16 @@ public class S3Spooler {
     return next;
   }
 
-  void postProcess(String postProcessObjectKey) {
-    switch (s3ConfigBean.postProcessingConfig.postProcessing) {
+  void postProcessOrErrorHandle(String postProcessObjectKey, PostProcessingOptions postProcessing, String postProcessBucket,
+                                String postProcessFolder, S3ArchivingOption archivingOption) {
+    switch (postProcessing) {
       case NONE:
         break;
       case DELETE:
-        postProcessDelete(postProcessObjectKey);
+        delete(postProcessObjectKey);
         break;
       case ARCHIVE:
-        postProcessArchive(postProcessObjectKey);
+        archive(postProcessObjectKey, postProcessBucket, postProcessFolder, archivingOption);
         break;
       default:
         throw new IllegalStateException("Invalid post processing option : " +
@@ -131,24 +133,26 @@ public class S3Spooler {
     }
   }
 
-  private void postProcessArchive(String postProcessObjectKey) {
+  private void archive(String postProcessObjectKey, String postProcessBucket, String postProcessFolder,
+                       S3ArchivingOption archivingOption) {
     String destBucket = s3ConfigBean.s3Config.bucket;
-    switch (s3ConfigBean.postProcessingConfig.archivingOption) {
+    switch (archivingOption) {
       case MOVE_TO_DIRECTORY:
         //no-op
         break;
       case MOVE_TO_BUCKET:
-        destBucket = s3ConfigBean.postProcessingConfig.postProcessBucket;
+        destBucket = postProcessBucket;
         break;
       default:
-        throw new IllegalStateException("Invalid Archive option : " + s3ConfigBean.postProcessingConfig.archivingOption.name());
+        throw new IllegalStateException("Invalid Archive option : " + archivingOption.name());
     }
-    String srcObjKey = postProcessObjectKey.substring(postProcessObjectKey.lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
-    String destKey = s3ConfigBean.postProcessingConfig.postProcessFolder + srcObjKey;
+    String srcObjKey = postProcessObjectKey.substring(
+      postProcessObjectKey.lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
+    String destKey = postProcessFolder + srcObjKey;
     AmazonS3Util.move(s3Client, s3ConfigBean.s3Config.bucket, postProcessObjectKey, destBucket, destKey);
   }
 
-  private void postProcessDelete(String postProcessObjectKey) {
+  private void delete(String postProcessObjectKey) {
     LOG.debug("Deleting previous file '{}'", postProcessObjectKey);
     s3Client.deleteObject(s3ConfigBean.s3Config.bucket, postProcessObjectKey);
   }
@@ -156,11 +160,9 @@ public class S3Spooler {
   public void handleCurrentObjectAsError() {
     //Move to error directory only if the error bucket and folder is specified and is different from
     //source bucket and folder
-    if(needsMovingToErrorDir(s3ConfigBean)) {
-      String srcObjKey = currentObject.getKey().substring(currentObject.getKey().lastIndexOf(s3ConfigBean.s3Config.delimiter) + 1);
-      String destKey = s3ConfigBean.errorConfig.errorFolder + srcObjKey;
-      AmazonS3Util.move(s3Client, s3ConfigBean.s3Config.bucket, currentObject.getKey(), s3ConfigBean.errorConfig.errorBucket, destKey);
-    }
+    postProcessOrErrorHandle(currentObject.getKey(), s3ConfigBean.errorConfig.errorHandlingOption,
+      s3ConfigBean.errorConfig.errorBucket, s3ConfigBean.errorConfig.errorFolder,
+      s3ConfigBean.errorConfig.archivingOption);
     currentObject = null;
   }
 
@@ -181,7 +183,9 @@ public class S3Spooler {
       S3ObjectSummary objectSummary = AmazonS3Util.getObjectSummary(s3Client, s3ConfigBean.s3Config.bucket, s3Offset.getKey());
       if(objectSummary != null &&
         objectSummary.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) {
-        postProcess(s3Offset.getKey());
+        postProcessOrErrorHandle(s3Offset.getKey(), s3ConfigBean.postProcessingConfig.postProcessing,
+          s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessFolder,
+          s3ConfigBean.postProcessingConfig.archivingOption);
       }
     }
     currentObject = null;
@@ -191,31 +195,4 @@ public class S3Spooler {
     return FileSystems.getDefault().getPathMatcher("glob:" + pattern);
   }
 
-  private boolean needsMovingToErrorDir(S3ConfigBean s3ConfigBean) {
-    //Move to error directory only if the error handling info is specified and is different from
-    //source bucket and folder
-    boolean move = false;
-    if(s3ConfigBean.errorConfig.errorBucket != null && !s3ConfigBean.errorConfig.errorBucket.isEmpty()) {
-      //Error bucket configuration is specified
-      if(s3ConfigBean.errorConfig.errorBucket.equals(s3ConfigBean.s3Config.bucket)) {
-        //Error bucket is same as source bucket, so error folder must be specified and different from
-        // source folder in order to move
-        if(s3ConfigBean.errorConfig.errorFolder != null && !s3ConfigBean.errorConfig.errorFolder.isEmpty() &&
-          !s3ConfigBean.errorConfig.errorFolder.equals(s3ConfigBean.s3Config.folder)) {
-          move = true;
-        }
-      } else {
-        //A bucket other than source bucket is specified for error files. Move!!
-        move = true;
-      }
-    } else {
-      //Error bucket config is not specified.
-      //Check if error folder config is specified and different from source folder.
-      if(s3ConfigBean.errorConfig.errorFolder != null && !s3ConfigBean.errorConfig.errorFolder.isEmpty() &&
-        !s3ConfigBean.errorConfig.errorFolder.equals(s3ConfigBean.s3Config.folder)) {
-        move = true;
-      }
-    }
-    return move;
-  }
 }
