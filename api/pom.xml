@@ -8,12 +8,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-root</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
-    <relativePath>../root</relativePath>
-  </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-api</artifactId>
   <version>1.1.0-SNAPSHOT</version>
@@ -21,45 +15,105 @@
   <name>StreamSets Data Collector API</name>
   <packaging>jar</packaging>
 
+  <organization>
+    <name>StreamSets</name>
+    <url>http://www.streamsets.com</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <!-- required JDK version -->
+    <javaVersion>1.7</javaVersion>
+
+    <!-- Testcases output redirection -->
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+
+    <!-- Platform encoding override -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <!-- Dependency Versions
+
+         All dependency versions should be defined here to avoid version
+         mismatches with multiple artifacts of the same logical dependency.
+    -->
+    <guava.version>18.0</guava.version>
+    <metrics.version>3.1.0</metrics.version>
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.7</slf4j.version>
+
+    <junit.version>4.11</junit.version>
+    <mockito.version>1.10.7</mockito.version>
+  </properties>
+
+
+  <!--<distributionManagement>-->
+    <!--<repository>-->
+      <!--<id>apache.staging.https</id>-->
+      <!--<name>Apache Release Distribution Repository</name>-->
+      <!--<url>https://repository.apache.org/service/local/staging/deploy/maven2</url>-->
+    <!--</repository>-->
+    <!--<snapshotRepository>-->
+      <!--<id>apache.snapshots.https</id>-->
+      <!--<name>Apache Development Snapshot Repository</name>-->
+      <!--<url>https://repository.apache.org/content/repositories/snapshots</url>-->
+    <!--</snapshotRepository>-->
+  <!--</distributionManagement>-->
+
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
+      <version>${log4j.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-core</artifactId>
+      <version>${metrics.version}</version>
       <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
+
     <resources>
       <resource>
         <directory>${basedir}/src/main/resources</directory>
@@ -76,10 +130,41 @@
         <filtering>true</filtering>
       </resource>
     </resources>
+
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.3.1</version>
+        <configuration>
+          <rules>
+            <requireMavenVersion>
+              <version>[3.2.1,)</version>
+            </requireMavenVersion>
+            <requireJavaVersion>
+              <version>${javaVersion}</version>
+            </requireJavaVersion>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>${javaVersion}</source>
+          <target>${javaVersion}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.18.1</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-maven-plugins</artifactId>
+        <version>2.6.0</version>
         <executions>
           <execution>
             <id>version-info</id>
@@ -98,6 +183,81 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.8</version>
+        <configuration>
+          <excludes>
+            <exclude>.idea/**</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>.gitignore</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>**/target/**</exclude>
+            <exclude>.git/**</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.1</version>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <configuration>
+              <doctitle>StreamSets Data Collector API ${project.version}</doctitle>
+              <linksource>true</linksource>
+              <quiet>true</quiet>
+              <verbose>false</verbose>
+              <charset>UTF-8</charset>
+
+              <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.api.ext</excludePackageNames>
+
+              <groups>
+                <group>
+                  <title>Pipeline API</title>
+                  <packages>com.streamsets.pipeline.api:com.streamsets.pipeline.api.*</packages>
+                </group>
+              </groups>
+
+              <includeDependencySources>false</includeDependencySources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>attach-javadocs-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.8.2</version>
+      </plugin>
+
     </plugins>
   </build>
 

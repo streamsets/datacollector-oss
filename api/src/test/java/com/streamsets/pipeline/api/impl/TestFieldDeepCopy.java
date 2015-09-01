@@ -18,6 +18,7 @@ import java.util.Map;
 public class TestFieldDeepCopy {
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testClone() {
     ListTypeSupport ts = new ListTypeSupport();
     List<Field> list = new ArrayList<>();

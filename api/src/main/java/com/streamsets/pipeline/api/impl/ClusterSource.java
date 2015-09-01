@@ -24,31 +24,26 @@ public interface ClusterSource extends Source {
 
   /**
    * Return the no of records produced by this source
-   * @return
    */
   long getRecordsProduced();
 
   /**
    * Return true if a unrecoverable error has occured
-   * @return
    */
   boolean inErrorState();
 
   /**
    * Returns name of this origin
-   * @return
    */
   String getName();
 
   /**
    * Whether source is configured to run in batch mode or not
-   * @return
    */
   boolean isInBatchMode();
 
   /**
    * The configs to ship to cluster
-   * @return
    */
   Map<String, String> getConfigsToShip();
 

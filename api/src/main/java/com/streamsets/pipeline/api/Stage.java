@@ -43,18 +43,13 @@ public interface Stage<C extends Stage.Context> {
 
     public ExecutionMode getExecutionMode();
 
-    /**
-     * Returns the pipeline max memory in MiB
-     * @return
-     */
     public long getPipelineMaxMemory();
 
     public boolean isPreview();
 
     public boolean isClusterMode();
 
-    public ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode,
-        Object... args);
+    public ConfigIssue createConfigIssue(String configGroup, String configName, ErrorCode errorCode, Object... args);
 
     public List<Info> getPipelineInfo();
 

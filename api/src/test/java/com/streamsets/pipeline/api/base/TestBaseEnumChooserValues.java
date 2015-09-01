@@ -11,7 +11,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 public class TestBaseEnumChooserValues {
 
@@ -27,13 +27,13 @@ public class TestBaseEnumChooserValues {
 
   }
 
-  public class EnumTestChooserValues extends BaseEnumChooserValues {
+  public class EnumTestChooserValues extends BaseEnumChooserValues<EnumTest> {
     public EnumTestChooserValues() {
       super(EnumTest.class);
     }
   }
 
-  public class EnumWithLabelTestChooserValues extends BaseEnumChooserValues {
+  public class EnumWithLabelTestChooserValues extends BaseEnumChooserValues<EnumWithLabelTest> {
     public EnumWithLabelTestChooserValues() {
       super(EnumWithLabelTest.class);
     }
@@ -56,15 +56,15 @@ public class TestBaseEnumChooserValues {
   @Test
   public void testEnumSubSet() {
     ChooserValues cv = new BaseEnumChooserValues<EnumTest>(EnumTest.A){};
-    Assert.assertEquals(Arrays.asList("A"), cv.getValues());
-    Assert.assertEquals(Arrays.asList("A"), cv.getLabels());
+    Assert.assertEquals(Collections.singletonList("A"), cv.getValues());
+    Assert.assertEquals(Collections.singletonList("A"), cv.getLabels());
   }
 
   @Test
   public void testEnumWithLabelSubSet() {
     ChooserValues cv = new BaseEnumChooserValues<EnumWithLabelTest>(EnumWithLabelTest.X){};
-    Assert.assertEquals(Arrays.asList("X"), cv.getValues());
-    Assert.assertEquals(Arrays.asList("x"), cv.getLabels());
+    Assert.assertEquals(Collections.singletonList("X"), cv.getValues());
+    Assert.assertEquals(Collections.singletonList("x"), cv.getLabels());
   }
 
 }

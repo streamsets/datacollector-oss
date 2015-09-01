@@ -5,10 +5,9 @@
  */
 package com.streamsets.pipeline.api;
 
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class OnRecordErrorChooserValues extends BaseEnumChooserValues {
+public class OnRecordErrorChooserValues extends BaseEnumChooserValues<OnRecordError> {
 
   public OnRecordErrorChooserValues() {
     super(OnRecordError.class);

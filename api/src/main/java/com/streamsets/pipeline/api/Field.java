@@ -34,17 +34,17 @@ import java.util.Map;
  * A <code>Field</code> is a type/value pair, where the type o the value matches the <code>Field</code> type.
  * <code>Field</code> values can be automatically converted to compatible Java primitive types and classes.
  * <code>Field</code> values can be <code>null</code>.
- * <p/>
+ * <p></p>
  * The {@link Type} enumeration defines the supported types for <code>Field</code> values.
- * <p/>
+ * <p></p>
  * Except for the Collection based types, <code>Field</code> values are immutable. Collection <code>Field</code> values
  * can be modified using the corresponding Collection manipulation methods.
- * <p/>
+ * <p></p>
  * <b>NOTE:</b> Java <code>Date</code> and <code>byte[]</code> are not immutable. <code>Field</code> makes immutable
  * by performing a copy on <code>create()</code> and on <code>get()</code>. This means that if a <code>Date</code> or
  * <code>byte[]</code> instance obtained from a <code>Field</code> is modified, the actual value stored in the
  * <code>Field</code> is not modified.
- * <p/>
+ * <p></p>
  * The {@link #hashCode}, {@link #equals} and {@link #clone} methods work in deep operation mode on the
  * <code>Field</code>.
  */
@@ -303,10 +303,10 @@ public class Field implements Cloneable {
 
   /**
    * Clones the <code>Field</code>.
-   * <p/>
+   * <p></p>
    * For <code>Field</code> instances  of non-Collection based types it returns the same instance as the are immutable
    * (this deviates from the expected behavior documented in the  <code>Object.clone()</code>.
-   * <p/>
+   * <p></p>
    * * For <code>Field</code> instances  of Collection based types it returns the deep copy of the <code>Field</code>
    * instance.
    *

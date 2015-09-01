@@ -1,0 +1,25 @@
+StreamSets - Data Collector API
+
+This project defines the Data Collector programmatic API to build stages.
+
+Changes to this project must be done in a backwards compatible way.
+
+-------
+
+Software requirements:
+
+* Git 1.9+
+* JDK 1.7.*
+* Maven 3.2.3+
+
+-------
+
+To generate the API JAR, source JAR and JavaDoc JAR, run:
+
+$ mvn clean package
+
+To install it in your local Maven cache, run:
+
+$ mvn clean install
+
+-------
