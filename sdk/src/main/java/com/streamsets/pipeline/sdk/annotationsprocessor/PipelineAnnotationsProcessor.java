@@ -340,9 +340,9 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
         if(configDefAnnot.type().equals(ConfigDef.Type.MODEL)) {
           FieldSelectorModel fieldSelectorModel = variableElement.getAnnotation(FieldSelectorModel.class);
           if(fieldSelectorModel != null) {
-            ModelType modelType = ModelType.FIELD_SELECTOR_MULTI_VALUED;
+            ModelType modelType = ModelType.FIELD_SELECTOR_MULTI_VALUE;
             if(fieldSelectorModel.singleValued()) {
-              modelType = ModelType.FIELD_SELECTOR_SINGLE_VALUED;
+              modelType = ModelType.FIELD_SELECTOR;
             }
             model = new ModelDefinition(modelType, null, null, null, null, null);
           }
@@ -361,12 +361,12 @@ public class PipelineAnnotationsProcessor extends AbstractProcessor {
           }
           PredicateModel predicateModel = variableElement.getAnnotation(PredicateModel.class);
           if (predicateModel != null) {
-            model = new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
+            model = new ModelDefinition(ModelType.PREDICATE, null, null, null, null, null);
           }
           ListBeanModel listBeanModel = variableElement.getAnnotation(ListBeanModel.class);
           if(listBeanModel != null) {
             String typeName = getTypeNameFromComplexField(variableElement);
-            model = new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, null,
+            model = new ModelDefinition(ModelType.LIST_BEAN, null, null, null, null,
               getConfigDefsFromTypeElement(getTypeElementFromName(typeName)));
           }
         }

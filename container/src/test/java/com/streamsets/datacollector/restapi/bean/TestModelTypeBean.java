@@ -6,8 +6,6 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.streamsets.datacollector.config.ModelType;
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.ModelTypeJson;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,32 +14,32 @@ public class TestModelTypeBean {
 
   @Test
   public void testModelTypeBean() {
-    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.COMPLEX_FIELD) ==
-      ModelTypeJson.COMPLEX_FIELD);
-    Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.COMPLEX_FIELD) ==
-      ModelType.COMPLEX_FIELD);
+    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.LIST_BEAN) ==
+      ModelTypeJson.LIST_BEAN);
+    Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.LIST_BEAN) ==
+      ModelType.LIST_BEAN);
 
-    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_SELECTOR_SINGLE_VALUED) ==
-      ModelTypeJson.FIELD_SELECTOR_SINGLE_VALUED);
+    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_SELECTOR) ==
+      ModelTypeJson.FIELD_SELECTOR);
     Assert.assertTrue(
-      BeanHelper.unwrapModelType(ModelTypeJson.FIELD_SELECTOR_SINGLE_VALUED) ==
-      ModelType.FIELD_SELECTOR_SINGLE_VALUED);
+      BeanHelper.unwrapModelType(ModelTypeJson.FIELD_SELECTOR) ==
+      ModelType.FIELD_SELECTOR);
 
-    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_SELECTOR_MULTI_VALUED) ==
-      ModelTypeJson.FIELD_SELECTOR_MULTI_VALUED);
+    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_SELECTOR_MULTI_VALUE) ==
+      ModelTypeJson.FIELD_SELECTOR_MULTI_VALUE);
     Assert.assertTrue(
-      BeanHelper.unwrapModelType(ModelTypeJson.FIELD_SELECTOR_MULTI_VALUED) ==
-        ModelType.FIELD_SELECTOR_MULTI_VALUED);
+      BeanHelper.unwrapModelType(ModelTypeJson.FIELD_SELECTOR_MULTI_VALUE) ==
+        ModelType.FIELD_SELECTOR_MULTI_VALUE);
 
     Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_VALUE_CHOOSER) ==
       ModelTypeJson.FIELD_VALUE_CHOOSER);
     Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.FIELD_VALUE_CHOOSER) ==
       ModelType.FIELD_VALUE_CHOOSER);
 
-    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.LANE_PREDICATE_MAPPING) ==
-      ModelTypeJson.LANE_PREDICATE_MAPPING);
-    Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.LANE_PREDICATE_MAPPING) ==
-      ModelType.LANE_PREDICATE_MAPPING);
+    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.PREDICATE) ==
+      ModelTypeJson.PREDICATE);
+    Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.PREDICATE) ==
+      ModelType.PREDICATE);
 
     Assert.assertTrue(BeanHelper.wrapModelType(ModelType.VALUE_CHOOSER) ==
       ModelTypeJson.VALUE_CHOOSER);

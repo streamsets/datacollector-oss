@@ -5,6 +5,7 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -1010,16 +1011,16 @@ public class BeanHelper {
       return null;
     }
     switch (modelType) {
-      case COMPLEX_FIELD:
-        return ModelTypeJson.COMPLEX_FIELD;
-      case FIELD_SELECTOR_MULTI_VALUED:
-        return ModelTypeJson.FIELD_SELECTOR_MULTI_VALUED;
-      case FIELD_SELECTOR_SINGLE_VALUED:
-        return ModelTypeJson.FIELD_SELECTOR_SINGLE_VALUED;
+      case LIST_BEAN:
+        return ModelTypeJson.LIST_BEAN;
+      case FIELD_SELECTOR_MULTI_VALUE:
+        return ModelTypeJson.FIELD_SELECTOR_MULTI_VALUE;
+      case FIELD_SELECTOR:
+        return ModelTypeJson.FIELD_SELECTOR;
       case FIELD_VALUE_CHOOSER:
         return ModelTypeJson.FIELD_VALUE_CHOOSER;
-      case LANE_PREDICATE_MAPPING:
-        return ModelTypeJson.LANE_PREDICATE_MAPPING;
+      case PREDICATE:
+        return ModelTypeJson.PREDICATE;
       case VALUE_CHOOSER:
         return ModelTypeJson.VALUE_CHOOSER;
       case MULTI_VALUE_CHOOSER:
@@ -1034,20 +1035,20 @@ public class BeanHelper {
       return null;
     }
     switch (modelTypeJson) {
-      case COMPLEX_FIELD:
-        return com.streamsets.datacollector.config.ModelType.COMPLEX_FIELD;
-      case FIELD_SELECTOR_MULTI_VALUED:
-        return com.streamsets.datacollector.config.ModelType.FIELD_SELECTOR_MULTI_VALUED;
-      case FIELD_SELECTOR_SINGLE_VALUED:
-        return com.streamsets.datacollector.config.ModelType.FIELD_SELECTOR_SINGLE_VALUED;
+      case LIST_BEAN:
+        return ModelType.LIST_BEAN;
+      case FIELD_SELECTOR_MULTI_VALUE:
+        return ModelType.FIELD_SELECTOR_MULTI_VALUE;
+      case FIELD_SELECTOR:
+        return ModelType.FIELD_SELECTOR;
       case FIELD_VALUE_CHOOSER:
-        return com.streamsets.datacollector.config.ModelType.FIELD_VALUE_CHOOSER;
-      case LANE_PREDICATE_MAPPING:
-        return com.streamsets.datacollector.config.ModelType.LANE_PREDICATE_MAPPING;
+        return ModelType.FIELD_VALUE_CHOOSER;
+      case PREDICATE:
+        return ModelType.PREDICATE;
       case VALUE_CHOOSER:
-        return com.streamsets.datacollector.config.ModelType.VALUE_CHOOSER;
+        return ModelType.VALUE_CHOOSER;
       case MULTI_VALUE_CHOOSER:
-        return com.streamsets.datacollector.config.ModelType.MULTI_VALUE_CHOOSER;
+        return ModelType.MULTI_VALUE_CHOOSER;
       default:
         throw new IllegalArgumentException("Unrecognized model type");
     }

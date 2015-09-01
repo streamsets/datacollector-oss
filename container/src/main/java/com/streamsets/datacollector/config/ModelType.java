@@ -8,13 +8,13 @@ package com.streamsets.datacollector.config;
 import java.util.Collections;
 
 public enum ModelType {
-  FIELD_SELECTOR_MULTI_VALUED(new EmptyListDefaultPreparer()),
-  FIELD_SELECTOR_SINGLE_VALUED(new NopDefaultPreparer()),
+  FIELD_SELECTOR_MULTI_VALUE(new EmptyListDefaultPreparer()),
+  FIELD_SELECTOR(new NopDefaultPreparer()),
   FIELD_VALUE_CHOOSER(new NopDefaultPreparer()),
   VALUE_CHOOSER(new NopDefaultPreparer()),
   MULTI_VALUE_CHOOSER(new NopDefaultPreparer()),
-  LANE_PREDICATE_MAPPING(new EmptyMapDefaultPreparer()),
-  COMPLEX_FIELD(new EmptyListDefaultPreparer()),
+  PREDICATE(new EmptyMapDefaultPreparer()),
+  LIST_BEAN(new EmptyListDefaultPreparer()),
 
   ;
 

@@ -27,6 +27,23 @@ angular
       dirtyLanes: [],
       snapshotsInfo: [],
       rawDataConfigIndex: undefined,
+      rawDataCodemirrorOptions: {
+        mode: {
+          name: 'application/json'
+        },
+        inputStyle: 'contenteditable',
+        showCursorWhenSelecting: true,
+        lineNumbers: false,
+        matchBrackets: true,
+        autoCloseBrackets: {
+          pairs: '(){}\'\'""'
+        },
+        cursorHeight: 1,
+        extraKeys: {
+          'Ctrl-Space': 'autocomplete'
+        },
+        lineWrapping : true
+      },
 
       /**
        * Preview Data for previous stage instance.
@@ -259,7 +276,11 @@ angular
           if(configObj.name === 'rawData') {
             $scope.rawDataConfigIndex = index;
           } else if(configObj.name === 'dataFormatConfig.dataFormat') {
-            $scope.dataFormatConfigIndex = index;
+            if(configObj.value === 'XML') {
+              $scope.rawDataCodemirrorOptions.mode.name = 'application/xml';
+            } else {
+              $scope.rawDataCodemirrorOptions.mode.name = 'application/json';
+            }
           }
         });
 

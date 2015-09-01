@@ -253,7 +253,7 @@ public class ConfigDefinition {
                                                     model.getValuesProviderClass(), ex.toString(), ex));
           }
           break;
-        case COMPLEX_FIELD:
+        case LIST_BEAN:
           List<ConfigDefinition> listBean = model.getConfigDefinitions();
           List<ConfigDefinition> listBeanLocalize = new ArrayList<>(listBean.size());
           for (ConfigDefinition def : listBean) {

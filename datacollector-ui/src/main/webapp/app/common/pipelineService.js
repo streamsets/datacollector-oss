@@ -485,14 +485,14 @@ angular.module('dataCollectorApp.common')
         };
 
       if(configDefinition.type === 'MODEL') {
-        if(configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUED' && !config.value) {
+        if(configDefinition.model.modelType === 'FIELD_SELECTOR_MULTI_VALUE' && !config.value) {
           config.value = [];
-        } else if(configDefinition.model.modelType === 'LANE_PREDICATE_MAPPING') {
+        } else if(configDefinition.model.modelType === 'PREDICATE') {
           config.value = [{
             outputLane: stageInstance.outputLanes[0],
             predicate: 'default'
           }];
-        } else if(configDefinition.model.modelType === 'COMPLEX_FIELD') {
+        } else if(configDefinition.model.modelType === 'LIST_BEAN') {
           var complexFieldObj = {};
           angular.forEach(configDefinition.model.configDefinitions, function (complexFiledConfigDefinition) {
             var complexFieldConfig = self.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
@@ -597,7 +597,7 @@ angular.module('dataCollectorApp.common')
                 return configDefinition.model.labels[ind];
               }
               break;
-            case 'LANE_PREDICATE_MAPPING':
+            case 'PREDICATE':
               valStr = [];
               angular.forEach(configValue, function(lanePredicate, index) {
                 valStr.push({
@@ -607,7 +607,7 @@ angular.module('dataCollectorApp.common')
               });
               configValue = valStr;
               break;
-            case 'COMPLEX_FIELD':
+            case 'LIST_BEAN':
               valStr = [];
               angular.forEach(configValue, function(groupValueObject) {
                 var groupValStr = {};

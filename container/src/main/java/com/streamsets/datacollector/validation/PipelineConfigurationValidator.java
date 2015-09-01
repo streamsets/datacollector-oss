@@ -553,7 +553,7 @@ public class PipelineConfigurationValidator {
           preview = false;
         }
         break;
-      case FIELD_SELECTOR_MULTI_VALUED:
+      case FIELD_SELECTOR_MULTI_VALUE:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
           issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
@@ -574,7 +574,7 @@ public class PipelineConfigurationValidator {
           }
         }
         break;
-      case COMPLEX_FIELD:
+      case LIST_BEAN:
         if(conf.getValue() != null) {
           //this can be a single HashMap or an array of hashMap
           Map<String, ConfigDefinition> configDefinitionsMap = new HashMap<>();
@@ -601,7 +601,7 @@ public class PipelineConfigurationValidator {
           preview = false;
         }
         break;
-      case LANE_PREDICATE_MAPPING:
+      case PREDICATE:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
           issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),

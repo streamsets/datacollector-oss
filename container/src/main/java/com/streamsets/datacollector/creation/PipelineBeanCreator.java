@@ -575,7 +575,7 @@ public abstract class PipelineBeanCreator {
     if (value == null) {
       errors.add(issueCreator.create(groupName, configName, CreationError.CREATION_050));
     } else {
-      if (configDef.getModel() != null && configDef.getModel().getModelType() == ModelType.COMPLEX_FIELD) {
+      if (configDef.getModel() != null && configDef.getModel().getModelType() == ModelType.LIST_BEAN) {
         value = toComplexField(value, stageDef, stageConf, configDef, configConf, pipelineConstants, errors);
       } else if (List.class.isAssignableFrom(field.getType())) {
         value = toList(value, stageDef, configDef, pipelineConstants, stageName, groupName, configName, errors, field);

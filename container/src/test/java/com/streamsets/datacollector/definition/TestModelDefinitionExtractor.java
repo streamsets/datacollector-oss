@@ -161,7 +161,7 @@ public class TestModelDefinitionExtractor {
     ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
-    Assert.assertEquals(ModelType.FIELD_SELECTOR_MULTI_VALUED, def.getModelType());
+    Assert.assertEquals(ModelType.FIELD_SELECTOR_MULTI_VALUE, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(null, def.getConfigDefinitions());
   }
@@ -172,7 +172,7 @@ public class TestModelDefinitionExtractor {
     ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
-    Assert.assertEquals(ModelType.FIELD_SELECTOR_SINGLE_VALUED, def.getModelType());
+    Assert.assertEquals(ModelType.FIELD_SELECTOR, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(null, def.getConfigDefinitions());
   }
@@ -205,7 +205,7 @@ public class TestModelDefinitionExtractor {
     ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
-    Assert.assertEquals(ModelType.LANE_PREDICATE_MAPPING, def.getModelType());
+    Assert.assertEquals(ModelType.PREDICATE, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(null, def.getConfigDefinitions());
   }
@@ -216,7 +216,7 @@ public class TestModelDefinitionExtractor {
     ModelDefinition def = ModelDefinitionExtractor.get().extract("x.", f, "x");
     Assert.assertEquals(null, def.getValues());
     Assert.assertEquals(null, def.getLabels());
-    Assert.assertEquals(ModelType.COMPLEX_FIELD, def.getModelType());
+    Assert.assertEquals(ModelType.LIST_BEAN, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
     Assert.assertEquals(1, def.getConfigDefinitions().size());
     Assert.assertEquals("name", def.getConfigDefinitions().get(0).getName());

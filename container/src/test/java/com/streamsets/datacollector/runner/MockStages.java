@@ -505,7 +505,7 @@ public class MockStages {
           false, 1, null,
           Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false, new StageUpgrader.Default());
 
-        ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUED, null, Collections.<String>emptyList(),
+        ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
           Collections.<String>emptyList(), null, null);
         ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
           "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
@@ -590,7 +590,7 @@ public class MockStages {
 
         List<ConfigDefinition> list = new ArrayList<>();
         list.add(regularConf);
-        ModelDefinition modelDefinition = new ModelDefinition(ModelType.COMPLEX_FIELD, null, Collections.<String>emptyList(),
+        ModelDefinition modelDefinition = new ModelDefinition(ModelType.LIST_BEAN, null, Collections.<String>emptyList(),
           Collections.<String>emptyList(), null, list);
 
         ConfigDefinition complexConf = new ConfigDefinition(

@@ -31,13 +31,7 @@
              ng-if="rawDataConfigIndex"
              ng-model="detailPaneConfig.configuration[rawDataConfigIndex].value"
              ui-refresh="refreshCodemirror"
-             ui-codemirror-opts="{
-              mode: detailPaneConfig.configuration[dataFormatConfigIndex].value == 'XML' ? 'text/html' : 'javascript',
-              inputStyle: 'contenteditable',
-              showCursorWhenSelecting: true,
-              lineNumbers: true,
-              matchBrackets: true
-             }">
+             ui-codemirror-opts="rawDataCodemirrorOptions">
         </div>
       </td>
 

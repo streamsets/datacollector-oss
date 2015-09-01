@@ -125,8 +125,8 @@ public abstract class ModelDefinitionExtractor {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
         FieldSelectorModel fieldSelectorModel = field.getAnnotation(FieldSelectorModel.class);
-        ModelType modelType = (fieldSelectorModel.singleValued()) ? ModelType.FIELD_SELECTOR_SINGLE_VALUED
-                                                             : ModelType.FIELD_SELECTOR_MULTI_VALUED;
+        ModelType modelType = (fieldSelectorModel.singleValued()) ? ModelType.FIELD_SELECTOR
+                                                             : ModelType.FIELD_SELECTOR_MULTI_VALUE;
         return new ModelDefinition(modelType, null, null, null, null, null);
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
@@ -247,7 +247,7 @@ public abstract class ModelDefinitionExtractor {
     public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
-        return new ModelDefinition(ModelType.LANE_PREDICATE_MAPPING, null, null, null, null, null);
+        return new ModelDefinition(ModelType.PREDICATE, null, null, null, null, null);
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }
@@ -275,7 +275,7 @@ public abstract class ModelDefinitionExtractor {
       List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
       if (errors.isEmpty()) {
         Class listBeanClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
-        return new ModelDefinition(ModelType.COMPLEX_FIELD, null, null, null, listBeanClass,
+        return new ModelDefinition(ModelType.LIST_BEAN, null, null, null, listBeanClass,
                                    ConfigDefinitionExtractor.get().extract("", listBeanClass,
                                                                            Collections.<String>emptyList(), contextMsg));
       } else {

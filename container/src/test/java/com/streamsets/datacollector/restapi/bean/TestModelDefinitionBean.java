@@ -48,7 +48,7 @@ public class TestModelDefinitionBean {
       Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null));
 
     com.streamsets.datacollector.config.ModelDefinition modelDefinition =
-      new com.streamsets.datacollector.config.ModelDefinition(ModelType.COMPLEX_FIELD,
+      new com.streamsets.datacollector.config.ModelDefinition(ModelType.LIST_BEAN,
                                                          "valuesProviderClass", values,labels, String.class,
                                                          configDefinitions);
 
