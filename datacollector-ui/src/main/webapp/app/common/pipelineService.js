@@ -753,9 +753,7 @@ angular.module('dataCollectorApp.common')
           }
         });
       } else if(record.type === 'LIST_MAP') {
-        keys = Object.keys(record.value).sort();
-        angular.forEach(keys, function(key, index) {
-          var value = record.value[key];
+        angular.forEach(record.value, function(value, index) {
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
             if(!nonListAndMap && value.sqpath) {
               fieldPaths.push(value.sqpath);
