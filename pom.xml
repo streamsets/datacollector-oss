@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- (c) 2014 StreamSets, Inc. All rights reserved. May not
- be copied, modified, or distributed in whole or part without
- written consent of StreamSets, Inc.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -22,12 +30,8 @@
 
   <licenses>
     <license>
-      <name>(c) 2014 StreamSets, Inc. All rights reserved.</name>
-      <comments>
-        (c) 2014 StreamSets, Inc. All rights reserved. May not be copied, modified,
-        or distributed in whole or part without written consent of StreamSets, Inc.
-      </comments>
-      <url>http://www.streamsets.com</url>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
 
@@ -112,6 +116,7 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
@@ -119,24 +124,45 @@
         <configuration>
           <excludeSubProjects>false</excludeSubProjects>
           <excludes>
+
+            <!-- IntelliJ IDE -->
             <exclude>.idea/**</exclude>
             <exclude>**/*.iml</exclude>
+
+            <!-- Git -->
             <exclude>.gitignore</exclude>
-            <exclude>**/*.json</exclude>
-            <exclude>**/target/**</exclude>
             <exclude>.git/**</exclude>
+
+            <!-- Maven -->
+            <exclude>**/target/**</exclude>
+
+            <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
-            <exclude>**/.empty</exclude>
             <exclude>sdk/src/main/services/**</exclude>
+            <exclude>**/*.svg</exclude>
+            <exclude>**/MANIFEST.MF</exclude>
+            <exclude>**/service.sdl</exclude>
+            <exclude>**/*.db</exclude>
+            <exclude>**/*.csv</exclude>
+            <exclude>**/*.txt</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>commonlib/src/main/resources/*</exclude>
 
-            <!--TODO check with Madhu on all this stuff -->
-            <exclude>ui/**</exclude>
+            <!-- TestOverrunStreamingXmlParser relies on this file being small, cannot add license header -->
+            <exclude>common/src/test/resources/TestStreamingXmlParser-records.xml</exclude>
 
-            <!-- For Cloudera service descriptor -->
+            <!-- Modules to exclude (for now), not java stuff -->
+            <exclude>common-ui/**</exclude>
+            <exclude>datacollector-ui/**</exclude>
+            <exclude>e2e-tests/**</exclude>
+            <exclude>python/**</exclude>
+            <exclude>docs/**</exclude>
             <exclude>csd/**</exclude>
+
           </excludes>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
 
@@ -209,6 +235,39 @@
       <modules>
         <module>release</module>
       </modules>
+      <build>
+        <plugins>
+          <!-- Run apache-rat as part of the release build, at root level only -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>rat-report</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <echo file="${project.build.directory}/apache-rat.sh">#!/bin/bash
+                      if [ "${project.artifactId}" == "streamsets-datacollector" ];
+                      then
+                        mvn apache-rat:check -N
+                        exit $?
+                      fi
+                    </echo>
+                    <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
+                      <arg line="${project.build.directory}/apache-rat.sh"/>
+                    </exec>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
     <profile>
       <id>rpm</id>
@@ -217,15 +276,6 @@
       </activation>
       <modules>
         <module>rpm</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>template-lib</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <modules>
-        <module>template-lib</module>
       </modules>
     </profile>
     <profile>
