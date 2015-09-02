@@ -136,13 +136,12 @@ stop_sdc() {
   if [ "${STATUS}" = "0" ]; then
     su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop"
     if [ $? -eq 0 ]; then
+      sleep 2
       is_sdc_alive
-      if [ "${STATUS}" = "1" ]; then
-        rm ${SDC_PID}
-      elif [ "${STATUS}" = "0" ]; then
+      if [ "${STATUS}" = "0" ]; then
         su -m $SDC_USER -s /bin/bash -c "env JAVA_HOME=$JAVA_HOME $SDC_DIST/initd/sdcd stop -force"
-        exit $?
       fi
+      rm ${SDC_PID}
     fi
   elif [ "${STATUS}" = "1" ]; then
     rm ${SDC_PID}
@@ -164,6 +163,7 @@ case "$1" in
   stop)
         find_java
         stop_sdc
+        exit 0
         ;;
   restart)
         find_java
