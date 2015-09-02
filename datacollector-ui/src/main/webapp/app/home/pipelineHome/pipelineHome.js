@@ -1344,7 +1344,7 @@ angular
     };
 
     var updateRetryCountdown = function(nextRetryTimeStamp) {
-      $scope.retryCountDown = (nextRetryTimeStamp - (new Date()).getTime())/1000;
+      $scope.retryCountDown = (nextRetryTimeStamp - $rootScope.common.serverTimeDifference - (new Date()).getTime())/1000;
 
       if(retryCountDownTimer) {
         $timeout.cancel(retryCountDownTimer);
@@ -1354,6 +1354,8 @@ angular
         $scope.retryCountDown--;
         if($scope.retryCountDown > 0) {
           retryCountDownTimer = $timeout(retryCountDownCallback,1000);
+        } else {
+          $scope.retryCountDown = 0;
         }
       };
       retryCountDownTimer = $timeout(retryCountDownCallback, 1000);

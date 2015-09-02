@@ -100,6 +100,7 @@ angular.module('dataCollectorApp')
         logEndingOffset: -1,
         fetchingLog: false,
         counters: {},
+        serverTimeDifference: 0,
 
         /**
          * Open the Shutdown Modal Dialog
@@ -165,14 +166,6 @@ angular.module('dataCollectorApp')
             size: '',
             backdrop: true
           });
-        },
-
-        /**
-         * Return logs collected from Log WebSocket
-         * @returns {string}
-         */
-        getLogMessages: function() {
-          return logMessages.join('\n');
         },
 
         /**
@@ -296,7 +289,14 @@ angular.module('dataCollectorApp')
         }
       };
 
-    var logMessages = [];
+
+    api.admin.getServerTime().then(function(res) {
+      if(res && res.data) {
+        var serverTime = res.data.serverTime,
+          browserTime = (new Date()).getTime();
+        $rootScope.common.serverTimeDifference = serverTime - browserTime;
+      }
+    });
 
     authService.init().then(function() {
       $rootScope.common.userName = authService.getUserName();

@@ -131,6 +131,17 @@ angular.module('dataCollectorApp.common')
           method: 'GET',
           url: url
         });
+      },
+
+      /**
+       * Returns Server Time
+       */
+      getServerTime: function() {
+        var url = apiBase + '/system/info/serverTime';
+        return $http({
+          method: 'GET',
+          url: url
+        });
       }
 
     };

@@ -88,4 +88,16 @@ public class InfoResource {
     return Response.status(Response.Status.OK).entity(map).build();
   }
 
+  @GET
+  @Path("/info/serverTime")
+  @ApiOperation(value = "Returns Server Time", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response getServerTime(@Context SecurityContext context) throws PipelineException, IOException {
+    Map<String, Object> map = new HashMap<>();
+    map.put("serverTime", System.currentTimeMillis());
+    return Response.status(Response.Status.OK).entity(map).build();
+  }
+
+
 }
