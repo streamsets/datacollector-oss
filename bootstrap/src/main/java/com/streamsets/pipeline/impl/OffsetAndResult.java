@@ -4,6 +4,7 @@
  */
 package com.streamsets.pipeline.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 public class OffsetAndResult<T> {
@@ -12,7 +13,7 @@ public class OffsetAndResult<T> {
 
   public OffsetAndResult(Object offset, List<T> result) {
     this.offset = offset;
-    this.result = result;
+    this.result = result == null ? Collections.<T>emptyList() : result;
   }
 
   public Object getOffset() {

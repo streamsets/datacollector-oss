@@ -162,12 +162,12 @@ public class TestProducerConsumer {
     }
     @Override
     public Object getKey() {
-      return null;
+      return "key-" + i;
     }
 
     @Override
     public Object getValue() {
-      return null;
+      return "val-" + i;
     }
 
     @Override

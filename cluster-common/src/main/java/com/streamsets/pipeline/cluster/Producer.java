@@ -50,7 +50,10 @@ public class Producer {
       throw new RuntimeException(Utils.format("Producer encountered error: {}", producerError), producerError);
     }
     try {
-      final Object expectedOffset = batch.getOffset();
+      Object expectedOffset = "EMPTY_BATCH";
+      if (!batch.getResult().isEmpty()) {
+        expectedOffset = batch.getResult().get(batch.getResult().size() - 1).getKey(); // get the last one
+      }
       while (!dataChannel.offer(batch, 10, TimeUnit.MILLISECONDS)) {
         for (ControlChannel.Message controlMessage : controlChannel.getProducerMessages()) {
           switch (controlMessage.getType()) {

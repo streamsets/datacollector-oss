@@ -218,9 +218,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
                     try {
                       List<Map.Entry> buffer;
                       if (dataFormat == DataFormat.AVRO) {
-                        buffer = readAvroBatch(fileStatus, PREVIEW_SIZE);
+                        buffer = previewAvroBatch(fileStatus, PREVIEW_SIZE);
                       } else {
-                        buffer = readPreviewBatch(fileStatus, PREVIEW_SIZE);
+                        buffer = previewTextBatch(fileStatus, PREVIEW_SIZE);
                       }
                       for (int i = 0; i < buffer.size() && previewBuffer.size() < PREVIEW_SIZE; i++) {
                         Map.Entry entry = buffer.get(i);
@@ -288,7 +288,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return issues;
   }
 
-  private List<Map.Entry> readPreviewBatch(FileStatus fileStatus, int batchSize)
+  private List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
     throws IOException, InterruptedException {
     TextInputFormat textInputFormat = new TextInputFormat();
     InputSplit fileSplit = new FileSplit(fileStatus.getPath(), 0, fileStatus.getLen(), null);
@@ -306,11 +306,10 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     return batch;
   }
 
-  private List<Map.Entry> readAvroBatch(FileStatus fileStatus, int batchSize) throws IOException, InterruptedException {
+  private List<Map.Entry> previewAvroBatch(FileStatus fileStatus, int batchSize) throws IOException, InterruptedException {
     SeekableInput input = new FsInput(fileStatus.getPath(), hadoopConf);
-    DatumReader<GenericRecord> reader = new GenericDatumReader<GenericRecord>();
+    DatumReader<GenericRecord> reader = new GenericDatumReader<>();
     FileReader<GenericRecord> fileReader = DataFileReader.openReader(input, reader);
-    boolean hasNext = fileReader.hasNext();
     List<Map.Entry> batch = new ArrayList<>();
     int count = 0;
     while (fileReader.hasNext() && batch.size() < batchSize) {
@@ -323,7 +322,6 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       dataFileWriter.close();
       out.close();
       batch.add(new Pair(fileStatus.getPath().toUri().getPath() + "::" + count, out.toByteArray()));
-      hasNext = fileReader.hasNext();
       count++;
     }
     return batch;
