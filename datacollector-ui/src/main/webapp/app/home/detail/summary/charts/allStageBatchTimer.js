@@ -8,6 +8,8 @@ angular
     var baseQuery = "select mean,metric from timers where (pipeline='" + $scope.pipelineConfig.info.name + "') and ";
 
     angular.extend($scope, {
+      allDataZero: true,
+      totalValue: 0,
       chartOptions: {
         chart: {
           type: 'pieChart',
@@ -121,6 +123,8 @@ angular
       var pipelineMetrics = $rootScope.common.pipelineMetrics,
         values = [];
 
+      $scope.allDataZero = true;
+
       if(!pipelineMetrics.timers) {
         return;
       }
@@ -129,6 +133,10 @@ angular
         var stageTimer = pipelineMetrics.timers['stage.' + data.instanceName + '.batchProcessing.timer'];
         if(stageTimer) {
           data.value = stageTimer.mean;
+
+          if(data.value > 0) {
+            $scope.allDataZero = false;
+          }
         }
         values.push(data);
       });

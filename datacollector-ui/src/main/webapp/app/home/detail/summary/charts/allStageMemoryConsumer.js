@@ -12,6 +12,8 @@ angular
       };
 
     angular.extend($scope, {
+      allDataZero: true,
+      totalValue: 0,
       chartOptions: {
         chart: {
           type: 'pieChart',
@@ -135,6 +137,8 @@ angular
         values = [],
         total = 0;
 
+      $scope.allDataZero = true;
+
       if(!pipelineMetrics.counters) {
         return;
       }
@@ -145,6 +149,10 @@ angular
           data.value =  (stageCounter.count);
           values.push(data);
           total += stageCounter.count;
+
+          if(data.value > 0) {
+            $scope.allDataZero = false;
+          }
         }
       });
 

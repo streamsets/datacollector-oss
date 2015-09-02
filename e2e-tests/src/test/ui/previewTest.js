@@ -265,17 +265,7 @@ describe('StreamSets Data Collector App', function() {
         })
         .then(function() {
           //Check the input and output of second stage preview data
-          expect(element(by.css('.glyphicon-eye-close')).isPresent()).toBeTruthy();
-
-          var previewTable = element(by.css('.preview-table'));
-          //browser.wait(EC.visibilityOf(previewTable), 10000);
-
-          browser.sleep(1500);
-
-          return previewTable.all(by.repeater('inputRecord in stagePreviewData.input'))
-            .then(function(records) {
-              expect(records.length).toEqual(10);
-            });
+          expect(element(by.css('.preview-table')).isPresent()).toBeTruthy();
         });
 
     });
