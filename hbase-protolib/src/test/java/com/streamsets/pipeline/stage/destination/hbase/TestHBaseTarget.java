@@ -557,18 +557,14 @@ public class TestHBaseTarget {
 
     List<Record> singleRecord = ImmutableList.of(record);
     targetRunner.runInit();
-    targetRunner.runWrite(singleRecord);
+    try {
+      targetRunner.runWrite(singleRecord);
+      fail("Expected StageException but didn't get any");
+    } catch (StageException e) {
+      assertEquals(Errors.HBASE_26, e.getErrorCode());
+    } catch (Exception e) {
 
-    assertEquals(1, targetRunner.getErrorRecords().size());
-    assertTrue(targetRunner.getErrors().isEmpty());
-
-    targetRunner.runDestroy();
-
-    HTable htable = new HTable(conf, tableName);
-    Get g = new Get(Bytes.toBytes(rowKey));
-    Result r = htable.get(g);
-    assertTrue(r.isEmpty());
-
+    }
   }
 
   static class ForTestHBaseTarget extends HBaseDTarget {

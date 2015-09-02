@@ -303,7 +303,7 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws StageException {
+  private Put getHBasePut(Record record, byte[] rowKeyBytes) throws OnRecordErrorException, StageException {
     Put p = new Put(rowKeyBytes);
     for (Map.Entry<String, ColumnInfo> mapEntry : columnMappings.entrySet()) {
       // Parse the column in column family and qualifier
@@ -369,7 +369,6 @@ public class HBaseTarget extends BaseTarget {
     HTable hTable = null;
     Iterator<Record> it = batch.getRecords();
     Map<String, Record> rowKeyToRecord = new HashMap<>();
-    Map<Record, WriteErrorInfo> badRecordsInfo = new HashMap<>();
     try {
       hTable = new HTable(hbaseConf, tableName);
       // Disable auto-flush to increase performance by reducing the number of RPCs.
@@ -387,68 +386,30 @@ public class HBaseTarget extends BaseTarget {
             // limit is reached
             // Once it hits the buffer limit or autoflush is set to true, commit will happen
             hTable.put(p);
-          } catch (RetriesExhaustedWithDetailsException ex) {
-            // There may be more than one row which failed to persist
-            for (int i = 0; i < ex.getNumExceptions(); i++) {
-              Row r = ex.getRow(i);
-              // Map of bad records -> the error description
-              badRecordsInfo.put(rowKeyToRecord.get(Bytes.toString(r.getRow())),
-                new WriteErrorInfo(ex.getCause(i), r, ex.getHostnamePort(i)));
-            }
-            throw new StageException(Errors.HBASE_02, ex);
-          } catch (InterruptedIOException ex) {
+          } catch (Exception ex) {
             throw new StageException(Errors.HBASE_02, ex);
           }
-        } catch (Exception ex) {
+        } catch (OnRecordErrorException ex) {
           LOG.debug("Got exception while writing to HBase", ex);
           switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            if (badRecordsInfo.isEmpty()) {
+            case DISCARD:
+              break;
+            case TO_ERROR:
               getContext().toError(record, ex);
-            } else {
-              for (Map.Entry<Record, WriteErrorInfo> badRecordEntry : badRecordsInfo.entrySet()) {
-                getContext().toError(badRecordEntry.getKey(), Errors.HBASE_10, record, badRecordEntry.getValue().getDescription());
-              }
-              badRecordsInfo.clear();
-            }
-            break;
-          case STOP_PIPELINE:
-            throw ex;
-          default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-              getContext().getOnErrorRecord(), ex));
+              break;
+            case STOP_PIPELINE:
+              throw ex;
+            default:
+              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'", getContext()
+                .getOnErrorRecord(), ex));
           }
         }
       }
       // This will flush the internal buffer
       hTable.flushCommits();
     } catch (Exception ex) {
-      LOG.debug("Got exception while writing to HBase", ex);
-      switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        if (ex instanceof RetriesExhaustedWithDetailsException) {
-          RetriesExhaustedWithDetailsException retriesEx = ((RetriesExhaustedWithDetailsException) ex);
-          LOG.warn("Received error while writing records to Hbase destination " + retriesEx.getExhaustiveDescription());
-          for (int i = 0; i < retriesEx.getNumExceptions(); i++) {
-            Row r = retriesEx.getRow(i);
-            Record record = rowKeyToRecord.get(Bytes.toString(r.getRow()));
-            getContext().toError(record, Errors.HBASE_10, record,
-              new WriteErrorInfo(retriesEx.getCause(i), r, retriesEx.getHostnamePort(i)).getDescription());
-          }
-        } else {
-          throw new StageException(Errors.HBASE_02, ex);
-        }
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(Errors.HBASE_02, ex);
-      default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-          getContext().getOnErrorRecord(), ex));
-      }
+      LOG.debug("Got exception while flushing commits to HBase", ex);
+      throw new StageException(Errors.HBASE_02, ex);
     } finally {
       try {
         if (hTable != null) {
@@ -460,7 +421,7 @@ public class HBaseTarget extends BaseTarget {
     }
   }
 
-  private byte[] getBytesForValue(Record record, ColumnInfo columnInfo) throws StageException {
+  private byte[] getBytesForValue(Record record, ColumnInfo columnInfo) throws OnRecordErrorException, StageException {
     byte[] value;
     String index = columnInfo.columnValue;
     StorageType columnStorageType = columnInfo.storageType;
@@ -555,27 +516,4 @@ public class HBaseTarget extends BaseTarget {
     private final StorageType storageType;
   }
 
-  private static class WriteErrorInfo {
-    private final Throwable t;
-    private final Row row;
-    private final String server;
-
-    private WriteErrorInfo(Throwable t, Row row, String server) {
-      this.t = t;
-      this.row = row;
-      this.server = server;
-    }
-
-    private String getDescription() {
-      StringWriter errorWriter = new StringWriter();
-      PrintWriter pw = new PrintWriter(errorWriter);
-      pw.append("Exception from " + server + " for " + Bytes.toStringBinary(row.getRow()));
-      if (t != null) {
-        pw.println();
-        t.printStackTrace(pw);
-      }
-      pw.flush();
-      return errorWriter.toString();
-    }
-  }
 }
