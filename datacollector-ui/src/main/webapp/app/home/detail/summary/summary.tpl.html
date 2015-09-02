@@ -313,11 +313,12 @@
             <a href="/rest/v1/cluster/redirectToSlave?name={{pipelineConfig.info.name}}&sdcURL={{sdcURL}}"
                target="_blank">{{sdcURL}}</a>
           </li>
-
-          <li ng-if="!common.pipelineMetrics || !common.pipelineMetrics.slaves || common.pipelineMetrics.slaves.length === 0">
-            <span class="properties-label" translate="global.messages.info.noDataAvailable">No Data Available.</span>
-          </li>
         </ul>
+
+        <span class="no-data-available"
+              ng-if="!common.pipelineMetrics || !common.pipelineMetrics.slaves || common.pipelineMetrics.slaves.length === 0"
+              translate="global.messages.info.noDataAvailable">No Data Available.</span>
+
       </div>
     </div>
   </div>
