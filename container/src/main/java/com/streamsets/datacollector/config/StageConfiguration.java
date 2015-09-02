@@ -100,6 +100,14 @@ public class StageConfiguration implements Serializable {
     }
   }
 
+  public void addConfig(Config config) {
+    Config prevConfig = configurationMap.put(config.getName(), config);
+    if (prevConfig != null) {
+      configuration.remove(prevConfig);
+    }
+    configuration.add(config);
+  }
+
   public void setSystemGenerated() {
     systemGenerated = true;
   }

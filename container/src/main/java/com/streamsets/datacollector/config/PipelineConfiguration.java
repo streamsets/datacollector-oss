@@ -43,7 +43,7 @@ public class PipelineConfiguration implements Serializable{
     this.version = version;
     this.uuid = Preconditions.checkNotNull(uuid, "uuid cannot be null");
     this.description = description;
-    this.configuration = configuration;
+    this.configuration = new ArrayList<>(configuration);
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
@@ -152,6 +152,19 @@ public class PipelineConfiguration implements Serializable{
       }
     }
     return null;
+  }
+
+  public void addConfiguration(Config config) {
+    boolean found = false;
+    for (int i = 0; !found && i < configuration.size(); i++) {
+      if (configuration.get(i).getName().equals(config.getName())) {
+        configuration.set(i, config);
+        found = true;
+      }
+    }
+    if (!found) {
+      configuration.add(config);
+    }
   }
 
   public Map<String, Object> getUiInfo() {

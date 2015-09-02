@@ -179,4 +179,20 @@ public class TestPipelineConfigurationValidator {
     Assert.assertEquals(ValidationError.VALIDATION_0033.name(), issues.get(0).getErrorCode());
   }
 
+  @Test
+  public void testAddMissingConfigs() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
+    int pipelineConfigs = conf.getConfiguration().size();
+    int stageConfigs = conf.getStages().get(2).getConfiguration().size();
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    Assert.assertFalse(validator.validate().getIssues().hasIssues());
+    Assert.assertTrue(validator.canPreview());
+    Assert.assertFalse(validator.getIssues().hasIssues());
+    Assert.assertTrue(validator.getOpenLanes().isEmpty());
+
+    Assert.assertTrue(pipelineConfigs < conf.getConfiguration().size());
+    Assert.assertTrue(stageConfigs < conf.getStages().get(2).getConfiguration().size());
+  }
+
 }

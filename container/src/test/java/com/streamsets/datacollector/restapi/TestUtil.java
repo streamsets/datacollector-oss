@@ -6,6 +6,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -141,6 +142,8 @@ public class TestUtil {
     stages.add(sourceDef);
     stages.add(targetDef);
     Mockito.when(lib.getStages()).thenReturn(stages);
+
+    Mockito.when(lib.getPipeline()).thenReturn(PipelineDefinition.getPipelineDef());
     return lib;
   }
 
