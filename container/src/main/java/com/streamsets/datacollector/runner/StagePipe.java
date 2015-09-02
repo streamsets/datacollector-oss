@@ -99,7 +99,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
         }
       }
       this.context = pipeContext;
-      if (configuration.get("monitor.memory", true)) {
+      if (configuration.get("monitor.memory", false)) {
         LOG.info("Starting memory collector for {}", getStage().getInfo().getInstanceName());
         scheduledExecutorService.submit(
           new MemoryMonitor(memoryConsumedCounter,
