@@ -772,6 +772,7 @@ angular.module('dataCollectorApp.common')
 
             if(!nonListAndMap) {
               fieldPaths.push('[' + index + ']');
+              dFieldPaths.push('[' + index + ']');
             }
 
             if(fieldPathsType) {
