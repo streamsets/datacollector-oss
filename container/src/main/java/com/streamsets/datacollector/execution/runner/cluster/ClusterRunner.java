@@ -90,6 +90,7 @@ import java.util.concurrent.TimeoutException;
 public class ClusterRunner extends AbstractRunner {
   private static final Logger LOG = LoggerFactory.getLogger(ClusterRunner.class);
   static final String APPLICATION_STATE = "cluster.application.state";
+  private static final String APPLICATION_STATE_START_TIME = "cluster.application.startTime";
 
   @Inject RuntimeInfo runtimeInfo;
   @Inject Configuration configuration;
@@ -294,7 +295,7 @@ public class ClusterRunner extends AbstractRunner {
         slaveCallbackManager.setClusterToken(appState.getSdcToken());
         pipelineConf = getPipelineConf(name, rev);
       } catch (PipelineRunnerException | PipelineStoreException e) {
-        validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.toString(), new HashMap<String, Object>());
+        validateAndSetStateTransition(PipelineStatus.CONNECT_ERROR, e.toString(), attributes);
         throw e;
       }
       connect(appState, pipelineConf);
@@ -670,8 +671,8 @@ public class ClusterRunner extends AbstractRunner {
           sourceInfo, SUBMIT_TIMEOUT_SECS, getRules());
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = new HashMap<>();
-      attributes.putAll(getAttributes());
       attributes.put(APPLICATION_STATE, applicationState.getMap());
+      attributes.put(APPLICATION_STATE_START_TIME, System.currentTimeMillis());
       slaveCallbackManager.setClusterToken(applicationState.getSdcToken());
       validateAndSetStateTransition(PipelineStatus.RUNNING, "Pipeline in cluster is running", attributes);
       scheduleRunnable(pipelineConf);
@@ -740,6 +741,7 @@ public class ClusterRunner extends AbstractRunner {
     if (stopped) {
       attributes.putAll(getAttributes());
       attributes.remove(APPLICATION_STATE);
+      attributes.remove(APPLICATION_STATE_START_TIME);
       validateAndSetStateTransition(PipelineStatus.STOPPED, "Stopped cluster pipeline", attributes);
     }
   }
