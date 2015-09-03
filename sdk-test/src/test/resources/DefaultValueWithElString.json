@@ -1,5 +1,0 @@
-{
-  "stageClasses" : [
-    "com.streamsets.pipeline.sdk.annotationsprocessor.testData.DefaultValueWithELString"
-  ]
-}

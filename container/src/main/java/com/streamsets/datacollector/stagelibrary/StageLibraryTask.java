@@ -20,15 +20,16 @@ package com.streamsets.datacollector.stagelibrary;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
 import java.util.List;
 import java.util.Map;
 
 public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
-  public static final String STAGES_DEFINITION_RESOURCE = "PipelineStages.json";
+  public static final String STAGES_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.STAGES_FILE;
 
-  public static final String EL_DEFINITION_RESOURCE = "ElDefinitions.json";
+  public static final String EL_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.ELDEFS_FILE;
 
   public PipelineDefinition getPipeline();
 

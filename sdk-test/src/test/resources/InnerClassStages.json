@@ -1,7 +1,0 @@
-{
-  "stageClasses" : [
-    "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterStages.TwitterProcessor",
-    "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterStages.TwitterSource",
-    "com.streamsets.pipeline.sdk.annotationsprocessor.testData.TwitterStages.TwitterTarget"
-  ]
-}

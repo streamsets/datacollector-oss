@@ -86,8 +86,8 @@ public abstract class StageLibraryDefinitionExtractor {
         while (resources.hasMoreElements()) {
           URL url = resources.nextElement();
           try (InputStream is = url.openStream()) {
-            Map<String, List<String>> elInfo = ObjectMapperFactory.get().readValue(is, Map.class);
-            for (String className : elInfo.get("elClasses")) {
+            List<String> elList = ObjectMapperFactory.get().readValue(is, List.class);
+            for (String className : elList) {
               Class<? extends Stage> klass = (Class<? extends Stage>) classLoader.loadClass(className);
               elClasses.add(klass);
             }

@@ -241,8 +241,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             Map<String, String> stagesInLibrary = new HashMap<>();
             URL url = resources.nextElement();
             try (InputStream is = url.openStream()) {
-              Map<String, List<String>> libraryInfo = json.readValue(is, Map.class);
-              for (String className : libraryInfo.get("stageClasses")) {
+              List<String> stageList = json.readValue(is, List.class);
+              for (String className : stageList) {
                 stages++;
                 Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);
                 StageDefinition stage = StageDefinitionExtractor.get().
@@ -255,7 +255,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
                       libDef.getName(), key, stagesInLibrary.get(key), stage.getStageClass()));
                 }
                 stagesInLibrary.put(key, stage.getClassName());
-                stageList.add(stage);
+                this.stageList.add(stage);
                 stageMap.put(key, stage);
                 computeDependsOnChain(stage);
               }

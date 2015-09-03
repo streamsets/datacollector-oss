@@ -35,7 +35,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.sdk.annotationsprocessor.StageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +84,7 @@ public abstract class StageRunner<S extends Stage> {
   }
 
   private String getName(Class<? extends Stage> klass) {
-    return StageHelper.getStageNameFromClassName(klass.getName());
+    return klass.getName().replace(".", "_");
   }
 
   private int getVersion(Class<? extends Stage> klass) {

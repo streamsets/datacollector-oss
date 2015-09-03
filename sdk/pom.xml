@@ -154,17 +154,6 @@
 
   <build>
     <plugins>
-
-      <!-- Disable annotation processing during compile time. Otherwise compiler tries to process annotation even
-      before the processor class is compiled and this results in compilation failure.-->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerArgument>-proc:none</compilerArgument>
-        </configuration>
-      </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -205,8 +194,8 @@
                     <exclude>com.streamsets.pipeline.api.ext.*</exclude>
                     <exclude>com.streamsets.pipeline.api.base.*</exclude>
                     <exclude>com.streamsets.pipeline.api.impl.*</exclude>
+                    <exclude>com.streamsets.pipeline.api.impl.annotationsprocessor.*</exclude>
                     <exclude>com.streamsets.pipeline.sdk.*</exclude>
-                    <exclude>com.streamsets.pipeline.sdk.annotationsprocessor.*</exclude>
                   </excludes>
                 </relocation>
               </relocations>
