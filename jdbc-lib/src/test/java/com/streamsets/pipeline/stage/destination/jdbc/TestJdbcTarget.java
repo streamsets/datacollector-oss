@@ -156,6 +156,47 @@ public class TestJdbcTarget {
   }
 
   @Test
+  public void testSingleRecordWithCustomParam() throws Exception {
+    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME", "UPPER(?)"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+        .addConfiguration("connectionString", h2ConnectionString)
+        .addConfiguration("useCredentials", true)
+        .addConfiguration("rollbackOnError", false)
+        .addConfiguration("tableName", tableName)
+        .addConfiguration("columnNames", fieldMappings)
+        .addConfiguration("username", username)
+        .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
+        .build();
+
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create(1));
+    fields.add(Field.create("Adam"));
+    fields.add(Field.create("Kunicki"));
+    fields.add(Field.createDatetime(new Instant().toDate()));
+    record.set(Field.create(fields));
+
+    List<Record> singleRecord = ImmutableList.of(record);
+    targetRunner.runInit();
+    targetRunner.runWrite(singleRecord);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT FIRST_NAME, LAST_NAME FROM TEST.TEST_TABLE");
+      rs.next();
+      assertEquals("ADAM", rs.getString(1));
+      assertEquals("Kunicki", rs.getString(2));
+    }
+  }
+
+  @Test
   public void testRecordWithBatchUpdateException() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
         new JdbcFieldMappingConfig("[0]", "P_ID"),

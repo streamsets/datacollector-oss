@@ -30,6 +30,19 @@ public class JdbcFieldMappingConfig {
   public JdbcFieldMappingConfig(final String field, final String columnName) {
     this.field = field;
     this.columnName = columnName;
+    this.paramValue = "?";
+  }
+
+  /**
+   * Constructor used for unit testing purposes
+   * @param field
+   * @param columnName
+   * @param paramValue
+   */
+  public JdbcFieldMappingConfig(final String field, final String columnName, final String paramValue) {
+    this.field = field;
+    this.columnName = columnName;
+    this.paramValue = paramValue;
   }
 
   /**
@@ -40,7 +53,7 @@ public class JdbcFieldMappingConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
+      defaultValue = "",
       label = "SDC Field",
       description = "The field in the incoming record to output.",
       displayPosition = 10
@@ -53,8 +66,19 @@ public class JdbcFieldMappingConfig {
       type = ConfigDef.Type.STRING,
       defaultValue="",
       label = "Column Name",
-      description="The column name to write this field to.",
+      description = "The column name to write this field to.",
       displayPosition = 20
   )
   public String columnName;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "?",
+      label = "Parameterized Value",
+      description = "A parameterized value to use in the JDBC insert statement. Must include a ?.",
+      displayPosition = 30
+      // TODO: Have this depend on a checkbox in the JdbcDTarget. Blocked by SDC-1704
+  )
+  public String paramValue;
 }

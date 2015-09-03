@@ -39,7 +39,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
@@ -80,17 +82,20 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       while (recordIterator.hasNext()) {
         Record record = recordIterator.next();
 
-        SortedSet<String> columnSet = new TreeSet<>(getColumnsToFields().keySet());
+        Map<String, String> parameters = getColumnsToParameters();
+        SortedMap<String, String> columnsToParameters = new TreeMap<>();
         for (Map.Entry<String, String> entry : getColumnsToFields().entrySet()) {
           String columnName = entry.getKey();
           String fieldPath = entry.getValue();
-          if (!record.has(fieldPath)) {
-            columnSet.remove(columnName);
+
+          if (record.has(fieldPath)) {
+            columnsToParameters.put(columnName, parameters.get(columnName));
           }
         }
-        PreparedStatement statement = statementsForBatch.getInsertFor(columnSet);
+        PreparedStatement statement = statementsForBatch.getInsertFor(columnsToParameters);
+
         int i = 1;
-        for (String column : columnSet) {
+        for (String column : columnsToParameters.keySet()) {
 
           Field field = record.get(getColumnsToFields().get(column));
           Field.Type fieldType = field.getType();
