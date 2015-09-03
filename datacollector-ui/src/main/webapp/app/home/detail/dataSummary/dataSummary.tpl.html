@@ -65,7 +65,7 @@
                   <record-tree
                     record="sampledRecord.record"
                     record-value="sampledRecord.record.value"
-                    field-name="('global.form.record' | translate)+($index+1) + ( sampledRecord.matchedCondition ? conditionMatchedHTML : conditionNotMatchedHTML)"
+                    field-name="getRecordHeader(sampledRecord, $index)"
                     is-root="true"
                     editable="false">
                   </record-tree>

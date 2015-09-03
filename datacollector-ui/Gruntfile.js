@@ -183,9 +183,14 @@ module.exports = function(grunt) {
     /**
      * The directories to delete when `grunt clean` is executed.
      */
-    clean: [
-      '<%= build_dir %>'
-    ],
+    clean: {
+      build:[
+        '<%= build_dir %>'
+      ],
+      css: [
+        '<%= build_dir %>/assets/<%= pkg.name %>-<%= pkg.version %>-*.css'
+      ]
+    },
 
     /**
      * The `copy` task just copies files from A to B. We use it here to copy
@@ -594,7 +599,7 @@ module.exports = function(grunt) {
           'src/**/*.less',
           '<%= common_base_dir %>**/*.less'
         ],
-        tasks: [ 'less:build', 'concat:build_css' ]
+        tasks: [ 'clean:css', 'less:build', 'concat:build_css', 'index:build' ]
       },
 
       /**
@@ -638,7 +643,7 @@ module.exports = function(grunt) {
    * The `build` task gets your app ready to run for development and testing.
    */
   grunt.registerTask( 'build', [
-    'clean', 'html2js', 'jshint', 'less:build', 'concat:build_css',
+    'clean:build', 'html2js', 'jshint', 'less:build', 'concat:build_css',
     'copy:build_app_assets', 'copy:build_appjs',
     'copy:build_common_app_assets', 'copy:build_common_appjs',
     'copy:build_vendor_assets', 'copy:build_vendor_fonts',

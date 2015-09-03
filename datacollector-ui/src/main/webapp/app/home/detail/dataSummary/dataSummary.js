@@ -163,11 +163,17 @@ angular
     angular.extend($scope, {
       showRecordsLoading: false,
       samplingRecords: [],
-      conditionMatchedHTML: '<span class="lane-label"> ( Condition Matched: </span><span class="condition-matched"> true ) </span>',
-      conditionNotMatchedHTML: '<span class="lane-label"> ( Condition Matched:</span><span class="condition-not-matched"> false ) </span>',
 
       refreshSamplingRecords: function() {
         updateSamplingRecords();
+      },
+
+      getRecordHeader: function(sampledRecord, index) {
+        if(sampledRecord.matchedCondition) {
+          return '<span class="condition-matched"> Record' + (index + 1) + ' ( A Match ) </span>';
+        } else {
+          return '<span class="condition-not-matched"> Record' + (index + 1) + ' ( Not A Match ) </span>';
+        }
       }
     });
 
