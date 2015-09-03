@@ -134,6 +134,7 @@
 
             <!-- Maven -->
             <exclude>**/target/**</exclude>
+            <exclude>.m2/**</exclude> <!-- maven on jenkins -->
 
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
