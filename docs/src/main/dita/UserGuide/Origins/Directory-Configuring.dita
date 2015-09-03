@@ -142,9 +142,7 @@
                                             <li>Zip - Processes only Zip compressed files.</li>
                                             <li>GZip - Processes only GZip compressed files.</li>
                                             <li>By Extension - Processes uncompressed, Zip and GZip
-                                                compressed files. <draft-comment author="Loretta"
-                                                  >Tucu: would this option be better if called: Any,
-                                                  By Extension?  </draft-comment></li>
+                                                compressed files. </li>
                                         </ul></entry>
                                 </row>
                             </tbody>

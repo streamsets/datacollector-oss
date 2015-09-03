@@ -36,7 +36,9 @@
                                                   field as
                                                   follows:<codeblock>/&lt;field name></codeblock></p>
                                                 <p>So, to reference a CITY field in a simple JSON
-                                                  object, enter /CITY.</p>
+                                                  object, enter <codeph>/CITY</codeph>. A simple
+                                                  expression that calls the field might look like
+                                                  this:<codeblock>${record:value('/CITY')}</codeblock></p>
                                         </dd>
                                 </dlentry>
                                 <dlentry>
@@ -47,8 +49,10 @@
                                                   <codeblock>/&lt;path to field>/&lt;field name></codeblock></p>
                                                 <p>For example, the following field path describes
                                                   an employeeName field several levels deep in a
-                                                  JSON object:<filepath>
-                                                  /region/division/group/employeeName</filepath>.</p>
+                                                  JSON object:
+                                                  <codeph>/region/division/group/employeeName</codeph>.
+                                                  An expression that calls the field might look like
+                                                  this:<codeblock>${record:value("/region/division/group/employeeName")}</codeblock></p>
                                         </dd>
                                 </dlentry>
                                 <dlentry>
@@ -56,10 +60,16 @@
                                         <dd>To reference a field in an array or list, include the
                                                 index and path to the field, as
                                                 follows:<codeblock>[&lt;index value>]/&lt;path to field>/&lt;field name></codeblock></dd>
-                                        <dd>Delimited records are structured as lists. For more
+                                        <dd>For example, the following field path describes the same
+                                                employeeName field in the third region index in an
+                                                array:
+                                                <codeph>[2]/east/HR/employeeName</codeph>.</dd>
+                                        <dd>An expression that calls the field might look like
+                                                this:<codeblock>${record:value('[2]/east/HR/employeeName')}</codeblock></dd>
+                                        <dd>Delimited records can be structured as lists. For more
                                                 information, see <xref
-                                                  href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
-                                                /></dd>
+                                                  href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
+                                                />.</dd>
                                 </dlentry>
                                 <dlentry>
                                         <dt>Text</dt>

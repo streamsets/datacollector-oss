@@ -15,18 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kk2_mbm_xq">
  <title>Using Field Names in Expressions</title>
- <shortdesc>When you use a field name in an expression, use the following syntax:</shortdesc>
  <conbody>
-  <p>
-   <codeblock>${record:value("/&lt;field name>")}</codeblock>
-  </p>
+  <p><indexterm>expressions<indexterm>using field names</indexterm></indexterm><indexterm>field
+     names<indexterm>in expressions</indexterm></indexterm>When a pipeline is valid for preview,
+   expression completion provides available field names in a list. When a list is not available, use
+   the appropriate format for the field name.</p>
+  <p>When you use a field name in an expression, use the following
+   syntax:<codeblock>${record:value("/&lt;field name>")}</codeblock></p>
   <p>
    <note>You can use single or double quotation marks to surround a field name.</note>
   </p>
-  <p>For example, the following expression concatenates the values from the DATE field with values
-   from the TIME field:</p>
+  <p>For example, the following expressions both concatenate the values from the DATE field with
+   values from the TIME field:</p>
   <p>
-   <codeblock>${record:value('/DATE')} ${record:value('/TIME')}</codeblock>
+   <codeblock>${record:value('/DATE')} ${record:value('/TIME')}
+${record:value("/DATE")} ${record:value("/TIME")}</codeblock>
   </p>
  </conbody>
 </concept>

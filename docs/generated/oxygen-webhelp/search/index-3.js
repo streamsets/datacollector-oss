@@ -1,6 +1,5 @@
 
 // Auto generated index for searching.
-w["preference"]="77*11";
 w["preferences"]="77*0";
 w["preferred"]="77*2";
 w["prefers"]="77*1";

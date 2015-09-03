@@ -323,11 +323,19 @@
                                         whether to use the header line.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Type</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">Come back to
-                                            this</draft-comment>
-                                    </entry>
+                                    <entry>Record Type <xref
+                                            href="../Pipeline_Design/DelimitedDataRecordTypes.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_exx_41q_ft"/></xref></entry>
+                                    <entry>Record type to produce:<ul id="ul_izr_p1q_ft">
+                                            <li>List-Map - Generates an indexed list of data.
+                                                Enables you to use standard functions to process
+                                                data. Use for new pipelines.</li>
+                                            <li>List - Generates a record with an indexed list with
+                                                a map for header and value. Requires the use of
+                                                delimited data functions to process data. Use only
+                                                to maintain pipelines created before 1.1.0.</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Max Record Length (chars)</entry>
@@ -400,6 +408,13 @@
                         conrefed in Log Parser. </draft-comment>
                 </cmd>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">For any changes to the bullets below this first
+                        table, update Log Parser as well. Everything except the Log4j table/bullet
+                        point is copied from here. </draft-comment>
+                </cmd>
+            </step>
             <step id="LogData_Log4j">
                 <cmd>For log data, click the <wintitle>Log</wintitle> tab and configure the
                     following properties:</cmd>
@@ -444,11 +459,8 @@
                         </tgroup>
                     </table>
                     <ul id="ul_mdk_djs_sr">
-                        <li><draft-comment author="Loretta">For any changes to these bullets, update
-                                Log Parser as well. Everything except the Log4j table/bullet point
-                                is copied from here. </draft-comment>When you select
-                                <uicontrol>Apache Access Log Custom Format</uicontrol>, use Apache
-                            log format strings to define the <uicontrol>Custom Log
+                        <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
+                            use Apache log format strings to define the <uicontrol>Custom Log
                                 Format</uicontrol>.</li>
                         <li>When you select <uicontrol>Regular Expression</uicontrol>, enter the
                             regular expression that describes the log format, and then map the

@@ -14,13 +14,16 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hrt_tt4_fs">
- <title>Processing Delimited Data</title>
- <shortdesc>To process delimited data, you can use delimited data functions or standard record
-  functions. </shortdesc>
+ <title>Processing List Type Data</title>
+ <shortdesc>For delimited data in list-map record type, you can use standard record functions to
+        process data. For data in the list record type, you should either use the delimited data
+        functions or include the full field path in standard record functions. </shortdesc>
  <conbody>
-  <p><indexterm>delimited data<indexterm>processing</indexterm></indexterm>The expression language
-   provides delimited data functions to enable easier access to record details, such as the value of
-   a header or whether the record includes duplicate headers. </p>
+  <p><indexterm>delimited data<indexterm>processing list type
+                data</indexterm></indexterm><indexterm>list record type<indexterm>creating
+                    expressions</indexterm></indexterm>The expression language provides delimited
+            data functions to enable easier access to list record details, such as the value of a
+            header or whether the record includes duplicate headers. </p>
   <p>For example, you can use the <codeph>record:dValue('&lt;header>')</codeph> delimited data
       function to return the value associated with the specified header. Continuing with the example
       above, the following function returns user ID information:</p>

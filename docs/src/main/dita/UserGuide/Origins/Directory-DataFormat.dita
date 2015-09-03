@@ -47,12 +47,14 @@
           </ul></dd>
         <dd>When a record exceeds the maximum record length defined for the origin, Directory
           processes the object based on the error handling configured for the origin. </dd>
-    <dd>The resulting record is a List with header and value maps. Directory can convert a file to a
-          map based on the header line of the file. If the file does not include a header, the
-          origin creates the map based on column number.</dd>
-        <dd>For more information about the delimited data record structure, see <xref
-            href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"
-          />.</dd>
+        <dd>You can use a list or list-map record type for delimited data, optionally including the
+          header information when available. </dd>
+        <dd>If data does not include a header, the origin uses the column position as a header for
+          the list-map record types. For the list record type, the origin omits the header from the
+            map.<draft-comment author="Loretta">Madhu, are these two sentences above correct?
+          </draft-comment></dd>
+        <dd>For more information about the record types, see <xref
+            href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.</dd>
    </dlentry>
    <dlentry>
     <dt>XML</dt>

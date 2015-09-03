@@ -42,7 +42,9 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Pipeline_Configuration/Expressions-BasicSyntax.dita"/>
-   <topicref href="../Pipeline_Configuration/Expressions-FieldName.dita"/>
+   <topicref href="../Pipeline_Configuration/Expressions-FieldName.dita">
+    <topicref href="../Pipeline_Configuration/Expressions-FieldNSpecialChars.dita"/>
+   </topicref>
    <topicref href="../Pipeline_Configuration/ReferencingFieldNames.dita">
     <topicref href="../Pipeline_Configuration/WildcardsArraysMaps.dita"/>
    </topicref>

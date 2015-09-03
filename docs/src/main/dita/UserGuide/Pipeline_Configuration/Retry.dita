@@ -16,20 +16,22 @@
 <concept id="concept_cgm_ktz_2t">
  <title>Retrying the Pipeline</title>
  <shortdesc>By default, when the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> encounters a
-  stage-level error that might cause a pipeline to fail, it retries the pipeline - waiting a period
-  of time, and then trying again to  run the pipeline.</shortdesc>
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> encounters a
+    stage-level error that might cause a pipeline to fail, it retries the pipeline - it waits a
+    period of time, and then tries again to run the pipeline.</shortdesc>
  <conbody>
   <p><indexterm>pipelines<indexterm>retry attempts upon error</indexterm></indexterm>A stage-level
-   error might include a destination not being able to write to the destination system because the
-   system is down.</p>
-  <p>By default, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> retries the
-   pipeline an infinite number of times. This allows the pipeline to continue running as soon as any
-   temporary connection or system failures resolve. </p>
-  <p>You can use the Retry Attempts pipeline property to define the number of pipeline retries that
-   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   attempts. -1 represents an infinite number of retries. </p>
+      error might include a destination not being able to write to the destination system because
+      the system or network is down.</p>
+  <p>You can use the Retry Attempts pipeline property to define the maximum number of pipeline
+      retries that the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> performs. </p>
+    <p>With the default value, -1, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> retries
+      the pipeline an infinite number of times. This allows the pipeline to continue running as soon
+      as any temporary connection or system failures resolve. </p>
+    <p>If you want the pipeline to stop after a given number of retries, you can define the maximum
+      number of retries to perform.</p>
   <p>The wait time between retries begins at 15 seconds and doubles in length until reaching a
    maximum of 5 minutes. </p>
  </conbody>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_zcg_bm4_fs">
+  <title>Delimited Data Record Types</title>
+  <conbody>
+    <p><indexterm>delimited data<indexterm>record types</indexterm></indexterm><indexterm>pipeline
+          design<indexterm>delimited data record types</indexterm></indexterm><indexterm>list-map
+        record type<indexterm>delimited data</indexterm></indexterm><indexterm>list record
+          type<indexterm>delimited data</indexterm></indexterm>When reading delimited data, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
+      convert the data in a list or list-map record type. Use the default list-map record type to
+      easily process delimited data.<dl>
+        <dlentry>
+          <dt>List-Map Record Type</dt>
+          <dd>Provides easy use of field names or index values in expressions. Recommended for all
+            new pipelines.</dd>
+          <dd>A list-map record type results in an indexed list that preserves the order of data, as
+            follows:<codeblock>[0]/&lt;first header>:&lt;value>
+[1]/&lt;second header>:&lt;value>
+[2]/&lt;third header>:&lt;value>
+.
+.
+.</codeblock></dd>
+          <dd>
+            <p>For example, the following delimited rows:</p>
+            <p>
+              <codeblock><uicontrol>TransactionID,Type,UserID
+</uicontrol>0003420303,04,362
+0003420304,08,1008</codeblock>
+            </p>
+          </dd>
+          <dd>are converted to records as
+            follows:<codeblock>[0]/TransactionID: 0003420303
+[1]/Type: 04
+[2]/UserID: 362
+
+[0]/TransactionID: 0003420304
+[1]/Type: 08
+[2]/UserID: 1008</codeblock></dd>
+          <dd>
+            <note>In an expression, you can use the field name or the index number to call a field.
+              For example, you can use either of the following record:value expressions to return
+              data in the TransactionID
+              field:<codeblock>${record:value('/TransactionID')}
+${record:value('[0]'}</codeblock></note>
+          </dd>
+        </dlentry>
+        <dlentry>
+          <dt>List Record Type</dt>
+          <dd>Provides continued support for pipelines created before version 1.1.0. Not recommended
+            for new pipelines.</dd>
+          <dd>A list record type results in list with an index for the header position and a map
+            with each header and associated value, as
+            follows:<codeblock>[0]/header = &lt;first header>
+   /value = &lt;value for first header>
+[1]/header = &lt;second header>
+   /value = &lt;value for second header>
+[2]/header = &lt;third header>
+   /value = &lt;value for third header>
+.
+.
+.</codeblock></dd>
+          <dd>
+            <p>For example, the same delimited rows described above are converted to records as
+              follows:</p>
+            <codeblock>[0]/header = TransactionID
+   /value = 0003420303
+[1]/header = Type
+   /value = 04
+[2]/header = UserID
+   /value = 362
+
+[0]/header = TransactionID
+   /value = 0003420304
+[1]/header = Type
+   /value = 08
+[2]/header = UserID
+   /value = 1008</codeblock>
+          </dd>
+          <dd>
+            <note>In an expression, you can use delimited data functions or use the full field path
+              with standard functions. </note>
+          </dd>
+        </dlentry>
+      </dl></p>
+  </conbody>
+</concept>

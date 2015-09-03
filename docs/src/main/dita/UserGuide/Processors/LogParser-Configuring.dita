@@ -69,7 +69,8 @@
                     </table>
                 </info>
                 <info>
-                    <draft-comment author="Loretta">copied from reusable steps</draft-comment>
+                    <draft-comment author="Loretta">copied from reusable steps.  Everything except
+                        the Log4j table/bullet point is copied from there.</draft-comment>
                     <ul>
                         <li>When you select <uicontrol>Apache Access Log Custom Format</uicontrol>,
                             use Apache log format strings to define the <uicontrol>Custom Log

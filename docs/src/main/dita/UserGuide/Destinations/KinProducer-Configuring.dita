@@ -62,9 +62,7 @@
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
-                                        </ul><draft-comment author="Loretta">Adam: Can we call it
-                                            JSON Object? Just to be clear, in case no one reads the
-                                            doc? </draft-comment></entry>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Partition Strategy</entry>

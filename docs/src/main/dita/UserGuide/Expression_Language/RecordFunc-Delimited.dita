@@ -15,16 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_s2c_q14_fs">
  <title>Delimited Data Record Functions</title>
- <shortdesc>When reading delimited data, the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> generates
-  records of the List data format with a map of the header and value. Use delimited data record
-  functions to process delimited data, such as returning the value associated with a header or
-  checking for duplicate headers. </shortdesc>
+ <shortdesc>Use delimited data record functions to process list record type delimited data. If you
+    configured an origin to process the data using the list-map record type, you can use standard
+    record functions.</shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>delimited data</indexterm></indexterm><indexterm>delimited data
-     functions<indexterm>description</indexterm></indexterm>For more information about the delimited
-   data record format, see <xref
-    href="../Pipeline_Design/DelimitedDataRecordStructure.dita#concept_zcg_bm4_fs"/>.</p>
+          functions<indexterm>description</indexterm></indexterm>For more information about the
+      delimited data record types, see <xref
+        href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.</p>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
      <dt>record:dExists('&lt;header name>')</dt>

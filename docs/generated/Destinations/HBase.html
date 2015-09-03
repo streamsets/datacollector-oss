@@ -140,14 +140,14 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__d878e1305" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__d907e1306" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d10336e245">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d10335e245">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d10336e248">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d10335e248">Description</th>
 
                                 </tr>
 
@@ -155,30 +155,30 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">Stage Library</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d878e1361">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d907e1362">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -193,10 +193,10 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_pyq_qx5_vr__d878e1380" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_pyq_qx5_vr__d907e1381" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -204,10 +204,10 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10336e245 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_pyq_qx5_vr__d878e1395" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10335e245 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_pyq_qx5_vr__d907e1396" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10336e248 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10335e248 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -230,9 +230,9 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d10336e367">HBase Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d10335e367">HBase Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d10336e370">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d10335e370">Description</th>
 
                                 </tr>
 
@@ -240,9 +240,9 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">ZooKeeper Quorum</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">ZooKeeper Quorum</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Comma-separated list of servers in the ZooKeeper quorum.
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Comma-separated list of servers in the ZooKeeper quorum.
                                         Use the following format:
                                             <pre class="pre codeblock">&lt;host&gt;.&lt;domain&gt;.com</pre>
 <p class="p">To
@@ -253,25 +253,25 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">ZooKeeper Client Port</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">ZooKeeper Client Port</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Port number clients use to connect to the ZooKeeper
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Port number clients use to connect to the ZooKeeper
                                         servers. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">ZooKeeper Parent Znode</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">ZooKeeper Parent Znode</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Root node that contains all znodes used by the HBase
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Root node that contains all znodes used by the HBase
                                         cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">Table Name</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">Table Name</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Name of the HBase table to use. Enter a table name or a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Name of the HBase table to use. Enter a table name or a
                                         namespace and table name as follows:
                                         &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
                                             table name, HBase uses the default namespace.
@@ -281,25 +281,25 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">Row Key</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">Row Key</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Row key for the table. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Row key for the table. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">Storage Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">Storage Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Storage type of the row key. Choose
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Storage type of the row key. Choose
                                             <span class="ph uicontrol">Text</span> or
                                             <span class="ph uicontrol">Binary</span>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">Field to Column Mapping</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">Field to Column Mapping</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Map fields from pipeline records to HBase columns, and
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Map fields from pipeline records to HBase columns, and
                                         then define the storage type for the column in HBase.<p class="p">Use
                                             the <span class="ph uicontrol">Add</span> icon to create additional
                                             field mappings. </p>
@@ -308,10 +308,10 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HBase.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HBase.">
                                             <img class="image" id="task_pyq_qx5_vr__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file. </p>
@@ -320,10 +320,10 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
                                             <img class="image" id="task_pyq_qx5_vr__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">Location of the HDFS configuration files. Use a directory
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">Location of the HDFS configuration files. Use a directory
                                         or symlink within the <span class="ph">Data
                   Collector</span> resources directory.<div class="p">You can use the following file
                                             with the HBase destination:<ul class="ul" id="task_pyq_qx5_vr__ul_ezj_cvr_bt">
@@ -339,9 +339,9 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10336e367 ">HBase Configuration</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10335e367 ">HBase Configuration</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10336e370 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10335e370 ">
                                         <p class="p">Additional HBase configuration properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -367,6 +367,6 @@ To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"><div> </div><!-- © <a href="http://creativecommons.org/licenses/by-nc/4.0/legalcode">CC BY-NC 4.0.</a> StreamSets, 2015. --></div>
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"></div>
 </body>
 </html>

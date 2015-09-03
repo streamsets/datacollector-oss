@@ -156,9 +156,7 @@
             <ul id="ul_ErrorInformation">
                   <li>errorStage - The stage in the pipeline that generated the error.</li>
                   <li>errorCode - The error code associated with the error message.</li>
-                  <li>errorMessage - The text of the error message. <draft-comment author="Loretta"
-                              >Dev: I am listing the subset of key info - are there other ones I
-                              should list here as particularly useful?</draft-comment></li>
+                  <li>errorMessage - The text of the error message. </li>
             </ul>
             <p>
                   <draft-comment author="Loretta">The following is used in the Tutorial chapter, in

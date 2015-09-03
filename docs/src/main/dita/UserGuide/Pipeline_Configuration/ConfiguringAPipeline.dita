@@ -37,8 +37,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ryh_vfm_zs">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.0*"/>
                             <thead>
                                 <row>
                                     <entry>Pipeline Property</entry>
@@ -128,15 +128,13 @@
                                 </row>
                                 <row>
                                     <entry>Notify on Pipeline State Changes</entry>
-                                    <entry>Sends an email to the listed email IDs when the pipeline
-                                        encounters the listed states. Select the pipeline states to
-                                        use. </entry>
+                                    <entry>Sends an email when the pipeline encounters the listed
+                                        pipeline states. </entry>
                                 </row>
                                 <row>
                                     <entry>Email IDs</entry>
-                                    <entry>Email addresses to receive notifications. <draft-comment
-                                            author="Loretta">just on memory exceeded and stage
-                                            changes? for pipeline errors?</draft-comment></entry>
+                                    <entry>Email addresses to receive notification about pipeline
+                                        state changes. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
