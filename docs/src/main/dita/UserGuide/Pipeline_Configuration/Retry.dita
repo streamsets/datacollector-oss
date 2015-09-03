@@ -21,8 +21,8 @@
     period of time, and then tries again to run the pipeline.</shortdesc>
  <conbody>
   <p><indexterm>pipelines<indexterm>retry attempts upon error</indexterm></indexterm>A stage-level
-      error might include a destination not being able to write to the destination system because
-      the system or network is down.</p>
+            error might include a stage not being able to connect to an external system because the
+            system or network is down.</p>
   <p>You can use the Retry Attempts pipeline property to define the maximum number of pipeline
       retries that the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> performs. </p>

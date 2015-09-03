@@ -23,7 +23,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion determine where you can use an expression and the expression
                   elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d3859e222">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_ofb_1cm_xq__d3882e222">
                         <li class="li">Constants</li>
 
                         <li class="li">Field names</li>
@@ -66,29 +66,91 @@
 <div class="topic concept nested1" id="concept_kk2_mbm_xq">
  <h2 class="title topictitle2">Using Field Names in Expressions</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">When you use a field name in an expression, use the following syntax:</p>
+ <div class="body conbody">
+  <p class="p">When a pipeline is valid for preview,
+   expression completion provides available field names in a list. When a list is not available, use
+   the appropriate format for the field name.</p>
 
-  <div class="p">
-   <pre class="pre codeblock">${record:value("/&lt;field name&gt;")}</pre>
-
-  </div>
+  <div class="p">When you use a field name in an expression, use the following
+   syntax:<pre class="pre codeblock">${record:value("/&lt;field name&gt;")}</pre>
+</div>
 
   <div class="p">
    <div class="note note"><span class="notetitle">Note:</span> You can use single or double quotation marks to surround a field name.</div>
 
   </div>
 
-  <p class="p">For example, the following expression concatenates the values from the DATE field with values
-   from the TIME field:</p>
+  <p class="p">For example, the following expressions both concatenate the values from the DATE field with
+   values from the TIME field:</p>
 
   <div class="p">
-   <pre class="pre codeblock">${record:value('/DATE')} ${record:value('/TIME')}</pre>
+   <pre class="pre codeblock">${record:value('/DATE')} ${record:value('/TIME')}
+${record:value("/DATE")} ${record:value("/TIME")}</pre>
 
   </div>
 
  </div>
 
+<div class="topic concept nested2" id="concept_xnp_453_ft">
+ <h3 class="title topictitle3">Field Names with Special Characters</h3>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use quotation marks and the backslash character to handle special characters in
+  field names. </p>
+
+  <div class="p">Expression completion provides the correct syntax for field
+   names with special characters. But when you need to enter the field names manually, be sure to
+   use the following guidelines:<dl class="dl">
+    
+     <dt class="dt dlterm">Use quotation marks around field names with special characters</dt>
+
+     <dd class="dd">When a field name includes special characters, surround the field name with single or
+      double quotation marks as follows: <pre class="pre codeblock">/"&lt;field w/specialcharacter&gt;"</pre>
+Some
+      examples:<pre class="pre codeblock">/"Stream$ets"
+/'city&amp;state'
+/"product names"</pre>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">When using multiple sets of quotation marks, alternate between types as you go</dt>
+
+     <dd class="dd">Throughout the expression language, when using quotation marks, you can use single or
+      double quotation marks. But make sure to alternate between the types when nesting quotation
+      marks. </dd>
+
+     <dd class="dd">For example: </dd>
+
+     <dd class="dd">
+      <pre class="pre codeblock">${record:value('/"Stream$ets"'}
+${record:value("/'city&amp;state'"}</pre>
+
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">Use a backslash as an escape character</dt>
+
+     <dd class="dd">To use a quotation mark or backslash in a field name, use a backslash ( \ ).</dd>
+
+     <dd class="dd">Add additional backslashes as necessary to escape quotation marks. </dd>
+
+     <dd class="dd">For example, to use a field named "ID's" as a required field, you would use a single
+      backslash: <pre class="pre codeblock">/ID\'s</pre>
+</dd>
+
+     <dd class="dd">To use the same field in an expression, you might need additional backslashes as
+      follows:<pre class="pre codeblock">${record:value("/ID\\'s")}</pre>
+</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
 </div>
 <div class="topic concept nested1" id="concept_hjk_b4l_vq">
  <h2 class="title topictitle2">Referencing Field Names and Field Paths</h2>
@@ -116,8 +178,11 @@
                                                   follows:<pre class="pre codeblock">/&lt;field name&gt;</pre>
 </div>
 
-                                                <p class="p">So, to reference a CITY field in a simple JSON
-                                                  object, enter /CITY.</p>
+                                                <div class="p">So, to reference a CITY field in a simple JSON
+                                                  object, enter <samp class="ph codeph">/CITY</samp>. A simple
+                                                  expression that calls the field might look like
+                                                  this:<pre class="pre codeblock">${record:value('/CITY')}</pre>
+</div>
 
                                         </dd>
 
@@ -131,10 +196,13 @@
                                                   <pre class="pre codeblock">/&lt;path to field&gt;/&lt;field name&gt;</pre>
 </div>
 
-                                                <p class="p">For example, the following field path describes
+                                                <div class="p">For example, the following field path describes
                                                   an employeeName field several levels deep in a
-                                                  JSON object:<span class="ph filepath">
-                                                  /region/division/group/employeeName</span>.</p>
+                                                  JSON object:
+                                                  <samp class="ph codeph">/region/division/group/employeeName</samp>.
+                                                  An expression that calls the field might look like
+                                                  this:<pre class="pre codeblock">${record:value("/region/division/group/employeeName")}</pre>
+</div>
 
                                         </dd>
 
@@ -147,8 +215,17 @@
                                                 follows:<pre class="pre codeblock">[&lt;index value&gt;]/&lt;path to field&gt;/&lt;field name&gt;</pre>
 </dd>
 
-                                        <dd class="dd">Delimited records are structured as lists. For more
-                                                information, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordStructure.html#concept_zcg_bm4_fs" title="When reading delimited data, the Data Collector converts each row of delimited data to a record in List data format. To perform additional processing on the record, you can use the general expression language with your knowledge of the resulting record format or you can use delimited data functions.">Delimited Data Record Structure</a></dd>
+                                        <dd class="dd">For example, the following field path describes the same
+                                                employeeName field in the third region index in an
+                                                array:
+                                                <samp class="ph codeph">[2]/east/HR/employeeName</samp>.</dd>
+
+                                        <dd class="dd">An expression that calls the field might look like
+                                                this:<pre class="pre codeblock">${record:value('[2]/east/HR/employeeName')}</pre>
+</dd>
+
+                                        <dd class="dd">Delimited records can be structured as lists. For more
+                                                information, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">Delimited Data Record Types</a>.</dd>
 
                                 
                                 

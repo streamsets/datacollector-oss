@@ -24,11 +24,17 @@
    <topicref href="../Install_Config/Installing_the_DC.dita"/>
    <topicref href="../Install_Config/Installing_the_DC-Service.dita"/>
   </topicref>
-  <topicref href="../Install_Config/InstallingAdditionalStages.dita" chunk="to-content">
+  <topicref href="../Install_Config/AdditionalStageLibraries.dita" chunk="to-content">
    <topicmeta>
    <shortdesc/>
   </topicmeta>
-   <topicref href="../Install_Config/InstallStage-DownloadUntar.dita"/>
+   <topicref href="../Install_Config/AdditionalStageLibraries-Installing.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/AdditionalDrivers.dita"  chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/AdditionalDrivers-Installing.dita"/>
   </topicref>
   <topicref href="../Install_Config/UsersandRoles.dita" chunk="to-content">
    <topicmeta>

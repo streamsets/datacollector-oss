@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zhl_k4f_cr">
- <title>Installing Additional Stage Libraries</title>
+ <title>Additional Stage Libraries</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
     /> includes a wide range of stages for pipeline development, but you might need additional
     functionality. You can install stage libraries to provide access to additional

@@ -31,9 +31,7 @@
             follows:<codeblock>[0]/&lt;first header>:&lt;value>
 [1]/&lt;second header>:&lt;value>
 [2]/&lt;third header>:&lt;value>
-.
-.
-.</codeblock></dd>
+...</codeblock></dd>
           <dd>
             <p>For example, the following delimited rows:</p>
             <p>
@@ -50,13 +48,13 @@
 [0]/TransactionID: 0003420304
 [1]/Type: 08
 [2]/UserID: 1008</codeblock></dd>
-          <dd>
-            <note>In an expression, you can use the field name or the index number to call a field.
-              For example, you can use either of the following record:value expressions to return
-              data in the TransactionID
-              field:<codeblock>${record:value('/TransactionID')}
-${record:value('[0]'}</codeblock></note>
-          </dd>
+          <dd>In an expression, you can use the field name or the index number with a standard
+            record function to call a field. For example, you can use either of the following
+            record:value expressions to return data in the TransactionID
+            field:<codeblock>${record:value('/TransactionID')}
+${record:value('[0]'}</codeblock></dd>
+          <dd>For more information about standard record functions, see <xref
+              href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
         </dlentry>
         <dlentry>
           <dt>List Record Type</dt>
@@ -70,9 +68,7 @@ ${record:value('[0]'}</codeblock></note>
    /value = &lt;value for second header>
 [2]/header = &lt;third header>
    /value = &lt;value for third header>
-.
-.
-.</codeblock></dd>
+...</codeblock></dd>
           <dd>
             <p>For example, the same delimited rows described above are converted to records as
               follows:</p>
@@ -90,10 +86,8 @@ ${record:value('[0]'}</codeblock></note>
 [2]/header = UserID
    /value = 1008</codeblock>
           </dd>
-          <dd>
-            <note>In an expression, you can use delimited data functions or use the full field path
-              with standard functions. </note>
-          </dd>
+          <dd>In an expression, you can use delimited data functions or use the full field path with
+            standard functions. </dd>
         </dlentry>
       </dl></p>
   </conbody>

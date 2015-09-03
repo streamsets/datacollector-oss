@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_idl_hqw_ft">
+    <title>Installing Additional Drivers</title>
+    <taskbody>
+        <context><indexterm>additional drivers<indexterm>installing</indexterm></indexterm>To
+            install additional drivers for a stage, perform the following steps: <ol
+                id="ol_f3s_hrw_ft">
+                <li>Create a local directory external to the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> for the drivers. <p>Use a directory external to the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> to enable continued use of the drivers after upgrades. </p><p>For
+                        example, if you installed the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> in the following directory: <codeblock>/opts/sdc/</codeblock></p><p>you
+                        might create the driver directory at:
+                        <codeblock>/opts/sdc-extras</codeblock></p></li>
+                <li>Copy the drivers to the directory. Use a directory structure for each set of
+                    drivers based on the stage library name and directory structure as follows: <p>
+                        <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
+                    </p><p>For example to install drivers for JDBC in an opts/sdc-extras directory,
+                        you would copy them to the following directory:
+                        <codeblock>/opts/sdc-extras/&lt;&lt;get this later>></codeblock></p></li>
+                <li>In the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> environment file, add the following <draft-comment author="Loretta">add the
+                        variable? add the path? </draft-comment></li>
+            </ol></context>
+    </taskbody>
+</task>

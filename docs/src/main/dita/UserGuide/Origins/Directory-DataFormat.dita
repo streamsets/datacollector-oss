@@ -51,7 +51,7 @@
           header information when available. </dd>
         <dd>If data does not include a header, the origin uses the column position as a header for
           the list-map record types. For the list record type, the origin omits the header from the
-            map.<draft-comment author="Loretta">Madhu, are these two sentences above correct?
+            map.<draft-comment author="Loretta">add these two paragraphs everywhere.
           </draft-comment></dd>
         <dd>For more information about the record types, see <xref
             href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.</dd>

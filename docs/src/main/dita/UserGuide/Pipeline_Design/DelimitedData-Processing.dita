@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_hrt_tt4_fs">
  <title>Processing List Type Data</title>
- <shortdesc>For delimited data in list-map record type, you can use standard record functions to
+ <shortdesc>For delimited data in the list-map record type, you can use standard record functions to
         process data. For data in the list record type, you should either use the delimited data
         functions or include the full field path in standard record functions. </shortdesc>
  <conbody>

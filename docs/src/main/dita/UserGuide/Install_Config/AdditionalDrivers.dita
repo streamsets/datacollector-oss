@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pdv_qlw_ft">
+ <title>Additional Drivers</title>
+ <shortdesc>You can install additional drivers for stages. </shortdesc>
+ <conbody>
+  <p><indexterm>drivers<indexterm>installing additional for stages</indexterm></indexterm>Before you
+   use the JMS Consumer and JDBC Consumer origins, you need to install drivers for the
+   implementation that you want to use. For example, to use the JMS Consumer to read from Oracle,
+   install the Oracle JMS drivers. </p>
+  <p>Drivers for other stages are optional. For example, you can install custom classes for the
+   JavaScript or Jython Evaluators. </p>
+ </conbody>
+</concept>
