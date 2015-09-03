@@ -1,0 +1,1 @@
+The StreamSets Data Collector ${MESSAGE} at ${TIME}.<br><br>Pipeline URL: ${URL}<br><br><br>You are receiving this message because the pipeline is configured to send email to this address for user-defined pipeline state changes.

@@ -22,6 +22,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.alerts.AlertsUtil;
+import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -129,6 +130,12 @@ public class AlertManager {
             .replace(EmailConstants.PIPELINE_NAME_KEY, pipelineName)
             .replace(EmailConstants.CONDITION_KEY, ruleDefinition.getCondition())
             .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineName.replaceAll(" ", "%20"));
+
+          if(ruleDefinition instanceof DataRuleDefinition) {
+            emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ((DataRuleDefinition)ruleDefinition).getLabel());
+          } else {
+            emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ruleDefinition.getAlertText());
+          }
 
           if(emailSender == null) {
             LOG.error("Email Sender is not configured. Alert '{}' with message '{}' will not be sent via email.",

@@ -156,6 +156,47 @@ public class TestEmailNotifier {
   }
 
   @Test
+  public void testEmailNotifierDisconnected() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("DISCONNECTED"));
+
+    PipelineState disconnectingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTING, "Disconnecting",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState disconnectedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTED, "Disconnected",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(disconnectingState, disconnectedState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - DISCONNECTED"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+  @Test
+  public void testEmailNotifierConnecting() throws Exception {
+
+    EmailNotifier emailNotifier = new EmailNotifier("x", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),
+      ImmutableSet.of("CONNECTING"));
+
+    PipelineState disconnectedState = new PipelineStateImpl("x", "x", "0", PipelineStatus.DISCONNECTED, "Disconnected",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState connectingState = new PipelineStateImpl("x", "x", "0", PipelineStatus.CONNECTING, "Connecting",
+      System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    emailNotifier.onStateChange(disconnectedState, connectingState, "", null);
+
+    String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
+    Assert.assertTrue(headers != null);
+    Assert.assertTrue(headers.contains("To: foo, bar"));
+    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - CONNECTING"));
+    Assert.assertTrue(headers.contains("From: sdc@localhost"));
+    Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
+  }
+
+
+  @Test
   public void testEmailNotifierWrongPipeline() throws Exception {
 
     EmailNotifier emailNotifier = new EmailNotifier("y", "0", runtimeInfo, emailSender, ImmutableList.of("foo", "bar"),

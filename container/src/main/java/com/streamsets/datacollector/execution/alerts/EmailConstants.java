@@ -26,6 +26,7 @@ public class EmailConstants {
   public static final String ALERT_ERROR_EMAIL_TEMPLATE = "email-template-error-alert.txt";
   public static final String NOTIFY_ERROR_EMAIL_TEMPLATE = "email-template-error-notify.txt";
   public static final String METRIC_EMAIL_TEMPLATE = "email-template-metric.txt";
+  public static final String ALERT_NAME_KEY = "${ALERT_NAME}";
   public static final String ALERT_VALUE_KEY = "${ALERT_VALUE}";
   public static final String TIME_KEY = "${TIME}";
   public static final String PIPELINE_NAME_KEY = "${PIPELINE_NAME}";
@@ -35,7 +36,8 @@ public class EmailConstants {
   public static final String URL_KEY = "${URL}";
   public static final String DATE_MASK = "yyyy-MM-dd HH:mm:ss";
   public static final String PIPELINE_URL = "/collector/pipeline/";
-  public static final String STOPPED_EMAIL_TEMPLATE = "email-template-stopped.txt";
+  public static final String PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE = "email-template-pipeline-state-change.txt";
+  public static final String SDC_STATE_CHANGE__EMAIL_TEMPLATE = "email-template-sdc-state-change.txt";
   public static final String MESSAGE_KEY = "${MESSAGE}";
 
 }

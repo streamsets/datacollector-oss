@@ -89,22 +89,34 @@ public class EmailNotifier implements StateEventListener {
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - ERROR";
               break;
             case STOPPED:
-              url = Resources.getResource(EmailConstants.STOPPED_EMAIL_TEMPLATE);
+              url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
-              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "The pipeline was stopped");
+              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was stopped");
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - STOPPED";
               break;
             case FINISHED:
-              url = Resources.getResource(EmailConstants.STOPPED_EMAIL_TEMPLATE);
+              url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
-              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "The pipeline finished executing");
+              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "finished executing");
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - FINISHED";
               break;
             case RUNNING:
-              url = Resources.getResource(EmailConstants.STOPPED_EMAIL_TEMPLATE);
+              url = Resources.getResource(EmailConstants.PIPELINE_STATE_CHANGE__EMAIL_TEMPLATE);
               emailBody = Resources.toString(url, Charsets.UTF_8);
-              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "The pipeline is running");
+              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "started executing");
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - RUNNING";
+              break;
+            case DISCONNECTED:
+              url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
+              emailBody = Resources.toString(url, Charsets.UTF_8);
+              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was shut down");
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - DISCONNECTED";
+              break;
+            case CONNECTING:
+              url = Resources.getResource(EmailConstants.SDC_STATE_CHANGE__EMAIL_TEMPLATE);
+              emailBody = Resources.toString(url, Charsets.UTF_8);
+              emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was started");
+              subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - CONNECTING";
               break;
           }
         } catch (IOException e) {
