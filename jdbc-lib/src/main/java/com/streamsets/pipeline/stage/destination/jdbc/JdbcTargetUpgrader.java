@@ -17,11 +17,13 @@
  */
 package com.streamsets.pipeline.stage.destination.jdbc;
 
+import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.HashMap;
 import java.util.List;
 
 /** {@inheritDoc} */
@@ -40,11 +42,28 @@ public class JdbcTargetUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("changeLogFormat", "NONE"));
+
+    Config tableNameConfig = null;
     for (Config config : configs) {
       if (config.getName().equals("qualifiedTableName")) {
-        configs.add(new Config("tableName", config.getValue()));
-        configs.remove(config);
+        tableNameConfig = config;
       }
+    }
+
+    if (null != tableNameConfig) {
+      configs.add(new Config("tableName", tableNameConfig.getValue()));
+      configs.remove(tableNameConfig);
+    }
+
+    Config columnNamesConfig = null;
+    for (Config config : configs) {
+      if (config.getName().equals("columnNames")) {
+        columnNamesConfig = config;
+      }
+    }
+
+    for (HashMap<String, String> columnName : (List<HashMap<String, String>>)columnNamesConfig.getValue()) {
+      columnName.put("paramValue", "?");
     }
   }
 }

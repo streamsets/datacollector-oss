@@ -43,6 +43,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private boolean rollbackOnError;
 
   private Map<String, String> columnsToFields = new HashMap<>();
+  private Map<String, String> columnsToParameters = new HashMap<>();
 
   public JdbcBaseRecordWriter(
       String connectionString,
@@ -68,6 +69,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
       while (columns.next()) {
         String columnName = columns.getString(4);
         columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings
+        columnsToParameters.put(columnName, "?");
       }
     } catch (SQLException e) {
       String errorMessage = JdbcUtil.formatSqlException(e);
@@ -83,6 +85,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
       if (columnsToFields.containsKey(mapping.columnName)) {
         LOG.debug("Mapping field {} to column {}", mapping.field, mapping.columnName);
         columnsToFields.put(mapping.columnName, mapping.field);
+        columnsToParameters.put(mapping.columnName, mapping.paramValue);
       }
     }
   }
@@ -155,6 +158,15 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
    */
   protected Map<String, String> getColumnsToFields() {
     return columnsToFields;
+  }
+
+  /**
+   * SQL Columns to custom parameter mappings. These will be used to parameterized
+   * an INSERT statement
+   * @return map of the mappings
+   */
+  protected Map<String, String> getColumnsToParameters() {
+    return columnsToParameters;
   }
 
   /**

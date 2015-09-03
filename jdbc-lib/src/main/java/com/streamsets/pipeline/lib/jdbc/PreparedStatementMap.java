@@ -26,28 +26,30 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.SortedSet;
 
 class PreparedStatementMap {
   private final Connection connection;
   private final String tableName;
-  private final Map<SortedSet<String>, PreparedStatement> cache = new HashMap<>();
+  private final Map<SortedMap<String, String>, PreparedStatement> cache = new HashMap<>();
 
   public PreparedStatementMap(Connection connection, String tableName) {
     this.connection = connection;
     this.tableName = tableName;
   }
 
-  public PreparedStatement getInsertFor(SortedSet<String> columns) throws SQLException {
+  public PreparedStatement getInsertFor(SortedMap<String, String> columns) throws SQLException {
     // The INSERT query we're going to perform (parameterized).
     if (cache.containsKey(columns)) {
       return cache.get(columns);
     } else {
       String query = String.format(
-          "INSERT INTO %s (%s) VALUES (%s);",
+          "INSERT INTO %s (%s) VALUES (%s)",
           tableName,
-          Joiner.on(", ").join(columns),
-          Joiner.on(", ").join(Collections.nCopies(columns.size(), "?"))
+          // keySet and values will both return the same ordering, due to using a SortedMap
+          Joiner.on(", ").join(columns.keySet()),
+          Joiner.on(", ").join(columns.values())
       );
       PreparedStatement statement = connection.prepareStatement(query);
       cache.put(columns, statement);
