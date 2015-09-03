@@ -32,7 +32,7 @@ public class StageConfiguration implements Serializable {
   //basic info
   private final String instanceName;
   private String library;
-  private final String stageName;
+  private String stageName;
   private int stageVersion;
   private final List<Config> configuration;
   private final Map<String, Config> configurationMap;
@@ -69,6 +69,10 @@ public class StageConfiguration implements Serializable {
 
   public String getLibrary() {
     return library;
+  }
+
+  public void setStageName(String name) {
+    stageName = name;
   }
 
   public String getStageName() {

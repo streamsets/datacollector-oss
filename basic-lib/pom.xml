@@ -35,7 +35,6 @@
     <geoip2.version>2.1.0</geoip2.version>
     <guava.version>18.0</guava.version>
     <h2.version>1.4.187</h2.version>
-    <hikaricp.version>2.3.5</hikaricp.version>
     <jackson.version>2.4.3</jackson.version>
     <jersey.version>2.17</jersey.version>
     <joda.version>2.8</joda.version>
@@ -150,13 +149,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.zaxxer</groupId>
-      <artifactId>HikariCP-java6</artifactId>
-      <version>${hikaricp.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
       <version>${joda.version}</version>
@@ -207,16 +199,10 @@
       <version>${h2.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
+     <dependency>
       <groupId>org.glassfish.jersey.test-framework.providers</groupId>
       <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
       <version>${jersey.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-container</artifactId>
-      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

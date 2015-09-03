@@ -18,7 +18,10 @@
 package com.streamsets.datacollector.validation;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -160,18 +163,42 @@ public class PipelineConfigurationValidator {
     return stageLibrary.getLibraryNameAliases().get(name);
   }
 
-  boolean resolveLibraryAliases() {
-    if (pipelineConfiguration.getErrorStage() != null) {
-      String name = pipelineConfiguration.getErrorStage().getLibrary();
-      if (isLibraryAlias(name)) {
-        pipelineConfiguration.getErrorStage().setLibrary(resolveLibraryAlias(name));
+  void resolveStageAlias(StageConfiguration stageConf) {
+    String aliasKey = Joiner.on(",").join(stageConf.getLibrary(), stageConf.getStageName());
+    String aliasValue = Strings.nullToEmpty(stageLibrary.getStageNameAliases().get(aliasKey));
+    if (LOG.isTraceEnabled()) {
+      for (String key : stageLibrary.getStageNameAliases().keySet()) {
+        LOG.trace("Stage Lib Alias: {} => {}", key, stageLibrary.getStageNameAliases().get(key));
       }
+      LOG.trace("Looking for '{}' and found '{}'", aliasKey, aliasValue);
+    }
+    if (!aliasValue.isEmpty()) {
+      List<String> alias = Splitter.on(",").splitToList(aliasValue);
+      if (alias.size() == 2) {
+        LOG.debug("Converting '{}' to '{}'", aliasKey, aliasValue);
+        stageConf.setLibrary(alias.get(0));
+        stageConf.setStageName(alias.get(1));
+      } else {
+        LOG.error("Malformed stage alias: '{}'", aliasValue);
+      }
+    }
+  }
+
+  boolean resolveLibraryAliases() {
+    StageConfiguration errorStageConf = pipelineConfiguration.getErrorStage();
+    if (errorStageConf != null) {
+      String name = errorStageConf.getLibrary();
+      if (isLibraryAlias(name)) {
+        errorStageConf.setLibrary(resolveLibraryAlias(name));
+      }
+      resolveStageAlias(errorStageConf);
     }
     for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
       String name = stageConf.getLibrary();
       if (isLibraryAlias(name)) {
         stageConf.setLibrary(resolveLibraryAlias(name));
       }
+      resolveStageAlias(stageConf);
     }
     return true;
   }
@@ -532,8 +559,8 @@ public class PipelineConfigurationValidator {
     boolean preview = true;
     if (confDef == null) {
       // stage configuration defines an invalid configuration
-      issues.add(issueCreator.create(stageConf.getInstanceName(), null, conf.getName(),
-                                     ValidationError.VALIDATION_0008));
+      issues.add(issueCreator.create(stageConf.getInstanceName(), conf.getName(),
+        ValidationError.VALIDATION_0008));
       return false;
     }
     boolean validateConfig = true;

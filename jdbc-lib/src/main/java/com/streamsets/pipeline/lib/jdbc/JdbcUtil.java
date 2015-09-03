@@ -33,7 +33,7 @@ import java.util.Map;
 public class JdbcUtil {
   /**
    * Position in ResultSet for column and primary key metadata of the column name.
-   * 
+   *
    * @see java.sql.DatabaseMetaData#getColumns
    * @see java.sql.DatabaseMetaData#getPrimaryKeys
    */

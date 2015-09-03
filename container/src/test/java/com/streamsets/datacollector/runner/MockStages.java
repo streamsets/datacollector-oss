@@ -473,6 +473,11 @@ public class MockStages {
     }
 
     @Override
+    public Map<String, String> getStageNameAliases() {
+      return Collections.emptyMap();
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 

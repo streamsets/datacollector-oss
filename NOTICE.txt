@@ -52,6 +52,7 @@ This product includes components of the following software:
   GSon                            Apache License 2.0
   Guava                           Apache License 2.0
   Guid                            Apache License 2.0
+  H2                              Eclipse Public License 1.0
   Hbase                           Apache License 2.0
   Hikari CP                       Apache License 2.0
   Hive                            Apache License 2.0

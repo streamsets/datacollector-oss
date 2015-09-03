@@ -17,6 +17,7 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -153,16 +154,18 @@ public class TestPipelineConfigurationValidator {
   public void testLibraryAlias() {
     StageLibraryTask lib = MockStages.createStageLibrary();
     PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceProcessorTarget();
-    String stageLib = conf.getStages().get(0).getLibrary();
-
-    conf.getStages().get(0).setLibrary("foo");
-
+    StageConfiguration stageConf = conf.getStages().get(0);
+    String stageLib = stageConf.getLibrary();
+    String stageName = stageConf.getStageName();
+    stageConf.setLibrary("fooLib");
+    stageConf.setStageName("fooStage");
     lib = Mockito.spy(lib);
-    Mockito.when(lib.getLibraryNameAliases()).thenReturn(ImmutableMap.of("foo", stageLib));
-
+    Mockito.when(lib.getLibraryNameAliases()).thenReturn(ImmutableMap.of("fooLib", stageLib));
+    Mockito.when(lib.getStageNameAliases()).thenReturn(ImmutableMap.of(Joiner.on(",").join(stageLib, "fooStage"),
+      Joiner.on(",").join(stageLib, stageName)));
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
     conf = validator.validate();
-    Assert.assertFalse(conf.getIssues().hasIssues());
+    Assert.assertFalse(String.valueOf(conf.getIssues().getIssues()), conf.getIssues().hasIssues());
     Assert.assertEquals(stageLib, conf.getStages().get(0).getLibrary());
   }
 

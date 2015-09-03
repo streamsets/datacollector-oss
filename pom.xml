@@ -76,6 +76,7 @@
 
     <module>basic-lib</module>
 
+    <module>jdbc-lib</module>
     <module>jms-lib</module>
 
     <module>hdfs-protolib</module>

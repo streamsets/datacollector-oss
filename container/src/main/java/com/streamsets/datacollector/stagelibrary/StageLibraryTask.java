@@ -39,4 +39,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   public Map<String, String> getLibraryNameAliases();
 
+  public Map<String, String> getStageNameAliases();
+
 }
