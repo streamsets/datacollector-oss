@@ -126,7 +126,7 @@
           <excludes>
 
             <!-- IntelliJ IDE -->
-            <exclude>.idea/**</exclude>
+            <exclude>**/.idea/**</exclude>
             <exclude>**/*.iml</exclude>
 
             <!-- Git -->
