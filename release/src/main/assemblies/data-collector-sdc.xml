@@ -23,8 +23,15 @@
 
     <!-- LICENSE, NOTICE, README, etc -->
     <fileSet>
-      <directory>src/main/release-files</directory>
+      <directory>${basedir}/..</directory>
       <outputDirectory>/streamsets-datacollector-${project.version}</outputDirectory>
+      <includes>
+        <include>NOTICE.txt</include>
+        <include>README.txt</include>
+        <include>LICENSE.txt</include>
+        <include>BUILDING.txt</include>
+      </includes>
+      <fileMode>0555</fileMode>
     </fileSet>
 
     <!-- SDC -->

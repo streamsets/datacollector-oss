@@ -35,6 +35,13 @@ Maven Properties (use -D<property-name>):
 
 -------
 
+Running Testcases:
+
+Use 'mvn package' to run tests. This triggers the shading of the SDK dependencies which
+is required for libraries like cdh_5_4-lib/hdp_2_3-lib not to fail when running their
+test cases.
+
+-------
 
 Code Coverage (using cobertura plugin):
 
@@ -53,13 +60,6 @@ Aggregating the coverage report for all modules:
   $ mvn cobertura:cobertura -Dcobertura.aggregate
 
   The aggregated coverage report will be at root/target/site/cobertura/index.html
-
-
-IMPORTANT TEST INSTRUCTIONS:
-
-Use 'mvn package' to run tests. This triggers the shading of the SDK dependencies which
-is required for libraries like hdfs-lib/cdh5_3_0-lib/cdh5_2_1-lib not to fail when running
-their test cases.
 
 -------
 

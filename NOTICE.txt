@@ -1,0 +1,131 @@
+This product includes software developed by StreamSets, Inc.
+(http://www.streamsets.com/).
+
+This product includes components of the following software:
+
+  Project Name                    License
+-----------------------------------------------------------------------
+  Amazon AWS Java SDK             Apache License 2.0
+  Amazon Kinesis Client           Amazon Software License
+  Ant                             Apache License 2.0
+  Ant LR                          BSD License
+  AOPAlliance                     Public Domain
+  Apache Directory                Apache License 2.0
+  ASM                             BSD License
+  Automaton                       BSD License
+  Avro                            Apache License 2.0
+  BoneCP                          Apache License 2.0
+  Bouncy Castle                   MIT License
+  Calcite                         Apache License 2.0
+  Cassandra                       Apache License 2.0
+  Commons Beanutils               Apache License 2.0
+  Commons CLI                     Apache License 2.0
+  Commons Codec                   Apache License 2.0
+  Commons Collections             Apache License 2.0
+  Commons Compress                Apache License 2.0
+  Commons Configuration           Apache License 2.0
+  Commons CSV                     Apache License 2.0
+  Commons DBCP                    Apache License 2.0
+  Commons Digester                Apache License 2.0
+  Commons EL                      Apache License 2.0
+  Commons HttpClient              Apache License 2.0
+  Commons IO                      Apache License 2.0
+  Commons Lang                    Apache License 2.0
+  Commons Lang3                   Apache License 2.0
+  Commons Logging                 Apache License 2.0
+  Commons Math3                   Apache License 2.0
+  Commons Net                     Apache License 2.0
+  Commons Pool                    Apache License 2.0
+  Commons Pool2                   Apache License 2.0
+  Curator                         Apache License 2.0
+  Dagger                          Apache License 2.0
+  Data Nucleus                    Apache License 2.0
+  Derby                           Apache License 2.0
+  Dropwizzard Metrics             Apache License 2.0
+  eigenbase-properties            Apache License 2.0
+  Elasticsearch                   Apache License 2.0
+  Fast Serialization (fst)        Apache License 2.0
+  Flume                           Apache License 2.0
+  Geronimo                        Apache License 2.0
+  Google Http-Client              Apache License 2.0
+  Grovy                           Apache License 2.0
+  GSon                            Apache License 2.0
+  Guava                           Apache License 2.0
+  Guid                            Apache License 2.0
+  Hbase                           Apache License 2.0
+  Hikari CP                       Apache License 2.0
+  Hive                            Apache License 2.0
+  HK2                             CDDL
+  HTrace                          Apache License 2.0
+  HttpComponents                  Apache License 2.0
+  iq80 Snappy                     Apache License 2.0
+  Ivy                             Apache License 2.0
+  Jackson FasterXML               Apache License 2.0
+  Java Assist                     Apache License 2.0
+  Java Protobuf                   New BSD License
+  javax Activation                CDDL 1.0
+  javax Annotation API            CDDL
+  javax Inject                    Apache License 2.0
+  javax Jaxb API                  CDDL 1.1
+  javax JDO API                   Apache License 2.0
+  javax JSP API                   CDDL
+  javax JTA                       CDDL
+  javax Mail                      CDDL
+  javax Servlet API               CDDL
+  javax Stax API                  CDDL 1.0
+  javax Validation API            Apache License 2.0
+  javax WSRS API                  CDDL 1.1
+  Jaxb Implementation             CDDL 1.1
+  JCodings                        MIT License
+  Jersey                          CDDL
+  Jettison                        Apache License 2.0
+  Jetty                           Apache License 2.0
+  JLine                           BSD License
+  Joda Time                       Apache License 2.0
+  Joni                            MIT License
+  Jopt Simple                     MIT License
+  JPam                            Apache License 2.0
+  JSON                            JSON License
+  JSR-305                         Apache License 2.0
+  jtar                            Apache License 2.0
+  Jython                          Jython Software License
+  Kafka                           Apache License 2.0
+  Kryo                            New BSD License
+  LevelDB JNI                     BSD 3-Clause License
+  Log4J                           Apache License 2.0
+  Lucene                          Apache License 2.0
+  LZ4 Java                        Apache License 2.0
+  MaxMind DB                      Apache License 2.0
+  MaxMind Geoip2                  Apache License 2.0
+  Mimepull                        CDDL 1.1
+  MinLog                          New BSD License
+  Mongo DB                        Apache License 2.0
+  Netty                           Apache License 2.0
+  Netty                           Apache License 2.0
+  Noggit                          Apache License 2.0
+  Objenesis                       Apache License 2.0
+  Open CSV                        Apache License 2.0
+  Paranamer                       BSD License
+  Parquet                         Apache License 2.0
+  Pentaho                         Apache License 2.0
+  ReflectASM                      New BSD License
+  Reflections                     New BSD License
+  Scala                           BSD-like License
+  SLF4J                           MIT License
+  Solr                            Apache License 2.0
+  Spark                           Apache License 2.0
+  Spatial4J                       Apache License 2.0
+  Stax2 API                       BSD License
+  Swagger                         Apache License 2.0
+  Thrift                          Apache License 2.0
+  UnboundID LDAP SDK              UnboundID LDAP SDK Free Use License
+  Velocity                        Apache License 2.0
+  Windows Azure Storage SDK       Apache License 2.0
+  WSTX ASL                        Apache License 2.0
+  Xerces                          Apache License 2.0
+  XML APIs                        Apache License 2.0
+  xmlenc                          BSD License
+  XZ                              Public Domain
+  ZkClient                        Apache License 2.0
+  Zookeeper                       Apache License 2.0
+-----------------------------------------------------------------------
