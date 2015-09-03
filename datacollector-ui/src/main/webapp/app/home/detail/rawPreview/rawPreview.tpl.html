@@ -1,4 +1,3 @@
-
 <div ng-controller="RawPreviewController" class="raw-preview-tab">
   <form class="form row form-group-sm" role="form" ng-submit="rawSourcePreview()">
 
@@ -64,7 +63,12 @@
     </div>
 
     <div class="col-md-8 preview-data form-group" ng-if="rawSourcePreviewData">
-      <pre ng-bind="rawSourcePreviewData"></pre>
+      <div ui-codemirror
+           class="codemirror-editor"
+           ng-model="rawSourcePreviewData"
+           ui-refresh="refreshCodemirror"
+           ui-codemirror-opts="rawDataCodemirrorOptions">
+      </div>
     </div>
 
   </form>

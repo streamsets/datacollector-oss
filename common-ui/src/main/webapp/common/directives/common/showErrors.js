@@ -1,6 +1,6 @@
 /**
  * https://github.com/paulyoder/angular-bootstrap-show-errors
- *
+ * MIT License
  */
 
 angular.module('dataCollectorApp.commonDirectives')

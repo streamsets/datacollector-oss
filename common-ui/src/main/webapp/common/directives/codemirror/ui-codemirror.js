@@ -2,6 +2,7 @@
  * Binds a CodeMirror widget to a <textarea> element.
  *
  * https://github.com/angular-ui/ui-codemirror
+ * MIT License
  *
  */
 angular.module('dataCollectorApp.codemirrorDirectives')

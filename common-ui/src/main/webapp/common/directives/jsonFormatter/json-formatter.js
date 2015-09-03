@@ -1,5 +1,6 @@
 /**
  * https://github.com/mohsen1/json-formatter
+ * MIT License
  */
 
 angular.module('jsonFormatter', ['RecursionHelper'])

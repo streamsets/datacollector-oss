@@ -1,5 +1,6 @@
 /**
  * https://github.com/blackgate/bg-splitter
+ * MIT License
  */
 
 angular.module('splitterDirectives', [])

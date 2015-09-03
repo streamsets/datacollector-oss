@@ -2,7 +2,7 @@
  * Google Analytics tracking
  *
  * https://github.com/revolunet/angular-google-analytics
- *
+ * MIT License
  */
 
 angular.module('angular-google-analytics', [])
