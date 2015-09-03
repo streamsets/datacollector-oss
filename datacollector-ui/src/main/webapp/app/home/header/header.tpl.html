@@ -32,7 +32,14 @@
            ng-switch-when="RUNNING">
         <h3 class="pull-left">{{pipelineConfig.info.name | limitTo: 40}}: </h3>
         <h3 class="pull-left" translate="home.header.uptime">Uptime</h3>
-        <h3 class="pull-left" am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].timeStamp - common.serverTimeDifference"></h3>
+
+        <h3 class="pull-left"
+            ng-if="!common.pipelineStatusMap[pipelineConfig.info.name].attributes || !common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime']"
+            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].timeStamp - common.serverTimeDifference"></h3>
+
+        <h3 class="pull-left"
+            ng-if="common.pipelineStatusMap[pipelineConfig.info.name].attributes && common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime']"
+            am-time-ago="common.pipelineStatusMap[pipelineConfig.info.name].attributes['cluster.application.startTime'] - common.serverTimeDifference"></h3>
 
         <i class="fa fa-spinner fa-spin fa-2x green-color"></i>
       </div>
