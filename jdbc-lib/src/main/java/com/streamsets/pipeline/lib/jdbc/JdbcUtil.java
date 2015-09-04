@@ -78,7 +78,7 @@ public class JdbcUtil {
     String errorCode = String.valueOf(ex.getErrorCode());
     if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
       return MYSQL_DATA_ERROR_ERROR_CODES.containsKey(errorCode);
-    } if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0,2))) {
+    } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0,2))) {
       return true;
     }
     return false;
