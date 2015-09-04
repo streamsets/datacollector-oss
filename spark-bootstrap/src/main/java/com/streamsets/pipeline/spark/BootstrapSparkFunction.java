@@ -18,14 +18,14 @@
 package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.BootstrapCluster;
-
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
+
 import org.apache.spark.TaskContext;
 import org.apache.spark.api.java.function.VoidFunction;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import scala.Tuple2;
 
 import java.io.Serializable;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tuple2<T1, T2>>>, Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapSparkFunction.class);
@@ -40,6 +41,8 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private volatile boolean initialized = false;
   private ClusterFunction clusterFunction;
+  private Properties properties;
+  private int batchSize;
 
   public BootstrapSparkFunction() {
   }
@@ -49,6 +52,8 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
       return;
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
+    properties = BootstrapCluster.getProperties();
+    batchSize = Integer.parseInt(properties.getProperty("production.maxBatchSize", "1000").trim());
     initialized = true;
   }
 
@@ -59,7 +64,11 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     while (tupleIterator.hasNext()) {
       Tuple2<T1, T2> tuple = tupleIterator.next();
       if (IS_TRACE_ENABLED) {
-        LOG.trace("Got message: 1: {}, 2: {}", toString((byte[])tuple._1), toString((byte[])tuple._2));
+        LOG.trace("Got message: 1: {}, 2: {}", toString((byte[]) tuple._1), toString((byte[]) tuple._2));
+      }
+      if (batch.size() == batchSize) {
+        clusterFunction.invoke(batch);
+        batch = new ArrayList<>();
       }
       batch.add(new Pair(tuple._1(), tuple._2()));
     }
