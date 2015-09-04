@@ -145,6 +145,10 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
     codemirror.on('change', function(instance) {
       var newValue = instance.getValue();
 
+      if(dataType !== 'STRING' && newValue) {
+        newValue = newValue.trim();
+      }
+
       if(dataType === 'NUMBER') {
         if(newValue === '') {
           newValue = 0;
