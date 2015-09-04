@@ -53,6 +53,7 @@ This product includes components of the following software:
   Guava                           Apache License 2.0
   Guid                            Apache License 2.0
   H2                              Eclipse Public License 1.0
+  Hadoop                          Apache License 2.0
   Hbase                           Apache License 2.0
   Hikari CP                       Apache License 2.0
   Hive                            Apache License 2.0
@@ -130,3 +131,40 @@ This product includes components of the following software:
   ZkClient                        Apache License 2.0
   Zookeeper                       Apache License 2.0
 -----------------------------------------------------------------------
+
+
+UI Components
+
+  Project Name                              License
+-----------------------------------------------------------------------
+  angular                                   MIT License
+  angular-bootstrap                         MIT License
+  angular-bootstrap-datetimepicker          MIT License
+  angular-bootstrap-show-errors             MIT License
+  angular-cookies                           MIT License
+  angular-dynamic-locale                    MIT License
+  angular-google-analytics                  MIT License
+  angular-i18n                              MIT License
+  angular-moment                            MIT License
+  angular-nvd3                              MIT License
+  angular-resource                          MIT License
+  angular-route                             MIT License
+  angular-sanitize                          MIT License
+  angular-scenario                          MIT License
+  angular-swagger-ui                        MIT License
+  angular-translate                         MIT License
+  angular-translate-loader-static-files     MIT License
+  angular-translate-storage-cookie          MIT License
+  angular-ui-select                         MIT License
+  bg-splitter                               MIT License
+  bootstrap                                 MIT License
+  codemirror                                MIT License
+  d3                                        BSD License
+  fontawesome                               SIL OFL 1.1
+  jquery                                    MIT License
+  json-formatter                            Apache License 2.0
+  moment                                    MIT License
+  ngstorage                                 MIT License
+  nvd3                                      Apache License 2.0
+  ui-codemirror                             MIT License
+  underscore                                MIT License
