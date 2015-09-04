@@ -40,7 +40,7 @@ public enum Errors implements ErrorCode {
 
   HADOOPFS_12("The record '{}' is late"),
   HADOOPFS_13("Error while writing to HDFS: {}"),
-  HADOOPFS_14("Cannot write record '{}': {}"),
+  HADOOPFS_14("Cannot write record: {}"),
   HADOOPFS_15("Record in error: {}"),
   HADOOPFS_16("Unsupported data format '{}'"),
   HADOOPFS_17("Cannot initialize the late records writer manager: {}"),

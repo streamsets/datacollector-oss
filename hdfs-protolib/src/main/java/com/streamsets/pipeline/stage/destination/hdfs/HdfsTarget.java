@@ -685,9 +685,9 @@ public class HdfsTarget extends BaseTarget {
         }
       }
     } catch (IOException ex) {
-      throw new StageException(Errors.HADOOPFS_14, record, ex.toString(), ex);
+      throw new StageException(Errors.HADOOPFS_14, ex.toString(), ex);
     } catch (StageException ex) {
-      throw new OnRecordErrorException(Errors.HADOOPFS_14, record, ex.toString(), ex);
+      throw new OnRecordErrorException(ex.getErrorCode(), ex.getParams()); // params includes exception
     }
   }
 
