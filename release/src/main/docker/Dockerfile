@@ -31,7 +31,7 @@ RUN apk update && apk add bash && apk add snappy
 ENV SDC_USER=sdc
 RUN addgroup -S ${SDC_USER} && adduser -S ${SDC_USER} ${SDC_USER}
 
-ADD streamsets-datacollector-*$SDC_VERSION$*.tar* /opt/
+ADD streamsets-datacollector-*$SDC_VERSION$*.tgz /opt/
 ENV SDC_DIST /opt/streamsets-datacollector-$SDC_VERSION$
 
 # Disable authentication by default, can be overriden with custom sdc.properties.
