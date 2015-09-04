@@ -242,7 +242,7 @@ public class Pipeline {
         }
         errorStage = new StageRuntime(pipelineBean, pipelineBean.getErrorStage());
         setStagesContext(stages, errorStage, runner);
-        Pipe[] pipes = createPipes(stages);
+        Pipe[] pipes = createPipes(stages, runner);
         BadRecordsHandler badRecordsHandler = new BadRecordsHandler(errorStage);
         try {
           pipeline = new Pipeline(name, rev, configuration, pipelineBean, pipes, observer, badRecordsHandler, runner,
@@ -285,16 +285,17 @@ public class Pipeline {
       return clusterMode;
     }
 
-    private Pipe[] createPipes(StageRuntime[] stages) throws PipelineRuntimeException {
+    private Pipe[] createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {
       LaneResolver laneResolver = new LaneResolver(stages);
       List<Pipe> pipes = new ArrayList<>(stages.length * 3);
+
       for (int idx = 0; idx < stages.length; idx++) {
         Pipe pipe;
         StageRuntime stage = stages[idx];
         switch (stage.getDefinition().getType()) {
           case SOURCE:
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle);
+              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
@@ -309,7 +310,7 @@ public class Pipeline {
             pipes.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
                                  laneResolver.getStageOutputLanes(idx), scheduledExecutor,
-              memoryUsageCollectorResourceBundle);
+              memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             pipe = new ObserverPipe(stage, laneResolver.getObserverInputLanes(idx),
                                     laneResolver.getObserverOutputLanes(idx), observer);
@@ -323,7 +324,7 @@ public class Pipeline {
                                     laneResolver.getCombinerOutputLanes(idx));
             pipes.add(pipe);
             pipe = new StagePipe(pipelineName, rev, configuration, stage, laneResolver.getStageInputLanes(idx),
-              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle);
+              laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             break;
         }

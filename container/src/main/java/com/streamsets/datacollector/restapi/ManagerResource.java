@@ -193,7 +193,7 @@ public class ManagerResource {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
     if(pipelineName != null) {
       Runner runner = manager.getRunner(user, pipelineName, rev);
-      if (runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING) {
+      if (runner != null && runner.getState().getStatus().isActive()) {
         return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
       }
       if (runner != null) {

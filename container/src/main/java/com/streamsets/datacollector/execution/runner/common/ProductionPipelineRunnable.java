@@ -100,7 +100,7 @@ public class ProductionPipelineRunnable implements Runnable {
               Utils.format("The pipeline was stopped. The last committed source offset is {}."
                 , pipeline.getCommittedOffset()), null);
           }
-        } catch (PipelineRuntimeException e) {
+        } catch (PipelineException e) {
           LOG.error("An exception occurred while trying to transition pipeline state, {}", e.toString(), e);
         }
       }

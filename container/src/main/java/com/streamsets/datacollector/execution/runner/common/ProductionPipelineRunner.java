@@ -35,6 +35,10 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.record.HeaderImpl;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.restapi.bean.CounterJson;
+import com.streamsets.datacollector.restapi.bean.HistogramJson;
+import com.streamsets.datacollector.restapi.bean.MeterJson;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.FullPipeBatch;
@@ -100,6 +104,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
   private final Meter batchErrorRecordsMeter;
   private final Meter batchErrorMessagesMeter;
   private final Counter memoryConsumedCounter;
+  private MetricRegistryJson metricRegistryJson;
 
   /*indicates if the execution must be stopped after the current batch*/
   private volatile boolean stop = false;
@@ -164,6 +169,33 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public void setObserveRequests(BlockingQueue<Object> observeRequests) {
     this.observeRequests = observeRequests;
+  }
+
+  public void updateMetrics(MetricRegistryJson metricRegistryJson) {
+    this.metricRegistryJson = metricRegistryJson;
+    HistogramJson inputHistogramJson = metricRegistryJson.getHistograms().get("pipeline.inputRecordsPerBatch" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+    batchInputRecordsHistogram.update(inputHistogramJson.getCount());
+    HistogramJson outputHistogramJson = metricRegistryJson.getHistograms().get("pipeline.outputRecordsPerBatch" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+    batchOutputRecordsHistogram.update(outputHistogramJson.getCount());
+    HistogramJson errorHistogramJson = metricRegistryJson.getHistograms().get("pipeline.errorRecordsPerBatch" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+    batchErrorRecordsHistogram.update(errorHistogramJson.getCount());
+    HistogramJson errorPerBatchHistogramJson = metricRegistryJson.getHistograms().get("pipeline.errorsPerBatch" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+    batchErrorsHistogram.update(errorPerBatchHistogramJson.getCount());
+    MeterJson batchInputRecords = metricRegistryJson.getMeters().get("pipeline.batchInputRecords" + MetricsConfigurator.METER_SUFFIX);
+    batchInputRecordsMeter.mark(batchInputRecords.getCount());
+    MeterJson batchOutputRecords = metricRegistryJson.getMeters().get("pipeline.batchOutputRecords" + MetricsConfigurator.METER_SUFFIX);
+    batchOutputRecordsMeter.mark(batchOutputRecords.getCount());
+    MeterJson batchErrorRecords = metricRegistryJson.getMeters().get("pipeline.batchErrorRecords" + MetricsConfigurator.METER_SUFFIX);
+    batchErrorRecordsMeter.mark(batchErrorRecords.getCount());
+    MeterJson batchErrorMessagesRecords = metricRegistryJson.getMeters().get("pipeline.batchErrorMessages" + MetricsConfigurator.METER_SUFFIX);
+    batchErrorMessagesMeter.mark(batchErrorMessagesRecords.getCount());
+    CounterJson memoryConsumer = metricRegistryJson.getCounters().get("pipeline.memoryConsumed" + MetricsConfigurator.COUNTER_SUFFIX);
+    memoryConsumedCounter.inc(memoryConsumer.getCount());
+  }
+
+  @Override
+  public MetricRegistryJson getMetricRegistryJson() {
+    return this.metricRegistryJson;
   }
 
   public void setDeliveryGuarantee(DeliveryGuarantee deliveryGuarantee) {

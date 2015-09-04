@@ -19,6 +19,7 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.pipeline.api.StageException;
 
@@ -46,5 +47,7 @@ public interface PipelineRunner {
   public void setObserver(Observer observer);
 
   public void registerListener(BatchListener batchListener);
+
+  public MetricRegistryJson getMetricRegistryJson();
 
 }

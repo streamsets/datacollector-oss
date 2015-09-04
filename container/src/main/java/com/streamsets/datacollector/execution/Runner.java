@@ -117,7 +117,7 @@ public interface Runner {
   public void deleteHistory();
 
   // gets the current pipeline metrics
-  public Object getMetrics();
+  public Object getMetrics() throws PipelineStoreException;
 
   // returns error records for a give stage
   // delegates to the ErrorStore

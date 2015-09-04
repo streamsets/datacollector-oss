@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -51,7 +52,7 @@ public class DataObserverRunner {
   private final Configuration configuration;
   private final String name;
   private final String rev;
-
+  private MetricRegistryJson metricRegistryJson;
 
   public DataObserverRunner(String name, String rev, MetricRegistry metrics, AlertManager alertManager,
                             Configuration configuration) {
@@ -79,7 +80,7 @@ public class DataObserverRunner {
           if(dataRuleDefinition.isEnabled()  && sampledRecords != null && sampledRecords.size() > 0) {
             //evaluate rule only if it is enabled and there are sampled records.
             DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(name, rev, metrics, alertManager,
-              rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration);
+              rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds(), dataRuleDefinition, configuration, metricRegistryJson);
             dataRuleEvaluator.evaluateRule(sampledRecords, lane, ruleToSampledRecordsMap);
           } else if (!dataRuleDefinition.isEnabled()) {
             //If data rule is disabled, clear the sampled records for that rule
@@ -156,6 +157,10 @@ public class DataObserverRunner {
   @VisibleForTesting // make package private after refactoring
   public RulesConfigurationChangeRequest getRulesConfigurationChangeRequest() {
     return this.rulesConfigurationChangeRequest;
+  }
+
+  public void setMetricRegistryJson(MetricRegistryJson metricRegistryJson) {
+    this.metricRegistryJson = metricRegistryJson;
   }
 
 }

@@ -33,6 +33,8 @@ import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.CounterJson;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.LaneResolver;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ObserverException;
@@ -81,10 +83,11 @@ public class DataRuleEvaluator {
   private final AlertManager alertManager;
   private final String name;
   private final String rev;
+  private final MetricRegistryJson metricRegistryJson;
 
 
   public DataRuleEvaluator(String name, String rev, MetricRegistry metrics, AlertManager alertManager,
-                           List<String> emailIds, DataRuleDefinition dataRuleDefinition, Configuration configuration) {
+                           List<String> emailIds, DataRuleDefinition dataRuleDefinition, Configuration configuration, MetricRegistryJson metricRegistryJson) {
     this.name = name;
     this.rev = rev;
     this.metrics = metrics;
@@ -92,6 +95,7 @@ public class DataRuleEvaluator {
     this.dataRuleDefinition = dataRuleDefinition;
     this.configuration = configuration;
     this.alertManager = alertManager;
+    this.metricRegistryJson = metricRegistryJson;
   }
 
   public void evaluateRule(List<Record> sampleRecords, String lane,
@@ -136,13 +140,25 @@ public class DataRuleEvaluator {
         if (evaluatedRecordCounter == null) {
           evaluatedRecordCounter = MetricsConfigurator.createCounter(metrics, LaneResolver.getPostFixedLaneForObserver(
               lane), name, rev);
+          if (metricRegistryJson != null) {
+            CounterJson counterJson =
+              metricRegistryJson.getCounters().get(
+                LaneResolver.getPostFixedLaneForObserver(lane) + MetricsConfigurator.COUNTER_SUFFIX);
+            evaluatedRecordCounter.inc(counterJson.getCount());
+          }
         }
         //counter for the matching records - cummulative sum of records that match criteria
         Counter matchingRecordCounter =
             MetricsConfigurator.getCounter(metrics, USER_PREFIX + dataRuleDefinition.getId());
         if (matchingRecordCounter == null) {
-          matchingRecordCounter = MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId(),
-            name ,rev);
+          matchingRecordCounter =
+            MetricsConfigurator.createCounter(metrics, USER_PREFIX + dataRuleDefinition.getId(), name, rev);
+          if (metricRegistryJson != null) {
+            CounterJson counterJson =
+              metricRegistryJson.getCounters().get(
+                USER_PREFIX + dataRuleDefinition.getId() + MetricsConfigurator.COUNTER_SUFFIX);
+            matchingRecordCounter.inc(counterJson.getCount());
+          }
         }
 
         evaluatedRecordCounter.inc(evaluatedRecordCount);

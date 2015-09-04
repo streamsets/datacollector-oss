@@ -19,6 +19,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -41,6 +42,7 @@ public class DataObserverRunnable implements Runnable {
   private BlockingQueue<Object> requestQueue;
   private final DataObserverRunner dataObserverRunner;
   private final ThreadHealthReporter threadHealthReporter;
+  private MetricRegistryJson metricRegistryJson;
 
   public DataObserverRunnable(String name, String rev, ThreadHealthReporter threadHealthReporter,
                               MetricRegistry metrics, AlertManager alertManager, Configuration configuration) {
@@ -82,6 +84,10 @@ public class DataObserverRunnable implements Runnable {
     } finally {
       Thread.currentThread().setName(originalName);
     }
+  }
+
+  public void setMetricRegistryJson(MetricRegistryJson metricRegistryJson) {
+    dataObserverRunner.setMetricRegistryJson(metricRegistryJson);
   }
 
   public List<SampledRecord> getSampledRecords(String ruleId, int size) {

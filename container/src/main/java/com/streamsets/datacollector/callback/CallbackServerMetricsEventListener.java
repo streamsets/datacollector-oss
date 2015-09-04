@@ -78,7 +78,6 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
         throw new RuntimeException("Failed : HTTP error code : "
           + response.getStatus());
       }
-
     } catch (Exception ex) {
       LOG.warn("Error while calling callback to Callback Server , {}", ex.toString(), ex);
     }

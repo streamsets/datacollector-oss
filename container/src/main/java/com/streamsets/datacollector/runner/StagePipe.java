@@ -30,6 +30,10 @@ import com.streamsets.datacollector.memory.MemoryMonitor;
 import com.streamsets.datacollector.memory.MemoryUsageCollector;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.CounterJson;
+import com.streamsets.datacollector.restapi.bean.HistogramJson;
+import com.streamsets.datacollector.restapi.bean.MeterJson;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
@@ -66,22 +70,24 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private final String name;
   private final String rev;
   private final Configuration configuration;
+  private final MetricRegistryJson metricRegistryJson;
 
   @VisibleForTesting
   StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
     this("myPipeline", "0", new Configuration(), stage, inputLanes, outputLanes, new ResourceControlledScheduledExecutor(0.02f),
-      new MemoryUsageCollectorResourceBundle());
+      new MemoryUsageCollectorResourceBundle(), null);
   }
 
   public StagePipe(String name, String rev, Configuration configuration, StageRuntime stage, List<String> inputLanes,
                    List<String> outputLanes, ResourceControlledScheduledExecutor scheduledExecutorService,
-                   MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle) {
+                   MemoryUsageCollectorResourceBundle memoryUsageCollectorResourceBundle, MetricRegistryJson metricRegistryJson) {
     super(stage, inputLanes, outputLanes);
     this.name = name;
     this.rev = rev;
     this.configuration = configuration;
     this.scheduledExecutorService = scheduledExecutorService;
     this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
+    this.metricRegistryJson = metricRegistryJson;
   }
 
   @Override
@@ -100,14 +106,61 @@ public class StagePipe extends Pipe<StagePipe.Context> {
       outputRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".outputRecords", name, rev);
       errorRecordsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".errorRecords", name, rev);
       stageErrorsHistogram = MetricsConfigurator.createHistogram5Min(metrics, metricsKey + ".stageErrors", name, rev);
+
+
+      if (metricRegistryJson != null) {
+        MeterJson inputRecordsMeterJson =
+          metricRegistryJson.getMeters().get(metricsKey + ".inputRecords" + MetricsConfigurator.METER_SUFFIX);
+        inputRecordsMeter.mark(inputRecordsMeterJson.getCount());
+        MeterJson outputRecordsMeterJson =
+          metricRegistryJson.getMeters().get(metricsKey + ".outputRecords" + MetricsConfigurator.METER_SUFFIX);
+        outputRecordsMeter.mark(outputRecordsMeterJson.getCount());
+        MeterJson errorRecordsMeterJson =
+          metricRegistryJson.getMeters().get(metricsKey + ".errorRecords" + MetricsConfigurator.METER_SUFFIX);
+        errorRecordsMeter.mark(errorRecordsMeterJson.getCount());
+        MeterJson stageErrorMeterJson =
+          metricRegistryJson.getMeters().get(metricsKey + ".stageErrors" + MetricsConfigurator.METER_SUFFIX);
+        stageErrorMeter.mark(stageErrorMeterJson.getCount());
+        HistogramJson metricHistrogramJson =
+          metricRegistryJson.getHistograms()
+            .get(metricsKey + ".inputRecords" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+        inputRecordsHistogram.update(metricHistrogramJson.getCount());
+        HistogramJson outputRecordsHistogramJson =
+          metricRegistryJson.getHistograms().get(
+            metricsKey + ".outputRecords" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+        outputRecordsHistogram.update(outputRecordsHistogramJson.getCount());
+        HistogramJson errorRecordsHistogramJson =
+          metricRegistryJson.getHistograms()
+            .get(metricsKey + ".errorRecords" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+        errorRecordsHistogram.update(errorRecordsHistogramJson.getCount());
+        HistogramJson stageErrorsHistogramJson =
+          metricRegistryJson.getHistograms().get(metricsKey + ".stageErrors" + MetricsConfigurator.HISTOGRAM_M5_SUFFIX);
+        stageErrorsHistogram.update(stageErrorsHistogramJson.getCount());
+      }
+
       if (getStage().getConfiguration().getOutputLanes().size() > 1) {
         outputRecordsPerLaneCounter = new HashMap<>();
         outputRecordsPerLaneMeter = new HashMap<>();
         for (String lane : getStage().getConfiguration().getOutputLanes()) {
-          outputRecordsPerLaneCounter.put(lane, MetricsConfigurator.createCounter(
-              metrics, metricsKey + ":" + lane + ".outputRecords", name, rev));
-          outputRecordsPerLaneMeter.put(lane, MetricsConfigurator.createMeter(
-              metrics, metricsKey + ":" + lane + ".outputRecords", name, rev));
+          Counter outputRecordsCounter =
+            MetricsConfigurator.createCounter(metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
+          if (metricRegistryJson != null) {
+            CounterJson counterJson =
+              metricRegistryJson.getCounters().get(
+                metricsKey + ":" + lane + ".outputRecords" + MetricsConfigurator.COUNTER_SUFFIX);
+            outputRecordsCounter.inc(counterJson.getCount());
+          }
+          outputRecordsPerLaneCounter.put(lane, outputRecordsCounter);
+
+          Meter outputRecordsMeter = MetricsConfigurator.createMeter(
+            metrics, metricsKey + ":" + lane + ".outputRecords", name, rev);
+          if (metricRegistryJson != null) {
+            MeterJson meterJson =
+              metricRegistryJson.getMeters().get(
+                metricsKey + ":" + lane + ".outputRecords" + MetricsConfigurator.METER_SUFFIX);
+            outputRecordsMeter.mark(meterJson.getCount());
+          }
+          outputRecordsPerLaneMeter.put(lane, outputRecordsMeter);
         }
       }
       this.context = pipeContext;

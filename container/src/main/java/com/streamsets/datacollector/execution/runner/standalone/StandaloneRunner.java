@@ -60,6 +60,7 @@ import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
@@ -83,13 +84,17 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
 import dagger.ObjectGraph;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -126,10 +131,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private MetricsEventRunnable metricsEventRunnable;
   private int maxRetries;
   private ScheduledFuture<Void> retryFuture;
-
   private ProductionPipelineRunnable pipelineRunnable;
+  private boolean isRetrying;
   private volatile boolean isClosed;
   private UpdateChecker updateChecker;
+  private volatile String metricsForRetry;
 
   private static final Map<PipelineStatus, Set<PipelineStatus>> VALID_TRANSITIONS =
     new ImmutableMap.Builder<PipelineStatus, Set<PipelineStatus>>()
@@ -330,11 +336,17 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public Object getMetrics() {
+  public Object getMetrics() throws PipelineStoreException {
     if (prodPipeline != null) {
-      return prodPipeline.getPipeline().getRunner().getMetrics();
+      Object metrics = prodPipeline.getPipeline().getRunner().getMetrics();
+      if (metrics == null && getState().getStatus().isActive()) {
+        return metricsForRetry;
+      } else {
+        return metrics;
+      }
     }
     return null;
+
   }
 
   @Override
@@ -510,6 +522,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       @Override
       public Void call() throws StageException, PipelineException {
         LOG.info("Starting the runner now");
+        isRetrying = true;
+        metricsForRetry = getState().getMetrics();
         prepareForStart();
         start();
         return null;
@@ -612,6 +626,20 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         RulesConfigLoaderRunnable rulesConfigLoaderRunnable = objectGraph.get(RulesConfigLoaderRunnable.class);
         MetricObserverRunnable metricObserverRunnable = objectGraph.get(MetricObserverRunnable.class);
         ProductionPipelineRunner runner = (ProductionPipelineRunner) objectGraph.get(PipelineRunner.class);
+        if (isRetrying) {
+          ObjectMapper objectMapper = ObjectMapperFactory.get();
+          MetricRegistryJson metricRegistryJson = null;
+          try {
+            if (metricsForRetry != null) {
+              metricRegistryJson = objectMapper.readValue(metricsForRetry, MetricRegistryJson.class);
+              runner.updateMetrics(metricRegistryJson);
+              observerRunnable.setMetricRegistryJson(metricRegistryJson);
+            }
+          } catch (IOException ex) {
+            LOG.warn("Error while serializing slave metrics: , {}", ex.toString(), ex);
+          }
+          isRetrying = false;
+        }
         ProductionPipelineBuilder builder = objectGraph.get(ProductionPipelineBuilder.class);
 
         //register email notifier with event listener manager

@@ -22,6 +22,7 @@ import com.codahale.metrics.Timer;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.BatchListener;
 import com.streamsets.datacollector.runner.FullPipeBatch;
 import com.streamsets.datacollector.runner.MultiplexerPipe;
@@ -56,7 +57,7 @@ public class PreviewPipelineRunner implements PipelineRunner {
   private final String rev;
   private String sourceOffset;
   private String newSourceOffset;
-  private Timer processingTimer;
+  private final Timer processingTimer;
 
   public PreviewPipelineRunner(String name, String rev, RuntimeInfo runtimeInfo, SourceOffsetTracker offsetTracker,
                                int batchSize, int batches, boolean skipTargets) {
@@ -70,6 +71,11 @@ public class PreviewPipelineRunner implements PipelineRunner {
     this.metrics = new MetricRegistry();
     processingTimer = MetricsConfigurator.createTimer(metrics, "pipeline.batchProcessing", name, rev);
     batchesOutput = new ArrayList<>();
+  }
+
+  @Override
+  public MetricRegistryJson getMetricRegistryJson() {
+    return null;
   }
 
   @Override

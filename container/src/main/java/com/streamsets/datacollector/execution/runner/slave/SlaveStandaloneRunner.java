@@ -165,7 +165,7 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public Object getMetrics() {
+  public Object getMetrics() throws PipelineStoreException {
     return standaloneRunner.getMetrics();
   }
 

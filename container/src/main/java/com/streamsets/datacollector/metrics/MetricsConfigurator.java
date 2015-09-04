@@ -35,11 +35,11 @@ import java.util.concurrent.TimeUnit;
 public class MetricsConfigurator {
   public static final String JMX_PREFIX = "sdc.pipeline.";
 
-  private static final String METER_SUFFIX = ".meter";
-  private static final String COUNTER_SUFFIX = ".counter";
-  private static final String HISTOGRAM_M5_SUFFIX = ".histogramM5";
-  private static final String TIMER_SUFFIX = ".timer";
-  private static final String GAUGE_SUFFIX = ".gauge";
+  public static final String METER_SUFFIX = ".meter";
+  public static final String COUNTER_SUFFIX = ".counter";
+  public static final String HISTOGRAM_M5_SUFFIX = ".histogramM5";
+  public static final String TIMER_SUFFIX = ".timer";
+  public static final String GAUGE_SUFFIX = ".gauge";
 
   private static MetricRegistry sdcMetrics;
   private static List<String> runningPipelines = new ArrayList<>();

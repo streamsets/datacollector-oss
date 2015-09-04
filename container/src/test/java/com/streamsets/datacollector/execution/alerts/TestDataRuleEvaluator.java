@@ -75,7 +75,7 @@ public class TestDataRuleEvaluator {
       "testAlertEnabledMeterEnabled", ThresholdType.COUNT, "2", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator("name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -97,7 +97,7 @@ public class TestDataRuleEvaluator {
       false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -117,7 +117,7 @@ public class TestDataRuleEvaluator {
       5, false, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -138,7 +138,7 @@ public class TestDataRuleEvaluator {
       5, true, false, false);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -155,7 +155,7 @@ public class TestDataRuleEvaluator {
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -172,7 +172,7 @@ public class TestDataRuleEvaluator {
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -188,7 +188,7 @@ public class TestDataRuleEvaluator {
       5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -204,7 +204,7 @@ public class TestDataRuleEvaluator {
       "testNoAlertRaisedPercentage", lane, 100, 10, "${record:value(\"/name\")==null}", true,
       "testNoAlertRaisedPercentage", ThresholdType.PERCENTAGE, "60", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,  null, null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -219,7 +219,7 @@ public class TestDataRuleEvaluator {
       false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      dataRuleDefinition, new Configuration());
+      dataRuleDefinition, new Configuration(), null);
 
     evaluateRule(dataRuleEvaluator, lane);
 
@@ -245,7 +245,7 @@ public class TestDataRuleEvaluator {
       "nameNotNull", ThresholdType.COUNT, "2", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      nameNotNull, new Configuration());
+      nameNotNull, new Configuration(), null);
 
     evaluateRule(dataRuleEvaluator, lane);
 
@@ -260,7 +260,7 @@ public class TestDataRuleEvaluator {
       "nameEqualsStreamSets", ThresholdType.COUNT, "1", 5, true, false, true);
     DataRuleEvaluator dataRuleEvaluator2 = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-      nameEqualsStreamSets, new Configuration());
+      nameEqualsStreamSets, new Configuration(), null);
 
     evaluateRule(dataRuleEvaluator2, lane);
 
