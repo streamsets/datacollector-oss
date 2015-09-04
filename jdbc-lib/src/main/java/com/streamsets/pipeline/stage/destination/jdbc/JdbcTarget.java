@@ -142,10 +142,10 @@ public class JdbcTarget extends BaseTarget {
   private void createRecordWriter() throws StageException {
     switch (changeLogFormat) {
       case NONE:
-        recordWriter = new JdbcGenericRecordWriter(dataSource, tableName, rollbackOnError, customMappings);
+        recordWriter = new JdbcGenericRecordWriter(connectionString, dataSource, tableName, rollbackOnError, customMappings);
         break;
       case MSSQL:
-        recordWriter = new MicrosoftJdbcRecordWriter(dataSource, tableName);
+        recordWriter = new MicrosoftJdbcRecordWriter(connectionString, dataSource, tableName);
         break;
       default:
         throw new IllegalStateException("Unrecognized format specified: " + changeLogFormat);

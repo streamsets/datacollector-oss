@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
 import java.sql.Connection;
@@ -52,13 +53,36 @@ public class JdbcUtil {
    * codes as there are many.
    * </p>
    */
-  public static final Map<String, String> SQLSTATE_TO_ERROR = ImmutableMap.of(
+  private static final Map<String, String> STANDARD_DATA_ERROR_SQLSTATES = ImmutableMap.of(
       "21", "Cardinality violation",
       "22", "Data exception",
       "23", "Constraint violation",
       "42", "Syntax error or access rule violation",
       "44", "WITH CHECK OPTION violation"
   );
+
+  /**
+   * MySQL does not use standard SQL States for some errors
+   * handle those as a special case. See MySQL doc:
+   * Server Error Codes and Messages
+   */
+  private static final String MYSQL_GENERAL_ERROR = "HY000";
+  private static final Map<String, String> MYSQL_DATA_ERROR_ERROR_CODES = ImmutableMap.of(
+    "1364", "Field '%s' doesn't have a default value",
+    "1366", "Incorrect %s value: '%s' for column '%s' at row %ld",
+    "1391", "Key part '%s' length cannot be 0"
+  );
+
+  public static boolean isDataError(String connectionString, SQLException ex) {
+    String sqlState = Strings.nullToEmpty(ex.getSQLState());
+    String errorCode = String.valueOf(ex.getErrorCode());
+    if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
+      return MYSQL_DATA_ERROR_ERROR_CODES.containsKey(errorCode);
+    } if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0,2))) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * Formats the error message of a {@link java.sql.SQLException} for human consumption.

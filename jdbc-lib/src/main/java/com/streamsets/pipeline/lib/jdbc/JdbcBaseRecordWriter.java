@@ -37,6 +37,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcBaseRecordWriter.class);
   private final List<JdbcFieldMappingConfig> customMappings;
 
+  private String connectionString;
   private DataSource dataSource;
   private String tableName;
   private boolean rollbackOnError;
@@ -44,11 +45,13 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private Map<String, String> columnsToFields = new HashMap<>();
 
   public JdbcBaseRecordWriter(
+      String connectionString,
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldMappingConfig> customMappings
   ) throws StageException {
+    this.connectionString = connectionString;
     this.dataSource = dataSource;
     this.tableName = tableName;
     this.rollbackOnError = rollbackOnError;
@@ -69,6 +72,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
     } catch (SQLException e) {
       String errorMessage = JdbcUtil.formatSqlException(e);
       LOG.error(errorMessage);
+      LOG.debug(errorMessage, e);
       throw new StageException(Errors.JDBCDEST_09, tableName);
     }
   }
@@ -120,6 +124,13 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
     }
 
     throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported type: " + type.name());
+  }
+  /**
+   * Database connection string
+   * @return connection string
+   */
+  protected String getConnectionString() {
+    return connectionString;
   }
 
   /**

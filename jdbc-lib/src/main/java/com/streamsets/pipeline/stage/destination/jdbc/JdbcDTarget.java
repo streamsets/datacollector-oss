@@ -112,7 +112,7 @@ public class JdbcDTarget extends DTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Field to Column Mapping",
-      description = "Use to specify additional field mappings when input field name and column name don't match.",
+      description = "Optionally specify additional field mappings when input field name and column name don't match.",
       displayPosition = 40,
       group = "JDBC"
   )

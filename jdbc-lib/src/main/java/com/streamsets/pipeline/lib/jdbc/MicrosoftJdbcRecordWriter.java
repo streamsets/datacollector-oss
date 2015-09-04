@@ -52,12 +52,17 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
   public static final ChangeLogFormat FORMAT = ChangeLogFormat.MSSQL;
   public static final String OP_FIELD = "/__$operation";
 
+  private final String connectionString;
   private final String tableName;
   private final DataSource dataSource;
 
   private List<String> primaryKeyColumns;
 
-  public MicrosoftJdbcRecordWriter(DataSource dataSource, String tableName) throws StageException {
+  public MicrosoftJdbcRecordWriter(
+    String connectionString,
+    DataSource dataSource,
+    String tableName) throws StageException {
+    this.connectionString = connectionString;
     this.dataSource = dataSource;
     this.tableName = tableName;
 
@@ -79,7 +84,9 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
         try {
           connection.close();
         } catch (SQLException e) {
-          LOG.error(JdbcUtil.formatSqlException(e));
+          String formattedError = JdbcUtil.formatSqlException(e);
+          LOG.error(formattedError);
+          LOG.debug(formattedError, e);
         }
       }
     }
@@ -186,12 +193,16 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
         try {
           connection.rollback();
         } catch (SQLException e) {
-          LOG.error(JdbcUtil.formatSqlException(e));
+          String formattedError = JdbcUtil.formatSqlException(e);
+          LOG.error(formattedError);
+          LOG.debug(formattedError, e);
         } finally {
           try {
             connection.close();
           } catch (SQLException e) {
-            LOG.error(JdbcUtil.formatSqlException(e));
+            String formattedError = JdbcUtil.formatSqlException(e);
+            LOG.error(formattedError);
+            LOG.debug(formattedError, e);
           }
         }
       }
