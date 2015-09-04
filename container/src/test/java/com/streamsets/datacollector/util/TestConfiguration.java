@@ -198,7 +198,7 @@ public class TestConfiguration {
   }
 
   @Test
-  public void testUnresolvedConfigs() throws IOException {
+  public void testRefsConfigs() throws IOException {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     Configuration.setFileRefsBaseDir(dir);
@@ -208,13 +208,18 @@ public class TestConfiguration {
     writer.close();
     Configuration conf = new Configuration();
 
+    String home = System.getenv("HOME");
+
     conf.set("a", "@hello.txt@");
+    conf.set("b", "$HOME$");
     conf.set("x", "X");
     Assert.assertEquals("secret", conf.get("a", null));
+    Assert.assertEquals(home, conf.get("b", null));
     Assert.assertEquals("X", conf.get("x", null));
 
     Configuration uconf = conf.getUnresolvedConfiguration();
     Assert.assertEquals("@hello.txt@", uconf.get("a", null));
+    Assert.assertEquals("$HOME$", uconf.get("b", null));
     Assert.assertEquals("X", uconf.get("x", null));
 
     writer = new FileWriter(new File(dir, "config.properties"));
@@ -228,6 +233,7 @@ public class TestConfiguration {
 
     uconf = conf.getUnresolvedConfiguration();
     Assert.assertEquals("@hello.txt@", uconf.get("a", null));
+    Assert.assertEquals("$HOME$", uconf.get("b", null));
     Assert.assertEquals("X", uconf.get("x", null));
   }
 
