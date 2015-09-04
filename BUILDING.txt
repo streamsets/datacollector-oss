@@ -67,27 +67,19 @@ Preparing a Release:
 
 * Update POM versions in master:
 
-  $ mvn versions:set -Drelease -DnewVersion=<RELEASE_VERSION>-SNAPSHOT
-
-  Manually update the version in the rbgen-maven-plugin POM
-
-  Manually update the 'version' value in the  'datacollector-ui/package.json' file
+  $ ./dev-support/update-version.sh <RELEASE_VERSION>-SNAPSHOT
 
 * Cut a release branch in GIT and tag master branch
 
 * Update POM versions in master branch
 
-  $ mvn versions:set -Drelease -DnewVersion=<NEW_DEV_VERSION>-SNAPSHOT
-
-  If necessary update manually any POM that has not been updated (expected ones: e2e-tests & rbgen-maven-plugin)
+  $ ./dev-support/update-version.sh <NEXT_DEV_VERSION>-SNAPSHOT
 
 * Stabilize the release branch
 
 * Update POM version in release branch with final version
 
-  $ mvn versions:set -Drelease -DnewVersion=<RELEASE_VERSION>
-
-  If necessary update manually any POM that has not been updated (expected ones: e2e-tests & rbgen-maven-plugin)
+  $ ./dev-support/update-version.sh <RELEASE_VERSION>
 
 * Tag release branch
 
