@@ -40,65 +40,117 @@ public class Configuration {
     fileRefsBaseDir = dir;
   }
 
-  private interface Ref {
-    public String getValue();
-    public String getUnresolvedValue();
-  }
+  private static abstract class Ref {
+    private String unresolvedValue;
 
-  private static class StringRef implements Ref {
-    private String value;
-
-    public StringRef(String value) {
-      this.value = value;
+    protected Ref(String unresolvedValue) {
+      this.unresolvedValue = unresolvedValue;
     }
 
-    @Override
-    public String getValue() {
-      return value;
+    public abstract  String getTokenDelimiter();
+
+    protected static boolean isValueMyRef(String  tokenDelimiter, String value) {
+      value = value.trim();
+      return value.startsWith(tokenDelimiter) && value.endsWith(tokenDelimiter);
     }
 
-    @Override
     public String getUnresolvedValue() {
-      return getValue();
+      return unresolvedValue;
     }
+
+    protected String getUnresolvedValueWithoutDelimiter() {
+      return unresolvedValue.substring(getTokenDelimiter().length(),
+                                       unresolvedValue.length() - getTokenDelimiter().length());
+    }
+
+    public abstract  String getValue();
 
     @Override
     public String toString() {
-      return value;
+      return Utils.format("{}='{}'", getClass().getSimpleName(), unresolvedValue);
     }
+
   }
 
-  private static class FileRef implements Ref {
-    private String file;
+  private static class StringRef extends Ref {
 
-    public FileRef(String file) {
-      Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
-      this.file = file;
+    protected StringRef(String unresolvedValue) {
+      super(unresolvedValue);
     }
 
-    public String getFile() {
-      return file;
+    @Override
+    public String getTokenDelimiter() {
+      return "";
     }
 
     @Override
     public String getValue() {
-      try (BufferedReader br = new BufferedReader(new FileReader(new File(fileRefsBaseDir, file)))) {
+      return getUnresolvedValue();
+    }
+
+  }
+
+  private static class FileRef extends Ref {
+    private static final String DELIMITER = "@";
+
+    public static boolean isValueMyRef(String value) {
+      return isValueMyRef(DELIMITER, value);
+    }
+
+    protected FileRef(String unresolvedValue) {
+      super(unresolvedValue);
+      Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
+    }
+
+    @Override
+    public String getTokenDelimiter() {
+      return DELIMITER;
+    }
+
+    @Override
+    public String getValue() {
+      try (BufferedReader br = new BufferedReader(new FileReader(new File(fileRefsBaseDir,
+                                                                          getUnresolvedValueWithoutDelimiter())))) {
         return br.readLine();
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }
     }
 
-    @Override
-    public String getUnresolvedValue() {
-      return "@" + getFile() + "@";
+  }
+
+  private static class EnvRef extends Ref {
+    private static final String DELIMITER = "$";
+
+    public static boolean isValueMyRef(String value) {
+      return isValueMyRef(DELIMITER, value);
+    }
+
+    protected EnvRef(String unresolvedValue) {
+      super(unresolvedValue);
     }
 
     @Override
-    public String toString() {
-      return Utils.format("FileRef '{}'", file);
+    public String getTokenDelimiter() {
+      return DELIMITER;
     }
 
+    @Override
+    public String getValue() {
+      return System.getenv(getUnresolvedValueWithoutDelimiter());
+    }
+  }
+
+  private static Ref createRef(String value) {
+    Ref ref;
+    if (FileRef.isValueMyRef(value)) {
+      ref = new FileRef(value);
+    } else if (EnvRef.isValueMyRef(value)) {
+      ref = new EnvRef(value);
+    } else {
+      ref = new StringRef(value);
+    }
+    return ref;
   }
 
   private Map<String, Ref> map;
@@ -207,26 +259,11 @@ public class Configuration {
     reader.close();
   }
 
-  private Ref createRef(String value) {
-    Ref ref;
-    if (value.startsWith("@") && value.endsWith("@")) {
-      ref = new FileRef(value.substring(1, value.length() -1));
-    } else {
-      ref = new StringRef(value);
-    }
-    return ref;
-  }
-
   public void save(Writer writer) throws IOException {
     Preconditions.checkNotNull(writer, "writer cannot be null");
     Properties props = new Properties();
     for (Map.Entry<String, Ref> entry : map.entrySet()) {
-      if (entry.getValue() instanceof StringRef) {
-        props.setProperty(entry.getKey(), entry.getValue().getValue());
-      } else if (entry.getValue() instanceof FileRef) {
-        FileRef fileRef = (FileRef) entry.getValue();
-        props.setProperty(entry.getKey(), "@" + fileRef.getFile() + "@");
-      }
+      props.setProperty(entry.getKey(), entry.getValue().getUnresolvedValue());
     }
     props.store(writer, "");
     writer.close();
