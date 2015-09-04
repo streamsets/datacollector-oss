@@ -47,6 +47,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
   /**
    * Class constructor
+   * @param connectionString database connection string
    * @param dataSource a JDBC {@link javax.sql.DataSource} to get a connection from
    * @param tableName the name of the table to write to
    * @param rollbackOnError whether to attempt rollback of failed queries
@@ -54,11 +55,12 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    * @throws StageException
    */
   public JdbcGenericRecordWriter(
+      String connectionString,
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
       List<JdbcFieldMappingConfig> customMappings) throws StageException {
-    super(dataSource, tableName, rollbackOnError, customMappings);
+    super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
   }
 
   /** {@inheritDoc} */
@@ -82,14 +84,11 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         for (Map.Entry<String, String> entry : getColumnsToFields().entrySet()) {
           String columnName = entry.getKey();
           String fieldPath = entry.getValue();
-
           if (!record.has(fieldPath)) {
             columnSet.remove(columnName);
           }
         }
-
         PreparedStatement statement = statementsForBatch.getInsertFor(columnSet);
-
         int i = 1;
         for (String column : columnSet) {
 
@@ -176,8 +175,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       SQLException e,
       List<OnRecordErrorException> errorRecords
   ) throws StageException {
-    String sqlState = Strings.nullToEmpty(e.getSQLState());
-    if (sqlState.length() >= 2 && JdbcUtil.SQLSTATE_TO_ERROR.containsKey(sqlState.substring(0,2))) {
+    if (JdbcUtil.isDataError(getConnectionString(), e)) {
       String formattedError = JdbcUtil.formatSqlException(e);
       LOG.error(formattedError);
       LOG.debug(formattedError, e);

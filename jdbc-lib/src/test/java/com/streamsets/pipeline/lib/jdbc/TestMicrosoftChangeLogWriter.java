@@ -99,7 +99,7 @@ public class TestMicrosoftChangeLogWriter {
     fields.put("MSG", Field.create("unit test"));
     record.set(Field.create(fields));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(record));
     writer.writeBatch(batch);
 
@@ -127,7 +127,7 @@ public class TestMicrosoftChangeLogWriter {
     update.put("MSG", Field.create("second message"));
     updateRecord.set(Field.create(update));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, updateRecord));
     writer.writeBatch(batch);
 
@@ -156,7 +156,7 @@ public class TestMicrosoftChangeLogWriter {
     delete.put("MSG", Field.create("message"));
     deleteRecord.set(Field.create(delete));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, deleteRecord));
     writer.writeBatch(batch);
 
