@@ -476,18 +476,24 @@ angular
        * Returns Config Model Object
        *
        * @param stageInstance
-       * @param configuration
+       * @param configDefinition
        * @returns {*}
        */
-      getConfigIndex: function(stageInstance, configuration) {
-        if(stageInstance && configuration) {
+      getConfigIndex: function(stageInstance, configDefinition) {
+        if(stageInstance && configDefinition) {
           var configIndex;
-          _.find(stageInstance.configuration, function(config, index) {
-            if(configuration.name === config.name) {
+
+          angular.forEach(stageInstance.configuration, function(config, index) {
+            if(configDefinition.name === config.name) {
               configIndex = index;
-              return true;
             }
           });
+
+          if(configIndex === undefined) {
+            //No configuration found, added the configuration with default value
+            stageInstance.configuration.push(pipelineService.setDefaultValueForConfig(configDefinition, stageInstance));
+            configIndex = stageInstance.configuration.length - 1;
+          }
 
           return configIndex;
         }
