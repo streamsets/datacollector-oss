@@ -19,12 +19,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.1.0-RC1</version>
+    <version>1.1.0-RC2</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-apache-kafka_0_8_1-lib</artifactId>
-  <version>1.1.0-RC1</version>
+  <version>1.1.0-RC2</version>
   <description>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</description>
   <name>StreamSets Data Collector Apache Kafka 0.8.1.1 Lib</name>
   <packaging>jar</packaging>
