@@ -2,11 +2,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ghx_5vl_gt">
     <title>Configuring a Field Merger</title>
-    <shortdesc>Configure a Field Merger to merge or move fields within a list or map
-        record.</shortdesc>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>Field Merger
+                processor<indexterm>configuring</indexterm></indexterm>Configure a Field Merger to
+                merge or move fields within a list or map record.</p>
         </context>
         <steps id="steps_s5c_yvl_gt">
             <step
@@ -39,10 +39,8 @@
                                 </row>
                                 <row>
                                     <entry>Overwrite Fields</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">come back to
-                                            this</draft-comment>
-                                    </entry>
+                                    <entry>Overwrites any existing fields in the target field with
+                                        names that match the merge fields.</entry>
                                 </row>
                                 <row>
                                     <entry>Fields to Merge</entry>
