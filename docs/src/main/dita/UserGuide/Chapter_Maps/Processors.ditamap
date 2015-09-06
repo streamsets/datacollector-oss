@@ -40,6 +40,10 @@
    <topicref href="../Processors/FieldMasker_MaskTypes.dita"/>
    <topicref href="../Processors/FieldMasker-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldMerger.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/FieldMerger-Configuring.dita"/>
+  </topicref>
   <topicref href="../Processors/FieldRemover.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>

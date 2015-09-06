@@ -53,6 +53,13 @@
 [2]/UserID: 1008</pre>
 </dd>
 
+          <dd class="dd">If data does not include a header or if you choose to ignore a header, list-map
+            records use the column position as a header as follows:
+            <pre class="pre codeblock">[0] 0: &lt;value&gt;
+[1] 1: &lt;value&gt;
+[2] 2: &lt;value&gt;</pre>
+</dd>
+
           <dd class="dd">In an expression, you can use the field name or the index number with a standard
             record function to call a field. For example, you can use either of the following
             record:value expressions to return data in the TransactionID
@@ -99,6 +106,14 @@ ${record:value('[0]'}</pre>
    /value = 1008</pre>
 
           </dd>
+
+          <dd class="dd">If the data does not include a header or if you choose to ignore a header, the list
+            records omit the header from the map as
+            follows:<pre class="pre codeblock">[0]/value = &lt;value&gt;
+[1]/value = &lt;value&gt;
+[2]/value = &lt;value&gt;
+...</pre>
+</dd>
 
           <dd class="dd">In an expression, you can use delimited data functions or use the full field path with
             standard functions. </dd>

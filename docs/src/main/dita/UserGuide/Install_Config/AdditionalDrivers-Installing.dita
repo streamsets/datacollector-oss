@@ -24,8 +24,11 @@
                         <codeblock>/opts/sdc-extras/&lt;&lt;get this later>></codeblock></p></li>
                 <li>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment file, add the following <draft-comment author="Loretta">add the
-                        variable? add the path? </draft-comment></li>
+                    /> environment file - either sdc-env.sh or sdcd-env.sh, add the
+                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
+                    directory. <p>For example:
+                        </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</codeblock><draft-comment
+                        author="Loretta">add the variable? add the path? </draft-comment></li>
             </ol></context>
     </taskbody>
 </task>
