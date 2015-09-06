@@ -25,6 +25,7 @@
         <li>Field Converter - Converts the data type of a field.</li>
         <li>Field Hasher - Uses an algorithm to encode sensitive string data.</li>
         <li>Field Masker - Masks sensitive string data.</li>
+        <li>Field Merger - Merges fields in complex lists or maps.</li>
         <li>Field Remover - Removes fields from a record.</li>
         <li>Field Splitter - Splits the string values in a field into different fields.</li>
         <li>Geo IP- Provides geographic location information based on an IP address. </li>

@@ -138,44 +138,93 @@
 
  <div class="body conbody">
   <div class="p">The Hadoop FS origin processes data
-   differently based on the data format that you select. The origin processes the following types of
-    data:<dl class="dl">
-    
-     <dt class="dt dlterm">Text</dt>
+      differently based on the data format that you select. The origin processes the following types
+      of data:<dl class="dl">
+        
+          <dt class="dt dlterm">Text</dt>
 
-     <dd class="dd">Generates a record for each line in the file. </dd>
+          <dd class="dd">Generates a record for each line in the file. </dd>
 
-     <dd class="dd">When a line exceeds the maximum line length defined for the origin, Hadoop FS truncates the
-      line. The origin adds a boolean field named Truncated to indicate if the line was
-      truncated.</dd>
+          <dd class="dd">When a line exceeds the maximum line length defined for the origin, Hadoop FS
+            truncates the line. The origin adds a boolean field named Truncated to indicate if the
+            line was truncated.</dd>
 
-    
-    
-     <dt class="dt dlterm">JSON</dt>
+        
+        
+          <dt class="dt dlterm">JSON</dt>
 
-     <dd class="dd">Generates a record for each JSON object. You can use JSON files that include multiple JSON
-      objects or a single JSON array.</dd>
+          <dd class="dd">Generates a record for each JSON object. You can use JSON files that include multiple
+            JSON objects or a single JSON array.</dd>
 
-     <dd class="dd">When an object exceeds the maximum object length defined for the origin, Hadoop FS
-      processes the object based on the error handling configured for the origin. </dd>
+          <dd class="dd">When an object exceeds the maximum object length defined for the origin, Hadoop FS
+            processes the object based on the error handling configured for the origin. </dd>
 
-    
-    
-     <dt class="dt dlterm">Log</dt>
+        
+        
+          <dt class="dt dlterm">Log</dt>
 
-     <dd class="dd">Generates a record for every log line. </dd>
+          <dd class="dd">Generates a record for every log line. </dd>
 
-     <dd class="dd">When a line exceeds the maximum line length defined for the origin, Hadoop FS truncates
-      longer lines. </dd>
+          <dd class="dd">When a line exceeds the maximum line length defined for the origin, Hadoop FS
+            truncates longer lines. </dd>
 
-     <dd class="dd">You can include the processed log line as a field in the record. If the log line is
-      truncated, and you request the log line in the record, Hadoop FS includes the truncated
-      line.</dd>
+          <dd class="dd">You can include the processed log line as a field in the record. If the log line is
+            truncated, and you request the log line in the record, Hadoop FS includes the truncated
+            line.</dd>
 
-     <dd class="dd">You can define the log format or type to be read.</dd>
+          <dd class="dd">You can define the log format or type to be read.</dd>
 
-    
-   </dl>
+        
+        
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_jx4_zym_vs__d3022e181">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
+
+                              <dd class="dd">You can use a list or list-map record type for delimited data,
+                                    optionally including the header information when available. </dd>
+
+                              <dd class="dd">For more information about the record types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">Delimited Data Record Types</a>.</dd>
+
+                        
+        
+          <dt class="dt dlterm">Avro</dt>
+
+          <dd class="dd">Generates a record for every message. </dd>
+
+          <dd class="dd">To ensure proper data processing, indicate if the message includes an Avro schema. </dd>
+
+          <dd class="dd">You can use the schema associated with the message or provide an alternate schema
+            definition. Providing an alternate schema can improve performance.</dd>
+
+        
+      </dl>
 </div>
 
  </div>
@@ -278,9 +327,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28351e442">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28439e515">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28351e445">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28439e518">Description</th>
 
                                 </tr>
 
@@ -288,23 +337,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e442 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e515 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e445 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e442 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e445 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e518 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e442 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e515 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e445 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d3046e434">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e518 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e515 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e518 ">Error record handling for the stage: <ul class="ul" id="task_hgl_vgn_vs__d3046e434">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -335,9 +384,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d28351e517">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d28439e590">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d28351e520">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d28439e593">Description</th>
 
                                 </tr>
 
@@ -345,36 +394,36 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">HDFS URI. Include the HDFS scheme and authority as
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">HDFS URI. Include the HDFS scheme and authority as
                                         follows:
                                         <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Directory Path</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Directory Path</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">Directory for the data to be read. Include the HDFS
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">Directory for the data to be read. Include the HDFS
                                         scheme and authority in the path as follows:
                                             <samp class="ph codeph">&lt;scheme&gt;://&lt;authority&gt;/path</samp>.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Include All Subdirectories</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Include All Subdirectories</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">Reads from all directories within the specified directory
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">Reads from all directories within the specified directory
                                         path.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Data Format <a class="xref" href="HadoopFS-origin.html#concept_jx4_zym_vs" title="When you use an origin to read log data, you define the format of the log files to be read.">
                                             <img class="image" id="task_hgl_vgn_vs__image_mfn_hwx_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">
                                         <div class="p">Type of data to be read. Use one of the following
                                             options: <ul class="ul" id="task_hgl_vgn_vs__ul_czf_y14_vs">
                                                 <li class="li">Text</li>
@@ -391,18 +440,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Produce Single Record</td>
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Produce Single Record</td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">Generates a single record when a record includes multiple
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">Generates a single record when a record includes multiple
                                         objects. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Kerberos Authentication <a class="xref" href="HadoopFS-origin.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
                                             <img class="image" id="task_hgl_vgn_vs__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">Uses Kerberos credentials to connect to HDFS. <p class="p">When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <span class="ph">Data
                   Collector</span> configuration file. </p>
@@ -411,10 +460,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Hadoop FS Configuration Directory  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_hgl_vgn_vs__image_ocv_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">
                                         <p class="p">Location of the HDFS configuration files. Use a directory
                                             or symlink within the Data Collector resources
                                             directory.</p>
@@ -444,10 +493,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">HDFS User  <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls" title="You can configure the Hadoop FS origin to use an HDFS user to read data from HDFS.">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">HDFS User  <a class="xref" href="HadoopFS-origin.html#concept_u4h_lwt_ls" title="You can configure the Hadoop FS origin to use an HDFS user to read data from HDFS.">
                                             <img class="image" id="task_hgl_vgn_vs__image_t3x_4qg_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">The HDFS user to use to connect to HDFS. When using this
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">The HDFS user to use to connect to HDFS. When using this
                                         property, make sure HDFS is configured appropriately.<p class="p">By
                                             default, the pipeline uses the <span class="ph">Data
                   Collector</span> user to connect to HDFS.</p>
@@ -456,10 +505,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28351e517 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d28439e590 ">Hadoop FS Configuration  <a class="xref" href="HadoopFS-origin.html#concept_xh5_y4d_br">
                                             <img class="image" id="task_hgl_vgn_vs__image_if3_4hl_xs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28351e520 ">
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d28439e593 ">
                                         <p class="p">Additional Hadoop configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the property name and value. </p>
@@ -488,9 +537,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28351e733">Text Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28439e806">Text Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28351e736">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28439e809">Description</th>
 
                                 </tr>
 
@@ -498,9 +547,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e733 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e806 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e736 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e809 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -525,9 +574,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="20.61855670103093%" id="d28351e781">Delimited Property</th>
+                                    <th class="entry" valign="top" width="20.61855670103093%" id="d28439e854">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="79.38144329896907%" id="d28351e784">Description</th>
+                                    <th class="entry" valign="top" width="79.38144329896907%" id="d28439e857">Description</th>
 
                                 </tr>
 
@@ -535,9 +584,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_hgl_vgn_vs__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -562,18 +611,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Header Line</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
                                             <img class="image" id="task_hgl_vgn_vs__d3046e592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Record type to produce:<ul class="ul" id="task_hgl_vgn_vs__d3046e596">
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Record type to produce:<ul class="ul" id="task_hgl_vgn_vs__d3046e596">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -589,31 +638,31 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Delimiter character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Escape Character</td>
-
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Escape character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Delimiter character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28351e781 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28351e784 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Escape character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d28439e854 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d28439e857 ">Quote character for a custom file type.</td>
 
                                 </tr>
 
@@ -634,9 +683,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d28351e930">JSON Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d28439e1003">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d28351e933">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d28439e1006">Description</th>
 
                                 </tr>
 
@@ -644,9 +693,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28351e930 ">Maximum Object Length (chars)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d28439e1003 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28351e933 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="70%" headers="d28439e1006 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -670,9 +719,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28351e979">Log Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d28439e1052">Log Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28351e982">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d28439e1055">Description</th>
 
                                 </tr>
 
@@ -680,9 +729,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e979 ">Log Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1052 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e982 ">Format of the log files. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1055 ">Format of the log files. Use one of the following
                                             options:<ul class="ul" id="task_hgl_vgn_vs__d3046e785">
                                             <li class="li">Common Log Format</li>
 
@@ -704,17 +753,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e979 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1052 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e982 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1055 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e979 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1052 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e982 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1055 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -750,9 +799,9 @@
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d28351e1102">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d28439e1175">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d28351e1105">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d28439e1178">Description</th>
 
                                             </tr>
 
@@ -760,9 +809,9 @@
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e1102 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1175 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e1105 ">Determines how to handle information that
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1178 ">Determines how to handle information that
                                                   cannot be parsed:<ul class="ul" id="task_hgl_vgn_vs__d3046e903">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
@@ -782,17 +831,17 @@
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e1102 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1175 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e1105 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1178 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28351e1102 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d28439e1175 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28351e1105 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d28439e1178 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -819,9 +868,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d28351e1179">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d28439e1252">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d28351e1182">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d28439e1255">Description</th>
 
                                 </tr>
 
@@ -829,9 +878,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d28351e1179 ">Avro Reader Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d28439e1252 ">Avro Reader Schema</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d28351e1182 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="70%" headers="d28439e1255 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 

@@ -41,6 +41,30 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/AvroProps">
                 <cmd/>
             </step>
+            <step>
+                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Binary Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Binary Field Path</entry>
+                                    <entry>Field that contains the binary data.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
         </steps>
     </taskbody>
 </task>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_pgm_tsl_gt">
+ <title>Field Merger</title>
+ <shortdesc>The Field Merger merges one or more fields in a record to a different location in the
+  record. Use only for records with a list or map structure. </shortdesc>
+ <conbody>
+  <p>When you configure the Field Merger, you select the fields to be merged and define the target
+   fields. You can merge fields into a new field or an existing field:<dl>
+    <dlentry>
+     <dt>New target field </dt>
+     <dd>When you define a new field, the Field Merger creates the new field and merges the selected
+      fields under the new field.</dd>
+     <dd>
+      <p>For example, you select the following fields in a JSON map:</p>
+      <p>
+       <codeblock>/City
+/State</codeblock>
+      </p>
+     </dd>
+     <dd>If you create a new target field called <codeph>/Location</codeph>, the Field Merger merges
+      the fields as follows:<codeblock>/Location/City
+         /State</codeblock></dd>
+    </dlentry>
+    <dlentry>
+     <dt>Existing target field</dt>
+     <dd>When you choose an existing field as the target field, the Field Merger merges the selected
+      fields under the target field. You can optionally overwrite target fields of the same name if
+      they already exist. <draft-comment author="Loretta">email to Natty to see if everything gets
+       blown away or just the named fields.</draft-comment></dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>
