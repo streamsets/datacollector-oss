@@ -51,21 +51,29 @@
                         <pre class="pre codeblock">&lt;stage library name&gt;/lib/&lt;driver name&gt;</pre>
 
                     </div>
-<div class="p">For example to install drivers for JDBC in an opts/sdc-extras directory,
+<div class="p">For example to install drivers for JMS in an opts/sdc-extras directory,
                         you would copy them to the following directory:
-                        <pre class="pre codeblock">/opts/sdc-extras/&lt;&lt;get this later&gt;&gt;</pre>
+                        <pre class="pre codeblock">/opts/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
 </div>
 </li>
 
                 <li class="li">In the <span class="ph">Data
-                  Collector</span> environment file - either sdc-env.sh or sdcd-env.sh, add the
+                  Collector</span> environment file, sdc-env.sh or sdcd-env.sh, add the
                     STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
-                    directory. <p class="p">For example:
-                        </p>
+                    directory, as
+                        follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = &lt;driver directory&gt;</pre>
+<p class="p">For
+                        example:
+                    </p>
 <pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</pre>
 </li>
 
+                <li class="li">Restart the <span class="ph">Data
+                  Collector</span>.</li>
+
             </ol>
+<p class="p">The drivers in the directory become available to their respective
+            stages.</p>
 </div>
 
     </div>

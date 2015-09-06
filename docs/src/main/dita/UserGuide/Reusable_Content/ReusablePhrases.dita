@@ -100,7 +100,7 @@
                                     field named Truncated to indicate if the line was
                                     truncated.</dd>
                         </dlentry>
-                        <dlentry>
+                        <dlentry id="OriginDF-JSON">
                               <dt>JSON</dt>
                               <dd>Generates a record for each JSON object. You can process JSON
                                     files that include multiple JSON objects or a single JSON

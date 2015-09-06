@@ -26,8 +26,7 @@
      <dt>Existing target field</dt>
      <dd>When you choose an existing field as the target field, the Field Merger merges the selected
       fields under the target field. You can optionally overwrite target fields of the same name if
-      they already exist. <draft-comment author="Loretta">email to Natty to see if everything gets
-       blown away or just the named fields.</draft-comment></dd>
+      they already exist. </dd>
     </dlentry>
    </dl></p>
  </conbody>

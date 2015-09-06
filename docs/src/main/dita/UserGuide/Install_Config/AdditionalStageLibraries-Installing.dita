@@ -39,12 +39,12 @@
 $ tar xvf ~/streamsets-datacollector-&lt;stage_library>.tar.gz</codeblock></info>
             </step>
             <step>
-                <cmd>Stop and restart the <ph
+                <cmd>Restart the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</cmd>
             </step>
         </steps>
-        <result>The stages from the stage library are now available in the <ph
+        <result>The stages from the stage library become available in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</result>
     </taskbody>

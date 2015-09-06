@@ -19,16 +19,23 @@
                 <li>Copy the drivers to the directory. Use a directory structure for each set of
                     drivers based on the stage library name and directory structure as follows: <p>
                         <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
-                    </p><p>For example to install drivers for JDBC in an opts/sdc-extras directory,
+                    </p><p>For example to install drivers for JMS in an opts/sdc-extras directory,
                         you would copy them to the following directory:
-                        <codeblock>/opts/sdc-extras/&lt;&lt;get this later>></codeblock></p></li>
+                        <codeblock>/opts/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
                 <li>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment file - either sdc-env.sh or sdcd-env.sh, add the
+                    /> environment file, sdc-env.sh or sdcd-env.sh, add the
                     STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
-                    directory. <p>For example:
-                        </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</codeblock><draft-comment
-                        author="Loretta">add the variable? add the path? </draft-comment></li>
-            </ol></context>
+                    directory, as
+                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = &lt;driver directory></codeblock><p>For
+                        example:
+                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</codeblock></li>
+                <li>&lt;&lt;security policy?>><draft-comment author="Loretta">add the security
+                        policy info</draft-comment></li>
+                <li>Restart the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />.</li>
+            </ol><p>The drivers in the directory become available to their respective
+            stages.</p></context>
     </taskbody>
 </task>
