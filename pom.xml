@@ -143,6 +143,7 @@
 
             <!-- Git -->
             <exclude>.gitignore</exclude>
+            <exclude>.gitreview</exclude>
             <exclude>.git/**</exclude>
 
             <!-- Maven -->
