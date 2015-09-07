@@ -36,6 +36,8 @@ public enum Errors implements ErrorCode {
   IPC_DEST_10("Could not load trust certificates: {}"),
   IPC_DEST_11("Configuration value is empty"),
 
+  IPC_DEST_12("HOST:PORT '{}' is not an IPC end point"),
+
   IPC_DEST_15("Could not connect to any IPC destination: {}"),
 
   IPC_DEST_20("Could not transmit: {}"),

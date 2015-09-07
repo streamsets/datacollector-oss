@@ -349,8 +349,12 @@ public class Configs {
         conn.setRequestMethod("GET");
         conn.setDefaultUseCaches(false);
         if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-          ok = true;
-          break;
+          if (Constants.X_SDC_PING_VALUE.equals(conn.getHeaderField(Constants.X_SDC_PING_HEADER))) {
+            ok = true;
+          } else {
+            issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts",
+                                                 Errors.IPC_DEST_12, hostPort ));
+          }
         } else {
           errors.add(Utils.format("'{}': {}", hostPort, conn.getResponseMessage()));
         }

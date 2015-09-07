@@ -245,6 +245,7 @@ public class TestConfigs {
 
     // test HTTP_ACCEPTED
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     config.validateConnectivity(getContext(), issues);
     Assert.assertEquals(0, issues.size());
     Mockito.verify(conn).setRequestMethod(Mockito.eq("GET"));

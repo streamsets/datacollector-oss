@@ -83,8 +83,25 @@ public class TestSdcIpcSource {
 
       ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-      //valid IPC
+      //valid init
       Future<Boolean> future = executor.submit(new Callable<Boolean>() {
+        @Override
+        public Boolean call() throws Exception {
+          HttpURLConnection conn = getConnection(Constants.IPC_PATH, configs.appId, runner.getContext(),
+                                                 SSLTestUtils.getHostname() + ":" + configs.port, ssl,
+                                                 trustStore.toString(), "truststore");
+          conn.setRequestMethod("GET");
+          conn.setDefaultUseCaches(false);
+          conn.setDoOutput(false);
+          return conn.getResponseCode() == HttpURLConnection.HTTP_OK &&
+                 Constants.X_SDC_PING_VALUE.equals(conn.getHeaderField(Constants.X_SDC_PING_HEADER));
+        }
+      });
+
+      Assert.assertTrue(future.get(5, TimeUnit.SECONDS));
+
+      //valid IPC
+      future = executor.submit(new Callable<Boolean>() {
         @Override
         public Boolean call() throws Exception {
           Record r1 = RecordCreator.create();
