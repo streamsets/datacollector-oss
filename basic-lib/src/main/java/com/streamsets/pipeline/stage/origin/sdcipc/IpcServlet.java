@@ -63,6 +63,7 @@ public class IpcServlet extends HttpServlet {
       resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
     } else {
       LOG.debug("Validation from '{}', OK", req.getRemoteAddr());
+      resp.setHeader(Constants.X_SDC_PING_HEADER, Constants.X_SDC_PING_VALUE);
       resp.setStatus(HttpServletResponse.SC_OK);
     }
   }

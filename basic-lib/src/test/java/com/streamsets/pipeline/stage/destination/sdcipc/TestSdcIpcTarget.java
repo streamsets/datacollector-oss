@@ -161,6 +161,7 @@ public class TestSdcIpcTarget {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
 
     try {
@@ -198,6 +199,7 @@ public class TestSdcIpcTarget {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
 
     SdcIpcTarget target = new SdcIpcTarget(config);
@@ -224,6 +226,7 @@ public class TestSdcIpcTarget {
     // DISCARD RECORDS
     Mockito.reset(conn);
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
     runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.DISCARD).build();
     try {
@@ -245,6 +248,7 @@ public class TestSdcIpcTarget {
     // STOP PIPELINE
     Mockito.reset(conn);
     Mockito.when(conn.getResponseCode()).thenReturn(HttpURLConnection.HTTP_OK);
+    Mockito.when(conn.getHeaderField(Mockito.eq(Constants.X_SDC_PING_HEADER))).thenReturn(Constants.X_SDC_PING_VALUE);
     Mockito.when(conn.getOutputStream()).thenReturn(baos);
     runner = new TargetRunner.Builder(SdcIpcTarget.class, target).setOnRecordError(OnRecordError.STOP_PIPELINE).build();
     try {
@@ -284,6 +288,7 @@ public class TestSdcIpcTarget {
       if (appId == null || !appId.equals("appId")) {
         resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
       } else {
+        resp.setHeader(Constants.X_SDC_PING_HEADER, Constants.X_SDC_PING_VALUE);
         resp.setStatus(HttpServletResponse.SC_OK);
       }
     }
