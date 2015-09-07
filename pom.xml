@@ -142,13 +142,19 @@
             <exclude>**/*.iml</exclude>
 
             <!-- Git -->
-            <exclude>.gitignore</exclude>
+            <exclude>**/.gitignore</exclude>
             <exclude>.gitreview</exclude>
             <exclude>.git/**</exclude>
 
             <!-- Maven -->
             <exclude>**/target/**</exclude>
             <exclude>.m2/**</exclude> <!-- maven on jenkins -->
+
+            <!-- Node.js Modules -->
+            <exclude>**/node_modules/**</exclude>
+
+            <!-- Bower -->
+            <exclude>**/.bowerrc</exclude>
 
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
@@ -160,18 +166,17 @@
             <exclude>**/*.csv</exclude>
             <exclude>**/*.txt</exclude>
             <exclude>**/*.json</exclude>
+            <exclude>**/*.html</exclude>
             <exclude>commonlib/src/main/resources/*</exclude>
 
             <!-- TestOverrunStreamingXmlParser relies on this file being small, cannot add license header -->
             <exclude>common/src/test/resources/TestStreamingXmlParser-records.xml</exclude>
 
             <!-- Modules to exclude (for now), not java stuff -->
-            <exclude>common-ui/**</exclude>
-            <exclude>datacollector-ui/**</exclude>
-            <exclude>e2e-tests/**</exclude>
             <exclude>python/**</exclude>
             <exclude>docs/**</exclude>
             <exclude>csd/**</exclude>
+            <exclude>common-ui/src/main/webapp/common/directives/**</exclude>
 
           </excludes>
         </configuration>
