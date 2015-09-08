@@ -2,7 +2,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kvs_3hh_ht">
  <title>Amazon S3</title>
- <shortdesc>Information forthcoming...</shortdesc>
+ <shortdesc>The Amazon S3 origin reads data from Amazon S3. The file names must all share a file
+  name pattern and be fully written. To read data from an active file that is still being written
+  to, use the File Tail origin. </shortdesc>
  <conbody>
   <p></p>
  </conbody>
