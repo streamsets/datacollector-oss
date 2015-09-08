@@ -38,24 +38,6 @@ import java.io.IOException;
 @Path("/v1/authentication")
 public class AuthenticationResource {
 
-
-  @POST
-  @Path("/login")
-  @PermitAll
-  public void login(@FormParam("username") String username,
-                    @FormParam("password") String password,
-                    @Context HttpServletRequest request,
-                    @Context HttpServletResponse response) throws PipelineStoreException, IOException {
-
-    HttpSession session = request.getSession();
-    String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
-    if(redirectURL != null && redirectURL.contains("rest/v1/")) {
-      session.setAttribute(FormAuthenticator.__J_URI, "/");
-    }
-
-    response.sendRedirect("j_security_check?j_username=" + username + "&j_password=" + password);
-  }
-
   @POST
   @Path("/logout")
   @PermitAll

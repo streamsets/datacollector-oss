@@ -20,6 +20,7 @@ package com.streamsets.datacollector.http;
 import com.streamsets.datacollector.main.RuntimeInfo;
 
 import org.eclipse.jetty.security.*;
+import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.security.authentication.LoginAuthenticator;
 import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
@@ -115,6 +116,25 @@ public class ProxyAuthenticator extends LoginAuthenticator {
         Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
         session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
       }
+
+
+      if(this.authenticator instanceof FormAuthenticator) {
+        //Handle redirecting to home page instead of REST API page & setting reverse proxy base path
+        String pathInfo = request.getPathInfo();
+        if("/j_security_check".equals(pathInfo)) {
+          String basePath = request.getParameter("basePath");
+
+          if(basePath == null || basePath.trim().length() == 0) {
+            basePath = "/";
+          }
+
+          String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
+          if((redirectURL != null && (redirectURL.contains("rest/v1/") || redirectURL.contains("jmx"))) || !basePath.equals("/")) {
+            session.setAttribute(FormAuthenticator.__J_URI, basePath);
+          }
+        }
+      }
+
     }
 
     return authenticator.validateRequest(req, res, mandatory);
