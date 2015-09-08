@@ -206,7 +206,7 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
     s3ConfigBean.dataFormatConfig = new DataFormatConfig();
-    s3ConfigBean.dataFormatConfig.dataFormat = DataFormat.TEXT;
+    s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.textMaxLineLen = 1024;
 

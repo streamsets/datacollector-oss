@@ -48,19 +48,21 @@ public class DataFormatParser {
   private final String parentName;
   private final DataFormatConfig dataFormatConfig;
   private final MessageConfig messageConfig;
+  private final DataFormat dataFormat;
   private LogDataFormatValidator logDataFormatValidator;
   private Charset messageCharset;
   private DataParserFactory parserFactory;
 
-  public DataFormatParser(String parentName, DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
+  public DataFormatParser(String parentName, DataFormat dataFormat, DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
     this.parentName = parentName;
     this.dataFormatConfig = dataFormatConfig;
     this.messageConfig = messageConfig;
+    this.dataFormat = dataFormat;
   }
 
   public List<Stage.ConfigIssue> init(Source.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    switch (dataFormatConfig.dataFormat) {
+    switch (dataFormat) {
       case JSON:
         if (dataFormatConfig.jsonMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormat.JSON.name(), "dataFormatConfig.maxJsonObjectLen", ParserErrors.PARSER_04));
@@ -108,10 +110,10 @@ public class DataFormatParser {
         }
         break;
       default:
-        issues.add(context.createConfigIssue(parentName, "dataFormat", ParserErrors.PARSER_05, dataFormatConfig.dataFormat));
+        issues.add(context.createConfigIssue(parentName, "dataFormat", ParserErrors.PARSER_05, dataFormat));
     }
 
-    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormatConfig.dataFormat.getParserFormat())
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormat.getParserFormat())
       .setCharset(Charset.defaultCharset());
     if (dataFormatConfig.charset == null) {
       messageCharset = StandardCharsets.UTF_8;
@@ -126,7 +128,7 @@ public class DataFormatParser {
     }
     builder.setCharset(messageCharset).setRemoveCtrlChars(dataFormatConfig.removeCtrlChars);
 
-    switch (dataFormatConfig.dataFormat) {
+    switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(dataFormatConfig.textMaxLineLen);
         break;
@@ -157,7 +159,7 @@ public class DataFormatParser {
           .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, dataFormatConfig.schemaInMessage);
         break;
       default:
-        throw new IllegalStateException("Unknown data format: " + dataFormatConfig.dataFormat);
+        throw new IllegalStateException("Unknown data format: " + dataFormat);
     }
     parserFactory = builder.build();
     return issues;

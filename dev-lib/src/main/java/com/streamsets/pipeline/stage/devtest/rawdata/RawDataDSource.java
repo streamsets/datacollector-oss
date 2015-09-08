@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import org.slf4j.Logger;
@@ -39,6 +41,17 @@ import org.slf4j.LoggerFactory;
 public class RawDataDSource extends DSource {
   private static final Logger LOG = LoggerFactory.getLogger(RawDataDSource.class);
 
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Data Format",
+    displayPosition = 3000,
+    group = "RAW"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
   @ConfigDefBean(groups = "RAW")
   public DataFormatConfig dataFormatConfig;
 
@@ -53,9 +66,8 @@ public class RawDataDSource extends DSource {
   )
   public String rawData;
 
-
   @Override
   protected Source createSource() {
-    return new RawDataSource(dataFormatConfig, rawData);
+    return new RawDataSource(dataFormat, dataFormatConfig, rawData);
   }
 }

@@ -77,6 +77,7 @@ public class TestJmsSource {
   private DataFormatConfig dataFormatConfig;
   private MessageConfig messageConfig;
   private JmsConfig jmsConfig;
+  private DataFormat dataFormat;
 
   @Rule
   public ExpectedException thrown = ExpectedException.none();
@@ -109,7 +110,7 @@ public class TestJmsSource {
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = USERNAME;
     credentialsConfig.password = PASSWORD;
-    dataFormatConfig.dataFormat = DataFormat.TEXT;
+    dataFormat = DataFormat.TEXT;
     dataFormatConfig.removeCtrlChars = true;
     jmsConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
     jmsConfig.connectionFactory = CONNECTION_FACTORY;
@@ -159,7 +160,7 @@ public class TestJmsSource {
 
   private SourceRunner createRunner() {
     JmsSource origin = new JmsSource(basicConfig, credentialsConfig, jmsConfig,
-      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig, messageConfig),
+      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormat, dataFormatConfig, messageConfig),
       new InitialContextFactory());
     SourceRunner runner = new SourceRunner.Builder(JmsSource.class, origin)
       .addOutputLane("lane")
