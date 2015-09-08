@@ -6,12 +6,26 @@
 
   <div class="panel-body">
 
-    <button type="button" class="btn btn-primary btn-sm create-pipeline-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])"
-            ng-click="addPipelineConfig()">
-      <span class="glyphicon glyphicon-plus"></span>
-      <span translate="home.header.createNewPipeline">Create New Pipeline</span>
-    </button>
+    <div class="btn-group create-pipeline-btn">
+      <button type="button" class="btn btn-primary btn-sm"
+              ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])"
+              ng-click="addPipelineConfig()">
+        <span class="glyphicon glyphicon-plus"></span>
+        <span translate="home.header.createNewPipeline">Create</span>
+      </button>
+      <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="#" ng-click="addPipelineConfig()" translate="home.header.createNewPipeline">Create New Pipeline</a>
+        </li>
+        <li>
+          <a href="#" ng-click="importPipelineConfig()"translate="home.header.importPipeline">Import Pipeline</a>
+        </li>
+      </ul>
+    </div>
 
     <ul class="list-group">
       <li class="list-group-item pointer clearfix"
