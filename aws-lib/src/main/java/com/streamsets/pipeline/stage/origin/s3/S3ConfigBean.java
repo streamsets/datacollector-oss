@@ -18,8 +18,11 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
@@ -30,6 +33,16 @@ public class S3ConfigBean {
 
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Data Format",
+    displayPosition = 3000,
+    group = "S3"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
 
   @ConfigDefBean(groups = {"S3"})
   public DataFormatConfig dataFormatConfig;
@@ -47,7 +60,7 @@ public class S3ConfigBean {
   public S3Config s3Config;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    dataFormatConfig.init(context, issues, Groups.S3.name(), s3FileConfig.overrunLimit);
+    dataFormatConfig.init(context, dataFormat, Groups.S3.name(), s3FileConfig.overrunLimit, issues);
     basicConfig.init(context, issues, Groups.S3.name());
 
     //S3 source specific validation

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
@@ -31,24 +32,17 @@ import com.streamsets.pipeline.stage.origin.lib.ParserErrors;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
 public class JmsMessageConverterImpl implements JmsMessageConverter {
 
-  private final DataFormatConfig dataFormatConfig;
   private final DataFormatParser parser;
 
-  public JmsMessageConverterImpl(DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
-    this.dataFormatConfig = dataFormatConfig;
-    this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormatConfig, messageConfig);
+  public JmsMessageConverterImpl(DataFormat dataFormat, DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
+    this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormat, dataFormatConfig, messageConfig);
   }
 
   public List<Stage.ConfigIssue> init(Source.Context context) {

@@ -35,7 +35,6 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.FileCompressionChooserValues;
 import com.streamsets.pipeline.config.JsonMode;

@@ -17,8 +17,8 @@
  */
 package com.streamsets.pipeline.stage.origin.lib;
 
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.XMLChar;
@@ -31,7 +31,6 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
@@ -62,21 +61,11 @@ public class DataFormatConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    label = "Data Format",
-    displayPosition = 3000,
-    group = "#0"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
     defaultValue = "UTF-8",
     label = "Messages Charset",
     displayPosition = 3010,
     group = "#0",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
@@ -101,7 +90,7 @@ public class DataFormatConfig {
     description = "Longer lines are truncated",
     displayPosition = 100,
     group = "TEXT",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "TEXT",
     min = 1,
     max = Integer.MAX_VALUE
@@ -116,7 +105,7 @@ public class DataFormatConfig {
     description = "",
     displayPosition = 100,
     group = "JSON",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "JSON"
   )
   @ValueChooserModel(JsonModeChooserValues.class)
@@ -130,7 +119,7 @@ public class DataFormatConfig {
     description = "Larger objects are not processed",
     displayPosition = 110,
     group = "JSON",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "JSON",
     min = 1,
     max = Integer.MAX_VALUE
@@ -145,7 +134,7 @@ public class DataFormatConfig {
     description = "",
     displayPosition = 200,
     group = "DELIMITED",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvModeChooserValues.class)
@@ -159,7 +148,7 @@ public class DataFormatConfig {
     description = "",
     displayPosition = 210,
     group = "DELIMITED",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvHeaderChooserValues.class)
@@ -173,7 +162,7 @@ public class DataFormatConfig {
     description = "Larger objects are not processed",
     displayPosition = 220,
     group = "DELIMITED",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED",
     min = 1,
     max = Integer.MAX_VALUE
@@ -224,7 +213,7 @@ public class DataFormatConfig {
     description = "",
     displayPosition = 310,
     group = "DELIMITED",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvRecordTypeChooserValues.class)
@@ -238,7 +227,7 @@ public class DataFormatConfig {
     description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
     displayPosition = 300,
     group = "XML",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "XML"
   )
   public String xmlRecordElement;
@@ -251,7 +240,7 @@ public class DataFormatConfig {
     description = "Larger records are not processed",
     displayPosition = 310,
     group = "XML",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "XML",
     min = 1,
     max = Integer.MAX_VALUE
@@ -268,7 +257,7 @@ public class DataFormatConfig {
     description = "",
     displayPosition = 700,
     group = "LOG",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "LOG"
   )
   @ValueChooserModel(LogModeChooserValues.class)
@@ -282,7 +271,7 @@ public class DataFormatConfig {
     description = "Longer lines are truncated",
     displayPosition = 710,
     group = "LOG",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "LOG",
     min = 1,
     max = Integer.MAX_VALUE
@@ -297,7 +286,7 @@ public class DataFormatConfig {
     description = "Indicates if the original line of log should be retained in the record",
     displayPosition = 720,
     group = "LOG",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "LOG"
   )
   public boolean retainOriginalLine;
@@ -443,7 +432,7 @@ public class DataFormatConfig {
     description = "The Kafka message includes the Avro schema",
     displayPosition = 830,
     group = "AVRO",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "AVRO"
   )
   public boolean schemaInMessage;
@@ -456,17 +445,17 @@ public class DataFormatConfig {
     description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
     displayPosition = 840,
     group = "AVRO",
-    dependsOn = "dataFormat",
+    dependsOn = "dataFormat^",
     triggeredByValue = "AVRO",
     mode = ConfigDef.Mode.JSON
   )
   public String avroSchema;
 
-  public boolean init(Stage.Context context, List<Stage.ConfigIssue> issues, String stageGroup) {
-    return init(context, issues, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT);
+  public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, List<Stage.ConfigIssue> issues) {
+    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, issues);
   }
 
-  public boolean init(Stage.Context context, List<Stage.ConfigIssue> issues, String stageGroup, int overrunLimit) {
+  public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, int overrunLimit, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     switch (dataFormat) {
       case JSON:
@@ -527,13 +516,13 @@ public class DataFormatConfig {
         break;
     }
 
-    valid &= validateDataParser(context, issues, stageGroup, overrunLimit);
+    valid &= validateDataParser(context, dataFormat, stageGroup, overrunLimit, issues);
 
     return valid;
   }
 
-  private boolean validateDataParser(Stage.Context context, List<Stage.ConfigIssue> issues, String stageGroup,
-    int overrunLimit) {
+  private boolean validateDataParser(Stage.Context context, DataFormat dataFormat, String stageGroup,
+    int overrunLimit, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context,
       dataFormat.getParserFormat());

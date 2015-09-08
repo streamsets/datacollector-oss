@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jms;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -24,6 +25,8 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
@@ -48,6 +51,16 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   @ConfigDefBean(groups = {"JMS"})
   public CredentialsConfig credentialsConfig;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Data Format",
+    displayPosition = 3000,
+    group = "JMS"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat;
+
   @ConfigDefBean(groups = {"JMS"})
   public DataFormatConfig dataFormatConfig;
 
@@ -60,7 +73,7 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   @Override
   protected Source createSource() {
     return new JmsSource(basicConfig, credentialsConfig, jmsConfig,
-      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormatConfig, messageConfig),
+      new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(dataFormat, dataFormatConfig, messageConfig),
       new InitialContextFactory());
   }
 

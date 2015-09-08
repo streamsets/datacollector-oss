@@ -186,8 +186,7 @@ public abstract class ConfigDefinitionExtractor {
         ConfigDefinition dependsOnDef = definitionsMap.get(def.getDependsOn());
 
         if (dependsOnDef == null) {
-          errors.add(new ErrorMessage(DefinitionError.DEF_153, contextMsg, contextMsg, def.getName(),
-                                      def.getDependsOn()));
+          errors.add(new ErrorMessage(DefinitionError.DEF_153, contextMsg, def.getName(), def.getDependsOn()));
         } else {
           // evaluate dependsOn triggers
           ConfigDef annotation = def.getConfigField().getAnnotation(ConfigDef.class);

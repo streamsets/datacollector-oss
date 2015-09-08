@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
 import org.slf4j.Logger;
@@ -35,9 +36,9 @@ public class RawDataSource extends BaseSource  {
   private final DataFormatParser parser;
   private final String rawData;
 
-  public RawDataSource(DataFormatConfig dataFormatConfig, String rawData) {
+  public RawDataSource(DataFormat dataFormat, DataFormatConfig dataFormatConfig, String rawData) {
     this.rawData = rawData;
-    this.parser = new DataFormatParser(RawDataSourceGroups.RAW.name(), dataFormatConfig, null);
+    this.parser = new DataFormatParser(RawDataSourceGroups.RAW.name(), dataFormat, dataFormatConfig, null);
   }
 
   @Override
