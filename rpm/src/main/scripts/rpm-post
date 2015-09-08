@@ -20,3 +20,4 @@
 #
 sed -i 's|\(SDC_DIST="\)\(.*\)|\1%{install_dir}/current\2|' /etc/init.d/sdc
 sed -i 's|\(SDC_HOME="\)\(.*\)|\1%{install_dir}/current\2|' /etc/init.d/sdc
+ln -sf %{sdc_dist} %{install_dir}/current

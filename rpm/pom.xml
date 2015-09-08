@@ -75,6 +75,7 @@
                 <defineStatement>service_user ${sdc.user}</defineStatement>
                 <defineStatement>service_group ${sdc.group}</defineStatement>
                 <defineStatement>install_dir ${sdc.dir}</defineStatement>
+                <defineStatement>sdc_dist ${sdc.dir}/streamsets-datacollector-${project.version}</defineStatement>
               </defineStatements>
               <mappings>
                 <mapping>
@@ -153,7 +154,6 @@
                   <username>root</username>
                   <groupname>root</groupname>
                   <filemode>755</filemode>
-                  <configuration>noreplace</configuration>
                   <sources>
                     <source>
                       <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/_sdcinitd_prototype</location>
@@ -171,15 +171,6 @@
                     <source>
                       <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/sdcd</location>
                     </source>
-                  </sources>
-                </mapping>
-                <mapping>
-                  <directory>${sdc.dir}</directory>
-                  <sources>
-                    <softlinkSource>
-                      <destination>current</destination>
-                      <location>streamsets-datacollector-${project.version}</location>
-                    </softlinkSource>
                   </sources>
                 </mapping>
               </mappings>
