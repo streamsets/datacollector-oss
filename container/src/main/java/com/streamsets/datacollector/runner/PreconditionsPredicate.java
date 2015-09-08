@@ -19,6 +19,7 @@ package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuntimeEL;
@@ -44,7 +45,8 @@ public class PreconditionsPredicate implements FilterRecordBatch.Predicate  {
   public PreconditionsPredicate(Stage.Context context, List<String> preconditions) {
     this.preconditions = preconditions;
     elVars = context.createELVars();
-    elEval = context.createELEval(ConfigDefinition.PRECONDITIONS, RecordEL.class, StringEL.class, RuntimeEL.class);
+    elEval = context.createELEval(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, RecordEL.class, StringEL.class,
+                                  RuntimeEL.class);
   }
 
   @Override

@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -41,10 +42,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public abstract class StageDefinitionExtractor {
@@ -53,29 +52,6 @@ public abstract class StageDefinitionExtractor {
 
   public static StageDefinitionExtractor get() {
     return EXTRACTOR;
-  }
-
-  static final ConfigDefinition REQUIRED_FIELDS;
-  static final ConfigDefinition PRECONDITIONS;
-  static final ConfigDefinition ON_ERROR_RECORD;
-
-  static {
-    List<ConfigDefinition> defs = ConfigDefinitionExtractor.get().extract(BuiltInStageDefConfigs.class,
-                                                                          Collections.<String>emptyList(),
-                                                                          "Built-in stage configurations");
-    Map<String, ConfigDefinition> map = new HashMap<>();
-    for (ConfigDefinition def : defs) {
-      map.put(def.getName(), def);
-    }
-    REQUIRED_FIELDS = map.get(BuiltInStageDefConfigs.STAGE_REQUIRED_FIELDS_CONFIG);
-    PRECONDITIONS = map.get(BuiltInStageDefConfigs.STAGE_PRECONDITIONS_CONFIG);
-    ON_ERROR_RECORD = map.get(BuiltInStageDefConfigs.STAGE_ON_RECORD_ERROR_CONFIG);
-    Utils.checkState(REQUIRED_FIELDS != null, Utils.format("Missing built-in configuration '{}'",
-                                                           BuiltInStageDefConfigs.STAGE_REQUIRED_FIELDS_CONFIG));
-    Utils.checkState(PRECONDITIONS != null, Utils.format("Missing built-in configuration '{}'",
-                                                         BuiltInStageDefConfigs.STAGE_PRECONDITIONS_CONFIG));
-    Utils.checkState(ON_ERROR_RECORD != null, Utils.format("Missing built-in configuration '{}'",
-                                                           BuiltInStageDefConfigs.STAGE_ON_RECORD_ERROR_CONFIG));
   }
 
   static String getStageName(Class klass) {
@@ -213,12 +189,30 @@ public abstract class StageDefinitionExtractor {
 
       boolean recordsByRef = sDef.recordsByRef();
 
-      if (preconditions) {
-        configDefinitions.add(REQUIRED_FIELDS);
-        configDefinitions.add(PRECONDITIONS);
+      List<ConfigDefinition> systemConfigs = ConfigDefinitionExtractor.get().extract(StageConfigBean.class,
+                                                                                     Collections.<String>emptyList(),
+                                                                                     "systemConfigs");
+
+      for (ConfigDefinition def : systemConfigs) {
+        switch (def.getName()) {
+          case StageConfigBean.STAGE_PRECONDITIONS_CONFIG:
+          case StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG:
+            if (preconditions) {
+              configDefinitions.add(def);
+            }
+            break;
+          case StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG:
+            if (onRecordError) {
+              configDefinitions.add(def);
+            }
+            break;
+          default:
+            configDefinitions.add(def);
+        }
       }
-      if (onRecordError) {
-        configDefinitions.add(ON_ERROR_RECORD);
+
+      for (ConfigDefinition cDef : configDefinitions) {
+        cDef.addAutoELDefinitions(libraryDef);
       }
 
       boolean privateClassLoader = sDef.privateClassLoader();
@@ -257,9 +251,6 @@ public abstract class StageDefinitionExtractor {
           iterator.remove();
         }
       }
-    }
-    for (ConfigDefinition cDef : cDefs) {
-      cDef.addAutoELDefinitions(libraryDef);
     }
     return cDefs;
   }

@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -213,9 +214,9 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(StageDef.DefaultOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
     Assert.assertEquals(StageType.SOURCE, def.getType());
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
-    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
     Assert.assertFalse(def.getRecordsByRef());
     Assert.assertTrue(def.getUpgrader() instanceof StageUpgrader.Default);
   }
@@ -260,9 +261,9 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
     Assert.assertTrue(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
-    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
   }
 
   @Test
@@ -270,9 +271,9 @@ public class TestStageDefinitionExtractor {
     StageDefinition def = StageDefinitionExtractor.get().extract(MOCK_LIB_DEF, Target2.class, "x");
     Assert.assertTrue(def.hasOnRecordError());
     Assert.assertTrue(def.hasPreconditions());
-    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
-    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
-    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
+    Assert.assertTrue(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
   }
 
   @Test
@@ -283,9 +284,9 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(null, def.getOutputStreamLabelProviderClass());
     Assert.assertFalse(def.hasOnRecordError());
     Assert.assertFalse(def.hasPreconditions());
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.REQUIRED_FIELDS.getName()));
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.PRECONDITIONS.getName()));
-    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageDefinitionExtractor.ON_ERROR_RECORD.getName()));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_PRECONDITIONS_CONFIG));
+    Assert.assertFalse(def.getConfigDefinitionsMap().containsKey(StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG));
   }
 
   @Test(expected = IllegalArgumentException.class)
