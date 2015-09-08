@@ -547,8 +547,9 @@ public class DataFormatConfig {
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat)
-          .setMode(csvHeader)
+        builder.setMaxDataLen(csvMaxObjectLen)
+          .setMode(csvFileFormat).setMode(csvHeader)
+          .setMode(csvRecordType)
           .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
           .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
           .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
