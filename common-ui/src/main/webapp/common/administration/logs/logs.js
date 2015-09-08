@@ -38,7 +38,7 @@ angular
       }
     );
   }])
-  .controller('LogsController', function ($scope, $interval, api, configuration, Analytics) {
+  .controller('LogsController', function ($rootScope, $scope, $interval, api, configuration, Analytics) {
 
     configuration.init().then(function() {
       if(configuration.isAnalyticsEnabled()) {
@@ -70,10 +70,7 @@ angular
       }
     });
 
-    var loc = window.location,
-      webSocketLogURL = ((loc.protocol === "https:") ?
-          "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : "") +
-        '/rest/v1/webSocket?type=log',
+    var webSocketLogURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=log',
       logWebSocket,
       logWebSocketMessages = [];
 

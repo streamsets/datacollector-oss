@@ -537,19 +537,18 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageIconURL = function(stage) {
       if(stage.icon) {
-        return '/rest/' + api.apiVersion + '/definitions/stages/' + stage.library + '/' + stage.name + '/icon';
+        return 'rest/' + api.apiVersion + '/definitions/stages/' + stage.library + '/' + stage.name + '/icon';
       } else {
         switch(stage.type) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
-            return '/assets/stage/defaultSource.svg';
+            return 'assets/stage/defaultSource.svg';
           case pipelineConstant.PROCESSOR_STAGE_TYPE:
-            return '/assets/stage/defaultProcessor.svg';
+            return 'assets/stage/defaultProcessor.svg';
           case pipelineConstant.TARGET_STAGE_TYPE:
-            return '/assets/stage/defaultTarget.svg';
+            return 'assets/stage/defaultTarget.svg';
         }
       }
     };
-
 
 
     /**

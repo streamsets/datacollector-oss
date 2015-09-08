@@ -52,11 +52,8 @@ angular
       edges = [],
       destroyed = false,
       pageHidden = false,
-      loc = window.location,
       isWebSocketSupported,
-      webSocketBaseURL = ((loc.protocol === "https:") ?
-          "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
-      webSocketMetricsURL = webSocketBaseURL + '/rest/v1/webSocket?type=metrics&pipelineName=' + routeParamPipelineName,
+      webSocketMetricsURL = $rootScope.common.webSocketBaseURL + 'rest/v1/webSocket?type=metrics&pipelineName=' + routeParamPipelineName,
       metricsWebSocket,
       undoLimit = 10,
       archive = [],

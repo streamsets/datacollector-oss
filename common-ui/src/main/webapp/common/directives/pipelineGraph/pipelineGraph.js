@@ -29,7 +29,7 @@ angular.module('pipelineGraphDirectives', [])
       templateUrl: 'common/directives/pipelineGraph/pipelineGraph.tpl.html'
     };
   })
-  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter,
+  .controller('PipelineGraphController', function($scope, $rootScope, $element, _, $filter, $location,
                                                   pipelineConstant, $translate, pipelineService){
 
     var showTransition = false,
@@ -102,7 +102,7 @@ angular.module('pipelineGraphDirectives', [])
       thisGraph.dragLine = svgG.append('svg:path')
         .attr('class', 'link dragline hidden')
         .attr('d', 'M0,0L0,0')
-        .style('marker-end', 'url(#mark-end-arrow)');
+        .style('marker-end', 'url(' + $location.absUrl() + '#mark-end-arrow)');
 
       // svg nodes and edges
       thisGraph.paths = svgG.append('g').selectAll('g');
@@ -720,7 +720,7 @@ angular.module('pipelineGraphDirectives', [])
         .attr('width', 48)
         .attr('height', 48)
         .attr('xlink:href', function(d) {
-          return '/rest/v1/definitions/stages/' + d.library + '/' + d.stageName + '/icon';
+          return 'rest/v1/definitions/stages/' + d.library + '/' + d.stageName + '/icon';
         });
 
       //Add Error icons
@@ -833,7 +833,7 @@ angular.module('pipelineGraphDirectives', [])
 
       // update existing paths
       paths.selectAll('path')
-        .style('marker-end', 'url(#end-arrow)')
+        .style('marker-end', 'url(' + $location.absUrl() + '#end-arrow)')
         .classed(consts.selectedClass, function(d) {
           return d === state.selectedEdge;
         })
@@ -877,7 +877,7 @@ angular.module('pipelineGraphDirectives', [])
       // add new paths
       pathNewGs
         .append('path')
-        .style('marker-end', 'url(#end-arrow)')
+        .style('marker-end', 'url(' + $location.absUrl() + '#end-arrow)')
         .classed('link', true)
         .attr('d', function(d) {
           return thisGraph.getPathDValue(d);
@@ -888,17 +888,6 @@ angular.module('pipelineGraphDirectives', [])
         pathNewGs
           .append('svg:foreignObject')
           .attr('class', 'edge-preview-container graph-bootstrap-tooltip')
-          /*.attr('title', function(d) {
-            var alertRules = _.filter(graph.pipelineRules.dataRuleDefinitions, function(ruleDefn) {
-              return ruleDefn.lane === d.outputLane && ruleDefn.enabled;
-            });
-
-            if(alertRules && alertRules.length) {
-              return alertRules.length + ' Active Data Rules';
-            } else {
-              return 'No Active Data Rules';
-            }
-          })*/
           .attr('width', 25)
           .attr('height', 25)
           .attr('x', function(d) {

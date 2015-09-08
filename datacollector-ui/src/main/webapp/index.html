@@ -18,15 +18,26 @@
   <meta charset="utf-8">
   <meta name="description" content="StreamSets Data Collector">
   <title ng-bind="common.title">StreamSets Data Collector</title>
-  <!--base href="/" /-->
+
+  <script type="text/javascript">
+    var baseHref = document.location.pathname,
+      collectorIndex = baseHref.indexOf('/collector/');
+
+    if(collectorIndex !== -1) {
+      baseHref = baseHref.substr(0, collectorIndex + 1);
+    }
+
+    document.write("<base href='" + baseHref + "' />");
+  </script>
+
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
-  <link rel="stylesheet" type="text/css" href="/<%= file %>" /><% }); %>
+  <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
 
   <!-- compiled JavaScript --><% scripts.forEach( function ( file ) { %>
-  <script type="text/javascript" src="/<%= file %>"></script><% }); %>
+  <script type="text/javascript" src="<%= file %>"></script><% }); %>
 
 </head>
 <body ng-keydown="common.bodyKeyEvent($event)">
@@ -34,15 +45,15 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="header-container">
     <div class="navbar-header">
-      <a class="logo" href="/">
-        <img src="/assets/logo.png" />
+      <a class="logo" ng-href="{{common.baseHref}}">
+        <img src="assets/logo.png" />
       </a>
     </div>
     <div class="collapse navbar-collapse">
 
       <ul class="nav navbar-nav navbar-right" ng-cloak>
         <li>
-          <a href="/"
+          <a ng-href="{{common.baseHref}}"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.home' | translate}}"
              tooltip-trigger="mouseenter"
@@ -120,7 +131,7 @@
           </a>
           <ul class="dropdown-menu">
             <li>
-              <a href="/collector/configuration">
+              <a href="collector/configuration">
                 <i class="fa fa-gear"></i>
                 <span translate="global.menu.admin.configuration">Configuration</span>
               </a>
@@ -134,13 +145,13 @@
             </li>
 
             <li>
-              <a href="/collector/jvmMetrics">
+              <a href="collector/jvmMetrics">
                 <i class="fa fa-dashboard"></i>
                 <span translate="global.menu.admin.jvmMetrics">JVM Metrics</span>
               </a>
             </li>
             <li>
-              <a href="/collector/logs">
+              <a href="collector/logs">
                 <i class="fa fa-tasks"></i>
                 <span translate="global.menu.admin.logs">Logs</span>
               </a>
@@ -210,7 +221,7 @@
             </li>
 
             <li>
-              <a href="/collector/restapi">
+              <a href="collector/restapi">
                 <span class="fa fa-globe"></span>
                 <span translate="global.menu.help.restFulAPI">RESTful API</span>
               </a>
