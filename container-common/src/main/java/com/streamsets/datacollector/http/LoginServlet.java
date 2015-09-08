@@ -36,15 +36,20 @@ public class LoginServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
+    HttpSession session = req.getSession();
     String user = req.getParameter("j_username");
     String pass = req.getParameter("j_password");
+    String basePath = req.getParameter("basePath");
 
-    HttpSession session = req.getSession();
-    String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
-    if(redirectURL != null && redirectURL.contains("rest/v1/")) {
-      session.setAttribute(FormAuthenticator.__J_URI, "/");
+    if(basePath == null || basePath.trim().length() == 0) {
+      basePath = "/";
     }
 
-    resp.sendRedirect("j_security_check?j_username="+user+"&j_password="+pass);
+    String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
+    if((redirectURL != null && redirectURL.contains("rest/v1/")) || !basePath.equals("/")) {
+      session.setAttribute(FormAuthenticator.__J_URI, basePath);
+    }
+
+    resp.sendRedirect(basePath + "j_security_check?j_username=" + user + "&j_password=" + pass);
   }
 }

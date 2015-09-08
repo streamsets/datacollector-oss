@@ -300,7 +300,7 @@ public class WebServerTask extends AbstractTask {
     server.addBean(loginService);
     securityHandler.setLoginService(loginService);
 
-    FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", false);
+    FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", true);
     securityHandler.setAuthenticator(new ProxyAuthenticator(authenticator, runtimeInfo));
     return securityHandler;
   }

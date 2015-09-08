@@ -23,7 +23,7 @@
 angular.module('dataCollectorApp.common')
   .factory('api', function($rootScope, $http, $q) {
     var apiVersion = 'v1',
-      apiBase = '/rest/' + apiVersion,
+      apiBase = 'rest/' + apiVersion,
       api = {
         apiVersion: apiVersion,
         events: {}
@@ -75,7 +75,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getJMX : function() {
-        var url = '/jmx';
+        var url = 'jmx';
         return $http({
           method: 'GET',
           url: url

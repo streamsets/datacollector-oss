@@ -40,7 +40,7 @@ angular
     );
   }])
   .controller('RESTfulAPIController', function ($scope, $rootScope, $q, configuration, Analytics, $http, _) {
-    $scope.swaggerURL = '/rest/swagger.json';
+    $scope.swaggerURL = 'rest/swagger.json';
 
     $q.all([
       configuration.init()

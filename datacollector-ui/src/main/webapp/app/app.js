@@ -35,7 +35,7 @@ angular.module('dataCollectorApp')
 
     // Initialize angular-translate
     $translateProvider.useStaticFilesLoader({
-      prefix: '/i18n/',
+      prefix: 'i18n/',
       suffix: '.json'
     });
 
@@ -72,21 +72,25 @@ angular.module('dataCollectorApp')
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
                  $timeout, $translate, authService, userRoles, configuration, Analytics, $q) {
+
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
       alertsTimer,
       isWebSocketSupported,
       loc = window.location,
+      httpBaseURL = ((loc.protocol === "https:") ? "https://" : "http://") + loc.hostname + (loc.port ? ":" + loc.port : ""),
+      bases = document.getElementsByTagName('base'),
+      baseHref = (bases.length > 0) ? (bases[0].href).replace(httpBaseURL, '') : '/',
       webSocketBaseURL = ((loc.protocol === "https:") ?
-          "wss://" : "ws://") + loc.hostname + (((loc.port != 80) && (loc.port != 443)) ? ":" + loc.port : ""),
+          "wss://" : "ws://") + loc.hostname + (((loc.protocol === "http:" && loc.port == 80) || (loc.protocol === "https:" && loc.port == 443)) ? "" : ":" + loc.port) + baseHref,
       BACKSPACE_KEY = 8,
       DELETE_KEY = 46,
       Z_KEY = 90,
       Y_KEY = 89,
       destroyed = false,
-      webSocketStatusURL = webSocketBaseURL + '/rest/v1/webSocket?type=status',
+      webSocketStatusURL = webSocketBaseURL + 'rest/v1/webSocket?type=status',
       statusWebSocket,
-      webSocketAlertsURL = webSocketBaseURL + '/rest/v1/webSocket?type=alerts',
+      webSocketAlertsURL = webSocketBaseURL + 'rest/v1/webSocket?type=alerts',
       alertsWebSocket;
 
     $rootScope.pipelineConstant = pipelineConstant;
@@ -101,6 +105,8 @@ angular.module('dataCollectorApp')
         userName: 'Account',
         authenticationType: 'none',
         apiVersion: api.apiVersion,
+        baseHref: baseHref,
+        webSocketBaseURL: webSocketBaseURL,
         active: {
           home: 'active'
         },
@@ -475,12 +481,12 @@ angular.module('dataCollectorApp')
 
               var notification = new Notification(alertInfo.pipelineName, {
                 body: alertInfo.ruleDefinition.alertText,
-                icon: '/assets/favicon.png'
+                icon: 'assets/favicon.png'
               });
 
               notification.onclick = function() {
                 notification.close();
-                window.open('/collector/pipeline/' + alertInfo.pipelineName);
+                window.open('collector/pipeline/' + alertInfo.pipelineName);
               };
 
             }
