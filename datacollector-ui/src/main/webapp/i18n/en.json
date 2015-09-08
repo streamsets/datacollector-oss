@@ -139,9 +139,9 @@
   },
   "home": {
     "ago": "ago",
-    "createPipeline": "Create new pipeline",
+    "createPipeline": "Create New Pipeline",
     "getStarted": "Get Started",
-    "importPipeline": "Import pipeline",
+    "importPipeline": "Import Pipeline",
     "invalidStatus": "Pipeline is invalid",
     "header" : {
       "addStage": "Add Stage",
@@ -161,6 +161,7 @@
       "displayDensity": "Display density:",
       "emptyAlerts": "It’s all good! You don’t have any new alerts.",
       "finishingPipeline": "Finishing Pipeline...",
+      "importPipeline": "Import Pipeline",
       "issues": "Issues",
       "more": "More",
       "nextBatch": "Preview Next Batch",
