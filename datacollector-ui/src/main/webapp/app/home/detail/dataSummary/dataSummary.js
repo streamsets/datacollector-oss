@@ -161,6 +161,7 @@ angular
   })
   .controller('DataSummarySamplingController', function ($scope, api) {
     angular.extend($scope, {
+      sampledRecordsType: 'matched',
       showRecordsLoading: false,
       samplingRecords: [],
 
@@ -173,6 +174,17 @@ angular
           return '<span class="condition-matched"> Record' + (index + 1) + ' ( A Match ) </span>';
         } else {
           return '<span class="condition-not-matched"> Record' + (index + 1) + ' ( Not A Match ) </span>';
+        }
+      },
+
+      filterSampledRecords: function(sampledRecord) {
+        switch($scope.sampledRecordsType) {
+          case 'matched':
+            return sampledRecord.matchedCondition === true;
+          case 'notMatched':
+            return sampledRecord.matchedCondition === false;
+          case 'all':
+            return true;
         }
       }
     });

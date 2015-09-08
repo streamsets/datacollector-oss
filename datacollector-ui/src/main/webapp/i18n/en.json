@@ -243,8 +243,14 @@
       "custom": "Custom",
       "dataRules": "Data Rules",
       "dataSummaryTab": {
+        "allSampledRecords": "All",
+        "allSampledRecordsTooltip": "Show All Sampled Records",
+        "matchedSampledRecords": "Matched",
+        "matchedSampledRecordsTooltip": "Show only Sampled Records which matched the condition",
+        "meterGraphPostFix": " (records/sec)",
         "noRulesMessage": "No active Data Rules for this stream. Add Rules in Data Rules Tab for Inspecting Data.",
-        "meterGraphPostFix": " (records/sec)"
+        "notMatchedSampledRecords": "Not Matched",
+        "notMatchedSampledRecordsTooltip": "Show only Sampled Records which didn't matched the condition"
       },
       "definitionsJSONData": "Definitions",
       "general": "General",

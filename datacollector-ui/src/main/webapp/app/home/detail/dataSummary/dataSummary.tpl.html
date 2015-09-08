@@ -51,16 +51,37 @@
               <thead>
               <tr>
                 <th class="col-md-4">
-                  <span translate="global.form.sampleRecords">Sample Records</span>
-                  <i class="fa fa-refresh pointer icon-button"
-                     ng-click="refreshSamplingRecords()"
-                     tooltip-placement="right"
-                     tooltip="{{'global.form.refresh' | translate}}"></i>
+                  <div class="pull-left">
+                    <span translate="global.form.sampleRecords">Sample Records</span>
+                    <i class="fa fa-refresh pointer icon-button"
+                       ng-click="refreshSamplingRecords()"
+                       tooltip-placement="right"
+                       tooltip="{{'global.form.refresh' | translate}}"></i>
+                  </div>
+
+                  <div class="pull-right btn-group toggle-toolbar">
+                    <label class="btn btn-default btn-sm" ng-model="sampledRecordsType"
+                           tooltip-placement="bottom"
+                           tooltip-append-to-body="true"
+                           tooltip="{{'home.detailPane.dataSummaryTab.allSampledRecordsTooltip' | translate}}"
+                           btn-radio="'all'">{{'home.detailPane.dataSummaryTab.allSampledRecords' | translate}}</label>
+                    <label class="btn btn-default btn-sm" ng-model="sampledRecordsType"
+                           tooltip-placement="bottom"
+                           tooltip-append-to-body="true"
+                           tooltip="{{'home.detailPane.dataSummaryTab.matchedSampledRecordsTooltip' | translate}}"
+                           btn-radio="'matched'">{{'home.detailPane.dataSummaryTab.matchedSampledRecords' | translate}}</label>
+                    <label class="btn btn-default btn-sm" ng-model="sampledRecordsType"
+                           tooltip-placement="bottom"
+                           tooltip-append-to-body="true"
+                           tooltip="{{'home.detailPane.dataSummaryTab.notMatchedSampledRecordsTooltip' | translate}}"
+                           btn-radio="'notMatched'">{{'home.detailPane.dataSummaryTab.notMatchedSampledRecords' | translate}}</label>
+                  </div>
+
                 </th>
               </tr>
               </thead>
               <tbody ng-hide="showBadRecordsLoading">
-              <tr ng-repeat="sampledRecord in samplingRecords">
+              <tr ng-repeat="sampledRecord in filteredSampledRecords = (samplingRecords | filter: filterSampledRecords)">
                 <td>
                   <record-tree
                     record="sampledRecord.record"
@@ -72,7 +93,7 @@
                 </td>
               </tr>
 
-              <tr ng-if="samplingRecords.length === 0">
+              <tr ng-if="filteredSampledRecords.length === 0">
                 <td class="no-records text-center"
                     translate="home.previewPane.noRecords">No Records to view.</td>
               </tr>
