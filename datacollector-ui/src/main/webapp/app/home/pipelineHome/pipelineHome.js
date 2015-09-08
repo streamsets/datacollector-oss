@@ -63,7 +63,11 @@ angular
       currArchivePos = null,
       archiveOp = false,
       reloadingNew = false,
-      retryCountDownTimer;
+      retryCountDownTimer,
+      infoNameWatchListener,
+      pipelineStatusWatchListener,
+      metricsWatchListener,
+      errorsWatchListener;
 
     angular.extend($scope, {
       _: _,
@@ -1502,12 +1506,12 @@ angular
       });
     });
 
-    $scope.$watch('pipelineConfig.info.name', function() {
+    infoNameWatchListener = $scope.$watch('pipelineConfig.info.name', function() {
       $scope.isPipelineRunning = derivePipelineRunning();
       $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
     });
 
-    $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]', function() {
+    pipelineStatusWatchListener = $rootScope.$watch('common.pipelineStatusMap["' + routeParamPipelineName + '"]', function() {
       var oldActiveConfigStatus = $scope.activeConfigStatus || {};
 
       $scope.isPipelineRunning = derivePipelineRunning();
@@ -1533,7 +1537,7 @@ angular
 
     });
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
+    metricsWatchListener = $rootScope.$watch('common.pipelineMetrics', function() {
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
       if(pipelineStatus && config && pipelineStatus.name === config.info.name &&
@@ -1551,7 +1555,7 @@ angular
       }
     });
 
-    $rootScope.$watch('common.errors', function() {
+    errorsWatchListener = $rootScope.$watch('common.errors', function() {
       var commonErrors = $rootScope.common.errors;
       if(commonErrors && commonErrors.length && commonErrors[0].pipelineIssues) {
         $scope.refreshGraph();
@@ -1577,6 +1581,24 @@ angular
         }
       } else {
         $timeout.cancel(pipelineMetricsTimer);
+      }
+
+      //Clear all $watch by calling de registration function
+
+      if(infoNameWatchListener) {
+        infoNameWatchListener();
+      }
+
+      if(pipelineStatusWatchListener) {
+        pipelineStatusWatchListener();
+      }
+
+      if(metricsWatchListener) {
+        metricsWatchListener();
+      }
+
+      if(errorsWatchListener) {
+        errorsWatchListener();
       }
 
       destroyed = true;
