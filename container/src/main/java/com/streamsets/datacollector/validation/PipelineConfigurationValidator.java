@@ -33,10 +33,10 @@ import com.streamsets.datacollector.configupgrade.PipelineConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.JvmEL;
-import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.record.PathElement;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -50,7 +50,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.impl.TextUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.StringEL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -464,7 +463,7 @@ public class PipelineConfigurationValidator {
       for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
-        if (stageDef.hasPreconditions() && confDef.getName().equals(ConfigDefinition.PRECONDITIONS)) {
+        if (stageDef.hasPreconditions() && confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
           preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
         }
       }
@@ -537,8 +536,7 @@ public class PipelineConfigurationValidator {
           ELVariables elVars = new ELVariables();
           RecordEL.setRecordInContext(elVars, PRECONDITION_RECORD);
           try {
-            ELEval elEval = new ELEvaluator(ConfigDefinition.PRECONDITIONS, constants,
-                                            RecordEL.class, StringEL.class, RuntimeEL.class);
+            ELEval elEval = new ELEvaluator(StageConfigBean.STAGE_PRECONDITIONS_CONFIG, constants, confDef.getElDefs());
             elEval.eval(elVars, precondition, Boolean.class);
           } catch (ELEvalException ex) {
             issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),

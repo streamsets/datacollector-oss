@@ -17,7 +17,6 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ChooserValues;
@@ -29,18 +28,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Captures attributes related to individual configuration options
  */
 public class ConfigDefinition {
-
-  public static final String REQUIRED_FIELDS = "stageRequiredFields";
-  public static final String ON_RECORD_ERROR = "stageOnRecordError";
-  public static final String PRECONDITIONS = "stageRecordPreconditions";
-  public static final Set<String> SYSTEM_CONFIGS = ImmutableSet.of(REQUIRED_FIELDS, PRECONDITIONS, ON_RECORD_ERROR);
-
   private final Field configField;
   private final String name;
   private final ConfigDef.Type type;
@@ -96,36 +88,67 @@ public class ConfigDefinition {
     this.dependsOn = dependsOn;
     this.triggeredByValues = triggeredByValues;
     this.displayPosition = displayPosition;
-    this.elFunctionDefinitions = elFunctionDefinitions;
+
+    this.elDefs = new ArrayList<>();
+    this.elDefs.addAll(elDefs);
+    this.elFunctionDefinitions = new ArrayList<>();
     elFunctionDefinitionsIdx = new ArrayList<>();
     for (ElFunctionDefinition f : elFunctionDefinitions) {
-      elFunctionDefinitionsIdx.add(f.getIndex());
+      addElFunction(f);
     }
-    this.elConstantDefinitions = elConstantDefinitions;
+    this.elConstantDefinitions = new ArrayList<>();
     elConstantDefinitionsIdx = new ArrayList<>();
     for (ElConstantDefinition c : elConstantDefinitions) {
-      elConstantDefinitionsIdx.add(c.getIndex());
+      addElConstant(c);
     }
     this.min = min;
     this.max = max;
     this.mode = mode;
     this.lines = lines;
-    this.elDefs = elDefs;
     this.dependsOnMap = dependsOnMap;
     this.evaluation = evaluation;
   }
 
   public void addAutoELDefinitions(StageLibraryDefinition libraryDef) {
-    elDefs = new ArrayList<>(elDefs);
-    elDefs.addAll(libraryDef.getElDefs());
-    elFunctionDefinitions = new ArrayList<>(elFunctionDefinitions);
-    elFunctionDefinitions.addAll(libraryDef.getElFunctionDefinitions());
-    elFunctionDefinitionsIdx = new ArrayList<>(elFunctionDefinitionsIdx);
-    elFunctionDefinitionsIdx.addAll(libraryDef.getElFunctionDefinitionsIdx());
-    elConstantDefinitions = new ArrayList<>(elConstantDefinitions);
-    elConstantDefinitions.addAll(libraryDef.getElConstantDefinitions());
-    elConstantDefinitionsIdx = new ArrayList<>(elConstantDefinitionsIdx);
-    elConstantDefinitionsIdx.addAll(libraryDef.getElConstantDefinitionsIdx());
+    if (this.getType() != ConfigDef.Type.MODEL || this.getModel().getModelType() != ModelType.LIST_BEAN) {
+
+      for (Class klass : libraryDef.getElDefs()) {
+        addElDef(klass);
+      }
+
+      for (ElFunctionDefinition f : libraryDef.getElFunctionDefinitions()) {
+        addElFunction(f);
+      }
+
+      for (ElConstantDefinition c : libraryDef.getElConstantDefinitions()) {
+        addElConstant(c);
+      }
+
+    } else {
+      for (ConfigDefinition configDef : this.getModel().getConfigDefinitions()) {
+        configDef.addAutoELDefinitions(libraryDef);
+      }
+    }
+  }
+
+  private void addElDef(Class klass) {
+    if (!elDefs.contains(klass)) {
+      elDefs.add(klass);
+    }
+  }
+
+  private void addElFunction(ElFunctionDefinition elF) {
+    if (!elFunctionDefinitionsIdx.contains(elF.getIndex())) {
+      elFunctionDefinitions.add(elF);
+      elFunctionDefinitionsIdx.add(elF.getIndex());
+    }
+  }
+
+  private void addElConstant(ElConstantDefinition elC) {
+    if (!elConstantDefinitionsIdx.contains(elC.getIndex())) {
+      elConstantDefinitions.add(elC);
+      elConstantDefinitionsIdx.add(elC.getIndex());
+    }
   }
 
   public Field getConfigField() {

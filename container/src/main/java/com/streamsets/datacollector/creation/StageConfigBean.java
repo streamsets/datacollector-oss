@@ -18,6 +18,7 @@
 package com.streamsets.datacollector.creation;
 
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
@@ -29,6 +30,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.List;
+import java.util.Set;
 
 // we are using the annotation for reference purposes only.
 // the annotation processor does not work on this maven project
@@ -36,10 +38,11 @@ import java.util.List;
 @GenerateResourceBundle
 public class StageConfigBean {
 
+  public static final String STAGE_ON_RECORD_ERROR_CONFIG = "stageOnRecordError";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
+      defaultValue= "TO_ERROR",
       label = "On Record Error",
       description = "Action to take with records sent to error",
       displayPosition = 30,
@@ -48,8 +51,9 @@ public class StageConfigBean {
   @ValueChooserModel(OnRecordErrorChooserValues.class)
   public OnRecordError stageOnRecordError;
 
+  public static final String STAGE_REQUIRED_FIELDS_CONFIG = "stageRequiredFields";
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
       label = "Required Fields",
@@ -60,8 +64,9 @@ public class StageConfigBean {
   @FieldSelectorModel
   public List<String> stageRequiredFields;
 
+  public static final String STAGE_PRECONDITIONS_CONFIG = "stageRecordPreconditions";
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.LIST,
       defaultValue="",
       label = "Preconditions",
@@ -72,5 +77,8 @@ public class StageConfigBean {
       elDefs = { RecordEL.class, StringEL.class, RuntimeEL.class }
   )
   public List<String> stageRecordPreconditions;
+
+  public static final Set<String> CONFIGS = ImmutableSet.of(STAGE_ON_RECORD_ERROR_CONFIG, STAGE_PRECONDITIONS_CONFIG,
+                                                            STAGE_REQUIRED_FIELDS_CONFIG);
 
 }

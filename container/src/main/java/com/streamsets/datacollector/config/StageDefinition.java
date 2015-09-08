@@ -368,7 +368,7 @@ public class StageDefinition {
     // stage configs
     List<ConfigDefinition> configDefs = new ArrayList<>();
     for (ConfigDefinition configDef : getConfigDefinitions()) {
-      if (ConfigDefinition.SYSTEM_CONFIGS.contains(configDef.getName())) {
+      if (StageConfigBean.CONFIGS.contains(configDef.getName())) {
         configDefs.add(configDef.localize(getClass().getClassLoader(), SYSTEM_CONFIGS_RB));
       } else {
         configDefs.add(configDef.localize(classLoader, rbName));

@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.CommonError;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import javax.servlet.jsp.el.FunctionMapper;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ELEvaluator extends ELEval {
-
+  private static final Logger LOG = LoggerFactory.getLogger(ELEvaluator.class);
   private final String configName;
   private final Map<String, Object> constants;
   private final Map<String, Method> functions;
@@ -45,6 +47,10 @@ public class ELEvaluator extends ELEval {
 
   // ExpressionEvaluatorImpl can be used as a singleton
   private static final ExpressionEvaluatorImpl EVALUATOR = new ExpressionEvaluatorImpl();
+
+  public ELEvaluator(String configName, Map<String, Object> constants, List<Class> elFuncConstDefClasses) {
+    this(configName, constants, elFuncConstDefClasses.toArray(new Class[elFuncConstDefClasses.size()]));
+  }
 
   public ELEvaluator(String configName, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
@@ -86,6 +92,7 @@ public class ELEvaluator extends ELEval {
     try {
       EVALUATOR.parseExpressionString(el);
     } catch (ELException e) {
+      LOG.debug("Error parsering EL '{}': {}", el, e.toString(), e);
       throw new ELEvalException(CommonError.CMN_0105, el, e.toString(), e);
     }
   }
@@ -93,7 +100,6 @@ public class ELEvaluator extends ELEval {
   @Override
   @SuppressWarnings("unchecked")
   public <T> T evaluate (final ELVars vars, String expression, Class<T> returnType) throws ELEvalException {
-
     VariableResolver variableResolver = new VariableResolver() {
 
       @Override
@@ -112,6 +118,7 @@ public class ELEvaluator extends ELEval {
     try {
       return (T) EVALUATOR.evaluate(expression, returnType, variableResolver, functionMapper);
     } catch (ELException e) {
+      LOG.debug("Error valuating EL '{}': {}", expression, e.toString(), e);
       Throwable t = e;
       if(e.getRootCause() != null) {
         t = e.getRootCause();
