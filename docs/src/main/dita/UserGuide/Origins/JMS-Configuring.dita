@@ -39,19 +39,33 @@
                             <tbody>
                                 <row>
                                     <entry>JMS Initial Context Factory</entry>
-                                    <entry>JMS initial context factory. </entry>
+                                    <entry>JMS initial context factory. <p>For example, for Apache
+                                            ActiveMQ you might use:
+                                                <codeph>org.apache.activemq.jndi.ActiveMQInitialContextFactory</codeph>.
+                                            </p><p>Or for Oracle Weblogic, you might use:
+                                                <codeph>weblogic.jndi.WLInitialContextFactory</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>JNDI Connection Factory</entry>
-                                    <entry>JNDI connection factory.</entry>
+                                    <entry>JNDI connection factory.<p>For example, for ActiveMQ, you
+                                            might use: <codeph>ConnectionFactory</codeph>.</p><p>For
+                                            Weblogic, you might use:
+                                                <codeph>jms/ConnectionFactory</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>JMS Provider URL</entry>
-                                    <entry>URL for the JMS provider.</entry>
+                                    <entry>URL for the JMS provider.<p>For example, for ActiveMQ,
+                                            you might use:
+                                                <codeph>tcp://localhost:&lt;portno></codeph>.</p><p>For
+                                            Weblogic, you might use:
+                                                <codeph>t3/localhost:&lt;portno></codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>JMS Destination Name</entry>
-                                    <entry>JMS queue or topic name. </entry>
+                                    <entry>JMS queue or topic name. <p>For example, for ActiveMQ,
+                                            you might use:<codeph>&lt;queue
+                                            name></codeph>.</p><p>For Weblogic, you might use:
+                                                <codeph>jms/Queue</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>JMS Message Selector</entry>
@@ -87,7 +101,6 @@
                                                   scale="11" id="image_wjh_ycl_br"/></xref></li>
                                             <li>Log</li>
                                             <li>Avro</li>
-                                            <li>Binary</li>
                                         </ul></entry>
                                 </row>
                                 <row
@@ -169,9 +182,6 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
-                <cmd/>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
                 <cmd/>
             </step>
@@ -179,6 +189,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/AvroProps">
                 <cmd/>
             </step>
         </steps>

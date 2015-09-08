@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_tm4_pbg_ht">
+ <title>Java Security Manager</title>
+ <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+  /> includes a Java Security Manager that is enabled by default. </shortdesc>
+ <conbody>
+  <p>The Java Security Manager restricts the runtime permissions of user libraries. This allows
+   administrators to control what user libraries do on production systems. For example, by default,
+   user libraries cannot call out to network resources and potentially cause denial of service
+   attacked.</p>
+  <p>The security policy is defined in the <codeph>sdc-security.policy</codeph> file located in the
+    <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   configuration directory: &lt;SDCinstalldir>/etc. The file syntax is <xref
+    href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html"
+    format="html" scope="external">java standard</xref>. </p>
+  <p>To disable the Java Security Manager, edit the SDC_SECURITY_MANAGER_ENABLED flag in the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> environment
+   file. </p>
+ </conbody>
+</concept>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_cx3_lhh_ht">
+    <title>Configuring a JDBC Producer</title>
+    <shortdesc>Information forthcoming...</shortdesc>
+    <taskbody>
+        <context>
+            <p>You can access the latest documentation on the StreamSets website: <xref
+                    href="https://www.streamsets.com/documentation/current/DCUserGuide/help/index.html"
+                    format="html" scope="external"/></p>
+            <p>You can also configure the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to use the latest documentation as the context-sensitive help. This requires an
+                internet connection and a login. </p>
+        </context>
+        <steps id="steps_s3k_5hh_ht">
+            <step>
+                <cmd>In the top right corner of the Data Collector console, click <menucascade>
+                        <uicontrol>Help</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>.</cmd>
+            </step>
+            <step>
+                <cmd>For the <uicontrol>Help</uicontrol> property, select <uicontrol>Hosted
+                        Help</uicontrol>, and then click <uicontrol>Done</uicontrol>. </cmd>
+                <stepresult>When you click the context-sensitive help icon, the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> launches hosted help with the latest documentation after you log in.
+                </stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

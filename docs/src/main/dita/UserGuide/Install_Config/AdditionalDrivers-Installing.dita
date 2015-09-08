@@ -3,25 +3,26 @@
 <task id="task_idl_hqw_ft">
     <title>Installing Additional Drivers</title>
     <taskbody>
-        <context><indexterm>additional drivers<indexterm>installing</indexterm></indexterm>To
-            install additional drivers for a stage, perform the following steps: <ol
-                id="ol_f3s_hrw_ft">
+        <context><indexterm>additional
+                    drivers<indexterm>installing</indexterm></indexterm><indexterm>stages<indexterm>installing
+                    additional drivers</indexterm></indexterm>To install additional drivers for a
+            stage, perform the following steps: <ol id="ol_f3s_hrw_ft">
                 <li>Create a local directory external to the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> for the drivers. <p>Use a directory external to the <ph
+                    /> installation directory for the drivers. Use an external directory to enable
+                    use of the drivers after upgrading the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />.<p>For example, if you installed the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> to enable continued use of the drivers after upgrades. </p><p>For
-                        example, if you installed the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> in the following directory: <codeblock>/opts/sdc/</codeblock></p><p>you
+                        /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
                         might create the driver directory at:
-                        <codeblock>/opts/sdc-extras</codeblock></p></li>
+                        <codeblock>/opt/sdc-extras</codeblock></p></li>
                 <li>Copy the drivers to the directory. Use a directory structure for each set of
                     drivers based on the stage library name and directory structure as follows: <p>
                         <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
-                    </p><p>For example to install drivers for JMS in an opts/sdc-extras directory,
+                    </p><p>For example to install drivers for JMS in an opt/sdc-extras directory,
                         you would copy them to the following directory:
-                        <codeblock>/opts/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
+                        <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
                 <li>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> environment file, sdc-env.sh or sdcd-env.sh, add the
@@ -29,9 +30,26 @@
                     directory, as
                         follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = &lt;driver directory></codeblock><p>For
                         example:
-                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</codeblock></li>
-                <li>&lt;&lt;security policy?>><draft-comment author="Loretta">add the security
-                        policy info</draft-comment></li>
+                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opt/sdc-extras/</codeblock></li>
+                <li>When using the Java Security Manager, which is enabled by default, update the
+                        <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> security policy to include the driver directory as follows:<ul
+                        id="ul_gpf_2dg_ht">
+                        <li>In the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> configuration directory, edit the security
+                            policy:<codeblock>&lt;SDCinstalldir>/etc/sdc-security.policy</codeblock></li>
+                        <li>Add the following lines to the file:
+                            <codeblock>// user-defined additional driver directory
+grant codebase "file://&lt;driver directory>-" {
+  permission java.security.AllPermission;
+};</codeblock></li>
+                    </ul><p>For example:
+                        <codeblock>// user-defined additional driver directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</codeblock></p></li>
                 <li>Restart the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</li>

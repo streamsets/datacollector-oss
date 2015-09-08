@@ -206,6 +206,30 @@
 
 </div>
 </div>
+<div class="topic concept nested1" id="concept_tm4_pbg_ht">
+ <h2 class="title topictitle2">Java Security Manager</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span> includes a Java Security Manager that is enabled by default. </p>
+
+  <p class="p">The Java Security Manager restricts the runtime permissions of user libraries. This allows
+   administrators to control what user libraries do on production systems. For example, by default,
+   user libraries cannot call out to network resources and potentially cause denial of service
+   attacked.</p>
+
+  <p class="p">The security policy is defined in the <samp class="ph codeph">sdc-security.policy</samp> file located in the
+    <span class="ph">Data
+                  Collector</span>
+   configuration directory: &lt;SDCinstalldir&gt;/etc. The file syntax is <a class="xref" href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/PolicyFiles.html" target="_blank">java standard</a>. </p>
+
+  <p class="p">To disable the Java Security Manager, edit the SDC_SECURITY_MANAGER_ENABLED flag in the <span class="ph">Data
+                  Collector</span> environment
+   file. </p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_ugz_41n_qr">
     <h2 class="title topictitle2">Configuring the Data Collector Environment</h2>
 
@@ -243,9 +267,9 @@ The <span class="ph">Data
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="43.75%" id="d22371e413">Environment Variables</th>
+                                <th class="entry" valign="top" width="43.75%" id="d22829e452">Environment Variables</th>
 
-                                <th class="entry" valign="top" width="56.25%" id="d22371e416">Description</th>
+                                <th class="entry" valign="top" width="56.25%" id="d22829e455">Description</th>
 
                             </tr>
 
@@ -253,18 +277,18 @@ The <span class="ph">Data
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d22371e413 ">SDC_ROOT_CLASSPATH</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d22829e452 ">SDC_ROOT_CLASSPATH</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d22371e416 ">Defines the path to jar files to be added to the Data
+                                <td class="entry" valign="top" width="56.25%" headers="d22829e455 ">Defines the path to jar files to be added to the Data
                                     Collector root classloader. Use for components that must be in
                                     the root classloader, such as Snappy. </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d22371e413 ">SDC_JAVA_OPTS</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d22829e452 ">SDC_JAVA_OPTS</td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d22371e416 ">Additional Java options for the <span class="ph">Data
+                                <td class="entry" valign="top" width="56.25%" headers="d22829e455 ">Additional Java options for the <span class="ph">Data
                   Collector</span>. <p class="p">By default, the Xmx and Xms properties set the <span class="ph">Data
                   Collector</span> Java heap size to 1024 MB. </p>
 <p class="p">By default, XX:PermSize
@@ -276,9 +300,11 @@ The <span class="ph">Data
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="43.75%" headers="d22371e413 ">SDC_SECURITY_MANAGER_ENABLED</td>
+                                <td class="entry" valign="top" width="43.75%" headers="d22829e452 ">SDC_SECURITY_MANAGER_ENABLED </td>
 
-                                <td class="entry" valign="top" width="56.25%" headers="d22371e416 ">Default is True. Do not change this property. </td>
+                                <td class="entry" valign="top" width="56.25%" headers="d22829e455 ">When enabled, the Java Security Manager restricts the runtime
+                                    permissions of user libraries. <p class="p">Default is true. </p>
+</td>
 
                             </tr>
 

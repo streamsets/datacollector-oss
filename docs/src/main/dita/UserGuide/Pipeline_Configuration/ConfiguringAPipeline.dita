@@ -89,7 +89,13 @@
                                                 ><image href="../Graphics/icon_moreInfo.png"
                                                 scale="10" id="image_wms_qvz_2t"/>
                                         </xref></entry>
-                                    <entry>Retries the pipeline upon error. Use -1 to retry
+                                    <entry>Retries the pipeline upon error. <p>This option is not
+                                            supported for cluster mode pipelines at this time.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Retry Attempts</entry>
+                                    <entry>Number of retries attempted. Use -1 to retry
                                         indefinitely. <p>The wait time between retries starts at 15
                                             seconds and doubles until reaching five
                                         minutes.</p></entry>

@@ -5,10 +5,10 @@
  <shortdesc>You can install additional drivers for stages. </shortdesc>
  <conbody>
   <p><indexterm>drivers<indexterm>installing additional for stages</indexterm></indexterm>Before you
-   use the JMS Consumer and JDBC Consumer origins, you need to install drivers for the
-   implementation that you want to use. For example, to use the JMS Consumer to read from Oracle,
-   install the Oracle JMS drivers. </p>
-  <p>Drivers for other stages are optional. For example, you can install custom classes for the
-   JavaScript or Jython Evaluators. </p>
+   use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to
+   install drivers for the implementation that you want to use. For example, to use the JDBC
+   Consumer or JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
+  <p>Additional drivers for other stages are optional. For example, you can install custom classes
+   for the JavaScript or Jython Evaluators. </p>
  </conbody>
 </concept>

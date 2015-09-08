@@ -21,6 +21,8 @@
   <p><indexterm>origins<indexterm>overview</indexterm></indexterm>You can use different origins
       based on the execution mode of the pipeline. </p>
     <p>In standalone pipelines, you can use the following origins: <ul id="ul_mxz_jxm_jq">
+        <li>Amazon S3 - Reads data from Amazon S3.<draft-comment author="Loretta">get back to
+            this</draft-comment></li>
         <li>Directory - Reads fully-written files from a directory. </li>
         <li>File Tail - Reads lines of data from an active file after reading related archived files
           in the directory. </li>

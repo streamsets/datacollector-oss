@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can install additional drivers for stages. Before you use the JMS Consumer and JDBC Consumer origins, you need to install drivers for the implementation that you want to use. For example, to use ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Additional Drivers"></meta><meta name="abstract" content="You can install additional drivers for stages."></meta><meta name="description" content="You can install additional drivers for stages."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pdv_qlw_ft"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Additional Drivers</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can install additional drivers for stages. Before you use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to install drivers for the implementation that you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Additional Drivers"></meta><meta name="abstract" content="You can install additional drivers for stages."></meta><meta name="description" content="You can install additional drivers for stages."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pdv_qlw_ft"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Additional Drivers</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -17,12 +17,12 @@
  <div class="body conbody"><p class="shortdesc">You can install additional drivers for stages. </p>
 
   <p class="p">Before you
-   use the JMS Consumer and JDBC Consumer origins, you need to install drivers for the
-   implementation that you want to use. For example, to use the JMS Consumer to read from Oracle,
-   install the Oracle JMS drivers. </p>
+   use the JMS Consumer and JDBC Consumer origins or the JDBC Producer destination, you need to
+   install drivers for the implementation that you want to use. For example, to use the JDBC
+   Consumer or JDBC Producer with Oracle, install the Oracle JDBC drivers.</p>
 
-  <p class="p">Drivers for other stages are optional. For example, you can install custom classes for the
-   JavaScript or Jython Evaluators. </p>
+  <p class="p">Additional drivers for other stages are optional. For example, you can install custom classes
+   for the JavaScript or Jython Evaluators. </p>
 
  </div>
 
@@ -31,18 +31,17 @@
     <h2 class="title topictitle2">Installing Additional Drivers</h2>
 
     <div class="body taskbody">
-        <div class="section context">To
-            install additional drivers for a stage, perform the following steps: <ol class="ol" id="task_idl_hqw_ft__ol_f3s_hrw_ft">
+        <div class="section context">To install additional drivers for a
+            stage, perform the following steps: <ol class="ol" id="task_idl_hqw_ft__ol_f3s_hrw_ft">
                 <li class="li">Create a local directory external to the <span class="ph">Data
-                  Collector</span> for the drivers. <p class="p">Use a directory external to the <span class="ph">Data
-                  Collector</span> to enable continued use of the drivers after upgrades. </p>
-<div class="p">For
-                        example, if you installed the <span class="ph">Data
-                  Collector</span> in the following directory: <pre class="pre codeblock">/opts/sdc/</pre>
+                  Collector</span> installation directory for the drivers. Use an external directory to enable
+                    use of the drivers after upgrading the <span class="ph">Data
+                  Collector</span>.<div class="p">For example, if you installed the <span class="ph">Data
+                  Collector</span> in the following directory: <pre class="pre codeblock">/opt/sdc/</pre>
 </div>
 <div class="p">you
                         might create the driver directory at:
-                        <pre class="pre codeblock">/opts/sdc-extras</pre>
+                        <pre class="pre codeblock">/opt/sdc-extras</pre>
 </div>
 </li>
 
@@ -51,9 +50,9 @@
                         <pre class="pre codeblock">&lt;stage library name&gt;/lib/&lt;driver name&gt;</pre>
 
                     </div>
-<div class="p">For example to install drivers for JMS in an opts/sdc-extras directory,
+<div class="p">For example to install drivers for JMS in an opt/sdc-extras directory,
                         you would copy them to the following directory:
-                        <pre class="pre codeblock">/opts/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
+                        <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
 </div>
 </li>
 
@@ -65,7 +64,31 @@
 <p class="p">For
                         example:
                     </p>
-<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = /opts/sdc-extras/</pre>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = /opt/sdc-extras/</pre>
+</li>
+
+                <li class="li">When using the Java Security Manager, which is enabled by default, update the
+                        <span class="ph">Data
+                  Collector</span> security policy to include the driver directory as follows:<ul class="ul" id="task_idl_hqw_ft__ul_gpf_2dg_ht">
+                        <li class="li">In the <span class="ph">Data
+                  Collector</span> configuration directory, edit the security
+                            policy:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/etc/sdc-security.policy</pre>
+</li>
+
+                        <li class="li">Add the following lines to the file:
+                            <pre class="pre codeblock">// user-defined additional driver directory
+grant codebase "file://&lt;driver directory&gt;-" {
+  permission java.security.AllPermission;
+};</pre>
+</li>
+
+                    </ul>
+<div class="p">For example:
+                        <pre class="pre codeblock">// user-defined additional driver directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</pre>
+</div>
 </li>
 
                 <li class="li">Restart the <span class="ph">Data
