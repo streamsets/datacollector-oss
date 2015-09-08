@@ -23,9 +23,22 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
-          <dt/>
-          <dd/>
+        <dlentry>
+          <dt>JSON</dt>
+          <dd>Generates a record for each JSON object. You can process JSON files that include
+            multiple JSON objects or a single JSON array.</dd>
+          <dd>When an object exceeds the maximum object length defined for the origin, the origin
+            cannot continue processing data in the file. Records already processed from the file are
+            passed to the pipeline. The behavior of the origin is then based on the error handling
+            configured for the stage:<ul id="ul_sjn_fxf_ht">
+              <li>Discard - The origin continues processing with the next file, leaving the
+                partially-processed file in the directory. </li>
+              <li>To Error - The origin continues processing with the next file. If a
+                post-processing error directory is configured for the stage, the origin moves the
+                partially-processed file to the error directory. Otherwise, it leaves the file in
+                the directory.</li>
+              <li>Stop Pipeline - The origin stops the pipeline. </li>
+            </ul></dd>
         </dlentry>
         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
           <dt/>

@@ -30,6 +30,7 @@
         <li>13 - Carriage return</li>
       </ul></p>
     <p>You can use the following stages to remove control characters: <ul id="ul_hm5_nlm_js">
+        <li>Amazon S3 origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
         <li>Kafka Consumer origin</li>

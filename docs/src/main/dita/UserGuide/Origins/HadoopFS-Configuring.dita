@@ -190,7 +190,11 @@
                             <tbody>
                                 <row>
                                     <entry>Avro Reader Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
+                                    <entry>Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p>When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

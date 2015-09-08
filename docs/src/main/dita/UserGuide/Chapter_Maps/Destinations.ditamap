@@ -66,6 +66,18 @@
    <topicref href="../Destinations/HBase-HBaseProperties.dita"/>
    <topicref href="../Destinations/HBase-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/Hive.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/Hive-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/JDBCProducer.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/JDBCProducer-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/KProducer.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

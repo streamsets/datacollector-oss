@@ -48,6 +48,9 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldRemover-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/FieldRenamer.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/FieldRenamer-Configuring.dita"/></topicref>
   <topicref href="../Processors/FieldSplitter.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/FieldSplitter-Configuring.dita"/>

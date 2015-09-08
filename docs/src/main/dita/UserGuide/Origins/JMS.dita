@@ -15,16 +15,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rhh_4nj_dt">
  <title>JMS Consumer</title>
- <shortdesc>The JMS Consumer reads data from a Java Messaging Service (JMS). The JMS Consumer also
-  supports reading Advanced Message Queuing Protocol (AMQP) messages.</shortdesc>
+ <shortdesc>The JMS Consumer reads data from a Java Messaging Service (JMS). </shortdesc>
  <conbody>
   <p><indexterm>JMS Consumer
-     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>JMS
-     Consumer</indexterm></indexterm>When you configure a JMS Consumer, you configure the connection
-   information and the queue or topic name. You can optionally use JMS credentials and remove
-   control characters. You can also define a JMS message selector to specify the messages that the
-   origin reads. By default, the JMS Consumer reads all messages.</p>
-  <p>JMS stores the offset with the JMS server. You cannot reset the offset for the JMS
-      Consumer.</p>
+                    origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>JMS
+                    Consumer</indexterm></indexterm>Before you use the JMS Consumer, install the
+            drivers required for your JMS implementation.</p>
+        <p>When you configure a JMS Consumer, you configure the connection information and the queue
+            or topic name. You can optionally use JMS credentials and remove control characters. You
+            can also define a JMS message selector to specify the messages that the origin reads. By
+            default, the JMS Consumer reads all messages.</p>
+  <p>JMS stores the offset with the JMS server. You cannot use the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            reset the offset.<note>Advanced Message Queuing Protocol (AMQP) is an alternative
+                standard to JMS and any AMQP provider should also support JMS.</note></p>
  </conbody>
 </concept>

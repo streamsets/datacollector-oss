@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_bbf_2gg_ht">
+    <title>Installing JMS Drivers</title>
+    <shortdesc>Before you use the JMS Consumer, install the JMS drivers for the implementation that
+        you are using. </shortdesc>
+    <taskbody>
+        <context>
+            <p><indexterm>JMS Consumer<indexterm>installing drivers</indexterm></indexterm>For
+                example, to use the Oracle version of JMS, you need to install the Oracle JMS
+                drivers: <codeph>wljmsclient.jar</codeph> and <codeph>wlclient.jar</codeph>. Or to
+                use the ActiveMQ version, install all the ActiveMQ jars: activemq-all-*.jar.</p>
+            <p>For details on installing additional drivers, see <xref
+                    href="../Install_Config/AdditionalDrivers.dita#concept_pdv_qlw_ft"/>.</p>
+        </context>
+    </taskbody>
+</task>

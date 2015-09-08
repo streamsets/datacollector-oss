@@ -72,8 +72,9 @@
                                         </p><p>You can add any valid Java property.</p></entry>
                             </row>
                             <row>
-                                <entry>SDC_SECURITY_MANAGER_ENABLED</entry>
-                                <entry>Default is True. Do not change this property. </entry>
+                                <entry>SDC_SECURITY_MANAGER_ENABLED </entry>
+                                <entry>When enabled, the Java Security Manager restricts the runtime
+                                    permissions of user libraries. <p>Default is true. </p></entry>
                             </row>
                         </tbody>
                     </tgroup>

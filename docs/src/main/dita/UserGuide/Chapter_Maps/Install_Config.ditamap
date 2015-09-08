@@ -60,6 +60,7 @@
     <topicref href="../Install_Config/PermGenSize.dita"/>
     <topicref href="../Install_Config/EnablingJMXTools.dita"/>
    </topicref>
+   <topicref href="../Install_Config/JavaSecurityManager.dita"/>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>
   </topicref>

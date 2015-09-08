@@ -20,6 +20,10 @@
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
+  <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/AmazonS3-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Directory_FileProcessing.dita"/>
@@ -70,6 +74,7 @@
   </topicref>
   <topicref href="../Origins/JMS.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/JMS-InstallDrivers.dita"/>
    <topicref href="../Origins/JMS-DataFormats.dita">
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
