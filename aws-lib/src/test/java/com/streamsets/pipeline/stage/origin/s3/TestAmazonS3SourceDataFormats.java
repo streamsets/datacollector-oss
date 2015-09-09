@@ -120,6 +120,10 @@ public class TestAmazonS3SourceDataFormats {
     in = Resources.getResource("sample_log.log").openStream();
     putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_log.log", in, new ObjectMetadata());
     s3client.putObject(putObjectRequest);
+    //avro
+    in = Resources.getResource("sample_avro.avro").openStream();
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "sample_avro.avro", in, new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
 
 
     int count = 0;
@@ -129,7 +133,7 @@ public class TestAmazonS3SourceDataFormats {
         count++;
       }
     }
-    Assert.assertEquals(5, count);
+    Assert.assertEquals(6, count);
   }
 
   private static void createBucket(AmazonS3Client s3client, String bucketName) {
@@ -290,6 +294,35 @@ public class TestAmazonS3SourceDataFormats {
     }
   }
 
+  @Test
+  public void testProduceAvroFile() throws Exception {
+    AmazonS3Source source = createSourceAvro();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      int initialCount = getObjectCount(s3client, BUCKET_NAME);
+
+      List<Record> allRecords = new ArrayList<>();
+      String offset = null;
+      for(int i = 0; i < 5; i++) {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 1000, batchMaker);
+        Assert.assertNotNull(offset);
+
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        allRecords.addAll(records);
+      }
+
+      Assert.assertEquals(3, allRecords.size());
+      Assert.assertTrue(offset.contains("sample_avro.avro::-1"));
+      Assert.assertEquals(initialCount, getObjectCount(s3client, BUCKET_NAME));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private AmazonS3Source createSourceLog() {
 
     S3ConfigBean s3ConfigBean = new S3ConfigBean();
@@ -310,7 +343,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -346,7 +379,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.csv";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -378,7 +411,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.sdc";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -412,7 +445,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.xml";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -446,8 +479,41 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.json";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.accessKeyId = "foo";
+    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createSourceAvro() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.AVRO;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.avroSchema = null;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 128;
+    s3ConfigBean.s3FileConfig.filePattern = "*.avro";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);

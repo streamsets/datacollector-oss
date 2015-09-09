@@ -68,7 +68,11 @@ public class AvroDataParserFactory extends DataParserFactory {
 
   @Override
   public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
-    throw new UnsupportedOperationException();
+    try {
+      return new AvroDataStreamParser(getSettings().getContext(), schema, id, is, offset, getSettings().getOverRunLimit());
+    } catch (IOException e) {
+      throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
+    }
   }
 
   @Override

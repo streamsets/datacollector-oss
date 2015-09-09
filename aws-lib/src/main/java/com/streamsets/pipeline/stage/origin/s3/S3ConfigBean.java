@@ -65,12 +65,13 @@ public class S3ConfigBean {
   public S3Config s3Config;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+
+    s3FileConfig.init(context, issues);
     dataFormatConfig.init(context, dataFormat, Groups.S3.name(), s3FileConfig.overrunLimit, issues);
     basicConfig.init(context, issues, Groups.S3.name());
 
     //S3 source specific validation
     s3Config.init(context, issues, advancedConfig);
-    s3FileConfig.init(context, issues);
 
     if(errorConfig.errorFolder != null && !errorConfig.errorFolder.isEmpty() &&
       !errorConfig.errorFolder.endsWith(s3Config.delimiter)) {

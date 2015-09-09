@@ -404,7 +404,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = POSTPROCESS_FOLDER;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -442,7 +442,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = POSTPROCESS_FOLDER;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -480,7 +480,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = POSTPROCESS_FOLDER;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -520,7 +520,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = FOLDER_NAME;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -560,7 +560,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = "test-error-folder2/";
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();
@@ -600,7 +600,7 @@ public class TestAmazonS3Source {
     s3ConfigBean.postProcessingConfig.postProcessFolder = FOLDER_NAME;
 
     s3ConfigBean.s3FileConfig = new S3FileConfig();
-    s3ConfigBean.s3FileConfig.overrunLimit = 65*1000;
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*.log";
 
     s3ConfigBean.s3Config = new S3Config();

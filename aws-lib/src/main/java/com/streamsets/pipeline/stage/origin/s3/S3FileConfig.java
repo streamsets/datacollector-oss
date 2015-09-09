@@ -26,8 +26,8 @@ import java.util.List;
 
 public class S3FileConfig {
 
-  private static final int MIN_OVERRUN_LIMIT = 64 * 1000;
-  private static final int MAX_OVERRUN_LIMIT = 1000 * 1000;
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
+  private static final int MAX_OVERRUN_LIMIT = 1024 * 1024;
 
   @ConfigDef(
     required = true,
@@ -43,7 +43,7 @@ public class S3FileConfig {
     required = true,
     type = ConfigDef.Type.NUMBER,
     label = "Buffer Limit (KB)",
-    defaultValue = "64000",
+    defaultValue = "128",
     description = "Low level reader buffer limit to avoid out of Memory errors",
     displayPosition = 120,
     group = "#0",
@@ -57,6 +57,7 @@ public class S3FileConfig {
   }
 
   private void validate(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    overrunLimit = overrunLimit * 1024; //convert to KB
     if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit >= MAX_OVERRUN_LIMIT) {
       issues.add(context.createConfigIssue(Groups.S3.name(), "overrunLimit", Errors.S3_SPOOLDIR_04));
     }
