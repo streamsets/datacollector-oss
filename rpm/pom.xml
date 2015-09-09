@@ -23,8 +23,8 @@
   <properties>
     <sdc.user>sdc</sdc.user>
     <sdc.group>sdc</sdc.group>
-    <sdc.dir>/opt/sdc</sdc.dir>
-    <sdc.distroot>${basedir}/../dist/target/streamsets-datacollector-${project.version}</sdc.distroot>
+    <sdc.dir>/opt/streamsets-datacollector</sdc.dir>
+    <sdc.distroot>${basedir}/../dist/target/streamsets-datacollector-${project.version}/streamsets-datacollector-${project.version}</sdc.distroot>
   </properties>
 
   <dependencies>
@@ -68,7 +68,6 @@
                 <defineStatement>service_user ${sdc.user}</defineStatement>
                 <defineStatement>service_group ${sdc.group}</defineStatement>
                 <defineStatement>install_dir ${sdc.dir}</defineStatement>
-                <defineStatement>sdc_dist ${sdc.dir}/streamsets-datacollector-${project.version}</defineStatement>
               </defineStatements>
               <mappings>
                 <mapping>
@@ -80,67 +79,67 @@
                     <source>
                       <location>${sdc.distroot}</location>
                       <excludes>
-                        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/user-libs/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/etc/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/bin/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/libexec/*</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/initd/sdcd</exclude>
+                        <exclude>streamsets-libs/**</exclude>
+                        <exclude>user-libs/**</exclude>
+                        <exclude>etc/**</exclude>
+                        <exclude>bin/**</exclude>
+                        <exclude>libexec/*</exclude>
+                        <exclude>initd/sdcd</exclude>
                       </excludes>
                     </source>
                   </sources>
                 </mapping>
                 <!--Empty user-libs-->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/user-libs</directory>
+                  <directory>${sdc.dir}/user-libs</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-basic-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-basic-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-basic-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-basic-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-basic-lib</location>
                     </source>
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/libexec</directory>
+                  <directory>${sdc.dir}/libexec</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/libexec</location>
+                      <location>${sdc.distroot}/libexec</location>
                     </source>
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/bin</directory>
+                  <directory>${sdc.dir}/bin</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/bin</location>
+                      <location>${sdc.distroot}/bin</location>
                     </source>
                   </sources>
                 </mapping>
@@ -159,7 +158,7 @@
                   <configuration>noreplace</configuration>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/etc</location>
+                      <location>${sdc.distroot}/etc</location>
                     </source>
                   </sources>
                 </mapping>
@@ -171,20 +170,20 @@
                   <filemode>755</filemode>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/_sdcinitd_prototype</location>
+                      <location>${sdc.distroot}/initd/_sdcinitd_prototype</location>
                       <destination>sdc</destination>
                     </source>
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/initd</directory>
+                  <directory>${sdc.dir}/initd</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <username>root</username>
                   <groupname>root</groupname>
                   <filemode>755</filemode>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/sdcd</location>
+                      <location>${sdc.distroot}/initd/sdcd</location>
                     </source>
                   </sources>
                 </mapping>
@@ -234,26 +233,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_1_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -290,26 +289,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -346,26 +345,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-apache-kafka_0_8_2_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -402,26 +401,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-aws-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-aws-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-aws-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-aws-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-aws-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-aws-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-aws-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-aws-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -458,26 +457,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cassandra_2_1_5-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -514,26 +513,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh_kafka_1_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -570,26 +569,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_2_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -626,26 +625,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_2_3-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -682,26 +681,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_2_4-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -738,26 +737,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_3_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -794,26 +793,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_3_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -850,26 +849,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_3_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -906,26 +905,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_4_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -962,26 +961,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_4_1-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1019,26 +1018,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_4_0-cluster-cdh_kafka_1_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1076,26 +1075,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1132,26 +1131,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-elasticsearch_1_4_4-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1188,26 +1187,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-elasticsearch_1_5_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1244,26 +1243,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-hdp_2_2_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1300,26 +1299,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-mongodb_3_0_2-lib</location>
                     </source>
                   </sources>
                 </mapping>
@@ -1356,26 +1355,26 @@
               <mappings>
                 <!-- Separate mappings for dirs exist b/c of the Won't Fix for this JIRA https://jira.codehaus.org/browse/MRPM-8 -->
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib/lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib/lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
+                  <directory>${sdc.dir}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <filemode>644</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</location>
+                      <location>${sdc.distroot}/streamsets-libs/streamsets-datacollector-jython_2_7_0-lib</location>
                     </source>
                   </sources>
                 </mapping>
