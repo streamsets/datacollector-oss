@@ -7,6 +7,7 @@ package com.streamsets.pipeline.http;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.streamsets.datacollector.http.GaugeValue;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;

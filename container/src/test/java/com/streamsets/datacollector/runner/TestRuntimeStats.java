@@ -8,7 +8,8 @@ package com.streamsets.datacollector.runner;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.pipeline.json.ObjectMapperFactory;
+import com.streamsets.pipeline.runner.RuntimeStats;
 import org.junit.Assert;
 import org.junit.Test;
 
