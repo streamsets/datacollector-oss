@@ -18,4 +18,6 @@
 # under the License.
 #
 #
-/usr/sbin/userdel %{service_user}
+if [ $1 -eq 0 ]; then
+  /usr/sbin/userdel %{service_user}
+fi

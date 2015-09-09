@@ -31,8 +31,8 @@
   <properties>
     <sdc.user>sdc</sdc.user>
     <sdc.group>sdc</sdc.group>
-    <sdc.dir>/opt/sdc</sdc.dir>
-    <sdc.distroot>${basedir}/../dist/target/streamsets-datacollector-${project.version}</sdc.distroot>
+    <sdc.dir>/opt/streamsets-datacollector</sdc.dir>
+    <sdc.distroot>${basedir}/../dist/target/streamsets-datacollector-${project.version}/streamsets-datacollector-${project.version}</sdc.distroot>
   </properties>
 
   <dependencies>
@@ -86,21 +86,21 @@
                     <source>
                       <location>${sdc.distroot}</location>
                       <excludes>
-                        <exclude>streamsets-datacollector-${project.version}/etc/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/bin/**</exclude>
-                        <exclude>streamsets-datacollector-${project.version}/initd/sdcd</exclude>
+                        <exclude>etc/**</exclude>
+                        <exclude>bin/**</exclude>
+                        <exclude>initd/sdcd</exclude>
                       </excludes>
                     </source>
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/bin</directory>
+                  <directory>${sdc.dir}/bin</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/bin</location>
+                      <location>${sdc.distroot}/bin</location>
                     </source>
                   </sources>
                 </mapping>
@@ -119,7 +119,7 @@
                   <configuration>noreplace</configuration>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/etc</location>
+                      <location>${sdc.distroot}/etc</location>
                       <excludes>
                         <exclude>email-password.txt</exclude>
                         <exclude>keystore-password.txt</exclude>
@@ -137,13 +137,13 @@
                   <configuration>noreplace</configuration>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/etc/email-password.txt</location>
+                      <location>${sdc.distroot}/etc/email-password.txt</location>
                     </source>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/etc/keystore-password.txt</location>
+                      <location>${sdc.distroot}/etc/keystore-password.txt</location>
                     </source>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/etc/form-realm.properties</location>
+                      <location>${sdc.distroot}/etc/form-realm.properties</location>
                     </source>
                   </sources>
                 </mapping>
@@ -156,20 +156,20 @@
                   <configuration>noreplace</configuration>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/_sdcinitd_prototype</location>
+                      <location>${sdc.distroot}/initd/_sdcinitd_prototype</location>
                       <destination>sdc</destination>
                     </source>
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/streamsets-datacollector-${project.version}/initd</directory>
+                  <directory>${sdc.dir}/initd</directory>
                   <directoryIncluded>false</directoryIncluded>
                   <username>root</username>
                   <groupname>root</groupname>
                   <filemode>755</filemode>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/streamsets-datacollector-${project.version}/initd/sdcd</location>
+                      <location>${sdc.distroot}/initd/sdcd</location>
                     </source>
                   </sources>
                 </mapping>
