@@ -1,5 +1,5 @@
 /*
- * Orange angular-swagger-ui - v0.1.5
+ * Orange angular-swagger-ui - v0.2.3
  *
  * (C) 2015 Orange, all right reserved
  * MIT Licensed
@@ -35,48 +35,54 @@ angular
       return format || item.type;
     };
 
-
     /**
      * retrieves object class name based on definition
      */
-    function getClassName(schema) {
-      return schema.$ref.replace('#/definitions/', '');
+    function getClassName(item) {
+      var parts = item.$ref.replace('#/definitions/', '').split('#/');
+      return parts[parts.length - 1];
+    }
+
+    /**
+     * retrieves object definition name
+     */
+    function getDefinitionName(item) {
+      return item.$ref.replace('#/definitions/', '');
     }
 
     /**
      * generates a sample object (request body or response body)
      */
-    function getSampleObj(swagger, schema) {
+    function getSampleObj(swagger, schema, currentGenerated) {
       var sample;
-
-      if(!schema) {
-        //TODO: fix it
-        return undefined;
-      }
-
-      if (schema.default || schema.example){
+      currentGenerated = currentGenerated || {}; // used to handle circular references
+      if (schema.default || schema.example) {
         sample = schema.default || schema.example;
       } else if (schema.properties) {
         sample = {};
         for (var name in schema.properties) {
-          sample[name] = getSampleObj(swagger, schema.properties[name]);
+          sample[name] = getSampleObj(swagger, schema.properties[name], currentGenerated);
         }
       } else if (schema.$ref) {
         // complex object
-        var def = swagger.definitions && swagger.definitions[getClassName(schema)];
+        var def = swagger.definitions && swagger.definitions[getDefinitionName(schema)];
         if (def) {
-          if (!objCache[schema.$ref]) {
+          if (!objCache[schema.$ref] && !currentGenerated[schema.$ref]) {
             // object not in cache
-            objCache[schema.$ref] = getSampleObj(swagger, def);
+            currentGenerated[schema.$ref] = true;
+            objCache[schema.$ref] = getSampleObj(swagger, def, currentGenerated);
           }
-          sample = objCache[schema.$ref];
+          sample = objCache[schema.$ref] || {};
+        } else {
+          console.warn('schema not found', schema.$ref);
         }
       } else if (schema.type === 'array') {
-        sample = [getSampleObj(swagger, schema.items)];
+        sample = [getSampleObj(swagger, schema.items, currentGenerated)];
       } else if (schema.type === 'object') {
         sample = {};
       } else {
         sample = getSampleValue(getType(schema));
+        sample = schema.defaultValue || schema.example || getSampleValue(getType(schema));
       }
       return sample;
     }
@@ -124,15 +130,17 @@ angular
       return json;
     };
 
+    /**
+     * inline model counter
+     */
     var countInLine = 0;
 
     /**
      * generates object's model
      */
-    var generateModel = this.generateModel = function(swagger, schema, modelName) {
-      var model = '',
-        name,
-        buffer;
+    var generateModel = this.generateModel = function(swagger, schema, modelName, currentGenerated) {
+      var model = '', buffer, name;
+      currentGenerated = currentGenerated || {}; // used to handle circular references
 
       function isRequired(item, name) {
         return item.required && item.required.indexOf(name) !== -1;
@@ -140,6 +148,7 @@ angular
 
       if (schema.properties) {
         modelName = modelName || ('Inline Model' + countInLine++);
+        currentGenerated[modelName] = true;
         buffer = ['<div><strong>' + modelName + ' {</strong>'];
         var submodels = [];
 
@@ -150,19 +159,19 @@ angular
           if (property.properties) {
             name = 'Inline Model' + countInLine++;
             buffer.push(name);
-            submodels.push(generateModel(swagger, property, name));
+            submodels.push(generateModel(swagger, property, name, currentGenerated));
           } else if (property.$ref) {
             buffer.push(getClassName(property));
-            submodels.push(generateModel(swagger, property));
-          } else if (property.type === 'array' && property.items) {
+            submodels.push(generateModel(swagger, property, null, currentGenerated));
+          } else if (property.type === 'array') {
             buffer.push('Array[');
             if (property.items.properties) {
               name = 'Inline Model' + countInLine++;
               buffer.push(name);
-              submodels.push(generateModel(swagger, property, name));
+              submodels.push(generateModel(swagger, property, name, currentGenerated));
             } else if (property.items.$ref) {
               buffer.push(getClassName(property.items));
-              submodels.push(generateModel(swagger, property.items));
+              submodels.push(generateModel(swagger, property.items, null, currentGenerated));
             } else {
               buffer.push(getType(property.items));
             }
@@ -193,13 +202,17 @@ angular
         model = buffer.join('');
       } else if (schema.$ref) {
         var className = getClassName(schema),
-          def = swagger.definitions && swagger.definitions[className];
+          def = swagger.definitions && swagger.definitions[getDefinitionName(schema)];
 
+        if (currentGenerated[className]) {
+          return ''; // already generated
+        }
         if (def) {
           if (!modelCache[schema.$ref]) {
             // cache generated object
-            modelCache[schema.$ref] = generateModel(swagger, def, className);
+            modelCache[schema.$ref] = generateModel(swagger, def, className, currentGenerated);
           }
+          currentGenerated[className] = true;
           model = modelCache[schema.$ref];
         }
       } else if (schema.type === 'array') {
@@ -208,12 +221,12 @@ angular
         if (schema.items.properties) {
           name = 'Inline Model' + countInLine++;
           buffer.push(name);
-          sub = generateModel(swagger, schema.items, name);
+          sub = generateModel(swagger, schema.items, name, currentGenerated);
         } else if (schema.items.$ref) {
           buffer.push(getClassName(schema.items));
-          sub = generateModel(swagger, schema.items);
+          sub = generateModel(swagger, schema.items, null, currentGenerated);
         } else {
-          //parts.push(getType(schema.items));
+          buffer.push(getType(schema.items));
         }
         buffer.push(']</strong><br><br>', sub);
         model = buffer.join('');
