@@ -29,26 +29,26 @@ public class S3FileConfig {
 
   @ConfigDef(
     required = true,
+    type = ConfigDef.Type.STRING,
+    label = "File Name Pattern",
+    description = "A glob or regular expression that defines the pattern of the file names in the directory",
+    displayPosition = 100,
+    group = "#0"
+  )
+  public String filePattern;
+
+  @ConfigDef(
+    required = true,
     type = ConfigDef.Type.NUMBER,
     label = "Buffer Limit (KB)",
     defaultValue = "64000",
     description = "Low level reader buffer limit to avoid out of Memory errors",
-    displayPosition = 100,
+    displayPosition = 120,
     group = "#0",
     min = 1,
     max = Integer.MAX_VALUE
   )
   public int overrunLimit;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "File Name Pattern",
-    description = "A glob or regular expression that defines the pattern of the file names in the directory",
-    displayPosition = 120,
-    group = "#0"
-  )
-  public String filePattern;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     validate(context, issues);

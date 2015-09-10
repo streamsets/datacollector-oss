@@ -48,7 +48,7 @@ public class S3Config {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "Access Key Id",
+    label = "Access Key ID",
     description = "",
     displayPosition = 20,
     group = "#0"
@@ -88,7 +88,7 @@ public class S3Config {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
-    label = "Object Path delimiter",
+    label = "Object Path Delimiter",
     description = "",
     defaultValue = "/",
     displayPosition = 70,
