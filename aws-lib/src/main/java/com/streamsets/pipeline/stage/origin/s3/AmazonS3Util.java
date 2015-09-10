@@ -98,9 +98,29 @@ public class AmazonS3Util {
   }
 
   private static boolean isEligible(S3ObjectSummary s, AmazonS3Source.S3Offset s3Offset) {
-    return (s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) > 0) ||
-      ((s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) &&
-          (s.getKey().compareTo(s3Offset.getKey()) > 0));
+
+    //The object is eligible if
+    //1. The timestamp is greater than that of the current object in offset
+    //2. The timestamp is same but the name is lexicographically greater than the current object [can happen when multiple objects are uploaded in one go]
+    //3. Same timestamp, same name [same as the current object in offset], eligible if it was not completely processed [offset != -1]
+
+    boolean isEligible = false;
+    if(s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) > 0) {
+      isEligible = true;
+    } else if(s.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) {
+      //same timestamp
+      //compare names
+      if(s.getKey().compareTo(s3Offset.getKey()) > 0) {
+        isEligible = true;
+      } else if (s.getKey().compareTo(s3Offset.getKey()) == 0) {
+        //same time stamp, same name
+        //If the current offset is not -1, return the file. It means the previous file was partially processed.
+        if(Long.parseLong(s3Offset.getOffset()) != -1) {
+          isEligible = true;
+        }
+      }
+    }
+    return isEligible;
   }
 
   static void move(AmazonS3Client s3Client, String srcBucket, String sourceKey, String destBucket,
