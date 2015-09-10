@@ -41,7 +41,7 @@ exports.config = {
       'ui/logPage.js'
     ],
     single: [
-      'ui/previewTest.js'
+      'ui/pipelineHomePage.js'
     ]
   },
 
