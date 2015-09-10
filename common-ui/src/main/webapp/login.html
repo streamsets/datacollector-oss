@@ -25,6 +25,11 @@
 
     if(collectorIndex !== -1) {
       baseHref = baseHref.substr(0, collectorIndex + 1);
+    } else {
+      var restIndex = baseHref.indexOf('/rest/');
+      if(restIndex !== -1) {
+        baseHref = baseHref.substr(0, restIndex + 1);
+      }
     }
 
     document.write("<base href='" + baseHref + "' />");
