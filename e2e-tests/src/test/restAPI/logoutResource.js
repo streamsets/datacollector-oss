@@ -35,7 +35,7 @@ frisby.create('Login to StreamSets Data Collector')
           "Cookie": cookie
         }
       })
-      .expectStatus(303)
+      .expectStatus(200)
       .after(function(body, res) {
         var cookie = res.headers['set-cookie'];
         frisby.create('Trying to access build info after logout should redirect to login page.')
