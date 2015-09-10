@@ -62,7 +62,7 @@ public class DataFormatConfig {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "UTF-8",
-    label = "Messages Charset",
+    label = "Charset",
     displayPosition = 3010,
     group = "#0",
     dependsOn = "dataFormat^",
