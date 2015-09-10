@@ -1,9 +1,10 @@
 <div class="swagger-ui" aria-live="polite" aria-relevant="additions removals">
-  <h3 class="swagger-loading" ng-if="loading">loading ...</h3>
-  <!--div class="api-name">
+  <!--
+  <div class="api-name">
     <h3 ng-bind="infos.title"></h3>
   </div>
-  <div class="api-description" ng-bind-html="infos.description"></div-->
+  <div class="api-description" ng-bind-html="infos.description"></div>
+  -->
   <div class="api-infos">
     <div class="api-infos-contact" ng-if="infos.contact">
       <div ng-if="infos.contact.name" class="api-infos-contact-name">created by <span ng-bind="infos.contact.name"></span></div>
@@ -15,7 +16,7 @@
     </div>
   </div>
   <ul class="list-unstyled endpoints">
-    <li ng-repeat="api in resources" class="endpoint" ng-class="{active:api.open}">
+    <li ng-repeat="api in resources track by $index" class="endpoint" ng-class="{active:api.open}">
       <div class="clearfix">
         <ul class="list-inline pull-left endpoint-heading">
           <li>
@@ -38,7 +39,7 @@
         </ul>
       </div>
       <ul class="list-unstyled collapse operations" ng-class="{in:api.open}">
-        <li ng-repeat="op in api.operations" class="operation {{op.httpMethod}}">
+        <li ng-repeat="op in api.operations track by $index" class="operation {{op.httpMethod}}">
           <div class="heading">
             <a ng-click="op.open=!op.open;permalink(op.open?op.operationId:null)" href="javascript:;">
               <div class="clearfix">
@@ -51,7 +52,7 @@
           <div class="content collapse" ng-class="{in:op.open}">
             <div ng-if="op.description">
               <h5>implementation notes</h5>
-              <p ng-bind="op.description"></p>
+              <p ng-bind-html="op.description"></p>
             </div>
             <form role="form" name="explorerForm" ng-submit="explorerForm.$valid&&submitExplorer(op)">
               <div ng-if="op.responseClass" class="response">
@@ -82,7 +83,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr ng-repeat="param in op.parameters">
+                  <tr ng-repeat="param in op.parameters track by $index">
                     <td ng-class="{bold:param.required}">
                       <label for="param{{param.id}}" ng-bind="param.name"></label>
                     </td>
@@ -108,13 +109,13 @@
                         <div ng-if="param.in!=='body'">
                           <div ng-if="param.default"><span ng-bind="param.default"></span> (default)</div>
                           <div ng-if="param.enum">
-                            <span ng-repeat="value in param.enum">{{value}}<span ng-if="!$last"> or </span></span>
+                            <span ng-repeat="value in param.enum track by $index">{{value}}<span ng-if="!$last"> or </span></span>
                           </div>
                           <div ng-if="param.required"><strong>(required)</strong></div>
                         </div>
                       </div>
                     </td>
-                    <td ng-class="{bold:param.required}" ng-bind="param.description"></td>
+                    <td ng-class="{bold:param.required}" ng-bind-html="param.description"></td>
                     <td ng-bind="param.in"></td>
                     <td ng-if="param.type" ng-switch="param.type">
                       <span ng-switch-when="array" ng-bind="'Array['+param.items.type+']'"></span>
@@ -146,7 +147,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr ng-repeat="(code, resp) in op.responses">
+                  <tr ng-repeat="(code, resp) in op.responses track by $index">
                     <td ng-bind="code"></td>
                     <td ng-bind-html="resp.description"></td>
                     <td>
@@ -181,7 +182,7 @@
       </ul>
     </li>
   </ul>
-  <div class="api-version" ng-if="infos">
+  <div class="api-version clearfix" ng-if="infos">
     [BASE URL: <span class="h4" ng-bind="infos.basePath"></span>, API VERSION: <span class="h4" ng-bind="infos.version"></span>, HOST: <span class="h4" ng-bind="infos.scheme"></span>://<span class="h4" ng-bind="infos.host"></span>]
   </div>
 </div>

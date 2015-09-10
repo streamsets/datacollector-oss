@@ -1,16 +1,23 @@
 /*
- * Orange angular-swagger-ui - v0.1.5
+ * Orange angular-swagger-ui - v0.2.3
  *
  * (C) 2015 Orange, all right reserved
  * MIT Licensed
  */
-
 angular
   .module('swaggerUi')
-  .service('swaggerClient', ['$q', '$http', function($q, $http) {
+  .service('swaggerClient', ['$q', '$http', 'swaggerModules', function($q, $http, swaggerModules) {
 
-    function formatResult(deferred, data, status, headers, config) {
-      var query = '';
+    var baseUrl;
+
+    /**
+     * format API explorer response before display
+     */
+    function formatResult(deferred, response) {
+      var query = '',
+        data = response.data,
+        config = response.config;
+
       if (config.params) {
         var parts = [];
         for (var key in config.params) {
@@ -24,13 +31,16 @@ angular
         url: config.url + query,
         response: {
           body: data ? (angular.isString(data) ? data : angular.toJson(data, true)) : 'no content',
-          status: status,
-          headers: angular.toJson(headers(), true)
+          status: response.status,
+          headers: angular.toJson(response.headers(), true)
         }
       });
     }
 
-    this.send = function(swagger, operation, values, transform) {
+    /**
+     * Send API explorer request
+     */
+    this.send = function(swagger, operation, values) {
       var deferred = $q.defer(),
         query = {},
         headers = {},
@@ -66,9 +76,7 @@ angular
             }
             break;
           case 'body':
-            if (!!value) {
-              values.body = value;
-            }
+            values.body = values.body || value;
             break;
         }
       }
@@ -78,8 +86,7 @@ angular
       headers['Content-Type'] = values.body ? values.contentType : 'text/plain';
 
       // build request
-      //FIXME should use server hosting the documentation if scheme or host are not defined
-      var request = {
+      var options = {
           method: operation.httpMethod,
           url: [swagger.basePath || '', path].join(''),
           headers: headers,
@@ -87,18 +94,29 @@ angular
           params: query
         },
         callback = function(data, status, headers, config) {
-          formatResult(deferred, data, status, headers, config);
+          // execute modules
+          var response = {
+            data: data,
+            status: status,
+            headers: headers,
+            config: config
+          };
+          swaggerModules
+            .execute(swaggerModules.AFTER_EXPLORER_LOAD, response)
+            .then(function() {
+              formatResult(deferred, response);
+            });
         };
 
-      // apply transform
-      if (typeof transform === 'function') {
-        transform(request);
-      }
-
-      // send request
-      $http(request)
-        .success(callback)
-        .error(callback);
+      // execute modules
+      swaggerModules
+        .execute(swaggerModules.BEFORE_EXPLORER_LOAD, options)
+        .then(function() {
+          // send request
+          $http(options)
+            .success(callback)
+            .error(callback);
+        });
 
       return deferred.promise;
     };

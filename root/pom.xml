@@ -75,7 +75,7 @@
     <jtar.version>2.2</jtar.version>
     <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
-    <swagger.version>1.5.0</swagger.version>
+    <swagger.version>1.5.3</swagger.version>
     <commons-pool.version>2.4.1</commons-pool.version>
   </properties>
 
