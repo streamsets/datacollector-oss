@@ -216,6 +216,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-kafka-0.8.1.1</provide>
@@ -272,6 +273,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-kafka-0.8.2.0</provide>
@@ -328,6 +330,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-kafka-0.8.2.1</provide>
@@ -384,6 +387,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-aws</provide>
@@ -440,6 +444,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cassandra-2.1.5</provide>
@@ -496,6 +501,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh_kafka_1_2_0</provide>
@@ -552,6 +558,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh5-5.2.1</provide>
@@ -608,6 +615,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh5-5.2.3</provide>
@@ -664,6 +672,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh5-5.2.4</provide>
@@ -720,6 +729,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-5.3.0</provide>
@@ -776,6 +786,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-5.3.1</provide>
@@ -832,6 +843,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-5.3.2</provide>
@@ -888,6 +900,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-5.4.0</provide>
@@ -944,6 +957,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-5.4.1</provide>
@@ -1001,6 +1015,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-cluster-5.4.0-kafka-1.2.0</provide>
@@ -1058,6 +1073,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-cdh-cluster-5.4.1-kafka-1.2.0</provide>
@@ -1114,6 +1130,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-elasticsearch-1.4.4</provide>
@@ -1170,6 +1187,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-elasticsearch-1.5.0</provide>
@@ -1226,6 +1244,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-hdp-2.2.0</provide>
@@ -1282,6 +1301,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-mongodb-3.0.2</provide>
@@ -1338,6 +1358,7 @@
               <group>Applications/System</group>
               <packager>StreamSets</packager>
               <targetOS>linux</targetOS>
+              <release>4</release>
               <prefix>/opt</prefix>
               <provides>
                 <provide>streamsets-datacollector-jython-2.7.0</provide>
