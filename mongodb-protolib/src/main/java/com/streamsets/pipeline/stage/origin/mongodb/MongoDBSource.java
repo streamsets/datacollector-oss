@@ -153,6 +153,8 @@ public class MongoDBSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    // do not return null in the case where the table is empty on startup
+    lastSourceOffset = lastSourceOffset == null ? "" : lastSourceOffset;
     String nextSourceOffset = lastSourceOffset;
     int numRecords = 0;
 
@@ -196,7 +198,7 @@ public class MongoDBSource extends BaseSource {
             fields.put(entry.getKey(), value);
           }
         } catch (IOException e) {
-          handleError(Errors.MONGODB_10, e.toString());
+          handleError(Errors.MONGODB_10, e.toString(), e);
           continue;
         }
 
@@ -216,7 +218,7 @@ public class MongoDBSource extends BaseSource {
         ++numRecords;
       }
     } catch (MongoClientException e) {
-      LOG.error("Error reading cursor: {}", e);
+      throw new StageException(Errors.MONGODB_12, e.toString(), e);
     }
     return nextSourceOffset;
   }
@@ -226,7 +228,7 @@ public class MongoDBSource extends BaseSource {
 
     ObjectId offset;
     if (null == cursor) {
-      if (null == lastSourceOffset) {
+      if (null == lastSourceOffset || lastSourceOffset.isEmpty()) {
         offset = initialObjectId;
       } else {
         offset = new ObjectId(lastSourceOffset);

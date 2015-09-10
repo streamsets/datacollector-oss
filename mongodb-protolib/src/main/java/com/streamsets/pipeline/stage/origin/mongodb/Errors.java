@@ -32,7 +32,8 @@ public enum Errors implements ErrorCode {
   MONGODB_08("Failed to parse port: '{}'"),
   MONGODB_09("Unknown host: '{}'"),
   MONGODB_10("Failed to parse entry: {}"),
-  MONGODB_11("Offset tracking field: '{}' missing from document: '{}'")
+  MONGODB_11("Offset tracking field: '{}' missing from document: '{}'"),
+  MONGODB_12("Error writing to database: {}")
 
   ;
   private final String msg;
