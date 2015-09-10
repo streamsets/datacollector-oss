@@ -412,6 +412,13 @@ public class KafkaTarget extends BaseTarget {
       } catch (ELEvalException e) {
         throw new StageException(KafkaErrors.KAFKA_54, partition, record.getHeader().getSourceId(), e.toString());
       }
+    } else if(partitionStrategy == PartitionStrategy.DEFAULT) {
+      RecordEL.setRecordInContext(partitionVars, record);
+      try {
+        partitionKey = partitionEval.eval(partitionVars, partition, String.class);
+      } catch (ELEvalException e) {
+        throw new StageException(KafkaErrors.KAFKA_54, partition, record.getHeader().getSourceId(), e.getMessage());
+      }
     }
     return partitionKey;
   }
@@ -500,7 +507,7 @@ public class KafkaTarget extends BaseTarget {
   /****************************************************/
 
   private void validatePartitionExpression(List<ConfigIssue> issues) {
-    if (partitionStrategy == PartitionStrategy.EXPRESSION) {
+    if (partitionStrategy == PartitionStrategy.EXPRESSION || partitionStrategy == PartitionStrategy.DEFAULT) {
       partitionEval = getContext().createELEval("partition");
       partitionVars = getContext().createELVars();
       //There is no scope to provide partitionVars for kafka target as of today, create empty partitionVars
