@@ -245,6 +245,17 @@ public class KafkaTestUtil {
     return records;
   }
 
+  public static List<Record> createIdenticalStringRecords() {
+    List<Record> records = new ArrayList<>(9);
+    int id = 0;
+    for (int i = 0; i < 9; i++) {
+      Record r = RecordCreator.create("s", "s:1", (TEST_STRING + id).getBytes(), MIME);
+      r.set(Field.create((TEST_STRING + id)));
+      records.add(r);
+    }
+    return records;
+  }
+
   public static List<Record> createIntegerRecords() {
     List<Record> records = new ArrayList<>(9);
     for (int i = 0; i < 9; i++) {

@@ -13,6 +13,7 @@ public enum PartitionStrategy implements Label {
   RANDOM("Random"),
   ROUND_ROBIN("Round Robin"),
   EXPRESSION("Expression"),
+  DEFAULT("Default"),
 
   ;
 

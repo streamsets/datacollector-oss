@@ -126,11 +126,11 @@ public class KafkaDTarget extends DTarget {
     type = ConfigDef.Type.STRING,
     defaultValue = "${0}",
     label = "Partition Expression",
-    description = "Expression that determines the partition to write to",
+    description = "Determines the partition key to use with default kafka partitioner class in case of 'Default Partition Strategy'. In case of 'Expression Partition Strategy' it determines the partition number",
     displayPosition = 40,
     group = "KAFKA",
     dependsOn = "partitionStrategy",
-    triggeredByValue = "EXPRESSION",
+    triggeredByValue = {"EXPRESSION", "DEFAULT"},
     elDefs = {RecordEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT
   )

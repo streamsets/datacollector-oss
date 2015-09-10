@@ -37,6 +37,8 @@ public class TestKafkaTargetMultiPartition {
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams9;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams10;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams11;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams12;
+  private static List<KafkaStream<byte[], byte[]>> kafkaStreams13;
 
   private static final String HOST = "localhost";
   private static final int PARTITIONS = 3;
@@ -52,6 +54,8 @@ public class TestKafkaTargetMultiPartition {
   private static final String TOPIC9 = "TestKafkaTargetMultiPartition9";
   private static final String TOPIC10 = "TestKafkaTargetMultiPartition10";
   private static final String TOPIC11 = "TestKafkaTargetMultiPartition11";
+  private static final String TOPIC12 = "TestKafkaTargetMultiPartition12";
+  private static final String TOPIC13 = "TestKafkaTargetMultiPartition13";
 
   @BeforeClass
   public static void setUp() {
@@ -69,6 +73,8 @@ public class TestKafkaTargetMultiPartition {
     KafkaTestUtil.createTopic(TOPIC9, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC10, PARTITIONS, REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC12, PARTITIONS, REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC13, PARTITIONS, REPLICATION_FACTOR);
 
     kafkaStreams1 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC1, PARTITIONS);
     kafkaStreams2 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC2, PARTITIONS);
@@ -81,6 +87,8 @@ public class TestKafkaTargetMultiPartition {
     kafkaStreams9 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC9, PARTITIONS);
     kafkaStreams10 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC10, PARTITIONS);
     kafkaStreams11 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC11, PARTITIONS);
+    kafkaStreams12 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC12, PARTITIONS);
+    kafkaStreams13 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC13, PARTITIONS);
   }
 
   @AfterClass
@@ -478,6 +486,116 @@ public class TestKafkaTargetMultiPartition {
       Assert.assertEquals(1, messages.size());
       messages.clear();
     }
+  }
+
+  @Test
+  public void testDefaultPartitioner1() throws InterruptedException, StageException {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC12)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "${record:value('/')}")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.DEFAULT)
+      .addConfiguration("textFieldPath", "/")
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> records = new ArrayList<>();
+    for(Record r : logRecords) {
+      records.add(r.get().getValueAsString());
+    }
+    List<String> messages = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams12.size() == PARTITIONS);
+    for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams12) {
+      ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
+      try {
+        while (it.hasNext()) {
+          messages.add(new String(it.next().message()));
+        }
+      } catch (kafka.consumer.ConsumerTimeoutException e) {
+        //no-op
+      }
+      Assert.assertEquals(3, messages.size());
+      for(String message : messages) {
+        Assert.assertTrue(records.contains(message.trim()));
+      }
+      messages.clear();
+    }
+  }
+
+  @Test
+  public void testDefaultPartitioner2() throws InterruptedException, StageException {
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+      .addConfiguration("topic", TOPIC13)
+        //record has a map which contains an integer field with key "partitionKey",
+        //kafka has 3 partitions. Expression distributes the record to partition based on the condition
+      .addConfiguration("partition", "${record:value('/')}")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("kafkaProducerConfigs", null)
+      .addConfiguration("dataFormat", DataFormat.TEXT)
+      .addConfiguration("singleMessagePerBatch", false)
+      .addConfiguration("partitionStrategy", PartitionStrategy.DEFAULT)
+      .addConfiguration("textFieldPath", "/")
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("textEmptyLineIfNull", true)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("runtimeTopicResolution", false)
+      .addConfiguration("topicExpression", null)
+      .addConfiguration("topicWhiteList", null)
+      .build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = KafkaTestUtil.createIdenticalStringRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    List<String> records = new ArrayList<>();
+    for(Record r : logRecords) {
+      records.add(r.get().getValueAsString());
+    }
+    List<String> messages = new ArrayList<>();
+    List<Integer> partitionSize = new ArrayList<>();
+    Assert.assertTrue(kafkaStreams13.size() == PARTITIONS);
+    //All messages should be routed to same partition as the partition key is the same
+    for(KafkaStream<byte[], byte[]> kafkaStream : kafkaStreams13) {
+      ConsumerIterator<byte[], byte[]> it = kafkaStream.iterator();
+      try {
+        while (it.hasNext()) {
+          messages.add(new String(it.next().message()));
+        }
+      } catch (kafka.consumer.ConsumerTimeoutException e) {
+        //no-op
+      }
+      partitionSize.add(messages.size());
+      messages.clear();
+    }
+
+    //make sure that partitionSize list has 3 entries - 0, 0 and 9 in no particular order
+    Assert.assertEquals(3, partitionSize.size());
+    int numberOfMessages =  partitionSize.get(0) + partitionSize.get(1) + partitionSize.get(2);
+    Assert.assertEquals(9, numberOfMessages);
+    if(partitionSize.get(0) == 9 || partitionSize.get(1) == 9 || partitionSize.get(2) == 9) {
+
+    } else {
+      Assert.fail("Only one of the 3 partitions should get all the messages");
+    }
+
   }
 
 }

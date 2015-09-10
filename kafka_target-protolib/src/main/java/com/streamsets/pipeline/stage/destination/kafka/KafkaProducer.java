@@ -120,6 +120,8 @@ public class KafkaProducer {
       props.put(PARTITIONER_CLASS_KEY, ROUND_ROBIN_PARTITIONER_CLASS);
     } else if (partitionStrategy == PartitionStrategy.EXPRESSION) {
       props.put(PARTITIONER_CLASS_KEY, EXPRESSION_PARTITIONER_CLASS);
+    } else if (partitionStrategy == PartitionStrategy.DEFAULT) {
+      //default partitioner class
     }
   }
 
@@ -130,7 +132,6 @@ public class KafkaProducer {
       kafkaProducerConfigs.remove(METADATA_BROKER_LIST_KEY);
       kafkaProducerConfigs.remove(PRODUCER_TYPE_KEY);
       kafkaProducerConfigs.remove(KEY_SERIALIZER_CLASS_KEY);
-      kafkaProducerConfigs.remove(PARTITIONER_CLASS_KEY);
       kafkaProducerConfigs.remove(SERIALIZER_CLASS_KEY);
 
       for (Map.Entry<String, String> producerConfig : kafkaProducerConfigs.entrySet()) {
