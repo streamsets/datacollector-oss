@@ -41,15 +41,15 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>MongoDB Connection String</entry>
+                                    <entry>Connection String</entry>
                                     <entry>Connection string for the MongoDB instance.</entry>
                                 </row>
                                 <row>
-                                    <entry>MongoDB Database</entry>
+                                    <entry>Database</entry>
                                     <entry>Name of the MongoDB database.</entry>
                                 </row>
                                 <row>
-                                    <entry>MongoDB Collection</entry>
+                                    <entry>Collection</entry>
                                     <entry>Name of the MongoDB collection to use.</entry>
                                 </row>
                                 <row>
@@ -64,19 +64,87 @@
                                             <codeph>YYYY-MM-DD hh:mm:ss</codeph>.</entry>
                                 </row>
                                 <row>
-                                    <entry>Offset Field</entry>
+                                    <entry>Offset Field <xref href="MongoDB-OffsetField.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_k2w_rsd_3t"/></xref>
+                                    </entry>
                                     <entry>Field to use to track reads. Default is the _id field.
                                         You can use any Object ID field, but results are not
                                         guaranteed.</entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size</entry>
+                                    <entry>Batch Size (records)</entry>
                                     <entry>Maximum number of records allowed in a batch.</entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Wait Time</entry>
+                                    <entry>Max Batch Wait Time <xref
+                                            href="BatchSizeWaitTime.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_mwv_b52_zq"/></xref>
+                                    </entry>
                                     <entry>Amount of time the origin will wait to fill a batch
                                         before sending an empty batch. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To use credentials, click the <uicontrol>Credentials</uicontrol> tab and
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bdl_csd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Authentication Type</entry>
+                                    <entry>Authentication to use. To use authentication, select
+                                        Username/Password.</entry>
+                                </row>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>MongoDB user name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>MongoDB password.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>Optionally, click the <uicontrol>Advanced</uicontrol> tab to configure the read
+                    preference:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_xwz_jsd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Read Preference <xref href="MongoDB-ReadPreference.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_egw_psd_3t"/></xref>
+                                    </entry>
+                                    <entry>Determines how the origin reads data from different
+                                        members of the MongoDB replica set.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

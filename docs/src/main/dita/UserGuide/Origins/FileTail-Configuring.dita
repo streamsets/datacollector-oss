@@ -74,7 +74,7 @@
                                             error handling.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Max Batch Size</entry>
+                                    <entry>Maximum Batch Size</entry>
                                     <entry>Maximum number of lines to include in a batch. Honors
                                         values up to the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

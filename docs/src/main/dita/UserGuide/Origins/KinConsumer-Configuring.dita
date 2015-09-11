@@ -49,6 +49,10 @@
                                         cluster.</entry>
                                 </row>
                                 <row>
+                                    <entry>Application Name</entry>
+                                    <entry>Kinesis application name. </entry>
+                                </row>
+                                <row>
                                     <entry>Stream Name</entry>
                                     <entry>Kinesis stream name.</entry>
                                 </row>

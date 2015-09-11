@@ -100,7 +100,7 @@
                                         default types.db file. </entry>
                                 </row>
                                 <row>
-                                    <entry>Convert Hi-res Time &amp; Interval</entry>
+                                    <entry>Convert Hi-Res Time &amp; Interval</entry>
                                     <entry>Converts the collectd high resolution time format
                                         interval and timestamp to UNIX time, in
                                         milliseconds.</entry>

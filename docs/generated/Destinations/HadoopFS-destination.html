@@ -142,7 +142,7 @@ If you have multiple
                 environment variable as
                   follows:<pre class="pre codeblock">-Djava.library.path=&lt;path to Snappy native library&gt;</pre>
 <p class="p">For
-                  information about configuring the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.The Data Collector can provide JMX metrics to third-party tools.">Java Configuration Options</a>.</p>
+                  information about configuring the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.The Data Collector can provide JMX metrics to external tools.">Java Configuration Options</a>.</p>
 </li>
 
               <li class="li">In the destination, select the Snappy compression codec.</li>
@@ -168,7 +168,7 @@ If you have multiple
                 as
                   follows:<div class="p"><pre class="pre codeblock">-Djava.library.path=&lt;path to LZO native library&gt;</pre>
 For
-                  information about configuring the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.The Data Collector can provide JMX metrics to third-party tools.">Java Configuration Options</a>.</div>
+                  information about configuring the SDC_JAVA_OPTS environment variable, see <a class="xref" href="../Install_Config/DCEnvironmentConfig.html#concept_vrx_4fg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.The Data Collector can provide JMX metrics to external tools.">Java Configuration Options</a>.</div>
 </li>
 
               <li class="li">In the destination, select the Other compression codec and enter the full LZO
@@ -481,7 +481,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1321" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1493" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -519,7 +519,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d11163e779 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e782 ">Error record handling for the stage: <ul class="ul" id="task_m2m_skm_zq__d907e1377">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e782 ">Error record handling for the stage: <ul class="ul" id="task_m2m_skm_zq__d907e1549">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -535,7 +535,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d11163e779 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_m2m_skm_zq__d907e1396" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_m2m_skm_zq__d907e1568" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e782 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
@@ -546,7 +546,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d11163e779 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_m2m_skm_zq__d907e1411" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_m2m_skm_zq__d907e1583" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e782 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
@@ -925,7 +925,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1593" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1901" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -970,7 +970,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1528" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1836" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -987,7 +987,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d11163e1446 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e1449 ">Determines how JSON data is written:<ul class="ul" id="task_m2m_skm_zq__d907e1557">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d11163e1449 ">Determines how JSON data is written:<ul class="ul" id="task_m2m_skm_zq__d907e1865">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1013,7 +1013,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                     the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1446" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m2m_skm_zq__d907e1618" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">

@@ -162,8 +162,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use this step for origins that are not cluster
-                        origins. Standalone only</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>1stStepErrorHandling</uicontrol> -
+                        Use this step for origins that are not cluster origins. Standalone
+                        only</draft-comment>
                 </cmd>
             </step>
             <step id="1stStepErrorHandling">
@@ -206,8 +207,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Use for origins that ARE cluster origins -
-                        points out stop pipeline is not valid.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>1stStep-ClusterOrigin</uicontrol> -
+                        Use for origins that ARE cluster origins - points out stop pipeline is not
+                        valid.</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ClusterOrigin">
@@ -234,6 +236,10 @@
                                     <entry>Optional description.</entry>
                                 </row>
                                 <row>
+                                    <entry>Stage Library</entry>
+                                    <entry>Library version that you want to use. </entry>
+                                </row>
+                                <row>
                                     <entry>On Record Error</entry>
                                     <entry>Error record handling for the stage: <ul
                                             id="ul_mp4_lsn_xs">
@@ -251,18 +257,68 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>Avro</uicontrol> data - The following
-                        step is used by Kafka Consumer. Hadoop FS and Flume have their own
-                        thing.</draft-comment>
+                    <draft-comment author="Loretta"
+                            ><uicontrol>1stStep-StageLib-EHandling</uicontrol> - Use this step for
+                        origins with stage libraries.</draft-comment>
                 </cmd>
             </step>
-            <step id="AvroProps">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+            <step>
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
+                    <table frame="all" rowsep="1" colsep="1" id="table_rv1_q3d_3t">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Stage Library</entry>
+                                    <entry>Library version that you want to use. </entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_kw1_q3d_3t">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-AVROFILE</uicontrol>  - The
+                        following step is used by Directory, Hadoop FS - origins that read avro from
+                        files.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-AVRO-FILE">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, optionally configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_igl_bq2_2t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -273,14 +329,55 @@
                             <tbody>
                                 <row>
                                     <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
+                                    <entry>Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p>When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p><p>You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-AVRO-Mess</uicontrol>  - The
+                        following step is used by JMS, Kafka - origins that read Avro data from
+                        messages.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-AVRO-Mess">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_acd_2qd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Message includes Schema</entry>
+                                    <entry>Indicates that the message includes an Avro schema.
+                                    </entry>
                                 </row>
                                 <row>
-                                    <entry>Include Schema</entry>
-                                    <entry>Includes the schema in each message. <note>Omitting the
-                                            schema definition can improve performance, but requires
-                                            the appropriate schema management to avoid losing track
-                                            of the schema associated with the data.</note></entry>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p>When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p><p>You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -323,6 +420,11 @@
                                         whether to use the header line.</entry>
                                 </row>
                                 <row>
+                                    <entry>Max Record Length (chars)</entry>
+                                    <entry>Maximum length of a record in characters. Longer records
+                                        are not read. </entry>
+                                </row>
+                                <row>
                                     <entry>Record Type <xref
                                             href="../Pipeline_Design/DelimitedDataRecordTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -336,11 +438,6 @@
                                                 delimited data functions to process data. Use only
                                                 to maintain pipelines created before 1.1.0.</li>
                                         </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Max Record Length (chars)</entry>
-                                    <entry>Maximum length of a record in characters. Longer records
-                                        are not read. </entry>
                                 </row>
                                 <row>
                                     <entry>Delimiter Character</entry>
@@ -836,6 +933,80 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in
+                        KProducer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-Mess">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each message. <note>Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Event</uicontrol> - Used in
+                        Flume.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-Event">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_igm_vtd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each event. <note>Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>JSONProps</uicontrol> - Used for
                         Hadoop FS and Kafka Producer, like Delimited, above. </draft-comment>
                 </cmd>
@@ -1092,7 +1263,7 @@
                                             enabled for SSL.</p></entry>
                                 </row>
                                 <row id="row-TrustStore">
-                                    <entry>TrustStore File</entry>
+                                    <entry>Truststore File</entry>
                                     <entry>Truststore file for SSL. Required if the keystore file is
                                         a self-signed certificate.<p>Must be stored in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

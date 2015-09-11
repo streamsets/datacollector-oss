@@ -72,10 +72,6 @@
                                     <entry>Optional message selector to limit the messages read by
                                         the origin. By default, reads all messages. </entry>
                                 </row>
-                                <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Uses JMS credentials.</entry>
-                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
                                     <entry/>
@@ -83,6 +79,10 @@
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
                                     <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Uses JMS credentials.</entry>
                                 </row>
                                 <row>
                                     <entry>Data Format <xref href="JMS-DataFormats.dita">
@@ -191,7 +191,7 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/AvroProps">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
                 <cmd/>
             </step>
         </steps>
