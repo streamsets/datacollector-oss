@@ -433,7 +433,7 @@ public class HiveTarget extends BaseTarget {
           // The record has the requested field, rename it to match the column name.
           record.set(SDC_FIELD_SEP + entry.getKey(), record.get(entry.getValue()));
           // Remove the original field
-          record.delete(entry.getKey());
+          record.delete(entry.getValue());
         }
       }
     }
