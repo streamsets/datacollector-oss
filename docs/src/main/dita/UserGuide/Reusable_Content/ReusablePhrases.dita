@@ -88,7 +88,7 @@
             </p>
             <p>
                   <draft-comment author="Loretta">ORIGIN DATA FOMATS - from Directory. DLEntries are
-                        conrefed by Kafka Consumer and Hadoop FS when possible. </draft-comment>
+                        conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3. </draft-comment>
             </p>
             <p>
                   <dl id="ORIGIN-DFormats">
@@ -109,6 +109,27 @@
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage. </dd>
                         </dlentry>
+                        <dlentry id="OriginDF-JSONFILE">
+                              <dt>JSON</dt>
+                              <dd>Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+                              <dd>When an object exceeds the maximum object length defined for the
+                                    origin, the origin cannot continue processing data in the file.
+                                    Records already processed from the file are passed to the
+                                    pipeline. The behavior of the origin is then based on the error
+                                    handling configured for the stage:<ul id="ul_sjn_fxf_ht">
+                                          <li>Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+                                          <li>To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+                                          <li>Stop Pipeline - The origin stops the pipeline. </li>
+                                    </ul></dd>
+                        </dlentry>
                         <dlentry id="OriginDF-DELIM">
                               <dt>Delimited</dt>
                               <dd>Generates a record for each delimited line. You can use the
@@ -128,11 +149,51 @@
                                                 user-defined delimiter, escape, and quote
                                                 characters.</li>
                                     </ul></dd>
-                              <dd>When a record exceeds the maximum record length defined for the
+                              <dd>You can use a list or list-map record type for delimited data,
+                                    optionally including the header information when available. When
+                                    a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
+                              <dd>For more information about the record types, see <xref
+                                          href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
+                                    />.</dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-DELIMFILE">
+                              <dt>Delimited</dt>
+                              <dd>Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul id="ul_hbd_f2p_ht">
+                                          <li><uicontrol>Default CSV</uicontrol> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+                                          <li><uicontrol>RFC4180 CSV</uicontrol> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+                                          <li><uicontrol>MS Excel CSV</uicontrol> - Microsoft Excel
+                                                comma-separated file.</li>
+                                          <li><uicontrol>MySQL CSV</uicontrol> - MySQL comma
+                                                separated file.</li>
+                                          <li><uicontrol>Tab-Separated Values</uicontrol> - File
+                                                that includes tab-separated values.</li>
+                                          <li><uicontrol>Custom</uicontrol> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+                                    </ul></dd>
                               <dd>You can use a list or list-map record type for delimited data,
-                                    optionally including the header information when available. </dd>
+                                    optionally including the header information when available. When
+                                    a record exceeds the user-defined maximum record length, the
+                                    origin cannot continue processing data in the file. Records
+                                    already processed from the file are passed to the pipeline. The
+                                    behavior of the origin is then based on the error handling
+                                    configured for the stage:<ul id="ul_it3_g2p_ht">
+                                          <li>Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+                                          <li>To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+                                          <li>Stop Pipeline - The origin stops the pipeline. </li>
+                                    </ul></dd>
                               <dd>For more information about the record types, see <xref
                                           href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
@@ -144,16 +205,31 @@
                                     delimiter element, the origin treats the XML file as a single
                                     record.</dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
-                                    origin cannot process the XML file. If the stage is configured
-                                    to pass error records to the pipeline for error handling, it
-                                    passes the entire XML file to the pipeline.</dd>
-                              <dd>
-                                    <draft-comment author="Loretta">OLD: When a record exceeds the
-                                          user-defined maximum record length, the origin skips the
-                                          record and continues processing with the next record. It
-                                          sends the skipped record to the pipeline for error
-                                          handling.</draft-comment>
-                              </dd>
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-XMLFILE">
+                              <dt>XML</dt>
+                              <dd>Generates records based on the location of the XML element that
+                                    you define as the record delimiter. If you do not define a
+                                    delimiter element, the origin treats the XML file as a single
+                                    record.</dd>
+                              <dd>When a record exceeds the user-defined maximum record length, the
+                                    origin cannot continue processing data in the file. Records
+                                    already processed from the file are passed to the pipeline. The
+                                    behavior of the origin is then based on the error handling
+                                    configured for the stage:<ul id="ul_rnb_qdp_ht">
+                                          <li>Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+                                          <li>To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+                                          <li>Stop Pipeline - The origin stops the pipeline. </li>
+                                    </ul></dd>
                         </dlentry>
                         <dlentry id="OriginDF-SDC">
                               <dt>SDC Records</dt>

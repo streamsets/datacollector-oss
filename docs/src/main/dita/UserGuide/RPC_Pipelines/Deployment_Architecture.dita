@@ -18,32 +18,21 @@
  <shortdesc>When using RPC pipelines, consider your needs and environment carefully as you design
   the deployment architecture. </shortdesc>
  <conbody>
-  <p><indexterm>RPC pipelines<indexterm>deployment architecture</indexterm></indexterm>A few points
-   to consider:<dl>
-    <dlentry>
-     <dt>Use multiple destination pipelines to improve downstream availability</dt>
-     <dd>To ensure downstream availability, you generally want to deploy multiple destination
+  <p><indexterm>RPC pipelines<indexterm>deployment architecture</indexterm></indexterm>One key point
+      to consider:<dl>
+        <dlentry>
+          <dt>Use multiple destination pipelines to improve downstream availability</dt>
+          <dd>To ensure downstream availability, you generally want to deploy multiple destination
             pipelines. </dd>
           <dd>Note that the origin pipeline writes data to a single destination pipeline, but can
             round-robin through multiple pipelines. By using multiple destination pipelines, you can
             provide redundancy and avoid bottlenecks with a high-volume origin pipeline:</dd>
-     <dd><image href="../Graphics/RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
-     <dd>If you have multiple data centers with similar data, you might deploy several sets of this
-      model. This would allow you to process similar data from multiple data centers and store the
-      data in a destination data center that might use Kafka or HDFS as a final destination:</dd>
-     <dd><image href="../Graphics/RPCarch-manySets.png" id="image_pbj_msg_ct" scale="100"/></dd>
-    </dlentry>
-    <dlentry>
-     <dt>Run pipelines on different <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>s</dt>
-     <dd>Though a <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can run
-      more than one pipeline, to avoid overburdening a single <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in a high
-      volume context, use a different <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to run each
-      pipeline. </dd>
-    </dlentry>
-   </dl></p>
+          <dd><image href="../Graphics/RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
+          <dd>If you have multiple pipelines with similar data, you might deploy several sets of
+            this model, as follows:</dd>
+          <dd><image href="../Graphics/RPCarch-manySets.png" id="image_pbj_msg_ct" scale="100"
+            /></dd>
+        </dlentry>
+      </dl></p>
  </conbody>
 </concept>

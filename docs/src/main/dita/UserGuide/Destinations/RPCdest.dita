@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lfk_hx2_ct">
  <title>RPC</title>
- <shortdesc>The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination
-    as part of an origin pipeline. </shortdesc>
+ <shortdesc>The RPC destination passes data over the network to an RPC origin. Use the RPC
+    destination as part of an origin pipeline. </shortdesc>
  <conbody>
   <p><indexterm>RPC
      destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>RPC</indexterm></indexterm>When

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_e1j_jwv_ht">
+ <title>Change Data Capture</title>
+ <shortdesc>The JDBC Consumer can process change data capture data when the database captures
+  changes in a table, as with Oracle and Microsoft SQL Server. </shortdesc>
+ <conbody>
+  <p><indexterm>JDBC Consumer origin<indexterm>change data capture</indexterm></indexterm>To use
+   change data capture, you define the transaction ID column and maximum transaction size. When
+   these properties are defined, JDBC Consumer processes data as a batch up to the maximum
+   transaction size, overriding the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum batch
+   size. </p>
+  <p>When the transaction is larger than the maximum transaction size, JDBC Consumer uses multiple
+   batches as needed.</p>
+  <p>To preserve transactional integrity, increase the maximum transaction size as necessary. Note
+   that setting this property too high can cause out of memory errors. </p>
+ </conbody>
+</concept>

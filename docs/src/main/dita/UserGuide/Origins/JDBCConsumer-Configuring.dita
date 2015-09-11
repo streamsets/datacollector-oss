@@ -105,7 +105,7 @@
                 <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
                     configure the following properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_mb1_kfs_bs">
+                    <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -123,6 +123,41 @@
                                 <row>
                                     <entry>Password</entry>
                                     <entry>Password for the JDBC account</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>To use change data capture, on the <uicontrol>Change Data Capture</uicontrol>
+                    tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_vnz_v1w_ht">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Change Data Capture  Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Transaction ID Column Name</entry>
+                                    <entry>Transaction ID column name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Max Transaction Size (rows) <xref
+                                            href="JDBCConsumer-CDC.dita"><image
+                                                href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_gsf_kdw_ht"/>
+                                        </xref></entry>
+                                    <entry>Maximum number of rows to include in a batch.
+                                            <p>Overrides the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> maximum batch size. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

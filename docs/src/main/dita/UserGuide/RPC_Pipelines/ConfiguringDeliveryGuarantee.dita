@@ -35,9 +35,8 @@
      of data. </li>
    </ul></p>
   <p>
-   <note>If the RPC pipelines are configured to use different delivery guarantees, the <ph
-     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses At Least
-    Once.</note>
+   <note>If the RPC pipelines are configured to use different delivery guarantees, the resulting
+        behavior is At Most Once.</note>
   </p>
  </conbody>
  <related-links>

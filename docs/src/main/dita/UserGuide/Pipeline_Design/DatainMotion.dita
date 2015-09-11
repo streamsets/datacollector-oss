@@ -26,11 +26,11 @@
    The batch moves through the pipeline from processor to processor until it reaches pipeline
    destinations.</p>
   <p>Destinations write the batch to destination systems, and the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commits the
-   offset internally. Based on the pipeline delivery guarantee, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> either commits
-   the offset as soon as it writes to destination systems or after receiving confirmation of the
-   write from destination systems. </p>
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commits
+      the offset internally. Based on the pipeline delivery guarantee, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> either
+      commits the offset as soon as it writes to any destination system or after receiving
+      confirmation of the write from all destination systems. </p>
   <p>After the offset commit, the origin stage creates a new batch. </p>
   <p>Note that this describes general pipeline behavior. Behavior can differ based on the specific
    pipeline configuration. For example, for the Kafka Consumer, the Kafka Zookeeper tracks and

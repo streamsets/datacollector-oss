@@ -1155,6 +1155,11 @@
                                             the Retries Per Batch property.</p><p>Default is 2000
                                             milliseconds.</p></entry>
                                 </row>
+                                <row id="row-UseCompression">
+                                    <entry>Use Compression</entry>
+                                    <entry>Enables the destination to use compression to pass data
+                                        to the RPC origin. Enabled by default. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

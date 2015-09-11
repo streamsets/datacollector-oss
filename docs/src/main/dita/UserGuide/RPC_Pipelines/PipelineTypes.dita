@@ -18,8 +18,8 @@
  <conbody>
   <p><indexterm>RPC pipelines<indexterm>types</indexterm></indexterm><indexterm>origin
           pipeline<indexterm>RPC pipelines</indexterm></indexterm><indexterm>destination
-          pipeline<indexterm>RPC pipelines</indexterm></indexterm>To pass data across data centers,
-      use the following types of RPC pipelines: <dl>
+          pipeline<indexterm>RPC pipelines</indexterm></indexterm>You can create two kinds of RPC
+      pipelines: <dl>
         <dlentry>
           <dt>origin pipeline</dt>
           <dd>Processes data from the origin system and passes it to the destination pipeline. </dd>

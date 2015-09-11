@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines , are a set of pipelines that pass data from one pipeline to another over the WAN without writing to an intermediary system. Use RPC pipelines to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC Pipelines"></meta><meta name="abstract" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the WAN without writing to an intermediary system. Use RPC pipelines to securely transmit data across data centers."></meta><meta name="description" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the WAN without writing to an intermediary system. Use RPC pipelines to securely transmit data across data centers."></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipelines_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lnh_z3z_bt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines , are a set of pipelines that pass data from one pipeline to another over the network without writing to an intermediary system. You might use RPC ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC Pipelines"></meta><meta name="abstract" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the network without writing to an intermediary system. You might use RPC pipelines to send data securely between two data centers."></meta><meta name="description" content="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the network without writing to an intermediary system. You might use RPC pipelines to send data securely between two data centers."></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipelines_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lnh_z3z_bt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -15,8 +15,8 @@
 
  
  <div class="body conbody"><p class="shortdesc">Remote Protocol Call pipelines, a.k.a. <dfn class="term">RPC pipelines</dfn>, are a set of
-    pipelines that pass data from one pipeline to another over the WAN without writing to an
-    intermediary system. Use RPC pipelines to securely transmit data across data
+    pipelines that pass data from one pipeline to another over the network  without writing to an
+    intermediary system. You might use RPC pipelines to send data securely between two data
     centers.</p>
 
     <p class="p">Typically, a pipeline uses a standard origin such as
@@ -27,9 +27,9 @@
       pipeline uses an RPC destination to write directly to an RPC origin in the destination
       pipeline, as follows: </p>
 
-    <img class="image" id="concept_lnh_z3z_bt__image_gw4_mlb_dt" src="../Graphics/RPCpipelines.png" height="219" width="853"></img>
-    <p class="p">The RPC destination and RPC origin enable you to pass data securely from one data center to
-      another, effectively like creating a single pipeline that spans two data centers.</p>
+    <img class="image" id="concept_lnh_z3z_bt__image_gw4_mlb_dt" src="../Graphics/RPCpipelines.png" height="289" width="888"></img>
+    <p class="p">The RPC destination and RPC origin enable you to pass data securely from one pipeline to
+      another, effectively like creating a single pipeline that spans a network. </p>
 
   </div>
 
@@ -38,8 +38,8 @@
  <h2 class="title topictitle2">RPC Pipeline Types</h2>
 
  <div class="body conbody">
-  <div class="p">To pass data across data centers,
-      use the following types of RPC pipelines: <dl class="dl">
+  <div class="p">You can create two kinds of RPC
+      pipelines: <dl class="dl">
         
           <dt class="dt dlterm">origin pipeline</dt>
 

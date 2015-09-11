@@ -182,9 +182,8 @@
                                                 an RPC destination pipeline.</li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
-                                        </ul><p>For cluster mode, use Discard or Write to Kafka.
-                                            Writing to file is not supported at this time.
-                                        </p></entry>
+                                        </ul><p>For cluster mode, Write to File is not supported at
+                                            this time. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -353,6 +352,10 @@
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-ReadTimeout">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/row-UseCompression">
                                     <entry/>
                                 </row>
                             </tbody>

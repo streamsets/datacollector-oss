@@ -40,7 +40,7 @@
             <row>
               <entry>Apache Kafka</entry>
               <entry>0.8.1.x<p>0.8.2.x</p></entry>
-              <entry>Use to access Kafka. <p>Provides a Kafka Consumer and Kafka
+              <entry>Use to access Kafka. <p>Provides the Kafka Consumer and Kafka
                 Producer.</p></entry>
             </row>
             <row>
@@ -52,31 +52,31 @@
                     <li>Hadoop FS</li>
                     <li>HBase</li>
                     <li>Solr</li>
-                  </ul></p><p>Also provides a Hadoop FS origin for cluster mode
+                  </ul></p><p>Also provides the Hadoop FS origin for cluster mode
                 pipelines.</p></entry>
             </row>
             <row>
               <entry>CDH Cluster Kafka 1.2.x</entry>
               <entry>5.4.x</entry>
               <entry>Use to read from the Cloudera distribution of the Apache Kafka 1.2.0.
-                  <p>Provides a Kafka Consumer origin for cluster mode pipelines. </p></entry>
+                  <p>Provides the Kafka Consumer origin for cluster mode pipelines. </p></entry>
             </row>
             <row>
               <entry>CDH Kafka </entry>
               <entry>1.2.0 (0.8.2.0)</entry>
               <entry>Use access the Cloudera distribution of Apache Kafka 1.2.0 (0.8.2.0).
-                  <p>Provides a Kafka Consumer origin and Kafka Producer destination.</p></entry>
+                  <p>Provides the Kafka Consumer origin and Kafka Producer destination.</p></entry>
             </row>
             <row>
               <entry>Cassandra </entry>
               <entry>2.x</entry>
-              <entry>Use to write to Apache Cassandra 1.2, 2.0, and 2.1.<p>Provides a Cassandra
+              <entry>Use to write to Apache Cassandra 1.2, 2.0, and 2.1.<p>Provides the Cassandra
                   destination.</p></entry>
             </row>
             <row>
               <entry>Elasticsearch</entry>
-              <entry>1.4.x<p>1.5.x</p></entry>
-              <entry>Use to write to Elasticsearch.<p>Provides an Elasticsearch destination.
+              <entry>1.4.x<p>1.5.x</p><p>1.6.x</p><p>1.7.x</p></entry>
+              <entry>Use to write to Elasticsearch.<p>Provides the Elasticsearch destination.
                 </p></entry>
             </row>
             <row>
@@ -90,21 +90,32 @@
                   </ul></p></entry>
             </row>
             <row>
+              <entry>JDBC</entry>
+              <entry>N/A</entry>
+              <entry>Use to access databases through JDBC. Provides the JDBC Consumer origin and
+                JDBC Producer destination. </entry>
+            </row>
+            <row>
+              <entry>JMS</entry>
+              <entry>N/A</entry>
+              <entry>Use to read from JMS.<p>Provides the JMS Consumer origin.</p></entry>
+            </row>
+            <row>
               <entry>Jython</entry>
               <entry>2.7.x</entry>
-              <entry>Use to process scripts written in Jython.<p>Provides a Jython Evaluator
+              <entry>Use to process scripts written in Jython.<p>Provides the Jython Evaluator
                   processor. </p></entry>
             </row>
             <row>
               <entry>Kinesis</entry>
               <entry>1.x</entry>
-              <entry>Use to access Amazon Kinesis.<p>Provides a Kinesis origin and
-                destination.</p></entry>
+              <entry>Use to access Amazon Kinesis.<p>Provides the Kinesis origin and
+                  destination.</p></entry>
             </row>
             <row>
               <entry>MongoDB</entry>
               <entry>3.x</entry>
-              <entry>Use to read from Mongo DB.<p>Provides a MongoDB origin.</p></entry>
+              <entry>Use to read from Mongo DB.<p>Provides the MongoDB origin.</p></entry>
             </row>
           </tbody>
         </tgroup>

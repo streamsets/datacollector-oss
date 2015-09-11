@@ -22,6 +22,10 @@
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/AmazonS3-Folder_FileNamePattern.dita"/>
+   <topicref href="../Origins/AmazonS3-FileProcessingOrder.dita"/>
+   <topicref href="../Origins/AmazonS3-BufferLimit.dita"/>
+   <topicref href="../Origins/AmazonS3-DataFormat.dita"/>
    <topicref href="../Origins/AmazonS3-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/Directory.dita" chunk="to-content">
@@ -70,6 +74,7 @@
    <topicref href="../Origins/JDBCConsumer-Recovery.dita"/>
    <topicref href="../Origins/JDBCConsumer-Full-IncrementalQueries.dita"/>
    <topicref href="../Origins/JDBC-SQLQuery.dita"/>
+   <topicref href="../Origins/JDBCConsumer-CDC.dita"/>
    <topicref href="../Origins/JDBCConsumer-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/JMS.dita" chunk="to-content">

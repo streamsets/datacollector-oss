@@ -63,6 +63,11 @@
        <entry>Character encoding of the messages to be processed.<p>Not used for the SDC Record,
          Avro, or Binary data format.</p></entry>
       </row>
+      <row id="Charset">
+       <entry>Charset</entry>
+       <entry>Character encoding of the messages to be processed.<p>Not used for the SDC Record or
+         Avro data format.</p></entry>
+      </row>
      </tbody>
     </tgroup>
    </table>

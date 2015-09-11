@@ -36,7 +36,7 @@ ${record:value("/'city&amp;state'"}</codeblock>
      <dd>For example, to use a field named "ID's" as a required field, you would use a single
       backslash: <codeblock>/ID\'s</codeblock></dd>
      <dd>To use the same field in an expression, you might need additional backslashes as
-      follows:<codeblock>${record:value("/ID\\'s")}</codeblock></dd>
+      follows:<codeblock>${record:value('/ID\\'s')}</codeblock></dd>
     </dlentry>
    </dl></p>
  </conbody>
