@@ -120,7 +120,7 @@ public class HttpClientDSource extends DSource {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Polling interval (ms)",
+    label = "Polling Interval (ms)",
     defaultValue = "5000",
     displayPosition = 26,
     group = "HTTP",
@@ -143,7 +143,7 @@ public class HttpClientDSource extends DSource {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    label = "Batch Size",
+    label = "Batch Size (recs)",
     defaultValue = "100",
     description = "Maximum number of response entities to queue (e.g. JSON objects).",
     displayPosition = 40,
