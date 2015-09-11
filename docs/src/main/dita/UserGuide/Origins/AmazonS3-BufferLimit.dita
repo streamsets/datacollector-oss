@@ -20,9 +20,8 @@
  <conbody>
   <p><indexterm>Amazon S3 origin<indexterm>buffer limit and error
         handling</indexterm></indexterm><indexterm>buffer limit and error handling<indexterm>for
-          Amazon S3</indexterm></indexterm>A buffer limit determines the amount of data that can be
-      read into the memory and helps prevent out of memory errors. Decrease the buffer limit when
-      memory on the <ph
+          Amazon S3</indexterm></indexterm>The buffer limit helps prevent out of memory errors.
+      Decrease the buffer limit when memory on the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine is
       limited. Increase the buffer limit to process larger records when memory is available. </p>
     <p>When a record is larger than the specified limit, the origin processes the source file based
