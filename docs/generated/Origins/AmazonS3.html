@@ -330,7 +330,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e303" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e305" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -361,7 +361,7 @@ file2.log        09-30-2015 18:39:44</pre>
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d24572e421 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e424 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d3146e350">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e424 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d3146e352">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -697,7 +697,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e962" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1134" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -734,7 +734,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e667" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e839" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -752,7 +752,7 @@ file2.log        09-30-2015 18:39:44</pre>
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d24572e963 ">JSON Content</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e966 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_gfj_ssv_yq__d3146e698">
+                                            <ul class="ul" id="task_gfj_ssv_yq__d3146e870">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -764,7 +764,7 @@ file2.log        09-30-2015 18:39:44</pre>
 
                                 </tr>
 
-                                <tr id="task_gfj_ssv_yq__d3146e709" class="row">
+                                <tr id="task_gfj_ssv_yq__d3146e881" class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d24572e963 ">Maximum Object Length (chars)</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e966 ">Maximum number of characters in a JSON object. <p class="p">Longer
@@ -786,7 +786,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e542" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e714" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -836,10 +836,18 @@ file2.log        09-30-2015 18:39:44</pre>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d24572e1031 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
-                                            <img class="image" id="task_gfj_ssv_yq__d3146e592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d24572e1031 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d24572e1034 ">Record type to produce:<ul class="ul" id="task_gfj_ssv_yq__d3146e596">
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d24572e1034 ">Maximum length of a record in characters. Longer records
+                                        are not read. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d24572e1031 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
+                                            <img class="image" id="task_gfj_ssv_yq__d3146e773" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d24572e1034 ">Record type to produce:<ul class="ul" id="task_gfj_ssv_yq__d3146e777">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -851,14 +859,6 @@ file2.log        09-30-2015 18:39:44</pre>
 
                                         </ul>
 </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d24572e1031 ">Max Record Length (chars)</td>
-
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d24572e1034 ">Maximum length of a record in characters. Longer records
-                                        are not read. </td>
 
                                 </tr>
 
@@ -895,7 +895,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1022" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1193" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -944,7 +944,7 @@ file2.log        09-30-2015 18:39:44</pre>
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e756" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e928" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -962,7 +962,7 @@ file2.log        09-30-2015 18:39:44</pre>
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d24572e1241 ">Log Format</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e1244 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_gfj_ssv_yq__d3146e785">
+                                            options:<ul class="ul" id="task_gfj_ssv_yq__d3146e957">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1006,7 +1006,7 @@ file2.log        09-30-2015 18:39:44</pre>
                         </table>
 </div>
 
-                    <ul class="ul" id="task_gfj_ssv_yq__d3146e834">
+                    <ul class="ul" id="task_gfj_ssv_yq__d3146e1006">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1024,7 +1024,7 @@ file2.log        09-30-2015 18:39:44</pre>
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e874" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1046" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
@@ -1042,7 +1042,7 @@ file2.log        09-30-2015 18:39:44</pre>
                                                 <td class="entry" valign="top" width="22.22222222222222%" headers="d24572e1364 ">On Parse Error</td>
 
                                                 <td class="entry" valign="top" width="77.77777777777779%" headers="d24572e1367 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d3146e903">
+                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d3146e1075">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 

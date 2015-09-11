@@ -242,12 +242,8 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
                 <cmd/>
             </step>
-            <step>
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and optionally enter an
-                    Avro schema definition. </cmd>
-                <info>Entering a schema definition overrides any existing schema definitions
-                    associated with the data.<p>You can optionally use the runtime:loadResource
-                        function to use a schema definition stored in a file.</p></info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

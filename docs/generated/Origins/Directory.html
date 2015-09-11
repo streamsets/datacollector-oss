@@ -319,8 +319,8 @@
  <div class="body conbody"><p class="shortdesc">When you use an origin to read log data, you define the format of the log files to be
   read. </p>
 
-  <p class="p">You can read log
-   files that use the following log formats:</p>
+  <p class="p">You
+   can read log files that use the following log formats:</p>
 
   <div class="p">
    <dl class="dl">
@@ -408,7 +408,7 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e303" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e305" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -439,7 +439,7 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d26716e543 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e546 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d3146e350">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e546 ">Error record handling for the stage: <ul class="ul" id="task_gfj_ssv_yq__d3146e352">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -706,7 +706,7 @@ Use to
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e962" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1134" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -743,7 +743,7 @@ Use to
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e667" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e839" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -761,7 +761,7 @@ Use to
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d26716e1010 ">JSON Content</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e1013 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_gfj_ssv_yq__d3146e698">
+                                            <ul class="ul" id="task_gfj_ssv_yq__d3146e870">
                                                 <li class="li">Array of Objects </li>
 
                                                 <li class="li">Multiple Objects</li>
@@ -773,7 +773,7 @@ Use to
 
                                 </tr>
 
-                                <tr id="task_gfj_ssv_yq__d3146e709" class="row">
+                                <tr id="task_gfj_ssv_yq__d3146e881" class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d26716e1010 ">Maximum Object Length (chars)</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e1013 ">Maximum number of characters in a JSON object. <p class="p">Longer
@@ -795,7 +795,7 @@ Use to
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e542" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e714" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -845,10 +845,18 @@ Use to
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d26716e1079 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
-                                            <img class="image" id="task_gfj_ssv_yq__d3146e592" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d26716e1079 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d26716e1082 ">Record type to produce:<ul class="ul" id="task_gfj_ssv_yq__d3146e596">
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d26716e1082 ">Maximum length of a record in characters. Longer records
+                                        are not read. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d26716e1079 ">Record Type <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs" title="For delimited data in the list-map record type, you can use standard record functions to process data. For data in the list record type, you should either use the delimited data functions or include the full field path in standard record functions.">
+                                            <img class="image" id="task_gfj_ssv_yq__d3146e773" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d26716e1082 ">Record type to produce:<ul class="ul" id="task_gfj_ssv_yq__d3146e777">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -860,14 +868,6 @@ Use to
 
                                         </ul>
 </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="20.61855670103093%" headers="d26716e1079 ">Max Record Length (chars)</td>
-
-                                    <td class="entry" valign="top" width="79.38144329896907%" headers="d26716e1082 ">Maximum length of a record in characters. Longer records
-                                        are not read. </td>
 
                                 </tr>
 
@@ -945,7 +945,7 @@ Use to
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e756" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e928" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -963,7 +963,7 @@ Use to
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d26716e1283 ">Log Format</td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e1286 ">Format of the log files. Use one of the following
-                                            options:<ul class="ul" id="task_gfj_ssv_yq__d3146e785">
+                                            options:<ul class="ul" id="task_gfj_ssv_yq__d3146e957">
                                             <li class="li">Common Log Format</li>
 
                                             <li class="li">Combined Log Format</li>
@@ -1007,7 +1007,7 @@ Use to
                         </table>
 </div>
 
-                    <ul class="ul" id="task_gfj_ssv_yq__d3146e834">
+                    <ul class="ul" id="task_gfj_ssv_yq__d3146e1006">
                         <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
                             use Apache log format strings to define the <span class="ph uicontrol">Custom Log
                                 Format</span>.</li>
@@ -1025,7 +1025,7 @@ Use to
 
                         <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
                                 
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e874" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e1046" class="table" frame="border" border="1" rules="all">
                                         
                                         
                                         <thead class="thead" align="left">
@@ -1043,7 +1043,7 @@ Use to
                                                 <td class="entry" valign="top" width="22.22222222222222%" headers="d26716e1406 ">On Parse Error</td>
 
                                                 <td class="entry" valign="top" width="77.77777777777779%" headers="d26716e1409 ">Determines how to handle information that
-                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d3146e903">
+                                                  cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d3146e1075">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
 
@@ -1090,12 +1090,45 @@ Use to
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For Avro data, click the <span class="keyword wintitle">Avro</span> tab and optionally enter an
-                    Avro schema definition. </span>
-                <div class="itemgroup info">Entering a schema definition overrides any existing schema definitions
-                    associated with the data.<p class="p">You can optionally use the runtime:loadResource
-                        function to use a schema definition stored in a file.</p>
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, optionally configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d3146e582" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26716e1483">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26716e1486">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26716e1483 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26716e1486 ">Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p class="p">When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p>
+<p class="p">You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
 </div>
+
+                </div>
             </li>
 </ol>
 
