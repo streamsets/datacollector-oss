@@ -59,3 +59,8 @@ If you need help with production systems, you can check out the variety of suppo
 Contributing code
 -----------
 We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to get started.
+
+
+Changelog
+----------
+See the latest [changelog](https://github.com/StreamSets/datacollector/blob/master/CHANGES.txt)
