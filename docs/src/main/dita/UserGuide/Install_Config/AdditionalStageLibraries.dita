@@ -49,8 +49,9 @@
               <entry>Use to write to the Cloudera CDH distribution of Hadoop. <p>Provides the
                   following destinations:<ul id="ul_gw5_y1t_2s">
                     <li>Flume</li>
-                    <li>Hadoop FS</li>
+                    <li>Hadoop FS </li>
                     <li>HBase</li>
+                    <li>Hive Streaming (5.4.x only)</li>
                     <li>Solr</li>
                   </ul></p><p>Also provides the Hadoop FS origin for cluster mode
                 pipelines.</p></entry>
@@ -87,6 +88,7 @@
                     <li>Flume</li>
                     <li>Hadoop FS</li>
                     <li>HBase</li>
+                    <li>Hive Streaming</li>
                   </ul></p></entry>
             </row>
             <row>

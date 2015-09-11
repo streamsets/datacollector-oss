@@ -179,7 +179,9 @@
                                             <li>Write to File - Writes error records to a file in
                                                 the specified directory. </li>
                                             <li>Write to Another Pipeline - Writes error records to
-                                                an RPC destination pipeline.</li>
+                                                an RPC destination pipeline.<p>Requires an RPC
+                                                  destination pipeline to process the error records.
+                                                </p></li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
                                         </ul><p>For cluster mode, Write to File is not supported at

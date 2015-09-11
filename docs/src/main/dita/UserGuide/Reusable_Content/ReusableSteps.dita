@@ -1150,7 +1150,7 @@
                                 </row>
                                 <row id="row-ReadTimeout">
                                     <entry>Read Timeout (ms)</entry>
-                                    <entry>Milliseconds to to wait for the RPC origin to read data
+                                    <entry>Milliseconds to wait for the RPC origin to read data
                                         from a batch. <p>The destination retries the write based on
                                             the Retries Per Batch property.</p><p>Default is 2000
                                             milliseconds.</p></entry>

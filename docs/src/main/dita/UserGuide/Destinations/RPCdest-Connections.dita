@@ -19,6 +19,6 @@
  <conbody>
   <p><indexterm>RPC destinations<indexterm>RPC connections</indexterm></indexterm>The RPC connection
    is the host and port number of the RPC origin to receive the data. Define multiple connections to
-   allow the the RPC destination to round-robin through multiple pipelines in case of bottlenecks. </p>
+   allow the RPC destination to round-robin through multiple pipelines in case of bottlenecks. </p>
  </conbody>
 </concept>

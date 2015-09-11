@@ -25,6 +25,7 @@
                     origin</indexterm></indexterm><indexterm>origins<indexterm>resetting the
                     origin</indexterm></indexterm>You can reset the origin for the following origin
                 stages:<ul id="ul_k1q_35k_2s">
+                <li>Amazon S3</li>
                 <li>Directory</li>
                 <li>File Tail</li>
                 <li>JDBC Consumer</li>

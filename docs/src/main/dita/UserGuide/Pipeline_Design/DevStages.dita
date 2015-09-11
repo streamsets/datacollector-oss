@@ -43,8 +43,8 @@
     </dlentry>
     <dlentry>
      <dt>Dev Raw Data Source origin</dt>
-     <dd>Generates records based on user-supplied data. You can enter raw data, select the data type
-      of the data, and then configure any format-related configuration options. </dd>
+     <dd>Generates records based on user-supplied data. You can enter raw data, select the data
+            format of the data, and then configure any format-related configuration options. </dd>
      <dd>For example, you can enter a set of log data, select the log data format, and then define
       the log format and other log properties for the data. </dd>
           <dd>In data preview, this stage displays the raw source data as well as the data generated

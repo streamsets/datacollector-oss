@@ -41,6 +41,7 @@ fileA.log        09-30-2015 12:03:23
 fileB.log        09-30-2015 15:34:51
 file2.log        09-30-2015 18:39:44</codeblock></p>
                 <p>If while processing these files a new file arrives with a timestamp of 09-29-2015
-                        12:00:00, the origin cannot read the file unless you reset the origin.</p>
+                        12:00:00, the Amazon S3 origin cannot read the file unless you reset the
+                        origin.</p>
         </conbody>
 </concept>

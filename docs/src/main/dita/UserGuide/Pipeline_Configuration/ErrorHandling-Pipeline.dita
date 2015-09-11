@@ -42,9 +42,14 @@
           <dd>The pipeline writes error records to an RPC pipeline. The <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>To write to another pipeline, you need to create an RPC destination pipeline to
-            process the error records. The pipeline must include an RPC origin configured to read
-            error records from this pipeline.  </dd>
+          <dd>When you write to another pipeline, the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            effectively creates an RPC origin pipeline to pass the error records to another
+            pipeline. </dd>
+          <dd>You need to create an RPC destination pipeline to process the error records. The
+            pipeline must include an RPC origin configured to read error records from this pipeline. </dd>
+          <dd>For more information about RPC pipelines, see <xref
+              href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>.</dd>
         </dlentry>
         <dlentry>
           <dt>Write to Kafka</dt>

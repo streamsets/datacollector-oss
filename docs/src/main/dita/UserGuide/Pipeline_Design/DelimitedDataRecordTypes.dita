@@ -25,12 +25,12 @@
       easily process delimited data.<dl>
         <dlentry>
           <dt>List-Map Record Type</dt>
-          <dd>Provides easy use of field names or index values in expressions. Recommended for all
-            new pipelines.</dd>
-          <dd>A list-map record type results in an indexed list that preserves the order of data, as
-            follows:<codeblock>[0]/&lt;first header>:&lt;value>
-[1]/&lt;second header>:&lt;value>
-[2]/&lt;third header>:&lt;value>
+          <dd>Provides easy use of field names or column position in expressions. Recommended for
+            all new pipelines.</dd>
+          <dd>A list-map record type results in a structure that preserves the order of data, as
+            follows:<codeblock>/&lt;first header>:&lt;value>
+/&lt;second header>:&lt;value>
+/&lt;third header>:&lt;value>
 ...</codeblock></dd>
           <dd>
             <p>For example, the following delimited rows:</p>
@@ -41,19 +41,19 @@
             </p>
           </dd>
           <dd>are converted to records as
-            follows:<codeblock>[0]/TransactionID: 0003420303
-[1]/Type: 04
-[2]/UserID: 362
+            follows:<codeblock>/TransactionID: 0003420303
+/Type: 04
+/UserID: 362
 
-[0]/TransactionID: 0003420304
-[1]/Type: 08
-[2]/UserID: 1008</codeblock></dd>
+/TransactionID: 0003420304
+/Type: 08
+/UserID: 1008</codeblock></dd>
           <dd>If data does not include a header or if you choose to ignore a header, list-map
             records use the column position as a header as follows:
-            <codeblock>[0] 0: &lt;value>
-[1] 1: &lt;value>
-[2] 2: &lt;value></codeblock></dd>
-          <dd>In an expression, you can use the field name or the index number with a standard
+            <codeblock>0: &lt;value>
+1: &lt;value>
+2: &lt;value></codeblock></dd>
+          <dd>In an expression, you can use the field name or the column position with a standard
             record function to call a field. For example, you can use either of the following
             record:value expressions to return data in the TransactionID
             field:<codeblock>${record:value('/TransactionID')}

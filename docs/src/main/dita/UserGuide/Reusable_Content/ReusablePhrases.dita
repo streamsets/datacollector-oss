@@ -87,8 +87,8 @@
                   </xref>
             </p>
             <p>
-                  <draft-comment author="Loretta">ORIGIN DATA FOMATS - from Directory. DLEntries are
-                        conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3. </draft-comment>
+                  <draft-comment author="Loretta">ORIGIN DATA FORMATS - from Directory. DLEntries
+                        are conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3. </draft-comment>
             </p>
             <p>
                   <dl id="ORIGIN-DFormats">
@@ -150,8 +150,8 @@
                                                 characters.</li>
                                     </ul></dd>
                               <dd>You can use a list or list-map record type for delimited data,
-                                    optionally including the header information when available. When
-                                    a record exceeds the maximum record length defined for the
+                                    optionally including the header information when available. </dd>
+                              <dd>When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
                               <dd>For more information about the record types, see <xref
@@ -178,8 +178,8 @@
                                                 characters.</li>
                                     </ul></dd>
                               <dd>You can use a list or list-map record type for delimited data,
-                                    optionally including the header information when available. When
-                                    a record exceeds the user-defined maximum record length, the
+                                    optionally including the header information when available. </dd>
+                              <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
                                     already processed from the file are passed to the pipeline. The
                                     behavior of the origin is then based on the error handling

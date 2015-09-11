@@ -26,7 +26,8 @@
       format to process data from another pipeline or to generate data to be processed by another
       pipeline.</p>
   <p>You can use the following origins to read SDC Record data: <ul id="ul_ep4_r2b_wr">
-    <li>Directory</li>
+    <li>Amazon S3</li>
+                <li>Directory</li>
         <li>JMS Consumer</li>
     <li>Kafka Consumer</li>
         <li>Kinesis Consumer</li>

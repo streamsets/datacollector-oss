@@ -78,9 +78,15 @@
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
-          <dd class="dd">To write to another pipeline, you need to create an RPC destination pipeline to
-            process the error records. The pipeline must include an RPC origin configured to read
-            error records from this pipeline.  </dd>
+          <dd class="dd">When you write to another pipeline, the <span class="ph">Data
+                  Collector</span>
+            effectively creates an RPC origin pipeline to pass the error records to another
+            pipeline. </dd>
+
+          <dd class="dd">You need to create an RPC destination pipeline to process the error records. The
+            pipeline must include an RPC origin configured to read error records from this pipeline. </dd>
+
+          <dd class="dd">For more information about RPC pipelines, see <a class="xref" href="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt" title="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the network without writing to an intermediary system. You might use RPC pipelines to send data securely between two data centers.">RPC Pipelines</a>.</dd>
 
         
         

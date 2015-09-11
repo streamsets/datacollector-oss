@@ -24,12 +24,11 @@
             processes files in the specified folder or directories defined by a glob pattern. </p>
   <p>For example, to read all CSV files in the East Coast folder, you can use "East Coast" for the
             folder name and "*.csv" for the file name pattern. </p>
-        <p>But say the East Coast folder includes a separate folder for each state, and you use the
-            slash as the path delimiter. To read all CSV files in each state folder, you can leave
-            the folder property empty, and then use the following for the file name pattern: "East
-            Coast/*/*.csv".</p>
-        <p>With this configuration, the Amazon S3 origin processes all *.csv files in the first
-            level of East Coast subdirectories. The origin does not process any CSV files in the
-            East Coast folder or in folders nested in the subdirectories.</p>
+        <p>But say the East Coast folder includes a separate subdirectory for each state. To read
+            all CSV files for each state, you can leave the folder property empty, and then use the
+            following for the file name pattern: "East Coast/*/*.csv". </p>
+        <p>With this configuration, the Amazon S3 origin processes all CSV files in the first level
+            of East Coast subdirectories. The origin does not process any CSV files in the East
+            Coast folder or in folders nested in the subdirectories.</p>
  </conbody>
 </concept>

@@ -80,7 +80,7 @@
                                             names to process. You can use UNIX-style wildcards, such
                                             as * or ?. For example, *.log. </p>
                                         <p>To process data in more than one folder, you can include
-                                            the path to the files to be processed, and use wildcards
+                                            the path to the files to be processed and use wildcards
                                             to define glob patterns. </p>
                                     </entry>
                                 </row>
@@ -170,7 +170,8 @@
                                             <li>Archive - Moves the file to another location.</li>
                                             <li>Delete - Deletes the file.</li>
                                         </ul><p>When archiving processed files, best practice is to
-                                            archive error files as well. </p></entry>
+                                            also  archive files that cannot be processed.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Archiving Option</entry>

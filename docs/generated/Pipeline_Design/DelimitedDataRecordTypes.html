@@ -21,13 +21,13 @@
         
           <dt class="dt dlterm">List-Map Record Type</dt>
 
-          <dd class="dd">Provides easy use of field names or index values in expressions. Recommended for all
-            new pipelines.</dd>
+          <dd class="dd">Provides easy use of field names or column position in expressions. Recommended for
+            all new pipelines.</dd>
 
-          <dd class="dd">A list-map record type results in an indexed list that preserves the order of data, as
-            follows:<pre class="pre codeblock">[0]/&lt;first header&gt;:&lt;value&gt;
-[1]/&lt;second header&gt;:&lt;value&gt;
-[2]/&lt;third header&gt;:&lt;value&gt;
+          <dd class="dd">A list-map record type results in a structure that preserves the order of data, as
+            follows:<pre class="pre codeblock">/&lt;first header&gt;:&lt;value&gt;
+/&lt;second header&gt;:&lt;value&gt;
+/&lt;third header&gt;:&lt;value&gt;
 ...</pre>
 </dd>
 
@@ -44,23 +44,23 @@
           </dd>
 
           <dd class="dd">are converted to records as
-            follows:<pre class="pre codeblock">[0]/TransactionID: 0003420303
-[1]/Type: 04
-[2]/UserID: 362
+            follows:<pre class="pre codeblock">/TransactionID: 0003420303
+/Type: 04
+/UserID: 362
 
-[0]/TransactionID: 0003420304
-[1]/Type: 08
-[2]/UserID: 1008</pre>
+/TransactionID: 0003420304
+/Type: 08
+/UserID: 1008</pre>
 </dd>
 
           <dd class="dd">If data does not include a header or if you choose to ignore a header, list-map
             records use the column position as a header as follows:
-            <pre class="pre codeblock">[0] 0: &lt;value&gt;
-[1] 1: &lt;value&gt;
-[2] 2: &lt;value&gt;</pre>
+            <pre class="pre codeblock">0: &lt;value&gt;
+1: &lt;value&gt;
+2: &lt;value&gt;</pre>
 </dd>
 
-          <dd class="dd">In an expression, you can use the field name or the index number with a standard
+          <dd class="dd">In an expression, you can use the field name or the column position with a standard
             record function to call a field. For example, you can use either of the following
             record:value expressions to return data in the TransactionID
             field:<pre class="pre codeblock">${record:value('/TransactionID')}
