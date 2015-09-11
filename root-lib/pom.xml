@@ -19,12 +19,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-proto</artifactId>
-    <version>1.1.0-RC2</version>
+    <version>1.1.0</version>
     <relativePath>../root-proto</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-root-lib</artifactId>
-  <version>1.1.0-RC2</version>
+  <version>1.1.0</version>
   <description>StreamSets Data Collector Root Libraries POM</description>
   <name>StreamSets Data Collector Root Libraries POM</name>
   <packaging>pom</packaging>

@@ -59,7 +59,3 @@ If you need help with production systems, you can check out the variety of suppo
 Contributing code
 -----------
 We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to get started.
-
-Changelog
-----------
-<<point to the changelog file in github>>

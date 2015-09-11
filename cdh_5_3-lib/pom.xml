@@ -19,12 +19,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.1.0-RC2</version>
+    <version>1.1.0</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_3-lib</artifactId>
-  <version>1.1.0-RC2</version>
+  <version>1.1.0</version>
   <description>StreamSets Data Collector CDH5.3.6 Lib</description>
   <name>StreamSets Data Collector CDH5.3.6 Lib</name>
   <packaging>jar</packaging>
