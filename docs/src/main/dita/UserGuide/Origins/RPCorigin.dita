@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_agb_5c1_ct">
  <title>RPC </title>
- <shortdesc>The RPC origin reads data passed from an RPC destination over the WAN. Use the RPC
+ <shortdesc>The RPC origin reads data passed from an RPC destination over the network. Use the RPC
     origin as part of an RPC destination pipeline. </shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>RPC</indexterm></indexterm><indexterm>RPC

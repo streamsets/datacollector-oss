@@ -22,6 +22,9 @@
       determine how the origin connects to the database. You configure the query mode, offset
       column, initial offset value, and SQL query to define the data returned by the database.</p>
 
+        <p class="p">You can configure the JDBC Consumer to perform change data capture for databases that
+            store the information in a table. </p>
+
     <p class="p">You can also configure add custom properties that your driver requires and configure
       additional properties for JDBC versions older than 4.0.</p>
 
@@ -29,18 +32,16 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_aq1_lxp_fs">
- <h2 class="title topictitle2">Installing the Driver</h2>
+  <h2 class="title topictitle2">Installing the JDBC Driver</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">To use JDBC Consumer, install the JDBC driver for the database that you are accessing. </p>
+  <div class="body conbody">
+    <p class="p">Before
+      you use the JDBC Consumer, install the JDBC driver for the database. You cannot access the
+      database until you install the required driver. </p>
 
-  <div class="p">You cannot
-   access the database until you install the required driver. Install the driver in the following
-   location, and then restart the <span class="ph">Data
-                  Collector</span>:<pre class="pre codeblock">&lt;SDCinstalldir&gt;/streamsets-libs/streamsets-datacollector-basic-lib/lib</pre>
-</div>
+    <p class="p">For more information about installing drivers, see <a class="xref" href="../Install_Config/AdditionalDrivers.html#concept_pdv_qlw_ft" title="You can install additional drivers for stages.">Additional Drivers</a>.</p>
 
- </div>
+  </div>
 
 </div>
 <div class="topic concept nested1" id="concept_nxz_2kz_bs">
@@ -156,6 +157,29 @@
   </div>
 
 </div>
+<div class="topic concept nested1" id="concept_e1j_jwv_ht">
+ <h2 class="title topictitle2">Change Data Capture</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The JDBC Consumer can process change data capture data when the database captures
+  changes in a table, as with Oracle and Microsoft SQL Server. </p>
+
+  <p class="p">To use
+   change data capture, you define the transaction ID column and maximum transaction size. When
+   these properties are defined, JDBC Consumer processes data as a batch up to the maximum
+   transaction size, overriding the <span class="ph">Data
+                  Collector</span> maximum batch
+   size. </p>
+
+  <p class="p">When the transaction is larger than the maximum transaction size, JDBC Consumer uses multiple
+   batches as needed.</p>
+
+  <p class="p">To preserve transactional integrity, increase the maximum transaction size as necessary. Note
+   that setting this property too high can cause out of memory errors. </p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_ryz_tkr_bs">
     <h2 class="title topictitle2">Configuring a JDBC Consumer</h2>
 
@@ -171,14 +195,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d3166e303" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__d3146e303" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d30916e275">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d32988e311">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d30916e278">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d32988e314">Description</th>
 
                                 </tr>
 
@@ -186,23 +210,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e275 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e311 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e278 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e275 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e278 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e314 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e275 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e311 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e278 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d3166e350">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e314 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e311 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e314 ">Error record handling for the stage: <ul class="ul" id="task_ryz_tkr_bs__d3146e350">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -231,9 +255,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d30916e347">JDBC Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d32988e383">JDBC Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d30916e350">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d32988e386">Description</th>
 
                                 </tr>
 
@@ -241,17 +265,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">JDBC Connection String</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">JDBC Connection String</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">JDBC connection string.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">JDBC connection string.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Incremental Mode  <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Incremental Mode  <a class="xref" href="JDBCConsumer.html#concept_ets_gnr_bs"><img class="image" id="task_ryz_tkr_bs__image_mm5_tvg_cs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">Defines how JDBC Consumer queries the database. Select to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">Defines how JDBC Consumer queries the database. Select to
                                         perform incremental queries. Clear to perform full queries.
                                             <p class="p">Default is incremental mode. </p>
 </td>
@@ -259,33 +283,33 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">SQL Query  <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs"><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">SQL Query  <a class="xref" href="JDBCConsumer.html#concept_uj4_mxy_bs"><img class="image" id="task_ryz_tkr_bs__image_yxz_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">SQL query to use when reading data from the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">SQL query to use when reading data from the
                                         database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Initial Offset </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Initial Offset </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">Offset value to use when the pipeline starts.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">Offset value to use when the pipeline starts.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Offset Column  <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Offset Column  <a class="xref" href="JDBCConsumer.html#concept_nxz_2kz_bs" title="JDBC Consumer uses an offset column and initial offset value to determine where to start reading data within a table. Include both the offset column and the offset value in the WHERE clause of the SQL query."><img class="image" id="task_ryz_tkr_bs__image_rqs_srq_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">Column to use for the offset value.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">Column to use for the offset value.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Query Interval</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Query Interval</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">Amount of time to wait between queries. Enter an
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">Amount of time to wait between queries. Enter an
                                         expression based on a unit of time. You can use SECONDS,
                                         MINUTES, or HOURS.<p class="p">Default is 10 seconds: ${10 * SECONDS}.
                                         </p>
@@ -294,17 +318,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Use Credentials</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Use Credentials</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">Indicates whether to use a login to access the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">Indicates whether to use a login to access the
                                         database.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e347 ">Additional JDBC Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e383 ">Additional JDBC Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e350 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e386 ">
                                         <p class="p">Additional JDBC configuration properties to use. To add
                                             properties, click <span class="ph uicontrol">Add</span> and define
                                             the JDBC property name and value. </p>
@@ -328,14 +352,14 @@
                     configure the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_mb1_kfs_bs" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_ybf_v1w_ht" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d30916e485">Credentials Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d32988e521">Credentials Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d30916e488">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d32988e524">Description</th>
 
                                 </tr>
 
@@ -343,16 +367,60 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e485 ">Username</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e521 ">Username</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e488 ">User name for the JDBC connection.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e524 ">User name for the JDBC connection.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e485 ">Password</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e521 ">Password</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e488 ">Password for the JDBC account</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e524 ">Password for the JDBC account</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use change data capture, on the <span class="ph uicontrol">Change Data Capture</span>
+                    tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ryz_tkr_bs__table_vnz_v1w_ht" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d32988e576">Change Data Capture  Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d32988e579">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d32988e576 ">Transaction ID Column Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d32988e579 ">Transaction ID column name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d32988e576 ">Max Transaction Size (rows) <a class="xref" href="JDBCConsumer.html#concept_e1j_jwv_ht" title="The JDBC Consumer can process change data capture data when the database captures changes in a table, as with Oracle and Microsoft SQL Server."><img class="image" id="task_ryz_tkr_bs__image_gsf_kdw_ht" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d32988e579 ">Maximum number of rows to include in a batch.
+                                            <p class="p">Overrides the <span class="ph">Data
+                  Collector</span> maximum batch size. </p>
+</td>
 
                                 </tr>
 
@@ -374,9 +442,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d30916e540">Legacy Driver Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d32988e643">Legacy Driver Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d30916e543">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d32988e646">Description</th>
 
                                 </tr>
 
@@ -384,17 +452,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e540 ">JDBC Class Driver Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e643 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e543 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e646 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d30916e540 ">Connection Health Test Query</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d32988e643 ">Connection Health Test Query</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d30916e543 ">Optional query to test the health of a connection.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d32988e646 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0. </td>
 
                                 </tr>

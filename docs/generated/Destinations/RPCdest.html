@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an origin pipeline. When you configure the RPC destination, you specify the RPC ID and RPC connections ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC"></meta><meta name="abstract" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an origin pipeline."></meta><meta name="description" content="The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination as part of an origin pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lfk_hx2_ct"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The RPC destination passes data over the network to an RPC origin. Use the RPC destination as part of an origin pipeline. When you configure the RPC destination, you specify the RPC ID and RPC ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RPC"></meta><meta name="abstract" content="The RPC destination passes data over the network to an RPC origin. Use the RPC destination as part of an origin pipeline."></meta><meta name="description" content="The RPC destination passes data over the network to an RPC origin. Use the RPC destination as part of an origin pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_lfk_hx2_ct"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RPC</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -14,8 +14,8 @@
  <h1 class="title topictitle1">RPC</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The RPC destination passes data over the WAN to an RPC origin. Use the RPC destination
-    as part of an origin pipeline. </p>
+ <div class="body conbody"><p class="shortdesc">The RPC destination passes data over the network to an RPC origin. Use the RPC
+    destination as part of an origin pipeline. </p>
 
   <p class="p">When
    you configure the RPC destination, you specify the RPC ID and RPC connections to use. You can
@@ -24,7 +24,7 @@
  </div>
 
  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
-<div class="related_link"><a class="navheader_parent_path" href="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt" title="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the WAN without writing to an intermediary system. Use RPC pipelines to securely transmit data across data centers.">RPC Pipelines</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt" title="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of pipelines that pass data from one pipeline to another over the network without writing to an intermediary system. You might use RPC pipelines to send data securely between two data centers.">RPC Pipelines</a></div>
 </div>
 </div>
 <div class="topic concept nested1" id="concept_icz_wzw_dt">
@@ -265,6 +265,14 @@
 <p class="p">Default is 2000
                                             milliseconds.</p>
 </td>
+
+                                </tr>
+
+                                <tr id="task_nbl_r2x_dt__d907e2075" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d15708e348 ">Use Compression</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d15708e351 ">Enables the destination to use compression to pass data
+                                        to the RPC origin. Enabled by default. </td>
 
                                 </tr>
 

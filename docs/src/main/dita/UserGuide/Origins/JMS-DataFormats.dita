@@ -42,14 +42,9 @@
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry>
-     <dt>XML</dt>
-     <dd>Generates records based on the location of the XML element that you define as the record
-      delimiter. If you do not define a delimiter element, JMS Consumer treats the XML file as a
-      single record.</dd>
-     <dd>When a record exceeds the maximum record length defined for the origin, the origin skips
-      the record and continues processing with the next record. It sends the skipped record to the
-      pipeline for error handling.</dd>
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
+     <dt/>
+     <dd/>
     </dlentry>
     <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
      <dt/>

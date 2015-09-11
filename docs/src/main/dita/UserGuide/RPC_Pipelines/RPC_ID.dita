@@ -19,8 +19,8 @@
       recognize each other. </shortdesc>
  <conbody>
   <p><indexterm>RPC pipelines<indexterm>RPC ID</indexterm></indexterm><indexterm>RPC ID<indexterm>in
-               RPC origins and destinations</indexterm></indexterm>To enable the RPC destination to
-         write directly to an RPC origin, create a single RPC ID and use it in both stages. </p>
+                    RPC origins and destinations</indexterm></indexterm>To enable the RPC
+            destination to write directly to an RPC origin, use the same RPC ID in both stages. </p>
       <p>To write to multiple pipelines, use the RPC ID in the RPC destination and all RPC
          origins.</p>
  </conbody>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ltv_r3l_5q">
+ <title>File Processing Order</title>
+ <shortdesc>The Amazon S3 origin processes files that match the configured file name pattern in
+                order of the last-modified timestamp.</shortdesc>
+ <conbody>
+                <p><indexterm>file processing<indexterm>Amazon
+                                S3</indexterm></indexterm><indexterm>Amazon S3 origin<indexterm>file
+                                        processing</indexterm></indexterm><indexterm>file name
+                                        pattern<indexterm>Amazon S3
+                        property</indexterm></indexterm>When you start a pipeline, the Amazon S3
+                        origin starts processing data with the earliest file in the defined location
+                        that matches the user-defined file name pattern, and then progresses in
+                        chronological order. If two or more files have the same timestamp, the
+                        origin processes the files in lexicographically increasing order.</p>
+                <p>To process files that include a timestamp earlier than processed files, reset the
+                        origin to read all available files.</p>
+                <p>For example, you use "*.log" as the file name pattern to process the following
+                        log files from two different servers:</p>
+                <codeblock>fileA.log        09-30-2015 12:03:23
+fileB.log        09-30-2015 15:34:51
+file1.log        09-30-2015 12:00:00
+file2.log        09-30-2015 18:39:44</codeblock>
+                <p>The origin reads these files in order of the timestamp, as
+                        follows:<codeblock>file1.log        09-30-2015 12:00:00
+fileA.log        09-30-2015 12:03:23
+fileB.log        09-30-2015 15:34:51
+file2.log        09-30-2015 18:39:44</codeblock></p>
+                <p>If while processing these files a new file arrives with a timestamp of 09-29-2015
+                        12:00:00, the origin cannot read the file unless you reset the origin.</p>
+        </conbody>
+</concept>

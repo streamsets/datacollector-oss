@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_czx_ktn_ht">
+ <title>Development Stages</title>
+ <conbody>
+  <p><indexterm>pipeline design<indexterm>development
+     stages</indexterm></indexterm><indexterm>origins<indexterm>development
+    origins</indexterm></indexterm><indexterm>processors<indexterm>development
+     processors</indexterm></indexterm><indexterm>Dev Data Generator
+     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Source
+     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Raw Data Source
+     origin<indexterm>description</indexterm></indexterm><indexterm>Dev Random Error
+     processor<indexterm>description</indexterm></indexterm><indexterm>Dev Record Creator
+     processor<indexterm>description</indexterm></indexterm>The <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+   several development stages that you can use to help develop or test pipelines. <note>Do not use
+    development stages in production pipelines. </note></p>
+  <p>You can use the following development stages when developing or testing pipelines:<dl>
+    <dlentry>
+     <dt>Dev Data Generator origin</dt>
+     <dd>Generates records with the configured number of fields with the selected data types.</dd>
+     <dd>You can use a Map or List-Map root field type. </dd>
+     <dd>The On Record Error property has no effect in this stage.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Dev Random Source origin</dt>
+     <dd>Generates records with the configured number of Long fields. You can define a delay between
+      batches and a maximum number of records to generate.</dd>
+     <dd>The On Record Error property has no effect in this stage.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Dev Raw Data Source origin</dt>
+     <dd>Generates records based on user-supplied data. You can enter raw data, select the data type
+      of the data, and then configure any format-related configuration options. </dd>
+     <dd>For example, you can enter a set of log data, select the log data format, and then define
+      the log format and other log properties for the data. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Dev Random Error processor</dt>
+     <dd>Generates error records so you can test pipeline error handling. You can configure the
+      stage to discard records, define required fields and preconditions, and configure stage error
+      handling. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>Dev Record Creator processor</dt>
+     <dd>Generates two records for each record that enters the stage. You can define required fields
+      and preconditions, and configure stage error handling. </dd>
+    </dlentry>
+    <dlentry>
+     <dt>To Error destination</dt>
+     <dd>Passes records to the pipeline for error handling. </dd>
+     <dd>For more information, see <xref href="../Destinations/ToError.dita#concept_ryn_v3z_lr"
+      />.</dd>
+    </dlentry>
+    <dlentry>
+     <dt>Trash destination</dt>
+     <dd>Silently discards records. </dd>
+     <dd>For more information, see <xref href="../Destinations/Trash.dita#concept_htf_ydj_wq"
+      />.</dd>
+    </dlentry>
+   </dl></p>
+ </conbody>
+</concept>
