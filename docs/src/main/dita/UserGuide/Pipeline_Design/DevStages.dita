@@ -47,6 +47,8 @@
       of the data, and then configure any format-related configuration options. </dd>
      <dd>For example, you can enter a set of log data, select the log data format, and then define
       the log format and other log properties for the data. </dd>
+          <dd>In data preview, this stage displays the raw source data as well as the data generated
+            by the stage. </dd>
     </dlentry>
     <dlentry>
      <dt>Dev Random Error processor</dt>
@@ -58,18 +60,6 @@
      <dt>Dev Record Creator processor</dt>
      <dd>Generates two records for each record that enters the stage. You can define required fields
       and preconditions, and configure stage error handling. </dd>
-    </dlentry>
-    <dlentry>
-     <dt>To Error destination</dt>
-     <dd>Passes records to the pipeline for error handling. </dd>
-     <dd>For more information, see <xref href="../Destinations/ToError.dita#concept_ryn_v3z_lr"
-      />.</dd>
-    </dlentry>
-    <dlentry>
-     <dt>Trash destination</dt>
-     <dd>Silently discards records. </dd>
-     <dd>For more information, see <xref href="../Destinations/Trash.dita#concept_htf_ydj_wq"
-      />.</dd>
     </dlentry>
    </dl></p>
  </conbody>

@@ -23,10 +23,8 @@
         <dlentry>
           <dt>origin pipeline</dt>
           <dd>Processes data from the origin system and passes it to the destination pipeline. </dd>
-          <dd>Uses an RPC destination to pass data to a destination pipeline. To provide redundancy,
-            you can define connections to multiple destination pipelines. <draft-comment
-              author="Loretta">Dev: Should I state the logic behind connection
-              selection?</draft-comment></dd>
+          <dd>Uses an RPC destination to pass data to a destination pipeline. To provide redundancy
+            and load-balancing, you can define connections to multiple destination pipelines. </dd>
         </dlentry>
         <dlentry>
           <dt>destination pipeline</dt>
