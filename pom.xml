@@ -137,6 +137,8 @@
           <excludeSubProjects>false</excludeSubProjects>
           <excludes>
 
+            <exclude>CHANGES.txt</exclude>
+
             <!-- IntelliJ IDE -->
             <exclude>**/.idea/**</exclude>
             <exclude>**/*.iml</exclude>
