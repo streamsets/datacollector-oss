@@ -29,7 +29,7 @@
             provide redundancy and avoid bottlenecks with a high-volume origin pipeline:</dd>
           <dd><image href="../Graphics/RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
           <dd>If you have multiple pipelines with similar data, you might deploy several sets of
-            this model, as follows:</dd>
+            this model to provide load-balancing and redundancy:</dd>
           <dd><image href="../Graphics/RPCarch-manySets.png" id="image_pbj_msg_ct" scale="100"
             /></dd>
         </dlentry>

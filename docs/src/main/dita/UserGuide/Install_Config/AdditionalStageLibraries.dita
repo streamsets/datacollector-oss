@@ -92,8 +92,8 @@
             <row>
               <entry>JDBC</entry>
               <entry>N/A</entry>
-              <entry>Use to access databases through JDBC. Provides the JDBC Consumer origin and
-                JDBC Producer destination. </entry>
+              <entry>Use to access databases through JDBC.<p>Provides the JDBC Consumer origin and
+                  JDBC Producer destination.  </p></entry>
             </row>
             <row>
               <entry>JMS</entry>
