@@ -31,6 +31,9 @@ angular
         case 'int64':
           format = 'long';
           break;
+        case 'uuid':
+          format = 'string';
+          break;
       }
       return format || item.type;
     };

@@ -87,9 +87,9 @@
     </dependency>
 
     <dependency>
-	  <groupId>commons-io</groupId>
-	  <artifactId>commons-io</artifactId>
-	  <scope>test</scope>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -116,25 +116,29 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-         <groupId>com.streamsets</groupId>
-         <artifactId>streamsets-datacollector-api</artifactId>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-api</artifactId>
         </exclusion>
         <exclusion>
-         <groupId>com.streamsets</groupId>
-         <artifactId>streamsets-datacollector-container</artifactId>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-cli</artifactId>
         </exclusion>
         <exclusion>
-         <groupId>com.streamsets</groupId>
-         <artifactId>streamsets-datacollector-container-common</artifactId>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-container</artifactId>
         </exclusion>
         <exclusion>
-         <groupId>com.streamsets</groupId>
-         <artifactId>streamsets-datacollector-bootstrap</artifactId>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-container-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-bootstrap</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
 
-     <dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <scope>test</scope>
@@ -260,38 +264,38 @@
   </dependencies>
 
   <build>
-   <resources>
+    <resources>
       <resource>
         <directory>${basedir}/src/main/resources</directory>
         <includes>
           <include>miniIT.properties</include>
-         </includes>
+        </includes>
         <filtering>true</filtering>
       </resource>
     </resources>
     <plugins>
 
-    <plugin>
-      <artifactId>exec-maven-plugin</artifactId>
-      <groupId>org.codehaus.mojo</groupId>
-      <executions>
-        <execution><!-- Run our version calculation script -->
-        <id>Spark Assembly</id>
-        <phase>generate-test-resources</phase>
-        <goals>
-         <goal>exec</goal>
-        </goals>
-        <configuration>
-         <executable>${basedir}/src/test/resources/download.sh</executable>
-        </configuration>
-        </execution>
-      </executions>
-     </plugin>
-     <plugin>
+      <plugin>
+        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <executions>
+          <execution><!-- Run our version calculation script -->
+            <id>Spark Assembly</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>${basedir}/src/test/resources/download.sh</executable>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-            <argLine>-Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m</argLine>
+          <argLine>-Xmx2048m -XX:PermSize=1024m -XX:MaxPermSize=1024m</argLine>
         </configuration>
       </plugin>
       <plugin>

@@ -46,6 +46,10 @@ while test $# -gt 0; do
       shift
       exec ${BASEDIR}/libexec/_create-sdc "$@"
       ;;
+    cli)
+      shift
+      exec ${BASEDIR}/libexec/_cli "$@"
+      ;;
     help)
       ${PRG} --help
       exit 0
@@ -61,6 +65,10 @@ while test $# -gt 0; do
       echo "  Sub-commands:"
       echo ""
       echo "    dc: starts the Data Collector"
+      echo ""
+      echo "    create-dc: Creates new instance of Data Collector"
+      echo ""
+      echo "    cli: Data Collector CLI"
       echo ""
       exit 0
       ;;
