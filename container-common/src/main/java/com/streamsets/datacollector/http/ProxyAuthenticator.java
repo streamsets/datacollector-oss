@@ -18,22 +18,23 @@
 package com.streamsets.datacollector.http;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
-
-import org.eclipse.jetty.security.*;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.security.authentication.LoginAuthenticator;
 import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
 import org.eclipse.jetty.server.UserIdentity;
+import org.eclipse.jetty.util.B64Code;
 
-import javax.security.auth.Subject;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import java.security.Principal;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 
@@ -117,20 +118,43 @@ public class ProxyAuthenticator extends LoginAuthenticator {
         session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
       }
 
-
       if(this.authenticator instanceof FormAuthenticator) {
-        //Handle redirecting to home page instead of REST API page & setting reverse proxy base path
-        String pathInfo = request.getPathInfo();
-        if("/j_security_check".equals(pathInfo)) {
-          String basePath = request.getParameter("basePath");
+        String credentials = request.getHeader(HttpHeader.AUTHORIZATION.asString());
+        if (credentials != null) {
+          //Support User name and password as part of Authorization Header for Form & Digest Authenticator
+          int space=credentials.indexOf(' ');
+          if (space>0) {
+            String method=credentials.substring(0,space);
+            if ("basic".equalsIgnoreCase(method)) {
+              credentials = credentials.substring(space+1);
+              credentials = B64Code.decode(credentials, StandardCharsets.ISO_8859_1);
+              int i = credentials.indexOf(':');
+              if (i>0) {
+                String username = credentials.substring(0,i);
+                String password = credentials.substring(i+1);
 
-          if(basePath == null || basePath.trim().length() == 0) {
-            basePath = "/";
+                UserIdentity userIdentity = login (username, password, request);
+                if (userIdentity!=null) {
+                  Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
+                  session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
+                }
+              }
+            }
           }
+        } else {
+          //Handle redirecting to home page instead of REST API page & setting reverse proxy base path
+          String pathInfo = request.getPathInfo();
+          if("/j_security_check".equals(pathInfo)) {
+            String basePath = request.getParameter("basePath");
 
-          String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
-          if((redirectURL != null && (redirectURL.contains("rest/v1/") || redirectURL.contains("jmx"))) || !basePath.equals("/")) {
-            session.setAttribute(FormAuthenticator.__J_URI, basePath);
+            if(basePath == null || basePath.trim().length() == 0) {
+              basePath = "/";
+            }
+
+            String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
+            if((redirectURL != null && (redirectURL.contains("rest/v1/") || redirectURL.contains("jmx"))) || !basePath.equals("/")) {
+              session.setAttribute(FormAuthenticator.__J_URI, basePath);
+            }
           }
         }
       }

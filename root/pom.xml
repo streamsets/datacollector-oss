@@ -77,6 +77,8 @@
     <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
     <swagger.version>1.5.3</swagger.version>
     <commons-pool.version>2.4.1</commons-pool.version>
+    <jodatime.version>2.3</jodatime.version>
+    <airlift.version>0.7</airlift.version>
   </properties>
 
   <dependencyManagement>
@@ -103,6 +105,11 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-container</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cli</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -356,6 +363,11 @@
         <version>${jackson.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-datatype-joda</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
         <version>${jackson.version}</version>
@@ -405,6 +417,7 @@
         <artifactId>jersey-container-servlet-core</artifactId>
         <version>${jersey.version}</version>
       </dependency>
+
       <dependency>
         <groupId>javax.inject</groupId>
         <artifactId>javax.inject</artifactId>
@@ -500,6 +513,22 @@
         <groupId>io.swagger</groupId>
         <artifactId>swagger-jersey2-jaxrs</artifactId>
         <version>${swagger.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>${swagger.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>${jodatime.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.airlift</groupId>
+        <artifactId>airline</artifactId>
+        <version>${airlift.version}</version>
       </dependency>
 
       <dependency>

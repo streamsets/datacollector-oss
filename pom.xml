@@ -104,6 +104,8 @@
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
     <module>spark-bootstrap</module>
+
+    <module>cli</module>
   </modules>
 
   <build>

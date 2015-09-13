@@ -294,6 +294,19 @@
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>true</useTransitiveDependencies>
       <useTransitiveFiltering>true</useTransitiveFiltering>
+      <outputDirectory>/cli-lib</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-cli</include>
+      </includes>
+      <fileMode>0755</fileMode>
+    </dependencySet>
+
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
       <outputDirectory>/container-lib</outputDirectory>
       <unpack>false</unpack>
       <scope>compile</scope>
