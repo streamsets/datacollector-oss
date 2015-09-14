@@ -22,13 +22,13 @@
    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    console, log in, and create your first pipeline. </p>
   <p>What do you want it to do? Let's say you want to read XML files from a directory and remove the
-   newline characters before moving it into Hive. To do this, you start with a Directory origin
+   newline characters before moving it into HDFS. To do this, you start with a Directory origin
    stage and configure it to point to the source file directory. (You can also have the stage
    archive processed files and write files that were not fully processed to a separate directory for
    review.)</p>
   <p>To remove the newline characters, connect Directory to an Expression Evaluator processor and
    configure it to remove the newline character from the last field in the record.</p>
-  <p>To make the data available to Hive, you connect the Expression Evaluator to a Hadoop FS
+  <p>To make the data available to HDFS, you connect the Expression Evaluator to a Hadoop FS
    destination stage. You configure the stage to write the data as a JSON object (though you can use
    other data formats as well). </p>
   <p>You preview data to see how source data moves through the pipeline and notice that some fields
