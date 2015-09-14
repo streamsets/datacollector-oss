@@ -69,6 +69,8 @@
               </provides>
               <requires>
                 <require>jre &gt;= 1.7</require>
+                <require>bash</require>
+                <require>which</require>
               </requires>
               <defineStatements>
                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
@@ -89,6 +91,7 @@
                       <excludes>
                         <exclude>etc/**</exclude>
                         <exclude>bin/**</exclude>
+                        <exclude>libexec/*</exclude>
                         <exclude>initd/sdcd</exclude>
                       </excludes>
                     </source>
@@ -102,6 +105,20 @@
                   <sources>
                     <source>
                       <location>${sdc.distroot}/bin</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/libexec</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/libexec</location>
+                      <excludes>
+                        <exclude>bootstrap-libs</exclude>
+                      </excludes>
                     </source>
                   </sources>
                 </mapping>
@@ -171,6 +188,14 @@
                     <source>
                       <location>${sdc.distroot}/initd/sdcd</location>
                     </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/usr/bin</directory>
+                  <sources>
+                    <softlinkSource>
+                      <location>${sdc.dir}/bin/streamsets</location>
+                    </softlinkSource>
                   </sources>
                 </mapping>
               </mappings>
