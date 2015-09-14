@@ -12,7 +12,7 @@
   limitations under the License. See accompanying LICENSE file.
 --->
 
-<img style="width:100%;" src="/github-banner.png">
+<img style="width:100%;" src="/common-ui/src/main/webapp/assets/logo.png">
 
 [StreamSets](http://streamsets.com)
 =================
