@@ -69,6 +69,8 @@
               </provides>
               <requires>
                 <require>jre &gt;= 1.7</require>
+                <require>bash</require>
+                <require>which</require>
               </requires>
               <defineStatements>
                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
@@ -88,6 +90,7 @@
                       <excludes>
                         <exclude>etc/**</exclude>
                         <exclude>bin/**</exclude>
+                        <exclude>libexec/*</exclude>
                         <exclude>initd/sdcd</exclude>
                       </excludes>
                     </source>
@@ -101,6 +104,20 @@
                   <sources>
                     <source>
                       <location>${sdc.distroot}/bin</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/libexec</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/libexec</location>
+                      <excludes>
+                        <exclude>bootstrap-libs</exclude>
+                      </excludes>
                     </source>
                   </sources>
                 </mapping>
@@ -153,7 +170,6 @@
                   <username>root</username>
                   <groupname>root</groupname>
                   <filemode>755</filemode>
-                  <configuration>noreplace</configuration>
                   <sources>
                     <source>
                       <location>${sdc.distroot}/initd/_sdcinitd_prototype</location>
@@ -174,11 +190,10 @@
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}</directory>
+                  <directory>/usr/bin</directory>
                   <sources>
                     <softlinkSource>
-                      <destination>current</destination>
-                      <location>streamsets-datacollector-${project.version}</location>
+                      <location>${sdc.dir}/bin/streamsets</location>
                     </softlinkSource>
                   </sources>
                 </mapping>
