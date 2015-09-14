@@ -12,8 +12,6 @@
   limitations under the License. See accompanying LICENSE file.
 --->
 
-<img style="width:100%;" src="/github-banner.png">
-
 [StreamSets](http://streamsets.com)
 
 # Building StreamSets Data Collector

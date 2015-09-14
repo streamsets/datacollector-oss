@@ -12,8 +12,6 @@
   limitations under the License. See accompanying LICENSE file.
 --->
 
-<img style="width:100%;" src="/github-banner.png">
-
 [StreamSets](http://streamsets.com)
 
 # Contributing
@@ -35,5 +33,4 @@ To begin you first need to sign our [Contributor License Agreement](http://strea
 # Useful resources
 
 * [Building StreamSets Data Collector](build.md)
-* [Source tree layout](http://streamsets.com/docs)
 * [StreamSets Data Collector Documentation](http://streamsets.com/docs)
