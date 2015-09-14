@@ -12,8 +12,6 @@
   limitations under the License. See accompanying LICENSE file.
 --->
 
-<img style="width:100%;" src="/github-banner.png">
-
 [StreamSets](http://streamsets.com)
 
 # Building StreamSets Data Collector
@@ -42,7 +40,7 @@ From within the DataCollector directory, execute:
 
 To start the DataCollector, execute:
 
-`dist/target/streamsets-datacollector-1.1.0/streamsets-datacollector-1.1.0/bin/streamsets dc`
+`dist/target/streamsets-datacollector-1.2.0/streamsets-datacollector-1.2.0/bin/streamsets dc`
 
 ## Release build
 
@@ -52,12 +50,12 @@ From within the DataCollector directory, execute:
 
 The release tarball will be created at:
 
-`release/tar/streamsets-datacollector-1.1.0.tgz`
+`release/tar/streamsets-datacollector-1.2.0.tgz`
 
 Untar the tarball in your prefered location :
 
-`tar xvzf streamsets-datacollector-1.1.0.tgz`
+`tar xvzf streamsets-datacollector-1.2.0.tgz`
 
 To start the DataCollector, execute:
 
-`datacollector-1.1.0/bin/streamsets dc`
+`datacollector-1.2.0/bin/streamsets dc`
