@@ -103,8 +103,8 @@ public class S3Config {
     this.endPoint = endPoint;
   }
 
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    validateConnection(context, issues);
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues, S3AdvancedConfig advancedConfig) {
+    validateConnection(context, issues, advancedConfig);
     //if the folder does not end with delimiter, add one
     if(folder != null && !folder.isEmpty() && !folder.endsWith(delimiter)) {
       folder = folder + delimiter;
@@ -123,11 +123,29 @@ public class S3Config {
 
   private AmazonS3Client s3Client;
 
-  private void validateConnection(Stage.Context context, List<Stage.ConfigIssue> issues) {
+  private void validateConnection(Stage.Context context, List<Stage.ConfigIssue> issues, S3AdvancedConfig advancedConfig) {
     //Access Key ID - username [unique in aws]
     //secret access key - password
     AWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
-    s3Client = new AmazonS3Client(credentials, new ClientConfiguration());
+    ClientConfiguration clientConfig = new ClientConfiguration();
+
+    // Optional proxy settings
+    if (advancedConfig.useProxy) {
+      if (advancedConfig.proxyHost != null && !advancedConfig.proxyHost.isEmpty()) {
+        clientConfig.setProxyHost(advancedConfig.proxyHost);
+        clientConfig.setProxyPort(advancedConfig.proxyPort);
+
+        if (advancedConfig.proxyUser != null && !advancedConfig.proxyUser.isEmpty()) {
+          clientConfig.setProxyUsername(advancedConfig.proxyUser);
+        }
+
+        if (advancedConfig.proxyPassword != null) {
+          clientConfig.setProxyPassword(advancedConfig.proxyPassword);
+        }
+      }
+    }
+
+    s3Client = new AmazonS3Client(credentials, clientConfig);
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
     if(endPoint != null && !endPoint.isEmpty()) {
       s3Client.setEndpoint(endPoint);

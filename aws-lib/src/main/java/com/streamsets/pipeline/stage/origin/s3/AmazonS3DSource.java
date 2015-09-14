@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",

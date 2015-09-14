@@ -25,6 +25,7 @@ public enum Groups implements Label {
   S3("Amazon S3"),
   ERROR_HANDLING("Error Handling"),
   POST_PROCESSING("Post Processing"),
+  ADVANCED("Advanced"),
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),
