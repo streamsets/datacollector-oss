@@ -66,6 +66,9 @@ angular
       metricsWatchListener,
       errorsWatchListener;
 
+    //Remove search parameter if any, search parameter causing canvas arrow issue
+    $location.search({});
+
     angular.extend($scope, {
       _: _,
       showLoading: true,
