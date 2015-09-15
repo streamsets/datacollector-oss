@@ -65,6 +65,8 @@ public class KafkaTarget extends BaseTarget {
 
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String MESSAGE_SEND_MAX_RETRIES_KEY = "message.send.max.retries";
+  private static final String COMPRESSION_CODEC = "compression.codec";
+  private static final String COMPRESSED_TOPICS = "compressed.topics";
   private static final int MESSAGE_SEND_MAX_RETRIES_DEFAULT = 10;
   private static final String RETRY_BACKOFF_MS_KEY = "retry.backoff.ms";
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
@@ -600,6 +602,13 @@ public class KafkaTarget extends BaseTarget {
 
   private void validateKafkaProducerConfigs(List<ConfigIssue> issues) {
     if(kafkaProducerConfigs != null) {
+      if (kafkaProducerConfigs.containsKey(COMPRESSION_CODEC)) {
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_10,
+          COMPRESSION_CODEC + " is disabled for this release"));
+      } else if (kafkaProducerConfigs.containsKey(COMPRESSED_TOPICS)) {
+        issues.add(getContext().createConfigIssue(Groups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_10,
+          COMPRESSED_TOPICS + " is disabled for this release"));
+      }
       if(kafkaProducerConfigs.containsKey(MESSAGE_SEND_MAX_RETRIES_KEY)) {
         try {
           messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).trim());
