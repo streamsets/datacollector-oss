@@ -7,7 +7,7 @@
         <context>
             <p>You can access the latest documentation for this release on the StreamSets website:
                     <xref
-                    href="https://www.streamsets.com/documentation/1.1.0/DCUserGuide/help/index.html"
+                    href="https://www.streamsets.com/documentation/datacollector/1.1.0/userguide/help/index.html"
                     format="html" scope="external"/></p>
             <p>You can also configure the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
