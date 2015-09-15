@@ -687,7 +687,7 @@
                     </table>
                 </info>
             </step>
-            <step>
+            <step id="PROCESSORS">
                 <cmd>
                     <draft-comment author="Loretta"
                         ><uicontrol>PROCESSORS</uicontrol></draft-comment>
@@ -696,7 +696,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Use this step for processors that have error
-                        handling - should be all I think? </draft-comment>
+                        handling - should be almost all. </draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ReqField-ErrorHandling">
@@ -723,17 +723,6 @@
                                     <entry>Optional description.</entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>Error record handling for the stage: <ul
-                                            id="ul_swp_lfh_hr">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
-                                                cluster pipelines.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
                                     <entry>Required Fields <xref
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -752,6 +741,17 @@
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
                                 </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_swp_lfh_hr">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+                                        </ul></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -760,7 +760,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">Use the following step for processors without
-                        record handling.</draft-comment>
+                        record handling - Field Remover, Record Deduplicator.</draft-comment>
                 </cmd>
             </step>
             <step id="1stStep-ReqField-noEHandling">
@@ -804,6 +804,72 @@
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">Both of the following steps are used in JDBC
+                        Consumer &amp; Producer config topics.</draft-comment>
+                </cmd>
+            </step>
+            <step id="JDBC-Credentials">
+                <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>User name for the JDBC connection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for the JDBC account</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="JDBC-Legacy">
+                <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
+                        Drivers</uicontrol> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Legacy Driver Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Class Driver Name</entry>
+                                    <entry>Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Health Test Query</entry>
+                                    <entry>Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0.
+                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>

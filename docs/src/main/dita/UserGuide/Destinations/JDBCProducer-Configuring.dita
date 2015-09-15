@@ -15,31 +15,85 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cx3_lhh_ht">
     <title>Configuring a JDBC Producer</title>
-    <shortdesc>Information forthcoming...</shortdesc>
+    <shortdesc>Configure the JDBC Producer to use JDBC to write data to a database
+        table.</shortdesc>
     <taskbody>
-        <context>
-            <p>You can access the latest documentation for the release on the StreamSets website: <xref
-                    href="https://www.streamsets.com/documentation/1.1.0/DCUserGuide/help/index.html"
-                    format="html" scope="external"/></p>
-            <p>You can also configure the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to use the latest documentation as the context-sensitive help. This requires an
-                internet connection and a login. </p>
-        </context>
+        <context/>
         <steps id="steps_s3k_5hh_ht">
-            <step>
-                <cmd>In the top right corner of the Data Collector console, click <menucascade>
-                        <uicontrol>Help</uicontrol>
-                        <uicontrol>Settings</uicontrol>
-                    </menucascade>.</cmd>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
             </step>
             <step>
-                <cmd>For the <uicontrol>Help</uicontrol> property, select <uicontrol>Hosted
-                        Help</uicontrol>, and then click <uicontrol>Done</uicontrol>. </cmd>
-                <stepresult>When you click the context-sensitive help icon, the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> launches hosted help with the latest documentation after you log in.
-                </stepresult>
+                <cmd>On the <uicontrol>JDBC</uicontrol> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_c1b_nhy_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>JDBC Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Connection String</entry>
+                                    <entry>Connection string to use to connect to the
+                                            database.<p>Some databases, such as Postgres, require
+                                            the schema included in the connection string. Use the
+                                            connection string format required by the database.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Select to use JDBC credentials.</entry>
+                                </row>
+                                <row>
+                                    <entry>Table Name</entry>
+                                    <entry>Database table to write to. <p>Some databases require a
+                                            fully-qualified table name, such as &lt;schema |
+                                            database>:&lt;tablename>. Use the table name format
+                                            required by the database. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Field to Column Mapping</entry>
+                                    <entry>By default fields are written to columns of the same
+                                        name. Use to override the default mappings.</entry>
+                                </row>
+                                <row>
+                                    <entry>Change Log Format</entry>
+                                    <entry>Format of the change capture log. Use to specify the log
+                                        format of origin data when processing change capture
+                                        data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Rollback Batch On Error</entry>
+                                    <entry>Rolls back the entire batch when an error occurs within
+                                        the batch. </entry>
+                                </row>
+                                <row>
+                                    <entry>Additional JDBC Configuration Properties</entry>
+                                    <entry>
+                                        <p>Additional JDBC configuration properties to use. To add
+                                            properties, click Add and define the JDBC property name
+                                            and value. </p>
+                                        <p>Use the property names and values as expected by JDBC.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Credentials">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Legacy">
+                <cmd/>
             </step>
         </steps>
     </taskbody>
