@@ -23,6 +23,10 @@
 angular.module('dataCollectorApp.filters')
   .filter('objLimitTo', function() {
     return function(obj, limit){
+      if(obj === null) {
+        return [];
+      }
+
       var keys = Object.keys(obj);
       if(keys.length < 1){
         return [];
@@ -32,7 +36,7 @@ angular.module('dataCollectorApp.filters')
 
       keys.sort();
 
-      angular.forEach(keys, function(key, arrayIndex){
+      angular.forEach(keys, function(key){
         if(count >= limit){
           return false;
         }

@@ -747,11 +747,21 @@ angular.module('dataCollectorApp.common')
           }
         });
       } else if(record.type === 'MAP') {
-        keys = Object.keys(record.value).sort();
-        angular.forEach(keys, function(key) {
-          var value = record.value[key];
-          if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
-            if(!nonListAndMap && value.sqpath) {
+        if(record.value) {
+          keys = Object.keys(record.value).sort();
+          angular.forEach(keys, function(key) {
+            var value = record.value[key];
+            if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {
+              if(!nonListAndMap && value.sqpath) {
+                fieldPaths.push(value.sqpath);
+                dFieldPaths.push(value.dqpath);
+
+                if(fieldPathsType) {
+                  fieldPathsType.push(value.type);
+                }
+              }
+              self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths);
+            } else if(value.sqpath) {
               fieldPaths.push(value.sqpath);
               dFieldPaths.push(value.dqpath);
 
@@ -759,16 +769,8 @@ angular.module('dataCollectorApp.common')
                 fieldPathsType.push(value.type);
               }
             }
-            self.getFieldPaths(value, fieldPaths, nonListAndMap, fieldPathsType, dFieldPaths);
-          } else if(value.sqpath) {
-            fieldPaths.push(value.sqpath);
-            dFieldPaths.push(value.dqpath);
-
-            if(fieldPathsType) {
-              fieldPathsType.push(value.type);
-            }
-          }
-        });
+          });
+        }
       } else if(record.type === 'LIST_MAP') {
         angular.forEach(record.value, function(value, index) {
           if(value.type === 'MAP' || value.type === 'LIST' || value.type === 'LIST_MAP') {

@@ -31,7 +31,7 @@
         <div ng-switch-when="MAP">
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
-            ng-if="isOpen || (isRoot && record.expand)"
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
             record="record"
             record-value="_recordValue"
@@ -44,12 +44,14 @@
             selected-path="selectedPath"
             show-field-type="showFieldType">
           </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
         </div>
 
         <div ng-switch-when="LIST_MAP">
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
           <record-tree
-            ng-if="isOpen || (isRoot && record.expand)"
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | objLimitTo: limit"
             record="record"
             record-value="_recordValue"
@@ -63,12 +65,14 @@
             selected-path="selectedPath"
             show-field-type="showFieldType">
           </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
         </div>
 
         <div ng-switch-when="LIST">
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}} [ {{recordValue.value.length}} ]</span>
           <record-tree
-            ng-if="isOpen || (isRoot && record.expand)"
+            ng-if="(isOpen || (isRoot && record.expand)) && recordValue.value"
             ng-repeat="(_fieldName, _recordValue) in recordValue.value | limitTo: limit"
             record="record"
             record-value="_recordValue"
@@ -81,6 +85,8 @@
             selected-path="selectedPath"
             show-field-type="showFieldType">
           </record-tree>
+
+          <span ng-if="recordValue.value == null" class="field-value">null</span>
         </div>
 
 
