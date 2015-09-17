@@ -41,6 +41,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -181,12 +182,11 @@ public abstract class StageDefinitionExtractor {
       int outputStreams = (variableOutputStreams || type == StageType.TARGET)
                           ? 0 : sDef.outputStreams().getEnumConstants().length;
       List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
-
       List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
       if (executionModesLibraryOverride != null) {
         executionModes = executionModesLibraryOverride;
       }
-
+      List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
       boolean recordsByRef = sDef.recordsByRef();
 
       List<ConfigDefinition> systemConfigs = ConfigDefinitionExtractor.get().extract(StageConfigBean.class,
@@ -228,7 +228,7 @@ public abstract class StageDefinitionExtractor {
       return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
                                  errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
                                  configGroupDefinition, variableOutputStreams, outputStreams,
-                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader);
+                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }

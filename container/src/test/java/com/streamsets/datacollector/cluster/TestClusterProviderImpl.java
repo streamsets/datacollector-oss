@@ -30,11 +30,13 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.ExecutionMode;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -103,14 +105,19 @@ public class TestClusterProviderImpl {
     configs.add(new Config("clusterKerberos", false));
     configs.add(new Config("kerberosPrincipal", ""));
     configs.add(new Config("kerberosKeytab", ""));
+    configs.add(new Config("executionMode", ExecutionMode.CLUSTER_STREAMING));
     pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
       UUID.randomUUID(), null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
-    File sparkKafkaJar = new File(tempDir, ClusterModeConstants.SPARK_KAFKA_JAR_PREFIX + ".jar");
+    File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
+    File avroJar = new File(tempDir, "avro-1.7.7.jar");
+    File avroMapReduceJar = new File(tempDir, "avro-mapred-1.7.7.jar");
     Assert.assertTrue(sparkKafkaJar.createNewFile());
-    classLoader = new URLClassLoader(new URL[] {sparkKafkaJar.toURL()}) {
+    Assert.assertTrue(avroJar.createNewFile());
+    Assert.assertTrue(avroMapReduceJar.createNewFile());
+    classLoader = new URLClassLoader(new URL[] {sparkKafkaJar.toURL(), avroJar.toURL(), avroMapReduceJar.toURL()}) {
       public String getType() {
         return ClusterModeConstants.USER_LIBS;
       }
@@ -119,8 +126,6 @@ public class TestClusterProviderImpl {
     env = new HashMap<>();
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
-    sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, "kafka");
-    sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, "false");
     sparkProvider = new ClusterProviderImpl();
   }
 
@@ -166,6 +171,47 @@ public class TestClusterProviderImpl {
   }
 
   @Test
+  public void testStreamingExecutionMode() throws Throwable {
+    MockSystemProcess.output.add(" application_1429587312661_0024 ");
+    List<Config> list = new ArrayList<Config>();
+    list.add(new Config("executionMode", ExecutionMode.CLUSTER_STREAMING.name()));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
+      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
+      MockStages.getErrorStageConfig());
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+      "aaa", null, null, null, true));
+    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
+      webDir, bootstrapLibDir, classLoader, classLoader,  60,
+      new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
+        new ArrayList<String>(), UUID.randomUUID())).getId());
+    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_SPARK,
+      MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertTrue(MockSystemProcess.args
+      .contains("<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,"
+        + "<masked>/spark-streaming-kafka-1.2.jar"));
+  }
+
+  @Test
+  public void testBatchExecutionMode() throws Throwable {
+    MockSystemProcess.output.add(" application_1429587312661_0024 ");
+    List<Config> list = new ArrayList<Config>();
+    list.add(new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
+      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
+      MockStages.getErrorStageConfig());
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+      "aaa", null, null, null, true));
+    Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
+      bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
+        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertTrue(MockSystemProcess.args.contains("<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,"
+      + "<masked>/avro-1.7.7.jar," + "<masked>/avro-mapred-1.7.7.jar"));
+  }
+
+  @Test
   public void testKerberosError() throws Throwable {
     MockSystemProcess.output.add("Caused by: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]");
     MockSystemProcess.output.add("\tat com.sun.security.sasl.gsskerb.GssKrb5Client.evaluateChallenge(GssKrb5Client.java:212)");
@@ -193,7 +239,7 @@ public class TestClusterProviderImpl {
       "--executor-memory", "512m", "--executor-cores", "1", "--num-executors", "64", "--archives",
       "<masked>/provider-temp/staging/libs.tar.gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
       "--files", "<masked>/provider-temp/staging/log4j.properties", "--jars",
-      "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,<masked>/spark-streaming-kafka.jar",
+      "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar",
       "--conf", "spark.executor.extraJavaOptions=-javaagent:./streamsets-datacollector-bootstrap.jar ",
       "--class", "com.streamsets.pipeline.BootstrapClusterStreaming",
       "<masked>/bootstrap-lib/spark/streamsets-datacollector-spark-bootstrap.jar"}, MockSystemProcess.args.toArray());

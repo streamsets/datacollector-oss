@@ -142,7 +142,7 @@ public class TestPipelineStateStore {
   }
 
   private PipelineConfiguration createPipeline(UUID uuid) {
-    PipelineConfiguration pc = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER);
+    PipelineConfiguration pc = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH);
     pc.setUuid(uuid);
     return pc;
   }
@@ -169,7 +169,7 @@ public class TestPipelineStateStore {
     assertEquals("user3", pipelineState.getUser());
     assertEquals("name1", pipelineState.getName());
     assertEquals("0", pipelineState.getRev());
-    assertEquals(ExecutionMode.CLUSTER, pipelineState.getExecutionMode());
+    assertEquals(ExecutionMode.CLUSTER_BATCH, pipelineState.getExecutionMode());
 
     pc0 = pipelineStoreTask.load("name1", "0");
     pc0 = createPipeline(pc0.getUuid());
@@ -228,9 +228,9 @@ public class TestPipelineStateStore {
 
   @Test
   public void stateChangeExecutionMode() throws Exception {
-    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     PipelineState pipelineState = pipelineStateStore.getState("aaa", "0");
-    assertEquals(ExecutionMode.CLUSTER, pipelineState.getExecutionMode());
+    assertEquals(ExecutionMode.CLUSTER_BATCH, pipelineState.getExecutionMode());
     pipelineStateStore.saveState("user1", "aaa", "0", PipelineStatus.STOPPED, "Pipeline stopped", null, ExecutionMode.STANDALONE, null, 0, 0);
     pipelineState = pipelineStateStore.getState("aaa", "0");
     assertEquals(ExecutionMode.STANDALONE, pipelineState.getExecutionMode());

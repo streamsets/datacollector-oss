@@ -32,6 +32,7 @@ public class MockSystemProcess implements SystemProcess {
   public static final List<String> output = new ArrayList<>();
   public static final List<String> error = new ArrayList<>();
   public static final List<String> args = new ArrayList<>();
+  public static Map<String, String> env;
 
   public static void reset() {
     isAlive = false;
@@ -56,6 +57,7 @@ public class MockSystemProcess implements SystemProcess {
 
   @Override
   public void start(Map<String, String> env) throws IOException {
+    MockSystemProcess.env = env;
     start();
   }
 

@@ -104,7 +104,7 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(validator.getIssues().hasIssues());
 
     // cluster only stage can preview  and run as cluster
-    conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER);
+    conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH);
     validator = new PipelineConfigurationValidator(lib, "name", conf);
     Assert.assertFalse(validator.validate().getIssues().hasIssues());
     Assert.assertTrue(validator.canPreview());

@@ -46,14 +46,20 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
 
   @Override
   public String getName() {
-    initializeClusterSource();
-    return clusterSource.getName();
+    if (initializeClusterSource()) {
+      return clusterSource.getName();
+    } else {
+      return null;
+    }
   }
 
   @Override
   public boolean isInBatchMode() {
-    initializeClusterSource();
-    return clusterSource.isInBatchMode();
+    if (initializeClusterSource()) {
+      return clusterSource.isInBatchMode();
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -63,8 +69,9 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
    */
   @Override
   public void put(List<Map.Entry> batch) throws InterruptedException {
-    initializeClusterSource();
-    clusterSource.put(batch);
+    if (initializeClusterSource()) {
+      clusterSource.put(batch);
+    }
   }
 
   private boolean initializeClusterSource() {

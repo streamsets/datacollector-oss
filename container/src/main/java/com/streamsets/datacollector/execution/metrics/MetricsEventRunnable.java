@@ -63,7 +63,7 @@ public class MetricsEventRunnable implements Runnable {
   private final MetricRegistry metricRegistry;
   private final String name;
   private final String rev;
-  private int scheduledDelay;
+  private final int scheduledDelay;
 
   @Inject
   public MetricsEventRunnable(@Named("name") String name, @Named("rev") String rev, Configuration configuration,
@@ -99,12 +99,12 @@ public class MetricsEventRunnable implements Runnable {
       if (eventListenerManager.hasMetricEventListeners(name) && state.getStatus().isActive()) {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
         String metricsJSONStr;
-        if(state.getExecutionMode() == ExecutionMode.CLUSTER) {
+        if (state.getExecutionMode() == ExecutionMode.CLUSTER_BATCH
+          || state.getExecutionMode() == ExecutionMode.CLUSTER_STREAMING) {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
-          metricsJSONStr =
-            objectMapper.writer().writeValueAsString(metricRegistry);
+          metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistry);
         }
         eventListenerManager.broadcastMetrics(name, metricsJSONStr);
       }

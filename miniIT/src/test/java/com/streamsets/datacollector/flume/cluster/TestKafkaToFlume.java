@@ -135,7 +135,6 @@ public class TestKafkaToFlume {
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
     pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
     pipelineJson = pipelineJson.replaceAll("localhost:9050", "localhost:" + flumePort);
-    pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER");
     return pipelineJson;
   }
 

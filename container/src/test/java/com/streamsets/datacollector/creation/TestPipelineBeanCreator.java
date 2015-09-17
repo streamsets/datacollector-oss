@@ -508,7 +508,7 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<Config> pipelineConfigs = ImmutableList.of(
-        new Config("executionMode", ExecutionMode.CLUSTER.name()),
+        new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
         new Config("memoryLimit", 1000)
     );
 
@@ -527,7 +527,7 @@ public class TestPipelineBeanCreator {
     Assert.assertNotNull(bean);
 
     // pipeline configs
-    Assert.assertEquals(ExecutionMode.CLUSTER, bean.getConfig().executionMode);
+    Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
 
     // stages
     Assert.assertEquals(1, bean.getStages().size());
@@ -580,7 +580,7 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<Config> pipelineConfigs = ImmutableList.of(
-        new Config("executionMode", ExecutionMode.CLUSTER.name()),
+        new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
         new Config("memoryLimit", 1000)
     );
 

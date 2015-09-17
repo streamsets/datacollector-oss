@@ -19,7 +19,8 @@ package com.streamsets.datacollector.restapi.bean;
 
 public enum ExecutionModeJson {
   STANDALONE,
-  CLUSTER,
+  CLUSTER_BATCH,
+  CLUSTER_STREAMING,
   SLAVE
   ;
 }

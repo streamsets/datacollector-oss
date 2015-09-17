@@ -37,6 +37,7 @@ import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,8 @@ import java.util.Map;
   version = 2,
   label = "Hadoop FS",
   description = "Reads data from Hadoop file system",
-  execution = ExecutionMode.CLUSTER,
+  execution = ExecutionMode.CLUSTER_BATCH,
+  libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
   icon = "hdfs.png",
   privateClassLoader = true,
   upgrader = ClusterHdfsSourceUpgrader.class

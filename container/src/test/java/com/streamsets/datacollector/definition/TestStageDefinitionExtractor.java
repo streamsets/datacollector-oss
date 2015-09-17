@@ -18,6 +18,7 @@
 package com.streamsets.datacollector.definition;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
@@ -75,7 +76,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L", description = "D", icon = "TargetIcon.svg")
+  @StageDef(version = 1, label = "L", description = "D", icon = "TargetIcon.svg", libJarsRegex = {ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX})
   public static class Source1 extends BaseSource {
 
     @ConfigDef(
@@ -118,7 +119,7 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = 2, label = "LL", description = "DD", icon = "TargetIcon.svg",
-      execution = ExecutionMode.STANDALONE, outputStreams = TwoOutputStreams.class, recordsByRef = true,
+      execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH}, outputStreams = TwoOutputStreams.class, recordsByRef = true,
       privateClassLoader = true, upgrader = Source2Upgrader.class)
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
@@ -209,7 +210,8 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(0, def.getConfigGroupDefinition().getGroupNames().size());
     Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(1, def.getOutputStreams());
-    Assert.assertEquals(2, def.getExecutionModes().size());
+    Assert.assertEquals(3, def.getExecutionModes().size());
+    Assert.assertEquals(2, def.getLibJarsRegex().size());
     Assert.assertEquals("TargetIcon.svg", def.getIcon());
     Assert.assertEquals(StageDef.DefaultOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
@@ -234,7 +236,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(1, def.getConfigGroupDefinition().getGroupNames().size());
     Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(2, def.getOutputStreams());
-    Assert.assertEquals(1, def.getExecutionModes().size());
+    Assert.assertEquals(2, def.getExecutionModes().size());
     Assert.assertEquals("TargetIcon.svg", def.getIcon());
     Assert.assertEquals(TwoOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());
     Assert.assertEquals(null, def.getOutputStreamLabels());
@@ -297,12 +299,12 @@ public class TestStageDefinitionExtractor {
   @Test
   public void testLibraryExecutionOverride() {
     Properties props = new Properties();
-    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + Source1.class.getName(), "CLUSTER");
+    props.put(StageLibraryDefinition.EXECUTION_MODE_PREFIX + Source1.class.getName(), "CLUSTER_BATCH");
     StageLibraryDefinition libDef = new StageLibraryDefinition(TestStageDefinitionExtractor.class.getClassLoader(),
                                                                "mock", "MOCK", props, null, null, null);
 
     StageDefinition def = StageDefinitionExtractor.get().extract(libDef, Source1.class, "x");
-    Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER),def.getExecutionModes());
+    Assert.assertEquals(ImmutableList.of(ExecutionMode.CLUSTER_BATCH),def.getExecutionModes());
   }
 
 }

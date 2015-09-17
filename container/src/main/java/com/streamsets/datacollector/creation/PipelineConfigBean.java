@@ -170,7 +170,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 100,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = "CLUSTER"
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
   )
   public long clusterSlaveMemory;
 
@@ -184,7 +184,7 @@ public class PipelineConfigBean implements Stage {
     displayPosition = 110,
     group = "CLUSTER",
     dependsOn = "executionMode",
-    triggeredByValue = "CLUSTER"
+    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
   )
   public String clusterSlaveJavaOpts;
 
@@ -198,7 +198,7 @@ public class PipelineConfigBean implements Stage {
     displayPosition = 120,
     group = "CLUSTER",
     dependsOn = "executionMode",
-    triggeredByValue = "CLUSTER"
+    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
   )
   public Map clusterLauncherEnv;
 

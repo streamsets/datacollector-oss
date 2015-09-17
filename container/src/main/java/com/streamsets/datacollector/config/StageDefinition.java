@@ -47,17 +47,18 @@ public class StageDefinition {
   private final boolean preconditions;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
-  private List<ConfigDefinition> configDefinitions;
-  private Map<String, ConfigDefinition> configDefinitionsMap;
+  private final List<ConfigDefinition> configDefinitions;
+  private final Map<String, ConfigDefinition> configDefinitionsMap;
   private final String icon;
   private final ConfigGroupDefinition configGroupDefinition;
   private final boolean variableOutputStreams;
   private final int outputStreams;
   private final String outputStreamLabelProviderClass;
   private List<String> outputStreamLabels;
-  private List<ExecutionMode> executionModes;
+  private final List<ExecutionMode> executionModes;
   private final boolean recordsByRef;
   private final StageUpgrader upgrader;
+  private final List<String> libJarsRegex;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
@@ -66,7 +67,7 @@ public class StageDefinition {
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
-      StageUpgrader upgrader) {
+      StageUpgrader upgrader, List<String> libJarsRegex) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -103,6 +104,8 @@ public class StageDefinition {
     this.executionModes = executionModes;
     this.recordsByRef = recordsByRef;
     this.upgrader = upgrader;
+    this.libJarsRegex = libJarsRegex;
+
   }
 
   public StageDefinition(StageDefinition def, ClassLoader classLoader) {
@@ -133,6 +136,7 @@ public class StageDefinition {
     executionModes = def.executionModes;
     recordsByRef = def.recordsByRef;
     upgrader = def.upgrader;
+    libJarsRegex = def.libJarsRegex;
   }
 
     public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass,
@@ -141,7 +145,7 @@ public class StageDefinition {
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
-        StageUpgrader upgrader) {
+        StageUpgrader upgrader, List<String> libJarsRegex) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = libraryDefinition.getClassLoader();
@@ -177,6 +181,7 @@ public class StageDefinition {
     this.executionModes = executionModes;
     this.recordsByRef = recordsByRef;
     this.upgrader = upgrader;
+    this.libJarsRegex = libJarsRegex;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -298,6 +303,10 @@ public class StageDefinition {
     return executionModes;
   }
 
+  public List<String> getLibJarsRegex() {
+    return libJarsRegex;
+  }
+
   public boolean getRecordsByRef() {
     return recordsByRef;
   }
@@ -400,7 +409,7 @@ public class StageDefinition {
                                getVersion(), label, description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes,
-                               recordsByRef, upgrader);
+                               recordsByRef, upgrader, libJarsRegex);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

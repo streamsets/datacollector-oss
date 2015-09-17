@@ -41,7 +41,7 @@ public class SparkStreamingBinding implements ClusterBinding {
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
 
   private JavaStreamingContext ssc;
-  private Properties properties;
+  private final Properties properties;
 
   public SparkStreamingBinding(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
@@ -70,12 +70,8 @@ public class SparkStreamingBinding implements ClusterBinding {
     };
     Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     LOG.info("Making calls through spark context ");
-    if ("kafka".equalsIgnoreCase(getProperty("cluster.source.name"))) {
-      JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
-      dStream.foreachRDD(new SparkDriverFunction());
-    } else {
-      throw new IllegalStateException("Property value " + getProperty("cluster.source.name") + " is invalid");
-    }
+    JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
+    dStream.foreachRDD(new SparkDriverFunction());
     ssc.start();
   }
 

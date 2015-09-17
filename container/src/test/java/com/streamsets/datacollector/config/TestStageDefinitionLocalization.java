@@ -85,8 +85,8 @@ public class TestStageDefinitionLocalization {
                                               "StageDescription", StageType.PROCESSOR, true, true, true, configs,
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
-                                              Arrays.asList(ExecutionMode.CLUSTER, ExecutionMode.STANDALONE), false,
-                                              new StageUpgrader.Default());
+                                              Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
+                                              new StageUpgrader.Default(), Collections.<String>emptyList());
     return def;
   }
 

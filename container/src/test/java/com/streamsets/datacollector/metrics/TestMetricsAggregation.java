@@ -76,7 +76,7 @@ public class TestMetricsAggregation {
     pipelineStateStore = Mockito.mock(PipelineStateStore.class);
     Mockito.when(pipelineStateStore.getState(Matchers.anyString(), Matchers.anyString())).thenReturn(
       new PipelineStateImpl("aaa", "samplePipeline", "1.0.0",
-        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, ExecutionMode.CLUSTER, null, 0, 0)
+        PipelineStatus.RUNNING, "The pipeline is not running", System.currentTimeMillis(), null, ExecutionMode.CLUSTER_BATCH, null, 0, 0)
     );
 
 

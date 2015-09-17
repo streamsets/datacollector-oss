@@ -121,14 +121,14 @@ public class TestClusterRunner {
       "description2");
     PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTargetHigherVersion();
     mockPipelineConf.getConfiguration().add(new Config("executionMode",
-      ExecutionMode.CLUSTER.name()));
+      ExecutionMode.CLUSTER_BATCH.name()));
     mockPipelineConf.setUuid(pipelineConfiguration.getUuid());
     pipelineStoreTask.save("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0", "description"
       , mockPipelineConf);
 
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL, null);
-    setExecMode(ExecutionMode.CLUSTER);
+    setExecMode(ExecutionMode.CLUSTER_BATCH);
   }
 
   @After
@@ -159,24 +159,24 @@ public class TestClusterRunner {
     Runner clusterRunner = createClusterRunner();
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.EDITED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
     pipelineStateStore
-      .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+      .saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPING, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.STOPPED, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING_ERROR, null, attributes,
-      ExecutionMode.CLUSTER, null, 0, 0);
+      ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     try {
       clusterRunner.prepareForDataCollectorStart();
       fail("Expected exception but didn't get any");
@@ -193,18 +193,18 @@ public class TestClusterRunner {
         stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
     assertEquals("My_dummy_metrics", clusterRunner.getMetrics().toString());
     assertNull(clusterRunner.getState().getMetrics());
-    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER,
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_BATCH,
       null, 0, 0);
     clusterRunner.prepareForDataCollectorStart();
     assertEquals("\"My_dummy_metrics\"", clusterRunner.getState().getMetrics());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.CONNECTING, null, attributes,
-      ExecutionMode.CLUSTER, null, 0, 0);
+      ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     clusterRunner.prepareForStart();
     assertNull(clusterRunner.getState().getMetrics());
   }
 
   private void setState(PipelineStatus status) throws Exception {
-    pipelineStateStore.saveState("admin", NAME, "0", status, null, attributes, ExecutionMode.CLUSTER, null, 0, 0);
+    pipelineStateStore.saveState("admin", NAME, "0", status, null, attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
   }
 
   @Test
@@ -361,23 +361,22 @@ public class TestClusterRunner {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
     ClusterSourceInfo clusterSourceInfo =
       clusterRunner.getClusterSourceInfo(NAME, REV,
-        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER) // creates ClusterMSource
+        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH) // creates ClusterMSource
                                                                                           // which
         // has parallelism 25
         );
     Assert.assertEquals(25, clusterSourceInfo.getParallelism());
-    Assert.assertEquals("ClusterMSource", clusterSourceInfo.getClusterSourceName());
   }
 
   @Test
   public void testPipelineWithValidationIssues() throws PipelineException, StageException {
     ClusterRunner clusterRunner = (ClusterRunner) createClusterRunner();
-    pipelineStateStore.saveState("admin", NAME, REV, PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER,
+    pipelineStateStore.saveState("admin", NAME, REV, PipelineStatus.STARTING, null, attributes, ExecutionMode.CLUSTER_BATCH,
       null, 0, 0);
     try {
       MockStages.ClusterMSource.MOCK_VALIDATION_ISSUES = true;
       clusterRunner.getClusterSourceInfo(NAME, REV,
-        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER));
+        MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_BATCH));
       fail("Expected PipelineRuntimeException but didn't get any");
     } catch (PipelineRuntimeException pe) {
       assertEquals(ContainerError.CONTAINER_0800, pe.getErrorCode());
@@ -392,6 +391,8 @@ public class TestClusterRunner {
   @Test(timeout = 20000)
   public void testLoadingUnsupportedPipeline() throws Exception {
     Runner runner = createClusterRunnerForUnsupportedPipeline();
+    pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, REV, PipelineStatus.EDITED, null, attributes, ExecutionMode.CLUSTER_BATCH,
+      null, 0, 0);
     runner.start();
     while(runner.getState().getStatus() != PipelineStatus.START_ERROR) {
       Thread.sleep(100);
@@ -404,7 +405,7 @@ public class TestClusterRunner {
   @Test
   public void tesOnDataCollectorStartUnsupportedPipeline1() throws Exception {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.STARTING, null,
-      attributes, ExecutionMode.CLUSTER, null, 0, 0);
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
@@ -420,7 +421,7 @@ public class TestClusterRunner {
   @Test
   public void tesOnDataCollectorStartUnsupportedPipeline2() throws Exception {
     pipelineStateStore.saveState("admin", TestUtil.HIGHER_VERSION_PIPELINE, "0", PipelineStatus.RUNNING, null,
-      attributes, ExecutionMode.CLUSTER, null, 0, 0);
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     Runner clusterRunner = createClusterRunnerForUnsupportedPipeline();
     clusterRunner.prepareForDataCollectorStart();
     clusterProvider.submitTimesOut = true;
@@ -443,11 +444,23 @@ public class TestClusterRunner {
       new LockCache<String>());
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", "a", "some desc");
+    pipelineStateStore.saveState("admin", "a", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     pipelineStoreTask.create("admin", "b", "some desc");
+    pipelineStateStore.saveState("admin", "b", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     pipelineStoreTask.create("admin", "c", "some desc");
+    pipelineStateStore.saveState("admin", "c", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     pipelineStoreTask.create("admin", "d", "some desc");
+    pipelineStateStore.saveState("admin", "d", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     pipelineStoreTask.create("admin", "e", "some desc");
+    pipelineStateStore.saveState("admin", "e", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
     pipelineStoreTask.create("admin", "f", "some desc");
+    pipelineStateStore.saveState("admin", "f", "0", PipelineStatus.EDITED, null,
+      attributes, ExecutionMode.CLUSTER_BATCH, null, 0, 0);
 
     //Only one runner can start pipeline at the max since the runner thread pool size is 3
     Runner runner1 = createClusterRunner("a", pipelineStoreTask, resourceManager);

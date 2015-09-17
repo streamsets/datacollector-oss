@@ -30,6 +30,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -278,7 +279,8 @@ public class Pipeline {
       boolean clusterMode = false;
       if(pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY) != null) {
         String executionMode = (String) pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY).getValue();
-        if (executionMode != null && !executionMode.isEmpty() && executionMode.equals(EXECUTION_MODE_CLUSTER)) {
+        if (executionMode != null && !executionMode.isEmpty() && (executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_BATCH.name()) ||
+          executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_STREAMING.name()))) {
           clusterMode = true;
         }
       }

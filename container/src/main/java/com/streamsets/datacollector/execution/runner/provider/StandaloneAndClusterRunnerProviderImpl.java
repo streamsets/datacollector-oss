@@ -50,7 +50,8 @@ public class StandaloneAndClusterRunnerProviderImpl implements RunnerProvider {
     List<Object> modules = new ArrayList<>();
     LOG.info(Utils.format("Pipeline execution mode is: {} ", executionMode));
     switch (executionMode) {
-      case CLUSTER:
+      case CLUSTER_BATCH:
+      case CLUSTER_STREAMING:
         objectGraph = objectGraph.plus(ClusterRunnerInjectorModule.class);
         modules.add(new ClusterRunnerModule(user, name, rev, objectGraph));
         break;

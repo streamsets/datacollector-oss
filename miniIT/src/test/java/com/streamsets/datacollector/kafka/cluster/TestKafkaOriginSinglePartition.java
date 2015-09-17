@@ -68,7 +68,7 @@ public class TestKafkaOriginSinglePartition extends TestPipelineOperationsCluste
     pipelineJson = pipelineJson.replace("topicName", TOPIC);
     pipelineJson = pipelineJson.replaceAll("localhost:9092", KafkaTestUtil.getMetadataBrokerURI());
     pipelineJson = pipelineJson.replaceAll("localhost:2181", KafkaTestUtil.getZkConnect());
-    pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER");
+    pipelineJson = pipelineJson.replaceAll("STANDALONE", "CLUSTER_STREAMING");
     return pipelineJson;
   }
 

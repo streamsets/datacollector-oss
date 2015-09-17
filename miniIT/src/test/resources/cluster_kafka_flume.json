@@ -4,7 +4,7 @@
   "description" : "",
   "configuration" : [ {
     "name" : "executionMode",
-    "value" : "CLUSTER"
+    "value" : "CLUSTER_STREAMING"
   }, {
     "name" : "clusterSlaveMemory",
     "value" : 1024

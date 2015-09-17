@@ -18,7 +18,6 @@
 package com.streamsets.datacollector.cluster;
 
 import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -90,9 +89,9 @@ import java.util.regex.Pattern;
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
   static final Pattern NO_VALID_CREDENTIALS = Pattern.compile("(No valid credentials provided.*)");
-  private static final String CLUSTER_TYPE = "CLUSTER_TYPE";
-  private static final String CLUSTER_TYPE_SPARK = "spark";
-  private static final String CLUSTER_TYPE_MAPREDUCE = "mr";
+  public static final String CLUSTER_TYPE = "CLUSTER_TYPE";
+  public static final String CLUSTER_TYPE_SPARK = "spark";
+  public static final String CLUSTER_TYPE_MAPREDUCE = "mr";
   private static final String CLUSTER_TYPE_YARN = "yarn";
   private static final String KERBEROS_AUTH = "KERBEROS_AUTH";
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
@@ -410,10 +409,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     // order is important here as we don't want error stage
     // configs overriding source stage configs
     String clusterToken = UUID.randomUUID().toString();
-    ClusterOrigin clusterOrigin = null;
-    String pathToSparkKafkaJar = null;
-    String pathToAvroMapredJar = null;
-    String pathToAvroJar = null;
+    List<String> jarsToShip = new ArrayList<String>();
     List<Issue> errors = new ArrayList<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
     if (!errors.isEmpty()) {
@@ -424,9 +420,10 @@ public class ClusterProviderImpl implements ClusterProvider {
     for (StageBean stageBean : pipelineBean.getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
+    boolean isBatch = false;
     for (StageConfiguration stageConf : pipelineConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                       false);
+                                                     false);
       if (stageConf.getInputLanes().isEmpty()) {
         for (Config conf : stageConf.getConfiguration()) {
           if (conf.getValue() != null) {
@@ -458,36 +455,28 @@ public class ClusterProviderImpl implements ClusterProvider {
             }
           }
         }
-        // find the spark-kafka jar
-        for (URL jarUrl : ((URLClassLoader)stageDef.getStageClassLoader()).getURLs()) {
-          File jarFile = new File(jarUrl.getPath());
-          if (jarFile.getName().startsWith(ClusterModeConstants.SPARK_KAFKA_JAR_PREFIX)) {
-            pathToSparkKafkaJar = jarFile.getAbsolutePath();
+        ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+        if (executionMode == ExecutionMode.CLUSTER_BATCH) {
+          isBatch = true;
+        } else if (executionMode == ExecutionMode.CLUSTER_STREAMING) {
+          isBatch = false;
+        } else {
+          throw new IllegalStateException(Utils.format("Unsupported execution mode '{}' for cluster mode",
+            executionMode));
+        }
+        List<String> libJarsRegex = stageDef.getLibJarsRegex();
+        if (!libJarsRegex.isEmpty()) {
+          for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
+            File jarFile = new File(jarUrl.getPath());
+            for (String libJar : libJarsRegex) {
+              Pattern pattern = Pattern.compile(libJar);
+              Matcher matcher = pattern.matcher(jarFile.getName());
+              if (matcher.matches()) {
+                jarsToShip.add(jarFile.getAbsolutePath());
+              }
+            }
           }
         }
-
-        for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
-          File jarFile = new File(jarUrl.getPath());
-          if (jarFile.getName().startsWith(ClusterModeConstants.AVRO_MAPRED_JAR_PREFIX)) {
-            pathToAvroMapredJar = jarFile.getAbsolutePath();
-          }
-        }
-        for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
-          File jarFile = new File(jarUrl.getPath());
-          Pattern pattern = Pattern.compile(ClusterModeConstants.AVRO_JAR_REGEX);
-          Matcher matcher = pattern.matcher(jarFile.getName());
-          if (matcher.matches()) {
-            pathToAvroJar = jarFile.getAbsolutePath();
-          }
-        }
-      }
-      try {
-        clusterOrigin = ClusterOrigin.valueOf(Strings.nullToEmpty(sourceInfo.get(ClusterModeConstants.
-          CLUSTER_SOURCE_NAME)).toUpperCase(Locale.ENGLISH));
-      } catch (IllegalArgumentException ex) {
-        String msg = Utils.format("Illegal value '{}' for '{}'", sourceInfo.
-          get(ClusterModeConstants.CLUSTER_SOURCE_NAME), ClusterModeConstants.CLUSTER_SOURCE_NAME);
-        throw new IllegalArgumentException(msg, ex);
       }
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
@@ -500,10 +489,6 @@ public class ClusterProviderImpl implements ClusterProvider {
         throw new IllegalStateException(Utils.format("Error unknown stage library type: '{}'", type));
       }
     }
-    if (clusterOrigin == ClusterOrigin.KAFKA) {
-      Utils.checkState(pathToSparkKafkaJar != null, "Could not find spark kafka jar");
-    }
-
     LOG.info("stagingDir = '{}'", stagingDir);
     LOG.info("bootstrapDir = '{}'", bootstrapDir);
     LOG.info("etcDir = '{}'", etcDir);
@@ -554,9 +539,6 @@ public class ClusterProviderImpl implements ClusterProvider {
       String msg = errorString("serializing etc directory: {}", ex);
       throw new RuntimeException(msg, ex);
     }
-    boolean isBatch = Boolean.parseBoolean(Utils.checkNotNull(sourceInfo.get(
-      ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE), ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE)
-      .trim().toLowerCase(Locale.ENGLISH));
     File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
     File clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
       "streamsets-datacollector-spark-bootstrap");
@@ -564,8 +546,6 @@ public class ClusterProviderImpl implements ClusterProvider {
     InputStream clusterLog4jProperties = null;
     try {
       if (isBatch) {
-         Utils.checkState(pathToAvroJar != null, "Could not find avro jar");
-         Utils.checkState(pathToAvroMapredJar != null, "Could not find avro-mapred jar");
         clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-mr-log4j.properties"),
           "Cluster Log4J Properties");
       } else {
@@ -593,15 +573,14 @@ public class ClusterProviderImpl implements ClusterProvider {
       args = generateMRArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
         config.clusterSlaveJavaOpts, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
-        sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath(), pathToAvroJar,
-        pathToAvroMapredJar);
+        sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath(), jarsToShip);
     } else {
       LOG.info("Submitting Spark Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
       args = generateSparkArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
         config.clusterSlaveJavaOpts, numExecutors, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
-        pathToSparkKafkaJar, clusterBootstrapJar.getAbsolutePath());
+        jarsToShip, clusterBootstrapJar.getAbsolutePath());
     }
     SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), outputDir, args);
     LOG.info("Starting: " + process);
@@ -656,7 +635,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private List<String> generateMRArgs(String clusterManager, String slaveMemory, String javaOpts,
                                       String libsTarGz, String etcTarGz, String resourcesTarGz, String log4jProperties,
                                       String bootstrapJar, String sdcPropertiesFile,
-                                      String clusterBootstrapJar, String pathToAvroJar, String pathToAvroMapredJar) {
+                                      String clusterBootstrapJar, List<String> jarsToShip) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
     args.add("start");
@@ -668,15 +647,20 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("-D");
     args.add("mapreduce.job.log4j-properties-file=" + log4jProperties);
     args.add("-libjars");
-    args.add(Joiner.on(",").join(bootstrapJar, pathToAvroMapredJar, pathToAvroJar));
+    String libJarString = bootstrapJar;
+    for (String jarToShip: jarsToShip) {
+      libJarString = libJarString + "," + jarToShip;
+    }
+    args.add(libJarString);
     args.add(sdcPropertiesFile);
     args.add(Joiner.on(" ").join(String.format("-Xmx%sm", slaveMemory), javaOpts,
       "-javaagent:./" + (new File(bootstrapJar)).getName()));
     return args;
   }
+
   private List<String> generateSparkArgs(String clusterManager, String slaveMemory, String javaOpts,
                              String numExecutors, String libsTarGz, String etcTarGz, String resourcesTarGz,
-                             String log4jProperties, String bootstrapJar, String pathToSparkKafkaJar,
+                             String log4jProperties, String bootstrapJar, List<String> jarsToShip,
                              String clusterBootstrapJar) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
@@ -702,7 +686,11 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("--files");
     args.add(log4jProperties);
     args.add("--jars");
-    args.add(Joiner.on(",").skipNulls().join(bootstrapJar, pathToSparkKafkaJar));
+    String libJarString = bootstrapJar;
+    for (String jarToShip: jarsToShip) {
+      libJarString = libJarString + "," + jarToShip;
+    }
+    args.add(libJarString);
     // use our javaagent and java opt configs
     args.add("--conf");
     args.add("spark.executor.extraJavaOptions=" + Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(),

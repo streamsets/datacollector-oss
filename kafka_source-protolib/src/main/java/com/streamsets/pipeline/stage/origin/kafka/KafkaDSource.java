@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -52,6 +53,8 @@ import java.util.Map;
   version = 2,
   label = "Kafka Consumer",
   description = "Reads data from Kafka",
+  execution = {ExecutionMode.CLUSTER_STREAMING, ExecutionMode.STANDALONE},
+  libJarsRegex = {"spark-streaming-kafka.*"},
   icon = "kafka.png",
   recordsByRef = true,
   upgrader = KafkaSourceUpgrader.class

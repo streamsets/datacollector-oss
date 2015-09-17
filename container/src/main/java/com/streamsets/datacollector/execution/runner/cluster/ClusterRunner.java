@@ -277,7 +277,7 @@ public class ClusterRunner extends AbstractRunner {
     try {
       if (isNodeShuttingDown) {
         validateAndSetStateTransition(PipelineStatus.DISCONNECTED, "Node is shutting down, disconnecting from the "
-          + "pipeline in cluster mode");
+          + "pipeline in " + getState().getExecutionMode() + " mode");
       } else {
         ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
         if (appState.getId() == null) {
@@ -323,13 +323,13 @@ public class ClusterRunner extends AbstractRunner {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
     }
     LOG.info("Preparing to start pipeline '{}::{}'", name, rev);
-    validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in cluster mode");
+    validateAndSetStateTransition(PipelineStatus.STARTING, "Starting pipeline in " + getState().getExecutionMode() + " mode");
   }
 
   @Override
   public void prepareForStop() throws PipelineStoreException, PipelineRunnerException {
     LOG.info("Preparing to stop pipeline '{}::{}'", name, rev);
-    validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping pipeline in cluster mode");
+    validateAndSetStateTransition(PipelineStatus.STOPPING, "Stopping pipeline in " + getState().getExecutionMode() + " mode");
   }
 
   @Override
@@ -339,7 +339,7 @@ public class ClusterRunner extends AbstractRunner {
       Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
       ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
-      if (executionMode != ExecutionMode.CLUSTER) {
+      if (executionMode != ExecutionMode.CLUSTER_BATCH && executionMode != ExecutionMode.CLUSTER_STREAMING) {
         throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
       }
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
@@ -464,7 +464,7 @@ public class ClusterRunner extends AbstractRunner {
           }
         }
         pipelineState =
-          pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, ExecutionMode.CLUSTER,
+          pipelineStateStore.saveState(user, name, rev, toStatus, message, attributes, getState().getExecutionMode(),
             metricsJSONStr, 0, 0);
       }
       // This should be out of sync block
@@ -515,11 +515,10 @@ public class ClusterRunner extends AbstractRunner {
 
     try {
       int parallelism = clusterSource.getParallelism();
-      String clusterSourceName  = clusterSource.getName();
       if (parallelism < 1) {
         throw new PipelineRuntimeException(ContainerError.CONTAINER_0112);
       }
-      return new ClusterSourceInfo(clusterSourceName, parallelism, clusterSource.isInBatchMode(),
+      return new ClusterSourceInfo(parallelism,
                                    clusterSource.getConfigsToShip());
     } catch (IOException ex) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.toString(), ex);
@@ -528,14 +527,10 @@ public class ClusterRunner extends AbstractRunner {
 
   static class ClusterSourceInfo {
     private final int parallelism;
-    private final String clusterSourceName;
-    private final boolean isInBatchMode;
     private final Map<String, String> configsToShip;
 
-    ClusterSourceInfo(String clusterSourceName, int parallelism, boolean isInBatchMode, Map<String, String> configsToShip) {
+    ClusterSourceInfo(int parallelism, Map<String, String> configsToShip) {
       this.parallelism = parallelism;
-      this.clusterSourceName = clusterSourceName;
-      this.isInBatchMode = isInBatchMode;
       this.configsToShip = configsToShip;
     }
 
@@ -543,19 +538,10 @@ public class ClusterRunner extends AbstractRunner {
       return parallelism;
     }
 
-    String getClusterSourceName() {
-      return clusterSourceName;
-    }
-
-    boolean isInBatchMode() {
-      return isInBatchMode;
-    }
-
     Map<String, String> getConfigsToShip() {
       return configsToShip;
     }
-
-  }
+ }
 
   private ProductionPipeline createProductionPipeline(String name, String rev, Configuration configuration,
     PipelineConfiguration pipelineConfiguration) throws PipelineStoreException, PipelineRuntimeException,
@@ -664,8 +650,6 @@ public class ClusterRunner extends AbstractRunner {
       File bootstrapDir = new File(this.runtimeInfo.getLibexecDir(), "bootstrap-libs");
       // create pipeline and get the parallelism info from the source
       sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, String.valueOf(clusterSourceInfo.getParallelism()));
-      sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_NAME, clusterSourceInfo.getClusterSourceName());
-      sourceInfo.put(ClusterModeConstants.CLUSTER_SOURCE_BATCHMODE, String.valueOf(clusterSourceInfo.isInBatchMode()));
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_NAME, name);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_REV, rev);
       sourceInfo.put(ClusterModeConstants.CLUSTER_PIPELINE_USER, user);

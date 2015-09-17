@@ -24,7 +24,6 @@ import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluator;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
-
 import java.util.List;
 
 public class MetricsObserverRunner {

@@ -1110,8 +1110,10 @@ public class BeanHelper {
       return null;
     }
     switch (executionMode) {
-      case CLUSTER:
-        return ExecutionModeJson.CLUSTER;
+      case CLUSTER_BATCH:
+        return ExecutionModeJson.CLUSTER_BATCH;
+      case CLUSTER_STREAMING:
+        return ExecutionModeJson.CLUSTER_STREAMING;
       case STANDALONE:
         return ExecutionModeJson.STANDALONE;
       case SLAVE:
@@ -1126,8 +1128,10 @@ public class BeanHelper {
       return null;
     }
     switch (executionModeJson) {
-      case CLUSTER:
-        return ExecutionMode.CLUSTER;
+      case CLUSTER_BATCH:
+        return ExecutionMode.CLUSTER_BATCH;
+      case CLUSTER_STREAMING:
+        return ExecutionMode.CLUSTER_STREAMING;
       case STANDALONE:
         return ExecutionMode.STANDALONE;
       case SLAVE:
