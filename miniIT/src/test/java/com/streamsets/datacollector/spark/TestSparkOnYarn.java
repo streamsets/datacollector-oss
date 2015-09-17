@@ -150,6 +150,7 @@ public class TestSparkOnYarn {
         attempt++;
         LOG.debug("Attempt no: " + attempt + " to retrieve list of slaves");
       }
+      Thread.sleep(10000);
       List<URI> list = miniSDC.getListOfSlaveSDCURI();
       assertTrue(list != null && !list.isEmpty());
       Map<String, Map<String, Object>> countersMap = VerifyUtils.getCounters(list, "admin", "0");
