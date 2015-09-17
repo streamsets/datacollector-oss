@@ -161,7 +161,7 @@ public class SpoolDirDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "10",
+      defaultValue = "1000",
       label = "Max Files in Directory",
       description = "Max number of files in the directory waiting to be processed. Additional files cause the " +
                     "pipeline to fail.",
