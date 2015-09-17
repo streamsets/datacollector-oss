@@ -61,6 +61,10 @@ public class BaseCommand implements Runnable {
 
 
   public ApiClient getApiClient() {
+    if(sdcAuthType == null) {
+      sdcAuthType = "form";
+    }
+
     if(sdcUser == null) {
       sdcUser = "admin";
     }
@@ -69,7 +73,7 @@ public class BaseCommand implements Runnable {
       sdcPassword = "admin";
     }
 
-    ApiClient apiClient = new ApiClient();
+    ApiClient apiClient = new ApiClient(sdcAuthType);
     apiClient.setBasePath(sdcURL + "/rest");
     apiClient.setUsername(sdcUser);
     apiClient.setPassword(sdcPassword);

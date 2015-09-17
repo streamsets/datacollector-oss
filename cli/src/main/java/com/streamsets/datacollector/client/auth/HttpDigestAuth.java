@@ -18,10 +18,9 @@
 package com.streamsets.datacollector.client.auth;
 
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.api.client.filter.HTTPDigestAuthFilter;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
-public class HttpBasicAuth implements Authentication {
+public class HttpDigestAuth implements Authentication {
   private String username;
   private String password;
 
@@ -43,6 +42,6 @@ public class HttpBasicAuth implements Authentication {
 
   @Override
   public void setFilter(Client client) {
-    client.addFilter(new HTTPBasicAuthFilter(username, password));
+    client.addFilter(new HTTPDigestAuthFilter(username, password));
   }
 }

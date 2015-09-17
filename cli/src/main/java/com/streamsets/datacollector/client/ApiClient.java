@@ -17,39 +17,33 @@
  */
 package com.streamsets.datacollector.client;
 
+import com.streamsets.datacollector.client.auth.Authentication;
+import com.streamsets.datacollector.client.auth.HttpBasicAuth;
+import com.streamsets.datacollector.client.auth.HttpDigestAuth;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.client.WebResource.Builder;
-
+import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
-import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.MediaType;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
-
-import java.net.URLEncoder;
-
-import java.io.IOException;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import javax.ws.rs.core.Response.Status.Family;
 import java.io.DataInputStream;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import com.streamsets.datacollector.client.auth.Authentication;
-import com.streamsets.datacollector.client.auth.HttpBasicAuth;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TimeZone;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public class ApiClient {
@@ -59,7 +53,7 @@ public class ApiClient {
   private String basePath = "https://localhost/rest";
   private JSON json = new JSON();
 
-  private Map<String, Authentication> authentications;
+  private final Authentication authentication;
 
   private int statusCode;
   private Map<String, List<String>> responseHeaders;
@@ -67,6 +61,10 @@ public class ApiClient {
   private DateFormat dateFormat;
 
   public ApiClient() {
+    this("basic");
+  }
+
+  public ApiClient(String authType) {
     // Use ISO 8601 format for date and datetime.
     // See https://en.wikipedia.org/wiki/ISO_8601
     this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
@@ -77,11 +75,18 @@ public class ApiClient {
     // Set default User-Agent.
     setUserAgent("Java-Swagger");
 
-    // Setup authentications (key: authentication name, value: authentication).
-    authentications = new HashMap<String, Authentication>();
-    authentications.put("basic", new HttpBasicAuth());
-    // Prevent the authentications from being modified.
-    authentications = Collections.unmodifiableMap(authentications);
+
+    switch(authType) {
+      case "basic":
+      case "form":
+        authentication = new HttpBasicAuth();
+        break;
+      case "digest":
+        authentication = new HttpDigestAuth();
+        break;
+      default:
+        authentication = null;
+    }
   }
 
   public String getBasePath() {
@@ -108,46 +113,21 @@ public class ApiClient {
   }
 
   /**
-   * Get authentications (key: authentication name, value: authentication).
-   */
-  public Map<String, Authentication> getAuthentications() {
-    return authentications;
-  }
-
-  /**
-   * Get authentication for the given name.
-   *
-   * @param authName The authentication name
-   * @return The authentication, null if not found
-   */
-  public Authentication getAuthentication(String authName) {
-    return authentications.get(authName);
-  }
-
-  /**
    * Helper method to set username for the first HTTP basic authentication.
    */
   public void setUsername(String username) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setUsername(username);
-        return;
-      }
+    if(authentication != null) {
+      authentication.setUsername(username);
     }
-    throw new RuntimeException("No HTTP basic authentication configured!");
   }
 
   /**
    * Helper method to set password for the first HTTP basic authentication.
    */
   public void setPassword(String password) {
-    for (Authentication auth : authentications.values()) {
-      if (auth instanceof HttpBasicAuth) {
-        ((HttpBasicAuth) auth).setPassword(password);
-        return;
-      }
+    if(authentication != null) {
+      authentication.setPassword(password);
     }
-    throw new RuntimeException("No HTTP basic authentication configured!");
   }
 
   /**
@@ -380,8 +360,6 @@ public class ApiClient {
       throw new ApiException(500, "either body or binaryBody must be null");
     }
 
-    updateParamsForAuth(authNames, queryParams, headerParams);
-
     Client client = getClient();
 
     StringBuilder b = new StringBuilder();
@@ -577,19 +555,6 @@ public class ApiClient {
   }
 
   /**
-   * Update query and header parameters based on authentication settings.
-   *
-   * @param authNames The authentications to apply
-   */
-  private void updateParamsForAuth(String[] authNames, List<Pair> queryParams, Map<String, String> headerParams) {
-    for (String authName : authNames) {
-      Authentication auth = authentications.get(authName);
-      if (auth == null) throw new RuntimeException("Authentication undefined: " + authName);
-      auth.applyToParams(queryParams, headerParams);
-    }
-  }
-
-  /**
    * Encode the given form parameters as request body.
    */
   private String getXWWWFormUrlencodedParams(Map<String, Object> formParams) {
@@ -624,6 +589,11 @@ public class ApiClient {
       Client client = Client.create();
       if (debugging)
         client.addFilter(new LoggingFilter());
+
+      if(authentication != null) {
+        authentication.setFilter(client);
+      }
+
       hostMap.put(basePath, client);
     }
     return hostMap.get(basePath);

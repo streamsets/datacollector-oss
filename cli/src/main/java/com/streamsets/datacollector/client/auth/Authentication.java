@@ -17,13 +17,13 @@
  */
 package com.streamsets.datacollector.client.auth;
 
-import com.streamsets.datacollector.client.Pair;
-
-import java.util.Map;
-import java.util.List;
+import com.sun.jersey.api.client.Client;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public interface Authentication {
-  /** Apply authentication settings to header and query params. */
-  void applyToParams(List<Pair> queryParams, Map<String, String> headerParams);
+  void setUsername(String username);
+
+  void setPassword(String password);
+
+  void setFilter(Client client);
 }
