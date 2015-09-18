@@ -257,6 +257,9 @@
       "general": "General",
       "history": "History",
       "historyTab": {
+        "clearHistory": "Clear History",
+        "clearHistoryConfirmationTitle": "Clear History Confirmation",
+        "clearHistoryConfirmationMessage": "Are you sure you want to clear history for Pipeline '{{name}}'?",
         "noStatus": "No Status to view.",
         "summaryModal": {
           "recordCountBarChartTitle": "Record Count"

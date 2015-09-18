@@ -1,44 +1,40 @@
 <div class="history-tab" ng-controller="HistoryController">
 
-  <div class="row">
-    <div class="col-sm-12">
-      <div class="panel panel-default">
-        <div class="panel-heading" translate="home.detailPane.history">History</div>
-        <div class="panel-body history-messages">
+  <button type="button" class="btn btn-primary btn-sm add-button pull-right"
+          ng-show="isAuthorized([userRoles.admin, userRoles.creator]) && !isPipelineRunning && runHistory.length"
+          ng-click="clearHistory()">
+    <i class="fa fa-trash-o"></i> {{'home.detailPane.historyTab.clearHistory' | translate}}
+  </button>
 
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
-                <th class="col-md-2" translate="global.form.status">Status</th>
-                <th class="col-md-5" translate="global.form.message">Message</th>
-                <th class="col-md-2" translate="home.detailPane.summary">Summary</th>
-              </tr>
-            </thead>
-            <tbody ng-hide="showLoading">
-              <tr ng-repeat="history in runHistory track by $index">
-                <td>{{history.timeStamp | date:'medium'}}</td>
-                <td ng-bind="history.status"></td>
-                <td ng-bind="history.message"></td>
-                <td>
-                  <a href="javascript:;"
-                     ng-if="history.metrics"
-                     translate="home.detailPane.historyTab.viewSummary"
-                     ng-click="viewSummary(history, $index)">View Summary ...</a>
-                </td>
-              </tr>
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="col-md-3" translate="global.form.lastStatusChange">Last Status Change</th>
+      <th class="col-md-2" translate="global.form.status">Status</th>
+      <th class="col-md-5" translate="global.form.message">Message</th>
+      <th class="col-md-2" translate="home.detailPane.summary">Summary</th>
+    </tr>
+    </thead>
+    <tbody ng-hide="showLoading">
+    <tr ng-repeat="history in runHistory track by $index">
+      <td>{{history.timeStamp | date:'medium'}}</td>
+      <td ng-bind="history.status"></td>
+      <td ng-bind="history.message"></td>
+      <td>
+        <a href="javascript:;"
+           ng-if="history.metrics"
+           translate="home.detailPane.historyTab.viewSummary"
+           ng-click="viewSummary(history, $index)">View Summary ...</a>
+      </td>
+    </tr>
 
-              <tr ng-if="runHistory.length === 0">
-                <td colspan="3" class="no-status text-center" translate="home.detailPane.historyTab.noStatus">No Status.</td>
-              </tr>
+    <tr ng-if="runHistory.length === 0">
+      <td colspan="3" class="no-status text-center" translate="home.detailPane.historyTab.noStatus">No Status.</td>
+    </tr>
 
-            </tbody>
-          </table>
+    </tbody>
+  </table>
 
-          <div show-loading="showLoading"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div show-loading="showLoading"></div>
 
 </div>

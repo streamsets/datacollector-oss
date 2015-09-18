@@ -680,6 +680,21 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Clear history of the pipeline
+       *
+       * @param name
+       * @param rev
+       * @returns {*}
+       */
+      clearHistory: function(name, rev) {
+        var url = apiBase + '/pipeline/' + name + '/history';
+        return $http({
+          method: 'DELETE',
+          url: url
+        });
+      },
+
+      /**
        * Reset Offset for Pipeline
        *
        * @param name

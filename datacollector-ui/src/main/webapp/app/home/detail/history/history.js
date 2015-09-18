@@ -70,6 +70,35 @@ angular
             }
           }
         });
+      },
+
+      /**
+       * Clear History Callback function.
+       *
+       * @param $event
+       */
+      clearHistory: function($event) {
+        var modalInstance = $modal.open({
+            templateUrl: 'app/home/detail/history/clearHistory/clearHistory.tpl.html',
+            controller: 'ClearHistoryModalInstanceController',
+            size: '',
+            backdrop: 'static',
+            resolve: {
+              pipelineInfo: function () {
+                return $scope.pipelineConfig.info;
+              }
+            }
+          });
+
+        if($event) {
+          $event.stopPropagation();
+        }
+
+        modalInstance.result.then(function () {
+          updateHistory($scope.pipelineConfig.info.name);
+        }, function () {
+
+        });
       }
     });
 
