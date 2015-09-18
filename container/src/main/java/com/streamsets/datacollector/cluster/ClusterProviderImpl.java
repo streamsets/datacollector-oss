@@ -195,6 +195,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcInStream = new FileInputStream(sdcPropertiesFile);
       sdcProperties.load(sdcInStream);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
+      sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
         ExecutionMode.SLAVE.name());
       if(runtimeInfo != null) {
