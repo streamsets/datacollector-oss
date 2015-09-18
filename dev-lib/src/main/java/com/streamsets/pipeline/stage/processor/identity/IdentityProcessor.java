@@ -24,15 +24,14 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 @GenerateResourceBundle
-@StageDef(version = 1, label = "Identity",
+@StageDef(version = 1, label = "Dev Identity",
           description = "It echoes every record it receives without changing, other than stage header information",
-          icon="identity.png")
+          icon="dev.png")
 public class IdentityProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     batchMaker.addRecord(record);
-
   }
 
 }
