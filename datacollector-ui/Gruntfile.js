@@ -1,5 +1,7 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one
+ * Copyright 2015 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
  * regarding copyright ownership.  The ASF licenses this file
@@ -180,7 +182,7 @@ module.exports = function(grunt) {
         ' * <%= pkg.name %> - v<%= pkg.version %> - <%= buildTime %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
-        ' * Licensed to the Apache Software Foundation (ASF) under one\n' +
+        ' * Licensed under the Apache Software Foundation (ASF) under one\n' +
         ' * or more contributor license agreements.  See the NOTICE file\n' +
         ' * distributed with this work for additional information\n' +
         ' * regarding copyright ownership.  The ASF licenses this file\n' +
