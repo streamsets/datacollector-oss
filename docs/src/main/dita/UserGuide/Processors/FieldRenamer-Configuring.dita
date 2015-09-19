@@ -15,32 +15,60 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_y5g_4hh_ht">
     <title>Configuring a Field Renamer</title>
-    <shortdesc>Information forthcoming...</shortdesc>
     <taskbody>
-        <context>
-            <p>You can access the latest documentation for this release on the StreamSets website:
-                    <xref
-                        href="https://www.streamsets.com/documentation/datacollector/1.1.0/userguide/help/index.html"
-                    format="html" scope="external"/>.</p>
-            <p>You can also configure the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to use the latest documentation as the context-sensitive help. This requires an
-                internet connection and a login. </p>
-        </context>
+        <context><indexterm>Field Renamer
+            processor<indexterm>configuring</indexterm></indexterm>Configure a Field Renamer to
+            rename fields in a record.</context>
         <steps id="steps_s3k_5hh_ht">
-            <step>
-                <cmd>In the top right corner of the Data Collector console, click <menucascade>
-                        <uicontrol>Help</uicontrol>
-                        <uicontrol>Settings</uicontrol>
-                    </menucascade>.</cmd>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ReqField-ErrorHandling">
+                <cmd/>
             </step>
             <step>
-                <cmd>For the <uicontrol>Help</uicontrol> property, select <uicontrol>Hosted
-                        Help</uicontrol>, and then click <uicontrol>Done</uicontrol>. </cmd>
-                <stepresult>When you click the context-sensitive help icon, the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> launches hosted help with the latest documentation after you log in.
-                </stepresult>
+                <cmd>On the <wintitle>Rename</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_bk5_ml4_jt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Field Renamer Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Field Does Not Exist</entry>
+                                    <entry>Action to take when a field to be renamed does not exist
+                                        in a record:<ul id="ul_uhd_115_jt">
+                                            <li>Continue - The processor continues processing the
+                                                record, skipping any missing fields.</li>
+                                            <li>Send to Error - The processor handles the record
+                                                based on the error handling configured for the
+                                                stage.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Overwrite Existing Fields</entry>
+                                    <entry>Overwrites any fields in the record that matches the new
+                                        field names.</entry>
+                                </row>
+                                <row>
+                                    <entry>Fields to Rename</entry>
+                                    <entry>To rename fields, enter or select the field to rename and
+                                        enter the new name for the field. Click
+                                            <uicontrol>Add</uicontrol> to rename additional fields. <p>
+                                            <note>When using the processor to rename fields in
+                                                records with complex structures, be sure to use the
+                                                appropriate field path.</note>
+                                        </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

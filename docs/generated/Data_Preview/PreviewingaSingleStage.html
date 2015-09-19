@@ -37,9 +37,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d7439e66">Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d7493e66">Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d7439e69">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d7493e69">Description</th>
 
                                 </tr>
 
@@ -47,9 +47,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7439e66 ">Preview Source</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Preview Source</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7439e69 ">Source data for the preview:<ul class="ul" id="task_cxd_p25_qq__d735e150">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Source data for the preview:<ul class="ul" id="task_cxd_p25_qq__d735e150">
                                             <li class="li">Configured Source - Provides data from the origin
                                                 system.</li>
 
@@ -61,9 +61,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7439e66 ">Preview Batch Size</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Preview Batch Size</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7439e69 ">Number of records to use in the preview. Honors values up
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Number of records to use in the preview. Honors values up
                                         to the <span class="ph">Data
                   Collector</span> preview batch size. <p class="p">Default is 10. The <span class="ph">Data
                   Collector</span> default is 10.</p>
@@ -72,9 +72,18 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7439e66 ">Write to Destinations</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Preview Timeout</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7439e69 ">Determines whether the preview writes data to pipeline
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Milliseconds to wait for preview data. Use to limit the
+                                        time data preview waits for data to arrive at the origin.
+                                        Relevant for transient origins only. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Write to Destinations</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Determines whether the preview writes data to pipeline
                                         destinations. <p class="p">By default, does not write data to
                                             destinations. </p>
 </td>
@@ -82,21 +91,37 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7439e66 ">Snapshot Data</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Show Record Header</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7439e69 ">When using a snapshot for source data, select the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Displays record metadata in List view. Headers do not
+                                        display in Table view.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Show Field Type</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Displays the data type for fields in List view. Field
+                                        types do not display in Table view.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Snapshot Data</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">When using a snapshot for source data, select the
                                         snapshot to use. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7439e66 ">Remember the Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7493e66 ">Remember the Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7439e69 ">Stores the current preview configuration for use every
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7493e69 ">Stores the current preview configuration for use every
                                         time you request a preview for this pipeline. <p class="p">After you
                                             run data preview, you can change this option in the
                                             Preview panel by selecting the Preview Configuration
-                                            icon (<img class="image" id="task_cxd_p25_qq__d735e204" src="../Reusable_Content/../Graphics/icon_PrevPreviewConfig.png" height="16" width="19"></img>) and clearing the
+                                            icon (<img class="image" id="task_cxd_p25_qq__d735e232" src="../Reusable_Content/../Graphics/icon_PrevPreviewConfig.png" height="16" width="19"></img>) and clearing the
                                             option. The change takes effect the next time you run
                                             data preview.</p>
 </td>
@@ -112,7 +137,7 @@
                 <div class="itemgroup stepresult">The Preview panel highlights the origin stage and displays preview data
                     in table view. Since this is the origin of the pipeline, no input data displays.
                         <p class="p">To view preview data in list view, click the <span class="ph uicontrol">List
-                            View</span> icon: <img class="image" id="task_cxd_p25_qq__d735e219" src="../Reusable_Content/../Graphics/icon_PrevListView.png" height="12" width="15"></img>.</p>
+                            View</span> icon: <img class="image" id="task_cxd_p25_qq__d735e247" src="../Reusable_Content/../Graphics/icon_PrevListView.png" height="12" width="15"></img>.</p>
 </div>
             </li>
 <li class="li step stepexpand">
@@ -126,7 +151,7 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">To refresh the preview, click the <span class="ph uicontrol">Refresh Preview</span> icon:
-                        <img class="image" id="task_cxd_p25_qq__d735e239" src="../Reusable_Content/../Graphics/icon_PrevRefresh.png" height="12" width="11"></img>.</span>
+                        <img class="image" id="task_cxd_p25_qq__d735e267" src="../Reusable_Content/../Graphics/icon_PrevRefresh.png" height="12" width="11"></img>.</span>
                 <div class="itemgroup info">Based on the origin, refreshing the preview either provides a new set of data
                     or reverts any changes to the existing data.</div>
             </li>

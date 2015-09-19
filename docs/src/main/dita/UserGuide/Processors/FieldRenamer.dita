@@ -15,5 +15,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vyv_zsg_ht">
  <title>Field Renamer</title>
- <shortdesc>Information forthcoming...</shortdesc>
+ <shortdesc>Use the Field Renamer to rename fields in a record. </shortdesc>
+    <conbody>
+        <p><indexterm>Field Renamer
+                    processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
+                    Renamer</indexterm></indexterm>You can configure the Field Renamer to overwrite
+            existing fields with the same name. Fields that are not renamed or overwritten pass to
+            the next stage.</p>
+    </conbody>
 </concept>
