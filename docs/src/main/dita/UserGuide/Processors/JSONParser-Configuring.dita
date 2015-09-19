@@ -18,7 +18,7 @@
     <shortdesc>Configure a JSON Parser to parse a JSON object in a String field. </shortdesc>
     <taskbody>
         <context><indexterm>JSON Parser processor<indexterm>configuring</indexterm></indexterm>When
-            you configure a JSON Parser, you specify the field to parse and the output field to
+            you configure a JSON Parser, specify the field to parse and the output field to
             use.</context>
         <steps id="steps_wc5_4g2_zq">
             <step
@@ -52,16 +52,6 @@
                                 <row>
                                     <entry>New Parsed Field</entry>
                                     <entry>Output field for the parsed JSON object.</entry>
-                                </row>
-                                <row>
-                                    <entry>Error Record</entry>
-                                    <entry>Determines what to do with error records:<ul
-                                            id="ul_xtt_q52_zq">
-                                            <li>Discard - Discards the record. </li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling. </li>
-                                            <li>Stop Pipeline - Stops the pipeline. </li>
-                                        </ul></entry>
                                 </row>
                             </tbody>
                         </tgroup>

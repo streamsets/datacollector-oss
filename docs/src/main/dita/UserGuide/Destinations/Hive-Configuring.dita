@@ -2,32 +2,122 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cx3_lhh_ht">
     <title>Configuring a Hive Streaming Destination</title>
-    <shortdesc>Information forthcoming...</shortdesc>
     <taskbody>
-        <context>
-            <p>You can access the latest documentation for this release on the StreamSets website:
-                    <xref
-                    href="https://www.streamsets.com/documentation/datacollector/1.1.0/userguide/help/index.html"
-                    format="html" scope="external"/></p>
-            <p>You can also configure the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to use the latest documentation as the context-sensitive help. This requires an
-                internet connection and a login. </p>
-        </context>
+        <context><indexterm>Hive Streaming
+            destination<indexterm>configuring</indexterm></indexterm>Use the Hive Streaming
+            destination to write data to Hive:</context>
         <steps id="steps_s3k_5hh_ht">
-            <step>
-                <cmd>In the top right corner of the Data Collector console, click <menucascade>
-                        <uicontrol>Help</uicontrol>
-                        <uicontrol>Settings</uicontrol>
-                    </menucascade>.</cmd>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                <cmd/>
             </step>
             <step>
-                <cmd>For the <uicontrol>Help</uicontrol> property, select <uicontrol>Hosted
-                        Help</uicontrol>, and then click <uicontrol>Done</uicontrol>. </cmd>
-                <stepresult>When you click the context-sensitive help icon, the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> launches hosted help with the latest documentation after you log in.
-                </stepresult>
+                <cmd>On the <wintitle>Hive</wintitle> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_cfq_2tg_jt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Hive Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Hive Metastore Thrift URL</entry>
+                                    <entry>Thrift URI for the Hive metastore. Use the following
+                                        format:
+                                            <codeblock>thrift://&lt;host>:&lt;port></codeblock><p>The
+                                            port number is typically 9083. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Schema</entry>
+                                    <entry>Hive schema.</entry>
+                                </row>
+                                <row>
+                                    <entry>Table </entry>
+                                    <entry>Bucketed Hive table stored in as an ORC file.</entry>
+                                </row>
+                                <row>
+                                    <entry>Hive Configuration Directory <xref
+                                            href="Hive-HiveProperties.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_wjh_ycl_br"/></xref></entry>
+                                    <entry>
+                                        <p>Absolute path to the directory containing the Hive and
+                                            Hadoop configuration files.</p>
+                                        <p>The destination uses the following configuration
+                                                files:<ul id="ul_frp_nkn_jt">
+                                                <li>core-site.xml </li>
+                                                <li>hdfs-site.xml</li>
+                                                <li>hive-site.xml</li>
+                                            </ul></p>
+                                        <p>
+                                            <note>Properties in the configuration files are
+                                                overridden by individual properties defined in this
+                                                destination. </note>
+                                        </p>
+                                    </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FIELD2ColumnMapping">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Auto Create Partitions</entry>
+                                    <entry>Automatically creates partitions when needed. Used for
+                                        partitioned tables only.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fqc_qln_jt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Transaction Batch Size</entry>
+                                    <entry>The number of transactions to request in a batch for each
+                                        partition in the table. For more information, see the Hive
+                                        documentation. <p>Default is 1000 transactions.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Buffer Limit (KB)</entry>
+                                    <entry>Maximum size of the record to be written to the
+                                        destination. Increase the size to accommodate larger
+                                        records. <p>Records that exceed the limit are handled based
+                                            on the error handling configured for the stage.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Hive Configuration</entry>
+                                    <entry>
+                                        <p>Additional Hive properties to use. Click the
+                                                <uicontrol>Add</uicontrol> icon and define the
+                                            property name and value. </p>
+                                        <p>Use the property names and values as expected by Hive.
+                                        </p>
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

@@ -43,9 +43,8 @@
                                     <entry>JDBC Connection String</entry>
                                     <entry>Connection string to use to connect to the
                                             database.<p>Some databases, such as Postgres, require
-                                            the schema included in the connection string. Use the
-                                            connection string format required by the database.
-                                        </p></entry>
+                                            the schema in the connection string. Use the connection
+                                            string format required by the database. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>
@@ -58,10 +57,9 @@
                                             database>:&lt;tablename>. Use the table name format
                                             required by the database. </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Field to Column Mapping</entry>
-                                    <entry>By default fields are written to columns of the same
-                                        name. Use to override the default mappings.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/FIELD2ColumnMapping">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Change Log Format</entry>
@@ -78,8 +76,8 @@
                                     <entry>Additional JDBC Configuration Properties</entry>
                                     <entry>
                                         <p>Additional JDBC configuration properties to use. To add
-                                            properties, click Add and define the JDBC property name
-                                            and value. </p>
+                                            properties, click <uicontrol>Add</uicontrol> and define
+                                            the JDBC property name and value. </p>
                                         <p>Use the property names and values as expected by JDBC.
                                         </p>
                                     </entry>

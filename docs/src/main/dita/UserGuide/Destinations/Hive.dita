@@ -2,5 +2,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kvs_3hh_ht">
  <title>Hive Streaming</title>
- <shortdesc>Information forthcoming...</shortdesc>
+ <shortdesc>The Hive Streaming destination writes data to Hive tables stored in the ORC (Optimized
+  Row Columnar) file format.</shortdesc>
+ <conbody>
+  <p><indexterm>Hive Streaming
+     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hive
+     Streaming</indexterm></indexterm>The Hive Streaming destination requires Hive version 0.13 or
+   above. Before you use the destination, verify that your Hadoop implementation supports Hive
+   Streaming. </p>
+  <p>When configuring Hive Streaming, you specify the Hive metastore and a bucketed table stored in
+   the ORC file format. You define the location of the Hive and Hadoop configuration files and
+   optionally specify additional required properties. By default, the destination creates new
+   partitions as needed.</p>
+  <p>Hive Streaming writes data to the table based on the matching field names. You can defining
+   custom field mappings that override the default field mappings. </p>
+ </conbody>
 </concept>

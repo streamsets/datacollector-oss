@@ -83,5 +83,30 @@
     <stentry>Provides context-sensitive help based on the information in the panel. </stentry>
    </strow>
   </simpletable>
+  <p>
+   <draft-comment author="Loretta">The following row is used in Configuring Hive Streaming and
+    Configuring JDBC Producer</draft-comment>
+  </p>
+  <table frame="all" rowsep="1" colsep="1" id="table_ps1_hln_jt">
+   <tgroup cols="2">
+    <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+    <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+    <thead>
+     <row>
+      <entry/>
+      <entry/>
+     </row>
+    </thead>
+    <tbody>
+     <row id="FIELD2ColumnMapping">
+      <entry>Field to Column Mapping</entry>
+      <entry>
+       <p>Use to override the default field to column mappings. </p>
+       <p>By default, fields are written to columns of the same name. </p>
+      </entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </table>
  </conbody>
 </concept>
