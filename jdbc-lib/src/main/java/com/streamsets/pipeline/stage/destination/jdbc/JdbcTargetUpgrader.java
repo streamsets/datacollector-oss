@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.destination.jdbc;
 
-import com.google.common.collect.Lists;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -34,7 +33,11 @@ public class JdbcTargetUpgrader implements StageUpgrader {
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
-        upgradeV1ToV2(configs);
+        upgradeV1toV2(configs);
+        upgradeV2toV3(configs);
+        break;
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -42,7 +45,7 @@ public class JdbcTargetUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private void upgradeV1toV2(List<Config> configs) {
     configs.add(new Config("changeLogFormat", "NONE"));
 
     Config tableNameConfig = null;
@@ -67,5 +70,9 @@ public class JdbcTargetUpgrader implements StageUpgrader {
     for (HashMap<String, String> columnName : (List<HashMap<String, String>>)columnNamesConfig.getValue()) {
       columnName.put("paramValue", "?");
     }
+  }
+
+  private void upgradeV2toV3(List<Config> configs) {
+    configs.add(new Config("useMultiRowInsert", true));
   }
 }

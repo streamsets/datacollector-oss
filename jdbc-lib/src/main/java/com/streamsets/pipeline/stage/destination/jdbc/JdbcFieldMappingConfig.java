@@ -30,9 +30,7 @@ public class JdbcFieldMappingConfig {
    * @param columnName
    */
   public JdbcFieldMappingConfig(final String field, final String columnName) {
-    this.field = field;
-    this.columnName = columnName;
-    this.paramValue = "?";
+    this(field, columnName, "?");
   }
 
   /**
