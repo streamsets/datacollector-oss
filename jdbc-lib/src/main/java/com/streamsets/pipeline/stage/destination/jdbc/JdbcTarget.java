@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.JdbcGenericRecordWriter;
+import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.MicrosoftJdbcRecordWriter;
@@ -59,6 +60,7 @@ public class JdbcTarget extends BaseTarget {
   private final String username;
   private final String password;
   private final boolean rollbackOnError;
+  private final boolean useMultiRowInsert;
 
   private final String tableName;
   private final List<JdbcFieldMappingConfig> customMappings;
@@ -80,6 +82,7 @@ public class JdbcTarget extends BaseTarget {
       final String tableName,
       final List<JdbcFieldMappingConfig> customMappings,
       final boolean rollbackOnError,
+      final boolean useMultiRowInsert,
       final Map<String, String> driverProperties,
       final ChangeLogFormat changeLogFormat,
       final String driverClassName,
@@ -91,6 +94,7 @@ public class JdbcTarget extends BaseTarget {
     this.tableName = tableName;
     this.customMappings = customMappings;
     this.rollbackOnError = rollbackOnError;
+    this.useMultiRowInsert = useMultiRowInsert;
     if (driverProperties != null) {
       this.driverProperties.putAll(driverProperties);
     }
@@ -102,7 +106,6 @@ public class JdbcTarget extends BaseTarget {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-
 
     Target.Context context = getContext();
 
@@ -144,7 +147,23 @@ public class JdbcTarget extends BaseTarget {
   private void createRecordWriter() throws StageException {
     switch (changeLogFormat) {
       case NONE:
-        recordWriter = new JdbcGenericRecordWriter(connectionString, dataSource, tableName, rollbackOnError, customMappings);
+        if (!useMultiRowInsert) {
+          recordWriter = new JdbcGenericRecordWriter(
+              connectionString,
+              dataSource,
+              tableName,
+              rollbackOnError,
+              customMappings
+          );
+        } else {
+          recordWriter = new JdbcMultiRowRecordWriter(
+              connectionString,
+              dataSource,
+              tableName,
+              rollbackOnError,
+              customMappings
+          );
+        }
         break;
       case MSSQL:
         recordWriter = new MicrosoftJdbcRecordWriter(connectionString, dataSource, tableName);

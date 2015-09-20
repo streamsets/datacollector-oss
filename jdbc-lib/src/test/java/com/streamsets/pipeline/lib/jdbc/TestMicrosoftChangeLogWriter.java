@@ -53,7 +53,6 @@ public class TestMicrosoftChangeLogWriter {
   private DataSource dataSource;
   private Connection connection;
 
-
   @Before
   public void setUp() throws SQLException {
     // Create a table in H2 and put some data in it for querying.

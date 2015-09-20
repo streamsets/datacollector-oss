@@ -34,7 +34,7 @@ import java.util.Map;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JDBC Producer",
     description = "Writes data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
@@ -146,6 +146,17 @@ public class JdbcDTarget extends DTarget {
   public boolean rollbackOnError;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Multi-Row Insert",
+      description = "Whether to generate multi-row INSERT statements instead of batches of single-row INSERTs",
+      displayPosition = 60,
+      group = "JDBC"
+  )
+  public boolean useMultiRowInsert;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Driver Class Name",
@@ -175,6 +186,7 @@ public class JdbcDTarget extends DTarget {
         tableName,
         columnNames,
         rollbackOnError,
+        useMultiRowInsert,
         driverProperties,
         changeLogFormat,
         driverClassName,
