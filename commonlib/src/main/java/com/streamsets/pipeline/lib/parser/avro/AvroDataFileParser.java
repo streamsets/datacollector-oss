@@ -40,6 +40,7 @@ public class AvroDataFileParser implements DataParser {
 
   private final Schema avroSchema;
   private final File file;
+  private final SeekableOverrunFileInputStream sin;
   private long previousSync;
   private long recordCount;
   private final DatumReader<GenericRecord> datumReader;
@@ -57,8 +58,9 @@ public class AvroDataFileParser implements DataParser {
     }
     this.file = file;
     datumReader = new GenericDatumReader<>(avroSchema, avroSchema, GenericData.get()); //Reader schema argument is optional
-    dataFileReader = new DataFileReader<>(new SeekableOverrunFileInputStream(
-      new FileInputStream(file), maxObjectLength, true), datumReader);
+    sin = new SeekableOverrunFileInputStream(
+      new FileInputStream(file), maxObjectLength, true);
+    dataFileReader = new DataFileReader<>(sin, datumReader);
     if(readerOffset != null && !readerOffset.isEmpty() && !readerOffset.equals("0")) {
       String[] split = readerOffset.split(OFFSET_SEPARATOR);
       if(split.length == 3) {
@@ -83,6 +85,7 @@ public class AvroDataFileParser implements DataParser {
   public Record parse() throws IOException, DataParserException {
     //seekToOffset to the required position
     if(dataFileReader.hasNext()) {
+      sin.resetCount();
       GenericRecord avroRecord = dataFileReader.next();
       if (dataFileReader.previousSync() > previousSync) {
         previousSync = dataFileReader.previousSync();
@@ -103,6 +106,7 @@ public class AvroDataFileParser implements DataParser {
     int count = 0;
     while(count < recordCount) {
       if(dataFileReader.hasNext()) {
+        sin.resetCount();
         dataFileReader.next();
         count++;
       } else {
