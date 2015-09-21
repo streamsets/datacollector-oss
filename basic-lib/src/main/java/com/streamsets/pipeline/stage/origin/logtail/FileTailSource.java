@@ -378,9 +378,18 @@ public class FileTailSource extends BaseSource {
         String tag = chunk.getTag();
         tag = (tag != null && tag.isEmpty()) ? null : tag;
         String liveFileStr = chunk.getFile().serialize();
-        for (FileLine line : chunk.getLines()) {
+
+        List<FileLine> lines = chunk.getLines();
+        int truncatedLine = chunk.isTruncated() ? lines.size()-1 : -1;
+
+        for(int i = 0; i < lines.size(); i++) {
+          FileLine line = lines.get(i);
           String sourceId = liveFileStr + "::" + line.getFileOffset();
           try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
+            if(i == truncatedLine) {
+              //set truncated
+              parser.setTruncated();
+            }
             Record record = parser.parse();
             if (record != null) {
               if (tag != null) {

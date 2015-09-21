@@ -7,7 +7,7 @@ package com.streamsets.pipeline.lib.parser.avro;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
@@ -24,7 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 
-public class AvroMessageParser implements DataParser {
+public class AvroMessageParser extends AbstractDataParser {
 
   private Schema avroSchema;
   private DatumReader<GenericRecord> datumReader;
@@ -99,4 +99,5 @@ public class AvroMessageParser implements DataParser {
       dataFileReader.close();
     }
   }
+
 }

@@ -9,13 +9,13 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SdcRecordDataParser implements DataParser {
+public class SdcRecordDataParser extends AbstractDataParser {
   private final RecordReader recordReader;
   private boolean eof;
 

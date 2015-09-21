@@ -9,14 +9,14 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.xml.OverrunStreamingXmlParser;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
-public class XmlCharDataParser implements DataParser {
+public class XmlCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final int maxObjectLen;

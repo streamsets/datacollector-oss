@@ -10,7 +10,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunLineReader;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.io.IOUtils;
 
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TextCharDataParser implements DataParser {
+public class TextCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final boolean collapseAllLines;
@@ -32,7 +32,8 @@ public class TextCharDataParser implements DataParser {
   private boolean eof;
 
   public TextCharDataParser(Stage.Context context, String readerId, boolean collapseAllLines, OverrunReader reader,
-      long readerOffset, int maxObjectLen, String fieldTextName, String fieldTruncatedName) throws IOException {
+      long readerOffset, int maxObjectLen, String fieldTextName, String fieldTruncatedName)
+    throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.collapseAllLines = collapseAllLines;
@@ -51,6 +52,10 @@ public class TextCharDataParser implements DataParser {
 
   private boolean isOverMaxObjectLen(int len) {
     return maxObjectLen > -1 && len > maxObjectLen;
+  }
+
+  private boolean isTruncated(int len) {
+    return isOverMaxObjectLen(len) || truncated;
   }
 
   @Override
@@ -76,7 +81,7 @@ public class TextCharDataParser implements DataParser {
       record = context.createRecord(readerId + "::" + offset);
       Map<String, Field> map = new HashMap<>();
       map.put(fieldTextName, Field.create(sb.toString()));
-      if (isOverMaxObjectLen(sb.length())) {
+      if (isTruncated(sb.length())) {
         map.put(fieldTruncatedName, Field.create(true));
       }
       record.set(Field.create(map));
@@ -97,7 +102,7 @@ public class TextCharDataParser implements DataParser {
       record = context.createRecord(recordIdSb.toString());
       Map<String, Field> map = new HashMap<>();
       map.put(fieldTextName, Field.create(sb.toString()));
-      if (isOverMaxObjectLen(read)) {
+      if (isTruncated(read)) {
         map.put(fieldTruncatedName, Field.create(true));
       }
       record.set(Field.create(map));
@@ -116,5 +121,4 @@ public class TextCharDataParser implements DataParser {
   public void close() throws IOException {
     reader.close();
   }
-
 }
