@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -569,29 +570,34 @@ public class SpoolDirSource extends BaseSource {
         }
       }
     } catch (IOException|DataParserException ex) {
-      offset = MINUS_ONE;
-      String exOffset;
-      if (ex instanceof OverrunException) {
-        exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
+      if(ex.getCause() instanceof ClosedByInterruptException) {
+        //If the pipeline was stopped, we may get a ClosedByInterruptException.
+        // Instead of sending the file to error, produce what ever you have and move one.
       } else {
-        try {
-          exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
-        } catch (IOException ex1) {
-          LOG.warn("Could not get the file offset to report with error, reason: {}", ex1.toString(), ex);
-          exOffset = MINUS_ONE;
+        offset = MINUS_ONE;
+        String exOffset;
+        if (ex instanceof OverrunException) {
+          exOffset = String.valueOf(((OverrunException) ex).getStreamOffset());
+        } else {
+          try {
+            exOffset = (parser != null) ? parser.getOffset() : MINUS_ONE;
+          } catch (IOException ex1) {
+            LOG.warn("Could not get the file offset to report with error, reason: {}", ex1.toString(), ex);
+            exOffset = MINUS_ONE;
+          }
         }
-      }
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
-        case STOP_PIPELINE:
-          getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
-          throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
-        default:
-          throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
-                                                       getContext().getOnErrorRecord(), ex));
+        switch (getContext().getOnErrorRecord()) {
+          case DISCARD:
+            break;
+          case TO_ERROR:
+            throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
+          case STOP_PIPELINE:
+            getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
+            throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
+          default:
+            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+              getContext().getOnErrorRecord(), ex));
+        }
       }
     } finally {
       if (MINUS_ONE.equals(offset)) {
