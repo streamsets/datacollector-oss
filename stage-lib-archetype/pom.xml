@@ -17,7 +17,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets.datacollector.archetype</groupId>
   <artifactId>stage-lib</artifactId>
-  <version>1.1.0-RC1</version>
+  <version>1.1.0</version>
   <name>StreamSets Stage Library Archetype</name>
   <url>https://www.streamsets.com</url>
   <packaging>maven-archetype</packaging>
