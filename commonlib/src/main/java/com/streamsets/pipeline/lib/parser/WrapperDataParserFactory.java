@@ -101,6 +101,11 @@ public class WrapperDataParserFactory extends DataParserFactory {
     }
 
     @Override
+    public void setTruncated() {
+      dataParser.setTruncated();
+    }
+
+    @Override
     public void close() throws IOException {
       try {
         dataParser.close();

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.OverrunReader;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.csv.CSVFormat;
@@ -37,7 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DelimitedCharDataParser implements DataParser {
+public class DelimitedCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
   private final OverrunCsvParser parser;

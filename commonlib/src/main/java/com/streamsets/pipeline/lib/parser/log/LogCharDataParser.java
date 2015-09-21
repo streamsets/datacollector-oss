@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.io.IOUtils;
 
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class LogCharDataParser implements DataParser {
+public abstract class LogCharDataParser extends AbstractDataParser {
 
   static final String TEXT_FIELD_NAME = "originalLine";
   static final String TRUNCATED_FIELD_NAME = "truncated";
@@ -68,6 +68,10 @@ public abstract class LogCharDataParser implements DataParser {
 
   private boolean isOverMaxObjectLen(int len) {
     return maxObjectLen > -1 && len > maxObjectLen;
+  }
+
+  private boolean isTruncated(int len) {
+    return isOverMaxObjectLen(len) || truncated;
   }
 
   @Override
@@ -111,9 +115,9 @@ public abstract class LogCharDataParser implements DataParser {
       Map<String, Field> map = new HashMap<>();
       if (retainOriginalText) {
         map.put(TEXT_FIELD_NAME, Field.create(sb.toString()));
-        if (isOverMaxObjectLen(read)) {
-          map.put(TRUNCATED_FIELD_NAME, Field.create(true));
-        }
+      }
+      if (isTruncated(read)) {
+        map.put(TRUNCATED_FIELD_NAME, Field.create(true));
       }
       map.putAll(fieldsFromLogLine);
       record.set(Field.create(map));
@@ -170,9 +174,9 @@ public abstract class LogCharDataParser implements DataParser {
     Map<String, Field> map = new HashMap<>();
     if (retainOriginalText) {
       map.put(TEXT_FIELD_NAME, Field.create(sb.toString()));
-      if (isOverMaxObjectLen(previousRead)) {
-        map.put(TRUNCATED_FIELD_NAME, Field.create(true));
-      }
+    }
+    if (isTruncated(previousRead)) {
+      map.put(TRUNCATED_FIELD_NAME, Field.create(true));
     }
     map.putAll(fieldsFromPrevLine);
     record.set(Field.create(map));
@@ -265,6 +269,5 @@ public abstract class LogCharDataParser implements DataParser {
     }
     return eol;
   }
-
 
 }

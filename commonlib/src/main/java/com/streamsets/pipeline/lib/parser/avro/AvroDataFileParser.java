@@ -22,7 +22,7 @@ package com.streamsets.pipeline.lib.parser.avro;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
@@ -36,7 +36,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class AvroDataFileParser implements DataParser {
+public class AvroDataFileParser extends AbstractDataParser {
 
   private static final String OFFSET_SEPARATOR = "::";
 

@@ -242,6 +242,64 @@ public class TestFileTailSource {
   }
 
   @Test
+  public void testTailLogTruncated() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+    String logFile = new File(testDataDir, "logFile.txt").getAbsolutePath();
+    InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("testLogFileTruncated.txt");
+    OutputStream os = new FileOutputStream(logFile);
+    IOUtils.copy(is, os);
+    is.close();
+    os.close();
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/logFile.txt";
+    fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = "";
+    //Set max line length of 2 characters
+    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 3, 1, 1, Arrays.asList(fileInfo),
+      PostProcessingOptions.NONE, null, null,
+      false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+    SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
+      .addOutputLane("lane").addOutputLane("metadata")
+      .build();
+    runner.runInit();
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Record record = output.getRecords().get("lane").get(0);
+      //max line length was set to 2 characters. So text has just 3 chars and there is also a boolean field truncated = true
+      Assert.assertEquals("FIR", record.get("/text").getValueAsString());
+      Assert.assertEquals(true, record.get("/truncated").getValueAsBoolean());
+
+      String offset = output.getNewOffset();
+      Assert.assertNotNull(offset);
+      output = runner.runProduce(offset, 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      record = output.getRecords().get("lane").get(0);
+      //max line length was set to 2 characters. So text has just 3 chars and there is also a boolean field truncated = true
+      Assert.assertEquals("LAS", record.get("/text").getValueAsString());
+      Assert.assertEquals(true, record.get("/truncated").getValueAsBoolean());
+
+      offset = output.getNewOffset();
+      Assert.assertNotNull(offset);
+      output = runner.runProduce(offset, 1000);
+      Assert.assertNotNull(output.getNewOffset());
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      record = output.getRecords().get("lane").get(0);
+      Assert.assertEquals("NA", record.get("/text").getValueAsString());
+      //No truncated field as there is no truncation
+      Assert.assertEquals(false, record.has("/truncated"));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testTailJson() throws Exception {
     File testDataDir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(testDataDir.mkdirs());
