@@ -27,12 +27,15 @@ then
   echo "Usage: $0 NEW-VERSION"
   exit 1
 fi
-mvn versions:set -Drelease -DnewVersion=$version
+mvn versions:set -Drelease -Parchetype -DnewVersion=$version
 pushd rbgen-maven-plugin
-mvn versions:set -Drelease -DnewVersion=$version
+mvn versions:set -DnewVersion=$version
+popd
+pushd stage-lib-archetype
+mvn versions:set -DnewVersion=$version
 popd
 pushd e2e-tests
-mvn versions:set -Drelease -DnewVersion=$version
+mvn versions:set -DnewVersion=$version
 popd
 perl -i -pe 's@^(\s+"version"\s*:\s*").*("\s*,\s*)$@${1}'"$version"'$2@' datacollector-ui/package.json
 find . -name pom.xml.versionsBackup -delete
