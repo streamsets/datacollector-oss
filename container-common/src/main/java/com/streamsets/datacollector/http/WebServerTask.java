@@ -392,7 +392,8 @@ public class WebServerTask extends AbstractTask {
       server.start();
       port = server.getURI().getPort();
       hashSessionManager.setSessionCookie(JSESSIONID_COOKIE + port);
-      LOG.info("Running on URI '{}', HTTPS '{}' ",server.getURI(), isSSLEnabled());
+      LOG.info("Running on URI '{}', HTTPS '{}' ", server.getURI(), isSSLEnabled());
+      System.out.println("Data Collector Running on URI : " + server.getURI());
       if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
         try {
           String baseHttpUrl = "http://";
