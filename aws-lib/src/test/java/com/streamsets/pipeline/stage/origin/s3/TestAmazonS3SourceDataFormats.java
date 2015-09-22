@@ -354,6 +354,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -390,6 +393,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -421,6 +427,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.secretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
+
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
 
     return new AmazonS3Source(s3ConfigBean);
   }
@@ -456,6 +465,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -490,6 +502,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
     return new AmazonS3Source(s3ConfigBean);
   }
 
@@ -522,6 +537,9 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config.secretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
+
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
 
     return new AmazonS3Source(s3ConfigBean);
   }
