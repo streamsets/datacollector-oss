@@ -24,9 +24,9 @@ Creating a project using the archetype is accomplished like so:
 
 ```
 % mvn archetype:generate \
-    -DarchetypeGroupId=com.streamsets.datacollector.archetype \
-    -DarchetypeArtifactId=stage-lib \
-    -DarchetypeVersion=1.1.0
+    -DarchetypeGroupId=com.streamsets \
+    -DarchetypeArtifactId=streamsets-datacollector-stage-lib-tutorial \
+    -DarchetypeVersion=1.1.1
 ```
 
 This will then ask you a few questions:
