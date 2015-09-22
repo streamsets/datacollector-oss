@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_icz_wzw_dt">
  <title>RPC Connections</title>
- <shortdesc>In an RPC destination, the RPC connections define where the destinations passes data. </shortdesc>
+ <shortdesc>In an RPC destination, the RPC connections define where the destination passes data. </shortdesc>
  <conbody>
   <p><indexterm>RPC destinations<indexterm>RPC connections</indexterm></indexterm>The RPC connection
    is the host and port number of the RPC origin to receive the data. Define multiple connections to

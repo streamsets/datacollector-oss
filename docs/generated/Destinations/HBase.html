@@ -1,0 +1,385 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The HBase destination writes data to an HBase cluster. The destination can write data to HBase as text, binary data, or JSON strings. You can define the data format for each column written to HBase. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HBase"></meta><meta name="abstract" content="The HBase destination writes data to an HBase cluster. The destination can write data to HBase as text, binary data, or JSON strings. You can define the data format for each column written to HBase."></meta><meta name="description" content="The HBase destination writes data to an HBase cluster. The destination can write data to HBase as text, binary data, or JSON strings. You can define the data format for each column written to HBase."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wsz_5t5_vr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HBase</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_wsz_5t5_vr">
+   <h1 class="title topictitle1">HBase</h1>
+
+   
+   <div class="body conbody"><p class="shortdesc">The HBase destination writes data to an HBase cluster. The destination can write data
+      to HBase as text, binary data, or JSON strings. You can define the data format for each column
+      written to HBase.</p>
+
+      <p class="p">When
+         you configure the HBase destination, you specify the HBase configuration properties,
+         including the ZooKeeper Quorum, parent znode, and table name. You specify the row key for
+         the table, and then map fields from the pipeline to HBase columns. </p>
+
+      <p class="p">When necessary, you can enable Kerberos authentication and add additional HBase
+         configuration properties.</p>
+
+   </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_xy5_4tm_vs">
+ <h2 class="title topictitle2">Kerberos Authentication</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use Kerberos authentication to connect to HBase. When you use Kerberos
+  authentication, the <span class="ph">Data
+                  Collector</span> uses the
+  Kerberos principal and keytab to connect to HBase. </p>
+
+  <p class="p">The Kerberos principal and keytab are defined in the <span class="ph">Data
+                  Collector</span> configuration
+   file. To use Kerberos authentication, configure all Kerberos properties in the <span class="ph">Data
+                  Collector</span> configuration
+   file. </p>
+
+ </div>
+
+ <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to origin and destination systems, as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_gbt_fpt_ls">
+ <h2 class="title topictitle2">Using an HBase User</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the destination to use an HBase user to write data to HBase. </p>
+
+  <p class="p">By default, the <span class="ph">Data
+                  Collector</span> uses the
+      user account who started it to connect to external systems. When using Kerberos, the <span class="ph">Data
+                  Collector</span> uses the
+      Kerberos principal. </p>
+
+  <div class="p">To use an HBase user to connect to HBase, perform the following tasks:<ol class="ol" id="concept_gbt_fpt_ls__ul_mb1_xpt_ls">
+        <li class="li">On HBase, configure the <span class="ph">Data
+                  Collector</span> user
+          as a proxy user and authorize the <span class="ph">Data
+                  Collector</span> user
+          to impersonate the HBase user.<p class="p">For more information, see the HBase
+          documentation.</p>
+</li>
+
+        <li class="li">In the HBase destination, enter the HBase user name.</li>
+
+      </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_tjp_v5l_zq">
+ <h2 class="title topictitle2">HDFS Properties and Configuration File</h2>
+
+ <div class="body conbody">
+  <p class="p">You can configure the HBase destination to
+            use individual HDFS properties or HDFS configuration files:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">HBase configuration file</dt>
+
+                    <dd class="dd">You can use the following HDFS configuration file with the HBase
+                        configuration file: <ul class="ul" id="concept_tjp_v5l_zq__ul_rwk_x5r_bt">
+                  <li class="li">hbase-site.xml</li>
+
+            </ul>
+</dd>
+
+                        <dd class="dd">To use HDFS configuration files: <ol class="ol" id="concept_tjp_v5l_zq__ol_rb2_2nr_bt">
+                            <li class="li">Store the files or a symlink to the files in the <span class="ph">Data
+                  Collector</span> resources directory. </li>
+
+                            <li class="li">In the HBase destination, specify the location of the files. </li>
+
+                        </ol>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Individual properties</dt>
+
+                    <dd class="dd">You can configure individual HBase properties in the HBase destination. To
+                        add an HBase property, you specify the exact property name and the value.
+                        The HBase destination does not validate the property names or
+                            values.<div class="note note"><span class="notetitle">Note:</span> Individual properties override properties defined in the
+                            HBase configuration file. </div>
+</dd>
+
+                
+            </dl>
+
+        </div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_pyq_qx5_vr">
+    <h2 class="title topictitle2">Configuring an HBase Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                an HBase destination to write data to HBase. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_pyq_qx5_vr__steps_upj_std_br"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__d907e1640" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d10467e247">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d10467e250">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_pyq_qx5_vr__d907e1695" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_pyq_qx5_vr__d907e1709" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10467e247 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10467e250 ">Error record handling for the stage: <ul class="ul" id="task_pyq_qx5_vr__d907e1726">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+            <span class="ph cmd">On the <span class="ph uicontrol">HBase</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pyq_qx5_vr__table_l5z_wcv_vr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d10467e369">HBase Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d10467e372">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">ZooKeeper Quorum</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Comma-separated list of servers in the ZooKeeper quorum.
+                                        Use the following format:
+                                            <pre class="pre codeblock">&lt;host&gt;.&lt;domain&gt;.com</pre>
+<p class="p">To
+                                            ensure a connection, enter additional broker
+                                        URIs.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">ZooKeeper Client Port</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Port number clients use to connect to the ZooKeeper
+                                        servers. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">ZooKeeper Parent Znode</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Root node that contains all znodes used by the HBase
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">Table Name</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Name of the HBase table to use. Enter a table name or a
+                                        namespace and table name as follows:
+                                        &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a
+                                            table name, HBase uses the default namespace.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">Row Key</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Row key for the table. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">Storage Type</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Storage type of the row key. Choose
+                                            <span class="ph uicontrol">Text</span> or
+                                            <span class="ph uicontrol">Binary</span>.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">Fields</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Map fields from records to HBase columns, and then define
+                                        the storage type for the column in HBase.<p class="p">Use the
+                                                <span class="ph uicontrol">Add</span> icon to create additional
+                                            field mappings. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">Kerberos Authentication <a class="xref" href="HBase.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HBase.">
+                                            <img class="image" id="task_pyq_qx5_vr__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
+                                            selected, uses the Kerberos principal and keytab defined
+                                            in the <span class="ph">Data
+                  Collector</span> configuration file. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">HBase User <a class="xref" href="HBase.html#concept_gbt_fpt_ls" title="You can configure the destination to use an HBase user to write data to HBase.">
+                                            <img class="image" id="task_pyq_qx5_vr__image_ytm_zzx_kt" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">The HBase user to use to connect to HBase. When using
+                                        this property, make sure HBase is configured
+                                            appropriately.<p class="p">By default, the pipeline uses the Data
+                                            Collector user to connect to HBase.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">HBase Configuration Directory <a class="xref" href="HBase.html#concept_tjp_v5l_zq">
+                                            <img class="image" id="task_pyq_qx5_vr__image_br4_fgs_5r" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">Location of the HDFS configuration files. Use a directory
+                                        or symlink within the <span class="ph">Data
+                  Collector</span> resources directory.<div class="p">You can use the following file
+                                            with the HBase destination:<ul class="ul" id="task_pyq_qx5_vr__ul_ezj_cvr_bt">
+                  <li class="li">hbase-site.xml</li>
+
+            </ul>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are
+                                            overridden by individual properties defined in the
+                                            stage.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d10467e369 ">HBase Configuration</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d10467e372 ">
+                                        <p class="p">Additional HBase configuration properties to use. </p>
+
+                                        <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
+                                            define the property name and value. Use the property
+                                            names and values as expected by HBase. </p>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+        </li>
+</ol>
+
+      
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

@@ -46,18 +46,22 @@
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
                             id="image_jnr_wtk_5s" scale="70"/></p></info>
-                <info>At the top of the canvas, the Pipeline Creation Help Bar indicates that the
-                    origin is missing and offers a list of origins to choose from. On the right, the
-                    stage library displays a list of available origins. You can use the drop-down
-                    menu to change the stages that display.</info>
-                <info>If the Pipeline Creation Help Bar does not display, you might have disabled
-                    it. To enable it, in the top right corner of the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> window, click the  <menucascade>
-                        <uicontrol>Help</uicontrol>
-                        <uicontrol>Settings</uicontrol>
-                    </menucascade>. Clear the <uicontrol>Hide Pipeline Creation Help Bar</uicontrol>
-                    option.</info>
+                <info>Note a few helpful areas: <draft-comment author="Loretta">change this to a
+                        table?</draft-comment><ol id="ol_egg_lnf_lt">
+                        <li>The Pipeline Creation Help Bar indicates that the origin is missing and
+                            offers a list of origins to choose from. <p>If the Pipeline Creation
+                                Help Bar does not display, you might have disabled it. To enable it,
+                                in the top right corner of the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> window, click the <menucascade>
+                                    <uicontrol>Help</uicontrol>
+                                    <uicontrol>Settings</uicontrol>
+                                </menucascade>. Clear the <uicontrol>Hide Pipeline Creation Help
+                                    Bar</uicontrol> option.</p></li>
+                        <li>On the right, the stage library displays a list of available origins. </li>
+                        <li>You can use the drop-down menu to change the stages that display.</li>
+                    </ol></info>
+                <info/>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab. And

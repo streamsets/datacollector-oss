@@ -22,17 +22,21 @@
                 <dlentry>
                     <dt>Configuration files</dt>
                     <dd>The following configuration files are required for the Hive Streaming
-                            destination:<ul id="ul_a2w_1tm_jt">
-                            <li>core-site.xml</li>
-                            <li>hdfs-site.xml</li>
-                            <li>hive-site.xml</li>
+                            destination:<ul
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveStreamingFiles"
+                            id="ul_stc_qjf_lt">
+                            <li/>
                         </ul></dd>
-                    <dd>To use the configuration files, <ol id="ol_rb2_2nr_bt">
-                            <li>Store the files or a symlink to the files in a path local to the <ph
+                    <dd>To use the configuration files: <ol id="ol_rb2_2nr_bt">
+                            <li>Store the files or a symlink to the files the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> resources directory or elsewhere in a path local to the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 />.</li>
-                            <li>In the Hive Streaming destination, specify an absolute path to the
-                                directory containing the files.</li>
+                            <li>In the Hive Streaming destination, if the files are stored in the
+                                resource directory, specify a relative path to the files. If the
+                                files are stored outside of the resources directory, specify an
+                                absolute path to the files. </li>
                         </ol></dd>
                 </dlentry>
                 <dlentry>

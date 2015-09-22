@@ -2,14 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline. You can use different origins based on the execution mode of the pipeline. In standalone ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline. You can use different origins based on the execution mode of the pipeline. In standalone ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Origins"></meta><meta name="abstract" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="description" content="An origin stage represents the source for the pipeline. You can use a single origin stage in a pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hpr_twm_jq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Origins</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_hpr_twm_jq">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
-
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Origins/Origins_title.html" title="Origins">Origins</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hpr_twm_jq">
  <h1 class="title topictitle1">Origins</h1>
 
  
@@ -58,6 +59,135 @@
 
  </div>
 
-<div class="navfooter"><!----></div><div class="footer"></div>
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ypd_vgr_5q">
+ <h2 class="title topictitle2">Batch Size and Wait Time</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">For origin stages, the batch size determines the maximum number of records sent through
+        the pipeline at one time. The batch wait time determines the time that the origin waits for
+        data before sending a batch. At the end of the wait time, it sends the batch regardless of
+        how many records the batch contains. </p>
+
+  <p class="p">For example, a File Tail origin is configured
+            for a batch size of 20 records and a batch wait time of 240 seconds. When data arrives
+            quickly, File Tail fills a batch with 20 records and sends it through the pipeline
+            immediately, creating a new batch and sending it again as soon as it is full. As
+            incoming data slows, a remaining batch contains a few records, gaining an extra record
+            periodically. 240 seconds after creating the batch, File Tail sends the partially-full
+            batch through the pipeline. It immediately creates a new batch and starts a new
+            countdown.</p>
+
+  <p class="p">Configure the batch wait time based on your processing needs. You might reduce the batch wait
+   time to ensure all data is processed within a specified time frame or to make regular contact
+   with pipeline destinations. Use the default or increase the wait time if you prefer not to
+   process partial or empty batches.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_jp5_ql1_tq">
+    <h2 class="title topictitle2">Previewing Raw Source Data</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">You can preview raw source data for Directory, File Tail, and Kafka Consumer origins.
+        Preview raw source data when reviewing the data might help with origin
+        configuration.</p>
+
+        <div class="section context">
+            <p class="p">When you preview file data, you can
+                use the real directory and actual source file. Or when appropriate, you might use a
+                different file that is similar to the source. </p>
+
+            <p class="p">When you preview Kafka data, you enter the connection information for the Kafka
+                cluster.</p>
+
+            <p class="p">The data used for the raw source preview in an origin stage is not used when
+                previewing data for the pipeline.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_jp5_ql1_tq__steps_k14_k41_tq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel for the origin stage, click the <span class="keyword wintitle">Raw
+                        Preview</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Directory or File Tail origin, enter a directory and file name.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For a Kafka Consumer, enter the following information:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jp5_ql1_tq__table_eh1_q2f_xq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41043e210">Kafka Raw Preview Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41043e213">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41043e210 ">Topic</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41043e213 ">Kafka topic to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41043e210 ">Partition</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41043e213 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41043e210 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41043e213 ">Broker host name. Use any broker associated with the
+                                        partition.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41043e210 ">Broker Port</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41043e213 ">Broker port number.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41043e210 ">Max Wait Time (secs)</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41043e213 ">Maximum amount of time the preview waits to receive data
+                                        from Kafka.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Preview</span>.</span>
+            </li>
+</ol>
+
+        <div class="section result">The Raw Source Preview area displays the preview.</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Origins/Origins_title.html" title="Origins"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Origins</span></a></span>  </div><div class="footer"></div>
 </body>
 </html>

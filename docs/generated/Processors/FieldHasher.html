@@ -1,0 +1,195 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values. Use the Field Hasher to encode highly-sensitive data. For example, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Field Hasher"></meta><meta name="abstract" content="The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="description" content="The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use MD5, SHA1 or SHA2 to hash field values."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ivv_c3k_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Field Hasher</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ivv_c3k_wq">
+ <h1 class="title topictitle1">Field Hasher</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Field Hasher uses an algorithm to encode values in a field. The Field Hasher can use
+  MD5, SHA1 or SHA2 to hash field values. </p>
+
+  <p class="p">Use the Field Hasher to encode highly-sensitive data. For
+      example, you might use the Field Hasher to encode social security or credit card numbers.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_xjd_dlk_wq">
+    <h2 class="title topictitle2">Configuring a Field Hasher</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Field Hasher to
+            encode sensitive data. When you configure the Field Hasher, you select the field that
+            you want to encode and the algorithm that you want to use. </div>
+
+        <ol class="ol steps" id="task_xjd_dlk_wq__steps_fsf_flk_wq"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__d5468e1302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d51221e80">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d51221e83">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e80 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e83 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e80 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e83 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e80 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_xjd_dlk_wq__d5468e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e83 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e80 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_xjd_dlk_wq__d5468e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e83 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e80 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e83 ">Error record handling for the stage: <ul class="ul" id="task_xjd_dlk_wq__d5468e1378">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand" id="task_xjd_dlk_wq__SelectHashField">
+                <span class="ph cmd">On the <span class="keyword wintitle">Hash</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xjd_dlk_wq__table_ozv_nnk_wq" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d51221e192">Field Hasher Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d51221e195">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e192 ">Fields to Hash</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e195 ">One or more fields to hash with the same algorithm.<p class="p">You can use the asterisk wildcard to represent array indices and map
+                  elements. <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                  </a>
+            </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e192 ">Hash Type</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e195 ">Algorithm to use to hash field values:<ul class="ul" id="task_xjd_dlk_wq__ul_kmd_rnk_wq">
+                                            <li class="li">MD5 - Produces a 128-bit (16-byte) hash value,
+                                                typically expressed in text format as a 32 digit
+                                                hexadecimal number.</li>
+
+                                            <li class="li">SHA1 - Produces a 160-bit (20-byte) hash value.</li>
+
+                                            <li class="li">SHA2 - Based on SHA1, but uses a set of four hash
+                                                functions: 224, 256, 384, or 512 bits.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51221e192 ">On Field Issue</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51221e195 ">Determines the action if a record does not include values
+                                        for the fields to hash:<ul class="ul" id="task_xjd_dlk_wq__ul_n3n_yr2_jr">
+                                            <li class="li">Continue - Passes nulls for the missing values.</li>
+
+                                            <li class="li">Send to Error - Passes the record to the pipeline
+                                                for error handling.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To hash another field, click the <span class="ph uicontrol">Add</span> icon, and then
+                    repeat the previous step. </span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

@@ -2,14 +2,15 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="When reading delimited data, the Data Collector can convert the data in a list or list-map record type. Use the default list-map record type to easily process delimited data. List-Map Record Type ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Delimited Data Record Types"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zcg_bm4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Delimited Data Record Types</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="When reading delimited data, the Data Collector can convert the data in a list or list-map record type. Use the default list-map record type to easily process delimited data. List-Map Record Type ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Delimited Data Record Types"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zcg_bm4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Delimited Data Record Types</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody" id="concept_zcg_bm4_fs">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
-
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_zcg_bm4_fs">
   <h1 class="title topictitle1">Delimited Data Record Types</h1>
 
   <div class="body conbody">
@@ -66,7 +67,7 @@
 ${record:value('[0]'}</pre>
 </dd>
 
-          <dd class="dd">For more information about standard record functions, see <a class="xref" href="../Expression_Language/RecordFunctions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
+          <dd class="dd">For more information about standard record functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
 
         
         
@@ -123,6 +124,50 @@ ${record:value('[0]'}</pre>
 
   </div>
 
-<div class="navfooter"><!----></div><div class="footer"></div>
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_hrt_tt4_fs">
+ <h2 class="title topictitle2">Processing List Type Data</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">For delimited data in the list-map record type, you can use standard record functions to
+        process data. For data in the list record type, you should either use the delimited data
+        functions or include the full field path in standard record functions. </p>
+
+  <p class="p">The expression language provides delimited
+            data functions to enable easier access to list record details, such as the value of a
+            header or whether the record includes duplicate headers. </p>
+
+  <p class="p">For example, you can use the <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data
+      function to return the value associated with the specified header. Continuing with the example
+      above, the following function returns user ID information:</p>
+
+  <pre class="pre codeblock">${record:dValue('UserID')}</pre>
+
+  <div class="p">With the User ID header index, you can use the <samp class="ph codeph">record:dValueAt(&lt;header
+                index&gt;)</samp> function to return the same information, as
+            follows:<pre class="pre codeblock">${record:dValueAt(2)}</pre>
+</div>
+
+  <div class="p">But if you prefer, you can use the field path to the data with the standard record function,
+                <samp class="ph codeph">record:value('&lt;field
+            path&gt;')</samp>:<pre class="pre codeblock">${record:value('[2]/value')}</pre>
+</div>
+
+  <p class="p">Note that the field path references the column index and the "value" key.</p>
+
+  <div class="p">
+   <div class="note tip"><span class="tiptitle">Tip:</span> You can use the <samp class="ph codeph">record:dToMap()</samp> function to convert the record
+    to a map, and then use standard functions for record processing.</div>
+
+  </div>
+
+  <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process list record type delimited data. If you configured an origin to process the data using the list-map record type, you can use standard record functions.">Delimited Data Record Functions</a>.</p>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div><div class="footer"></div>
 </body>
 </html>

@@ -77,9 +77,9 @@
                                         to the server. </entry>
                                 </row>
                                 <row>
-                                    <entry>Batch Size</entry>
-                                    <entry>Maximum number of JSON objects to include in a batch and
-                                        send through the pipeline at one time.</entry>
+                                    <entry>Batch Size (recs)</entry>
+                                    <entry>Maximum number of records to include in a batch and send
+                                        through the pipeline at one time.</entry>
                                 </row>
                                 <row>
                                     <entry>Batch Wait Time (ms)  <xref

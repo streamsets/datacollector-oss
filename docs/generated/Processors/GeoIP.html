@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Geo IP processor provides geographic location information for IP addresses. The Geo IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must provide your own ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Geo IP"></meta><meta name="abstract" content="The Geo IP processor provides geographic location information for IP addresses. The Geo IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must provide your own copy of the database file."></meta><meta name="description" content="The Geo IP processor provides geographic location information for IP addresses. The Geo IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must provide your own copy of the database file."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fch_fc3_ms"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Geo IP</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_fch_fc3_ms">
+ <h1 class="title topictitle1">Geo IP</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Geo IP processor provides geographic location information for IP addresses. The Geo
+    IP processor uses the MaxMind GeoIP2 database file to provide geolocation information. You must
+    provide your own copy of the database file. </p>
+
+  <p class="p">To use the Geo IP processor, you define the location of the
+      database file, specify one or more IP address input fields, name the corresponding output
+      field, and specify the geolocation information that you want. </p>
+
+    <p class="p">The input field must be an Integer or String datatype with IP addresses formatted as
+        follows:<samp class="ph codeph"> n.n.n.n.</samp></p>
+
+  <div class="p">Geo IP can provide the following geolocation information for each IP address:<ul class="ul" id="concept_fch_fc3_ms__ul_ptx_mg3_ms">
+        <li class="li">Country name</li>
+
+        <li class="li">Country ISO code</li>
+
+        <li class="li">City name</li>
+
+        <li class="li">Latitude</li>
+
+        <li class="li">Longitude</li>
+
+      </ul>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_kg2_21s_ns">
+ <h2 class="title topictitle2">Database File Location</h2>
+
+ <div class="body conbody">
+  <p class="p">To use the Geo IP processor, save the MaxMind GeoIP2
+      database file in a directory local to the <span class="ph">Data
+                  Collector</span> or in the
+        <span class="ph">Data
+                  Collector</span>
+      resources directory: <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>. And then define the
+      location of the database file in the processor.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_wpz_nhs_ns">
+    <h2 class="title topictitle2">Configuring a Geo IP Processor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure
+            a Geo IP processor to return geolocation information based on IP addresses.</div>
+
+        <ol class="ol steps" id="task_wpz_nhs_ns__steps_et4_33s_ns"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__d5468e1302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d54104e136">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d54104e139">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e136 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e139 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e136 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e139 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e136 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d5468e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e139 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e136 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_wpz_nhs_ns__d5468e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e139 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e136 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e139 ">Error record handling for the stage: <ul class="ul" id="task_wpz_nhs_ns__d5468e1378">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Geolocation</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wpz_nhs_ns__table_f3t_m3s_ns" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d54104e248">Geo IP Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d54104e251">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e248 ">GeoIP2 Database File </td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e251 ">Directory where the GeoIP2 database file is located.
+                                        Enter a fully-qualified location or the <span class="ph">Data
+                  Collector</span> resources directory:
+                                            <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e248 ">Input Field Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e251 ">Incoming field with the IP address to use. The field can
+                                        be an Integer or String data type. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e248 ">Output Field Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e251 ">Name of the field to pass the selected geolocation
+                                        data.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d54104e248 ">GeoIP2 Field</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d54104e251 ">Geolocation data to be passed by the output field.
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To return additional geolocation data, click the <span class="ph uicontrol">Add</span>
+                    icon.</span>
+                <div class="itemgroup info">You can return geolocation data for the same input field or a different input
+                    field. </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

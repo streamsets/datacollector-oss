@@ -49,10 +49,10 @@
                                         <p>Absolute path to the directory containing the Hive and
                                             Hadoop configuration files.</p>
                                         <p>The destination uses the following configuration
-                                                files:<ul id="ul_frp_nkn_jt">
-                                                <li>core-site.xml </li>
-                                                <li>hdfs-site.xml</li>
-                                                <li>hive-site.xml</li>
+                                                files:<ul
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HiveStreamingFiles"
+                                                id="ul_hgc_rjf_lt">
+                                                <li/>
                                             </ul></p>
                                         <p>
                                             <note>Properties in the configuration files are

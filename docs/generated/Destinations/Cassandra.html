@@ -1,0 +1,264 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Cassandra destination writes data to a Cassandra cluster. When you configure the Cassandra destination, you define connection information, optional user credentials, and map incoming fields to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cassandra"></meta><meta name="abstract" content="The Cassandra destination writes data to a Cassandra cluster."></meta><meta name="description" content="The Cassandra destination writes data to a Cassandra cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hfy_mfd_sr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cassandra</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_hfy_mfd_sr">
+ <h1 class="title topictitle1">Cassandra</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Cassandra destination writes data to a Cassandra cluster.</p>
+
+  <p class="p">When
+   you configure the Cassandra destination, you define connection information, optional user
+   credentials, and map incoming fields to columns in the Cassandra table.</p>
+
+    <p class="p">Batches written to Cassandra are atomic - this means you can only write entire batches of
+      records to Cassandra. If an error occurs with one or more records in a batch, Cassandra fails
+      the entire batch. When a batch fails, all records are sent to the stage for error handling. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_bdg_bt3_ms">
+ <h2 class="title topictitle2">Cassandra Data Types</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Due to Cassandra requirements, the data types of the incoming fields must match the data
+    types of the corresponding Cassandra columns. When appropriate, use a Type Converter processor
+    earlier in the pipeline to convert data types. </p>
+
+  <p class="p">For details about the conversion of Java data types to Cassandra data types, see the Cassandra
+      documentation: <a class="xref" href="http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/javaClass2Cql3Datatypes_r.html" target="_blank">http://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/javaClass2Cql3Datatypes_r.html</a>. </p>
+
+  <div class="p">The Cassandra destination supports the following Cassandra data types:<ul class="ul" id="concept_bdg_bt3_ms__ul_qjk_2t3_ms">
+    <li class="li">ASCII</li>
+
+    <li class="li">Bigint</li>
+
+    <li class="li">Boolean</li>
+
+    <li class="li">Counter</li>
+
+    <li class="li">Decimal </li>
+
+    <li class="li">Double </li>
+
+    <li class="li">Float </li>
+
+    <li class="li">Int </li>
+
+    <li class="li">List </li>
+
+    <li class="li">Map </li>
+
+    <li class="li">Text </li>
+
+    <li class="li">Timestamp </li>
+
+    <li class="li">Varchar </li>
+
+    <li class="li">Varint</li>
+
+   </ul>
+</div>
+
+  <div class="p">The following data types are not supported at this time:<ul class="ul" id="concept_bdg_bt3_ms__ul_cjj_lt3_ms">
+    <li class="li">Blob</li>
+
+    <li class="li">Inet</li>
+
+    <li class="li">Set</li>
+
+    <li class="li">Uuid</li>
+
+   </ul>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_t1d_z3l_sr">
+    <h2 class="title topictitle2">Configuring a Cassandra Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">Configure a Cassandra
+            destination to write data to a Cassandra cluster.</div>
+
+        <ol class="ol steps" id="task_t1d_z3l_sr__steps_tgy_3tv_4r"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t1d_z3l_sr__d907e1302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d7910e170">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d7910e173">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7910e170 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7910e173 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7910e170 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7910e173 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7910e170 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_t1d_z3l_sr__d907e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7910e173 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7910e170 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_t1d_z3l_sr__d907e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7910e173 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d7910e170 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d7910e173 ">Error record handling for the stage: <ul class="ul" id="task_t1d_z3l_sr__d907e1378">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Cassandra</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_t1d_z3l_sr__table_m3b_fkl_sr" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d7910e282">Cassandra Property</th>
+
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d7910e285">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Cassandra Contact Points</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">Host names for nodes in Cassandra cluster. To ensure a
+                                        connection, use the <span class="ph uicontrol">Add</span> icon to enter
+                                        several host names.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Cassandra Port</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">The port number for the Cassandra nodes.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Compression</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">Optional compression type for transport-level requests
+                                        and responses.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">Indicates whether to use credentials to access the
+                                        cluster.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Fully-Qualified Table Name</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">Name of the Cassandra table to use. Enter a
+                                        fully-qualified name using the following format: &lt;key
+                                        space&gt;.&lt;table name&gt;.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d7910e282 ">Field to Column Mapping</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d7910e285 ">Map fields from the record to Cassandra columns. Use the
+                                            <span class="ph uicontrol">Add</span> icon to create additional
+                                        field mappings. <div class="note note"><span class="notetitle">Note:</span> The record field data type must match
+                                            the data type of the Cassandra column.</div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div></li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use Cassandra credentials, click the <span class="keyword wintitle">Credentials</span> tab,
+                    and then enter a user name and password.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>
