@@ -273,15 +273,15 @@ public class TestPipelineConfigurationUpgrader {
   private PipelineConfiguration getPipelineToUpgrade() {
     StageConfiguration stageConf1 = new StageConfiguration("i1", SOURCE2_V1_DEF.getLibrary(), SOURCE2_V1_DEF.getName(),
                                                            SOURCE2_V2_DEF.getVersion(), Collections.EMPTY_LIST, null,
-                                                           null, null);
+                                                           Collections.EMPTY_LIST, null);
 
     StageConfiguration stageConf2 = new StageConfiguration("i2", SOURCE2_V1_DEF.getLibrary(), SOURCE2_V1_DEF.getName(),
                                                            SOURCE2_V1_DEF.getVersion(), Collections.EMPTY_LIST, null,
-                                                           null, null);
+                                                           Collections.EMPTY_LIST, null);
 
     StageConfiguration errorConf = new StageConfiguration("e", SOURCE2_V1_DEF.getLibrary(), SOURCE2_V1_DEF.getName(),
                                                           SOURCE2_V1_DEF.getVersion(), Collections.EMPTY_LIST, null,
-                                                          null, null);
+                                                          Collections.EMPTY_LIST, null);
 
     return new PipelineConfiguration(1, PipelineConfigBean.VERSION, UUID.randomUUID(), null, Collections.EMPTY_LIST,
                                      null, ImmutableList.of(stageConf1, stageConf2), errorConf);

@@ -280,7 +280,7 @@ public class Pipeline {
     private boolean isClusterMode(PipelineConfiguration pipelineConf) {
       boolean clusterMode = false;
       if(pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY) != null) {
-        String executionMode = (String) pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY).getValue();
+        String executionMode = pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY).getValue().toString();
         if (executionMode != null && !executionMode.isEmpty() && (executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_BATCH.name()) ||
           executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_STREAMING.name()))) {
           clusterMode = true;

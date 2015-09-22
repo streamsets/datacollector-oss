@@ -32,6 +32,7 @@ import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.cluster.ClusterPipelineStatus;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.execution.AbstractRunner;
@@ -61,6 +62,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.ValidationError;
@@ -192,6 +194,36 @@ public class ClusterRunner extends AbstractRunner {
     if (configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
       MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT) > 0) {
       metricsEventRunnable = this.objectGraph.get(MetricsEventRunnable.class);
+    }
+    try {
+      // CLUSTER is old state, upgrade to cluster batch or cluster streaming based on source
+      if (getState().getExecutionMode() == ExecutionMode.CLUSTER) {
+        String sourceName = null;
+        PipelineConfiguration pipelineConf = getPipelineConf(name, rev);
+        for (StageConfiguration stageConf : pipelineConf.getStages()) {
+          if (stageConf.getInputLanes().isEmpty()) {
+            sourceName = stageConf.getStageName();
+            break;
+          }
+        }
+        String msg;
+        ExecutionMode executionMode;
+        Utils.checkNotNull(sourceName, "Source name should not be null");
+        if (sourceName.contains("ClusterHdfsDSource")) {
+          msg = "Upgrading execution mode to " + ExecutionMode.CLUSTER_BATCH + " from " + ExecutionMode.CLUSTER;
+          executionMode = ExecutionMode.CLUSTER_BATCH;
+        } else {
+          msg = "Upgrading execution mode to " + ExecutionMode.CLUSTER_STREAMING + " from " + ExecutionMode.CLUSTER;
+          executionMode = ExecutionMode.CLUSTER_STREAMING;
+
+        }
+        PipelineState currentState = getState();
+        pipelineStateStore.saveState(user, name, rev, currentState.getStatus(), msg, currentState.getAttributes(),
+          executionMode, currentState.getMetrics(), currentState.getRetryAttempt(),
+          currentState.getNextRetryTimeStamp());
+      }
+    } catch (PipelineException pex) {
+      throw new RuntimeException("Error while accessing Pipeline State: " + pex, pex);
     }
   }
 

@@ -136,6 +136,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
           return new RunnerInfo(runner, executionMode);
         }
       });
+      ExecutionMode cachedExecutionMode = runnerInfo.executionMode;
+      ExecutionMode persistentExecutionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
+      if (cachedExecutionMode == ExecutionMode.CLUSTER) {
+        LOG.info("Upgrading execution mode from " + ExecutionMode.CLUSTER + " to " + persistentExecutionMode);
+        runnerInfo.executionMode = persistentExecutionMode;
+      }
       if (runnerInfo.executionMode != pipelineStateStore.getState(name, rev).getExecutionMode()) {
         LOG.info(Utils.format("Invalidate the existing runner for pipeline '{}::{}' as execution mode has changed",
           name, rev));
@@ -307,7 +313,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   private static class RunnerInfo {
     private final Runner runner;
-    private final ExecutionMode executionMode;
+    private ExecutionMode executionMode;
 
     private RunnerInfo(Runner runner, ExecutionMode executionMode) {
       this.runner = runner;

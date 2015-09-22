@@ -1121,7 +1121,7 @@ public class BeanHelper {
       case SLAVE:
         return ExecutionModeJson.SLAVE;
       default:
-        throw new IllegalArgumentException("Unrecognized execution mode");
+        throw new IllegalArgumentException("Unrecognized execution mode: " + executionMode);
     }
   }
 
@@ -1130,6 +1130,8 @@ public class BeanHelper {
       return null;
     }
     switch (executionModeJson) {
+      case CLUSTER:
+        return ExecutionMode.CLUSTER;
       case CLUSTER_BATCH:
         return ExecutionMode.CLUSTER_BATCH;
       case CLUSTER_STREAMING:
@@ -1139,7 +1141,7 @@ public class BeanHelper {
       case SLAVE:
         return ExecutionMode.SLAVE;
       default:
-        throw new IllegalArgumentException("Unrecognized execution mode");
+        throw new IllegalArgumentException("Unrecognized execution mode: " + executionModeJson);
     }
   }
 

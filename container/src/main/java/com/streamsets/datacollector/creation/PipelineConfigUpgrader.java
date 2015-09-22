@@ -40,6 +40,8 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -49,6 +51,29 @@ public class PipelineConfigUpgrader implements StageUpgrader {
 
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    boolean found = false;
+    int index = 0;
+    String sourceName = null;
+    for (int i = 0; i < configs.size(); i++) {
+      Config config = configs.get(i);
+      if (config.getName().equals("executionMode")) {
+        if (config.getValue().equals("CLUSTER")) {
+          found = true;
+          index = i;
+        }
+      } else if (config.getName().equals("sourceName")) {
+        sourceName = config.getValue().toString();
+      }
+    }
+    if (found) {
+      configs.remove(index);
+      Utils.checkNotNull(sourceName, "Source stage name cannot be null");
+      configs.add(new Config("executionMode", (sourceName.contains("ClusterHdfsDSource")) ? ExecutionMode.CLUSTER_BATCH
+        : ExecutionMode.CLUSTER_STREAMING));
+    }
   }
 
   private void upgradeV2ToV3(List<Config> configs) {

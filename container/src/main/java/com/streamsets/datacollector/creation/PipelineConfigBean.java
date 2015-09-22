@@ -49,7 +49,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 3;
+  public static final int VERSION = 4;
 
   @ConfigDef(
       required = true,

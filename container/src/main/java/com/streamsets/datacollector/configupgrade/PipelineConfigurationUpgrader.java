@@ -116,9 +116,29 @@ public class PipelineConfigurationUpgrader {
     // upgrade pipeline level configs if necessary
     StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineConf);
     if (needsUpgrade(getPipelineDefinition(), pipelineConfs, issues)) {
+      String sourceName = null;
+      for (StageConfiguration stageConf: pipelineConf.getStages()) {
+        if (stageConf.getInputLanes().isEmpty()) {
+          sourceName = stageConf.getStageName();
+        }
+      }
+      List<Config> configList = pipelineConfs.getConfiguration();
+      // config 'sourceName' used by upgrader v3 to v4
+      configList.add(new Config("sourceName", sourceName));
+      pipelineConfs.setConfig(configList);
       pipelineConfs = upgrade(getPipelineDefinition(), pipelineConfs, issues);
+      configList = pipelineConfs.getConfiguration();
+      int index = -1;
+      for (int i = 0; i < configList.size(); i++) {
+        Config config = configList.get(i);
+        if (config.getName().equals("sourceName")) {
+          index = i;
+          break;
+        }
+      }
+      configList.remove(index);
+      pipelineConfs.setConfig(configList);
     }
-
     List<StageConfiguration> stageConfs = new ArrayList<>();
 
     // upgrade error stage if present and if necessary
@@ -145,9 +165,7 @@ public class PipelineConfigurationUpgrader {
     if (ownIssues.isEmpty()) {
       pipelineConf.setConfiguration(pipelineConfs.getConfiguration());
       pipelineConf.setVersion(pipelineConfs.getStageVersion());
-
       pipelineConf.setErrorStage(errorStageConf);
-
       pipelineConf.setStages(stageConfs);
     } else {
       issues.addAll(ownIssues);
