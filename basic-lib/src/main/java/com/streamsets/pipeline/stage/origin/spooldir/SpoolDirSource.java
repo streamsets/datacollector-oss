@@ -568,9 +568,10 @@ public class SpoolDirSource extends BaseSource {
         }
       }
     } catch (IOException|DataParserException ex) {
-      if(ex.getCause() instanceof ClosedByInterruptException) {
-        //If the pipeline was stopped, we may get a ClosedByInterruptException.
-        // Instead of sending the file to error, produce what ever you have and move one.
+      if(ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
+        //If the pipeline was stopped, we may get a ClosedByInterruptException while reading avro data.
+        //This is because the thread is interrupted when the pipeline is stopped.
+        //Instead of sending the file to error, publish batch and move one.
       } else {
         offset = MINUS_ONE;
         String exOffset;
