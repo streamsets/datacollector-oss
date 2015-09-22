@@ -49,11 +49,6 @@
                                     <entry>URI for the node.</entry>
                                 </row>
                                 <row>
-                                    <entry>ZooKeeper Connection String</entry>
-                                    <entry>Connection string for the ZooKeeper associated with the
-                                        cluster.</entry>
-                                </row>
-                                <row>
                                     <entry>Record Indexing Mode</entry>
                                     <entry>Determines how records are indexed.</entry>
                                 </row>

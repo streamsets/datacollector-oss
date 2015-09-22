@@ -114,6 +114,13 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>File Type</entry>
+                                    <entry>Output file type:<ul id="ul_lgf_j3g_br">
+                                            <li>Text files</li>
+                                            <li>Sequence files</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
                                     <entry>Data Format</entry>
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
@@ -121,13 +128,6 @@
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>Avro</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>File Type</entry>
-                                    <entry>Output file type:<ul id="ul_lgf_j3g_br">
-                                            <li>Text files</li>
-                                            <li>Sequence files</li>
                                         </ul></entry>
                                 </row>
                                 <row>

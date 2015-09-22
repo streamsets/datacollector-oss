@@ -15,13 +15,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_lfk_hx2_ct">
  <title>RPC</title>
- <shortdesc>The RPC destination passes data over the network to an RPC origin. Use the RPC
-    destination as part of an origin pipeline. </shortdesc>
+ <shortdesc>The RPC destination enables connectivity between two StreamSets RPC pipelines. The RPC
+    destination passes data to an RPC origin. Use the RPC destination as part of an RPC origin
+    pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>RPC
-     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>RPC</indexterm></indexterm>When
-   you configure the RPC destination, you specify the RPC ID and RPC connections to use. You can
-   optionally enable SSL to pass data securely and define retry and timeout properties.</p>
+    <p><indexterm>RPC
+          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>RPC</indexterm></indexterm>You
+      can use RPC pipelines across a single Data Collector instance on a single machine, or across a
+      local network or the public internet to a remote Data Collector. </p>
+    <p>When you configure the RPC destination, you specify the RPC ID and RPC connections to use.
+      You can optionally enable SSL to pass data securely and define retry and timeout
+      properties.</p>
  </conbody>
  <related-links>
   <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>

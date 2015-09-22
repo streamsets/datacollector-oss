@@ -15,15 +15,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_agb_5c1_ct">
  <title>RPC </title>
- <shortdesc>The RPC origin reads data passed from an RPC destination over the network. Use the RPC
-    origin as part of an RPC destination pipeline. </shortdesc>
+ <shortdesc> The RPC origin enables connectivity between two StreamSets RPC pipelines. The RPC
+    origin reads data passed from an RPC destination. Use the RPC origin as part of an RPC
+    destination pipeline.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>RPC</indexterm></indexterm><indexterm>RPC
-          origins<indexterm>overview</indexterm></indexterm>When you configure the RPC origin, you
-      define the port that the origin listens to for data. The port number must be specified in one
-      of the RPC connections defined in the RPC destination. </p>
+          origins<indexterm>overview</indexterm></indexterm>You can use RPC pipelines across a
+      single Data Collector instance on a single machine, or across a local network or the public
+      internet to a remote Data Collector. You can configure the origin to use SSL for secure
+      connectivity. </p>
+    <p>When you configure the RPC origin, you define the port that the origin listens to for data.
+      The port number must be specified in one of the RPC connections defined in the RPC
+      destination. </p>
     <p>Similarly, the RPC ID in the RPC origin must match the RPC ID used in the RPC destination. </p>
-    <p>You can configure the origin to use SSL to securely transfer data. </p>
  </conbody>
   <related-links>
     <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>

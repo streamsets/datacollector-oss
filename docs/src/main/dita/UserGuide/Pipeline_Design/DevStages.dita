@@ -50,6 +50,12 @@
           <dd>In data preview, this stage displays the raw source data as well as the data generated
             by the stage. </dd>
     </dlentry>
+        <dlentry>
+          <dt>Dev Identity processor</dt>
+          <dd>Passes all records through to the next stage. Use as a placeholder in the pipeline.
+            You can define required fields and preconditions, and configure stage error handling.
+          </dd>
+        </dlentry>
     <dlentry>
      <dt>Dev Random Error processor</dt>
      <dd>Generates error records so you can test pipeline error handling. You can configure the

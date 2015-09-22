@@ -2,15 +2,14 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Pipelines"></meta><meta name="abstract" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode. In standalone mode, a single Data Collector process ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Cluster Pipelines"></meta><meta name="abstract" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="description" content="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hmh_kfn_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Cluster Pipelines</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody">
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines">Cluster Pipelines</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div></td></tr></tbody></table>
-<div class="nested0" id="concept_hmh_kfn_1s">
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_hmh_kfn_1s">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
+
  <h1 class="title topictitle1">Cluster Pipelines</h1>
 
  
@@ -82,69 +81,6 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic concept nested1" id="concept_swq_1bg_xs">
- <h2 class="title topictitle2">Kerberos Authentication for the Cluster</h2>
-
- 
- <div class="body conbody"><p class="shortdesc">If the YARN cluster uses Kerberos authentication, make sure to configure the <span class="ph">Data
-                  Collector</span> to use Kerberos
-  authentication.</p>
-
-  <p class="p">When you configure Kerberos authentication for the <span class="ph">Data
-                  Collector</span>, you enable
-   the <span class="ph">Data
-                  Collector</span> to use
-   Kerberos and define the principal and keytab. When Kerberos is enabled for the <span class="ph">Data
-                  Collector</span>, the <span class="ph">Data
-                  Collector</span> automatically
-   uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
-
- </div>
-
-  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to origin and destination systems, as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
-</div>
-</div>
-</div>
-<div class="topic concept nested1" id="concept_xxz_nft_ls">
- <h2 class="title topictitle2">Error Handling Limitations</h2>
-
- <div class="body conbody">
-  <div class="p">Please
-      note the following limitations to pipeline configuration options at this time:<ul class="ul" id="concept_xxz_nft_ls__ul_vf1_zft_ls">
-        <li class="li"><span class="ph uicontrol">Memory Limit Exceeded</span> - Use the log or log and alert options.
-          Stopping the pipeline is not supported at this time. </li>
-
-        <li class="li"><span class="ph uicontrol">Error Records</span> - Write error records to Kafka or discard the
-          records. Stopping the pipeline or writing records to file is not supported at this time.
-        </li>
-
-      </ul>
-</div>
-
- </div>
-
-</div>
-<div class="topic concept nested1" id="concept_fk4_gd4_1s">
- <h2 class="title topictitle2">Monitoring a Cluster</h2>
-
- <div class="body conbody">
-  <p class="p">After you start a pipeline,
-      the <span class="ph">Data
-                  Collector</span>
-      console displays basic monitoring information for the pipeline and links to each <span class="ph">Data
-                  Collector</span> worker. </p>
-
-  <p class="p">For monitoring details for a <span class="ph">Data
-                  Collector</span> worker,
-      click the worker link.</p>
-
- </div>
-
-</div>
-</div>
-<div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Cluster_Mode/ClusterPipelines_title.html" title="Cluster Pipelines"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Cluster Pipelines</span></a></span>  </div><div class="footer"></div>
+<div class="navfooter"><!----></div><div class="footer"></div>
 </body>
 </html>
