@@ -20,7 +20,7 @@ package com.streamsets.pipeline.lib.parser.avro;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.io.OverrunInputStream;
-import com.streamsets.pipeline.lib.parser.DataParser;
+import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
@@ -33,7 +33,7 @@ import org.apache.avro.io.DatumReader;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class AvroDataStreamParser implements DataParser {
+public class AvroDataStreamParser extends AbstractDataParser {
 
   private static final String OFFSET_SEPARATOR = "::";
 
