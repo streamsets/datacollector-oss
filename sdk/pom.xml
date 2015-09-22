@@ -158,6 +158,55 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.1</version>
+        <executions>
+          <execution>
+            <id>javadoc</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+            <configuration>
+              <doctitle>StreamSets Data Collector SDK ${project.version}</doctitle>
+              <linksource>true</linksource>
+              <quiet>true</quiet>
+              <verbose>false</verbose>
+              <charset>UTF-8</charset>
+
+              <groups>
+                <group>
+                  <title>Pipeline SDK</title>
+                  <packages>com.streamsets.pipeline.sdk:com.streamsets.pipeline.sdk.*</packages>
+                </group>
+              </groups>
+
+              <includeDependencySources>false</includeDependencySources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>attach-javadocs-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
