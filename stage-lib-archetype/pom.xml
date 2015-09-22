@@ -19,12 +19,60 @@
   <artifactId>stage-lib</artifactId>
   <version>1.1.0</version>
   <name>StreamSets Stage Library Archetype</name>
-  <url>https://www.streamsets.com</url>
+  <description>StreamSets Stage Library Archetype</description>
   <packaging>maven-archetype</packaging>
+  <url>http://www.streamsets.com</url>
+  <scm>
+    <url>https://github.com/streamsets/datacollector</url>
+  </scm>
+
+  <organization>
+    <name>StreamSets</name>
+    <url>http://www.streamsets.com</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <!-- TODO add rest of team-->
+    <developer>
+      <id>brock</id>
+      <name>Brock Noland</name>
+      <email>brock@streamsets.com</email>
+      <timezone>America/Chicago</timezone>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>sign</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <build>
     <resources>
