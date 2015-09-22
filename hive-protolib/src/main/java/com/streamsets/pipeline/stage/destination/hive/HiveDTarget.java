@@ -56,7 +56,7 @@ public class HiveDTarget extends DTarget {
       label = "Schema",
       type = ConfigDef.Type.STRING,
       defaultValue = "default",
-      description = "The Hive schema the target table belongs to. Also called 'database'.",
+      description = "The Hive schema of the target table. Sometimes also called \"database\".",
       displayPosition = 20,
       group = "HIVE"
   )
@@ -97,9 +97,10 @@ public class HiveDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      label = "Auto Create Partitions",
+      label = "Create Partitions",
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
+      description = "Automatically create partitions if they do not exist.",
       displayPosition = 60,
       group = "HIVE"
   )
@@ -119,9 +120,9 @@ public class HiveDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
-      label = "Buffer Limit (KB)",
+      label = "Max Record Size (KB)",
       type = ConfigDef.Type.NUMBER,
-      description = "Low level writer buffer limit to avoid out of memory errors.",
+      description = "Larger records are sent to error.",
       defaultValue = "128",
       min = 1,
       displayPosition = 80,
@@ -133,8 +134,7 @@ public class HiveDTarget extends DTarget {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Hive Configuration",
-      description = "Additional Hive properties to pass to the underlying Hive Configuration. These properties " +
-          "have precedence over properties loaded via the 'Hive Configuration Directory' configuration.",
+      description = "Additional configuration properties. Values here override values loaded from config files.",
       displayPosition = 90,
       group = "ADVANCED"
   )
