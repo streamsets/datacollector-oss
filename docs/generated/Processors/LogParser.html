@@ -1,0 +1,301 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The Log Parser processor parses log data in a field based on the specified log format. Use the Log Parser to process log data within the pipeline. To read log data directly from an origin system, you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Log Parser"></meta><meta name="abstract" content="The Log Parser processor parses log data in a field based on the specified log format. Use the Log Parser to process log data within the pipeline. To read log data directly from an origin system, you can use an origin that processes the log data format, such as File Tail or Kafka Consumer."></meta><meta name="description" content="The Log Parser processor parses log data in a field based on the specified log format. Use the Log Parser to process log data within the pipeline. To read log data directly from an origin system, you can use an origin that processes the log data format, such as File Tail or Kafka Consumer."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_ulm_qdq_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Log Parser</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_ulm_qdq_fs">
+ <h1 class="title topictitle1">Log Parser</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Log Parser processor parses log data in a field based on the specified log format.
+    Use the Log Parser to process log data within the pipeline. To read log data directly from an
+    origin system, you can use an origin that processes the log data format, such as File Tail or
+    Kafka Consumer.</p>
+
+  <p class="p">When you configure Log Parser, you define the field that
+      contains the log line and the field to contain the parsed fields. </p>
+
+    <p class="p">If the record contains fields in addition to the field to be parsed, those fields are passed
+      through by default. Parsed fields are written to the specified location, overwriting any
+      existing data. </p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_tr1_spd_sr">
+ <h2 class="title topictitle2">Log Formats</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When you use Log Parser to parse log data, you define the format of the log files to be
+  read. </p>
+
+  <p class="p">You can use the following log formats:</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm">Common Log Format</dt>
+
+     <dd class="dd">A standardized text format used by web servers to generate log files. Also known as the
+      NCSA (National Center for Supercomputing Applications) Common Log format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Combined Log Format</dt>
+
+     <dd class="dd">A standardized text format based on the common log format that includes additional
+      information. Also known as the Apache/NCSA Combined Log Format.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Error Log Format</dt>
+
+     <dd class="dd">The standardized error log format generated by the Apache HTTP Server 2.2.</dd>
+
+    
+    
+     <dt class="dt dlterm">Apache Access Log Custom Format</dt>
+
+     <dd class="dd">A customizable access log generated by the Apache HTTP Server 2.2. Use the Apache HTTP
+      Server version 2.2 syntax to define the format of the log file. </dd>
+
+    
+    
+     <dt class="dt dlterm">Regular Expression</dt>
+
+     <dd class="dd">Use a regular expression to define the structure of log data, and then assign the field or
+      fields represented by each group.  </dd>
+
+     <dd class="dd">Use any valid regular expression.</dd>
+
+    
+    
+     <dt class="dt dlterm">Grok Pattern</dt>
+
+     <dd class="dd">Use a grok pattern to define the structure of log data. You can use the grok patterns
+      supported by the <span class="ph">Data
+                  Collector</span>. You can
+      also define a custom grok pattern and then use it as part of the log format. </dd>
+
+     <dd class="dd">For more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data. You can use a single pattern or use several patterns to define a larger pattern. You can also use valid sections of patterns to define a custom pattern.">Grok Patterns</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">log4j</dt>
+
+     <dd class="dd">A customizable format generated by the Apache Log4j 1.2 logging utility. You can use the
+      default format or specify a custom format. Use the Apache Log4j version 1.2 syntax to define
+      the format of the log file.</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_jm1_b4w_fs">
+    <h2 class="title topictitle2">Configuring a Log Parser</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure a Log Parser to
+                parse log data in a field. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_jm1_b4w_fs__steps_ysb_1qw_fs"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jm1_b4w_fs__d5468e1302" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d56290e191">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d56290e194">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d56290e191 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d56290e194 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d56290e191 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d56290e194 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d56290e191 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_jm1_b4w_fs__d5468e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d56290e194 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d56290e191 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_jm1_b4w_fs__d5468e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d56290e194 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d56290e191 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d56290e194 ">Error record handling for the stage: <ul class="ul" id="task_jm1_b4w_fs__d5468e1378">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Parse</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jm1_b4w_fs__table_egn_2qw_fs" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d56290e303">Log Parser Properties</th>
+
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d56290e306">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d56290e303 ">Field to Parse</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d56290e306 ">Field path that contains the log data to parse. </td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d56290e303 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_jm1_b4w_fs__d5692e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d56290e306 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d56290e303 ">New Parsed Field</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d56290e306 ">Field to act as the root field for the newly parsed
+                                        fields. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="27.77777777777778%" headers="d56290e303 ">Log Format</td>
+
+                                    <td class="entry" valign="top" width="72.22222222222221%" headers="d56290e306 ">Format of log data. Use one of the following
+                                            formats:<ul class="ul" id="task_jm1_b4w_fs__ul_ith_4rw_fs">
+                                            <li class="li">Common Log Format</li>
+
+                                            <li class="li">Combined Log Format</li>
+
+                                            <li class="li">Apache Error Log Format</li>
+
+                                            <li class="li">Apache Access Log Custom Format</li>
+
+                                            <li class="li">Regular Expression</li>
+
+                                            <li class="li">Grok Pattern</li>
+
+                                            <li class="li">Log4j</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+                <div class="itemgroup info">
+                    
+                    <ul class="ul">
+                        <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
+                            use Apache log format strings to define the <span class="ph uicontrol">Custom Log
+                                Format</span>.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Regular Expression</span>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Grok Pattern</span>, you can define any
+                            custom grok patterns that you want to use in the <span class="ph uicontrol">Grok Pattern
+                                Definition</span> field, and then enter the grok pattern log
+                            file description in the <span class="ph uicontrol">Grok Pattern</span> field.<p class="p">For
+                                more information about supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data. You can use a single pattern or use several patterns to define a larger pattern. You can also use valid sections of patterns to define a custom pattern.">Grok Patterns</a>.</p>
+</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Log4j</span>, you can use log4j
+                            variables to define a custom log format.</li>
+
+                    </ul>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

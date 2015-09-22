@@ -1,0 +1,144 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and use from within a pipeline. With runtime properties, you can define different sets of values for different ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Runtime Properties"></meta><meta name="abstract" content="Runtime properties are properties that you define in a file local to the Data Collector and use from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="description" content="Runtime properties are properties that you define in a file local to the Data Collector and use from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/AdvancedPipelineConfig-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_fjx_g31_1s"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Runtime Properties</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration">Advanced Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Advanced Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_fjx_g31_1s">
+ <h1 class="title topictitle1">Runtime Properties</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Runtime properties are properties that you define in a file local to the <span class="ph">Data
+                  Collector</span> and use from
+    within a pipeline. With runtime properties, you can define different sets of values for
+    different <span class="ph">Data
+                  Collector</span>s.</p>
+
+  <p class="p">You can use runtime
+      properties to define values for stage and pipeline properties. For example, you can define an
+      error directory runtime property that points to different directories on a test machine and a
+      production machine. Similarly, you might create test and production runtime properties for the
+      origin and destination stages. </p>
+
+    <p class="p">You can use runtime properties for any pipeline property that allows the use of the
+      expression language. You can, for example, use runtime properties to represent batch sizes and
+      timeouts, directories, URI, and advanced properties. You cannot use runtime properties to
+      represent fields or constants. </p>
+
+  <div class="p">To implement runtime properties, perform the following steps:<ol class="ol" id="concept_fjx_g31_1s__ol_m24_1bh_1s">
+    <li class="li">Define runtime properties. </li>
+
+    <li class="li">Use runtime properties in the pipeline.</li>
+
+   </ol>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_dys_tp1_1s">
+ <h2 class="title topictitle2">Defining Runtime Properties</h2>
+
+ <div class="body conbody">
+    <p class="p">You can define
+      runtime properties in the <span class="ph">Data
+                  Collector</span>
+      configuration file or in a separate runtime properties file local to the <span class="ph">Data
+                  Collector</span>.</p>
+
+  <div class="p">
+   <dl class="dl">
+    
+     <dt class="dt dlterm"><span class="ph">Data
+                  Collector</span>
+            configuration file</dt>
+
+     <dd class="dd">Use the following steps to define runtime properties in the <span class="ph">Data
+                  Collector</span>
+      configuration file:<ol class="ol" id="concept_dys_tp1_1s__ol_l2b_jq1_1s">
+       <li class="li">In the <span class="ph">Data
+                  Collector</span>
+        configuration file, configure the <samp class="ph codeph">runtime.conf.location</samp> property as
+        follows:<pre class="pre codeblock">runtime.conf.location=embedded</pre>
+</li>
+
+       <li class="li">Use the following format to define runtime properties:
+                <pre class="pre codeblock">runtime.conf_&lt;property name&gt;=&lt;value&gt;</pre>
+For example, the
+                following runtime property defines a Hadoop FS directory template location:
+                <pre class="pre codeblock">runtime.conf_HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+      </ol>
+</dd>
+
+    
+    
+     <dt class="dt dlterm">Separate runtime properties file</dt>
+
+     <dd class="dd">Use the following steps to define runtime properties in a separate runtime properties
+              file:<ol class="ol" id="concept_dys_tp1_1s__ol_szl_ww1_1s">
+              <li class="li">Create a text file and save it in a directory local to the <span class="ph">Data
+                  Collector</span>.</li>
+
+              <li class="li">In the <span class="ph">Data
+                  Collector</span>
+                configuration file, configure the <samp class="ph codeph">runtime.conf.location</samp> property to
+                point to the file. </li>
+
+              <li class="li">In the text file, list the runtime properties that you want to define using the
+                following format:<pre class="pre codeblock">&lt;property name&gt;=&lt;value&gt;</pre>
+For example,
+                the following runtime property defines the same Hadoop FS directory template in a
+                separate runtime properties
+                file:<pre class="pre codeblock">HDFSDirTemplate=/HDFS/DirectoryTemplate</pre>
+</li>
+
+            </ol>
+</dd>
+
+    
+   </dl>
+
+  </div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_pdh_glg_1s">
+ <h2 class="title topictitle2">Using Runtime Properties</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use the <span class="keyword cmdname">runtime:conf</span> function to call a runtime property. You can use
+    runtime properties to represent any stage or pipeline property that allows the use of the
+    expression language. </p>
+
+  <div class="p">To call a
+      runtime property, use the following syntax:
+      <pre class="pre codeblock">runtime:conf('&lt;property name&gt;')</pre>
+</div>
+
+  <div class="p">For example, to use a LogDir runtime property that represents the source file directory for the
+            Directory stage, enter the following syntax for the Files Directory
+            property:<pre class="pre codeblock">${runtime:conf('LogDir')}</pre>
+</div>
+
+  <div class="p">You can use a runtime property to represent a part of a property. For example, you could use a
+   RootDir runtime property and append the rest of the directory in the property as
+   follows:<pre class="pre codeblock">${runtime:conf('RootDir')}/logfiles</pre>
+</div>
+
+ </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Advanced_Config/AdvancedPipelineConfig-title.html" title="Advanced Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Advanced Configuration</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

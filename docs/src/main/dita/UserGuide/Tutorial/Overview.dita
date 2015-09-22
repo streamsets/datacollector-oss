@@ -20,26 +20,22 @@
  <conbody>
   <p>We have a basic and extended version of the tutorial. The basic version allows you to read from
    and write to a local file system so you can easily use the sample data. </p>
-  <p>The extended version flattens and manipulates the data before writing to the Trash destination.
-   Trash is a development destination that we use to test a pipeline without writing to a
-   destination system. If you prefer, you can write to any destination that works for you. </p>
-  <p>The sample data is a file of delimited data that we'll flatten along the way. The <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a special
-   record format for delimited data. So in addition to learning some basic <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and pipeline
-   configuration concepts, you'll see how to manipulate both delimited and flattened
-    data.<draft-comment author="Loretta">revisit the paragraph above. is there any need for
-    flattening any  more?</draft-comment></p>
-  <p>For sample data, the tutorial uses fare payment information from a taxi company. The basic
-   pipeline assesses the credit card vendors that customers use. (You could use this information
-   later to end contracts with low volume vendors.) The pipeline then masks the credit card numbers
-   before writing the results to file. A secondary branch standardizes the record format for
-   non-credit card data. </p>
+  <p>The extended version manipulates the data before writing to the Trash destination. Trash is a
+   development destination that we use to test a pipeline without writing to a destination system.
+   If you prefer, you can write to any destination that works for you. </p>
+  <p>For sample data, the tutorial uses publicly available fare payment information from a taxi
+   company that we've tweaked to add fake credit card data and invalid information to better serve
+   the tutorial. </p>
+  <p>The basic pipeline assesses the credit card vendors that customers use. (You could use this
+   information later to end contracts with low volume vendors.) The pipeline then masks the credit
+   card numbers before writing the results to file. A secondary branch standardizes the record
+   format for non-credit card data. </p>
   <p>Here's the pipeline the basic tutorial creates:</p>
   <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
-  <p>The extended pipeline adds an additional branch to flatten the data, convert some field types
-   and write to the Trash destination. We'll use data preview to test stage configuration and
-   changes in data before we complete the extended pipeline:</p>
+  <p>The extended pipeline adds an additional branch to convert some field types and write to the
+   Trash destination. We'll use data preview to test stage configuration and changes in data before
+   we complete the extended pipeline:<draft-comment author="Loretta">retake screenshot without the
+    flattener.</draft-comment></p>
   <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="75"/></p>
  </conbody>
 </concept>

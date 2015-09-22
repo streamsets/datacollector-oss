@@ -378,5 +378,12 @@
             <ul id="HDFSfiles_HBasedest">
                   <li>hbase-site.xml</li>
             </ul>
+            <draft-comment author="Loretta">List of config files used by Hive Streaming - used in
+                  Hive Properties &amp; Configuring Hive Streaming dest.</draft-comment>
+            <ul id="HiveStreamingFiles">
+                  <li>core-site.xml</li>
+                  <li>hdfs-site.xml</li>
+                  <li>hive-site.xml</li>
+            </ul>
       </conbody>
 </concept>
