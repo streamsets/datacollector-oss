@@ -1,0 +1,34 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Preconditions"></meta><meta name="abstract" content="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages."></meta><meta name="description" content="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_msl_yd4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Preconditions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_msl_yd4_fs">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Preconditions</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Preconditions are conditions that a record must satisfy to enter the stage for
+        processing. Like required fields, if a record does not meet a precondition, it is diverted
+        to the pipeline for error handling. You can define preconditions for any processor and most
+        destination stages. </p>
+
+  <p class="p">When you create more than one
+      precondition in a stage, a record must pass all conditions to enter the stage. You can use
+      most functions, pipeline constants, and runtime properties in preconditions. </p>
+
+  <div class="p">Configure preconditions as part of the overall pipeline logic or  to minimize processing
+   errors. For example, you might use the following expression to exclude records that originate
+   from outside the United States:<pre class="pre codeblock"> ${record:value('/COUNTRY') = 'US'}</pre>
+</div>
+
+ </div>
+
+<div class="navfooter"><!----></div><div class="footer"></div>
+</body>
+</html>

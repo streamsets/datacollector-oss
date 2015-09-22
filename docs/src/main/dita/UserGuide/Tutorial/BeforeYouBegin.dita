@@ -20,8 +20,10 @@
       tutorial, you'll need to do a few things:</p>
     <p>
       <ol id="ol_dtv_bzs_zs">
-        <li>Download sample data. <p>You can download sample data from the following location:
-              </p><p><xref
+        <li>Download sample data. <p>The sample data is publicly available taxi data that we've
+            tweaked to add fake credit card information and invalid information to better serve our
+            tutorial and demo. </p><p>You can download sample data from the following location:
+            </p><draft-comment author="Loretta">verify the link</draft-comment><p><xref
               href="https://www.streamsets.com/documentation/datacollector/1.1.0/tutorial/sample_data/nyc_taxi_data.csv"
               format="html" scope="external">
               https://www.streamsets.com/documentation/datacollector/1.1.0/tutorial/sample_data/nyc_taxi_data.csv</xref></p><p>You'll

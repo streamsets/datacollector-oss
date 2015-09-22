@@ -1,0 +1,155 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record. The expression language provides the following general record ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Record Functions"></meta><meta name="abstract" content="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record."></meta><meta name="description" content="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record."></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_p1z_ggv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Record Functions</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
+<body onload="highlightSearchTerm()" class="frmBody" id="concept_p1z_ggv_1r">
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"></td><td><div class="navheader"></div></td></tr></tbody></table>
+
+ <h1 class="title topictitle1">Record Functions</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Use record functions to determine information about a record, such as the stage that
+  created it or whether a field exists in the record. </p>
+
+  <p class="p">The expression language provides the
+   following general record functions:</p>
+
+  <dl class="dl">
+   
+    <dt class="dt dlterm">record:attribute('&lt;attribute name&gt;')</dt>
+
+    <dd class="dd">Returns the value of the specified record attribute. Use to return data, for example, for
+     the "tag" attribute that you set using the File Tail origin. </dd>
+
+    <dd class="dd">Return type: String.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:creator()</dt>
+
+    <dd class="dd">Returns the instance name of the stage that created the record, typically an origin stage.
+     Data is stored in the stageCreator field of a record. </dd>
+
+    <dd class="dd">Return type: String.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:exists('&lt;field path&gt;')</dt>
+
+    <dd class="dd">Determines if the specified field is in a record. When the field is not in the record,
+     returns 0. When the field is in the record, returns 1. </dd>
+
+    <dd class="dd">Return type: Boolean.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:id()</dt>
+
+    <dd class="dd">Returns the ID of the stage that created the record, typically an origin stage. Data is
+     stored in the sourceId field of a record. </dd>
+
+    <dd class="dd">Return type: String.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:path()</dt>
+
+    <dd class="dd">Returns the stages in the pipeline that processed a record. Data is stored in the stagesPath
+     field of a record. The field path uses the following
+     format:<pre class="pre codeblock">&lt;origin instance name&gt;:&lt;next stage instance name&gt;:&lt;next stage instance name&gt;:... </pre>
+</dd>
+
+    <dd class="dd">Return type: String.</dd>
+
+   
+   
+    <dt class="dt dlterm">record:type('&lt;field path&gt;')</dt>
+
+    <dd class="dd">Checks the data type of a field. Possible return values are: <ul class="ul" id="concept_p1z_ggv_1r__ul_lmr_2hv_1r">
+      <li class="li">Boolean</li>
+
+      <li class="li">Char</li>
+
+      <li class="li">Byte</li>
+
+      <li class="li">Short</li>
+
+      <li class="li">Integer</li>
+
+      <li class="li">Long</li>
+
+      <li class="li">Float</li>
+
+      <li class="li">Double</li>
+
+      <li class="li">Date</li>
+
+      <li class="li">Datetime</li>
+
+      <li class="li">Decimal</li>
+
+      <li class="li">String</li>
+
+      <li class="li">Byte-Array</li>
+
+      <li class="li">Map</li>
+
+      <li class="li">List</li>
+
+     </ul>
+</dd>
+
+    <dd class="dd">Return type: String. </dd>
+
+   
+   
+    <dt class="dt dlterm">record:value('&lt;field path&gt;')</dt>
+
+    <dd class="dd">Returns the value of the field in the appropriate data type.</dd>
+
+    <dd class="dd">Return type: When the field includes a value, returns the type based on the field value.
+     When the field is null, the function returns no value. </dd>
+
+    <dd class="dd">
+     <p class="p">Nulls are coerced based on the expected return type of the function. For example, if an EL
+      is expected to return a string, null is coerced to an empty string. However, a null integer is
+      coerced to 0.</p>
+
+    </dd>
+
+   
+   
+    <dt class="dt dlterm">record:valueOrDefault('&lt;field path&gt;' , &lt;default value&gt;)</dt>
+
+    <dd class="dd">Returns the value of the field in the appropriate data type. If the field does not exist,
+     returns the default value. If the field is null, the function returns a null value. </dd>
+
+    <dd class="dd">Use to provide a default value when a field does not exist. </dd>
+
+    <dd class="dd">Return type: Variable, based on whether the function returns the field value or default
+     value.</dd>
+
+    <dd class="dd">
+     <div class="p">
+      <div class="note tip"><span class="tiptitle">Tip:</span> To replace null values, you might add a tertiary
+       operator as
+       follows:<pre class="pre codeblock">record:value('/field path') == null ? '&lt;default value&gt;' : record:value('/field path')</pre>
+</div>
+
+     </div>
+
+    </dd>
+
+   
+  </dl>
+
+ </div>
+
+<div class="navfooter"><!----></div><div class="footer"></div>
+</body>
+</html>

@@ -27,7 +27,9 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a special
    record format for delimited data. So in addition to learning some basic <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and pipeline
-   configuration concepts, you'll see how to manipulate both delimited and flattened data.</p>
+   configuration concepts, you'll see how to manipulate both delimited and flattened
+    data.<draft-comment author="Loretta">revisit the paragraph above. is there any need for
+    flattening any  more?</draft-comment></p>
   <p>For sample data, the tutorial uses fare payment information from a taxi company. The basic
    pipeline assesses the credit card vendors that customers use. (You could use this information
    later to end contracts with low volume vendors.) The pipeline then masks the credit card numbers

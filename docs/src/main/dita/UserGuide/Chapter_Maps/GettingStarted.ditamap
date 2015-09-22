@@ -13,7 +13,7 @@
   limitations under the License.
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map collection-type="sequence">
+<map>
  <title>Getting Started</title>
  <topicref href="../Getting_Started/GettingStarted_Title.dita">
   <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">
@@ -23,7 +23,7 @@
    <topicref href="../Getting_Started/HowShouldIUsetheDataCollector.dita"/>
    <topicref href="../Getting_Started/HowDoesItWork.dita"/>
   </topicref>
-  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita">
+  <topicref href="../Getting_Started/LoggingIn_CreatingPipeline.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

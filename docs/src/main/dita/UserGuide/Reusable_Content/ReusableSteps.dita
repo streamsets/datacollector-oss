@@ -934,16 +934,6 @@
                                     <entry>Library version that you want to use. </entry>
                                 </row>
                                 <row>
-                                    <entry>On Record Error</entry>
-                                    <entry>Error record handling for the stage: <ul
-                                            id="ul_kwy_43h_hr">
-                                            <li>Discard - Discards the record.</li>
-                                            <li>Send to Error - Sends the record to the pipeline for
-                                                error handling.</li>
-                                            <li>Stop Pipeline - Stops the pipeline.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
                                     <entry>Required Fields <xref
                                             href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -962,6 +952,16 @@
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
                                 </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_fqw_4fy_kt">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
+                                        </ul></entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
@@ -970,7 +970,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DelimProps:</uicontrol> Use for the
-                        appropriate delimited destinations - currently Hadoop FS and Kafka
+                        appropriate delimited destinations - currently Flume, Hadoop FS and Kafka
                         Producer:</draft-comment>
                 </cmd>
             </step>
@@ -990,7 +990,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>CSV Format</entry>
+                                    <entry>Delimiter Format</entry>
                                     <entry>Format for delimited data:<ul
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
                                             id="ul_k3j_vvf_jr">
@@ -1208,26 +1208,25 @@
                                         <entry>Evaluates an expression at runtime to determine the
                                             topic to use for each record.</entry>
                                     </row>
-                                    <row id="KPTopicEx">
-                                        <entry>Topic Expression</entry>
-                                        <entry>Expression used to determine where each record is
-                                            written. Use an expression that evaluates to a topic
-                                            name. <p>For runtime topic resolution only. </p></entry>
-                                    </row>
-                                    <row id="KPTopicWList">
-                                        <entry>Topic White List</entry>
-                                        <entry>List of valid topic names to write to. Use to avoid
-                                            writing to invalid topics. Records that resolve to
-                                            invalid topic names are passed the stage for error
-                                            handling. <p>Use an asterisk (*) to allow writing to any
-                                                topic name. By default, all topic names are
-                                                valid.</p><p>For runtime topic resolution only.
-                                            </p></entry>
-                                    </row>
                                     <row id="KPTopic">
                                         <entry>Topic</entry>
                                         <entry>Kafka topic to use. <p>Not available when using
                                                 runtime topic resolution.</p></entry>
+                                    </row>
+                                    <row id="KPTopicEx">
+                                        <entry>Topic Expression</entry>
+                                        <entry>Expression used to determine where each record is
+                                            written when using runtime topic resolution. Use an
+                                            expression that evaluates to a topic name. </entry>
+                                    </row>
+                                    <row id="KPTopicWList">
+                                        <entry>Topic White List</entry>
+                                        <entry>List of valid topic names to write to when using
+                                            runtime topic resolution. Use to avoid writing to
+                                            invalid topics. Records that resolve to invalid topic
+                                            names are passed the stage for error handling. <p>Use an
+                                                asterisk (*) to allow writing to any topic name. By
+                                                default, all topic names are valid.</p></entry>
                                     </row>
                                     <row id="KPPartStrategy">
                                         <entry>Partition Strategy </entry>
@@ -1245,13 +1244,12 @@
                                                 href="../Destinations/KProducer-PartitionStrategy.dita#concept_qpm_xp4_4r">
                                                 <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_as2_sc1_ft"/></xref></entry>
-                                        <entry>Expression to use to write to partitions. <p>Define
-                                                the expression to evaluate to the partition where
-                                                you want each record written. Partition numbers
-                                                start with 0.</p><p
+                                        <entry>Expression to use when using the expression partition
+                                            strategy. <p>Define the expression to evaluate to the
+                                                partition where you want each record written.
+                                                Partition numbers start with 0.</p><p
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
-                                                /><p>For the expression partition strategy only.
-                                            </p></entry>
+                                            /></entry>
                                     </row>
                                     <row>
                                         <entry>Data Format</entry>

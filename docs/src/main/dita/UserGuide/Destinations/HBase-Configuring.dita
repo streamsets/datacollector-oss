@@ -74,10 +74,10 @@
                                             <uicontrol>Binary</uicontrol>.</entry>
                                 </row>
                                 <row>
-                                    <entry>Field to Column Mapping</entry>
-                                    <entry>Map fields from pipeline records to HBase columns, and
-                                        then define the storage type for the column in HBase.<p>Use
-                                            the <uicontrol>Add</uicontrol> icon to create additional
+                                    <entry>Fields</entry>
+                                    <entry>Map fields from records to HBase columns, and then define
+                                        the storage type for the column in HBase.<p>Use the
+                                                <uicontrol>Add</uicontrol> icon to create additional
                                             field mappings. </p></entry>
                                 </row>
                                 <row>
@@ -91,6 +91,15 @@
                                             in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> configuration file. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>HBase User <xref href="HBase-HBaseUser.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_ytm_zzx_kt"/></xref></entry>
+                                    <entry>The HBase user to use to connect to HBase. When using
+                                        this property, make sure HBase is configured
+                                            appropriately.<p>By default, the pipeline uses the Data
+                                            Collector user to connect to HBase.</p></entry>
                                 </row>
                                 <row>
                                     <entry>HBase Configuration Directory <xref

@@ -15,9 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wsz_5t5_vr">
    <title>HBase</title>
-   <shortdesc>The HBase destination writes data to an HBase cluster. The destination writes data to
-      HBase in text, binary, or JSON format. You can define the data format for each column written
-      to HBase.</shortdesc>
+   <shortdesc>The HBase destination writes data to an HBase cluster. The destination can write data
+      to HBase as text, binary data, or JSON strings. You can define the data format for each column
+      written to HBase.</shortdesc>
    <conbody>
       <p><indexterm>HBase
                destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>HBase</indexterm></indexterm>When
