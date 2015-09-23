@@ -88,13 +88,12 @@ public class AvroDataFileParser extends AbstractDataParser {
     //seekToOffset to the required position
     if(dataFileReader.hasNext()) {
       sin.resetCount();
-      GenericRecord avroRecord = dataFileReader.next();
       if (dataFileReader.previousSync() > previousSync) {
         previousSync = dataFileReader.previousSync();
-        recordCount = 1;
-      } else {
-        recordCount++;
+        recordCount = 0;
       }
+      GenericRecord avroRecord = dataFileReader.next();
+      recordCount++;
       Record record = context.createRecord(file.getName() + OFFSET_SEPARATOR + previousSync + OFFSET_SEPARATOR + recordCount);
       record.set(AvroTypeUtil.avroToSdcField(record, avroRecord.getSchema(), avroRecord));
       return record;

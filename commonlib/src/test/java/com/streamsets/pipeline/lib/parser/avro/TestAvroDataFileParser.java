@@ -29,11 +29,19 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.DatumWriter;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestAvroDataFileParser {
 
@@ -52,7 +60,7 @@ public class TestAvroDataFileParser {
 
     parse = avroDataFileParser.parse();
     Assert.assertNotNull(parse);
-    Assert.assertEquals("500::1", avroDataFileParser.getOffset());
+    Assert.assertEquals("244::3", avroDataFileParser.getOffset());
 
     parse = avroDataFileParser.parse();
     Assert.assertNull(parse);
@@ -77,13 +85,63 @@ public class TestAvroDataFileParser {
     dataParser = getDataParser(avroDataFile, 1024, dataParser.getOffset());
     parse = dataParser.parse();
     Assert.assertNotNull(parse);
-    Assert.assertEquals("500::1", dataParser.getOffset());
+    Assert.assertEquals("244::3", dataParser.getOffset());
 
     dataParser = getDataParser(avroDataFile, 1024, dataParser.getOffset());
     parse = dataParser.parse();
     Assert.assertNull(parse);
     Assert.assertEquals("-1", dataParser.getOffset());
 
+  }
+
+  public static final String AVRO_SCHEMA = "{\n"
+    +"\"type\": \"record\",\n"
+    +"\"name\": \"Employee\",\n"
+    +"\"fields\": [\n"
+    +" {\"name\": \"name\", \"type\": \"string\"},\n"
+    +" {\"name\": \"id\", \"type\": \"int\"}\n"
+    +"]}";
+
+  private static final String[] NAMES = {
+    "Brock", "Hari"
+  };
+
+  @Test
+  public void testIncorrectOffset() throws Exception {
+    File avroDataFile = SdcAvroTestUtil.createAvroDataFile();
+    avroDataFile.delete();
+    Schema schema = new Schema.Parser().parse(AVRO_SCHEMA);
+    DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
+    DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter);
+    dataFileWriter.create(schema, avroDataFile);
+    for (int i = 0; i < 5; i++) {
+      GenericRecord r = new GenericData.Record(schema);
+      r.put("name", NAMES[i % NAMES.length]);
+      r.put("id", i);
+      dataFileWriter.setSyncInterval(1073741824);
+      dataFileWriter.append(r);
+      dataFileWriter.sync();
+    }
+    dataFileWriter.flush();
+    dataFileWriter.close();
+    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
+      DataParserFormat.AVRO);
+    DataParserFactory factory = dataParserFactoryBuilder
+      .setMaxDataLen(1024 * 1024)
+      .setOverRunLimit(1000 * 1000)
+      .build();
+    DataParser dataParser = factory.getParser(avroDataFile, null);
+    Map<String, Record> records = new HashMap<>();
+    Record record;
+    while((record = dataParser.parse()) != null) {
+      records.put(dataParser.getOffset(), record);
+    }
+    Assert.assertEquals(String.valueOf(records), 5, records.size());
+    Assert.assertEquals(0, records.get("141::1").get("/id").getValueAsInteger());
+    Assert.assertEquals(1, records.get("166::1").get("/id").getValueAsInteger());
+    Assert.assertEquals(2, records.get("190::1").get("/id").getValueAsInteger());
+    Assert.assertEquals(3, records.get("215::1").get("/id").getValueAsInteger());
+    Assert.assertEquals(4, records.get("239::1").get("/id").getValueAsInteger());
   }
 
   private Stage.Context getContext() {
