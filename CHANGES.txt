@@ -1,3 +1,17 @@
+Release Notes - StreamSets Data Collector - Version 1.1.1
+
+** Bug
+    * [SDC-1587] - Document Preview Config changes (add show header and show type configuration)
+    * [SDC-1758] - Typo in JMX section of docs
+    * [SDC-1776] - Directory Origin cannot read an avro file larger than 1MB
+    * [SDC-1813] - Rename stage lib archetype to standard
+
+** Task
+    * [SDC-1618] - Doc: Check every origin /destination for property changes.
+    * [SDC-1800] - Prepare API for deployment to maven central
+    * [SDC-1801] - Prepare SDC for deployment to maven central
+    * [SDC-1825] - Finish decoupling api from datacollecotor
+
 Release Notes - StreamSets Data Collector - Version 1.1.0
 
 ** Sub-task
