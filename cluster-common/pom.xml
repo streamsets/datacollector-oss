@@ -19,12 +19,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cluster-common</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <description>StreamSets Data Collector Cluster Common</description>
   <name>StreamSets Data Collector Cluster common</name>
   <packaging>jar</packaging>
