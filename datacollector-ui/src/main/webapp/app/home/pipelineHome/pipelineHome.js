@@ -1110,7 +1110,7 @@ angular
           }
         });
 
-        $scope.stageLibraryList = stageLibraryList;
+        $scope.stageLibraryList = _.sortBy(stageLibraryList, 'libraryLabel');
 
         if(!options.detailTabName) {
           if($scope.isPipelineRunning) {
