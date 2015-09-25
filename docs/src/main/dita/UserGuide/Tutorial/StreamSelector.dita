@@ -15,21 +15,19 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_br5_rzq_ks">
     <title>Route Data with the Stream Selector</title>
-    <shortdesc>To route records credit card transactions to a separate branch for processing, we use
-        the Stream Selector processor. We'll also define a required field to drop records with no
-        payment type. </shortdesc>
+    <shortdesc>To route credit card transactions to a separate branch for processing, we'll use the
+        Stream Selector processor.</shortdesc>
     <taskbody>
-        <context><p>When you defined a required field, a record must include data for the specified
-                field to enter the stage. Records that don't meet the requirement are sent to the
-                pipeline for error handling. If you configured the pipeline to write to file, that's
-                where the error records will go. </p><p>The Stream Selector uses user-defined
-                conditions to route data. Any data not captured by a user-defined condition routes
-                to the default stream. </p>Because the data is delimited, we'll use a delimited data
-            record function for the condition. The <codeph>record:dValue</codeph> function returns
-            the value associated with the specified header so you don't need to know the exact index
-            position of the header in the record. <p>To capture records with credit card payments,
-                use the following condition:
-                <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock></p><p>From this,
+        <context><p>The Stream Selector routes data to different streams based on user-defined
+                conditions. Any data not captured by a user-defined condition routes to the default
+                stream.</p><p>We'll also define a required field to drop records with no payment
+                type. When you defined a required field, a record must include data for the
+                specified field to enter the stage. Records that don't meet the requirement are sent
+                to the pipeline for error handling. If you configured the pipeline to write to file,
+                that's where error records will go. </p>To represent data in a field, we use the
+                <codeph>record:value</codeph> function. This returns field values associated with
+            the field.<p>To capture records with credit card payments, use the following condition:
+                <codeblock>${record:value('/payment_type') == 'CRD'}</codeblock></p><p>From this,
                 you see that we enclose expressions in a dollar sign and curly brackets. You can use
                 single or double quotation marks around strings. For more information about the
                 expression language, see <xref
@@ -37,12 +35,13 @@
                 />.</p></context>
         <steps id="steps_xhx_3rk_ls">
             <step>
-                <cmd>In the stage library, select the <uicontrol>Stream Selector</uicontrol>
-                    processor and the Directory origin to it. Or, from the Pipeline Creation Help
-                    Bar, click <menucascade>
+                <cmd>From the Pipeline Creation Help Bar, click <menucascade>
                         <uicontrol>Select Processor to Connect</uicontrol>
                         <uicontrol>Stream Selector</uicontrol>
-                    </menucascade>.</cmd>
+                    </menucascade>. Or, in the stage library, select the <uicontrol>Stream
+                        Selector</uicontrol> processor (<image
+                        href="../Graphics/Tutorial_SSelector_icon.png" id="image_rt1_3m1_mt"
+                        scale="65"/>) and connect the Directory origin to it. </cmd>
             </step>
             <step>
                 <cmd>On the <wintitle>General</wintitle> tab, click in the <uicontrol>Required
@@ -52,9 +51,9 @@
             </step>
             <step>
                 <cmd>To discard records with no payment type information, select the following
-                    field: <uicontrol>[3]/value</uicontrol>.</cmd>
+                    field: <uicontrol>/payment_type</uicontrol>.</cmd>
                 <info>If a list does not appear, you can manually enter the field path:
-                    [3]/value.</info>
+                    /payment_type.</info>
             </step>
             <step>
                 <cmd>To configure the Stream Selector condition, click the
@@ -73,7 +72,7 @@
                     the expression completion feature helps you select the function and ensure valid
                     syntax.</cmd>
                 <info>
-                    <codeblock>${record:dValue('payment_type') == 'CRD'}</codeblock>
+                    <codeblock>${record:value('/payment_type') == 'CRD'}</codeblock>
                 </info>
                 <info>All records that match this condition pass to the first output stream. All
                     other records are captured by the default condition and passed through the
@@ -81,7 +80,7 @@
             </step>
         </steps>
         <result>The Stream Selector should look like this:<p><image
-                    href="../Graphics/Tutorial-StreamSelector.png" id="image_t1s_png_4s" scale="70"
+                    href="../Graphics/Tutorial-StreamSelector.png" id="image_t1s_png_4s" scale="60"
                 /></p></result>
     </taskbody>
 </task>

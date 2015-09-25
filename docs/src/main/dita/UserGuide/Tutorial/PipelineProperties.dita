@@ -45,33 +45,71 @@
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
-                            id="image_jnr_wtk_5s" scale="70"/></p></info>
-                <info>Note a few helpful areas: <draft-comment author="Loretta">change this to a
-                        table?</draft-comment><ol id="ol_egg_lnf_lt">
-                        <li>The Pipeline Creation Help Bar indicates that the origin is missing and
-                            offers a list of origins to choose from. <p>If the Pipeline Creation
-                                Help Bar does not display, you might have disabled it. To enable it,
-                                in the top right corner of the <ph
-                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                /> window, click the <menucascade>
-                                    <uicontrol>Help</uicontrol>
-                                    <uicontrol>Settings</uicontrol>
-                                </menucascade>. Clear the <uicontrol>Hide Pipeline Creation Help
-                                    Bar</uicontrol> option.</p></li>
-                        <li>On the right, the stage library displays a list of available origins. </li>
-                        <li>You can use the drop-down menu to change the stages that display.</li>
-                    </ol></info>
-                <info/>
+                            id="image_jnr_wtk_5s" scale="65"/></p></info>
+                <info>Note a few helpful areas: <table frame="all" rowsep="1" colsep="1"
+                        id="table_ezq_5ys_lt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth=".5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="4*"/>
+                            <thead>
+                                <row>
+                                    <entry>Area</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>1</entry>
+                                    <entry>The Pipeline Creation Help Bar indicates that the origin
+                                        is missing and offers a list of origins to choose from.
+                                            <p>If the Pipeline Creation Help Bar does not display,
+                                            you might have disabled it. To enable it, in the top
+                                            right corner of the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> window, click the <menucascade>
+                                                <uicontrol>Help</uicontrol>
+                                                <uicontrol>Settings</uicontrol>
+                                            </menucascade>. Clear the <uicontrol>Hide Pipeline
+                                                Creation Help Bar</uicontrol> option.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>2</entry>
+                                    <entry>Issues icon. Click to display the list of pipeline issues
+                                        found by implicit validation.</entry>
+                                </row>
+                                <row>
+                                    <entry>3</entry>
+                                    <entry>Stage library. Displays a list of available origins by
+                                        default.</entry>
+                                </row>
+                                <row>
+                                    <entry>4</entry>
+                                    <entry>Drop-down menu to change the stages that display in the
+                                        stage library.</entry>
+                                </row>
+                                <row>
+                                    <entry><image href="../Graphics/icon_ConfigStageLibrary.png"
+                                            id="image_ryw_gzs_lt" scale="90"/></entry>
+                                    <entry>Toggle Library Pane icon. Use to show and hide the stage
+                                        library.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Error Records</wintitle> tab. And
                     for the <uicontrol>Error Records</uicontrol> property, select <uicontrol>Write
                         to File</uicontrol>.</cmd>
+                <info>This writes error records to a file so you can deal with error records without
+                    having to stop the pipeline.</info>
             </step>
             <step>
                 <cmd>Click the <wintitle>Error Records - Write to File</wintitle> tab and configure
-                    the following properties: </cmd>
+                    the following properties.</cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_zvy_kfn_ls">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -106,6 +144,8 @@
                 </info>
             </step>
         </steps>
-        <result>Now we'll start building the pipeline...</result>
+        <result>
+            <p>Now we'll start building the pipeline...</p>
+        </result>
     </taskbody>
 </task>
