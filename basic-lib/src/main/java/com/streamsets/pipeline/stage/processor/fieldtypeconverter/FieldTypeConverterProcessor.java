@@ -60,7 +60,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
           } else {
             if (field.getType() == Field.Type.STRING) {
               if (field.getValue() == null) {
-                LOG.warn("Field {} in record {} has null value. Converting the type of filed to '{}' with null value.",
+                LOG.warn("Field {} in record {} has null value. Converting the type of field to '{}' with null value.",
                   matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
               } else {
@@ -80,7 +80,18 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
 
                 }
               }
+            } else if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE) &&
+              fieldTypeConverterConfig.targetType == Field.Type.LONG) {
+              if (field.getValue() == null) {
+                LOG.warn("Field {} in record {} has null value. Converting the type of field to '{}' with null value.",
+                  matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
+                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
+              } else {
+                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType,
+                  field.getValueAsDatetime().getTime()));
+              }
             } else {
+              //use the built in type conversion provided by TypeSupport
               try {
                 //use the built in type conversion provided by TypeSupport
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));

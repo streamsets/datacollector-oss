@@ -34,6 +34,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -1026,6 +1027,44 @@ public class TestFieldTypeConverterProcessor {
       Assert.assertEquals(Field.Type.STRING,result.get("null").getType());
       Assert.assertEquals(null, result.get("null").getValueAsDate());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDateTimeToLong() throws Exception {
+    FieldTypeConverterConfig dtConfig =
+      new FieldTypeConverterConfig();
+    dtConfig.fields = ImmutableList.of("/dateTime");
+    dtConfig.targetType = Field.Type.LONG;
+    dtConfig.dataLocale = "en";
+
+    FieldTypeConverterConfig dateConfig =
+      new FieldTypeConverterConfig();
+    dateConfig.fields = ImmutableList.of("/date");
+    dateConfig.targetType = Field.Type.LONG;
+    dateConfig.dataLocale = "en";
+
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+      .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("date", Field.createDate(new Date(0)));
+      map.put("dateTime", Field.createDatetime(new Date(0)));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(String.valueOf(result), 0, result.get("date").getValueAsLong());
+      Assert.assertEquals(String.valueOf(result), 0, result.get("dateTime").getValueAsLong());
     } finally {
       runner.runDestroy();
     }
