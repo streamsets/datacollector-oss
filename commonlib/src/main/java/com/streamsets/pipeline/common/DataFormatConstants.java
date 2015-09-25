@@ -24,7 +24,6 @@ import java.nio.charset.Charset;
 public class DataFormatConstants {
 
   public final static Charset UTF8 = Charset.forName("UTF-8");
-  // 10MB
   public static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
-    System.getProperty("DataFactoryBuilder.OverRunLimit", "10485760"));
+    System.getProperty("DataFactoryBuilder.OverRunLimit", "1000000"));
 }

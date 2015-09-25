@@ -68,8 +68,8 @@ public class SpoolDirSource extends BaseSource {
   private static final String MINUS_ONE = "-1";
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
-  private static final int MIN_OVERRUN_LIMIT = 64 * 1024; //64KB
-  private static final int MAX_OVERRUN_LIMIT = 1024 * 1024 * 10; //10MB
+  private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
+  private static final int MAX_OVERRUN_LIMIT = 1024 * 1024;
 
   private final DataFormat dataFormat;
   private final String charset;
