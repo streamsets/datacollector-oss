@@ -36,7 +36,6 @@ angular
         $scope.stopping = true;
         api.pipelineAgent.stopPipeline(pipelineInfo.name, 0).
           success(function(res) {
-            $scope.stopping = false;
             $modalInstance.close(res);
           }).
           error(function(data) {
