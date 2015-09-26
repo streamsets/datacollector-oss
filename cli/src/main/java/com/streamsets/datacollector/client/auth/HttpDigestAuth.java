@@ -17,8 +17,9 @@
  */
 package com.streamsets.datacollector.client.auth;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.filter.HTTPDigestAuthFilter;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import javax.ws.rs.client.WebTarget;
 
 public class HttpDigestAuth implements Authentication {
   private String username;
@@ -41,7 +42,8 @@ public class HttpDigestAuth implements Authentication {
   }
 
   @Override
-  public void setFilter(Client client) {
-    client.addFilter(new HTTPDigestAuthFilter(username, password));
+  public void setFilter(WebTarget webTarget) {
+    HttpAuthenticationFeature feature = HttpAuthenticationFeature.digest(username, password);
+    webTarget.register(feature);
   }
 }

@@ -19,58 +19,76 @@
  */
 package com.streamsets.datacollector.client.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.client.StringUtil;
-import java.util.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.HashMap;
 import java.util.Map;
 
 
-
-import io.swagger.annotations.*;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen",
+  date = "2015-09-11T14:51:29.367-07:00")
 public class PipelineStateJson   {
 
   private String user = null;
   private String name = null;
   private String rev = null;
 
-public enum StatusEnum {
-  EDITED("EDITED"), STARTING("STARTING"), START_ERROR("START_ERROR"), RUNNING("RUNNING"), RUNNING_ERROR("RUNNING_ERROR"), RUN_ERROR("RUN_ERROR"), FINISHING("FINISHING"), FINISHED("FINISHED"), RETRY("RETRY"), KILLED("KILLED"), STOPPING("STOPPING"), STOPPED("STOPPED"), DISCONNECTING("DISCONNECTING"), DISCONNECTED("DISCONNECTED"), CONNECTING("CONNECTING"), CONNECT_ERROR("CONNECT_ERROR");
+  public enum StatusEnum {
+    EDITED("EDITED"),
+    STARTING("STARTING"),
+    START_ERROR("START_ERROR"),
+    RUNNING("RUNNING"),
+    RUNNING_ERROR("RUNNING_ERROR"),
+    RUN_ERROR("RUN_ERROR"),
+    FINISHING("FINISHING"),
+    FINISHED("FINISHED"),
+    RETRY("RETRY"),
+    KILLED("KILLED"),
+    STOPPING("STOPPING"),
+    STOPPED("STOPPED"),
+    DISCONNECTING("DISCONNECTING"),
+    DISCONNECTED("DISCONNECTED"),
+    CONNECTING("CONNECTING"),
+    CONNECT_ERROR("CONNECT_ERROR");
 
-  private String value;
+    private String value;
 
-  StatusEnum(String value) {
-    this.value = value;
+    StatusEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private StatusEnum status = null;
   private String message = null;
   private Long timeStamp = null;
   private Map<String, Object> attributes = new HashMap<String, Object>();
 
-public enum ExecutionModeEnum {
-  STANDALONE("STANDALONE"), CLUSTER("CLUSTER"), SLAVE("SLAVE");
+  public enum ExecutionModeEnum {
+    STANDALONE("STANDALONE"),
+    CLUSTER_BATCH("CLUSTER_BATCH"),
+    CLUSTER_STREAMING("CLUSTER_STREAMING"),
+    SLAVE("SLAVE");
 
-  private String value;
+    private String value;
 
-  ExecutionModeEnum(String value) {
-    this.value = value;
+    ExecutionModeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private ExecutionModeEnum executionMode = null;
   private String metrics = null;

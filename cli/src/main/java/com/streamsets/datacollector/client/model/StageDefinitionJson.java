@@ -19,38 +19,36 @@
  */
 package com.streamsets.datacollector.client.model;
 
-import com.streamsets.datacollector.client.StringUtil;
-import com.streamsets.datacollector.client.model.RawSourceDefinitionJson;
-import com.streamsets.datacollector.client.model.ConfigGroupDefinitionJson;
-import java.util.*;
-import com.streamsets.datacollector.client.model.ConfigDefinitionJson;
-
-
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.client.StringUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen",
+  date = "2015-09-11T14:51:29.367-07:00")
 public class StageDefinitionJson   {
 
   private String name = null;
 
-public enum TypeEnum {
-  SOURCE("SOURCE"), PROCESSOR("PROCESSOR"), TARGET("TARGET");
+  public enum TypeEnum {
+    SOURCE("SOURCE"), PROCESSOR("PROCESSOR"), TARGET("TARGET");
 
-  private String value;
+    private String value;
 
-  TypeEnum(String value) {
-    this.value = value;
+    TypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private TypeEnum type = null;
   private String className = null;
@@ -64,20 +62,23 @@ public enum TypeEnum {
   private String outputStreamLabelProviderClass = null;
   private List<String> outputStreamLabels = new ArrayList<String>();
 
-public enum ExecutionModesEnum {
-  STANDALONE("STANDALONE"), CLUSTER("CLUSTER"), SLAVE("SLAVE");
+  public enum ExecutionModesEnum {
+    STANDALONE("STANDALONE"),
+    CLUSTER_BATCH("CLUSTER_BATCH"),
+    CLUSTER_STREAMING("CLUSTER_STREAMING"),
+    SLAVE("SLAVE");
 
-  private String value;
+    private String value;
 
-  ExecutionModesEnum(String value) {
-    this.value = value;
+    ExecutionModesEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
   }
-
-  @Override
-  public String toString() {
-    return value;
-  }
-}
 
   private List<ExecutionModesEnum> executionModes = new ArrayList<ExecutionModesEnum>();
   private String description = null;

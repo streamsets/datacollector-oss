@@ -19,8 +19,9 @@
  */
 package com.streamsets.datacollector.client.auth;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import javax.ws.rs.client.WebTarget;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public class HttpBasicAuth implements Authentication {
@@ -44,7 +45,8 @@ public class HttpBasicAuth implements Authentication {
   }
 
   @Override
-  public void setFilter(Client client) {
-    client.addFilter(new HTTPBasicAuthFilter(username, password));
+  public void setFilter(WebTarget webTarget) {
+    HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic(username, password);
+    webTarget.register(feature);
   }
 }

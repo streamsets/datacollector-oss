@@ -19,7 +19,7 @@
  */
 package com.streamsets.datacollector.client.auth;
 
-import com.sun.jersey.api.client.Client;
+import javax.ws.rs.client.WebTarget;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public interface Authentication {
@@ -27,5 +27,5 @@ public interface Authentication {
 
   void setPassword(String password);
 
-  void setFilter(Client client);
+  void setFilter(WebTarget webTarget);
 }

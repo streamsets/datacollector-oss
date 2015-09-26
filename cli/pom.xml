@@ -99,18 +99,16 @@
       <artifactId>swagger-annotations</artifactId>
     </dependency>
 
-    <!-- HTTP client: jersey-client -->
     <dependency>
-      <groupId>com.sun.jersey</groupId>
+      <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>${sunJersey.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.jersey.contribs</groupId>
-      <artifactId>jersey-multipart</artifactId>
-      <version>${sunJersey.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- JSON processing: jackson -->
     <dependency>
@@ -130,6 +128,10 @@
       <artifactId>jackson-datatype-joda</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+    </dependency>
+    <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
     </dependency>
@@ -139,7 +141,4 @@
       <artifactId>airline</artifactId>
     </dependency>
   </dependencies>
-  <properties>
-    <sunJersey.version>1.18</sunJersey.version>
-  </properties>
 </project>

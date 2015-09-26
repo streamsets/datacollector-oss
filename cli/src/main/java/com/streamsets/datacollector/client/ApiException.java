@@ -19,13 +19,12 @@
  */
 package com.streamsets.datacollector.client;
 
-import java.util.Map;
-import java.util.List;
+import javax.ws.rs.core.MultivaluedMap;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public class ApiException extends Exception {
   private int code = 0;
-  private Map<String, List<String>> responseHeaders = null;
+  private MultivaluedMap<String, Object> responseHeaders = null;
   private String responseBody = null;
 
   public ApiException() {}
@@ -38,22 +37,22 @@ public class ApiException extends Exception {
     super(message);
   }
 
-  public ApiException(String message, Throwable throwable, int code, Map<String, List<String>> responseHeaders, String responseBody) {
+  public ApiException(String message, Throwable throwable, int code, MultivaluedMap<String, Object> responseHeaders, String responseBody) {
     super(message, throwable);
     this.code = code;
     this.responseHeaders = responseHeaders;
     this.responseBody = responseBody;
   }
 
-  public ApiException(String message, int code, Map<String, List<String>> responseHeaders, String responseBody) {
+  public ApiException(String message, int code, MultivaluedMap<String, Object> responseHeaders, String responseBody) {
     this(message, (Throwable) null, code, responseHeaders, responseBody);
   }
 
-  public ApiException(String message, Throwable throwable, int code, Map<String, List<String>> responseHeaders) {
+  public ApiException(String message, Throwable throwable, int code, MultivaluedMap<String, Object> responseHeaders) {
     this(message, throwable, code, responseHeaders, null);
   }
 
-  public ApiException(int code, Map<String, List<String>> responseHeaders, String responseBody) {
+  public ApiException(int code, MultivaluedMap<String, Object> responseHeaders, String responseBody) {
     this((String) null, (Throwable) null, code, responseHeaders, responseBody);
   }
 
@@ -62,7 +61,7 @@ public class ApiException extends Exception {
     this.code = code;
   }
 
-  public ApiException(int code, String message, Map<String, List<String>> responseHeaders, String responseBody) {
+  public ApiException(int code, String message, MultivaluedMap<String, Object> responseHeaders, String responseBody) {
     this(code, message);
     this.responseHeaders = responseHeaders;
     this.responseBody = responseBody;
@@ -75,7 +74,7 @@ public class ApiException extends Exception {
   /**
    * Get the HTTP response headers.
    */
-  public Map<String, List<String>> getResponseHeaders() {
+  public MultivaluedMap<String, Object> getResponseHeaders() {
     return responseHeaders;
   }
 
