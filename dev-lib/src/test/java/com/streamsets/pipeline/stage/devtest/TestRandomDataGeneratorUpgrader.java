@@ -21,33 +21,32 @@ package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.api.impl.Utils;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RandomDataGeneratorSourceUpgrader implements StageUpgrader {
-  @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-                              List<Config> configs) throws StageException {
-    switch(fromVersion) {
-      case 1:
-        upgradeV1ToV2(configs);
-      case 2:
-        upgradeV2ToV3(configs);
-        break;
-      default:
-        throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
-    }
-    return configs;
-  }
+public class TestRandomDataGeneratorUpgrader {
 
-  private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("rootFieldType", "MAP"));
-  }
+  @Test
+  public void testRandomDataGeneratorUpgrader() throws StageException {
+    RandomDataGeneratorSourceUpgrader randomDataGeneratorSourceUpgrader = new RandomDataGeneratorSourceUpgrader();
+    List<Config> configs = new ArrayList<>();
+    randomDataGeneratorSourceUpgrader.upgrade (
+      "streamsets-datacollector-dev-lib",
+      "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+      "com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource1432763273869",
+      1,
+      3,
+      configs
+    );
 
-  private void upgradeV2ToV3(List<Config> configs) {
-    configs.add(new Config("headerAttributes", new ArrayList<>()));
+    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals("rootFieldType", configs.get(0).getName());
+    Assert.assertEquals("MAP", configs.get(0).getValue());
+    Assert.assertEquals("headerAttributes", configs.get(1).getName());
+    Assert.assertTrue(configs.get(1).getValue() instanceof List);
+    Assert.assertEquals(0, ((List)configs.get(1).getValue()).size());
   }
 }

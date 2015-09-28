@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.mongodb;
+package com.streamsets.pipeline.stage.common.mongodb;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -35,8 +35,13 @@ public enum Errors implements ErrorCode {
   MONGODB_09("Unknown host: '{}'"),
   MONGODB_10("Failed to parse entry: {}"),
   MONGODB_11("Offset tracking field: '{}' missing from document: '{}'"),
-  MONGODB_12("Error writing to database: {}")
-
+  MONGODB_12("Error writing to database: {}"),
+  MONGODB_13("Error serializing record '{}': {}"),
+  MONGODB_14("Unsupported operation type '{}' found in record {}"),
+  MONGODB_15("Operation type (insert, update or delete) is not specified in the header for record {}"),
+  MONGODB_16("Record {} does not contain the expected unique key field {}"),
+  MONGODB_17("Error writing records to Mongo : {}"),
+  MONGODB_18("Operation '{}' requires unique key to be configured"),
   ;
   private final String msg;
 

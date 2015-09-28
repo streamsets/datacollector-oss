@@ -20,29 +20,29 @@
 package com.streamsets.pipeline.stage.devtest;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
 @GenerateResourceBundle
 @StageDef(
-  version = 2,
+  version = 3,
   label="Dev Data Generator",
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
@@ -67,17 +67,29 @@ public class RandomDataGeneratorSource extends BaseSource {
   @ValueChooserModel(RootTypeChooserValueProvider.class)
   public RootType rootFieldType;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MAP,
+    label = "Header Attributes",
+    description = "Attributes to be put in the generated record header"
+  )
+  public Map<String, String> headerAttributes;
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     for(int i =0; i < maxBatchSize; i++) {
       batchMaker.addRecord(createRecord(lastSourceOffset, i));
     }
-    ThreadUtil.sleep(500);
     return "random";
   }
 
   private Record createRecord(String lastSourceOffset, int batchOffset) {
     Record record = getContext().createRecord("random:" + batchOffset);
+    if(headerAttributes != null && !headerAttributes.isEmpty()) {
+      for (Map.Entry<String, String> e : headerAttributes.entrySet()) {
+        record.getHeader().setAttribute(e.getKey(), e.getValue());
+      }
+    }
     LinkedHashMap<String, Field> map = new LinkedHashMap<>();
     for(DataGeneratorConfig dataGeneratorConfig : dataGenConfigs) {
       map.put(dataGeneratorConfig.field, Field.create(getFieldType(dataGeneratorConfig.type),

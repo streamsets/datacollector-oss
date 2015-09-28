@@ -41,8 +41,10 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.mongodb.Errors;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -294,7 +296,7 @@ public class MongoDBSource extends BaseSource {
         } catch (MongoException e) {
           issues.add(getContext().createConfigIssue(
               Groups.MONGODB.name(),
-              "mongoConnectionString",
+              "mongoClientURI",
               Errors.MONGODB_01,
               e.toString()
           ));
@@ -379,7 +381,7 @@ public class MongoDBSource extends BaseSource {
       if (hostport.length != 2) {
         issues.add(getContext().createConfigIssue(
             Groups.MONGODB.name(),
-            "mongoConnectionString",
+            "mongoClientURI",
             Errors.MONGODB_07,
             host
         ));
@@ -391,7 +393,7 @@ public class MongoDBSource extends BaseSource {
         } catch (UnknownHostException e) {
           issues.add(getContext().createConfigIssue(
               Groups.MONGODB.name(),
-              "mongoConnectionString",
+              "mongoClientURI",
               Errors.MONGODB_09,
               hostport[0]
           ));
@@ -399,7 +401,7 @@ public class MongoDBSource extends BaseSource {
         } catch (NumberFormatException e) {
           issues.add(getContext().createConfigIssue(
               Groups.MONGODB.name(),
-              "mongoConnectionString",
+              "mongoClientURI",
               Errors.MONGODB_08,
               hostport[1]
           ));
