@@ -21,6 +21,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PreviewOutput;
+import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -214,7 +215,11 @@ public class PreviewResource {
     try {
       Previewer previewer = manager.createPreviewer(this.user, pipelineName, rev);
       previewer.validateConfigs(timeout);
-      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewer.getStatus());
+      PreviewStatus previewStatus = previewer.getStatus();
+      if(previewStatus == null) {
+        previewStatus =  PreviewStatus.VALIDATING;
+      }
+      PreviewInfoJson previewInfoJson = new PreviewInfoJson(previewer.getId(), previewStatus);
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(previewInfoJson).build();
     } catch (PipelineRuntimeException ex) {
       if (ex.getErrorCode() == ContainerError.CONTAINER_0165) {
