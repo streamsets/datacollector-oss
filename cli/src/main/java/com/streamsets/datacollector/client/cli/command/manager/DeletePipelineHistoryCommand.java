@@ -49,8 +49,12 @@ public class DeletePipelineHistoryCommand extends BaseCommand {
     try {
       managerApi.deleteHistory(pipelineName, pipelineRev);
       System.out.println("Pipeline history deleted successfully");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

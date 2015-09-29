@@ -71,8 +71,12 @@ public class ErrorMessagesCommand extends BaseCommand {
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(managerApi.getErrorMessages(pipelineName, pipelineRev,
         stageInstanceName, size)));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

@@ -77,8 +77,12 @@ public class UpdatePipelineRulesCommand extends BaseCommand {
           pipelineRev)));
       }
 
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

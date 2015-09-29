@@ -61,6 +61,10 @@ import com.streamsets.datacollector.client.cli.command.system.ShutdownCommand;
 import com.streamsets.datacollector.client.cli.command.system.ThreadsCommand;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Help;
+import io.airlift.airline.ParseArgumentsUnexpectedException;
+import io.airlift.airline.ParseOptionMissingException;
+
+import java.util.Arrays;
 
 @SuppressWarnings("unchecked")
 public class DataCollector {
@@ -140,6 +144,15 @@ public class DataCollector {
         ValidatePipelineCommand.class
       );
 
-    builder.build().parse(args).run();
+    try {
+      builder.build().parse(args).run();
+    } catch (ParseOptionMissingException | ParseArgumentsUnexpectedException ex) {
+      if(Arrays.asList(args).contains("--stack")) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
+    }
+
   }
 }

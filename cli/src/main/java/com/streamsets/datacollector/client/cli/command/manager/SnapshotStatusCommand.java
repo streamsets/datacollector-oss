@@ -60,8 +60,12 @@ public class SnapshotStatusCommand extends BaseCommand {
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(managerApi.getSnapshotStatus(pipelineName, snapshotName,
         pipelineRev)));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

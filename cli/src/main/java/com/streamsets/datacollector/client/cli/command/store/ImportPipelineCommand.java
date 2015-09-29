@@ -81,8 +81,12 @@ public class ImportPipelineCommand extends BaseCommand {
 
         System.out.println("Successfully imported from file '" + fileName + "' to pipeline - " + pipelineName );
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

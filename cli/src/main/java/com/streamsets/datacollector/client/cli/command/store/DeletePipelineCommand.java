@@ -38,8 +38,12 @@ public class DeletePipelineCommand extends BaseCommand {
     try {
       storeApi.deletePipeline(pipelineName);
       System.out.println("Deleted Pipeline - '" + pipelineName + "' successfully");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

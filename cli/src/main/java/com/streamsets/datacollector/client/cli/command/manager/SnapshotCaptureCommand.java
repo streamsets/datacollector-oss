@@ -78,8 +78,12 @@ public class SnapshotCaptureCommand extends BaseCommand {
     try {
       managerApi.captureSnapshot(pipelineName, snapshotName, pipelineRev, batches, batchSize);
       System.out.println("Capture Snapshot command executed successfully");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

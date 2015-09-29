@@ -52,8 +52,12 @@ public class ValidatePipelineCommand extends BaseCommand {
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(previewApi.validateConfigs(pipelineName, pipelineRev, 1000000l)));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

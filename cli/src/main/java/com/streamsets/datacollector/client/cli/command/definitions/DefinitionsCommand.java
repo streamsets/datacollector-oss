@@ -19,10 +19,8 @@
  */
 package com.streamsets.datacollector.client.cli.command.definitions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.api.DefinitionsApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
 import io.airlift.airline.Command;
@@ -36,10 +34,12 @@ public class DefinitionsCommand extends BaseCommand {
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(definitionsApi.getDefinitions()));
-    } catch (ApiException e) {
-      e.printStackTrace();
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

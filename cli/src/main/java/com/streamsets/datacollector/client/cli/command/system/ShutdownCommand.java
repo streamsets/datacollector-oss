@@ -31,8 +31,12 @@ public class ShutdownCommand extends BaseCommand {
     try {
       systemApi.shutdown();
       System.out.println("Data Collector is stopped.");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

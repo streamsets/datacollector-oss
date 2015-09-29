@@ -63,8 +63,12 @@ public class RunPreviewCommand extends BaseCommand {
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(previewApi.previewWithOverride(pipelineName,
         Collections.<StageOutputJson>emptyList(), pipelineRev, 10, 1, skipTargets, null, null)));
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

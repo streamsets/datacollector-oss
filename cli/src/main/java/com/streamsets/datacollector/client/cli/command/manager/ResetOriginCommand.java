@@ -48,8 +48,12 @@ public class ResetOriginCommand extends BaseCommand {
     try {
       managerApi.resetOffset(pipelineName, pipelineRev);
       System.out.println("Reset Origin is successful.");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

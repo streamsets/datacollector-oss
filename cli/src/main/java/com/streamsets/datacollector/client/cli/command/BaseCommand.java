@@ -57,10 +57,16 @@ public class BaseCommand implements Runnable {
   )
   public String sdcAuthType;
 
+  @Option(
+    name = {"--stack"},
+    description = "Print a stack trace when exiting with a warning or fatal error.",
+    required = false
+  )
+  public boolean printStackTrace;
+
   public void run() {
     System.out.println(getClass().getSimpleName());
   }
-
 
   public ApiClient getApiClient() {
     if(sdcAuthType == null) {

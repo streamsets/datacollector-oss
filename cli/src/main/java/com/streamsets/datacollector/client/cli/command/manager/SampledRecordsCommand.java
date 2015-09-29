@@ -68,8 +68,12 @@ public class SampledRecordsCommand extends BaseCommand {
       System.out.println(mapper.writeValueAsString(managerApi.getSampledRecords(pipelineName, pipelineRev,
         ruleId, size)));
 
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

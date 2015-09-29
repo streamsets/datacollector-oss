@@ -59,8 +59,12 @@ public class DeleteAlertCommand extends BaseCommand {
         System.out.println("Failed to deleted alert");
       }
 
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

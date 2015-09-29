@@ -75,8 +75,12 @@ public class ExportPipelineCommand extends BaseCommand {
       mapper.writeValue(new File(fileName), pipelineConfigAndRulesJson);
 
       System.out.println("Successfully exported pipeline '" + pipelineName + "' to file - " + fileName );
-    } catch(Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }

@@ -416,7 +416,7 @@ public class ApiClient {
       if(body != null) {
         response = builder.put(Entity.entity(body, contentType));
       } else {
-        response = builder.put(null);
+        response = builder.put(Entity.text(""));
       }
     } else if ("DELETE".equals(method)) {
       response = builder.delete();

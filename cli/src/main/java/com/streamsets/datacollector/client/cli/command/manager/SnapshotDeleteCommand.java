@@ -56,8 +56,12 @@ public class SnapshotDeleteCommand extends BaseCommand {
     try {
       managerApi.deleteSnapshot(pipelineName, snapshotName, pipelineRev);
       System.out.println("Deleted Snapshot successfully");
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception ex) {
+      if(printStackTrace) {
+        ex.printStackTrace();
+      } else {
+        System.out.println(ex.getMessage());
+      }
     }
   }
 }
