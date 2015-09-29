@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
+import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.DataParser;
@@ -91,7 +92,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
     logDataFormatValidator.validateLogFormatConfig(issues, getContext());
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
-    builder.setOverRunLimit(1000000);
+    builder.setOverRunLimit(DataFormatConstants.MAX_OVERRUN_LIMIT);
     builder.setRemoveCtrlChars(removeCtrlChars);
     logDataFormatValidator.populateBuilder(builder);
 

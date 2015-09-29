@@ -35,7 +35,7 @@ public class OverrunReader extends CountingReader {
   public static final String READ_LIMIT_SYS_PROP = "overrun.reader.read.limit";
 
   public static int getDefaultReadLimit() {
-    return Integer.parseInt(System.getProperty(READ_LIMIT_SYS_PROP, "102400"));
+    return Integer.parseInt(System.getProperty(READ_LIMIT_SYS_PROP, "1048576"));
   }
 
   private final int readLimit;
@@ -69,7 +69,7 @@ public class OverrunReader extends CountingReader {
     }
   }
 
-  private char[] oneCharBuf = new char[1];
+  private final char[] oneCharBuf = new char[1];
 
   @Override
   public int read() throws IOException {

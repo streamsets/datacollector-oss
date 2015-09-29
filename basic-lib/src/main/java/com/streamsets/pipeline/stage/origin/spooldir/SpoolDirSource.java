@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
+import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
@@ -46,6 +47,7 @@ import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +71,6 @@ public class SpoolDirSource extends BaseSource {
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
-  private static final int MAX_OVERRUN_LIMIT = 1024 * 1024;
 
   private final DataFormat dataFormat;
   private final String charset;
@@ -178,8 +179,9 @@ public class SpoolDirSource extends BaseSource {
 
     validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
-    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit > MAX_OVERRUN_LIMIT) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06));
+    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit > DataFormatConstants.MAX_OVERRUN_LIMIT) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06,
+        String.format("%.4f", (DataFormatConstants.MAX_OVERRUN_LIMIT * 1.0) / 1024)));
     }
 
     if (batchSize < 1) {
