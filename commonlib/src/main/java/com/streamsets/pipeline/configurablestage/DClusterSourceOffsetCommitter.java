@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.configurablestage;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,6 +141,11 @@ public abstract class DClusterSourceOffsetCommitter extends DSourceOffsetCommitt
     if (initializeClusterSource()) {
       clusterSource.postDestroy();
     }
+  }
+
+  @Override
+  public int getParallelism() throws IOException {
+    return initializeClusterSource() ? clusterSource.getParallelism() : -1;
   }
 
 }

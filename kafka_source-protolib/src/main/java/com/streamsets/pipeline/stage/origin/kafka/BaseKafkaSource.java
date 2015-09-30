@@ -242,7 +242,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
      return issues;
   }
 
-  @Override
+  // This API is being used by ClusterKafkaSource
   public int getParallelism() throws IOException {
     if(originParallelism == 0) {
       //origin parallelism is not yet calculated

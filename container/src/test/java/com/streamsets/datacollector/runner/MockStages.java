@@ -185,11 +185,6 @@ public class MockStages {
     }
 
     @Override
-    public int getParallelism() {
-      return 1;
-    }
-
-    @Override
     public void errorNotification(Throwable throwable) {
       if (sourceCapture != null && sourceCapture instanceof ErrorListener) {
         ((ErrorListener)sourceCapture).errorNotification(throwable);
@@ -221,11 +216,6 @@ public class MockStages {
         return sourceCapture.produce(lastSourceOffset, -1, batchMaker);
       }
       return null;
-    }
-
-    @Override
-    public int getParallelism() {
-      return 0;
     }
   }
 

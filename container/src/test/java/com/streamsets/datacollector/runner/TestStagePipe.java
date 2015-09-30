@@ -80,11 +80,6 @@ public class TestStagePipe {
       public void destroy() {
 
       }
-
-      @Override
-      public int getParallelism() {
-        return 1;
-      }
     });
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
