@@ -41,7 +41,7 @@ public abstract class DataParserFactory extends DataFactory {
   }
 
   public DataParser getParser(String id, byte[] data, int offset, int len) throws DataParserException {
-    return getParser(id, new ByteArrayInputStream(data, offset, len), 0);
+    return getParser(id, new ByteArrayInputStream(data, offset, len), "0");
   }
 
   public DataParser getParser(String id, byte[] data) throws DataParserException {
@@ -59,13 +59,13 @@ public abstract class DataParserFactory extends DataFactory {
   public DataParser getParser(File file, String fileOffset)
     throws DataParserException {
     try {
-      return getParser(file.getName(), new FileInputStream(file), Long.parseLong(fileOffset));
+      return getParser(file.getName(), new FileInputStream(file), fileOffset);
     } catch (FileNotFoundException e) {
       throw new DataParserException(Errors.DATA_PARSER_00, file.getAbsolutePath(), e.toString(), e);
     }
   }
 
-  public abstract DataParser getParser(String id, InputStream is, long offset) throws DataParserException;
+  public abstract DataParser getParser(String id, InputStream is, String offset) throws DataParserException;
 
   public abstract DataParser getParser(String id, Reader reader, long offset) throws DataParserException;
 

@@ -35,7 +35,7 @@ public class BinaryDataParserFactory extends DataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
     return new BinaryDataParser(getSettings().getContext(), is, id, getSettings().getMaxRecordLen());
   }
 

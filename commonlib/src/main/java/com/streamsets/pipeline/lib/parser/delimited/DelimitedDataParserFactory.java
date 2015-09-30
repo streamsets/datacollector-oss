@@ -34,7 +34,6 @@ import org.apache.commons.csv.CSVFormat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -53,8 +52,8 @@ public class DelimitedDataParserFactory extends DataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
-    return createParser(id, createReader(is), offset);
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
+    return createParser(id, createReader(is), Long.parseLong(offset));
   }
 
   @Override

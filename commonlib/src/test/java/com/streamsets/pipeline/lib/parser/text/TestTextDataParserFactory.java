@@ -64,7 +64,7 @@ public class TestTextDataParserFactory {
       .setMaxDataLen(3)
       .build();
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));
@@ -80,7 +80,7 @@ public class TestTextDataParserFactory {
       .setMaxDataLen(1000)
       .build();
     InputStream is = new ByteArrayInputStream("Hello\nBye".getBytes());
-    DataParser parser = factory.getParser("id", is, 6);
+    DataParser parser = factory.getParser("id", is, "6");
     Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has("/text"));

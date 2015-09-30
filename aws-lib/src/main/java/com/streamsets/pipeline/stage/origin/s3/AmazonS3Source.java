@@ -210,7 +210,7 @@ public class AmazonS3Source extends BaseSource {
         }
         String recordId = s3ConfigBean.s3Config.bucket + s3ConfigBean.s3Config.delimiter + s3Object.getKey();
         parser = s3ConfigBean.dataFormatConfig.getParserFactory().getParser(recordId, object.getObjectContent(),
-          Long.parseLong(offset));
+            offset);
         //we don't use S3 GetObject range capabilities to skip the already process offset because the parsers cannot
         // pick up from a non root doc depth in the case of a single object with records.
       }

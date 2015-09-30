@@ -539,7 +539,7 @@ public class SpoolDirSource extends BaseSource {
         if (dataFormat == DataFormat.AVRO) {
           parser = parserFactory.getParser(file, offset);
         } else {
-          parser = parserFactory.getParser(file.getName(), fileCompression.open(file), Long.parseLong(offset));
+          parser = parserFactory.getParser(file.getName(), fileCompression.open(file), offset);
         }
       }
       for (int i = 0; i < maxBatchSize; i++) {

@@ -150,6 +150,6 @@ public class TestGrokParser {
       .setConfig(LogDataParserFactory.GROK_PATTERN_DEFINITION_KEY, REGEX_DEFINITION)
       .build();
 
-    return factory.getParser("id", is, readerOffset);
+    return factory.getParser("id", is, String.valueOf(readerOffset));
   }
 }

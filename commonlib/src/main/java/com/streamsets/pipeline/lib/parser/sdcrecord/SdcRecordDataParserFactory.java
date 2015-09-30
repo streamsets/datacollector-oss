@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.parser.sdcrecord;
 
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -40,9 +39,9 @@ public class SdcRecordDataParserFactory extends DataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
     try {
-      return new SdcRecordDataParser(getSettings().getContext(), is, offset,
+      return new SdcRecordDataParser(getSettings().getContext(), is, Long.parseLong(offset),
         getSettings().getMaxRecordLen());
     } catch (IOException ex) {
       throw new DataParserException(Errors.SDC_RECORD_PARSER_00, id, offset, ex.toString(), ex);

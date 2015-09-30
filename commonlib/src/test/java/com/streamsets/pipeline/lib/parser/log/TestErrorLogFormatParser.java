@@ -154,6 +154,6 @@ public class TestErrorLogFormatParser {
       .setMode(LogMode.APACHE_ERROR_LOG_FORMAT)
       .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
       .build();
-    return factory.getParser("id", is, readerOffset);
+    return factory.getParser("id", is, String.valueOf(readerOffset));
   }
 }

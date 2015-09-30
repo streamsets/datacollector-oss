@@ -100,7 +100,7 @@ public class TestSdcRecordDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream(createJsonSdcRecordsString());
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -120,7 +120,7 @@ public class TestSdcRecordDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream(payload);
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     parser.parse();
     long offset = Long.parseLong(parser.getOffset());
@@ -131,7 +131,7 @@ public class TestSdcRecordDataParserFactory {
         .build();
 
     is = new ByteArrayInputStream(payload);
-    parser = factory.getParser("id", is, offset);
+    parser = factory.getParser("id", is, String.valueOf(offset));
     Assert.assertEquals(offset, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -151,7 +151,7 @@ public class TestSdcRecordDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream(payload);
-    factory.getParser("id", is, 0);
+    factory.getParser("id", is, "0");
   }
 
   @Test(expected = UnsupportedOperationException.class)

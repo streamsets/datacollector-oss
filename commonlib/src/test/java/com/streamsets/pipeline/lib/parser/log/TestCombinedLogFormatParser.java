@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -202,6 +201,6 @@ public class TestCombinedLogFormatParser {
       .setConfig(LogDataParserFactory.RETAIN_ORIGINAL_TEXT_KEY, true)
       .setOverRunLimit(1000)
       .build();
-    return factory.getParser("id", is, readerOffset);
+    return factory.getParser("id", is, String.valueOf(readerOffset));
   }
 }

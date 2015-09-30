@@ -46,8 +46,8 @@ public class JsonDataParserFactory extends DataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
-    return createParser(id, createReader(is), offset);
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
+    return createParser(id, createReader(is), Long.parseLong(offset));
   }
 
   @Override

@@ -68,7 +68,7 @@ public class TestJsonDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream("[\"Hello\"]\n".getBytes());
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));
@@ -86,7 +86,7 @@ public class TestJsonDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream("[[\"Hello\"],[\"Bye\"]]\n".getBytes());
-    DataParser parser = factory.getParser("id", is, 10);
+    DataParser parser = factory.getParser("id", is, "10");
     Assert.assertEquals(10, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertTrue(record.has(""));

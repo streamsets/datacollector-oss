@@ -88,7 +88,7 @@ public class TestXmlDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -107,7 +107,7 @@ public class TestXmlDataParserFactory {
         .build();
 
     InputStream is = new ByteArrayInputStream("<r><e>Hello</e><e>Bye</e></r>".getBytes());
-    DataParser parser = factory.getParser("id", is, 18);
+    DataParser parser = factory.getParser("id", is, "18");
     Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);

@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -236,7 +235,7 @@ public class TestLog4jParser {
       .setConfig(LogDataParserFactory.LOG4J_TRIM_STACK_TRACES_TO_LENGTH_KEY, 100)
       .build();
 
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -275,6 +274,6 @@ public class TestLog4jParser {
       .setConfig(LogDataParserFactory.LOG4J_FORMAT_KEY, "%d{ISO8601} %-5p %c{1} - %m")
       .build();
 
-    return factory.getParser("id", is, readerOffset);
+    return factory.getParser("id", is, String.valueOf(readerOffset));
   }
 }

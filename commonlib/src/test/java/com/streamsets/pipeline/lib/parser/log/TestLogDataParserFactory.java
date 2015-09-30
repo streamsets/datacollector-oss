@@ -158,7 +158,7 @@ public class TestLogDataParserFactory {
     InputStream is = new ByteArrayInputStream(
         "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
 
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
 
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
@@ -209,7 +209,7 @@ public class TestLogDataParserFactory {
 
     InputStream is = new ByteArrayInputStream(
         "127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
-    DataParser parser = factory.getParser("id", is, 0);
+    DataParser parser = factory.getParser("id", is, "0");
 
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     try {
@@ -232,7 +232,7 @@ public class TestLogDataParserFactory {
     InputStream is = new ByteArrayInputStream(
         "Hello\n127.0.0.1 ss h [10/Oct/2000:13:55:36 -0700] \"GET /apache_pb.gif HTTP/1.0\" 200 2326".getBytes());
 
-    DataParser parser = factory.getParser("id", is, 6);
+    DataParser parser = factory.getParser("id", is, "6");
 
     Assert.assertEquals(6, Long.parseLong(parser.getOffset()));
 

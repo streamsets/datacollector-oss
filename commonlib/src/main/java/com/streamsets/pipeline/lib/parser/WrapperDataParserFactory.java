@@ -62,7 +62,7 @@ public class WrapperDataParserFactory extends DataParserFactory {
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, long offset) throws DataParserException {
+  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
     return new WrapperDataParser(factory.getParser(id, is, offset));
   }
 
