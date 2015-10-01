@@ -17,8 +17,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.data;
+package com.streamsets.pipeline.config;
 
-public enum Compression {
-  NONE, DEFLATE, ZIP, GZIP
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
+
+@GenerateResourceBundle
+public enum Compression implements Label {
+  NONE("None"),
+  COMPRESSED_FILE("Compressed File"),
+  ARCHIVE("Archive"),
+  COMPRESSED_ARCHIVE("Compressed Archive"),
+  ;
+
+  private final String label;
+
+  Compression(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
+  }
+
 }

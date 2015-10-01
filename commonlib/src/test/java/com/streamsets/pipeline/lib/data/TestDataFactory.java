@@ -21,10 +21,12 @@ package com.streamsets.pipeline.lib.data;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
+
 
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -42,7 +44,7 @@ public class TestDataFactory {
     DataFactory dataFactory = dataFactoryBuilder
       .setMaxDataLen(1000)
       .setCharset(Charset.defaultCharset())
-      .setCompression(Compression.GZIP)
+      .setCompression(Compression.COMPRESSED_FILE)
       .setConfig(MockDataFactory.CONFIG1, "myConfig")
       .setConfig(MockDataFactory.CONFIG2, 1000)
       .setMode(MockMode.MODE1)
@@ -54,7 +56,7 @@ public class TestDataFactory {
     Assert.assertTrue(settings instanceof MockDataFactory.Settings);
 
     Assert.assertEquals(Charset.defaultCharset(), settings.getCharset());
-    Assert.assertEquals(Compression.GZIP, settings.getCompression());
+    Assert.assertEquals(Compression.COMPRESSED_FILE, settings.getCompression());
     Assert.assertEquals(MockDataFormat.MOCK_DATA, settings.getFormat());
     Assert.assertEquals(1000, settings.getMaxRecordLen());
     Assert.assertTrue(settings.getRemoveCtrlChars());
@@ -68,7 +70,7 @@ public class TestDataFactory {
     dataFactoryBuilder
       .setMaxDataLen(1000)
       .setCharset(Charset.defaultCharset())
-      .setCompression(Compression.GZIP)
+      .setCompression(Compression.COMPRESSED_FILE)
       .setConfig(MockDataFactory.CONFIG1, "myConfig")
       .setConfig(MockDataFactory.CONFIG2, 1000)
       .setMode(JsonMode.ARRAY_OBJECTS)
@@ -83,7 +85,7 @@ public class TestDataFactory {
     dataFactoryBuilder
       .setMaxDataLen(1000)
       .setCharset(Charset.defaultCharset())
-      .setCompression(Compression.GZIP)
+      .setCompression(Compression.COMPRESSED_FILE)
       .setConfig("myConfig", "myConfig")
       .setConfig(MockDataFactory.CONFIG2, 1000)
       .setMode(JsonMode.ARRAY_OBJECTS)

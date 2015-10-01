@@ -37,6 +37,8 @@
     <jackson.version>2.4.3</jackson.version>
     <commons-io.version>2.4</commons-io.version>
     <avro.version>1.7.7</avro.version>
+    <commons-compress.version>1.10</commons-compress.version>
+    <xz.version>1.5</xz.version>
   </properties>
 
   <dependencies>
@@ -136,6 +138,19 @@
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-avro</artifactId>
       <version>${jackson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>${commons-compress.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.tukaani</groupId>
+      <artifactId>xz</artifactId>
+      <version>${xz.version}</version>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>

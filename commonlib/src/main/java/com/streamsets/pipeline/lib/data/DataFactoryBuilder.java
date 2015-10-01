@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.data;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.common.DataFormatConstants;
+import com.streamsets.pipeline.config.Compression;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFactory, F extends DataFormat<DF>> {
-  
+
   private final Stage.Context context;
   private final F format;
   private final Set<Class<? extends Enum>> expectedModes;
@@ -40,6 +41,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   private boolean removeCtrlChars;
   private int maxDataLen;
   private int overRunLimit = DataFormatConstants.MAX_OVERRUN_LIMIT;
+  private String filePatternInArchive = DataFormatConstants.FILE_PATTERN_IN_ARCHIVE;
 
   public DataFactoryBuilder(Stage.Context context, F format) {
     this.context = Utils.checkNotNull(context, "context");
@@ -81,6 +83,12 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
     return (B) this;
   }
 
+  public B setFilePatternInArchive(String compressionFilePattern) {
+    Utils.checkNotNull(compressionFilePattern, "filePatternInArchive");
+    this.filePatternInArchive = compressionFilePattern;
+    return (B) this;
+  }
+
   public B setCharset(Charset charset) {
     Utils.checkNotNull(charset, "charset");
     this.charset = charset;
@@ -110,8 +118,8 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
   public DF build() {
     Utils.checkState(modes.size() == expectedModes.size(),
                      Utils.formatL("Format '{}', all required modes have not been set", format));
-    DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, charset, maxDataLen, modes,
-                                                             configs, overRunLimit, removeCtrlChars);
+    DataFactory.Settings settings = new DataFactory.Settings(context, format, compression, filePatternInArchive,
+        charset, maxDataLen, modes, configs, overRunLimit, removeCtrlChars);
     return format.create(settings);
   }
 

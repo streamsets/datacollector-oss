@@ -17,14 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.common;
+package com.streamsets.pipeline.config;
 
-import java.nio.charset.Charset;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class DataFormatConstants {
+public class CompressionChooserValues extends BaseEnumChooserValues {
 
-  public final static Charset UTF8 = Charset.forName("UTF-8");
-  public static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
-    System.getProperty("DataFactoryBuilder.OverRunLimit", "1048576"));
-  public static final String FILE_PATTERN_IN_ARCHIVE = "*";
+  public CompressionChooserValues() {
+    super(Compression.class);
+  }
+
 }

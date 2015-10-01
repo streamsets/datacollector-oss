@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.parser;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.data.DataFormat;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
@@ -83,7 +84,11 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
   @Override
   public DataParserFactory create(DataFactory.Settings settings) {
     try {
-      return constructor.newInstance(settings);
+      DataParserFactory dataParserFactory = constructor.newInstance(settings);
+      if(settings.getCompression() != Compression.NONE) {
+        dataParserFactory = new CompressionDataParserFactory(settings, dataParserFactory);
+      }
+      return dataParserFactory;
     } catch (Exception ex) {
       Throwable cause = ex;
       if (ex.getCause() != null) {

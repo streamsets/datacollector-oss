@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.data;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.config.Compression;
 
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -31,6 +32,7 @@ public abstract class DataFactory {
     private final Stage.Context context;
     private final DataFormat format;
     private final Compression compression;
+    private final String filePatternInArchive;
     private final Charset charset;
     private final boolean removeCtrlChars;
     private final int maxRecordLen;
@@ -38,11 +40,13 @@ public abstract class DataFactory {
     private final Map<String, Object> configs;
     private final int overRunLimit;
 
-    Settings(Stage.Context context, DataFormat format, Compression compression, Charset charset, int maxRecordLen,
-        Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs, int overRunLimit, boolean removeCtrlChars) {
+    Settings(Stage.Context context, DataFormat format, Compression compression, String filePatternInArchive,
+             Charset charset, int maxRecordLen, Map<Class<? extends Enum>, Enum> modes, Map<String, Object> configs,
+             int overRunLimit, boolean removeCtrlChars) {
       this.context = context;
       this.format = format;
       this.compression = compression;
+      this.filePatternInArchive = filePatternInArchive;
       this.charset = charset;
       this.removeCtrlChars = removeCtrlChars;
       this.maxRecordLen = maxRecordLen;
@@ -61,6 +65,10 @@ public abstract class DataFactory {
 
     public Compression getCompression() {
       return compression;
+    }
+
+    public String getFilePatternInArchive() {
+      return filePatternInArchive;
     }
 
     public Charset getCharset() {

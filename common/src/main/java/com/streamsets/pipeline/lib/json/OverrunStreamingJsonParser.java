@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.json;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -169,6 +170,8 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
     module.addDeserializer(Map.class, new MapDeserializer());
     module.addDeserializer(List.class, new ListDeserializer());
     objectMapper.registerModule(module);
+    objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
     return objectMapper;
   }
 

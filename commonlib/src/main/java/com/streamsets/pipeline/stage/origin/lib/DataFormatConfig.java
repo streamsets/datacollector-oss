@@ -26,6 +26,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.CharsetChooserValues;
+import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.config.CompressionChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -83,6 +85,34 @@ public class DataFormatConfig {
     group = "#0"
   )
   public boolean removeCtrlChars;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    description = "Compression file formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
+      "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
+    defaultValue = "NONE",
+    label = "Files Compression",
+    displayPosition = 3030,
+    group = "#0",
+    dependsOn = "dataFormat^",
+    triggeredByValue = { "TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG" }
+  )
+  @ValueChooserModel(CompressionChooserValues.class)
+  public Compression compression;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "File Name Pattern within Compressed Directory",
+    description = "A glob or regular expression that defines the pattern of the file names within the compressed directory",
+    defaultValue = "*",
+    displayPosition = 3040,
+    group = "#0",
+    dependsOn = "compression",
+    triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
+  )
+  public String filePatternInArchive = "*";
 
   @ConfigDef(
     required = true,
@@ -540,6 +570,8 @@ public class DataFormatConfig {
     builder.setCharset(fileCharset);
     builder.setOverRunLimit(overrunLimit);
     builder.setRemoveCtrlChars(removeCtrlChars);
+    builder.setCompression(compression);
+    builder.setFilePatternInArchive(filePatternInArchive);
 
     switch (dataFormat) {
       case TEXT:
