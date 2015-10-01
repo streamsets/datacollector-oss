@@ -36,11 +36,12 @@ import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JMS Consumer",
     description = "Reads data from a JMS source.",
     icon = "jms.png",
     execution = ExecutionMode.STANDALONE,
+    upgrader = JmsSourceUpgrader.class,
     recordsByRef = true
 )
 @ConfigGroups(value = JmsGroups.class)

@@ -1,4 +1,6 @@
 /**
+ * Copyright 2015 StreamSets Inc.
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.s3;
+package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
@@ -25,9 +27,10 @@ import com.streamsets.pipeline.config.Compression;
 
 import java.util.List;
 
-public class AmazonS3SourceUpgrader implements StageUpgrader {
+public class JmsSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
+  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
+                              List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
@@ -39,12 +42,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("s3ConfigBean.advancedConfig.useProxy", false));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyHost", ""));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyPort", 0));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyUser", ""));
-    configs.add(new Config("s3ConfigBean.advancedConfig.proxyPassword", ""));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.compressionInputFormat", Compression.NONE.name()));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.compressedFilePattern", "*"));
+    configs.add(new Config("dataFormatConfig.compressionInputFormat", Compression.NONE.name()));
+    configs.add(new Config("dataFormatConfig.compressedFilePattern", "*"));
   }
 }
