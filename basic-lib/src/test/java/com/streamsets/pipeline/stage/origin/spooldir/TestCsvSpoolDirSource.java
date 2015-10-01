@@ -22,11 +22,11 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -73,7 +73,7 @@ public class TestCsvSpoolDirSource {
   private SpoolDirSource createSource(CsvMode mode, CsvHeader header, char delimiter, char escape, char quote,
       int maxLen, CsvRecordType csvRecordType) {
     return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10,
-                              null, FileCompression.NONE, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10,
+                              null, Compression.NONE, "*",  null, PostProcessingOptions.ARCHIVE, createTestDir(), 10,
                               mode, header, maxLen,
                               delimiter, escape, quote, null, 0, 10, null, 0, null, 0, false, null, null, null, null,
                               null, false, null, OnParseError.ERROR, -1, null, csvRecordType);

@@ -22,13 +22,12 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -164,7 +163,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
 
   private SpoolDirSource createSource(OnParseError onParseError, int maxStackTraceLines) {
     return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null,
-                              FileCompression.NONE, null,
+      Compression.NONE, "*",  null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.LOG4J, 10000, true, null, null, Collections.<RegExConfig>emptyList(), null,
       null, false, null, onParseError, maxStackTraceLines, null, CsvRecordType.LIST);
@@ -304,7 +303,7 @@ public class TestLogSpoolDirSourceLog4jFormat {
   @Test
   public void testProduceFullFileCustomLogFormat() throws Exception {
     SpoolDirSource source = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log",
-      10, null, FileCompression.NONE, null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
+      10, null, Compression.NONE, "*",  null, PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.LOG4J, 1000, true, null, null, Collections.<RegExConfig>emptyList(), null,
       null, true, "%-6r [%15.15t] %-5p %30.30c - %m", OnParseError.ERROR, 0, null, CsvRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();

@@ -23,10 +23,14 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.Compression;
 
 import java.util.List;
 
 public class SpoolDirSourceUpgrader implements StageUpgrader {
+
+  public static final String FILE_COMPRESSION = "fileCompression";
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
                               List<Config> configs) throws StageException {
@@ -35,11 +39,44 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    // change compression enum values
+    Config compressionConfig = null;
+    int compressionConfigIndex = -1;
+    for(int i = 0; i < configs.size(); i++) {
+      if(FILE_COMPRESSION.equals(configs.get(i).getName())) {
+        switch((String)configs.get(i).getValue()) {
+          case "AUTOMATIC" :
+          case "NONE":
+            compressionConfig = new Config(FILE_COMPRESSION, Compression.NONE.name());
+            break;
+          case "ZIP":
+            compressionConfig = new Config(FILE_COMPRESSION, Compression.ARCHIVE.name());
+            break;
+          case "GZIP":
+            compressionConfig = new Config(FILE_COMPRESSION, Compression.COMPRESSED_FILE.name());
+            break;
+        }
+        compressionConfigIndex = i;
+        break;
+      }
+    }
+    if(compressionConfigIndex != -1) {
+      configs.remove(compressionConfigIndex);
+      configs.add(compressionConfigIndex, compressionConfig);
+    }
+
+    // add compression file pattern string
+    configs.add(new Config("filePatternInArchive", "*"));
   }
 
   private void upgradeV1ToV2(List<Config> configs) {

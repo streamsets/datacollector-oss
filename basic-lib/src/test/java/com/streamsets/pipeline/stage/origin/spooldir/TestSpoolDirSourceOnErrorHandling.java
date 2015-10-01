@@ -21,11 +21,11 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -59,7 +59,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     IOUtils.write("x,y", writer);
     writer.close();
     return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].csv", 10, null,
-                              FileCompression.NONE, null,
+      Compression.NONE, "*",  null,
                               PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
                               5, '^', '^', '^', null, 0, 10, null, 0, null, 0, false, null, null, null, null, null,
                               false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
@@ -142,7 +142,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     IOUtils.write("[2]", writer);
     writer.close();
     return new SpoolDirSource(DataFormat.JSON, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].json", 10, null,
-                              FileCompression.NONE, null,
+                              Compression.NONE, "*",  null,
                               PostProcessingOptions.ARCHIVE, dir, 10, null, null, 5, '^', '^', '^',
                               JsonMode.ARRAY_OBJECTS, 100, 10, null, 0, null, 0, false, null, null, null, null,
                               null, false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);

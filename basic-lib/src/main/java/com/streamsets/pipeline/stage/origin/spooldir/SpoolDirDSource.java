@@ -19,17 +19,19 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.FileRawSourcePreviewer;
 import com.streamsets.pipeline.config.CharsetChooserValues;
+import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.config.CompressionChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
@@ -37,23 +39,21 @@ import com.streamsets.pipeline.config.CsvModeChooserValues;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
-import com.streamsets.pipeline.config.FileCompressionChooserValues;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.JsonModeChooserValues;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
-import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.config.PostProcessingOptionsChooserValues;
+import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",
@@ -192,16 +192,28 @@ public class SpoolDirDSource extends DSource {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "AUTOMATIC",
+      description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
+      "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
+      defaultValue = "NONE",
       label = "Files Compression",
       displayPosition = 70,
-      group = "FILES",
-      dependsOn = "dataFormat",
-      triggeredByValue = { "TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG" }
+      group = "FILES"
   )
-  @ValueChooserModel(FileCompressionChooserValues.class)
-  public FileCompression fileCompression;
+  @ValueChooserModel(CompressionChooserValues.class)
+  public Compression fileCompression = Compression.NONE;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "File Name Pattern within Compressed Directory",
+    description = "A glob or regular expression that defines the pattern of the file names within the compressed directory",
+    defaultValue = "*",
+    displayPosition = 80,
+    group = "#0",
+    dependsOn = "fileCompression",
+    triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
+  )
+  public String compressionFilePattern = "*";
 
   @ConfigDef(
       required = false,
@@ -619,8 +631,8 @@ public class SpoolDirDSource extends DSource {
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
-      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, fileCompression, errorArchiveDir,
-      postProcessing, archiveDir,
+      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, fileCompression, compressionFilePattern,
+      errorArchiveDir, postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
       jsonContent, jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
       logMaxObjectLen, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName, grokPatternDefinition,

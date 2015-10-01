@@ -23,9 +23,9 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -107,7 +107,7 @@ public class TestAvroSpoolDirSource {
 
   private SpoolDirSource createSource() {
     return new SpoolDirSource(DataFormat.AVRO, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].avro", 10, null,
-                              FileCompression.NONE, null,
+                              Compression.NONE, "*", null,
       PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
       null, 0, LogMode.COMMON_LOG_FORMAT, 100, true, null, null, Collections.<RegExConfig>emptyList(),
       null, null, false, null, OnParseError.ERROR, 0, AVRO_SCHEMA, CsvRecordType.LIST);

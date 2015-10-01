@@ -26,11 +26,11 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.impl.XMLChar;
 import com.streamsets.pipeline.common.DataFormatConstants;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.FileCompression;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -53,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.charset.Charset;
@@ -82,7 +83,8 @@ public class SpoolDirSource extends BaseSource {
   private final String filePattern;
   private int maxSpoolFiles;
   private String initialFileToProcess;
-  private final FileCompression fileCompression;
+  private final Compression fileCompression;
+  private final String compressionFilePattern;
   private final String errorArchiveDir;
   private final PostProcessingOptions postProcessing;
   private final String archiveDir;
@@ -115,10 +117,10 @@ public class SpoolDirSource extends BaseSource {
 
   public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
       String spoolDir, int batchSize, long poolingTimeoutSecs,
-      String filePattern, int maxSpoolFiles, String initialFileToProcess, FileCompression fileCompression,
-      String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir, long retentionTimeMins,
-      CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
-      char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
+      String filePattern, int maxSpoolFiles, String initialFileToProcess, Compression fileCompression,
+      String compressionFilePattern, String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir,
+      long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter,
+      char csvCustomEscape, char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
       boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
       String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
@@ -135,6 +137,7 @@ public class SpoolDirSource extends BaseSource {
     this.maxSpoolFiles = maxSpoolFiles;
     this.initialFileToProcess = initialFileToProcess;
     this.fileCompression = fileCompression;
+    this.compressionFilePattern = compressionFilePattern;
     this.errorArchiveDir = errorArchiveDir;
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
@@ -338,7 +341,8 @@ public class SpoolDirSource extends BaseSource {
     builder.setCharset(fileCharset);
     builder.setOverRunLimit(overrunLimit);
     builder.setRemoveCtrlChars(removeCtrlChars);
-
+    builder.setCompression(fileCompression);
+    builder.setFilePatternInArchive(compressionFilePattern);
     switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);
@@ -539,7 +543,7 @@ public class SpoolDirSource extends BaseSource {
         if (dataFormat == DataFormat.AVRO) {
           parser = parserFactory.getParser(file, offset);
         } else {
-          parser = parserFactory.getParser(file.getName(), fileCompression.open(file), offset);
+          parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
         }
       }
       for (int i = 0; i < maxBatchSize; i++) {
