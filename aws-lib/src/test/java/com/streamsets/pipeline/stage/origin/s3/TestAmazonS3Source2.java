@@ -27,8 +27,11 @@ import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -43,9 +46,11 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -53,6 +58,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TestAmazonS3Source2 {
+
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private static String fakeS3Root;
   private static ExecutorService executorService;
@@ -66,7 +73,7 @@ public class TestAmazonS3Source2 {
   private static int port;
 
   @BeforeClass
-  public static void setUpClass() throws IOException, InterruptedException {
+  public static void setUpClass() throws IOException, InterruptedException, URISyntaxException {
     File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     fakeS3Root = dir.getAbsolutePath();
@@ -90,7 +97,7 @@ public class TestAmazonS3Source2 {
     }
   }
 
-  private static void populateFakes3() throws IOException, InterruptedException {
+  private static void populateFakes3() throws IOException, InterruptedException, URISyntaxException {
     BasicAWSCredentials credentials = new BasicAWSCredentials("foo", "bar");
     s3client = new AmazonS3Client(credentials);
     s3client.setEndpoint("http://localhost:" + port);
@@ -147,6 +154,28 @@ public class TestAmazonS3Source2 {
     putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/Canada/file12.log", in, new ObjectMetadata());
     s3client.putObject(putObjectRequest);
 
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/logArchive1.zip",
+      new FileInputStream(new File(Resources.getResource("logArchive.zip").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/logArchive2.zip",
+      new FileInputStream(new File(Resources.getResource("logArchive.zip").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/logArchive1.tar.gz",
+      new FileInputStream(new File(Resources.getResource("logArchive.tar.gz").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/logArchive2.tar.gz",
+      new FileInputStream(new File(Resources.getResource("logArchive.tar.gz").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/testAvro1.tar.gz",
+      new FileInputStream(new File(Resources.getResource("testAvro.tar.gz").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+
+    putObjectRequest = new PutObjectRequest(BUCKET_NAME, "NorthAmerica/testAvro2.tar.gz",
+      new FileInputStream(new File(Resources.getResource("testAvro.tar.gz").toURI())), new ObjectMetadata());
+    s3client.putObject(putObjectRequest);
+
     int count = 0;
     if(s3client.doesBucketExist(BUCKET_NAME)) {
       for(S3ObjectSummary s : S3Objects.withPrefix(s3client, BUCKET_NAME, "")) {
@@ -154,7 +183,7 @@ public class TestAmazonS3Source2 {
         count++;
       }
     }
-    Assert.assertEquals(12, count); //12 files + 3 dirs
+    Assert.assertEquals(18, count); //12 files + 3 dirs
   }
 
   private static void createBucket(AmazonS3Client s3client, String bucketName) {
@@ -200,6 +229,81 @@ public class TestAmazonS3Source2 {
     }
   }
 
+  @Test
+  public void testProduceZipFile() throws Exception {
+    AmazonS3Source source = createZipSource();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      List<Record> allRecords = new ArrayList<>();
+      String offset = null;
+      for(int i = 0; i < 50; i++) {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 1000, batchMaker);
+        Assert.assertNotNull(offset);
+
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        allRecords.addAll(records);
+      }
+      Assert.assertEquals(37044, allRecords.size());
+      Assert.assertTrue(offset.contains("NorthAmerica/logArchive2.zip::-1::53a43eff19003fa36a23589c90b31bc7::"));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testProduceTarGzipTextFile() throws Exception {
+    AmazonS3Source source = createTarGzipSource();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      List<Record> allRecords = new ArrayList<>();
+      String offset = null;
+      for(int i = 0; i < 50; i++) {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 1000, batchMaker);
+        Assert.assertNotNull(offset);
+
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        allRecords.addAll(records);
+      }
+      Assert.assertEquals(37044, allRecords.size());
+      Assert.assertTrue(offset.contains("NorthAmerica/logArchive2.tar.gz::-1::9c91073f2c2b51ed80c0a33da1238214::"));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testProduceTarGzipAvroFile() throws Exception {
+    AmazonS3Source source = createTarGzipAvroSource();
+    SourceRunner runner = new SourceRunner.Builder(AmazonS3DSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      List<Record> allRecords = new ArrayList<>();
+      String offset = null;
+      for(int i = 0; i < 50; i++) {
+        BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+        offset = source.produce(offset, 1000, batchMaker);
+        Assert.assertNotNull(offset);
+
+        StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+        List<Record> records = output.getRecords().get("lane");
+        allRecords.addAll(records);
+      }
+      Assert.assertEquals(48000, allRecords.size());
+      Assert.assertTrue(offset.contains("NorthAmerica/testAvro2.tar.gz::-1::c17d97fdd6f2c6902efe059753cf41b6::"));
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private AmazonS3Source createSource() {
 
     S3ConfigBean s3ConfigBean = new S3ConfigBean();
@@ -211,6 +315,8 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.dataFormat = DataFormat.TEXT;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.textMaxLineLen = 1024;
+    s3ConfigBean.dataFormatConfig.compression = Compression.NONE;
+    s3ConfigBean.dataFormatConfig.filePatternInArchive = "*";
 
     s3ConfigBean.errorConfig = new S3ErrorConfig();
     s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
@@ -226,6 +332,123 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3FileConfig = new S3FileConfig();
     s3ConfigBean.s3FileConfig.overrunLimit = 65;
     s3ConfigBean.s3FileConfig.filePattern = "*/*/*.log";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.accessKeyId = "foo";
+    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createZipSource() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.TEXT;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.textMaxLineLen = 102400;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
+    s3ConfigBean.s3FileConfig.filePattern = "*/*.zip";
+
+    s3ConfigBean.dataFormatConfig.compression = Compression.ARCHIVE;
+    s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/*.log";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.accessKeyId = "foo";
+    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createTarGzipSource() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.TEXT;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.textMaxLineLen = 102400;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
+    s3ConfigBean.s3FileConfig.filePattern = "*/logArchive*.tar.gz";
+
+    s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
+    s3ConfigBean.dataFormatConfig.filePatternInArchive = "*/[!.]*.log";
+
+    s3ConfigBean.s3Config = new S3Config();
+    s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
+    s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.accessKeyId = "foo";
+    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.folder = "";
+    s3ConfigBean.s3Config.delimiter = "/";
+
+    s3ConfigBean.advancedConfig = new S3AdvancedConfig();
+    s3ConfigBean.advancedConfig.useProxy = false;
+
+    return new AmazonS3Source(s3ConfigBean);
+  }
+
+  private AmazonS3Source createTarGzipAvroSource() {
+
+    S3ConfigBean s3ConfigBean = new S3ConfigBean();
+    s3ConfigBean.basicConfig = new BasicConfig();
+    s3ConfigBean.basicConfig.maxWaitTime = 1000;
+    s3ConfigBean.basicConfig.maxBatchSize = 60000;
+
+    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormat = DataFormat.AVRO;
+    s3ConfigBean.dataFormatConfig.charset = "UTF-8";
+    s3ConfigBean.dataFormatConfig.textMaxLineLen = 102400;
+
+    s3ConfigBean.errorConfig = new S3ErrorConfig();
+    s3ConfigBean.errorConfig.errorHandlingOption = PostProcessingOptions.NONE;
+
+    s3ConfigBean.postProcessingConfig = new S3PostProcessingConfig();
+    s3ConfigBean.postProcessingConfig.postProcessing = PostProcessingOptions.NONE;
+
+    s3ConfigBean.s3FileConfig = new S3FileConfig();
+    s3ConfigBean.s3FileConfig.overrunLimit = 65;
+    s3ConfigBean.s3FileConfig.filePattern = "*/testAvro*.tar.gz";
+
+    s3ConfigBean.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
+    s3ConfigBean.dataFormatConfig.filePatternInArchive = "[!.]*.avro";
 
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);

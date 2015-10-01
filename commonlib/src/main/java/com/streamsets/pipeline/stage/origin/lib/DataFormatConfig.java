@@ -89,17 +89,15 @@ public class DataFormatConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
-    description = "Compression file formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
+    description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
       "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
     defaultValue = "NONE",
-    label = "Files Compression",
+    label = "Compression Format",
     displayPosition = 3030,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = { "TEXT", "JSON", "DELIMITED", "XML", "SDC_JSON", "LOG" }
+    group = "#0"
   )
   @ValueChooserModel(CompressionChooserValues.class)
-  public Compression compression;
+  public Compression compression = Compression.NONE;
 
   @ConfigDef(
     required = true,

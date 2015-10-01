@@ -117,7 +117,7 @@ public class AmazonS3Util {
       } else if (s.getKey().compareTo(s3Offset.getKey()) == 0) {
         //same time stamp, same name
         //If the current offset is not -1, return the file. It means the previous file was partially processed.
-        if(Long.parseLong(s3Offset.getOffset()) != -1) {
+        if(!s3Offset.getOffset().equals("-1")) {
           isEligible = true;
         }
       }
