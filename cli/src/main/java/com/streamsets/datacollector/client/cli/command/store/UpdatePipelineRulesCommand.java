@@ -51,7 +51,7 @@ public class UpdatePipelineRulesCommand extends BaseCommand {
   @Option(
     name = {"-f", "--file"},
     description = "Pipeline Rules file name",
-    required = false
+    required = true
   )
   public String fileName;
 

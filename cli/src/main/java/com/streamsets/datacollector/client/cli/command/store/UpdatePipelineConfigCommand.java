@@ -59,7 +59,7 @@ public class UpdatePipelineConfigCommand extends BaseCommand {
   @Option(
     name = {"-f", "--file"},
     description = "Pipeline Configuration file name",
-    required = false
+    required = true
   )
   public String fileName;
 
