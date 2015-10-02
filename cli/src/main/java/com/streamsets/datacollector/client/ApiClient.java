@@ -442,9 +442,9 @@ public class ApiClient {
    * @param authNames The authentications to apply
    * @return The response body in type of string
    */
-   public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body, byte[] binaryBody,
-                          Map<String, String> headerParams, Map<String, Object> formParams, String accept,
-                          String contentType, String[] authNames, TypeRef returnType) throws ApiException {
+  public <T> T invokeAPI(String path, String method, List<Pair> queryParams, Object body, byte[] binaryBody,
+                         Map<String, String> headerParams, Map<String, Object> formParams, String accept,
+                         String contentType, String[] authNames, TypeRef returnType) throws ApiException {
 
     Response response = getAPIResponse(path, method, queryParams, body, binaryBody, headerParams, formParams,
       accept, contentType, authNames);
@@ -452,7 +452,13 @@ public class ApiClient {
     statusCode = response.getStatusInfo().getStatusCode();
     responseHeaders = response.getHeaders();
 
-    if(response.getStatusInfo() == Response.Status.NO_CONTENT) {
+    if(statusCode == 401) {
+      throw new ApiException(
+        response.getStatusInfo().getStatusCode(),
+        "HTTP Error 401 - Unauthorized: Access is denied due to invalid credentials.",
+        response.getHeaders(),
+        null);
+    } else if(response.getStatusInfo() == Response.Status.NO_CONTENT) {
       return null;
     } else if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
       if (returnType == null)
@@ -489,8 +495,8 @@ public class ApiClient {
       String valueStr = parameterToString(param.getValue());
       try {
         formParamBuilder.append(URLEncoder.encode(param.getKey(), "utf8"))
-            .append("=")
-            .append(URLEncoder.encode(valueStr, "utf8"));
+          .append("=")
+          .append(URLEncoder.encode(valueStr, "utf8"));
         formParamBuilder.append("&");
       } catch (UnsupportedEncodingException e) {
         // move on to next

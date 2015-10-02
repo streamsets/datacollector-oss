@@ -36,6 +36,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -95,6 +96,7 @@ public class ProxyAuthenticator extends LoginAuthenticator {
     throws ServerAuthException {
 
     HttpServletRequest request = (HttpServletRequest)req;
+    HttpServletResponse response = (HttpServletResponse)res;
     HttpSession session = request.getSession(true);
     Authentication authentication = (Authentication) session.getAttribute(SessionAuthentication.__J_AUTHENTICATED);
 
@@ -139,6 +141,15 @@ public class ProxyAuthenticator extends LoginAuthenticator {
                 if (userIdentity!=null) {
                   Authentication cached=new SessionAuthentication(getAuthMethod(), userIdentity, null);
                   session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
+                } else {
+                  try {
+                    response.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(),
+                      "basic realm=\"" + _loginService.getName() + '"');
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return Authentication.SEND_CONTINUE;
+                  } catch (IOException e) {
+                    throw new ServerAuthException(e);
+                  }
                 }
               }
             }

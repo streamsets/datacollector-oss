@@ -34,7 +34,6 @@ public class PingCommand extends BaseCommand {
       mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
       System.out.println(mapper.writeValueAsString(systemApi.getBuildInfo()));
     } catch (Exception ex) {
-      System.out.println("SDC was unreachable.");
       if(printStackTrace) {
         ex.printStackTrace();
       } else {

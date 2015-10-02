@@ -63,6 +63,10 @@ public class TestCLI {
         server = TestUtil.startServer(port, authType);
         baseURL = "http://127.0.0.1:" + port;
 
+        if(!authType.equals("none")) {
+          testWithInvalidCredentials(authType);
+        }
+
         testPingCommand(authType);
 
         testDefinitionsListCommand(authType);
@@ -95,6 +99,12 @@ public class TestCLI {
         TestUtil.stopServer(server);
       }
     }
+  }
+
+  private void testWithInvalidCredentials(String authType) {
+    String cliOutput = TestUtil.runCliCommand("-U", baseURL, "-a", authType, "-u", "admin", "-p", "invalidpassword",
+      "ping");
+    Assert.assertTrue(cliOutput.contains("HTTP Error 401 - Unauthorized: Access is denied due to invalid credentials."));
   }
 
   private void testPingCommand(String authType) {
