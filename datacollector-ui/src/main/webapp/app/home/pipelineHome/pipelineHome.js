@@ -597,6 +597,10 @@ angular
         $rootScope.common.trackEvent(category, action, label, value);
       },
 
+      /**
+       * Undo Changes
+       * @returns {boolean}
+       */
       undo: function() {
         if ($scope.canUndo()){
           currArchivePos -= 1;
@@ -606,6 +610,10 @@ angular
         return false;
       },
 
+      /**
+       * Redo changes
+       * @returns {boolean}
+       */
       redo: function() {
         if ($scope.canRedo()){
           currArchivePos += 1;
@@ -615,19 +623,36 @@ angular
         return false;
       },
 
+      /**
+       * Returns true if undo operation is supported
+       * @returns {boolean}
+       */
       canUndo: function() {
         return currArchivePos > 0;
       },
 
+      /**
+       * Returns true if redo operation is supported
+       * @returns {boolean}
+       */
       canRedo: function() {
         return currArchivePos < archive.length-1;
       },
 
       reloadingNewPipeline: function() {
         reloadingNew = true;
+      },
+
+      /**
+       * Select Pipeline Config in detail pane
+       */
+      selectPipelineConfig: function() {
+        $scope.$broadcast('selectNode');
+        $scope.changeStageSelection({
+          selectedObject: undefined,
+          type: pipelineConstant.PIPELINE
+        });
       }
-
-
     });
 
     $rootScope.common.errors = [];
