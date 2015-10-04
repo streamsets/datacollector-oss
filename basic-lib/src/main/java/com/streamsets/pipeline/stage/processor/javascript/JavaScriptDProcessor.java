@@ -80,16 +80,19 @@ public class JavaScriptDProcessor extends DProcessor {
     "\n" +
     "\n" +
     "    // Change record root field value to a MAP value and create an entry\n" +
-    "    //records[i].value = {};\n" +
-    "    //records[i].value.V = 'Hello';\n" +
+    "    //records[i].value = { V : 'Hello' };\n" +
+    "\n" +
+    "    // Access a MAP entry\n" +
+    "    //records[i].value.X = records[i].value['V'] + ' World';\n" +
     "\n" +
     "    // Modify a MAP entry\n" +
     "    //records[i].value.V = 5;\n" +
     "\n" +
     "    // Create an ARRAY entry\n" +
-    "    //records[i].value.A = [];\n" +
-    "    //records[i].value.A.push('Element 1');\n" +
-    "    //records[i].value.A.push('Element 2');\n" +
+    "    //records[i].value.A = ['Element 1', 'Element 2'];\n" +
+    "\n" +
+    "    // Access a Array entry\n" +
+    "    //records[i].value.B = records[i].value['A'][0];\n" +
     "\n" +
     "    // Modify an existing ARRAY entry\n" +
     "    //records[i].value.A[0] = 100;\n" +

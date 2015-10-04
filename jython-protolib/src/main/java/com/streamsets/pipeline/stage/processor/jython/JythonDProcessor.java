@@ -84,11 +84,17 @@ public class JythonDProcessor extends DProcessor {
     "    # Change record root field value to a MAP value and create an entry\n" +
     "    #record.value = { 'V' : 'Hello'}\n" +
     "\n" +
+    "    # Access a MAP entry\n" +
+    "    #record.value['X'] = record.value['V'] + ' World'\n" +
+    "\n" +
     "    # Modify a MAP entry\n" +
     "    #record.value['V'] = 5\n" +
     "\n" +
     "    # Create an ARRAY entry\n" +
     "    #record.value['A'] = [ 'Element 1', 'Element 2' ]\n" +
+    "\n" +
+    "    # Access an ARRAY entry\n" +
+    "    #record.value['B'] = record.value['A'][0]\n" +
     "\n" +
     "    # Modify an existing ARRAY entry\n" +
     "    #record.value['A'][0] = 100\n" +
