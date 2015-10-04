@@ -53,9 +53,20 @@ angular.module('dataCollectorApp')
     //Reload the page when the server is down.
     $httpProvider.interceptors.push(function($q) {
       return {
+        response: function(response) {
+          if(response.data && typeof response.data.indexOf == 'function' &&
+            response.data.indexOf('container login-container') !== -1) {
+            //Return response is login.html page content due to invalid session
+            window.location.reload();
+            return;
+          }
+          return response;
+        },
         responseError: function(rejection) {
           console.log(rejection);
-          if(rejection.status === 0) {
+          if(rejection.status === 0 || rejection.status === -1 ||
+            (rejection.data && (typeof response.data.indexOf == 'function') &&
+            rejection.data.indexOf('login.html') !== -1)) {
             window.location.reload();
             return;
           }
