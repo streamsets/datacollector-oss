@@ -205,7 +205,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
       } catch (DataParserException e) {
         //is this the first line being read? Yes -> throw exception
         if (previousLine.length() == 0 || maxStackTraceLines == -1) {
-          throw new DataParserException(Errors.LOG_PARSER_01, multilineLog.toString(), e.toString(), e);
+          throw e;
         }
         //otherwise read until we get a line that matches pattern
         if(numberOfLinesRead < maxStackTraceLines) {

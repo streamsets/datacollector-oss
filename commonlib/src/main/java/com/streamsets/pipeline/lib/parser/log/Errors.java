@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   LOG_PARSER_00("Cannot advance file '{}' to offset '{}'"),
   LOG_PARSER_01("Error parsing log line '{}', reason : '{}'"),
   LOG_PARSER_02("Unsupported format {} encountered"),
-  LOG_PARSER_03("Log line {} does not confirm to {}"),
+  LOG_PARSER_03("Log line '{}' does not conform to '{}'"),
 
   LOG_PARSER_04("Max data object length can be -1 or greater than 0"),
   LOG_PARSER_05("Custom Log Format field cannot be empty"),
