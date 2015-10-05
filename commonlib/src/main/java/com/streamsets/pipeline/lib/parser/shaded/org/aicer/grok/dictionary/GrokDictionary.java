@@ -107,7 +107,6 @@ public final class GrokDictionary {
     final String digestedExpression = digestExpressionAux(expression);
 
     logger.debug("Digested [" + expression + "] into [" + digestedExpression + "] before compilation");
-
     return new Grok(Pattern.compile(digestedExpression));
   }
 
