@@ -37,20 +37,27 @@ public class TestStoreApi {
 
   @Test
   public void testForDifferentAuthenticationTypes() {
+    Task server = null;
     try {
       for(String authType: authenticationTypes) {
         int port = TestUtil.getRandomPort();
-        Task server = TestUtil.startServer(port, authType);
+        server = TestUtil.startServer(port, authType);
         baseURL = "http://127.0.0.1:" + port;
         ApiClient apiClient = getApiClient(authType);
         StoreApi storeApi = new StoreApi(apiClient);
-        testStoreAPI(storeApi);
+
+        //testStoreAPI(storeApi);
+        testStoreAPINegativeCases(storeApi);
 
         TestUtil.stopServer(server);
       }
     } catch (Exception e) {
       e.printStackTrace();
       Assert.fail(e.getMessage());
+    } finally {
+      if(server != null) {
+        TestUtil.stopServer(server);
+      }
     }
   }
 
@@ -97,5 +104,17 @@ public class TestStoreApi {
     Assert.assertNotEquals(pipelineRules.getUuid(), updatedPipelineRules.getUuid());
   }
 
-
+  private void testStoreAPINegativeCases(StoreApi storeApi) {
+    //Fetch Invalid Pipeline Configuration
+    boolean exceptionTriggered = false;
+    try {
+      PipelineConfigurationJson pipelineConfig = storeApi.getPipelineInfo("Not a valid pipeline", "0", "pipeline", false);
+      Assert.assertNotNull(pipelineConfig);
+    } catch (ApiException ex) {
+      exceptionTriggered = true;
+      Assert.assertEquals(ex.getCode(), 500);
+      Assert.assertTrue(ex.getMessage().contains("CONTAINER_0200 - Pipeline 'Not a valid pipeline' does not exist"));
+    }
+    Assert.assertTrue(exceptionTriggered);
+  }
 }

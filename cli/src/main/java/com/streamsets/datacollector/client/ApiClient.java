@@ -470,7 +470,7 @@ public class ApiClient {
       String respBody = null;
       if (response.hasEntity()) {
         try {
-          respBody = String.valueOf(response.getEntity());
+          respBody = response.readEntity(String.class);
           message = respBody;
         } catch (RuntimeException e) {
           // e.printStackTrace();
