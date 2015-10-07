@@ -146,12 +146,15 @@ public abstract class LogCharDataParser extends AbstractDataParser {
       //associate it with the last field in the previously read line
       Field messageField = record.get("/" + Constants.MESSAGE);
       if(messageField != null) {
-        messageField.set(Field.Type.STRING, messageField.getValueAsString() + "\n" + stackTrace.toString());
+        Field originalMessage = messageField;
+        Field newMessage = Field.create(originalMessage.getValueAsString() + "\n" + stackTrace.toString());
+        record.set("/" + Constants.MESSAGE, newMessage);
       }
       //update the originalLine if required
       if(record.has("/" + TEXT_FIELD_NAME)) {
         Field originalLine = record.get("/" + TEXT_FIELD_NAME);
-        originalLine.set(Field.Type.STRING, originalLine.getValueAsString() + "\n" + stackTrace.toString());
+        Field newLine = Field.create(originalLine.getValueAsString() + "\n" + stackTrace.toString());
+        record.set("/" + TEXT_FIELD_NAME, newLine);
       }
       //if EOF was reached while reading the stack trace, update the current offset
       if(read == -1) {

@@ -24,7 +24,6 @@ import java.util.Collections;
 public enum ModelType {
   FIELD_SELECTOR_MULTI_VALUE(new EmptyListDefaultPreparer()),
   FIELD_SELECTOR(new NopDefaultPreparer()),
-  FIELD_VALUE_CHOOSER(new NopDefaultPreparer()),
   VALUE_CHOOSER(new NopDefaultPreparer()),
   MULTI_VALUE_CHOOSER(new NopDefaultPreparer()),
   PREDICATE(new EmptyMapDefaultPreparer()),

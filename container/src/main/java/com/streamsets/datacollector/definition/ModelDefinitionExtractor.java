@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
-import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -60,7 +59,6 @@ public abstract class ModelDefinitionExtractor {
     private static final Map<Class<? extends Annotation>, ModelDefinitionExtractor> MODEL_EXTRACTOR =
         ImmutableMap.<Class<? extends Annotation>, ModelDefinitionExtractor>builder()
           .put(FieldSelectorModel.class, new FieldSelectorExtractor())
-          .put(FieldValueChooserModel.class, new FieldValueChooserExtractor())
           .put(ValueChooserModel.class, new ValueChooserExtractor())
           .put(MultiValueChooserModel.class, new MultiValueChooserExtractor())
           .put(PredicateModel.class, new PredicateExtractor())
@@ -142,40 +140,6 @@ public abstract class ModelDefinitionExtractor {
         ModelType modelType = (fieldSelectorModel.singleValued()) ? ModelType.FIELD_SELECTOR
                                                              : ModelType.FIELD_SELECTOR_MULTI_VALUE;
         return new ModelDefinition(modelType, null, null, null, null, null);
-      } else {
-        throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
-      }
-    }
-  }
-
-  static class FieldValueChooserExtractor extends ModelDefinitionExtractor {
-
-    @Override
-    public List<ErrorMessage> validate(String configPrefix, Field field, Object contextMsg) {
-      List<ErrorMessage> errors = new ArrayList<>();
-      try {
-        FieldValueChooserModel fieldValueChooserModel = field.getAnnotation(FieldValueChooserModel.class);
-        ChooserValues values = fieldValueChooserModel.value().newInstance();
-        values.getValues();
-        values.getLabels();
-      } catch (Exception ex) {
-        errors.add(new ErrorMessage(DefinitionError.DEF_210, contextMsg, ex.toString()));
-      }
-      return errors;
-    }
-
-    @Override
-    public ModelDefinition extract(String configPrefix, Field field, Object contextMsg) {
-      List<ErrorMessage> errors = validate(configPrefix, field, contextMsg);
-      if (errors.isEmpty()) {
-        FieldValueChooserModel fieldValueChooserModel = field.getAnnotation(FieldValueChooserModel.class);
-        try {
-          ChooserValues values = fieldValueChooserModel.value().newInstance();
-          return new ModelDefinition(ModelType.FIELD_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
-                                     values.getLabels(), null, null);
-        } catch (Exception ex) {
-          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
-        }
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
       }

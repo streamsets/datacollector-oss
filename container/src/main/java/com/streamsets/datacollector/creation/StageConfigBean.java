@@ -21,12 +21,12 @@ package com.streamsets.datacollector.creation;
 
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.config.OnRecordErrorChooserValues;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.OnRecordErrorChooserValues;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;

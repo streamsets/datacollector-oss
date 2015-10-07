@@ -1031,8 +1031,6 @@ public class BeanHelper {
         return ModelTypeJson.FIELD_SELECTOR_MULTI_VALUE;
       case FIELD_SELECTOR:
         return ModelTypeJson.FIELD_SELECTOR;
-      case FIELD_VALUE_CHOOSER:
-        return ModelTypeJson.FIELD_VALUE_CHOOSER;
       case PREDICATE:
         return ModelTypeJson.PREDICATE;
       case VALUE_CHOOSER:
@@ -1055,8 +1053,6 @@ public class BeanHelper {
         return ModelType.FIELD_SELECTOR_MULTI_VALUE;
       case FIELD_SELECTOR:
         return ModelType.FIELD_SELECTOR;
-      case FIELD_VALUE_CHOOSER:
-        return ModelType.FIELD_VALUE_CHOOSER;
       case PREDICATE:
         return ModelType.PREDICATE;
       case VALUE_CHOOSER:

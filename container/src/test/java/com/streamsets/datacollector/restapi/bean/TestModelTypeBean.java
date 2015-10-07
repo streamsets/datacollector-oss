@@ -45,11 +45,6 @@ public class TestModelTypeBean {
       BeanHelper.unwrapModelType(ModelTypeJson.FIELD_SELECTOR_MULTI_VALUE) ==
         ModelType.FIELD_SELECTOR_MULTI_VALUE);
 
-    Assert.assertTrue(BeanHelper.wrapModelType(ModelType.FIELD_VALUE_CHOOSER) ==
-      ModelTypeJson.FIELD_VALUE_CHOOSER);
-    Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.FIELD_VALUE_CHOOSER) ==
-      ModelType.FIELD_VALUE_CHOOSER);
-
     Assert.assertTrue(BeanHelper.wrapModelType(ModelType.PREDICATE) ==
       ModelTypeJson.PREDICATE);
     Assert.assertTrue(BeanHelper.unwrapModelType(ModelTypeJson.PREDICATE) ==

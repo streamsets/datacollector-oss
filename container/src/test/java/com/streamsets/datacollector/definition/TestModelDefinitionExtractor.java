@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.ChooserValues;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
-import com.streamsets.pipeline.api.FieldValueChooserModel;
 import com.streamsets.pipeline.api.PredicateModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
@@ -79,15 +78,6 @@ public class TestModelDefinitionExtractor {
         type = ConfigDef.Type.MODEL,
         required = true
     )
-    @FieldSelectorModel
-    @FieldValueChooserModel(CV.class)
-    public String invalid2;
-
-    @ConfigDef(
-        label = "L",
-        type = ConfigDef.Type.MODEL,
-        required = true
-    )
     @ListBeanModel
     public Bean invalid3;
 
@@ -106,15 +96,6 @@ public class TestModelDefinitionExtractor {
     )
     @FieldSelectorModel(singleValued = true)
     public String fieldSelectorS;
-
-    @ConfigDef(
-        label = "L",
-        type = ConfigDef.Type.MODEL,
-        required = true
-    )
-
-    @FieldValueChooserModel(CV.class)
-    public String fieldChooserValue;
 
     @ConfigDef(
         label = "L",
@@ -158,12 +139,6 @@ public class TestModelDefinitionExtractor {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testInvalid2() throws Exception {
-    Field f = Configs.class.getField("invalid2");
-    ModelDefinitionExtractor.get().extract("", f, "x");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
   public void testInvalid3() throws Exception {
     Field f = Configs.class.getField("invalid3");
     ModelDefinitionExtractor.get().extract("", f, "x");
@@ -188,17 +163,6 @@ public class TestModelDefinitionExtractor {
     Assert.assertEquals(null, def.getLabels());
     Assert.assertEquals(ModelType.FIELD_SELECTOR, def.getModelType());
     Assert.assertEquals(null, def.getValuesProviderClass());
-    Assert.assertEquals(null, def.getConfigDefinitions());
-  }
-
-  @Test
-  public void testFieldChooserValue() throws Exception {
-    Field f = Configs.class.getField("fieldChooserValue");
-    ModelDefinition def = ModelDefinitionExtractor.get().extract("", f, "x");
-    Assert.assertEquals(ImmutableList.of("a"), def.getValues());
-    Assert.assertEquals(ImmutableList.of("A"), def.getLabels());
-    Assert.assertEquals(ModelType.FIELD_VALUE_CHOOSER, def.getModelType());
-    Assert.assertEquals(CV.class.getName(), def.getValuesProviderClass());
     Assert.assertEquals(null, def.getConfigDefinitions());
   }
 

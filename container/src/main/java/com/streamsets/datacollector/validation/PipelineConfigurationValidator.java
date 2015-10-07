@@ -663,14 +663,6 @@ public class PipelineConfigurationValidator {
           }
         }
         break;
-      case FIELD_VALUE_CHOOSER:
-        if(!(conf.getValue() instanceof Map)) {
-          // stage configuration must be a model
-          issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(),
-                                         ValidationError.VALIDATION_0009, "Map"));
-          preview = false;
-        }
-        break;
       case PREDICATE:
         if(!(conf.getValue() instanceof List)) {
           // stage configuration must be a model
