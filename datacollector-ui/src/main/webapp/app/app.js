@@ -54,7 +54,7 @@ angular.module('dataCollectorApp')
     $httpProvider.interceptors.push(function($q) {
       return {
         response: function(response) {
-          if(response.data && typeof response.data.indexOf == 'function' &&
+          if(response && response.data && typeof response.data.indexOf == 'function' &&
             response.data.indexOf('container login-container') !== -1) {
             //Return response is login.html page content due to invalid session
             window.location.reload();
@@ -65,7 +65,7 @@ angular.module('dataCollectorApp')
         responseError: function(rejection) {
           console.log(rejection);
           if(rejection.status === 0 || rejection.status === -1 ||
-            (rejection.data && (typeof response.data.indexOf == 'function') &&
+            (rejection.data && (typeof rejection.data.indexOf == 'function') &&
             rejection.data.indexOf('login.html') !== -1)) {
             window.location.reload();
             return;

@@ -46,7 +46,7 @@ public class TestStoreApi {
         ApiClient apiClient = getApiClient(authType);
         StoreApi storeApi = new StoreApi(apiClient);
 
-        //testStoreAPI(storeApi);
+        testStoreAPI(storeApi);
         testStoreAPINegativeCases(storeApi);
 
         TestUtil.stopServer(server);

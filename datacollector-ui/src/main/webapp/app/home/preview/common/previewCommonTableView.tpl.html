@@ -88,7 +88,7 @@
            contenteditable="{{previewMode}}"
            ng-model="flattenInputRecord[fieldPath].value"
            ng-change="recordValueUpdated(inputRecord, flattenInputRecord[fieldPath])"
-           class="field-value {{flattenInputRecord[fieldPath].type}}">
+           class="field-value {{flattenInputRecord[fieldPath].value != null ? flattenInputRecord[fieldPath].type : ''}}">
       </div>
 
     </td>
@@ -104,8 +104,8 @@
           }">
       <span class="number-circle" ng-if="$index === 0 && laneMap"
         tooltip="{{('home.previewPane.streamCondition' | translate ) + ': ' + laneMap[outputRecords[0].laneName].condition}}">{{laneMap[outputRecords[0].laneName].index}}</span>
-      <span
-        class="field-value {{flattenOutputRecord[fieldPath].type}}">{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE') ? (flattenOutputRecord[fieldPath].value + '' | date:'medium') : (flattenOutputRecord[fieldPath].value + '')}}</span>
+      <span class="field-value {{flattenOutputRecord[fieldPath].value != null ? flattenOutputRecord[fieldPath].type : ''}}"
+        >{{(flattenInputRecord[fieldPath].type === 'DATETIME' || flattenInputRecord[fieldPath].type === 'DATE') ? (flattenOutputRecord[fieldPath].value + '' | date:'medium') : (flattenOutputRecord[fieldPath].value + '')}}</span>
     </td>
 
     <td colspan="{{outputLimit}}" ng-if="errorsRecords && errorsRecords.length > 0">
@@ -129,8 +129,8 @@
     <td colspan="{{inputLimit}}"></td>
 
     <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit">
-      <span
-        class="field-value {{flattenRecord[fieldPath].type}}">{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</span>
+      <span class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}"
+        >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</span>
     </td>
   </tr>
 
@@ -138,9 +138,10 @@
       ng-repeat="record in stagePreviewData.output"
       ng-init="flattenRecord = getFlattenRecord(record)">
     <td ng-repeat="fieldPath in inputFieldPaths | limitTo: inputLimit"
-        class="field-value {{flattenRecord[fieldPath].type}}">{{flattenRecord[fieldPath].value + ''}}</td>
+        class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}"
+      >{{flattenRecord[fieldPath].value + ''}}</td>
     <td ng-repeat="fieldPath in outputFieldPaths | limitTo: outputLimit"
-        class="field-value {{flattenRecord[fieldPath].type}}"
+        class="field-value {{flattenRecord[fieldPath].value != null ? flattenRecord[fieldPath].type : ''}}"
       >{{(flattenRecord[fieldPath].type === 'DATETIME' || flattenRecord[fieldPath].type === 'DATE') ? (flattenRecord[fieldPath].value + '' | date:'medium') : (flattenRecord[fieldPath].value + '')}}</td>
   </tr>
 

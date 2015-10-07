@@ -150,11 +150,11 @@
           <span class="field-type" ng-show="showFieldType">{{recordValue.type}}</span>
 
           <span ng-if="editable !== true"
-                class="field-value {{recordValue.type}}"
+                class="field-value {{((recordValue.value != null) ? recordValue.type : '')}}"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
             >{{recordValue.value + ''}}</span>
 
-          <span class="field-value {{recordValue.dirty ? 'dirty ' + recordValue.type : recordValue.type}}"
+          <span class="field-value {{recordValue.dirty ? 'dirty ' + ((recordValue.value != null) ? recordValue.type : '') : ((recordValue.value != null) ? recordValue.type : '')}}"
                 ng-if="editable === true"
                 ng-class="{'value-addition' : (diffType === 'output' && updatedValue), 'value-deletion' : (diffType === 'input' && updatedValue)}"
                 contenteditable="true"
