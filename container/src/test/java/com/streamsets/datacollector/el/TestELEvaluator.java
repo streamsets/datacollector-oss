@@ -36,6 +36,14 @@ import java.util.List;
 public class TestELEvaluator {
 
   @Test
+  public void testNULL() throws ELEvalException {
+    ELEval elEval = new ELEvaluator(null);
+    ELVars variables = elEval.createVariables();
+    Object result = elEval.eval(variables, "${NULL}", Object.class);
+    Assert.assertNull(result);
+  }
+
+  @Test
   public void testElFunction() throws ELEvalException {
     ELEval elEval = new ELEvaluator("testElFunction", ValidTestEl.class);
     ELVars variables = elEval.createVariables();
@@ -87,9 +95,14 @@ public class TestELEvaluator {
     ELEval elEval = new ELEvaluator("testElConstantMetadata", ValidTestEl.class);
     List<ElConstantDefinition> elConstantDefinitions = ((ELEvaluator) elEval).getElConstantDefinitions();
 
-    Assert.assertEquals(1, elConstantDefinitions.size());
-
-    ElConstantDefinition constDef = elConstantDefinitions.get(0);
+    ElConstantDefinition constDef = null;
+    for (ElConstantDefinition def : elConstantDefinitions) {
+      if (def.getName().equals("CITY")) {
+        constDef = def;
+        break;
+      }
+    }
+    Assert.assertNotNull(constDef);
     Assert.assertEquals("CITY", constDef.getName());
     Assert.assertEquals("Declares the CITY constant to be 'San Francisco'", constDef.getDescription());
     Assert.assertEquals("String", constDef.getReturnType());

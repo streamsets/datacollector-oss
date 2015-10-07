@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.el;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -47,6 +48,9 @@ public class RuntimeEL {
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
   private static Properties RUNTIME_CONF_PROPS = null;
   private static RuntimeInfo runtimeInfo;
+
+  @ElConstant(name = "NULL", description = "NULL value")
+  public static final Object NULL = null;
 
   @ElFunction(
     prefix = "runtime",

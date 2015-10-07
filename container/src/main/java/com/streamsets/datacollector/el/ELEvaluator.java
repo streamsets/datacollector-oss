@@ -108,8 +108,8 @@ public class ELEvaluator extends ELEval {
       public Object resolveVariable(String name) throws ELException {
         Object value = constants.get(name);
         if (!vars.hasVariable(name)) {
-          if (value == null) {
-            throw new ELException(Utils.format("Variable '{}' cannot be resolved", name));
+          if (value == null && !constants.containsKey(name)) {
+            throw new ELException(Utils.format("Constants/Variable '{}' cannot be resolved", name));
           }
         } else {
           value = vars.getVariable(name);
