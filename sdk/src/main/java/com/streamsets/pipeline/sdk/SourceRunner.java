@@ -21,13 +21,16 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
@@ -36,16 +39,16 @@ public class SourceRunner extends StageRunner<Source> {
 
   public SourceRunner(Class<Source> sourceClass, Source source, Map<String, Object> configuration,
                       List<String> outputLanes, boolean isPreview, OnRecordError onRecordError,
-                      Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+                      Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
     super(sourceClass, source, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError, constants,
-      isClusterMode, resourcesDir);
+      executionMode, resourcesDir);
   }
 
   public SourceRunner(Class<Source> sourceClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode,
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode,
       String resourcesDir) {
     super(sourceClass, StageType.SOURCE, configuration, outputLanes, isPreview, onRecordError, constants,
-      isClusterMode, resourcesDir);
+      executionMode, resourcesDir);
   }
 
   public Output runProduce(String lastOffset, int maxBatchSize) throws StageException {
@@ -78,9 +81,9 @@ public class SourceRunner extends StageRunner<Source> {
     public SourceRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Source must have at least one output stream");
       return  (stage != null) ?
-        new SourceRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+        new SourceRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, executionMode,
                          resourcesDir)
-        : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+        : new SourceRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, executionMode,
                            resourcesDir);
     }
 

@@ -28,6 +28,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.FilterRecordBatch;
 import com.streamsets.datacollector.runner.PreconditionsPredicate;
 import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -51,7 +52,7 @@ public class TestPreconditionsPredicate {
   @SuppressWarnings("unchecked")
   private Stage.Context createContext() {
     return new StageContext("i", StageType.PROCESSOR, true, null, (List) Collections.emptyList(),
-                                         (Map) Collections.emptyMap(), (Map) ImmutableMap.of("a", "A"), false, "");
+                                         (Map) Collections.emptyMap(), (Map) ImmutableMap.of("a", "A"), ExecutionMode.STANDALONE, "");
   }
 
   @Test

@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import com.streamsets.pipeline.config.CsvRecordType;
 
 import org.apache.avro.Schema;
@@ -62,6 +63,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.impl.Pair;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
@@ -250,7 +252,7 @@ public class TestClusterHDFSSource {
   public void testProduce() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addConfiguration("hdfsUri", miniDFS.getURI().toString())
       .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)
@@ -304,7 +306,7 @@ public class TestClusterHDFSSource {
   public void testProduceDelimitedNoHeader() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addConfiguration("hdfsUri", miniDFS.getURI().toString())
       .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)
@@ -374,7 +376,7 @@ public class TestClusterHDFSSource {
   public void testProduceDelimitedIgnoreHeader() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addConfiguration("hdfsUri", miniDFS.getURI().toString())
       .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)
@@ -434,7 +436,7 @@ public class TestClusterHDFSSource {
   public void testProduceDelimitedWithHeader() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addConfiguration("hdfsUri", miniDFS.getURI().toString())
       .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)
@@ -498,7 +500,7 @@ public class TestClusterHDFSSource {
   public void testProduceAvroData() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
       .addOutputLane("lane")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addConfiguration("hdfsUri", miniDFS.getURI().toString())
       .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
       .addConfiguration("recursive", false)

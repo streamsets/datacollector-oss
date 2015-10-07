@@ -79,7 +79,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   private final Map<String, Class<?>[]> configToElDefMap;
   private final Map<String, Object> constants;
   private final long pipelineMaxMemory;
-  private final boolean isClusterMode;
+  private final ExecutionMode executionMode;
   private final String resourcesDir;
   private final String pipelineName;
   private final String rev;
@@ -88,7 +88,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
   //for SDK
   public StageContext(String instanceName, StageType stageType, boolean isPreview,
                       OnRecordError onRecordError, List<String> outputLanes, Map<String, Class<?>[]> configToElDefMap,
-                      Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+                      Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
     this.pipelineName = "myPipeline";
     this.rev = "0";
     pipelineInfo = ImmutableList.of();
@@ -102,12 +102,12 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this. configToElDefMap = configToElDefMap;
     this.constants = constants;
     this.pipelineMaxMemory = new MemoryLimitConfiguration().getMemoryLimit();
-    this.isClusterMode = isClusterMode;
+    this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
   }
 
   public StageContext(String pipelineName, String rev, List<Stage.Info> pipelineInfo, StageType stageType, boolean isPreview,
-                      MetricRegistry metrics, StageRuntime stageRuntime, long pipelineMaxMemory, boolean isClusterMode,
+                      MetricRegistry metrics, StageRuntime stageRuntime, long pipelineMaxMemory, ExecutionMode executionMode,
                       String resourcesDir) {
     this.pipelineName = pipelineName;
     this.rev = rev;
@@ -121,7 +121,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     this.configToElDefMap = getConfigToElDefMap(stageRuntime);
     this.constants = stageRuntime.getConstants();
     this.pipelineMaxMemory = pipelineMaxMemory;
-    this.isClusterMode = isClusterMode;
+    this.executionMode = executionMode;
     this.resourcesDir = resourcesDir;
   }
 
@@ -173,7 +173,7 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
 
   @Override
   public ExecutionMode getExecutionMode() {
-    return ExecutionMode.STANDALONE;
+    return executionMode;
   }
 
   @Override
@@ -382,8 +382,4 @@ public class StageContext implements Source.Context, Target.Context, Processor.C
     return new ELEvaluator(configName, constants, classes.toArray(new Class[classes.size()]));
   }
 
-  @Override
-  public boolean isClusterMode() {
-    return isClusterMode;
-  }
 }

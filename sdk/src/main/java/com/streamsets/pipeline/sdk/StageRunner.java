@@ -30,6 +30,7 @@ import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -37,6 +38,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -205,14 +207,14 @@ public abstract class StageRunner<S extends Stage> {
 
   @SuppressWarnings("unchecked")
   StageRunner(Class<S> stageClass, StageType stageType, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
     this(stageClass, (S) getStage(Utils.checkNotNull(stageClass, "stageClass")), stageType, configuration, outputLanes,
-      isPreview, onRecordError, constants, isClusterMode, resourcesDir);
+      isPreview, onRecordError, constants, executionMode, resourcesDir);
   }
 
   StageRunner(Class<S> stageClass, S stage, StageType stageType, Map < String, Object > configuration,
               List< String > outputLanes, boolean isPreview, OnRecordError onRecordError,
-              Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+              Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
     Utils.checkNotNull(stage, "stage");
     Utils.checkNotNull(configuration, "configuration");
     Utils.checkNotNull(outputLanes, "outputLanes");
@@ -234,7 +236,7 @@ public abstract class StageRunner<S extends Stage> {
       throw new RuntimeException(e);
     }
     context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap,
-      constants, isClusterMode, resourcesDir);
+      constants, executionMode, resourcesDir);
     status = Status.CREATED;
   }
 
@@ -338,7 +340,7 @@ public abstract class StageRunner<S extends Stage> {
     final Map<String, Object> configs;
     final Map<String, Object> constants;
     boolean isPreview;
-    boolean isClusterMode;
+    ExecutionMode executionMode = ExecutionMode.STANDALONE;
     OnRecordError onRecordError;
     String resourcesDir;
 
@@ -357,8 +359,8 @@ public abstract class StageRunner<S extends Stage> {
       return (B) this;
     }
 
-    public B setClusterMode(boolean isClusterMode) {
-      this.isClusterMode = isClusterMode;
+    public B setExecutionMode(ExecutionMode executionMode) {
+      this.executionMode = executionMode;
       return (B) this;
     }
 

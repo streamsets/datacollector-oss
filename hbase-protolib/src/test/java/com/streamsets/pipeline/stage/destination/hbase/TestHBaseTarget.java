@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
@@ -57,6 +58,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -68,6 +70,7 @@ import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -730,7 +733,7 @@ public class TestHBaseTarget {
         .addConfiguration("hbaseConfDir", dir.getAbsolutePath())
         .addConfiguration("rowKeyStorageType", StorageType.BINARY)
       .setOnRecordError(OnRecordError.DISCARD)
-      .setClusterMode(true).build();
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH).build();
 
     try {
       targetRunner.runInit();

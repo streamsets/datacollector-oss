@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -302,7 +303,8 @@ public class HdfsTarget extends BaseTarget {
     }
     if (hadoopConfDir != null && !hadoopConfDir.isEmpty()) {
       File hadoopConfigDir = new File(hadoopConfDir);
-      if(getContext().isClusterMode() && hadoopConfigDir.isAbsolute()) {
+      if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING)
+        && hadoopConfigDir.isAbsolute()) {
         //Do not allow absolute hadoop config directory in cluster mode
         issues.add(getContext().createConfigIssue(Groups.HADOOP_FS.name(), "hadoopConfDir", Errors.HADOOPFS_45,
           hadoopConfDir));

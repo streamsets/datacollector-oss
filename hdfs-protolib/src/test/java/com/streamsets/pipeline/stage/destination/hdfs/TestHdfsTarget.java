@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.configurablestage.DStage;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.ActiveRecordWriters;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -251,7 +253,7 @@ public class TestHdfsTarget {
       .addConfiguration("csvFileFormat", null)
       .addConfiguration("csvReplaceNewLines", false)
       .addConfiguration("charset", "UTF-8")
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .build();
     try {
       runner.runInit();

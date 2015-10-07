@@ -21,11 +21,13 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.BatchImpl;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,17 +40,17 @@ public class TargetRunner extends StageRunner<Target> {
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> targetClass, Target target, Map<String, Object> configuration, boolean isPreview,
-                      OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode,
+                      OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode,
       String resourcesDir) {
     super(targetClass, target, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError,
-      constants, isClusterMode, resourcesDir);
+      constants, executionMode, resourcesDir);
   }
 
   @SuppressWarnings("unchecked")
   public TargetRunner(Class<Target> sourceClass, Map<String, Object> configuration, boolean isPreview,
-      OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+      OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
     super(sourceClass, StageType.TARGET, configuration, Collections.EMPTY_LIST, isPreview, onRecordError, constants,
-      isClusterMode, resourcesDir);
+      executionMode, resourcesDir);
   }
 
   public void runWrite(List<Record> inputRecords) throws StageException {
@@ -74,8 +76,8 @@ public class TargetRunner extends StageRunner<Target> {
     public TargetRunner build() {
       Utils.checkState(outputLanes.isEmpty(), "A Target cannot have output streams");
       return (stage != null) ?
-        new TargetRunner(stageClass, stage, configs, isPreview, onRecordError, constants, isClusterMode, resourcesDir)
-        : new TargetRunner(stageClass, configs, isPreview, onRecordError, constants, isClusterMode, resourcesDir);
+        new TargetRunner(stageClass, stage, configs, isPreview, onRecordError, constants, executionMode, resourcesDir)
+        : new TargetRunner(stageClass, configs, isPreview, onRecordError, constants, executionMode, resourcesDir);
     }
 
   }

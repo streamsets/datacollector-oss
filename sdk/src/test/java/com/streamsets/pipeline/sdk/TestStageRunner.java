@@ -21,6 +21,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 
@@ -39,16 +40,16 @@ public class TestStageRunner {
   public static class DummyStageRunner extends StageRunner<DummyStage> {
 
     DummyStageRunner(Class<DummyStage> stageClass, Map<String, Object> configuration, List<String> outputLanes,
-        boolean isPreview, Map<String, Object> constants, boolean isClusterMode, String resourcesDir) {
+        boolean isPreview, Map<String, Object> constants, ExecutionMode executionMode, String resourcesDir) {
       super(stageClass, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR, constants,
-        isClusterMode, resourcesDir);
+        executionMode, resourcesDir);
     }
 
     DummyStageRunner(Class<DummyStage> stageClass, DummyStage stage, Map<String, Object> configuration,
                      List<String> outputLanes, boolean isPreview, Map<String, Object> constants,
-                     boolean isClusterMode, String resourcesDir) {
+                     ExecutionMode executionMode, String resourcesDir) {
       super(stageClass, stage, StageType.SOURCE, configuration, outputLanes, isPreview, OnRecordError.TO_ERROR,
-        constants, isClusterMode, resourcesDir);
+        constants, executionMode, resourcesDir);
     }
 
     public static class Builder extends StageRunner.Builder<DummyStage, DummyStageRunner, Builder> {
@@ -65,9 +66,9 @@ public class TestStageRunner {
       @Override
       public DummyStageRunner build() {
         return (stage != null) ?
-          new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants, isClusterMode,
+          new DummyStageRunner(stageClass, stage, configs, outputLanes, isPreview, constants, executionMode,
                                resourcesDir)
-          : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants, isClusterMode, resourcesDir);
+          : new DummyStageRunner(stageClass, configs, outputLanes, isPreview, constants, executionMode, resourcesDir);
       }
     }
   }
@@ -128,16 +129,16 @@ public class TestStageRunner {
     DummyStageRunner.Builder builder = new DummyStageRunner.Builder(DummyStage1.class);
     DummyStageRunner runner = builder.build();
     Assert.assertFalse(runner.getContext().isPreview());
-    builder.setClusterMode(true);
+    builder.setExecutionMode(ExecutionMode.CLUSTER_BATCH);
     runner = builder.build();
-    Assert.assertTrue(runner.getContext().isClusterMode());
+    Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, runner.getContext().getExecutionMode());
 
     builder = new DummyStageRunner.Builder(new DummyStage1());
     runner = builder.build();
-    Assert.assertFalse(runner.getContext().isClusterMode());
-    builder.setClusterMode(true);
+    Assert.assertEquals(ExecutionMode.STANDALONE, runner.getContext().getExecutionMode());
+    builder.setExecutionMode(ExecutionMode.CLUSTER_STREAMING);
     runner = builder.build();
-    Assert.assertTrue(runner.getContext().isClusterMode());
+    Assert.assertEquals(ExecutionMode.CLUSTER_STREAMING, runner.getContext().getExecutionMode());
   }
 
   @Test

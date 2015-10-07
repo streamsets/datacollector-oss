@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.hbase;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Field.Type;
 import com.streamsets.pipeline.api.Record;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
@@ -40,8 +42,6 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.RetriesExhaustedWithDetailsException;
-import org.apache.hadoop.hbase.client.Row;
 import org.apache.hadoop.hbase.security.User;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.security.UserGroupInformation;
@@ -53,9 +53,6 @@ import javax.security.auth.Subject;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
@@ -145,7 +142,7 @@ public class HBaseTarget extends BaseTarget {
     Configuration hbaseConf = HBaseConfiguration.create();
     if (hbaseConfDir != null && !hbaseConfDir.isEmpty()) {
       File hbaseConfigDir = new File(hbaseConfDir);
-      if(getContext().isClusterMode() && hbaseConfigDir.isAbsolute()) {
+      if((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING) && hbaseConfigDir.isAbsolute()) {
         //Do not allow absolute hdfs config directory in cluster mode
         issues.add(
             getContext().createConfigIssue(Groups.HBASE.name(), HBASE_CONF_DIR_CONFIG, Errors.HBASE_24, hbaseConfDir)

@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.geolocation;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -178,7 +180,7 @@ public class TestGeolocationProcessor {
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
       .addConfiguration("fieldTypeConverterConfigs", configs)
-      .setClusterMode(true)
+      .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
       .addOutputLane("a").build();
     try {
       runner.runInit();

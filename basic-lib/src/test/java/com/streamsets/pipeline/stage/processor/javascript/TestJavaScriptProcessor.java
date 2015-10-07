@@ -289,7 +289,7 @@ public class TestJavaScriptProcessor {
     testRecordModeOnErrorHandling(OnRecordError.STOP_PIPELINE);
   }
 
-  private void testBatchModeOnErrorHandling(OnRecordError  onRecordError) throws Exception {
+  private void testBatchModeOnErrorHandling(OnRecordError onRecordError) throws Exception {
     Processor processor = new JavaScriptProcessor(ProcessingMode.BATCH,
                                                   "for (var i = 0; i < records.length; i++){\n" +
                                                   "  var record = records[i];" +
@@ -304,7 +304,6 @@ public class TestJavaScriptProcessor {
         .build();
     runner.runInit();
     try {
-
       Record record1 = RecordCreator.create();
       record1.set(Field.create("Hello"));
       Record record2 = RecordCreator.create();

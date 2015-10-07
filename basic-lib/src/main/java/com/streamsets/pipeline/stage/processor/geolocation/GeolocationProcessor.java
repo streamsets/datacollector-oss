@@ -29,12 +29,14 @@ import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.model.CountryResponse;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,8 +75,9 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> result = super.init();
     File database = new File(geoIP2DBFile);
-    if(getContext().isClusterMode() && database.isAbsolute()) {
-      //Do not allow absolute geoIP2DBFile in cluster mode
+    if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING)
+      && database.isAbsolute()) {
+    //Do not allow absolute geoIP2DBFile in cluster mode
       result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_10, geoIP2DBFile));
     } else {
       if (!database.isAbsolute()) {

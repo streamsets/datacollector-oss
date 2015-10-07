@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
@@ -39,7 +40,8 @@ public class DelegatingKafkaSource extends BaseSource implements OffsetCommitter
 
   @Override
   protected List<ConfigIssue> init() {
-    if (getContext().isPreview() || !getContext().isClusterMode()) {
+    if (getContext().isPreview()
+      || !(getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING)) {
       delegate = standaloneKafkaSourceFactory.create();
     } else {
       delegate = clusterKafkaSourceFactory.create();

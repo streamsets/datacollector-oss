@@ -24,6 +24,7 @@ import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -54,7 +55,7 @@ public class TestStageContext {
   public void testToErrorNonStageException() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
                                             Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), false, null);
+      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -74,7 +75,7 @@ public class TestStageContext {
   public void testToErrorString() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
                                             Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), false, null);
+      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -92,7 +93,7 @@ public class TestStageContext {
   public void testToErrorMessage() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
                                             Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), false, null);
+      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -110,7 +111,7 @@ public class TestStageContext {
   public void testToErrorStageException() throws Exception {
     StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
                                             Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), false, null);
+      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);

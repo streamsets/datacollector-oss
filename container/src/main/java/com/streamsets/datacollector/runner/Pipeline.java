@@ -32,6 +32,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
@@ -265,28 +266,25 @@ public class Pipeline {
     private void setStagesContext(StageRuntime[] stages, StageRuntime errorStage, PipelineRunner runner) {
       List<Stage.Info> infos = new ArrayList<>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
-      boolean clusterMode = isClusterMode(pipelineConf);
+      ExecutionMode executionMode = getExecutionMode(pipelineConf);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
         stage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
+          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), executionMode,
           runner.getRuntimeInfo().getResourcesDir()));
       }
       errorStage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), clusterMode,
+          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), executionMode,
           runner.getRuntimeInfo().getResourcesDir()));
     }
 
-    private boolean isClusterMode(PipelineConfiguration pipelineConf) {
-      boolean clusterMode = false;
-      if(pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY) != null) {
-        String executionMode = pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY).getValue().toString();
-        if (executionMode != null && !executionMode.isEmpty() && (executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_BATCH.name()) ||
-          executionMode.equalsIgnoreCase(ExecutionMode.CLUSTER_STREAMING.name()))) {
-          clusterMode = true;
-        }
-      }
-      return clusterMode;
+    private ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf) {
+      Config executionModeConfig =
+        Utils.checkNotNull(pipelineConf.getConfiguration(EXECUTION_MODE_CONFIG_KEY), EXECUTION_MODE_CONFIG_KEY);
+      String executionMode = executionModeConfig.getValue().toString();
+      Utils.checkState(executionMode != null && !executionMode.isEmpty(), "Execution mode cannot be null or empty");
+      return ExecutionMode.valueOf(executionMode);
+
     }
 
     private Pipe[] createPipes(StageRuntime[] stages, PipelineRunner runner) throws PipelineRuntimeException {

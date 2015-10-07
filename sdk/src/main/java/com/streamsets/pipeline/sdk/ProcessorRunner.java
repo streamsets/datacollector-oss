@@ -22,14 +22,17 @@ package com.streamsets.pipeline.sdk;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,16 +41,16 @@ public class ProcessorRunner extends StageRunner<Processor> {
 
   public ProcessorRunner(Class<Processor> processorClass, Processor processor, Map<String, Object> configuration,
                          List<String> outputLanes, boolean isPreview, OnRecordError onRecordError,
-                         Map<String, Object> constants, boolean isClusterMode,String resourcesDir) {
+                         Map<String, Object> constants, ExecutionMode executionMode,String resourcesDir) {
     super(processorClass, processor, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError,
-      constants, isClusterMode, resourcesDir);
+      constants, executionMode, resourcesDir);
   }
 
   public ProcessorRunner(Class<Processor> processorClass, Map<String, Object> configuration, List<String> outputLanes,
-      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, boolean isClusterMode,
+      boolean isPreview, OnRecordError onRecordError, Map<String, Object> constants, ExecutionMode executionMode,
       String resourcesDir) {
     super(processorClass, StageType.PROCESSOR, configuration, outputLanes, isPreview, onRecordError, constants,
-      isClusterMode, resourcesDir);
+      executionMode, resourcesDir);
   }
 
   public Output runProcess(List<Record> inputRecords) throws StageException {
@@ -78,9 +81,9 @@ public class ProcessorRunner extends StageRunner<Processor> {
     public ProcessorRunner build() {
       Utils.checkState(!outputLanes.isEmpty(), "A Processor must have at least one output stream");
       return  (stage != null) ?
-        new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+        new ProcessorRunner(stageClass, stage, configs, outputLanes, isPreview, onRecordError, constants, executionMode,
                             resourcesDir)
-        : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, isClusterMode,
+        : new ProcessorRunner(stageClass, configs, outputLanes, isPreview, onRecordError, constants, executionMode,
                               resourcesDir);
     }
 

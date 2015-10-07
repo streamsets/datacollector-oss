@@ -21,6 +21,7 @@ package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -65,7 +66,7 @@ public class ContextInfoCreator {
       }
     }
     return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes, configToElDefMap,
-      new HashMap<String, Object>(), false, resourcesDir);
+      new HashMap<String, Object>(), ExecutionMode.STANDALONE, resourcesDir);
   }
 
   public static Source.Context createSourceContext(Class<?> stageClass, String instanceName, boolean isPreview,
