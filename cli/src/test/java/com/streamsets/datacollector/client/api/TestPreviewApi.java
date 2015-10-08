@@ -113,7 +113,8 @@ public class TestPreviewApi {
       Collections.<StageOutputJson>emptyList(), "0", 10, 1, false, null, null);
     Assert.assertNotNull(pipelineConfig);
     Assert.assertNotNull(previewInfoJson.getPreviewerId());
-    Assert.assertEquals(PreviewInfoJson.StatusEnum.RUNNING, previewInfoJson.getStatus());
+    Assert.assertTrue(previewInfoJson.getStatus() == PreviewInfoJson.StatusEnum.RUNNING ||
+      previewInfoJson.getStatus() == PreviewInfoJson.StatusEnum.RUN_ERROR);
 
     PreviewInfoJson lastPreviewStatus;
     while(true) {
