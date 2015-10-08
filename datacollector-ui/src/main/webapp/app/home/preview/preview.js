@@ -26,7 +26,7 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant,
-                                             $timeout) {
+                                             $timeout, $modal) {
     var previewDataBackup, previewStatusTimer, currentPreviewerId;
 
     angular.extend($scope, {
@@ -255,6 +255,23 @@ angular
         $timeout(function () {
           $scope.refreshCodemirror = false;
         }, 100);
+      },
+
+      /**
+       * View Raw Preview Data in modal dialog
+       */
+      viewRawPreviewData: function() {
+        $modal.open({
+          templateUrl: 'app/home/preview/rawPreviewData/rawPreviewDataModal.tpl.html',
+          controller: 'RawPreviewDataModalInstanceController',
+          size: 'lg',
+          backdrop: 'static',
+          resolve: {
+            previewData: function () {
+              return $scope.previewData;
+            }
+          }
+        });
       }
     });
 

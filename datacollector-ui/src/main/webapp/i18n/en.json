@@ -283,7 +283,7 @@
       "monitoringJSONData": "Pipeline Monitoring",
       "noStageDefinitionFound": "Could not find stage definition",
       "pipelineConfigJSONData": "Pipeline Configuration",
-      "pipelinePreviewJSONData": "Pipeline Preview",
+      "pipelinePreviewJSONData": "Preview Data",
       "pipelineRulesJSONData": "Pipeline Rules",
       "pipelineStatusJSONData": "Pipeline Status",
       "rawPreview": "Raw Preview",
@@ -402,6 +402,9 @@
       "outputData": "Output Data",
       "noOutputWarning": "No output records produced.",
       "noRecords": "No Records to view.",
+      "rawPreviewData": {
+        "modalTitle": "Raw Preview Data"
+      },
       "rememberMe": "Remember the configuration",
       "runPreview": "Run Preview",
       "showFieldType": "Show Field Type",
