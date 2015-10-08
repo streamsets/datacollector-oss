@@ -183,7 +183,7 @@ public class AmazonS3Source extends BaseSource {
       // again to wait for an object again
       LOG.warn("Pooling interrupted");
     } catch (AmazonClientException e) {
-      throw new StageException(Errors.S3_SPOOLDIR_23, e.toString());
+      throw new StageException(Errors.S3_SPOOLDIR_23, e.toString(), e);
     }
     return s3Offset;
   }
@@ -240,14 +240,14 @@ public class AmazonS3Source extends BaseSource {
             case STOP_PIPELINE:
               throw new StageException(Errors.S3_SPOOLDIR_02, s3Object.getKey(), exOffset);
             default:
-              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                 getContext().getOnErrorRecord(), ex));
           }
         }
       }
     } catch (AmazonClientException e) {
-      LOG.error("Error processing object with key '{}' offset '{}'", s3Object.getKey(), offset);
-      throw new StageException(Errors.S3_SPOOLDIR_25, e.toString());
+      LOG.error("Error processing object with key '{}' offset '{}'", s3Object.getKey(), offset, e);
+      throw new StageException(Errors.S3_SPOOLDIR_25, e.toString(), e);
     } catch (IOException | DataParserException ex) {
       if(ex.getCause() instanceof AbortedException) {
         //If the pipeline was stopped, the amazon s3 client thread catches the interrupt and throws aborted exception
@@ -276,7 +276,7 @@ public class AmazonS3Source extends BaseSource {
             getContext().reportError(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString());
             throw new StageException(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString(), ex);
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
               getContext().getOnErrorRecord(), ex));
         }
       }
@@ -287,7 +287,7 @@ public class AmazonS3Source extends BaseSource {
             parser.close();
             parser = null;
           } catch (IOException ex) {
-            LOG.debug("Exception while closing parser : '{}'", ex.toString());
+            LOG.debug("Exception while closing parser : '{}'", ex.toString(), ex);
           }
         }
         if (object != null) {
@@ -295,7 +295,7 @@ public class AmazonS3Source extends BaseSource {
             object.close();
             object = null;
           } catch (IOException ex) {
-            LOG.debug("Exception while closing S3 object : '{}'", ex.toString());
+            LOG.debug("Exception while closing S3 object : '{}'", ex.toString(), ex);
           }
         }
       }

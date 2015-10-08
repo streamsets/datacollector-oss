@@ -111,7 +111,7 @@ public class S3Spooler {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
 
-    if(objectQueue.size() == 0) {
+    if(objectQueue.isEmpty()) {
       findAndQueueObjects(s3Offset, false);
     }
 
