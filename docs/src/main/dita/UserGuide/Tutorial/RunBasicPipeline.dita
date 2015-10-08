@@ -21,9 +21,9 @@
         />.</shortdesc>
     <taskbody>
         <context>The console enters Monitor mode and shows summary statistics in the Monitor panel.
-            Odds are good the data alert has triggered, displaying a pop up message and a
-            notification, and the location of the triggered data alert has turned red:<p><image
-                    href="../Graphics/Tutorial-RunPipeline.png" id="image_gc3_vyr_ps" scale="60"
+            At some point as the pipeline runs, the data alert triggers. A message displays and the
+            location of the triggered data alert turns red:<p><image
+                    href="../Graphics/Tutorial-RunPipeline.png" id="image_gc3_vyr_ps" scale="55"
                 /></p><p>You can close the message and explore the information available in the
                 Monitor panel.</p><p>Note that when you select an unused part of the canvas, the
                 Monitor panel displays monitoring information for the entire pipeline. When you

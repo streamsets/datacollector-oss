@@ -21,15 +21,17 @@
         <context>
             <p> This is the information that we'll need to configure the pipeline: <ul
                     id="ul_a41_hvh_4s">
-                    <li>The name of the field that contains payment information - We'll use this to
-                        route data in the Stream Selector. </li>
-                    <li>The name of the field with credit card numbers - We'll use this to mask the
+                    <li>The field that contains payment information - We'll use this to route data
+                        in the Stream Selector. </li>
+                    <li>The field that contains credit card numbers - We'll use this to mask the
                         data in the Field Masker.</li>
                 </ul></p>
-            <p>The format for field paths differs based on the type of data you're working with.
-                When you import Delimited data as List-Map, you get an ordered list of fields with
-                header and values. List-Map allows you to reference a field like any simple JSON
-                field, as follows: <codeph>/&lt;fieldname></codeph>. </p>
+            <p>When you access data in a field, you specify the field path for the field. The field
+                path depends on the complexity of the record: <codeph>/&lt;fieldname></codeph> for
+                simple records and <codeph>&lt;path to field>/&lt;fieldname></codeph> for more
+                complex records.  </p>
+            <p>When you import Delimited data as List-Map, you can use
+                    <codeph>/&lt;fieldname></codeph>. </p>
             <p>To start data preview, all stages must be connected and all required fields filled
                 (though not necessarily correctly). Since the origin is configured and the only
                 stage, the pipeline should be ready to preview as is. </p>
@@ -114,7 +116,6 @@
                 <info>If you scroll to the right, you can verify that the credit_card field contains
                     credit card numbers for the first three records. When you scroll back to the
                     left, notice this corresponds to "CRD" in the payment_type field. </info>
-                <info/>
             </step>
             <step>
                 <cmd>Now that we have the information that we need, click the <uicontrol>Close

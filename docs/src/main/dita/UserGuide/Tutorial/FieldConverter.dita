@@ -15,16 +15,20 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_kxl_tvk_ps">
     <title>Convert Types with a Field Converter</title>
-    <shortdesc>Now, we can use a Field Converter to convert the data types of the flattened
-        fields.</shortdesc>
+    <shortdesc>Since the data was read from a file, the fields are all String at this point. Let's
+        use a Field Converter to convert some data types.</shortdesc>
     <taskbody>
-        <context>Since the data was read from a file, the fields are all String at this point. Let's
-            convert datetime fields to Datetime. And we'll convert monetary fields as well as the
-            longitude and latitude fields to Double. </context>
+        <context>Let's convert datetime fields to Datetime. And we'll convert monetary fields as
+            well as the longitude and latitude fields to Double. </context>
         <steps id="steps_wx1_xvk_ps">
             <step>
-                <cmd>Add a <uicontrol>Field Converter</uicontrol> to the canvas and connect the
-                    Jython Evaluator to the stage.</cmd>
+                <cmd>Add a <uicontrol>Field Converter</uicontrol> to the canvas.</cmd>
+            </step>
+            <step>
+                <cmd>To route all data from the pipeline through the new stage, connect the Field
+                    Masker and the Expression Evaluator to it as shown:</cmd>
+                <info><image href="../Graphics/Tutorial-AddFieldConverter.png" id="image_fsy_3nk_ps"
+                        scale="65"/></info>
             </step>
             <step>
                 <cmd>Click the <uicontrol>Conversions</uicontrol> tab.</cmd>
@@ -109,7 +113,7 @@
             </step>
         </steps>
         <result>The pipeline and Field Converter should look like this:<p><image
-                    href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="75"
+                    href="../Graphics/Tutorial-FieldConverter.png" id="image_lhs_bjq_ps" scale="65"
                 /></p></result>
     </taskbody>
 </task>

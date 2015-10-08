@@ -38,7 +38,7 @@
             <step>
                 <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
                     of fields and select the field that represents credit card data:
-                        <uicontrol>[20]/value</uicontrol>. </cmd>
+                        <uicontrol>/credit_card</uicontrol>. </cmd>
                 <info>A list of fields displays when the pipeline is valid for data preview. If the
                     list does not display, you can enter the field path manually.</info>
             </step>
@@ -77,7 +77,7 @@
             </step>
         </steps>
         <result>Here's how the Field Masker should look in the pipeline:<p><image
-                    href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="80"
+                    href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="65"
                 /></p></result>
     </taskbody>
 </task>

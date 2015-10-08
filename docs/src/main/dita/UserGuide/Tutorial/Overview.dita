@@ -24,18 +24,17 @@
    development destination that we use to test a pipeline without writing to a destination system.
    If you prefer, you can write to any destination that works for you. </p>
   <p>For sample data, the tutorial uses publicly available fare payment information from a taxi
-   company that we've tweaked to add fake credit card data and invalid information to better serve
-   the tutorial. </p>
-  <p>The basic pipeline assesses the credit card vendors that customers use. (You could use this
-   information later to end contracts with low volume vendors.) The pipeline then masks the credit
-   card numbers before writing the results to file. A secondary branch standardizes the record
-   format for non-credit card data. </p>
+   company that we've tweaked to add fake credit card data and invalid information so we show you
+   some error records in the tutorial. </p>
+  <p>The basic pipeline assesses the credit card vendors that customers use. (In the real world, you
+   could use this information later to end contracts with low volume vendors.) The pipeline then
+   masks the credit card numbers before writing the results to file. A secondary branch standardizes
+   the record format for non-credit card data. </p>
   <p>Here's the pipeline the basic tutorial creates:</p>
-  <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="80" id="image_c1c_wj4_ms"/></p>
+  <p><image href="../Graphics/Tutorial-BasicPipe.png" scale="65" id="image_c1c_wj4_ms"/></p>
   <p>The extended pipeline adds an additional branch to convert some field types and write to the
    Trash destination. We'll use data preview to test stage configuration and changes in data before
-   we complete the extended pipeline:<draft-comment author="Loretta">retake screenshot without the
-    flattener.</draft-comment></p>
-  <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="75"/></p>
+   we complete the extended pipeline:</p>
+  <p><image href="../Graphics/Tutorial-ExtendedPipe.png" id="image_k3b_dr4_ms" scale="60"/></p>
  </conbody>
 </concept>

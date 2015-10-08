@@ -85,7 +85,7 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">In the <span class="keyword wintitle">New Pipeline</span> window, enter a pipeline name and
                     optional description, and click <span class="ph uicontrol">Save</span>.</span>
-                <div class="itemgroup info">An empty canvas displays:<p class="p"><img class="image" id="task_jmz_3dn_ls__image_jnr_wtk_5s" src="../Graphics/Tutorial-Canvas.png" height="569" width="960"></img></p>
+                <div class="itemgroup info">An empty canvas displays:<p class="p"><img class="image" id="task_jmz_3dn_ls__image_jnr_wtk_5s" src="../Graphics/Tutorial-Canvas.png" height="462" width="780"></img></p>
 </div>
                 <div class="itemgroup info">Note a few helpful areas: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jmz_3dn_ls__table_ezq_5ys_lt" class="table" frame="border" border="1" rules="all">
@@ -404,19 +404,22 @@
 
         <div class="section context">
             <div class="p"> This is the information that we'll need to configure the pipeline: <ul class="ul" id="task_xb5_2sf_4s__ul_a41_hvh_4s">
-                    <li class="li">The name of the field that contains payment information - We'll use this to
-                        route data in the Stream Selector. </li>
+                    <li class="li">The field that contains payment information - We'll use this to route data
+                        in the Stream Selector. </li>
 
-                    <li class="li">The name of the field with credit card numbers - We'll use this to mask the
+                    <li class="li">The field that contains credit card numbers - We'll use this to mask the
                         data in the Field Masker.</li>
 
                 </ul>
 </div>
 
-            <p class="p">The format for field paths differs based on the type of data you're working with.
-                When you import Delimited data as List-Map, you get an ordered list of fields with
-                header and values. List-Map allows you to reference a field like any simple JSON
-                field, as follows: <samp class="ph codeph">/&lt;fieldname&gt;</samp>. </p>
+            <p class="p">When you access data in a field, you specify the field path for the field. The field
+                path depends on the complexity of the record: <samp class="ph codeph">/&lt;fieldname&gt;</samp> for
+                simple records and <samp class="ph codeph">&lt;path to field&gt;/&lt;fieldname&gt;</samp> for more
+                complex records.  </p>
+
+            <p class="p">When you import Delimited data as List-Map, you can use
+                    <samp class="ph codeph">/&lt;fieldname&gt;</samp>. </p>
 
             <p class="p">To start data preview, all stages must be connected and all required fields filled
                 (though not necessarily correctly). Since the origin is configured and the only
@@ -443,9 +446,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d60851e647">Data Preview Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d60851e656">Data Preview Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d60851e650">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d60851e659">Description</th>
 
                                 </tr>
 
@@ -453,34 +456,34 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d60851e647 ">Preview Source</td>
+                                    <td class="entry" valign="top" width="30%" headers="d60851e656 ">Preview Source</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d60851e650 ">Use the default <span class="ph uicontrol">Configured Source</span>
+                                    <td class="entry" valign="top" width="70%" headers="d60851e659 ">Use the default <span class="ph uicontrol">Configured Source</span>
                                         to use the sample source data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d60851e647 ">Write to Destinations</td>
+                                    <td class="entry" valign="top" width="30%" headers="d60851e656 ">Write to Destinations</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d60851e650 ">Make sure this checkbox is cleared. In general, you 'll
+                                    <td class="entry" valign="top" width="70%" headers="d60851e659 ">Make sure this checkbox is cleared. In general, you 'll
                                         want to clear this property to avoid writing data to
                                         destination systems.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d60851e647 ">Show Field Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d60851e656 ">Show Field Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d60851e650 ">Select this so you can see the data type of fields in the
+                                    <td class="entry" valign="top" width="70%" headers="d60851e659 ">Select this so you can see the data type of fields in the
                                         record. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d60851e647 ">Remember the Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d60851e656 ">Remember the Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d60851e650 ">Select to use these properties each time you run data
+                                    <td class="entry" valign="top" width="70%" headers="d60851e659 ">Select to use these properties each time you run data
                                         preview. <p class="p">When you select this option, the console enters
                                             data preview without showing this dialog box again. To
                                             change data preview options, click the Preview
@@ -521,7 +524,6 @@
                 <div class="itemgroup info">If you scroll to the right, you can verify that the credit_card field contains
                     credit card numbers for the first three records. When you scroll back to the
                     left, notice this corresponds to "CRD" in the payment_type field. </div>
-                <div class="itemgroup info"></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Now that we have the information that we need, click the <span class="ph uicontrol">Close
@@ -736,7 +738,7 @@ except Exception as e:
 <li class="li step stepexpand">
                 <span class="ph cmd">Click in the <span class="ph uicontrol">Fields to Mask</span> field. Scroll down the list
                     of fields and select the field that represents credit card data:
-                        <span class="ph uicontrol">[20]/value</span>. </span>
+                        <span class="ph uicontrol">/credit_card</span>. </span>
                 <div class="itemgroup info">A list of fields displays when the pipeline is valid for data preview. If the
                     list does not display, you can enter the field path manually.</div>
             </li>
@@ -750,9 +752,9 @@ except Exception as e:
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="28.49002849002849%" id="d60851e1090">Field Masker Property</th>
+                                    <th class="entry" valign="top" width="28.49002849002849%" id="d60851e1097">Field Masker Property</th>
 
-                                    <th class="entry" valign="top" width="71.5099715099715%" id="d60851e1093">Configuration</th>
+                                    <th class="entry" valign="top" width="71.5099715099715%" id="d60851e1100">Configuration</th>
 
                                 </tr>
 
@@ -760,24 +762,24 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1090 ">Mask Type</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1097 ">Mask Type</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1093 ">Regular Expression</td>
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1100 ">Regular Expression</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1090 ">Regular Expression</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1097 ">Regular Expression</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1093 ">
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1100 ">
                                         <samp class="ph codeph">(.*)([0-9]{4})</samp></td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1090 ">Groups to Show</td>
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d60851e1097 ">Groups to Show</td>
 
-                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1093 ">2</td>
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d60851e1100 ">2</td>
 
                                 </tr>
 
@@ -790,7 +792,7 @@ except Exception as e:
             </li>
 </ol>
 
-        <div class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="357" width="616"></img></p>
+        <div class="section result">Here's how the Field Masker should look in the pipeline:<p class="p"><img class="image" id="task_qbw_d3m_ls__image_v1y_35q_ps" src="../Graphics/Tutorial-FieldMasker.png" height="362" width="625"></img></p>
 </div>
 
     </div>
@@ -800,8 +802,9 @@ except Exception as e:
     <h2 class="title topictitle2">Write to the Destination</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">You can use the Hadoop FS destination to write to HDFS or to a local directory. We'll
-        write to a local directory.</p>
+    <div class="body taskbody"><p class="shortdesc">StreamSets lets you write data to many destinations. The Hadoop FS destination writes
+        to HDFS or a local directory. For the tutorial, we'll write to a local
+        directory.</p>
 
         <div class="section context">
             <p class="p">When you configure the Hadoop FS destination, you define the directory template. This
@@ -815,18 +818,19 @@ except Exception as e:
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel, click the <span class="keyword wintitle">Hadoop FS</span> tab. To use
-                    Hadoop FS to write to a local file system, configure the following property and
-                    use defaults for the rest: </span>
+                    Hadoop FS to write to a local file system, configure the following properties. </span>
                 <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_tlp_hvj_5s" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.47252747252747%" id="d60851e1194">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="27.47252747252747%" id="d60851e1204">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="72.52747252747253%" id="d60851e1197">Configuration</th>
+                                    <th class="entry" valign="top" width="72.52747252747253%" id="d60851e1207">Configuration</th>
 
                                 </tr>
 
@@ -834,9 +838,9 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d60851e1194 ">Hadoop FS URI</td>
+                                    <td class="entry" valign="top" width="27.47252747252747%" headers="d60851e1204 ">Hadoop FS URI</td>
 
-                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d60851e1197 ">file:///</td>
+                                    <td class="entry" valign="top" width="72.52747252747253%" headers="d60851e1207 ">file:///</td>
 
                                 </tr>
 
@@ -849,17 +853,19 @@ except Exception as e:
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="keyword wintitle">Output Files</span> tab and configure the following
-                    properties. Use the defaults for the rest:</span>
+                    properties. </span>
                 <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__table_kcy_5bn_ls" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="29.49852507374631%" id="d60851e1240">Hadoop FS Property</th>
+                                    <th class="entry" valign="top" width="29.49852507374631%" id="d60851e1253">Hadoop FS Property</th>
 
-                                    <th class="entry" valign="top" width="70.50147492625369%" id="d60851e1243">Configuration</th>
+                                    <th class="entry" valign="top" width="70.50147492625369%" id="d60851e1256">Configuration</th>
 
                                 </tr>
 
@@ -867,16 +873,16 @@ except Exception as e:
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1240 ">Data Format</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1253 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1243 ">Delimited</td>
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1256 ">Delimited</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1240 ">Files Prefix</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1253 ">Files Prefix</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1243 ">Defines a prefix for output files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1256 ">Defines a prefix for output files. <p class="p">By default, the files are prefixed with "SDC" and an expression that
                   returns the <span class="ph">Data
                   Collector</span> ID, but that's more than
                   we need here. </p>
@@ -885,9 +891,9 @@ Let's simplify and use "out_" instead.</td>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1240 ">Directory Template</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1253 ">Directory Template</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1243 ">Enter the directory where you want the files to be
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1256 ">Enter the directory where you want the files to be
                                         written and optionally include datetime variables to
                                         indicate the frequency at which the files should be rolled
                                         over. <p class="p">For example the following directory rolls the
@@ -899,9 +905,9 @@ Let's simplify and use "out_" instead.</td>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1240 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="29.49852507374631%" headers="d60851e1253 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1243 ">For the tutorial, let's lower the file size to something
+                                    <td class="entry" valign="top" width="70.50147492625369%" headers="d60851e1256 ">For the tutorial, let's lower the file size to something
                                         manageable, like 5 or 1.</td>
 
                                 </tr>
@@ -915,18 +921,20 @@ Let's simplify and use "out_" instead.</td>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="keyword wintitle">Delimited</span> tab and configure the following
-                    property. Use the defaults for the rest:</span>
+                    property. </span>
                 <div class="itemgroup info">
-                    <table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d60851e1316" class="stentry">Delimited Property</th>
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
 
-                            <th valign="bottom" align="left" id="d60851e1319" class="stentry">Configuration</th>
+                    <table cellpadding="4" cellspacing="0" summary="" id="task_wsj_5tm_ls__simpletable_jyj_2vq_ps" border="1" class="simpletable"><tr class="sthead">
+                            <th valign="bottom" align="left" id="d60851e1332" class="stentry">Delimited Property</th>
+
+                            <th valign="bottom" align="left" id="d60851e1335" class="stentry">Configuration</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d60851e1316" class="stentry">Header Line</td>
+                            <td valign="top" headers="d60851e1332" class="stentry">Header Line</td>
 
-                            <td valign="top" headers="d60851e1319" class="stentry">With Header Line</td>
+                            <td valign="top" headers="d60851e1335" class="stentry">With Header Line</td>
 
                         </tr>
 </table>
@@ -935,7 +943,7 @@ Let's simplify and use "out_" instead.</td>
             </li>
 </ol>
 
-        <div class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_svj_rvq_ps" src="../Graphics/Tutorial-HDFS.png" height="120" width="629"></img></p>
+        <div class="section result">This completes the primary branch:<p class="p"><img class="image" id="task_wsj_5tm_ls__image_svj_rvq_ps" src="../Graphics/Tutorial-HDFS.png" height="87" width="684"></img></p>
 <p class="p"> Now, let's go back to the Stream
                 Selector and complete the secondary branch.</p>
 </div>
@@ -947,10 +955,14 @@ Let's simplify and use "out_" instead.</td>
     <h2 class="title topictitle2">Add Corresponding Fields with the Expression Evaluator</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Use an Expression Editor to add the credit card type fields to the non-credit card
-        stream so all records have the same format when written to the destination.</p>
+    <div class="body taskbody"><p class="shortdesc">The Jython Evaluator script added new fields to the credit payments branch. To ensure
+        all records have the same structure, we'll use the Expression Evaluator to add the same
+        fields to the non-credit payment branch. </p>
 
         <div class="section context">
+            <p class="p">This ensures that all records have the same format when written to the
+                destination.</p>
+
             <p class="p">To do this, let's use data preview to verify how the Jython Evaluator adds the credit
                 card type to records.</p>
 
@@ -964,11 +976,9 @@ Let's simplify and use "out_" instead.</td>
                     output of that processor.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Expand the first output record, scroll down, and expand index 21. Note the
-                    header and value information:</span>
-                <div class="itemgroup info"><img class="image" id="task_wgb_t4p_ms__image_h4c_d4h_4s" src="../Graphics/Tutorial-Exp-JythonPreview.png" height="288" width="700"></img><p class="p">From this, we can see that we need to add a map with an index
-                        of 21, as well as the header and value fields.</p>
-</div>
+                <span class="ph cmd">Expand the first output record, scroll down, and notice the new field,
+                    /cc_type.</span>
+                <div class="itemgroup info"><img class="image" id="task_wgb_t4p_ms__image_h4c_d4h_4s" src="../Graphics/Tutorial-Exp-JythonPreview.png" height="288" width="700"></img></div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click <span class="ph uicontrol">Close Preview</span>.</span>
@@ -986,43 +996,31 @@ Let's simplify and use "out_" instead.</td>
                     follows:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_wgb_t4p_ms__simpletable_xdm_rcr_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d60851e1439" class="stentry">Output Field</th>
+                            <th valign="bottom" align="left" id="d60851e1458" class="stentry">Output Field</th>
 
-                            <th valign="bottom" align="left" id="d60851e1442" class="stentry">Expression</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d60851e1439" class="stentry">[21]</td>
-
-                            <td valign="top" headers="d60851e1442" class="stentry">${emptyMap()}</td>
+                            <th valign="bottom" align="left" id="d60851e1461" class="stentry">Expression</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d60851e1439" class="stentry">[21]/header</td>
+                            <td valign="top" headers="d60851e1458" class="stentry">/cc_type</td>
 
-                            <td valign="top" headers="d60851e1442" class="stentry">credit_card_type</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d60851e1439" class="stentry">[21]/value</td>
-
-                            <td valign="top" headers="d60851e1442" class="stentry">N/A</td>
+                            <td valign="top" headers="d60851e1461" class="stentry">n/a</td>
 
                         </tr>
 </table>
 
                 </div>
-                <div class="itemgroup info">Each row creates a field: The first creates a map for index 21. The second
-                    creates a header field with the name credit_card_type. The third creates a value
-                    field that indicates the information is not applicable.</div>
-                <div class="itemgroup info">For the last two rows, we're using constants as the last two expressions, so
-                    we don't need the dollar sign and brackets for the expression. But if we wanted
-                    to use them, we could define them as ${'credit_card_type'} and ${'N/A'}. </div>
+                <div class="itemgroup info">This creates a cc_type field that indicates the information is not
+                    applicable.</div>
+                <div class="itemgroup info">Since we're using "n/a" as a constant for the expression, we don't need to use
+                    the dollar sign and brackets for the expression. But if we wanted to use them,
+                    we could define them as ${'credit_card_type'} and ${'N/A'}. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Link the Expression Evaluator to the Hadoop FS destination. </span>
                 <div class="itemgroup info">This streams the data from this branch to the destination, merging data from
-                    both branches: <img class="image" id="task_wgb_t4p_ms__image_adv_r2r_ps" src="../Graphics/Tutorial-Expression.png" height="365" width="677"></img></div>
+                    both branches: 
+                    <img class="image" id="task_wgb_t4p_ms__image_adv_r2r_ps" src="../Graphics/Tutorial-Expression.png" height="365" width="677"></img></div>
             </li>
 </ol>
 
@@ -1034,7 +1032,8 @@ Let's simplify and use "out_" instead.</td>
 
     
     <div class="body taskbody"><p class="shortdesc">Now before we run the basic pipeline, let's add a data rule and alert. Data rules are
-        user-defined rules used to inspect data moving between two stages. </p>
+        user-defined rules used to inspect data moving between two stages. They are a powerful way
+        to look for outliers and anomalous data. </p>
 
         <div class="section context">
             <p class="p">Data rules and alerts require a detailed understanding of the data passing through
@@ -1046,7 +1045,7 @@ Let's simplify and use "out_" instead.</td>
                 the record count reaches a specified threshold. </p>
 
             <p class="p">We'll use an expression with the record:value('&lt;field path&gt;') function to identify
-                when the credit card number field, <samp class="ph codeph">[20]/value</samp>, is null. The
+                when the credit card number field, <samp class="ph codeph">/credit_card</samp>, is null. The
                 function returns the data in the specified field. </p>
 
         </div>
@@ -1064,39 +1063,39 @@ Let's simplify and use "out_" instead.</td>
                     properties:</span>
                 <div class="itemgroup info">
                     <table cellpadding="4" cellspacing="0" summary="" id="task_ets_dkj_ps__simpletable_z34_ctj_ps" border="1" class="simpletable"><tr class="sthead">
-                            <th valign="bottom" align="left" id="d60851e1567" class="stentry" width="30.3951367781155%">Data Rule Property</th>
+                            <th valign="bottom" align="left" id="d60851e1571" class="stentry" width="30.3951367781155%">Data Rule Property</th>
 
-                            <th valign="bottom" align="left" id="d60851e1570" class="stentry" width="69.6048632218845%">Description</th>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d60851e1567" class="stentry">Label</td>
-
-                            <td valign="top" headers="d60851e1570" class="stentry">Missing Card Numbers</td>
+                            <th valign="bottom" align="left" id="d60851e1574" class="stentry" width="69.6048632218845%">Description</th>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d60851e1567" class="stentry">Condition</td>
+                            <td valign="top" headers="d60851e1571" class="stentry">Label</td>
 
-                            <td valign="top" headers="d60851e1570" class="stentry">${record:value("[20]/value") == ""}</td>
-
-                        </tr>
-<tr class="strow">
-                            <td valign="top" headers="d60851e1567" class="stentry">Sampling Percentage</td>
-
-                            <td valign="top" headers="d60851e1570" class="stentry">20</td>
+                            <td valign="top" headers="d60851e1574" class="stentry">Missing Card Numbers</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d60851e1567" class="stentry">Alert Text</td>
+                            <td valign="top" headers="d60851e1571" class="stentry">Condition</td>
 
-                            <td valign="top" headers="d60851e1570" class="stentry">Over 10 missing credit card numbers!</td>
+                            <td valign="top" headers="d60851e1574" class="stentry">${record:value("/credit_card") == ""}</td>
 
                         </tr>
 <tr class="strow">
-                            <td valign="top" headers="d60851e1567" class="stentry">Threshold Value</td>
+                            <td valign="top" headers="d60851e1571" class="stentry">Sampling Percentage</td>
 
-                            <td valign="top" headers="d60851e1570" class="stentry">10</td>
+                            <td valign="top" headers="d60851e1574" class="stentry">20</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d60851e1571" class="stentry">Alert Text</td>
+
+                            <td valign="top" headers="d60851e1574" class="stentry">Over 10 missing credit card numbers!</td>
+
+                        </tr>
+<tr class="strow">
+                            <td valign="top" headers="d60851e1571" class="stentry">Threshold Value</td>
+
+                            <td valign="top" headers="d60851e1574" class="stentry">10</td>
 
                         </tr>
 </table>
@@ -1130,8 +1129,8 @@ Let's simplify and use "out_" instead.</td>
             <span class="ph uicontrol">Start</span> icon: <img class="image" id="image_lgp_rxp_ts" src="../Graphics/icon_ConfigStartPipeline.png" height="18" width="16"></img>.</p>
 
         <div class="section context">The console enters Monitor mode and shows summary statistics in the Monitor panel.
-            Odds are good the data alert has triggered, displaying a pop up message and a
-            notification, and the location of the triggered data alert has turned red:<p class="p"><img class="image" id="task_m21_dyj_ps__image_gc3_vyr_ps" src="../Graphics/Tutorial-RunPipeline.png" height="423" width="639"></img></p>
+            At some point as the pipeline runs, the data alert triggers. A message displays and the
+            location of the triggered data alert turns red:<p class="p"><img class="image" id="task_m21_dyj_ps__image_gc3_vyr_ps" src="../Graphics/Tutorial-RunPipeline.png" height="485" width="732"></img></p>
 <p class="p">You can close the message and explore the information available in the
                 Monitor panel.</p>
 <p class="p">Note that when you select an unused part of the canvas, the

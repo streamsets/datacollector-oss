@@ -24,7 +24,7 @@
             </p><draft-comment author="Loretta">verify the link</draft-comment><p><xref
               href="https://www.streamsets.com/documentation/datacollector/1.1.0/tutorial/sample_data/nyc_taxi_data.csv"
               format="html" scope="external">
-              https://www.streamsets.com/documentation/datacollector/1.1.0/tutorial/sample_data/nyc_taxi_data.csv</xref></p><p>You'll
+              https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv</xref></p><p>You'll
             need a login to the password-protected section of the site - it just takes a moment to
             set up an account.</p></li>
         <li>Set up a directory local to the <ph
@@ -37,10 +37,10 @@
           /> should be installed and running. </li>
         <li>To create and run the pipeline, you should have a <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> login
-          with the admin role or both the creator and manager roles. <p>If using the default
-            accounts shipped with the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
-            can use the admin login: <codeph>admin</codeph> / <codeph>admin</codeph>. </p></li>
+          with the admin role or both the creator and manager roles. <p>If you haven't set up custom
+            user accounts, you can use the admin account shipped with the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            Login: <codeph>admin</codeph> / <codeph>admin</codeph>. </p></li>
       </ol>
     </p>
  </conbody>

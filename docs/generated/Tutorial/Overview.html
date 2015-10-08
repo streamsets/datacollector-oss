@@ -25,23 +25,23 @@
    If you prefer, you can write to any destination that works for you. </p>
 
   <p class="p">For sample data, the tutorial uses publicly available fare payment information from a taxi
-   company that we've tweaked to add fake credit card data and invalid information to better serve
-   the tutorial. </p>
+   company that we've tweaked to add fake credit card data and invalid information so we show you
+   some error records in the tutorial. </p>
 
-  <p class="p">The basic pipeline assesses the credit card vendors that customers use. (You could use this
-   information later to end contracts with low volume vendors.) The pipeline then masks the credit
-   card numbers before writing the results to file. A secondary branch standardizes the record
-   format for non-credit card data. </p>
+  <p class="p">The basic pipeline assesses the credit card vendors that customers use. (In the real world, you
+   could use this information later to end contracts with low volume vendors.) The pipeline then
+   masks the credit card numbers before writing the results to file. A secondary branch standardizes
+   the record format for non-credit card data. </p>
 
   <p class="p">Here's the pipeline the basic tutorial creates:</p>
 
-  <p class="p"><img class="image" id="concept_is5_lrq_ks__image_c1c_wj4_ms" src="../Graphics/Tutorial-BasicPipe.png" height="182" width="736"></img></p>
+  <p class="p"><img class="image" id="concept_is5_lrq_ks__image_c1c_wj4_ms" src="../Graphics/Tutorial-BasicPipe.png" height="182" width="760"></img></p>
 
   <p class="p">The extended pipeline adds an additional branch to convert some field types and write to the
    Trash destination. We'll use data preview to test stage configuration and changes in data before
    we complete the extended pipeline:</p>
 
-  <p class="p"><img class="image" id="concept_is5_lrq_ks__image_k3b_dr4_ms" src="../Graphics/Tutorial-ExtendedPipe.png" height="120" width="766"></img></p>
+  <p class="p"><img class="image" id="concept_is5_lrq_ks__image_k3b_dr4_ms" src="../Graphics/Tutorial-ExtendedPipe.png" height="154" width="834"></img></p>
 
  </div>
 

@@ -15,8 +15,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wsj_5tm_ls">
     <title>Write to the Destination</title>
-    <shortdesc>You can use the Hadoop FS destination to write to HDFS or to a local directory. We'll
-        write to a local directory.</shortdesc>
+    <shortdesc>StreamSets lets you write data to many destinations. The Hadoop FS destination writes
+        to HDFS or a local directory. For the tutorial, we'll write to a local
+        directory.</shortdesc>
     <taskbody>
         <context>
             <p>When you configure the Hadoop FS destination, you define the directory template. This
@@ -29,9 +30,10 @@
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Hadoop FS</wintitle> tab. To use
-                    Hadoop FS to write to a local file system, configure the following property and
-                    use defaults for the rest: </cmd>
+                    Hadoop FS to write to a local file system, configure the following properties. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_tlp_hvj_5s">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -54,8 +56,10 @@
             </step>
             <step>
                 <cmd>Click the <wintitle>Output Files</wintitle> tab and configure the following
-                    properties. Use the defaults for the rest:</cmd>
+                    properties. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_kcy_5bn_ls">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -99,8 +103,10 @@
             </step>
             <step>
                 <cmd>Click the <wintitle>Delimited</wintitle> tab and configure the following
-                    property. Use the defaults for the rest:</cmd>
+                    property. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <simpletable frame="all" id="simpletable_jyj_2vq_ps">
                         <sthead>
                             <stentry>Delimited Property</stentry>
@@ -115,7 +121,7 @@
             </step>
         </steps>
         <result>This completes the primary branch:<p><image href="../Graphics/Tutorial-HDFS.png"
-                    id="image_svj_rvq_ps" scale="80"/></p><p> Now, let's go back to the Stream
+                    id="image_svj_rvq_ps" scale="60"/></p><p> Now, let's go back to the Stream
                 Selector and complete the secondary branch.</p></result>
     </taskbody>
 </task>
