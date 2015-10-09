@@ -144,7 +144,6 @@ public class KafkaProducer {
     // "key.serializer.class", "partitioner.class", "serializer.class".
     if (kafkaProducerConfigs != null && !kafkaProducerConfigs.isEmpty()) {
       kafkaProducerConfigs.remove(METADATA_BROKER_LIST_KEY);
-      kafkaProducerConfigs.remove(PRODUCER_TYPE_KEY);
       kafkaProducerConfigs.remove(KEY_SERIALIZER_CLASS_KEY);
       kafkaProducerConfigs.remove(SERIALIZER_CLASS_KEY);
 
