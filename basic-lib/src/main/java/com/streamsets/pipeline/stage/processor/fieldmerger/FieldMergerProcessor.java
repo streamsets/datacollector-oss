@@ -95,7 +95,9 @@ public class FieldMergerProcessor extends SingleLaneRecordProcessor {
           // Type is MAP
           Map<String, Field> map = fromField.getValueAsMap();
           for (Map.Entry<String, Field> entry : map.entrySet()) {
-            String newPath = toFieldName + MAP_FIELD_SEPARATOR + entry.getKey();
+            // If toFieldName is the root field, don't add an extra separator
+            String newPath = (toFieldName.equals(MAP_FIELD_SEPARATOR) ? "" : toFieldName)+
+                MAP_FIELD_SEPARATOR + entry.getKey();
             if (record.has(newPath) && !overwriteExisting) {
               fieldsRequiringOverwrite.add(toFieldName);
             } else {
