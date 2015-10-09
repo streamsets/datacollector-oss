@@ -55,7 +55,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
         for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(fieldToHash, fieldPaths)) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);
-            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST) {
+            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST || field.getType() == Field.Type.LIST_MAP) {
               fieldsWithListOrMapType.add(matchingFieldPath);
             } else if (field.getValue() == null) {
               fieldsWithNull.add(matchingFieldPath);

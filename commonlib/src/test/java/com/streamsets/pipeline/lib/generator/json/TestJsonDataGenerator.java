@@ -40,6 +40,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class TestJsonDataGenerator {
@@ -160,4 +161,26 @@ public class TestJsonDataGenerator {
     gen.flush();
   }
 
+  @Test
+  public void testGeneratorListMapType() throws Exception {
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("firstField", Field.create("sampleValue"));
+    linkedHashMap.put("secondField", Field.create(20));
+
+    Field listMapField = Field.createListMap(linkedHashMap);
+    Record record = RecordCreator.create();
+    record.set(listMapField);
+    StringWriter writer = new StringWriter();
+    DataGenerator gen = new JsonCharDataGenerator(writer, JsonMode.MULTIPLE_OBJECTS);
+    gen.write(record);
+
+    JsonParser parser = new ObjectMapper().getFactory().createParser(writer.toString());
+    Iterator<Object> it = parser.readValuesAs(Object.class);
+    Assert.assertTrue(it.hasNext());
+    Object obj = it.next();
+    Assert.assertNotNull(obj);
+    Assert.assertFalse(it.hasNext());
+    Assert.assertTrue(obj instanceof LinkedHashMap);
+    Assert.assertEquals(2, ((LinkedHashMap) obj).size());
+  }
 }

@@ -121,10 +121,11 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
         return Integer.valueOf(stringValue);
       case LONG:
         return Long.valueOf(stringValue);
-      case LIST:
-      case MAP:
       case SHORT:
         return Short.valueOf(stringValue);
+      case LIST_MAP:
+      case LIST:
+      case MAP:
       default:
         return stringValue;
     }

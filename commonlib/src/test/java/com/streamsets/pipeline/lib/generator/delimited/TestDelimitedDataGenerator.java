@@ -41,6 +41,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -161,6 +162,57 @@ public class TestDelimitedDataGenerator {
     gen.write(record);
     gen.close();
     Assert.assertEquals("A,B\r\na,b\r\na,bb\r\n", writer.toString());
+  }
+
+  @Test
+  public void testGeneratorListMapWithHeader() throws Exception {
+    StringWriter writer = new StringWriter();
+    DataGenerator gen = new DelimitedCharDataGenerator(writer, CsvMode.CSV.getFormat(), CsvHeader.WITH_HEADER, "h", "d", false);
+
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("firstField", Field.create("sampleValue"));
+    linkedHashMap.put("secondField", Field.create(20));
+    Field listMapField = Field.createListMap(linkedHashMap);
+    Record record = RecordCreator.create();
+    record.set(listMapField);
+
+    gen.write(record);
+    gen.close();
+    Assert.assertEquals("firstField,secondField\r\nsampleValue,20\r\n", writer.toString());
+  }
+
+  @Test
+  public void testGeneratorListMapIgnoreHeader() throws Exception {
+    StringWriter writer = new StringWriter();
+    DataGenerator gen = new DelimitedCharDataGenerator(writer, CsvMode.CSV.getFormat(), CsvHeader.IGNORE_HEADER, "h", "d", false);
+
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("firstField", Field.create("sampleValue"));
+    linkedHashMap.put("secondField", Field.create(20));
+    Field listMapField = Field.createListMap(linkedHashMap);
+    Record record = RecordCreator.create();
+    record.set(listMapField);
+
+    gen.write(record);
+    gen.close();
+    Assert.assertEquals("sampleValue,20\r\n", writer.toString());
+  }
+
+  @Test
+  public void testGeneratorListMapNoHeader() throws Exception {
+    StringWriter writer = new StringWriter();
+    DataGenerator gen = new DelimitedCharDataGenerator(writer, CsvMode.CSV.getFormat(), CsvHeader.NO_HEADER, "h", "d", false);
+
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("firstField", Field.create("sampleValue"));
+    linkedHashMap.put("secondField", Field.create(20));
+    Field listMapField = Field.createListMap(linkedHashMap);
+    Record record = RecordCreator.create();
+    record.set(listMapField);
+
+    gen.write(record);
+    gen.close();
+    Assert.assertEquals("sampleValue,20\r\n", writer.toString());
   }
 
   @Test
