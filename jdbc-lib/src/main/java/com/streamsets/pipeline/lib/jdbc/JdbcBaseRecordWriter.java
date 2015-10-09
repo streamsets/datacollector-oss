@@ -122,6 +122,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
         return "VARCHAR";
       case BYTE_ARRAY:
         return "VARBINARY";
+      case LIST_MAP:
       case MAP:
         throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported list or map type: MAP");
       case LIST:

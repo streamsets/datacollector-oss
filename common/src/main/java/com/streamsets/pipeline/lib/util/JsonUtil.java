@@ -122,7 +122,7 @@ public class JsonUtil {
         toReturn.add(fieldToJsonObject(record, f));
       }
       obj = toReturn;
-    } else if(field.getType()== Field.Type.MAP) {
+    } else if(field.getType()== Field.Type.MAP || field.getType() == Field.Type.LIST_MAP) {
       Map<String, Field> map = field.getValueAsMap();
       Map<String, Object> toReturn = new LinkedHashMap<>();
       for (Map.Entry<String, Field> entry :map.entrySet()) {

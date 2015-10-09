@@ -89,43 +89,43 @@ public class JsonCharDataGenerator implements DataGenerator {
     Object obj;
     if (field == null || field.getValue() == null) {
       obj = null;
-    } else if(field.getType()== Field.Type.BOOLEAN) {
+    } else if (field.getType() == Field.Type.BOOLEAN) {
       obj = field.getValueAsBoolean();
-    } else if(field.getType()== Field.Type.BYTE) {
+    } else if (field.getType() == Field.Type.BYTE) {
       obj = field.getValueAsByte();
-    } else if(field.getType()== Field.Type.BYTE_ARRAY) {
+    } else if (field.getType() == Field.Type.BYTE_ARRAY) {
       obj = field.getValueAsByteArray();
-    } else if(field.getType()== Field.Type.CHAR) {
+    } else if (field.getType() == Field.Type.CHAR) {
       obj = field.getValueAsChar();
-    } else if(field.getType()== Field.Type.DATE) {
+    } else if (field.getType() == Field.Type.DATE) {
       obj = field.getValueAsDate();
-    } else if(field.getType()== Field.Type.DATETIME) {
+    } else if (field.getType() == Field.Type.DATETIME) {
       obj = field.getValueAsDatetime();
-    } else if(field.getType()== Field.Type.DECIMAL) {
+    } else if (field.getType() == Field.Type.DECIMAL) {
       obj = field.getValueAsDecimal();
-    } else if(field.getType()== Field.Type.DOUBLE) {
+    } else if (field.getType() == Field.Type.DOUBLE) {
       obj = field.getValueAsDouble();
-    } else if(field.getType()== Field.Type.FLOAT) {
+    } else if (field.getType() == Field.Type.FLOAT) {
       obj = field.getValueAsFloat();
-    } else if(field.getType()== Field.Type.INTEGER) {
+    } else if (field.getType() == Field.Type.INTEGER) {
       obj = field.getValueAsInteger();
-    } else if(field.getType()== Field.Type.LONG) {
+    } else if (field.getType() == Field.Type.LONG) {
       obj = field.getValueAsLong();
-    } else if(field.getType()== Field.Type.SHORT) {
+    } else if (field.getType() == Field.Type.SHORT) {
       obj = field.getValueAsShort();
-    } else if(field.getType()== Field.Type.STRING) {
+    } else if (field.getType() == Field.Type.STRING) {
       obj = field.getValueAsString();
-    } else if(field.getType()== Field.Type.LIST) {
+    } else if (field.getType() == Field.Type.LIST) {
       List<Field> list = field.getValueAsList();
       List<Object> toReturn = new ArrayList<>(list.size());
-      for(Field f : list) {
+      for (Field f : list) {
         toReturn.add(fieldToJsonObject(record, f));
       }
       obj = toReturn;
-    } else if(field.getType()== Field.Type.MAP) {
+    } else if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST_MAP) {
       Map<String, Field> map = field.getValueAsMap();
       Map<String, Object> toReturn = new LinkedHashMap<>();
-      for (Map.Entry<String, Field> entry :map.entrySet()) {
+      for (Map.Entry<String, Field> entry : map.entrySet()) {
         toReturn.put(entry.getKey(), fieldToJsonObject(record, entry.getValue()));
       }
       obj = toReturn;

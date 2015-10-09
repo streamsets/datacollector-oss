@@ -447,7 +447,7 @@ public class HBaseTarget extends BaseTarget {
       value = Bytes.toBytes(field.getValueAsString());
     } else if (columnStorageType == StorageType.JSON_STRING) {
       // only map and list can be converted to json string
-      if (field.getType() == Type.MAP || field.getType() == Type.LIST) {
+      if (field.getType() == Type.MAP || field.getType() == Type.LIST || field.getType() == Type.LIST_MAP) {
         value = JsonUtil.jsonRecordToBytes(record, field);
       } else {
         throw new OnRecordErrorException(Errors.HBASE_12, field.getType(),
@@ -494,6 +494,9 @@ public class HBaseTarget extends BaseTarget {
       break;
     case LIST:
       throw new OnRecordErrorException(Errors.HBASE_12, Type.LIST.name(),
+          StorageType.BINARY.name(), record);
+    case LIST_MAP:
+      throw new OnRecordErrorException(Errors.HBASE_12, Type.LIST_MAP.name(),
           StorageType.BINARY.name(), record);
     case LONG:
       value = Bytes.toBytes(field.getValueAsLong());

@@ -30,7 +30,9 @@ import org.apache.commons.csv.CSVPrinter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 public class DelimitedCharDataGenerator implements DataGenerator {
   private final CSVFormat format;
@@ -82,37 +84,61 @@ public class DelimitedCharDataGenerator implements DataGenerator {
     }
     if (firstRecord) {
       if (getHeader() == CsvHeader.WITH_HEADER) {
-        writeLine(record, getHeaderKey());
+        writeHeader(record, getHeaderKey());
       }
       firstRecord = false;
     }
     writeLine(record, getValueKey());
   }
 
-  private void writeLine(Record record, String key) throws IOException, DataGeneratorException{
+  private void writeHeader(Record record, String key) throws DataGeneratorException, IOException {
     Field field = record.get();
-    if (field.getType() != Field.Type.LIST) {
+
+    if (field.getType() == Field.Type.LIST) {
+      writeLine(record, key);
+    } else if (field.getType() == Field.Type.LIST_MAP) {
+      LinkedHashMap<String, Field> columns = field.getValueAsListMap();
+      Set<String> values = columns.keySet(); // Set is backed by LinkedHashMap, so order is maintained
+      printer.printRecord(values);
+    } else {
       throw new DataGeneratorException(Errors.DELIMITED_GENERATOR_00, record.getHeader().getSourceId(), field.getType());
     }
+
+
+  }
+
+  private void writeLine(Record record, String key) throws IOException, DataGeneratorException{
+    Field field = record.get();
+
+    if (field.getType() != Field.Type.LIST && field.getType() != Field.Type.LIST_MAP) {
+      throw new DataGeneratorException(Errors.DELIMITED_GENERATOR_00, record.getHeader().getSourceId(), field.getType());
+    }
+
     List<Field> columns = field.getValueAsList();
     List<String> values = new ArrayList<>(columns.size());
+    boolean isListMap = field.getType() == Field.Type.LIST_MAP;
     for (int i = 0; i< columns.size(); i++) {
       Field column = columns.get(i);
-      try {
-        String value = column.getValueAsMap().get(key).getValueAsString();
-        if (replaceNewLines) {
-          if (value.contains("\n")) {
-            value = value.replace('\n', ' ');
-          }
-          if (value.contains("\r")) {
-            value = value.replace('\r', ' ');
-          }
+      String value;
+      if (!isListMap) {
+        try {
+          value = column.getValueAsMap().get(key).getValueAsString();
+        } catch (Exception ex) {
+          throw new DataGeneratorException(Errors.DELIMITED_GENERATOR_01, record.getHeader().getSourceId(), i,
+              column.getType());
         }
-        values.add(value);
-      } catch (Exception ex) {
-        throw new DataGeneratorException(Errors.DELIMITED_GENERATOR_01, record.getHeader().getSourceId(), i,
-                                         column.getType());
+      } else {
+        value = column.getValueAsString();
       }
+      if (replaceNewLines) {
+        if (value.contains("\n")) {
+          value = value.replace('\n', ' ');
+        }
+        if (value.contains("\r")) {
+          value = value.replace('\r', ' ');
+        }
+      }
+      values.add(value);
     }
     printer.printRecord(values);
   }

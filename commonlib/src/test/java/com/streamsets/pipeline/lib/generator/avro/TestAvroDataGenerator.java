@@ -46,6 +46,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TestAvroDataGenerator {
@@ -138,6 +140,34 @@ public class TestAvroDataGenerator {
     dataGenerator.close();
 
     System.out.println(new String(baos.toByteArray()));
+  }
+
+  @Test
+  public void testAvroGeneratorListMapType() throws Exception {
+    LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
+    linkedHashMap.put("name", Field.create("Jon Natkins"));
+    linkedHashMap.put("age", Field.create(29));
+    linkedHashMap.put("emails", Field.create(ImmutableList.of(Field.create("natty@streamsets.com"))));
+    linkedHashMap.put("boss", Field.create(Field.Type.MAP, null));
+    Field listMapField = Field.createListMap(linkedHashMap);
+    Record record = RecordCreator.create();
+    record.set(listMapField);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(baos, AVRO_SCHEMA);
+    gen.write(record);
+    gen.close();
+
+    //reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Assert.assertEquals("Jon Natkins", readRecord.get("name").toString());
+    Assert.assertEquals(29, readRecord.get("age"));
+    Assert.assertFalse(dataFileReader.hasNext());
   }
 
   private Record createRecord() throws IOException {
