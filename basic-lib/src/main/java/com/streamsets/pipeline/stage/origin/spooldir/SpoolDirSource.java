@@ -84,7 +84,7 @@ public class SpoolDirSource extends BaseSource {
   private int maxSpoolFiles;
   private String initialFileToProcess;
   private final Compression fileCompression;
-  private final String compressionFilePattern;
+  private final String filePatternInArchive;
   private final String errorArchiveDir;
   private final PostProcessingOptions postProcessing;
   private final String archiveDir;
@@ -118,7 +118,7 @@ public class SpoolDirSource extends BaseSource {
   public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
       String spoolDir, int batchSize, long poolingTimeoutSecs,
       String filePattern, int maxSpoolFiles, String initialFileToProcess, Compression fileCompression,
-      String compressionFilePattern, String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir,
+      String filePatternInArchive, String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir,
       long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter,
       char csvCustomEscape, char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
       int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
@@ -137,7 +137,7 @@ public class SpoolDirSource extends BaseSource {
     this.maxSpoolFiles = maxSpoolFiles;
     this.initialFileToProcess = initialFileToProcess;
     this.fileCompression = fileCompression;
-    this.compressionFilePattern = compressionFilePattern;
+    this.filePatternInArchive = filePatternInArchive;
     this.errorArchiveDir = errorArchiveDir;
     this.postProcessing = postProcessing;
     this.archiveDir = archiveDir;
@@ -342,7 +342,7 @@ public class SpoolDirSource extends BaseSource {
     builder.setOverRunLimit(overrunLimit);
     builder.setRemoveCtrlChars(removeCtrlChars);
     builder.setCompression(fileCompression);
-    builder.setFilePatternInArchive(compressionFilePattern);
+    builder.setFilePatternInArchive(filePatternInArchive);
     switch (dataFormat) {
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);

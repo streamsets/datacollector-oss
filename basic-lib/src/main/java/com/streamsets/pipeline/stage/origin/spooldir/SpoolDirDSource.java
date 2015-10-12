@@ -213,7 +213,7 @@ public class SpoolDirDSource extends DSource {
     dependsOn = "fileCompression",
     triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
   )
-  public String compressionFilePattern = "*";
+  public String filePatternInArchive = "*";
 
   @ConfigDef(
       required = false,
@@ -631,7 +631,7 @@ public class SpoolDirDSource extends DSource {
   @Override
   protected Source createSource() {
     return new SpoolDirSource(dataFormat, charset, removeCtrlChars, overrunLimit, spoolDir, batchSize,
-      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, fileCompression, compressionFilePattern,
+      poolingTimeoutSecs, filePattern, maxSpoolFiles, initialFileToProcess, fileCompression, filePatternInArchive,
       errorArchiveDir, postProcessing, archiveDir,
       retentionTimeMins, csvFileFormat, csvHeader, csvMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
       jsonContent, jsonMaxObjectLen, textMaxObjectLen, xmlRecordElement, xmlMaxObjectLen, logMode,
