@@ -46,5 +46,11 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Administration/CLI-Overview.dita" chunk="to-content">
+  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Administration/CLI-Launching.dita"/>
+ </topicref>
  </topicref>
 </map>

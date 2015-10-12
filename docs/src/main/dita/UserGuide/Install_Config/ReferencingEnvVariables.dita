@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_gvn_rnr_pt">
+ <title>Referencing Environment Variables</title>
+ <shortdesc>You can reference an environment variable in the <ph
+   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> properties file
+  by surrounding the environment variable with dollar signs, as follows: $<codeph>&lt;environment
+   variable></codeph>$. </shortdesc>
+ <conbody>
+  <p><indexterm>environment variables<indexterm>references in the Data Collector configuration
+          file</indexterm></indexterm><indexterm>Data Collector configuration
+          file<indexterm>referencing environment variables</indexterm></indexterm>For example, to
+      define the runtime.conf.location property as a subdirectory of the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> working
+      directory, you could configure the property as
+      follows:<codeblock>runtime.conf.location=$PWD$/runtime</codeblock></p>
+ </conbody>
+</concept>

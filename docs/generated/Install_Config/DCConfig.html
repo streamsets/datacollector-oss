@@ -19,9 +19,9 @@
     configuration file, sdc.properties, to configure properties such as the host name and port
     number and account information for email alerts. </p>
 
-    <p class="p">You can store sensitive configuration values in files separate from the <span class="ph">Data
+    <p class="p">You can store sensitive information in separate files and reference them in the <span class="ph">Data
                   Collector</span>
-      configuration file.</p>
+      configuration file. You can also reference information in an environment variable.</p>
 
     <p class="p">You can define runtime properties in the <span class="ph">Data
                   Collector</span>
@@ -73,17 +73,28 @@
 
 </div>
 <div class="topic concept nested1" id="concept_aqc_dbt_zr">
- <h2 class="title topictitle2">Storing and Referencing Sensitive Values</h2>
+ <h2 class="title topictitle2">Referencing Sensitive Values in Files</h2>
 
  
- <div class="body conbody"><p class="shortdesc">For increased security you can keep sensitive configuration values, such as passwords,
-    in files instead of saving them in the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">For increased security you can store sensitive information, such as a password, in
+    separate files and reference the files in the <span class="ph">Data
                   Collector</span>
-    configuration file. By default, the <span class="ph">Data
-                  Collector</span> expects the
-    email password and keystore file password in separate files. </p>
+    configuration file as follows: @<samp class="ph codeph">&lt;filename&gt;</samp>@.</p>
 
-  <div class="p">To store and reference sensitive information: <ol class="ol" id="concept_aqc_dbt_zr__ol_vws_tbt_zr">
+  <p class="p">You can store a single piece of information in a file. When the
+        <span class="ph">Data
+                  Collector</span>
+      starts, it checks the reference files for information. By default, the <span class="ph">Data
+                  Collector</span> expects
+      the email password and keystore file password to be stored in files. </p>
+
+    <div class="p">For example, if you configure xmail.username as follows, the <span class="ph">Data
+                  Collector</span> checks the
+      email_username.txt file for the user
+      name:<pre class="pre codeblock"><strong class="ph b">xmail.username</strong>=@email_username.txt@</pre>
+</div>
+
+    <div class="p">To store and reference sensitive information: <ol class="ol" id="concept_aqc_dbt_zr__ol_vws_tbt_zr">
         <li class="li">Create a text file for each configuration value that you want to safeguard.</li>
 
         <li class="li">Include only one configuration value in each file. <p class="p">You can store any configuration
@@ -103,10 +114,25 @@
 </li>
 
       </ol>
-For example, if you configure xmail.username as follows, the <span class="ph">Data
-                  Collector</span> checks the
-      email_username.txt file for the user
-      name:<pre class="pre codeblock"><strong class="ph b">xmail.username</strong>=@email_username.txt@</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_gvn_rnr_pt">
+ <h2 class="title topictitle2">Referencing Environment Variables</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can reference an environment variable in the <span class="ph">Data
+                  Collector</span> properties file
+  by surrounding the environment variable with dollar signs, as follows: $<samp class="ph codeph">&lt;environment
+   variable&gt;</samp>$. </p>
+
+  <div class="p">For example, to
+      define the runtime.conf.location property as a subdirectory of the <span class="ph">Data
+                  Collector</span> working
+      directory, you could configure the property as
+      follows:<pre class="pre codeblock">runtime.conf.location=$PWD$/runtime</pre>
 </div>
 
  </div>
@@ -196,9 +222,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="33.33333333333333%" id="d22690e350">General Property</th>
+                                <th class="entry" valign="top" width="33.33333333333333%" id="d23215e397">General Property</th>
 
-                                <th class="entry" valign="top" width="66.66666666666666%" id="d22690e353">Description</th>
+                                <th class="entry" valign="top" width="66.66666666666666%" id="d23215e400">Description</th>
 
                             </tr>
 
@@ -206,18 +232,18 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">http.port</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">http.port</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Port number to use for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Port number to use for the <span class="ph">Data
                   Collector</span> console. <p class="p">Default is 18630.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">https.port</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">https.port</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Secure port number for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Secure port number for the <span class="ph">Data
                   Collector</span> console. Any number besides -1 enables the secure port
                                     number. <p class="p">If you use both port properties, the HTTP port
                                         bounces to the HTTPS port.</p>
@@ -227,9 +253,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">https.keystore.path</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">https.keystore.path</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Keystore path and file name. <p class="p">By default, the file name is
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Keystore path and file name. <p class="p">By default, the file name is
                                             <span class="ph filepath">sdc-keystore.jks</span> and expected in
                                         the same directory as the <span class="ph">Data
                   Collector</span> configuration file.</p>
@@ -238,9 +264,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">https.keystore.password</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">https.keystore.password</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">File that contains the password to the keystore file. <p class="p">By
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">File that contains the password to the keystore file. <p class="p">By
                                         default, the file name is
                                             <span class="ph filepath">keystore-password.txt</span> and expected
                                         in the same directory as the <span class="ph">Data
@@ -252,18 +278,18 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">http.authentication</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">http.authentication</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">HTTP authentication. Use none, basic, digest, or
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">HTTP authentication. Use none, basic, digest, or
                                         form.<p class="p">Default is form.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">kerberos.client.enabled</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">kerberos.client.enabled</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Enables the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Enables the <span class="ph">Data
                   Collector</span> to use Kerberos authentication. Must be enabled to allow a
                                     stage to use Kerberos authentication to access external systems.
                                 </td>
@@ -271,17 +297,17 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">kerberos.client.principal</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">kerberos.client.principal</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Kerberos principal for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Kerberos principal for the <span class="ph">Data
                   Collector</span> to use. Enter a service principal.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">kerberos.client.keytab</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">kerberos.client.keytab</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Location of the Kerberos keytab file that contains the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Location of the Kerberos keytab file that contains the
                                     credentials for the Kerberos principal. <p class="p">Use a fully-qualified
                                         directory or a directory relative to the <span class="ph">Data
                   Collector</span> configuration directory.</p>
@@ -290,36 +316,36 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">preview.maxBatchSize</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">preview.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of records used to preview data. <p class="p">Default is
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of records used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">preview.maxBatches</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">preview.maxBatches</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of batches used to preview data. <p class="p">Default is
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of batches used to preview data. <p class="p">Default is
                                         10.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">production.maxBatchSize</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">production.maxBatchSize</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of records included in a batch when the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of records included in a batch when the
                                     pipeline runs.<p class="p">Default is 1000.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">production.maxErrorRecordsPerStage</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">production.maxErrorRecordsPerStage</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of error records to save in memory for each
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of error records to save in memory for each
                                     stage to display in monitor mode. When the limit is reached,
                                     older error records are discarded.<p class="p">Default is 100.
                                     </p>
@@ -328,9 +354,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">production.maxPipelineErrors</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">production.maxPipelineErrors</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of pipeline errors to save in memory to
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of pipeline errors to save in memory to
                                     display in monitor mode. When the limit is reached, older errors
                                     are discarded. <p class="p">Default is 100. </p>
 </td>
@@ -338,9 +364,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">max.logtail.concurrent.requests</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">max.logtail.concurrent.requests</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of external processes allowed to access the
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of external processes allowed to access the
                                         <span class="ph">Data
                   Collector</span> log file at the same time through REST API calls. <p class="p">Default
                                         is 5.</p>
@@ -349,25 +375,25 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">max.webSockets.current.requests</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">max.webSockets.current.requests</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Maximum number of WebSocket calls allowed. </td>
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Maximum number of WebSocket calls allowed. </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.help.base.url</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.help.base.url</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Base URL for the local <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Base URL for the local <span class="ph">Data
                   Collector</span> online help. <p class="p">Do not change this value.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.hosted.help.base.url</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.hosted.help.base.url</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Base URL for the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Base URL for the <span class="ph">Data
                   Collector</span> online help hosted by the StreamSets website. <p class="p">Do not
                                         change this value.</p>
 </td>
@@ -375,9 +401,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Interval in milliseconds that the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Interval in milliseconds that the <span class="ph">Data
                   Collector</span> waits before refreshing the <span class="ph">Data
                   Collector</span> console.<p class="p">Default is 2000.</p>
 </td>
@@ -385,35 +411,35 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.jvmMetrics.refresh.interval.ms</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.jvmMetrics.refresh.interval.ms</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Interval in milliseconds that the JVM metrics are
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Interval in milliseconds that the JVM metrics are
                                         refreshed.<p class="p">Default is 4000.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.enable.usage.data.collection</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.enable.usage.data.collection</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Allows anonymous Google Analytics information to be sent
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Allows anonymous Google Analytics information to be sent
                                     StreamSets. <p class="p">Default is true. </p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.enable.webSocket</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.enable.webSocket</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Enables the <span class="ph">Data
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Enables the <span class="ph">Data
                   Collector</span> to use WebSocket to gather pipeline information.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="33.33333333333333%" headers="d22690e350 ">ui.undo.limit</td>
+                                <td class="entry" valign="top" width="33.33333333333333%" headers="d23215e397 ">ui.undo.limit</td>
 
-                                <td class="entry" valign="top" width="66.66666666666666%" headers="d22690e353 ">Number of recent actions stored so you can undo them.
+                                <td class="entry" valign="top" width="66.66666666666666%" headers="d23215e400 ">Number of recent actions stored so you can undo them.
                                 </td>
 
                             </tr>
@@ -431,9 +457,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                         
                         <thead class="thead" align="left">
                             <tr class="row">
-                                <th class="entry" valign="top" width="22.22222222222222%" id="d22690e663">Email Alert Properties</th>
+                                <th class="entry" valign="top" width="22.22222222222222%" id="d23215e710">Email Alert Properties</th>
 
-                                <th class="entry" valign="top" width="77.77777777777779%" id="d22690e666">Description</th>
+                                <th class="entry" valign="top" width="77.77777777777779%" id="d23215e713">Description</th>
 
                             </tr>
 
@@ -441,83 +467,83 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
 
                         <tbody class="tbody">
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.transport.protocol</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.transport.protocol</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">Use smtp or smtps. <p class="p">Default is smtp.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtp.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtp.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">SMTP host name.<p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">SMTP host name.<p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtp.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtp.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">SMTP port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">SMTP port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtp.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtp.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">Whether the SMTP host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">Whether the SMTP host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtp.starttls.enable</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtp.starttls.enable</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">Whether the SMTP host uses STARTTLS encryption. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">Whether the SMTP host uses STARTTLS encryption. Use true or
                                         false.<p class="p">Default is false. </p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtps.host</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtps.host</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">SMTPS host name. <p class="p">Default is localhost.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">SMTPS host name. <p class="p">Default is localhost.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtps.port</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtps.port</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">SMTPS port number.<p class="p">Default is 25.</p>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">SMTPS port number.<p class="p">Default is 25.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">mail.smtps.auth</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">mail.smtps.auth</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">Whether the SMTPS host uses authentication. Use true or
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">Whether the SMTPS host uses authentication. Use true or
                                         false.<p class="p">Default is false.</p>
 </td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">xmail.username</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">xmail.username</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">User name for the email account to send alert email.</td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">User name for the email account to send alert email.</td>
 
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">xmail.password</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">xmail.password</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">File that contains the password for the email account.<p class="p">By
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">File that contains the password for the email account.<p class="p">By
                                         default, the file name is
                                             <span class="ph filepath">email-password.txt</span> and expected in
                                         the same directory as the <span class="ph">Data
@@ -529,9 +555,9 @@ For example, if you configure xmail.username as follows, the <span class="ph">Da
                             </tr>
 
                             <tr class="row">
-                                <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e663 ">xmail.from.address</td>
+                                <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e710 ">xmail.from.address</td>
 
-                                <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e666 ">Email address to send alert email. </td>
+                                <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e713 ">Email address to send alert email. </td>
 
                             </tr>
 
@@ -548,9 +574,9 @@ The <span class="ph">Data
                     
                     <thead class="thead" align="left">
                         <tr class="row">
-                            <th class="entry" valign="top" width="22.22222222222222%" id="d22690e817">Advanced Property</th>
+                            <th class="entry" valign="top" width="22.22222222222222%" id="d23215e864">Advanced Property</th>
 
-                            <th class="entry" valign="top" width="77.77777777777779%" id="d22690e820">Description</th>
+                            <th class="entry" valign="top" width="77.77777777777779%" id="d23215e867">Description</th>
 
                         </tr>
 
@@ -558,10 +584,10 @@ The <span class="ph">Data
 
                     <tbody class="tbody">
                         <tr class="row">
-                            <td class="entry" valign="top" width="22.22222222222222%" headers="d22690e817 ">runtime.conf.location  <a class="xref" href="../Advanced_Config/RuntimeProperties.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and use from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                            <td class="entry" valign="top" width="22.22222222222222%" headers="d23215e864 ">runtime.conf.location  <a class="xref" href="../Advanced_Config/RuntimeProperties.html#concept_fjx_g31_1s" title="Runtime properties are properties that you define in a file local to the Data Collector and use from within a pipeline. With runtime properties, you can define different sets of values for different Data Collectors."><img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                 </a></td>
 
-                            <td class="entry" valign="top" width="77.77777777777779%" headers="d22690e820 ">Location of runtime properties. Use to declare where runtime
+                            <td class="entry" valign="top" width="77.77777777777779%" headers="d23215e867 ">Location of runtime properties. Use to declare where runtime
                                 properties are defined:<ul class="ul" id="task_lxk_kjw_1r__ul_mh4_rrn_1s">
                                     <li class="li">embedded - The runtime properties are defined in the file.
                                             <p class="p">Use the following naming convention to define runtime

@@ -20,9 +20,9 @@
     configuration file, sdc.properties, to configure properties such as the host name and port
     number and account information for email alerts. </shortdesc>
   <conbody>
-    <p>You can store sensitive configuration values in files separate from the <ph
+    <p>You can store sensitive information in separate files and reference them in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file.</p>
+      configuration file. You can also reference information in an environment variable.</p>
     <p>You can define runtime properties in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file or in a separate file. For more information, see <xref

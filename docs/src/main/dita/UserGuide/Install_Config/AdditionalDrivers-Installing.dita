@@ -41,9 +41,9 @@
                     /> environment file, sdc-env.sh or sdcd-env.sh, add the
                     STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
                     directory, as
-                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = &lt;driver directory></codeblock><p>For
+                        follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;driver directory>"</codeblock><p>For
                         example:
-                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR = /opt/sdc-extras/</codeblock></li>
+                    </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></li>
                 <li>When using the Java Security Manager, which is enabled by default, update the
                         <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

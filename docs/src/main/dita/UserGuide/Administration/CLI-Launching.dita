@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kpw_mdt_qt">
+ <title>Using the Command Line Interface</title>
+ <conbody>
+  <p><indexterm>command line interface<indexterm>using</indexterm></indexterm>Use the following
+   command to launch the <ph
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command line
+   interface:<codeblock>$ &lt;SDCinstalldir/bin/streamsets cli (-U &lt;sdcURL> | --url &lt;sdcURL>) \
+[(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
+[(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] &lt;command> [&lt;args>] </codeblock></p>
+  <p>The following table describes the parameters in the command:<table frame="all" rowsep="1"
+    colsep="1" id="table_apy_55t_qt">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+     <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+     <thead>
+      <row>
+       <entry>Parameter</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row>
+       <entry>&lt;sdcURL></entry>
+       <entry><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        URL. <p>The default URL is <codeph>http://localhost:18630/</codeph>.</p></entry>
+      </row>
+      <row>
+       <entry>&lt;sdcAuthType></entry>
+       <entry>Optional. HTTP authentication type used by the <ph
+         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </entry>
+      </row>
+      <row>
+       <entry>&lt;sdcUser></entry>
+       <entry>Optional. User name for the login. </entry>
+      </row>
+      <row>
+       <entry>&lt;sdcPassword></entry>
+       <entry>Optional. Password for the login.</entry>
+      </row>
+      <row>
+       <entry>&lt;command> &lt;args></entry>
+       <entry>Required. Command to perform. </entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table></p>
+  <p>For additional information for each command, including the arguments you can use, use the help
+   command as follows:
+   <codeblock>&lt;SDCinstalldir&gt;/bin/streamsets cli (-U &lt;sdcURL> | --url &lt;sdcURL>) \
+[(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
+[(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] <b>help &lt;command></b></codeblock></p>
+  <p>For example, the following command displays the details for the manager command:
+   <codeblock>&lt;SDCinstalldir>/bin/streamsets cli -U http://localhost:18630 help manager</codeblock></p>
+ </conbody>
+</concept>
