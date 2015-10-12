@@ -23,7 +23,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.iterable.S3Objects;
-import com.amazonaws.services.s3.model.CreateBucketRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -36,6 +35,8 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.FakeS3;
+import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
 import org.junit.AfterClass;
@@ -49,7 +50,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.ServerSocket;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +77,7 @@ public class TestAmazonS3Source2 {
     File dir = new File(new File("target", UUID.randomUUID().toString()), "fakes3_root").getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     fakeS3Root = dir.getAbsolutePath();
-    port = getFreePort();
+    port = TestUtil.getFreePort();
     fakeS3 = new FakeS3(fakeS3Root, port);
     Assume.assumeTrue("Please install fakes3 in your system", fakeS3.fakes3Installed());
     //Start the fakes3 server
@@ -103,9 +103,9 @@ public class TestAmazonS3Source2 {
     s3client.setEndpoint("http://localhost:" + port);
     s3client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));
 
-    createBucket(s3client, BUCKET_NAME);
-    createBucket(s3client, POSTPROCESS_BUCKET);
-    createBucket(s3client, ERROR_BUCKET);
+    TestUtil.createBucket(s3client, BUCKET_NAME);
+    TestUtil.createBucket(s3client, POSTPROCESS_BUCKET);
+    TestUtil.createBucket(s3client, ERROR_BUCKET);
 
     //create directory structure
     // mybucket/NorthAmerica/USA
@@ -186,19 +186,6 @@ public class TestAmazonS3Source2 {
     Assert.assertEquals(18, count); //12 files + 3 dirs
   }
 
-  private static void createBucket(AmazonS3Client s3client, String bucketName) {
-    if(s3client.doesBucketExist(bucketName)) {
-      for(S3ObjectSummary s : S3Objects.inBucket(s3client, bucketName)) {
-        s3client.deleteObject(bucketName, s.getKey());
-      }
-      s3client.deleteBucket(bucketName);
-    }
-    Assert.assertFalse(s3client.doesBucketExist(bucketName));
-    // Note that CreateBucketRequest does not specify region. So bucket is
-    // bucketName
-    s3client.createBucket(new CreateBucketRequest(bucketName));
-  }
-
   @Test
   public void testProduceFullFile() throws Exception {
     AmazonS3Source source = createSource();
@@ -222,7 +209,7 @@ public class TestAmazonS3Source2 {
 
       Assert.assertEquals(6, allRecords.size());
       Assert.assertEquals(initialCount-6, getObjectCount(s3client, BUCKET_NAME));
-      Assert.assertEquals(postProcessInitialCount+6, getObjectCount(s3client, POSTPROCESS_BUCKET));
+      Assert.assertEquals(postProcessInitialCount + 6, getObjectCount(s3client, POSTPROCESS_BUCKET));
 
     } finally {
       runner.runDestroy();
@@ -462,13 +449,6 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.advancedConfig.useProxy = false;
 
     return new AmazonS3Source(s3ConfigBean);
-  }
-
-  public static int getFreePort() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(0);
-    int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    return port;
   }
 
   private int getObjectCount(AmazonS3Client s3Client, String bucket) {
