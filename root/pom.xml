@@ -161,7 +161,12 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_kafka_1_2_0-lib</artifactId>
+        <artifactId>streamsets-datacollector-cdh_kafka_1_2-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cdh_kafka_1_3-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -221,7 +226,12 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib</artifactId>
+        <artifactId>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2-lib</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

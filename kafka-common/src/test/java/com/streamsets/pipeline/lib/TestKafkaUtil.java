@@ -64,7 +64,7 @@ public class TestKafkaUtil {
     props.setProperty("auto.create.topics.enable", "true");
     KafkaServer kafkaServer = null;
     kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
-    Assert.assertEquals(1, KafkaUtil.getPartitionCount(new String("localhost:" + port), "testFetchTopicMetaData", 3, 1000));
+    Assert.assertEquals(1, KafkaUtil.getPartitionCount("localhost:" + port, "testFetchTopicMetaData", 3, 1000));
     kafkaServer.shutdown();
   }
 
@@ -75,7 +75,7 @@ public class TestKafkaUtil {
     props.setProperty("auto.create.topics.enable", "false");
     KafkaServer kafkaServer = TestUtils.createServer(new KafkaConfig(props), new MockTime());
     try {
-      KafkaUtil.getPartitionCount(new String("localhost:" + port), "testFetchTopicMetaDataAutoCreateFalse", 3, 1000);
+      KafkaUtil.getPartitionCount("localhost:" + port, "testFetchTopicMetaDataAutoCreateFalse", 3, 1000);
       Assert.fail("Expected StageException but didn't get any");
     } catch (IOException e) {
       //NOP assertEquals(Errors.KAFKA_03, e.getErrorCode());

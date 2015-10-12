@@ -83,7 +83,7 @@ public class TestClusterModeDataFormats {
   private static String originalTmpDir;
 
   @BeforeClass
-  public static void setUp() {
+  public static void setUp() throws Exception {
     //Init zookeeper
     originalTmpDir = System.getProperty("java.io.tmpdir");
     File testDir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
@@ -98,7 +98,7 @@ public class TestClusterModeDataFormats {
     // setup Broker
     port = TestUtils.choosePort();
     kafkaServers = new ArrayList<>(3);
-    Properties props1 = TestUtils.createBrokerConfig(BROKER_1_ID, port, true);
+    Properties props1 = TestUtilsBridge.createBrokerConfig(BROKER_1_ID, port, true, false);
 
     kafkaServers.add(TestUtils.createServer(new KafkaConfig(props1), new MockTime()));
     // create topic

@@ -27,8 +27,8 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-cdh_5_2-lib</artifactId>
   <version>1.2.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector CDH5.2.6 Lib</description>
-  <name>StreamSets Data Collector CDH5.2.6 Lib</name>
+  <description>StreamSets Data Collector CDH 5.2.6 Lib</description>
+  <name>StreamSets Data Collector CDH 5.2.6 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -37,7 +37,7 @@
     <solr.version>4.4.0-cdh5.2.6</solr.version>
     <solr.test.jetty.version>8.1.10.v20130312</solr.test.jetty.version>
     <flume.version>1.5.0-cdh5.2.6</flume.version>
-    <thrift.version>0.9.0-cdh5-2</thrift.version>
+    <thrift.version>0.9.0-cdh5-3</thrift.version>
     <avro.version>1.7.7</avro.version>
   </properties>
 

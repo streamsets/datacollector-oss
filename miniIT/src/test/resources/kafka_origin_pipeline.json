@@ -48,7 +48,7 @@
   },
   "stages" : [ {
     "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1432101613598",
-    "library" : "streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_2_0-lib",
+    "library" : "streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib",
     "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
@@ -177,7 +177,7 @@
           "value" : 1000
         } ]
       },
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_kafka_KafkaDSource&library=streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_2_0-lib&version=1.0.0"
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_origin_kafka_KafkaDSource&library=streamsets-datacollector-cdh5_4_1-cluster-cdh_kafka_1_3-lib&version=1.0.0"
     },
     "inputLanes" : [ ],
     "outputLanes" : [ "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1432101613598OutputLane14321016135990" ]

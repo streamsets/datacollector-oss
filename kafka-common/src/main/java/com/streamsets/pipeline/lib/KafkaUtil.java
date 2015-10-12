@@ -108,38 +108,48 @@ public class KafkaUtil {
     return topicMetadata.partitionsMetadata().size();
   }
 
-  public static List<KafkaBroker> validateKafkaBrokerConnectionString(List<Stage.ConfigIssue> issues, String connectionString,
-                                                                      String configGroupName, String configName, Stage.Context context) {
-    if(connectionString == null || connectionString.isEmpty()) {
-      issues.add(context.createConfigIssue(configGroupName, configName,
-        KafkaErrors.KAFKA_06, configName));
-      return null;
-    }
+  public static List<KafkaBroker> validateKafkaBrokerConnectionString(
+      List<Stage.ConfigIssue> issues,
+      String connectionString,
+      String configGroupName,
+      String configName,
+      Stage.Context context
+  ) {
     List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    String[] brokers = connectionString.split(",");
-    for(String broker : brokers) {
-      String[] brokerHostAndPort = broker.split(":");
-      if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
-      } else {
-        try {
-          int port = Integer.parseInt(brokerHostAndPort[1].trim());
-          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
-        } catch (NumberFormatException e) {
+    if (connectionString == null || connectionString.isEmpty()) {
+      issues.add(context.createConfigIssue(configGroupName, configName,
+          KafkaErrors.KAFKA_06, configName));
+    } else {
+      String[] brokers = connectionString.split(",");
+      for (String broker : brokers) {
+        String[] brokerHostAndPort = broker.split(":");
+        if (brokerHostAndPort.length != 2) {
           issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
+        } else {
+          try {
+            int port = Integer.parseInt(brokerHostAndPort[1].trim());
+            kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
+          } catch (NumberFormatException e) {
+            issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
+          }
         }
       }
     }
     return kafkaBrokers;
   }
 
-  public static List<KafkaBroker> validateZkConnectionString(List<Stage.ConfigIssue> issues, String connectString,
-                                                             String configGroupName, String configName,
-                                                             Stage.Context context) {
-    if(connectString == null || connectString.isEmpty()) {
+  public static List<KafkaBroker> validateZkConnectionString(
+      List<Stage.ConfigIssue> issues,
+      String connectString,
+      String configGroupName,
+      String configName,
+      Stage.Context context
+  ) {
+    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
+    if (connectString == null || connectString.isEmpty()) {
       issues.add(context.createConfigIssue(configGroupName, configName,
-        KafkaErrors.KAFKA_06, configName));
-      return null;
+          KafkaErrors.KAFKA_06, configName));
+      return kafkaBrokers;
     }
 
     String chrootPath;
@@ -156,11 +166,8 @@ public class KafkaUtil {
         }
       }
       connectString = connectString.substring(0, off);
-    } else {
-      //do nothing
     }
 
-    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
     String brokers[] = connectString.split(",");
     for(String broker : brokers) {
       String[] brokerHostAndPort = broker.split(":");
