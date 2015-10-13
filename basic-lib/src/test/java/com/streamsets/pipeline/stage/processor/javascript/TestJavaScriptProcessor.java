@@ -398,7 +398,7 @@ public class TestJavaScriptProcessor {
       Field field = Field.create(list);
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((String)null), output.getRecords().get("lane").get(1).get());
+      Assert.assertEquals(Field.create((String) null), output.getRecords().get("lane").get(1).get());
     } finally {
       runner.runDestroy();
     }
@@ -430,6 +430,46 @@ public class TestJavaScriptProcessor {
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValueAsInteger());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testListMap() throws Exception {
+    Processor processor = new JavaScriptProcessor(ProcessingMode.RECORD,
+                                              "out.write(records[0]);\n" +
+                                              "records[0].value['Hello'] = 2\n" +
+                                              "out.write(records[0])\n" +
+                                              "");
+    ProcessorRunner runner = new ProcessorRunner.Builder(JavaScriptDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      listMap.put("Hello", Field.create(1));
+
+      Record record = RecordCreator.create();
+      record.set(Field.createListMap(listMap));
+      List<Record> input = Arrays.asList(record);
+      StageRunner.Output output = runner.runProcess(input);
+
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      Assert.assertEquals(1, outRec.get("/Hello").getValue());
+      Assert.assertEquals(1, outRec.get("[0]").getValue());
+      outRec = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      if (System.getProperty("java.version").startsWith("1.7.")) {
+        Assert.assertEquals(2.0, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2.0, outRec.get("[0]").getValue());
+      }
+      if (System.getProperty("java.version").startsWith("1.8")) {
+        Assert.assertEquals(2, outRec.get("/Hello").getValue());
+        Assert.assertEquals(2, outRec.get("[0]").getValue());
+      }
     } finally {
       runner.runDestroy();
     }

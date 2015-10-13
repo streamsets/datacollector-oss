@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -294,14 +295,14 @@ public class TestJythonProcessor {
 
       List<Field> list = new ArrayList<>();
       list.add(Field.create(1)); //int
-      list.add(Field.create((long)5));
+      list.add(Field.create((long) 5));
       list.add(Field.create(0.5)); //double
       list.add(Field.create(true));
       list.add(Field.create("hello"));
       Field field = Field.create(list);
       Assert.assertEquals(field, output.getRecords().get("lane").get(0).get());
 
-      Assert.assertEquals(Field.create((String)null), output.getRecords().get("lane").get(1).get());
+      Assert.assertEquals(Field.create((String) null), output.getRecords().get("lane").get(1).get());
     } finally {
       runner.runDestroy();
     }
@@ -333,6 +334,40 @@ public class TestJythonProcessor {
       StageRunner.Output output = runner.runProcess(input);
       Assert.assertEquals(1, output.getRecords().get("lane").size());
       Assert.assertEquals(2, output.getRecords().get("lane").get(0).get("/count").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testListMap() throws Exception {
+    Processor processor = new JythonProcessor(ProcessingMode.RECORD,
+                                              "out.write(records[0])\n" +
+                                              "records[0].value['Hello'] = 2\n" +
+                                              "out.write(records[0])\n" +
+                                              "");
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      listMap.put("Hello", Field.create(1));
+
+      Record record = RecordCreator.create();
+      record.set(Field.createListMap(listMap));
+      List<Record> input = Arrays.asList(record);
+      StageRunner.Output output = runner.runProcess(input);
+
+      Assert.assertEquals(2, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      Assert.assertEquals(1, outRec.get("/Hello").getValue());
+      Assert.assertEquals(1, outRec.get("[0]").getValue());
+      outRec = output.getRecords().get("lane").get(1);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+      Assert.assertEquals(2, outRec.get("/Hello").getValue());
+      Assert.assertEquals(2, outRec.get("[0]").getValue());
     } finally {
       runner.runDestroy();
     }

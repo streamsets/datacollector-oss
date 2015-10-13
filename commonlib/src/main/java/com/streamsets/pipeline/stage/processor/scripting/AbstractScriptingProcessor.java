@@ -66,7 +66,7 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
       ProcessingMode processingMode,
       String script
   ) {
-    state = getScriptObjectFactory().createMap();
+    state = getScriptObjectFactory().createMap(false);
     this.log = log;
     this.scriptingEngineName = scriptingEngineName;
     this.scriptConfigGroup = scriptConfigGroup;

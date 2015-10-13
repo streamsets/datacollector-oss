@@ -83,11 +83,12 @@ public class Java8JavaScriptObjectFactory extends ScriptObjectFactory {
         }
       } else if(scriptObject instanceof Map) {
         Map mapScriptObject = (Map)scriptObject;
-        Map<String, Field> fields = new LinkedHashMap<>();
+        LinkedHashMap<String, Field> fieldMap = new LinkedHashMap<>();
         for (Object key : mapScriptObject.keySet()) {
-          fields.put(key.toString(), scriptToField(mapScriptObject.get(key)));
+          fieldMap.put(key.toString(), scriptToField(mapScriptObject.get(key)));
         }
-        field = Field.create(fields);
+        boolean isListMap = (scriptObject instanceof MapInfo) && ((MapInfo) scriptObject).isListMap();
+        field = (isListMap) ? Field.createListMap(fieldMap) : Field.create(fieldMap);
       } else if(scriptObject instanceof List) {
         List listScriptObject = (List)scriptObject;
         List<Field> fields = new ArrayList<>(listScriptObject.size());

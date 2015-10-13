@@ -52,13 +52,32 @@ public class ScriptObjectFactory {
     return record;
   }
 
+  public interface MapInfo {
+
+    public boolean isListMap();
+
+  }
+
   @SuppressWarnings("unchecked")
   public void putInMap(Object obj, Object key, Object value) {
     ((Map)obj).put(key, value);
   }
 
-  public Object createMap() {
-    return new LinkedHashMap<>();
+  private static class LinkedHashMapWithMapInfo extends LinkedHashMap implements MapInfo {
+    private final boolean isListMap;
+
+    public LinkedHashMapWithMapInfo(boolean isListMap) {
+      this.isListMap = isListMap;
+    }
+
+    @Override
+    public boolean isListMap() {
+      return isListMap;
+    }
+  }
+
+  public Object createMap(boolean isListMap) {
+    return new LinkedHashMapWithMapInfo(isListMap);
   }
 
   public Object createArray(List elements) {
@@ -73,8 +92,9 @@ public class ScriptObjectFactory {
       if (scriptObject != null) {
         switch (field.getType()) {
           case MAP:
+          case LIST_MAP:
             Map<String, Field> fieldMap = (Map<String, Field>) scriptObject;
-            Object scriptMap = createMap();
+            Object scriptMap = createMap(field.getType() == Field.Type.LIST_MAP);
             for (Map.Entry<String, Field> entry : fieldMap.entrySet()) {
               putInMap(scriptMap, entry.getKey(), fieldToScript(entry.getValue()));
             }
@@ -100,11 +120,12 @@ public class ScriptObjectFactory {
     if (scriptObject != null) {
       if (scriptObject instanceof Map) {
         Map<String, Object> scriptMap = (Map<String, Object>) scriptObject;
-        Map<String, Field> fieldMap = new LinkedHashMap<>();
+        LinkedHashMap<String, Field> fieldMap = new LinkedHashMap<>();
         for (Map.Entry<String, Object> entry : scriptMap.entrySet()) {
           fieldMap.put(entry.getKey(), scriptToField(entry.getValue()));
         }
-        field = Field.create(fieldMap);
+        boolean isListMap = (scriptObject instanceof MapInfo) && ((MapInfo) scriptObject).isListMap();
+        field = (isListMap) ? Field.createListMap(fieldMap) : Field.create(fieldMap);
       } else if (scriptObject instanceof List) {
         List scriptArray = (List) scriptObject;
         List<Field> fieldArray = new ArrayList<>(scriptArray.size());
