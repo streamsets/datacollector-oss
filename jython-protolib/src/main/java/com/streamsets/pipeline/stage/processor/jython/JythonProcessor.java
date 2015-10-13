@@ -48,7 +48,7 @@ public class JythonProcessor extends AbstractScriptingProcessor {
     return new JythonScriptObjectFactory(engine);
   }
 
-  private class JythonScriptObjectFactory extends ScriptObjectFactory {
+  private static class JythonScriptObjectFactory extends ScriptObjectFactory {
 
     public JythonScriptObjectFactory(ScriptEngine scriptEngine) {
       super(scriptEngine);
@@ -59,9 +59,22 @@ public class JythonProcessor extends AbstractScriptingProcessor {
       ((PyDictionary) obj).put(key, value);
     }
 
+    private static class PyDictionaryMapInfo extends PyDictionary implements MapInfo {
+      private final boolean isListMap;
+
+      public PyDictionaryMapInfo(boolean isListMap) {
+        this.isListMap = isListMap;
+      }
+
+      @Override
+      public boolean isListMap() {
+        return isListMap;
+      }
+    }
+
     @Override
-    public Object createMap() {
-      return new PyDictionary();
+    public Object createMap(boolean isListMap) {
+      return new PyDictionaryMapInfo(isListMap);
     }
 
     @Override

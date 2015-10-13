@@ -242,6 +242,19 @@
         <module>datacollector-ui</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>java8</id>
+      <activation>
+        <jdk>1.8</jdk>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <modules>
+        <!-- Dummy module to be able to compile the Java7 scripting support classes using javac from Java8. -->
+        <module>basic-lib-fake-java7</module>
+      </modules>
+    </profile>
+
     <profile>
       <id>docs</id>
       <activation>

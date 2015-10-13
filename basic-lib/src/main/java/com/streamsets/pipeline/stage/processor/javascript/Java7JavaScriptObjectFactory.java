@@ -23,65 +23,44 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 
 import javax.script.ScriptEngine;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import sun.org.mozilla.javascript.internal.NativeObject;
+import sun.org.mozilla.javascript.internal.NativeArray;
 
 public class Java7JavaScriptObjectFactory extends ScriptObjectFactory {
-  private static final Class MAP_OBJECT_CLASS;
-  private static final Method MAP_PUT_METHOD;
-  private static final int MAP_PUT_MODE_PERMANENT;
-  private static final Constructor ARRAY_CONSTRUCTOR;
-  private static final String REFLECTION_ERROR_MESSAGE = "Error performing reflection on " +
-    System.getProperty("java.version") + ". Please report: ";
-  // we are doing this reflection voodoo because the Java compile does not let you use sun....internal packages
-  // PRRRRRRRRHHHHHHHHHHH Oracle.
-  static {
-    try {
-      MAP_OBJECT_CLASS = ClassLoader.getSystemClassLoader().loadClass(
-        "sun.org.mozilla.javascript.internal.NativeObject");
-      //noinspection unchecked
-      MAP_PUT_METHOD = MAP_OBJECT_CLASS.getMethod("defineProperty", String.class, Object.class, Integer.TYPE);
-      MAP_PUT_MODE_PERMANENT = MAP_OBJECT_CLASS.getField("PERMANENT").getInt(null);
-      Class arrayClass = ClassLoader.getSystemClassLoader().loadClass(
-        "sun.org.mozilla.javascript.internal.NativeArray");
-      //noinspection unchecked
-      ARRAY_CONSTRUCTOR = arrayClass.getConstructor(Object[].class);
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
-    }
-  }
+
   public Java7JavaScriptObjectFactory(ScriptEngine engine) {
     super(engine);
   }
+
   @Override
   public Object createArray(List elements) {
-    try {
-      return ARRAY_CONSTRUCTOR.newInstance(new Object[]{elements.toArray(new Object[elements.size()])});
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
+    return new NativeArray(elements.toArray(new Object[elements.size()]));
+  }
+
+  public static class NativeObjectMapInfo extends NativeObject implements MapInfo {
+    private final boolean isListMap;
+
+    public NativeObjectMapInfo(boolean isListMap) {
+      this.isListMap = isListMap;
+    }
+
+    @Override
+    public boolean isListMap() {
+      return isListMap;
     }
   }
 
   @Override
-  public Object createMap() {
-    try {
-      return MAP_OBJECT_CLASS.newInstance();
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
-    }
+  public Object createMap(boolean isListMap) {
+    return new NativeObjectMapInfo(isListMap);
   }
 
   @Override
   public void putInMap(Object obj, Object key, Object value) {
-    try {
-      MAP_PUT_METHOD.invoke(obj, key, value, MAP_PUT_MODE_PERMANENT);
-    } catch (Exception ex) {
-      throw new RuntimeException(REFLECTION_ERROR_MESSAGE + ex, ex);
-    }
+    ((NativeObject)obj).defineProperty((String)key, value, NativeObject.PERMANENT);
   }
 
   @Override
