@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.common.InterfaceAudience;
+import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
@@ -31,6 +33,8 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
 
+@InterfaceAudience.LimitedPrivate
+@InterfaceStability.Unstable
 public class S3ConfigBean {
 
   @ConfigDefBean(groups = {"S3"})

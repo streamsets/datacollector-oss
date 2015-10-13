@@ -27,6 +27,8 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.streamsets.pipeline.common.InterfaceAudience;
+import com.streamsets.pipeline.common.InterfaceStability;
 
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
@@ -36,6 +38,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeSet;
 
+@InterfaceAudience.Private
+@InterfaceStability.Unstable
 public class AmazonS3Util {
 
   public static final int BATCH_SIZE = 1000;

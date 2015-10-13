@@ -21,9 +21,13 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.common.InterfaceAudience;
+import com.streamsets.pipeline.common.InterfaceStability;
 
 import java.util.List;
 
+@InterfaceAudience.LimitedPrivate
+@InterfaceStability.Unstable
 public class S3FileConfig {
 
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;

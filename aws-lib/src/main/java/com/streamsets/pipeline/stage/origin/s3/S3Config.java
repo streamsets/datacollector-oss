@@ -30,10 +30,17 @@ import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.common.InterfaceAudience;
+import com.streamsets.pipeline.common.InterfaceStability;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+@InterfaceAudience.LimitedPrivate
+@InterfaceStability.Unstable
 public class S3Config {
+  private final static Logger LOG = LoggerFactory.getLogger(S3Config.class);
 
   @ConfigDef(
     required = true,
@@ -157,9 +164,9 @@ public class S3Config {
       //check if the credentials are right by trying to list buckets
       s3Client.listBuckets();
     } catch (AmazonS3Exception e) {
+      LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
       issues.add(context.createConfigIssue(Groups.S3.name(), "accessKeyId", Errors.S3_SPOOLDIR_20,
         e.toString()));
     }
   }
-
 }
