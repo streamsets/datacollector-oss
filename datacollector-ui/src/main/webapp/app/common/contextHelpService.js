@@ -23,10 +23,13 @@ angular.module('dataCollectorApp.common')
   .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant) {
 
     var helpIds = {},
+      buildInfo = {},
       helpWindow;
 
-    this.configInitPromise = $q.all([api.admin.getHelpRef(), configuration.init()]).then(function(results) {
+    this.configInitPromise = $q.all([api.admin.getHelpRef(), api.admin.getBuildInfo(),
+      configuration.init()]).then(function(results) {
       helpIds = results[0].data;
+      buildInfo = results[1].data;
     });
 
     this.launchHelp = function(helpId) {
@@ -35,7 +38,7 @@ angular.module('dataCollectorApp.common')
           relativeURL = helpIds[helpId];
 
         if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
-          uiHelpBaseURL = configuration.getUIHostedHelpBaseURL();
+          uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';
         } else {
           uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
         }
