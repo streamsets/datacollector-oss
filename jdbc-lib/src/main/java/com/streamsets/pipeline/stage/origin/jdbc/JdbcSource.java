@@ -41,6 +41,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -67,6 +68,7 @@ public class JdbcSource extends BaseSource {
   private final String connectionTestQuery;
   private final String txnColumnName;
   private final int txnMaxSize;
+  private final JdbcRecordType recordType;
 
   private long queryIntervalMillis = Long.MIN_VALUE;
 
@@ -90,8 +92,8 @@ public class JdbcSource extends BaseSource {
       String driverClassName,
       String connectionTestQuery,
       String txnColumnName,
-      int txnMaxSize
-  ) {
+      int txnMaxSize,
+      JdbcRecordType jdbcRecordType) {
     this.isIncrementalMode = isIncrementalMode;
     this.connectionString = connectionString;
     this.query = query;
@@ -105,6 +107,7 @@ public class JdbcSource extends BaseSource {
     this.connectionTestQuery = connectionTestQuery;
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
+    this.recordType = jdbcRecordType;
   }
 
   @Override
@@ -316,7 +319,7 @@ public class JdbcSource extends BaseSource {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
-    Map<String, Field> fields = new HashMap<>(numColumns);
+    LinkedHashMap<String, Field> fields = new LinkedHashMap<>(numColumns);
 
     // Process row
     for (int i = 1; i <= numColumns; i++) {
@@ -334,7 +337,21 @@ public class JdbcSource extends BaseSource {
 
     final String recordContext = query + "::" + resultSet.getString(offsetColumn);
     Record record = context.createRecord(recordContext);
-    record.set(Field.create(fields));
+    if (recordType == JdbcRecordType.LIST_MAP) {
+      record.set(Field.createListMap(fields));
+    } else if (recordType == JdbcRecordType.MAP) {
+      record.set(Field.create(fields));
+    } else {
+      // type is LIST
+      List<Field> row = new ArrayList<>();
+      for (Map.Entry<String, Field> fieldInfo : fields.entrySet()) {
+        Map<String, Field> cell = new HashMap<>();
+        cell.put("header", Field.create(fieldInfo.getKey()));
+        cell.put("value", fieldInfo.getValue());
+        row.add(Field.create(cell));
+      }
+      record.set(Field.create(row));
+    }
     return record;
   }
 
