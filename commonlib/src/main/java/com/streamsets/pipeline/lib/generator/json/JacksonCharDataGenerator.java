@@ -19,6 +19,9 @@
  */
 package com.streamsets.pipeline.lib.generator.json;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -27,48 +30,49 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import java.io.IOException;
 import java.io.Writer;
 
-public class JsonCharDataGenerator implements DataGenerator {
+public class JacksonCharDataGenerator implements DataGenerator {
+  final static String EOL = System.getProperty("line.separator");
+  private final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
 
-  private static final String SDC_JSON_BOON_DISABLED_KEY = "sdc.json.boon.disabled";
-  private static final String SDC_JSON_BOON_DISABLED_DEFAULT = "false";
+  private final boolean isArray;
+  private final JsonGenerator generator;
+  private boolean closed;
 
-  private DataGenerator dataGenerator;
-  private boolean isArray;
-
-  public JsonCharDataGenerator(Writer writer, JsonMode jsonMode)
+  public JacksonCharDataGenerator(Writer writer, JsonMode jsonMode)
       throws IOException {
-    if(jsonMode == JsonMode.ARRAY_OBJECTS) {
-      isArray = true;
-      dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
-    } else {
-      String property = System.getProperty(SDC_JSON_BOON_DISABLED_KEY, SDC_JSON_BOON_DISABLED_DEFAULT);
-      if("true".equalsIgnoreCase(property)) {
-        // Use jackson generator even in case of multiple objects based on the system property
-        dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
-      } else {
-        dataGenerator = new BoonCharDataGenerator(writer, jsonMode);
-      }
+    isArray = jsonMode == JsonMode.ARRAY_OBJECTS;
+    generator = JSON_FACTORY.createGenerator(writer);
+    if (isArray) {
+      generator.writeStartArray();
     }
-  }
-
-  //VisibleForTesting
-  boolean isArrayObjects() {
-    return isArray;
   }
 
   @Override
   public void write(Record record) throws IOException, DataGeneratorException {
-    dataGenerator.write(record);
+    if (closed) {
+      throw new IOException("generator has been closed");
+    }
+    generator.writeObject(JsonUtil.fieldToJsonObject(record, record.get()));
+    if (!isArray) {
+      generator.writeRaw(EOL);
+    }
   }
 
   @Override
   public void flush() throws IOException {
-    dataGenerator.flush();
+    if (closed) {
+      throw new IOException("generator has been closed");
+    }
+    generator.flush();
   }
 
   @Override
   public void close() throws IOException {
-    dataGenerator.close();
+    closed = true;
+    if (isArray) {
+      generator.writeEndArray();
+    }
+    generator.close();
   }
 
 }

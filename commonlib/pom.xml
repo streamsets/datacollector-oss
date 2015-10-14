@@ -39,6 +39,7 @@
     <avro.version>1.7.7</avro.version>
     <commons-compress.version>1.10</commons-compress.version>
     <xz.version>1.5</xz.version>
+    <boon.version>0.33</boon.version>
   </properties>
 
   <dependencies>
@@ -153,6 +154,12 @@
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.fastjson</groupId>
+      <artifactId>boon</artifactId>
+      <version>${boon.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -23,52 +23,52 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import org.boon.json.JsonFactory;
+import org.boon.json.JsonSerializer;
+import org.boon.json.ObjectMapper;
+import org.boon.primitive.CharBuf;
 
 import java.io.IOException;
 import java.io.Writer;
 
-public class JsonCharDataGenerator implements DataGenerator {
+public class BoonCharDataGenerator implements DataGenerator {
+  final static String EOL = System.getProperty("line.separator");
 
-  private static final String SDC_JSON_BOON_DISABLED_KEY = "sdc.json.boon.disabled";
-  private static final String SDC_JSON_BOON_DISABLED_DEFAULT = "false";
+  private Writer writer;
+  private ObjectMapper mapper =  JsonFactory.create();
+  private boolean closed;
 
-  private DataGenerator dataGenerator;
-  private boolean isArray;
-
-  public JsonCharDataGenerator(Writer writer, JsonMode jsonMode)
+  public BoonCharDataGenerator(Writer writer, JsonMode jsonMode)
       throws IOException {
-    if(jsonMode == JsonMode.ARRAY_OBJECTS) {
-      isArray = true;
-      dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
-    } else {
-      String property = System.getProperty(SDC_JSON_BOON_DISABLED_KEY, SDC_JSON_BOON_DISABLED_DEFAULT);
-      if("true".equalsIgnoreCase(property)) {
-        // Use jackson generator even in case of multiple objects based on the system property
-        dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
-      } else {
-        dataGenerator = new BoonCharDataGenerator(writer, jsonMode);
-      }
+    if (jsonMode != JsonMode.MULTIPLE_OBJECTS) {
+      throw new IllegalArgumentException("This generator only supports MULTIPLE_OBJECTS");
     }
-  }
-
-  //VisibleForTesting
-  boolean isArrayObjects() {
-    return isArray;
+    this.writer = writer;
   }
 
   @Override
   public void write(Record record) throws IOException, DataGeneratorException {
-    dataGenerator.write(record);
+    if (closed) {
+      throw new IOException("generator has been closed");
+    }
+    JsonSerializer serializer = mapper.serializer();
+    CharBuf serialize = serializer.serialize(JsonUtil.fieldToJsonObject(record, record.get()));
+    int length = serialize.length();
+    writer.write(serialize.readForRecycle(), 0 , length);
+    writer.write(EOL);
   }
 
   @Override
   public void flush() throws IOException {
-    dataGenerator.flush();
+    if (closed) {
+      throw new IOException("generator has been closed");
+    }
+    writer.flush();
   }
 
   @Override
   public void close() throws IOException {
-    dataGenerator.close();
+    closed = true;
+    writer.close();
   }
-
 }
