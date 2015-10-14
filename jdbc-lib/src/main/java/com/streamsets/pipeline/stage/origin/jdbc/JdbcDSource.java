@@ -25,13 +25,14 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.lib.el.TimeEL;
 
 import java.util.Map;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -154,6 +155,18 @@ public class JdbcDSource extends DSource {
   public Map<String, String> driverProperties;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LIST_MAP",
+      label = "Record Type",
+      description = "",
+      displayPosition = 140,
+      group = "JDBC"
+  )
+  @ValueChooserModel(JdbcRecordTypeChooserValues.class)
+  public JdbcRecordType jdbcRecordType;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Driver Class Name",
@@ -210,7 +223,8 @@ public class JdbcDSource extends DSource {
         driverClassName,
         connectionTestQuery,
         txnIdColumnName,
-        txnMaxSize
+        txnMaxSize,
+        jdbcRecordType
       );
   }
 }

@@ -110,8 +110,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -167,8 +167,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -236,8 +236,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -263,8 +263,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -290,8 +290,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -320,8 +320,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -347,8 +347,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -374,8 +374,8 @@ public class TestJdbcSource {
         "",
         "",
         "",
-        1000
-    );
+        1000,
+        JdbcRecordType.LIST_MAP);
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -412,8 +412,8 @@ public class TestJdbcSource {
         "",
         "",
         "FIRST_NAME",
-        1000
-    );
+        1000,
+        JdbcRecordType.MAP);
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();
@@ -455,8 +455,8 @@ public class TestJdbcSource {
         "",
         "",
         "FIRST_NAME",
-        1
-    );
+        1,
+        JdbcRecordType.LIST);
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
         .build();

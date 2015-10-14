@@ -33,6 +33,8 @@ public class JdbcSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -43,5 +45,9 @@ public class JdbcSourceUpgrader implements StageUpgrader {
   private void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("txnIdColumnName", ""));
     configs.add(new Config("txnMaxSize", 10000));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("jdbcRecordType", "MAP"));
   }
 }
