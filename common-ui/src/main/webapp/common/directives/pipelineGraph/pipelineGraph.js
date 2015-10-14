@@ -1035,10 +1035,56 @@ angular.module('pipelineGraphDirectives', [])
       this.zoom.translate(translatePos).event(this.svg);
     };
 
-
     GraphCreator.prototype.panHome = function() {
+      var thisGraph = this,
+        nodes = thisGraph.nodes,
+        consts = thisGraph.consts,
+        svgWidth = thisGraph.svg.style('width').replace('px', ''),
+        svgHeight = thisGraph.svg.style('height').replace('px', ''),
+        xScale,
+        yScale,
+        minX,
+        minY,
+        maxX,
+        maxY;
+
+      if(!nodes || nodes.length < 1) {
+        return;
+      }
+
+      angular.forEach(nodes, function(node) {
+        var xPos = node.uiInfo.xPos,
+          yPos = node.uiInfo.yPos;
+        if(minX === undefined) {
+          minX = xPos;
+          maxX = xPos;
+          minY = yPos;
+          maxY = yPos;
+        } else {
+          if(xPos < minX) {
+            minX = xPos;
+          }
+
+          if(xPos > maxX) {
+            maxX = xPos;
+          }
+
+          if(yPos < minY) {
+            minY = yPos;
+          }
+
+          if(yPos > maxY) {
+            maxY = yPos;
+          }
+        }
+      });
+
+      xScale =  svgWidth / (maxX + consts.rectWidth + 30);
+      yScale =  svgHeight / (maxY + consts.rectHeight + 30);
+
       showTransition = true;
-      this.zoom.translate([0,0]).event(this.svg);
+      $scope.state.currentScale = xScale < yScale ? xScale : yScale;
+      this.zoom.translate([0, 0]).scale($scope.state.currentScale).event(this.svg);
     };
 
 
