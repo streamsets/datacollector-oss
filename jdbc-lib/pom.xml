@@ -31,7 +31,7 @@
 
   <properties>
     <h2.version>1.4.187</h2.version>
-    <hikaricp.version>2.3.5</hikaricp.version>
+    <hikaricp.version>2.4.1</hikaricp.version>
     <commons-lang.version>3.4</commons-lang.version>
   </properties>
 
@@ -70,7 +70,7 @@
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
-      <artifactId>HikariCP-java6</artifactId>
+      <artifactId>HikariCP</artifactId>
       <version>${hikaricp.version}</version>
     </dependency>
 

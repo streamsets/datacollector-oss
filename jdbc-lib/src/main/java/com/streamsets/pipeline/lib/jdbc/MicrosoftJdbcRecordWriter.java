@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.base.Joiner;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
@@ -32,9 +31,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -101,18 +100,14 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
 
   /** {@inheritDoc} */
   @Override
-  public List<OnRecordErrorException> writeBatch(Batch batch) throws StageException {
+  public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     try {
       connection = dataSource.getConnection();
 
-      Iterator<Record> recordIterator = batch.getRecords();
-
       recordLoop:
-      while (recordIterator.hasNext()) {
-        Record record = recordIterator.next();
-
+      for (Record record : batch) {
         String query;
         int i;
         Map<String, Object> columnMappings = getColumnMappings(record);
@@ -186,9 +181,8 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
       LOG.debug(formattedError, e);
       // Whole batch fails
       errorRecords.clear();
-      Iterator<Record> records = batch.getRecords();
-      while (records.hasNext()) {
-        errorRecords.add(new OnRecordErrorException(records.next(), Errors.JDBCDEST_14, formattedError));
+      for (Record record : batch) {
+        errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
       }
     } finally {
       if (connection != null) {

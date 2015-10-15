@@ -19,10 +19,11 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,5 +38,5 @@ public interface JdbcRecordWriter {
    * @return any records that failed to be written to the destination
    * @throws StageException
    */
-  List<OnRecordErrorException> writeBatch(Batch batch) throws StageException;
+  List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException;
 }

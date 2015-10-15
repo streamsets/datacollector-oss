@@ -20,9 +20,6 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 
-import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.runner.BatchImpl;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -110,7 +107,7 @@ public class TestMultiRowRecordWriter {
         false,
         mappings
     );
-    Batch batch = new BatchImpl("test", "0", generateRecords(10));
+    List<Record> batch = generateRecords(10);
     writer.writeBatch(batch);
 
     connection = DriverManager.getConnection(connectionString, username, password);

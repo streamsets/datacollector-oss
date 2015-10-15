@@ -73,6 +73,21 @@ public class TestJdbcTarget {
           "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
           "PRIMARY KEY(P_ID));"
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TABLE_ONE " +
+              "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+              "PRIMARY KEY(P_ID));"
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TABLE_TWO " +
+              "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+              "PRIMARY KEY(P_ID));"
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TABLE_THREE " +
+              "(P_ID INT NOT NULL, FIRST_NAME VARCHAR(255), LAST_NAME VARCHAR(255), TS TIMESTAMP, UNIQUE(P_ID), " +
+              "PRIMARY KEY(P_ID));"
+      );
       statement.addBatch("CREATE USER IF NOT EXISTS " + unprivUser + " PASSWORD '" + unprivPassword + "';");
       statement.addBatch("GRANT SELECT ON TEST.TEST_TABLE TO " + unprivUser + ";");
 
@@ -105,7 +120,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -132,7 +147,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -173,7 +188,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -216,7 +231,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -276,7 +291,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", true)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -336,7 +351,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -398,7 +413,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", unprivUser)
         .addConfiguration("password", unprivPassword)
@@ -455,7 +470,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -479,7 +494,7 @@ public class TestJdbcTarget {
         .addConfiguration("useCredentials", true)
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", "foo")
         .addConfiguration("password", "bar")
@@ -504,7 +519,7 @@ public class TestJdbcTarget {
         .addConfiguration("rollbackOnError", false)
         .addConfiguration("useMultiRowInsert", false)
         .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .addConfiguration("tableName", tableName)
+        .addConfiguration("tableNameTemplate", tableName)
         .addConfiguration("columnNames", fieldMappings)
         .addConfiguration("username", username)
         .addConfiguration("password", password)
@@ -512,5 +527,68 @@ public class TestJdbcTarget {
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
     assertEquals(2, issues.size());
+  }
+
+  @Test
+  public void testMultipleTables() throws Exception {
+    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+        .addConfiguration("connectionString", h2ConnectionString)
+        .addConfiguration("useCredentials", true)
+        .addConfiguration("rollbackOnError", false)
+        .addConfiguration("useMultiRowInsert", false)
+        .addConfiguration("tableNameTemplate", "${record:attribute('tableName')}")
+        .addConfiguration("columnNames", fieldMappings)
+        .addConfiguration("username", username)
+        .addConfiguration("password", password)
+        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
+        .build();
+
+    List<Record> records = ImmutableList.of(
+        generateRecord(1, "Adam", "Kunicki", "TEST.TABLE_ONE"),
+        generateRecord(2, "John", "Smith", "TEST.TABLE_TWO"),
+        generateRecord(3, "Jane", "Doe", "TEST.TABLE_TWO"),
+        generateRecord(4, "Jane", "Doe", "TEST.TABLE_THREE")
+    );
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    connection = DriverManager.getConnection(h2ConnectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_ONE");
+      rs.next();
+      assertEquals(1, rs.getInt(1));
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_TWO");
+      rs.next();
+      assertEquals(2, rs.getInt(1));
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TABLE_THREE");
+      rs.next();
+      assertEquals(1, rs.getInt(1));
+    }
+  }
+
+  private Record generateRecord(int id, String first, String last, String tableName) {
+    Record record = RecordCreator.create();
+    List<Field> fields = new ArrayList<>();
+    fields.add(Field.create(id));
+    fields.add(Field.create(first));
+    fields.add(Field.create(last));
+    fields.add(Field.createDatetime(new Instant().toDate()));
+    record.set(Field.create(fields));
+    record.getHeader().setAttribute("tableName", tableName);
+
+    return record;
   }
 }

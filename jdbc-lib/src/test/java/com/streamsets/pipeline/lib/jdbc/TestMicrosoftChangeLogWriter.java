@@ -20,8 +20,6 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.runner.BatchImpl;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -40,6 +38,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -101,7 +100,7 @@ public class TestMicrosoftChangeLogWriter {
     record.set(Field.create(fields));
 
     MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
-    Batch batch = new BatchImpl("test", "0", ImmutableList.of(record));
+    List<Record> batch = ImmutableList.of(record);
     writer.writeBatch(batch);
 
     connection = DriverManager.getConnection(connectionString, username, password);
@@ -129,7 +128,7 @@ public class TestMicrosoftChangeLogWriter {
     updateRecord.set(Field.create(update));
 
     MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
-    Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, updateRecord));
+    List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch);
 
     connection = DriverManager.getConnection(connectionString, username, password);
@@ -158,7 +157,7 @@ public class TestMicrosoftChangeLogWriter {
     deleteRecord.set(Field.create(delete));
 
     MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
-    Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, deleteRecord));
+    List<Record> batch = ImmutableList.of(insertRecord, deleteRecord);
     writer.writeBatch(batch);
 
     connection = DriverManager.getConnection(connectionString, username, password);

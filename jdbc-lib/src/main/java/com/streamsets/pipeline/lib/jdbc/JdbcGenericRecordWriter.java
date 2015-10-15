@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -36,7 +35,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
-  public List<OnRecordErrorException> writeBatch(Batch batch) throws StageException {
+  public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     try {
@@ -76,12 +75,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
       PreparedStatementMap statementsForBatch = new PreparedStatementMap(connection, getTableName());
 
-      // The batch holding the current batch to INSERT.
-      Iterator<Record> recordIterator = batch.getRecords();
-
-      while (recordIterator.hasNext()) {
-        Record record = recordIterator.next();
-
+      for (Record record : batch) {
         Map<String, String> parameters = getColumnsToParameters();
         SortedMap<String, String> columnsToParameters = new TreeMap<>();
         for (Map.Entry<String, String> entry : getColumnsToFields().entrySet()) {
@@ -171,12 +165,12 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
    *   In the case that we have a list of update counts, we can mark just the record as erroneous.
    *   Otherwise we must send the entire batch to error.
    * </p>
-   * @param batch Current batch
+   * @param failedRecords List of Failed Records
    * @param e BatchUpdateException
    * @param errorRecords List of error records for this batch
    */
   private void handleBatchUpdateException(
-      Batch batch,
+      Collection<Record> failedRecords,
       SQLException e,
       List<OnRecordErrorException> errorRecords
   ) throws StageException {
@@ -185,14 +179,12 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
 
-      Iterator<Record> failedRecords = batch.getRecords();
       if (!getRollbackOnError() && e instanceof BatchUpdateException &&
           ((BatchUpdateException) e).getUpdateCounts().length > 0) {
         BatchUpdateException bue = (BatchUpdateException) e;
 
         int i = 0;
-        while (failedRecords.hasNext()) {
-          Record record = failedRecords.next();
+        for (Record record : failedRecords) {
           if (i >= bue.getUpdateCounts().length ||
               bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
             errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
@@ -200,8 +192,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           i++;
         }
       } else {
-        while (failedRecords.hasNext()) {
-          errorRecords.add(new OnRecordErrorException(failedRecords.next(), Errors.JDBCDEST_14, formattedError));
+        for (Record record : failedRecords) {
+          errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
         }
       }
     } else {

@@ -27,7 +27,6 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.common.hash.PrimitiveSink;
-import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -45,7 +44,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +85,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   /** {@inheritDoc} */
   @SuppressWarnings("unchecked")
   @Override
-  public List<OnRecordErrorException> writeBatch(Batch batch) throws StageException {
+  public List<OnRecordErrorException> writeBatch(Collection<Record> batch) throws StageException {
     List<OnRecordErrorException> errorRecords = new LinkedList<>();
     Connection connection = null;
     try {
@@ -191,11 +189,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param batch input batch of records
    * @return Multi-valued map of records. Key is a hash of the columns present.
    */
-  private Multimap<Long, Record> partitionBatch(Batch batch) {
+  private Multimap<Long, Record> partitionBatch(Collection<Record> batch) {
     Multimap<Long, Record> partitions = ArrayListMultimap.create();
-    Iterator<Record> recordIterator = batch.getRecords();
-    while (recordIterator.hasNext()) {
-      Record record = recordIterator.next();
+    for (Record record : batch) {
       Long columnHash = getColumnHash(record).asLong();
       partitions.put(columnHash, record);
     }
@@ -245,7 +241,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param errorRecords List of error records for this batch
    */
   private void handleBatchUpdateException(
-      Batch batch,
+      Collection<Record> batch,
       SQLException e,
       List<OnRecordErrorException> errorRecords
   ) throws StageException {
@@ -254,14 +250,12 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       LOG.error(formattedError);
       LOG.debug(formattedError, e);
 
-      Iterator<Record> failedRecords = batch.getRecords();
       if (!getRollbackOnError() && e instanceof BatchUpdateException &&
           ((BatchUpdateException) e).getUpdateCounts().length > 0) {
         BatchUpdateException bue = (BatchUpdateException) e;
 
         int i = 0;
-        while (failedRecords.hasNext()) {
-          Record record = failedRecords.next();
+        for (Record record : batch) {
           if (i >= bue.getUpdateCounts().length ||
               bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
             errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
@@ -269,8 +263,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
           i++;
         }
       } else {
-        while (failedRecords.hasNext()) {
-          errorRecords.add(new OnRecordErrorException(failedRecords.next(), Errors.JDBCDEST_14, formattedError));
+        for (Record record : batch) {
+          errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
         }
       }
     } else {

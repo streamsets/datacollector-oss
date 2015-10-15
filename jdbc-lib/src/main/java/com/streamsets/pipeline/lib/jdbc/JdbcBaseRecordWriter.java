@@ -65,8 +65,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
   }
 
   protected void createDefaultFieldMappings() throws StageException {
-    try {
-      Connection connection = dataSource.getConnection();
+    try (Connection connection = dataSource.getConnection()) {
       ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableName);
       while (columns.next()) {
         String columnName = columns.getString(4);

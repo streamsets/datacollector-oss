@@ -27,6 +27,9 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 
 import java.util.List;
@@ -100,14 +103,16 @@ public class JdbcDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "",
+      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      defaultValue = "${record:attribute('tableName')}",
       label = "Table Name",
       description = "Depending on the database, may be specified as <schema>.<table>. Some databases require schema " +
           "be specified separately in the connection string.",
       displayPosition = 30,
       group = "JDBC"
   )
-  public String tableName;
+  public String tableNameTemplate;
 
   @ConfigDef(
       required = true,
@@ -183,7 +188,7 @@ public class JdbcDTarget extends DTarget {
         connectionString,
         username,
         password,
-        tableName,
+        tableNameTemplate,
         columnNames,
         rollbackOnError,
         useMultiRowInsert,
