@@ -30,7 +30,7 @@
     <ul class="list-group">
       <li class="list-group-item pointer clearfix"
           ng-class="{'active' : pipeline.name === activeConfigInfo.name}"
-          ng-repeat="pipeline in pipelines"
+          ng-repeat="pipeline in pipelines | orderBy: 'name'"
           ng-click="onSelect(pipeline)">
 
         <div class="pipeline-details pull-left">
