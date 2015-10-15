@@ -1,0 +1,98 @@
+/**
+ * Copyright 2015 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.datacollector.record;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+
+public class TestPathElement {
+
+  @Test
+  public void testMapElement() {
+    PathElement hello = PathElement.createMapElement("hello");
+    Assert.assertEquals("hello", hello.getName());
+    Assert.assertEquals(PathElement.Type.MAP, hello.getType());
+    Assert.assertEquals(0, hello.getIndex());
+  }
+
+  @Test
+  public void testArrayElement() {
+    PathElement hello = PathElement.createArrayElement(5);
+    Assert.assertNull(hello.getName());
+    Assert.assertEquals(PathElement.Type.LIST, hello.getType());
+    Assert.assertEquals(5, hello.getIndex());
+  }
+
+  @Test
+  public void testParseMap() {
+    List<PathElement> parse = PathElement.parse("/Asia/China/Bejing", false);
+    Assert.assertEquals(4, parse.size());
+    Assert.assertEquals(PathElement.ROOT, parse.get(0));
+    Assert.assertEquals("Asia", parse.get(1).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(1).getType());
+    Assert.assertEquals("China", parse.get(2).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(2).getType());
+    Assert.assertEquals("Bejing", parse.get(3).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(3).getType());
+  }
+
+  @Test
+  public void testParseMapWithWildCard() {
+    List<PathElement> parse = PathElement.parse("/Asia/*/Bejing", false);
+    Assert.assertEquals(4, parse.size());
+    Assert.assertEquals(PathElement.ROOT, parse.get(0));
+    Assert.assertEquals("Asia", parse.get(1).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(1).getType());
+    Assert.assertEquals("*", parse.get(2).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(2).getType());
+    Assert.assertEquals("Bejing", parse.get(3).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(3).getType());
+  }
+
+  @Test
+  public void testParseList() {
+    List<PathElement> parse = PathElement.parse("[5]/China/Bejing", false);
+    Assert.assertEquals(4, parse.size());
+    Assert.assertEquals(PathElement.ROOT, parse.get(0));
+    Assert.assertEquals(null, parse.get(1).getName());
+    Assert.assertEquals(5, parse.get(1).getIndex());
+    Assert.assertEquals(PathElement.Type.LIST,  parse.get(1).getType());
+    Assert.assertEquals("China", parse.get(2).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(2).getType());
+    Assert.assertEquals("Bejing", parse.get(3).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(3).getType());
+  }
+
+  @Test
+  public void testParseListWildCard() {
+    List<PathElement> parse = PathElement.parse("[*]/China/Bejing", false);
+    Assert.assertEquals(4, parse.size());
+    Assert.assertEquals(PathElement.ROOT, parse.get(0));
+    Assert.assertEquals(null, parse.get(1).getName());
+    Assert.assertEquals(0, parse.get(1).getIndex());
+    Assert.assertEquals(PathElement.Type.LIST,  parse.get(1).getType());
+    Assert.assertEquals("China", parse.get(2).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(2).getType());
+    Assert.assertEquals("Bejing", parse.get(3).getName());
+    Assert.assertEquals(PathElement.Type.MAP,  parse.get(3).getType());
+  }
+}

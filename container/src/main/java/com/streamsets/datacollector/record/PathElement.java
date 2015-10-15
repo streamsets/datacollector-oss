@@ -168,11 +168,16 @@ public class PathElement {
               case '7':
               case '8':
               case '9':
+              case '*': //wildcard character
                 collector.append(chars[pos]);
                 break;
               case ']':
                 try {
-                  int index = Integer.parseInt(collector.toString());
+                  int index = 0;
+                  String indexString = collector.toString();
+                  if(!"*".equals(indexString)) {
+                    index = Integer.parseInt(indexString);
+                  }
                   if (index >= 0) {
                     elements.add(PathElement.createArrayElement(index));
                     requiresStart = true;
