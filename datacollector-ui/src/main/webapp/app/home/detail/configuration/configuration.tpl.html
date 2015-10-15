@@ -1,7 +1,7 @@
 <div ng-controller="ConfigurationController" class="configuration-tab">
   <tabset class="tabs-top">
 
-    <tab active="generalConfigActive" select="onTabSelect()">
+    <tab active="generalConfigActive" select="onTabSelect({name: 'generalConfig'})">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, '')"></i>
@@ -16,7 +16,7 @@
     <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
          disable="!isGroupVisible(detailPaneConfig, detailPaneConfigDefn.configDefinitions, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active"
-         select="onTabSelect()">
+         select="onTabSelect(groupNameToLabelMap)">
       <tab-heading>
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, groupNameToLabelMap.name)"></i>
@@ -41,7 +41,7 @@
     </tab>
 
     <tab ng-if="errorStageConfig"
-         select="onTabSelect()"
+         select="onTabSelect({name: 'errorStageConfig'})"
          active="errorStageConfigActive">
       <tab-heading ng-controller="ErrorConfigurationController">
         <i class="fa fa-exclamation-triangle icon-danger"

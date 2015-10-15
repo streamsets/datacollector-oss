@@ -52,8 +52,18 @@ angular
       /**
        * Callback function when tab is selected.
        */
-      onTabSelect: function() {
+      onTabSelect: function(tab) {
         refreshCodemirrorWidget();
+        switch($scope.selectedType) {
+          case pipelineConstant.PIPELINE:
+            $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name] = tab.name;
+            break;
+          case pipelineConstant.STAGE_INSTANCE:
+            $scope.selectedConfigGroupCache[$scope.selectedObject.instanceName] = tab.name;
+            break;
+          case pipelineConstant.LINK:
+            $scope.selectedConfigGroupCache[$scope.selectedObject.outputLane] = tab.name;
+        }
       },
 
       /**
@@ -648,8 +658,11 @@ angular
         $scope.configGroupTabs = [];
       }
 
-      $scope.errorStageConfigActive = options.errorStage;
-
+      if(options.configGroup && options.configGroup === 'errorStageConfig') {
+        $scope.errorStageConfigActive = true;
+      } else {
+        $scope.errorStageConfigActive = options.errorStage;
+      }
     };
 
     $scope.$on('onSelectionChange', function(event, options) {

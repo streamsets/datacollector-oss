@@ -128,6 +128,7 @@ angular
           api.pipelineAgent.startPipeline($scope.activeConfigInfo.name, 0).
             then(
             function (res) {
+              $scope.clearTabSelectionCache();
               $scope.selectPipelineConfig();
               $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = res.data;
 
@@ -168,6 +169,7 @@ angular
         });
 
         modalInstance.result.then(function(status) {
+          $scope.clearTabSelectionCache();
           $scope.selectPipelineConfig();
           $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.name] = status;
           var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.name];

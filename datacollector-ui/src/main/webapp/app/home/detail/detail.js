@@ -346,6 +346,16 @@ angular
       onTabSelect: function(tab) {
         $scope.trackEvent(pipelineConstant.TAB_CATEGORY, pipelineConstant.SELECT_ACTION, tab.name, 1);
         $scope.activeDetailTab = tab;
+        switch($scope.selectedType) {
+          case pipelineConstant.PIPELINE:
+            $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name] = tab.name;
+            break;
+          case pipelineConstant.STAGE_INSTANCE:
+            $scope.selectedDetailPaneTabCache[$scope.selectedObject.instanceName] = tab.name;
+            break;
+          case pipelineConstant.LINK:
+            $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane] = tab.name;
+        }
       }
     });
 
@@ -360,15 +370,10 @@ angular
         });
       }
 
-      if(options.type === pipelineConstant.LINK && !$scope.isPipelineRunning && $scope.detailPaneTabs.length > 1) {
+      if(!options.detailTabName && options.type === pipelineConstant.LINK && !$scope.isPipelineRunning &&
+        $scope.detailPaneTabs.length > 1) {
         $scope.detailPaneTabs[1].active = true;
       }
-
-      //To fix NVD3 JS errors - https://github.com/novus/nvd3/pull/396
-      /*window.nv.charts = {};
-      window.nv.graphs = [];
-      window.nv.logs = {};
-      window.onresize = null;*/
     });
 
     $scope.$watch('isPipelineRunning', function(newValue) {

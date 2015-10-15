@@ -20,7 +20,7 @@
 
 angular.module('dataCollectorApp')
   .config(function($routeProvider, $locationProvider, $translateProvider, tmhDynamicLocaleProvider,
-                   uiSelectConfig, $httpProvider, AnalyticsProvider){
+                   uiSelectConfig, $httpProvider, AnalyticsProvider) {
     $locationProvider.html5Mode({enabled: true, requireBase: false});
     $routeProvider.otherwise({
       templateUrl: 'app/home/home.tpl.html',

@@ -93,6 +93,8 @@ angular
       },
       minimizeDetailPane: false,
       maximizeDetailPane: false,
+      selectedDetailPaneTabCache: {},
+      selectedConfigGroupCache: {},
 
       /**
        * Add New Pipeline Configuration
@@ -341,7 +343,6 @@ angular
             $scope.$broadcast('selectEdge', options.selectedObject, options.moveToCenter);
           }
         }
-
 
         updateDetailPane(options);
       },
@@ -652,6 +653,14 @@ angular
           selectedObject: undefined,
           type: pipelineConstant.PIPELINE
         });
+      },
+
+      /**
+       * Clear detail tab selection cache
+       */
+      clearTabSelectionCache: function() {
+        $scope.selectedDetailPaneTabCache = {};
+        $scope.selectedConfigGroupCache = {};
       }
     });
 
@@ -1138,10 +1147,18 @@ angular
         $scope.stageLibraryList = _.sortBy(stageLibraryList, 'libraryLabel');
 
         if(!options.detailTabName) {
-          if($scope.isPipelineRunning) {
-            options.detailTabName = 'summary';
+          if($scope.selectedDetailPaneTabCache[selectedObject.instanceName]) {
+            options.detailTabName = $scope.selectedDetailPaneTabCache[selectedObject.instanceName];
           } else {
-            options.detailTabName = 'configuration';
+            if($scope.isPipelineRunning) {
+              options.detailTabName = 'summary';
+            } else {
+              options.detailTabName = 'configuration';
+            }
+          }
+
+          if($scope.selectedConfigGroupCache[selectedObject.instanceName]) {
+            options.configGroup = $scope.selectedConfigGroupCache[selectedObject.instanceName];
           }
         }
 
@@ -1161,10 +1178,18 @@ angular
         }
 
         if(!options.detailTabName) {
-          if($scope.isPipelineRunning) {
-            options.detailTabName = 'summary';
+          if($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name]) {
+            options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.name];
           } else {
-            options.detailTabName = 'configuration';
+            if($scope.isPipelineRunning) {
+              options.detailTabName = 'summary';
+            } else {
+              options.detailTabName = 'configuration';
+            }
+          }
+
+          if($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name]) {
+            options.configGroup = $scope.selectedConfigGroupCache[$scope.pipelineConfig.info.name];
           }
         }
 
@@ -1172,10 +1197,14 @@ angular
         $scope.detailPaneConfig = $scope.selectedObject = selectedObject;
 
         if(!options.detailTabName) {
-          if($scope.isPipelineRunning) {
-            options.detailTabName = 'summary';
+          if($scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane]) {
+            options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane];
           } else {
-            options.detailTabName = 'dataRules';
+            if($scope.isPipelineRunning) {
+              options.detailTabName = 'summary';
+            } else {
+              options.detailTabName = 'dataRules';
+            }
           }
         }
       }
