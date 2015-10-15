@@ -149,6 +149,56 @@ public class TestExpressionProcessor {
   }
 
   @Test
+  public void testListMapType() throws StageException {
+
+    ExpressionProcessorConfig expressionProcessorConfigMap = new ExpressionProcessorConfig();
+    expressionProcessorConfigMap.expression = "${record:value('/mapField')}";
+    expressionProcessorConfigMap.fieldToSet = "/mapFieldCopy";
+
+    ExpressionProcessorConfig expressionProcessorConfigListMap = new ExpressionProcessorConfig();
+    expressionProcessorConfigListMap.expression = "${record:value('/listMapField')}";
+    expressionProcessorConfigListMap.fieldToSet = "/listMapFieldCopy";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("expressionProcessorConfigs",
+        ImmutableList.of(expressionProcessorConfigMap, expressionProcessorConfigListMap))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      HashMap<String, Field> mapField = new HashMap<>();
+      mapField.put("key1", Field.create("value1"));
+      mapField.put("key2", Field.create("value2"));
+
+      LinkedHashMap<String, Field> listMapField = new LinkedHashMap<>();
+      listMapField.put("key1", Field.create("value1"));
+      listMapField.put("key2", Field.create("value2"));
+
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("mapField", Field.create(Field.Type.MAP, mapField));
+      map.put("listMapField", Field.create(Field.Type.LIST_MAP, listMapField));
+
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(4, result.size());
+      Assert.assertTrue(result.containsKey("mapField"));
+      Assert.assertTrue(result.containsKey("listMapField"));
+      Assert.assertTrue(result.containsKey("mapFieldCopy"));
+      Assert.assertTrue(result.containsKey("listMapFieldCopy"));
+      Assert.assertEquals(Field.Type.MAP, result.get("mapField").getType());
+      Assert.assertEquals(Field.Type.LIST_MAP, result.get("listMapFieldCopy").getType());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testExpressionWithConstants() throws StageException {
 
     ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
