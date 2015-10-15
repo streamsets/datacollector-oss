@@ -33,6 +33,7 @@ import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -129,6 +130,8 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       return Field.Type.INTEGER;
     } else if(result instanceof String) {
       return Field.Type.STRING;
+    } else if(result instanceof LinkedHashMap) {
+      return Field.Type.LIST_MAP;
     } else if(result instanceof Map) {
       return Field.Type.MAP;
     } else if(result instanceof List) {
