@@ -277,7 +277,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         throw new StageException(errorCode, context);
       default:
         throw new IllegalStateException(
-            Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)
+            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
         );
     }
   }

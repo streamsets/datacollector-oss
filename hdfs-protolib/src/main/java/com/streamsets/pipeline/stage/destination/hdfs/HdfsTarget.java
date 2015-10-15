@@ -545,7 +545,7 @@ public class HdfsTarget extends BaseTarget {
         break;
       case XML:
       default:
-        throw new IllegalStateException("It should not happen");
+        throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));
     }
     return builder.build();
   }
@@ -596,7 +596,7 @@ public class HdfsTarget extends BaseTarget {
                   case STOP_PIPELINE:
                     throw ex;
                   default:
-                    throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                    throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                                  getContext().getOnErrorRecord(), ex));
                 }
               }
@@ -685,7 +685,7 @@ public class HdfsTarget extends BaseTarget {
             getLateWriters().release(lateWriter);
             break;
           default:
-            throw new RuntimeException("It should never happen");
+            throw new RuntimeException(Utils.format("Unknown late records action: {}", lateRecordsAction));
         }
       }
     } catch (IOException ex) {

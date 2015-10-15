@@ -218,7 +218,7 @@ public class ElasticSearchTarget extends BaseTarget {
           case STOP_PIPELINE:
             throw new StageException(Errors.ELASTICSEARCH_10, record.getHeader().getSourceId(), ex.toString(), ex);
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                          getContext().getOnErrorRecord(), ex));
         }
       }
@@ -244,7 +244,7 @@ public class ElasticSearchTarget extends BaseTarget {
             }
             throw new StageException(Errors.ELASTICSEARCH_12, msg);
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                          getContext().getOnErrorRecord()));
         }
       }

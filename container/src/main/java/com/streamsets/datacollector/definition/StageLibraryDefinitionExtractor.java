@@ -79,7 +79,7 @@ public abstract class StageLibraryDefinitionExtractor {
           libraryProps.load(inputStream);
         }
       } catch (IOException ex) {
-        throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
+        throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
       }
 
       List<Class> elClasses = new ArrayList<>();

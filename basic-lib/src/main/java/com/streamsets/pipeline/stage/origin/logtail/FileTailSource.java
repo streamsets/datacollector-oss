@@ -465,7 +465,7 @@ public class FileTailSource extends BaseSource {
           throw new StageException(Errors.TAIL_12, sourceId, ex.toString(), ex);
         }
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
           getContext().getOnErrorRecord(), ex));
     }
   }

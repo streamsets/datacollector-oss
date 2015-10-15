@@ -98,7 +98,7 @@ public class SampleTarget extends BaseTarget {
             throw new StageException(Errors.SAMPLE_01, e.toString());
           default:
             throw new IllegalStateException(
-                Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)
+                Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
             );
         }
       }

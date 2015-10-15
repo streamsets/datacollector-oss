@@ -324,7 +324,7 @@ public class FlumeTarget extends BaseTarget {
           throw new StageException(FlumeErrors.FLUME_50, record.getHeader().getSourceId(), ex.toString(), ex);
         }
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
           getContext().getOnErrorRecord()));
     }
   }

@@ -161,7 +161,7 @@ public class DataFormatParser {
           .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, dataFormatConfig.schemaInMessage);
         break;
       default:
-        throw new IllegalStateException("Unknown data format: " + dataFormat);
+        throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));
     }
     parserFactory = builder.build();
     return issues;

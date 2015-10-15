@@ -570,7 +570,7 @@ public class SpoolDirSource extends BaseSource {
             case STOP_PIPELINE:
               throw new StageException(Errors.SPOOLDIR_02, sourceFile, exOffset);
             default:
-              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                            getContext().getOnErrorRecord(), ex));
           }
         }
@@ -602,7 +602,7 @@ public class SpoolDirSource extends BaseSource {
             getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
             throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
               getContext().getOnErrorRecord(), ex));
         }
       }

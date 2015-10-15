@@ -240,7 +240,7 @@ public class KinesisTarget extends BaseTarget {
       case STOP_PIPELINE:
         throw new StageException(Errors.KINESIS_00, record, cause);
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
             getContext().getOnErrorRecord()));
     }
   }

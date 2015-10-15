@@ -301,7 +301,7 @@ public class JdbcTarget extends BaseTarget {
         throw error;
       default:
         throw new IllegalStateException(
-            Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), error)
+            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), error)
         );
     }
   }

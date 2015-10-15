@@ -368,7 +368,7 @@ public class JdbcSource extends BaseSource {
       case STOP_PIPELINE:
         throw new StageException(errorCode, params);
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
             context.getOnErrorRecord()));
     }
   }

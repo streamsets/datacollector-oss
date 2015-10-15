@@ -283,7 +283,7 @@ public class KafkaTarget extends BaseTarget {
           case STOP_PIPELINE:
             throw ex;
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
               getContext().getOnErrorRecord()));
         }
       }
@@ -341,7 +341,7 @@ public class KafkaTarget extends BaseTarget {
                   throw new StageException(KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(),
                     ex);
                 default:
-                  throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+                  throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                     getContext().getOnErrorRecord()));
               }
             }
@@ -390,7 +390,7 @@ public class KafkaTarget extends BaseTarget {
               throw new StageException(KafkaErrors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
             }
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                          getContext().getOnErrorRecord()));
         }
       }

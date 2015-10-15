@@ -218,7 +218,7 @@ public abstract class ConfigValueExtractor {
                 break;
             }
           } catch (Exception ex) {
-            throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
+            throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
           }
         }
       }

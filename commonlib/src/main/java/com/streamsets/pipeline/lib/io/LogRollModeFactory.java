@@ -116,7 +116,7 @@ public enum LogRollModeFactory implements RollModeFactory {
         ((LiveFileNameSetter) obj).setName(liveFileName);
         return (Comparator<Path>) obj;
       } catch (Exception ex) {
-        throw new RuntimeException("It should not happen: " + ex.toString(), ex);
+        throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
       }
     }
 

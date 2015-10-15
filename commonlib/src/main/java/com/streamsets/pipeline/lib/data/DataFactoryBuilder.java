@@ -51,7 +51,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
       expectedModes = format.getModes();
       configs = new HashMap<>(format.getConfigs());
     } catch (Exception ex) {
-      throw new RuntimeException("It should not happen", ex);
+      throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
     }
   }
 

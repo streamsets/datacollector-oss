@@ -161,7 +161,7 @@ public class LiveFile {
     try {
       return OBJECT_MAPPER.writeValueAsString(map);
     } catch (Exception ex) {
-      throw new RuntimeException("It should not happen: " + ex.toString(), ex);
+      throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
     }
   }
 

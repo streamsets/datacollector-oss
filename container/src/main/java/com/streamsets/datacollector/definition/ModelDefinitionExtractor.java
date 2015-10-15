@@ -172,7 +172,7 @@ public abstract class ModelDefinitionExtractor {
           return new ModelDefinition(ModelType.VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
                                      values.getLabels(), null, null);
         } catch (Exception ex) {
-          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
+          throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
         }
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));
@@ -206,7 +206,7 @@ public abstract class ModelDefinitionExtractor {
           return new ModelDefinition(ModelType.MULTI_VALUE_CHOOSER, values.getClass().getName(), values.getValues(),
             values.getLabels(), null, null);
         } catch (Exception ex) {
-          throw new RuntimeException(Utils.format("It should not happen: {}", ex.toString()), ex);
+          throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
         }
       } else {
         throw new IllegalArgumentException(Utils.format("Invalid ModelDefinition: {}", errors));

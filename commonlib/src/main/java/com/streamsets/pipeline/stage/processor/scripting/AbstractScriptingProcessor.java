@@ -172,14 +172,14 @@ public abstract class AbstractScriptingProcessor extends SingleLaneProcessor {
             case STOP_PIPELINE:
               throw new StageException(Errors.SCRIPTING_05, ex.toString(), ex);
             default:
-              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                            getContext().getOnErrorRecord(), ex));
           }
           break;
         case BATCH:
           throw new StageException(Errors.SCRIPTING_06, ex.toString(), ex);
         default:
-          throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+          throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                        getContext().getOnErrorRecord(), ex));
       }
     }

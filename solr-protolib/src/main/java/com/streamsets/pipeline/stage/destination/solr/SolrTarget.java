@@ -137,7 +137,7 @@ public class SolrTarget extends BaseTarget {
           case STOP_PIPELINE:
             throw new StageException(Errors.SOLR_04, record.getHeader().getSourceId(), ex.toString(), ex);
           default:
-            throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
               getContext().getOnErrorRecord(), ex));
         }
       }
@@ -174,7 +174,7 @@ public class SolrTarget extends BaseTarget {
       case STOP_PIPELINE:
         throw new StageException(Errors.SOLR_05, ex.toString());
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
           getContext().getOnErrorRecord()));
     }
   }

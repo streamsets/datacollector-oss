@@ -342,7 +342,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           throw new StageException(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
         }
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
           getContext().getOnErrorRecord(), ex));
     }
   }

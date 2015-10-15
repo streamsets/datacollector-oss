@@ -314,7 +314,7 @@ public abstract class PipelineBeanCreator {
     try {
       return field.get(obj) != null;
     } catch (Exception ex) {
-      throw new RuntimeException(Utils.format("This should never happen: {}", ex.toString()), ex);
+      throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
     }
   }
 

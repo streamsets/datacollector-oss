@@ -323,7 +323,7 @@ public class PathResolver {
     try {
       freqEdgeElEval.eval(elVars, pathTemplate, String.class);
     } catch (ELEvalException ex) {
-      throw new RuntimeException("It should not happen: " + ex.toString(), ex);
+      throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
     }
     elVars.addContextVariable(DATE_CONTEXT, null);
     if (!dc.noDate) {
@@ -340,7 +340,7 @@ public class PathResolver {
       if (dc.frequency > 1) {
         if (dc.frequencyUnit == 0) {
           throw new IllegalStateException(Utils.format(
-              "It should not happen, every() function in path template seems to have an invalid unit: {}",
+              "Unknown error every() function in path template seems to have an invalid unit: {}",
               pathTemplate));
         }
         // because we have a frequency greater than 1, we need to adjust to the floor of the frequency range

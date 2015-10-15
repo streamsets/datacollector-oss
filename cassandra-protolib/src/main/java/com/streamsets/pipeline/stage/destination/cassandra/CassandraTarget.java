@@ -326,7 +326,7 @@ public class CassandraTarget extends BaseTarget {
               throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
             default:
               throw new IllegalStateException(
-                  Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)
+                  Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
               );
           }
         }
@@ -350,7 +350,7 @@ public class CassandraTarget extends BaseTarget {
               throw new StageException(Errors.CASSANDRA_07, e.toString());
             default:
               throw new IllegalStateException(
-                  Utils.format("It should never happen. OnError '{}'", getContext().getOnErrorRecord(), e)
+                  Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
               );
           }
         }

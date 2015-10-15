@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.parser.delimited;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
@@ -63,7 +64,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         format = format.withHeader((String[])null).withSkipHeaderRecord(false);
         break;
       default:
-        throw new RuntimeException("It should not happen");
+        throw new RuntimeException(Utils.format("Unknown header error: {}", header));
     }
     parser = new OverrunCsvParser(reader, format, readerOffset, maxObjectLen);
     String[] hs = parser.getHeaders();

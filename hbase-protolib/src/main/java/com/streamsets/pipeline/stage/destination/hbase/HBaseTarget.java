@@ -413,7 +413,7 @@ public class HBaseTarget extends BaseTarget {
             case STOP_PIPELINE:
               throw ex;
             default:
-              throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'", getContext()
+              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext()
                 .getOnErrorRecord(), ex));
           }
         }

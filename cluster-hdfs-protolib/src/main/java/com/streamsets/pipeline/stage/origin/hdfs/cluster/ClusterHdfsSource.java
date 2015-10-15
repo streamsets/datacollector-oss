@@ -745,7 +745,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
           throw new StageException(Errors.HADOOPFS_08, messageId, ex.toString(), ex);
         }
       default:
-        throw new IllegalStateException(Utils.format("It should never happen. OnError '{}'",
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
           getContext().getOnErrorRecord(), ex));
     }
   }
