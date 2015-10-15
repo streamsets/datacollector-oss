@@ -15,6 +15,7 @@ This product includes components of the following software:
   Automaton                       BSD License
   Avro                            Apache License 2.0
   BoneCP                          Apache License 2.0
+  Boon                            Apache License 2.0
   Bouncy Castle                   MIT License
   Calcite                         Apache License 2.0
   Cassandra                       Apache License 2.0
