@@ -2,12 +2,33 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kafka Producer destination writes data to a Kafka cluster. When you configure a Kafka Producer, you define connection information, the partition strategy, and data format to use. You can add ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer destination writes data to a Kafka cluster."></meta><meta name="description" content="The Kafka Producer destination writes data to a Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kafka Producer destination writes data to a Kafka cluster. When you configure a Kafka Producer, you define connection information, the partition strategy, and data format to use. You can add ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kafka Producer"></meta><meta name="abstract" content="The Kafka Producer destination writes data to a Kafka cluster."></meta><meta name="description" content="The Kafka Producer destination writes data to a Kafka cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_oq2_5jl_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody">
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ ga('create', 'UA-67640002-1', 'auto');
+ ga('send', 'pageview');
+
+</script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_oq2_5jl_zq">
@@ -48,7 +69,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1007e431">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1009e431">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -66,7 +87,7 @@
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1007e448">
+                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1009e448">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -226,7 +247,7 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e1640" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e1640" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -263,7 +284,7 @@
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d15539e355 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_q4d_4yl_zq__d991e1695" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_q4d_4yl_zq__d993e1695" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e358 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
@@ -274,7 +295,7 @@
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d15539e355 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_q4d_4yl_zq__d991e1709" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_q4d_4yl_zq__d993e1709" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e358 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
@@ -286,7 +307,7 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d15539e355 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e358 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d991e1726">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e358 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d993e1726">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -312,7 +333,7 @@
                 <div class="itemgroup info">
                     <div class="p">
                         
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e2129" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e2129" class="table" frame="border" border="1" rules="all">
                                 
                                 
                                 <thead class="thead" align="left">
@@ -326,7 +347,7 @@
                                 </thead>
 
                                 <tbody class="tbody">
-                                    <tr id="task_q4d_4yl_zq__d991e2151" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2151" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Broker URI</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Connection string for the Kafka broker. Use the
@@ -338,8 +359,8 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2165" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d991e2170" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <tr id="task_q4d_4yl_zq__d993e2165" class="row">
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d993e2170" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Evaluates an expression at runtime to determine the
@@ -347,7 +368,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2177" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2177" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Topic</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Kafka topic to use. <p class="p">Not available when using
@@ -356,7 +377,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2188" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2188" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Topic Expression</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Expression used to determine where each record is
@@ -365,7 +386,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2197" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2197" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Topic White List</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">List of valid topic names to write to when using
@@ -378,10 +399,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2209" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2209" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d991e2216">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d993e2216">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -395,9 +416,9 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2229" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2229" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_q4d_4yl_zq__d991e2235" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                                <img class="image" id="task_q4d_4yl_zq__d993e2235" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Expression to use when using the expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
@@ -412,7 +433,7 @@
                                     <tr class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d991e2251">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d993e2251">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -420,7 +441,7 @@
                                                 <li class="li">Delimited</li>
 
                                                 <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_q4d_4yl_zq__d991e2266" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_q4d_4yl_zq__d993e2266" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                                 <li class="li">Avro</li>
 
@@ -440,7 +461,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2288" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2288" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">One Message per Batch</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">For each batch, writes the records to each partition
@@ -448,7 +469,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d991e2297" class="row">
+                                    <tr id="task_q4d_4yl_zq__d993e2297" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d15539e479 ">Kafka Configuration</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d15539e482 ">Additional Kafka properties to use. Click the
@@ -477,7 +498,7 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e2049" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e2049" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -522,7 +543,7 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e1983" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e1983" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -539,7 +560,7 @@
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d15539e758 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e761 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d991e2012">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d15539e761 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d993e2012">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -565,7 +586,7 @@
                     the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e1765" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e1765" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
@@ -634,7 +655,7 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d991e1847" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d993e1847" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">

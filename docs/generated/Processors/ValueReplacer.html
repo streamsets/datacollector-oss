@@ -2,12 +2,33 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls. Tip: To use an expression instead of a constant to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Value Replacer"></meta><meta name="abstract" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls."></meta><meta name="description" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_o5k_dmf_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Value Replacer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls. Tip: To use an expression instead of a constant to ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Value Replacer"></meta><meta name="abstract" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls."></meta><meta name="description" content="The Value Replacer replaces null values in a field with a constant. The Value Replacer can also replace existing values in a field with Nulls."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_o5k_dmf_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Value Replacer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script></head>
-<body onload="highlightSearchTerm()" class="frmBody">
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+ (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ ga('create', 'UA-67640002-1', 'auto');
+ ga('send', 'pageview');
+
+</script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Processors/Processors_title.html" title="Processors">Processors</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Processors/Processors_title.html" title="Processors"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Processors</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_o5k_dmf_zq">
@@ -39,14 +60,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ihq_ymf_zq__d5582e1302" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ihq_ymf_zq__d5585e1302" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d58789e83">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d58807e83">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d58789e86">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d58807e86">Description</th>
 
                                 </tr>
 
@@ -54,24 +75,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e83 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e83 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e86 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e83 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e86 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e86 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e83 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
-                                            <img class="image" id="task_ihq_ymf_zq__d5582e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e83 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e86 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e86 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e83 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_ihq_ymf_zq__d5585e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e86 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -79,10 +100,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e83 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
-                                            <img class="image" id="task_ihq_ymf_zq__d5582e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e83 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_ihq_ymf_zq__d5585e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e86 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e86 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -90,9 +111,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e83 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e83 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e86 ">Error record handling for the stage: <ul class="ul" id="task_ihq_ymf_zq__d5582e1378">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e86 ">Error record handling for the stage: <ul class="ul" id="task_ihq_ymf_zq__d5585e1378">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -123,9 +144,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d58789e195">Value Replacer Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d58807e195">Value Replacer Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d58789e198">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d58807e198">Description</th>
 
                                 </tr>
 
@@ -133,9 +154,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e195 ">Fields to Null</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e195 ">Fields to Null</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e198 ">One or more fields to replace with null values.<p class="p">You can use the asterisk wildcard to represent array indices and map
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e198 ">One or more fields to replace with null values.<p class="p">You can use the asterisk wildcard to represent array indices and map
                   elements. <a class="xref" href="../Pipeline_Configuration/Expressions.html#concept_vqr_sqc_wr" title="In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays."><img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                   </a>
             </p>
@@ -144,9 +165,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e195 ">Replace Null Values</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e195 ">Replace Null Values</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e198 ">Replaces null values with constants. Click
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e198 ">Replaces null values with constants. Click
                                             <span class="ph uicontrol">Add</span> to include more fields.
                                         Configure the following properties:<ul class="ul" id="task_ihq_ymf_zq__ul_sq3_fcg_zq">
                                             <li class="li">Fields to Replace - Name of the field to use.</li>
@@ -164,9 +185,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58789e195 ">Field Does Not Exist</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d58807e195 ">Field Does Not Exist</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58789e198 ">Determines how to handle records without the specified
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d58807e198 ">Determines how to handle records without the specified
                                             fields:<ul class="ul" id="task_ihq_ymf_zq__ul_jx1_4w2_jr">
                                             <li class="li">Continue - Passes the record with as much processing
                                                 as possible.</li>

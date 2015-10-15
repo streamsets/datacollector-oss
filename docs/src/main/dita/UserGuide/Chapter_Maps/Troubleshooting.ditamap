@@ -44,6 +44,7 @@
    <topicref href="../Troubleshooting/Destinations-HadoopFS.dita"/>
    <topicref href="../Troubleshooting/Destinations-HBase.dita"/>
    <topicref href="../Troubleshooting/Destinations-Kafka.dita"/>
+   <topicref href="../Troubleshooting/Destinations-RPC.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Performance.dita">
    <topicmeta>

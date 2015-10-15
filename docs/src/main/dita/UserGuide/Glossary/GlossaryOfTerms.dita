@@ -36,6 +36,10 @@
         <dd>Alerts based on rules that gather information about the data that passes between two
           stages.</dd>
       </dlentry>
+      <dlentry>
+        <dt>data preview</dt>
+        <dd>Preview of data as it moves through a pipeline. Use to develop and test pipelines.</dd>
+      </dlentry>
    <dlentry>
     <dt>destination</dt>
     <dd>A stage type used in a pipeline to represent where the <ph
@@ -49,7 +53,11 @@
           request data preview, or start the pipeline.</dd>
       </dlentry>
       <dlentry>
-        <dt>implicit validation</dt>
+        <dt>field path</dt>
+        <dd>The path to a field in a record. Use to reference a field.</dd> 
+      </dlentry>
+       <dlentry>   
+       <dt>implicit validation</dt>
         <dd>Lists missing or incomplete configuration. Occurs by default as the Data Collector
           console saves your changes.</dd>
       </dlentry>
