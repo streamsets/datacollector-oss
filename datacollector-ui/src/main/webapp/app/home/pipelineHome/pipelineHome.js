@@ -748,7 +748,7 @@ angular
             updateRetryCountdown($rootScope.common.pipelineStatusMap[routeParamPipelineName].nextRetryTimeStamp);
           }
 
-          updateGraph(config, rules);
+          updateGraph(config, rules, undefined, undefined, true);
           updateDetailPane({
             selectedObject: undefined,
             type: pipelineConstant.PIPELINE
@@ -937,7 +937,7 @@ angular
      * @param manualUpdate
      * @param ignoreArchive
      */
-    var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate, ignoreArchive) {
+    var updateGraph = function (pipelineConfig, pipelineRules, manualUpdate, ignoreArchive, fitToBounds) {
       var selectedStageInstance,
         stageErrorCounts = {},
         pipelineMetrics = $rootScope.common.pipelineMetrics,
@@ -1087,7 +1087,8 @@ angular
           isReadOnly: $scope.isPipelineReadOnly || $scope.isPipelineRunning || $scope.previewMode,
           pipelineRules: $scope.pipelineRules,
           triggeredAlerts: $scope.triggeredAlerts,
-          errorStage: $scope.pipelineConfig.errorStage
+          errorStage: $scope.pipelineConfig.errorStage,
+          fitToBounds: fitToBounds
         });
       });
 

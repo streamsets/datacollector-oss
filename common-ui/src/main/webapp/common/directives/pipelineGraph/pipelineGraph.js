@@ -1035,7 +1035,7 @@ angular.module('pipelineGraphDirectives', [])
       this.zoom.translate(translatePos).event(this.svg);
     };
 
-    GraphCreator.prototype.panHome = function() {
+    GraphCreator.prototype.panHome = function(onlyZoomIn) {
       var thisGraph = this,
         nodes = thisGraph.nodes,
         consts = thisGraph.consts,
@@ -1046,7 +1046,8 @@ angular.module('pipelineGraphDirectives', [])
         minX,
         minY,
         maxX,
-        maxY;
+        maxY,
+        currentScale;
 
       if(!nodes || nodes.length < 1) {
         return;
@@ -1083,8 +1084,13 @@ angular.module('pipelineGraphDirectives', [])
       yScale =  svgHeight / (maxY + consts.rectHeight + 30);
 
       showTransition = true;
-      $scope.state.currentScale = xScale < yScale ? xScale : yScale;
-      this.zoom.translate([0, 0]).scale($scope.state.currentScale).event(this.svg);
+      currentScale = xScale < yScale ? xScale : yScale;
+
+      if(currentScale < 1 || !onlyZoomIn) {
+        $scope.state.currentScale = currentScale;
+        this.zoom.translate([0, 0]).scale(currentScale).event(this.svg);
+      }
+
     };
 
 
@@ -1240,6 +1246,10 @@ angular.module('pipelineGraphDirectives', [])
         graph.selectNode(selectNode);
       } else if(selectEdge) {
         graph.selectEdge(selectEdge);
+      }
+
+      if(options.fitToBounds) {
+        graph.panHome(true);
       }
     });
 
