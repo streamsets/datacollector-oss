@@ -1148,6 +1148,23 @@ angular.module('pipelineGraphDirectives', [])
       thisGraph.rects.classed(thisGraph.consts.endNodeClass, false);
     };
 
+    GraphCreator.prototype.addDirtyNodeClass = function() {
+      var thisGraph = this;
+      thisGraph.rects.selectAll('circle')
+        .attr('class', function(d) {
+          var currentClass = d3.select(this).attr('class');
+          if(currentClass) {
+            var currentClassArr = currentClass.split(' '),
+              intersection = _.intersection(thisGraph.dirtyLanes, currentClassArr);
+
+            if(intersection && intersection.length) {
+              return currentClass + ' dirty';
+            }
+          }
+          return currentClass;
+        });
+    };
+
     GraphCreator.prototype.clearDirtyNodeClass = function() {
       var thisGraph = this;
       thisGraph.rects.selectAll('circle')
@@ -1214,6 +1231,10 @@ angular.module('pipelineGraphDirectives', [])
       graph.triggeredAlerts = options.triggeredAlerts;
       graph.errorStage = options.errorStage;
       graph.updateGraph();
+
+      if(graph.dirtyLanes) {
+        graph.addDirtyNodeClass();
+      }
 
       if(selectNode) {
         graph.selectNode(selectNode);
@@ -1445,25 +1466,14 @@ angular.module('pipelineGraphDirectives', [])
 
     $scope.$on('updateDirtyLaneConnector', function(event, dirtyLanes) {
       if(graph) {
-        graph.rects.selectAll('circle')
-          .attr('class', function(d) {
-            var currentClass = d3.select(this).attr('class');
-            if(currentClass) {
-              var currentClasArr = currentClass.split(' '),
-                intersection = _.intersection(dirtyLanes, currentClasArr);
-
-              if(intersection && intersection.length) {
-                return currentClass + ' dirty';
-              }
-            }
-
-            return currentClass;
-          });
+        graph.dirtyLanes = dirtyLanes;
+        graph.addDirtyNodeClass(dirtyLanes);
       }
     });
 
     $scope.$on('clearDirtyLaneConnector', function() {
       if(graph) {
+        graph.dirtyLanes = undefined;
         graph.clearDirtyNodeClass();
       }
     });
