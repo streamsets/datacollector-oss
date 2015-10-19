@@ -31,5 +31,5 @@ public interface JmsMessageConverter {
 
   List<Stage.ConfigIssue> init(Source.Context context);
 
-  int convert(BatchMaker batchMaker, Source.Context context, String messsageId, Message message) throws StageException;
+  int convert(BatchMaker batchMaker, Source.Context context, String messageId, Message message) throws StageException;
 }

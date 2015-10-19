@@ -31,7 +31,7 @@ public interface JmsMessageConsumer {
 
   List<Stage.ConfigIssue> init(Source.Context context);
 
-  int take(BatchMaker batchMaker, Source.Context context, int batchSize, String messageId) throws StageException;
+  int take(BatchMaker batchMaker, Source.Context context, int batchSize, long messageIndex) throws StageException;
 
   void commit() throws StageException;
 
