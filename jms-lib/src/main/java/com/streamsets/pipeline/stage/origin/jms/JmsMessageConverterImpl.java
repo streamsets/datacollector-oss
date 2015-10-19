@@ -52,14 +52,14 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
   }
 
   @Override
-  public int convert(BatchMaker batchMaker, Source.Context context, String messsageId, Message message) throws StageException {
+  public int convert(BatchMaker batchMaker, Source.Context context, String messageId, Message message) throws StageException {
     byte[] payload = null;
     if (message instanceof TextMessage) {
       TextMessage textMessage = (TextMessage) message;
       try {
         payload = textMessage.getText().getBytes(parser.getCharset());
       } catch (JMSException ex) {
-        handleException(context, messsageId, ex);
+        handleException(context, messageId, ex);
       }
     } else if (message instanceof BytesMessage) {
       BytesMessage bytesMessage = (BytesMessage) message;
@@ -78,7 +78,7 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
           }
         }
       } catch (JMSException ex) {
-        handleException(context, messsageId, ex);
+        handleException(context, messageId, ex);
       }
 //      TODO handle ObjectMessage's which are Java Serialized objects
 //    } else if (message instanceof ObjectMessage) {
@@ -93,15 +93,15 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
 //          }
 //        }
 //      } catch (JMSException | IOException ex) {
-//        handleException(context, messsageId, ex);
+//        handleException(context, messageId, ex);
 //      }
     } else {
-      handleException(context, messsageId, new StageException(JmsErrors.JMS_10, message.getClass().getName()));
+      handleException(context, messageId, new StageException(JmsErrors.JMS_10, message.getClass().getName()));
     }
     int count = 0;
     if (payload != null) {
       try {
-        for (Record record : parser.parse(context, messsageId, payload)) {
+        for (Record record : parser.parse(context, messageId, payload)) {
           Enumeration propertyNames = message.getPropertyNames();
           while (propertyNames.hasMoreElements()) {
             String name = String.valueOf(propertyNames.nextElement());
@@ -112,7 +112,7 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
           count++;
         }
       } catch (JMSException ex) {
-        handleException(context, messsageId, ex);
+        handleException(context, messageId, ex);
       }
     }
     return count;

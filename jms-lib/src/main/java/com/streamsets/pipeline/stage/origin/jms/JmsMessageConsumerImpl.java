@@ -133,7 +133,7 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
   }
 
   @Override
-  public int take(BatchMaker batchMaker, Source.Context context, int batchSize, String messageId)
+  public int take(BatchMaker batchMaker, Source.Context context, int batchSize, long messageIndex)
   throws StageException {
     long start = System.currentTimeMillis();
     int numMessagesConsumed = 0;
@@ -147,7 +147,10 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
           if (IS_TRACE_ENABLED) {
             LOG.trace("Got message: {}", message);
           }
-          numMessagesConsumed += jmsMessageConverter.convert(batchMaker, context, messageId, message);
+          String messageId = jmsConfig.destinationName + "::" + messageIndex;
+          int consumed = jmsMessageConverter.convert(batchMaker, context, messageId, message);
+          messageIndex += consumed;
+          numMessagesConsumed += consumed;
         }
       } catch (JMSException ex) {
         throw new StageException(JmsErrors.JMS_07, ex.toString(), ex);
