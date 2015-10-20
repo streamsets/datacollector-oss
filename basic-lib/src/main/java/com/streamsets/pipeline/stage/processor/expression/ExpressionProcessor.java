@@ -40,25 +40,38 @@ import java.util.Map;
 public class ExpressionProcessor extends SingleLaneRecordProcessor {
 
   private final List<ExpressionProcessorConfig> expressionProcessorConfigs;
+  private final List<HeaderAttributeConfig> headerAttributeConfigs;
 
   public ExpressionProcessor(
-      List<ExpressionProcessorConfig> expressionProcessorConfigs) {
+      List<ExpressionProcessorConfig> expressionProcessorConfigs,
+      List<HeaderAttributeConfig> headerAttributeConfigs) {
     this.expressionProcessorConfigs = expressionProcessorConfigs;
+    this.headerAttributeConfigs = headerAttributeConfigs;
   }
 
   private ELEval expressionEval;
-  private ELVars variables;
+  private ELVars expressionVars;
+
+  private ELEval headerAttributeEval;
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues =  super.init();
-    variables = ELUtils.parseConstants(null, getContext(), Groups.EXPRESSIONS.name(), "constants",
+    expressionVars = ELUtils.parseConstants(null, getContext(), Groups.EXPRESSIONS.name(), "constants",
       Errors.EXPR_01, issues);
     expressionEval = createExpressionEval(getContext());
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
-      ELUtils.validateExpression(expressionEval, variables, expressionProcessorConfig.expression, getContext(),
+      ELUtils.validateExpression(expressionEval, expressionVars, expressionProcessorConfig.expression, getContext(),
         Groups.EXPRESSIONS.name(), "expressionProcessorConfigs", Errors.EXPR_00,
         Object.class, issues);
+    }
+
+    if(headerAttributeConfigs != null && !headerAttributeConfigs.isEmpty()) {
+      headerAttributeEval = createHeaderAttributeEval(getContext());
+      for (HeaderAttributeConfig headerAttributeConfig : headerAttributeConfigs) {
+        ELUtils.validateExpression(headerAttributeEval, expressionVars, headerAttributeConfig.headerAttributeExpression,
+          getContext(), Groups.EXPRESSIONS.name(), "headerAttributeConfigs", Errors.EXPR_00, Object.class, issues);
+      }
     }
     return issues;
   }
@@ -67,9 +80,13 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
     return elContext.createELEval("expression");
   }
 
+  private ELEval createHeaderAttributeEval(ELContext elContext) {
+    return elContext.createELEval("headerAttributeExpression");
+  }
+
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    RecordEL.setRecordInContext(variables, record);
+    RecordEL.setRecordInContext(expressionVars, record);
     for(ExpressionProcessorConfig expressionProcessorConfig : expressionProcessorConfigs) {
       String fieldToSet = expressionProcessorConfig.fieldToSet;
       if(fieldToSet == null || fieldToSet.isEmpty()) {
@@ -77,7 +94,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       }
       Object result;
       try {
-        result = expressionEval.eval(variables, expressionProcessorConfig.expression, Object.class);
+        result = expressionEval.eval(expressionVars, expressionProcessorConfig.expression, Object.class);
       } catch (ELEvalException e) {
         throw new OnRecordErrorException(Errors.EXPR_03, expressionProcessorConfig.expression,
                                          record.getHeader().getSourceId(), e.toString(), e);
@@ -100,6 +117,23 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
               expressionProcessorConfig.fieldToSet);
           }
         }
+      }
+    }
+
+    if(headerAttributeConfigs != null && !headerAttributeConfigs.isEmpty()) {
+      for (HeaderAttributeConfig headerAttributeConfig : headerAttributeConfigs) {
+        String attributeToSet = headerAttributeConfig.attributeToSet;
+        if (attributeToSet == null || attributeToSet.isEmpty()) {
+          continue;
+        }
+        String result;
+        try {
+          result = headerAttributeEval.eval(expressionVars, headerAttributeConfig.headerAttributeExpression, String.class);
+        } catch (ELEvalException e) {
+          throw new OnRecordErrorException(Errors.EXPR_03, headerAttributeConfig.headerAttributeExpression,
+            record.getHeader().getSourceId(), e.toString(), e);
+        }
+        record.getHeader().setAttribute(attributeToSet, result);
       }
     }
     batchMaker.addRecord(record);

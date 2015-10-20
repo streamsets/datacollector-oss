@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -534,6 +535,46 @@ public class TestExpressionProcessor {
         "madhu");
       Assert.assertEquals(resultRecord.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(),
         "girish");
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testHeaderExpression() throws StageException {
+
+    HeaderAttributeConfig headerAttributeConfig1 = new HeaderAttributeConfig();
+    headerAttributeConfig1.attributeToSet = "OPERATION";
+    headerAttributeConfig1.headerAttributeExpression = "INSERT";
+
+    HeaderAttributeConfig headerAttributeConfig2 = new HeaderAttributeConfig();
+    headerAttributeConfig2.attributeToSet = "USER";
+    headerAttributeConfig2.headerAttributeExpression = "HK";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("expressionProcessorConfigs", new ArrayList<>())
+      .addConfiguration("headerAttributeConfigs", ImmutableList.of(headerAttributeConfig1, headerAttributeConfig2))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("baseSalary", Field.create(Field.Type.DOUBLE, 100000.25));
+      map.put("bonus", Field.create(Field.Type.INTEGER, 2000));
+      map.put("perks", Field.create(Field.Type.SHORT, 200));
+      Record record = RecordCreator.create("s", "s:1");
+      record.getHeader().setAttribute("USER", "SS");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record record1 = output.getRecords().get("a").get(0);
+      Record.Header header = record1.getHeader();
+
+      Assert.assertEquals("HK", header.getAttribute("USER"));
+      Assert.assertEquals("INSERT", header.getAttribute("OPERATION"));
 
     } finally {
       runner.runDestroy();

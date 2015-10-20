@@ -20,36 +20,34 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 
-public class ExpressionProcessorConfig {
+public class HeaderAttributeConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
+      type = ConfigDef.Type.STRING,
       defaultValue = "/",
-      label = "Output Field",
-      description = "Use an existing field or enter a new field. Using an existing field overwrites the " +
-                    "original value.",
-      displayPosition = 10,
+      label = "Header Attribute",
+      description = "Use an existing header attribute or enter a new attribute. Using an existing attribute " +
+        "overwrites the original value.",
+      displayPosition = 30,
       group = "EXPRESSIONS"
 
   )
-  @FieldSelectorModel(singleValued = true)
-  public String fieldToSet;
+  public String attributeToSet;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "${record:value('/')}",
-      label = "Field Expression",
-      description = "Use the expression language to modify values in a field.",
-      displayPosition = 20,
+      label = "Header Attribute Expression",
+      description = "Use the expression language to modify or set new attributes in the header.",
+      displayPosition = 40,
       elDefs = {RecordEL.class, ELSupport.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "EXPRESSIONS"
   )
-  public String expression;
+  public String headerAttributeExpression;
 
 }

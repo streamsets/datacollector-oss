@@ -30,10 +30,11 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
 import java.util.List;
 
 @StageDef(
-    version=1,
+    version=2,
     label="Expression Evaluator",
     description="Performs calculations on a field-by-field basis",
-    icon="expression.png"
+    icon="expression.png",
+    upgrader = ExpressionProcessorUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
@@ -43,7 +44,7 @@ public class ExpressionDProcessor extends DProcessor {
       required = false,
       type = ConfigDef.Type.MODEL,
       defaultValue="",
-      label = "Expressions",
+      label = "Field Expressions",
       description = "",
       displayPosition = 10,
       group = "EXPRESSIONS"
@@ -51,9 +52,21 @@ public class ExpressionDProcessor extends DProcessor {
   @ListBeanModel
   public List<ExpressionProcessorConfig> expressionProcessorConfigs;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    defaultValue="",
+    label = "Header Attribute Expressions",
+    description = "",
+    displayPosition = 10,
+    group = "EXPRESSIONS"
+  )
+  @ListBeanModel
+  public List<HeaderAttributeConfig> headerAttributeConfigs;
+
   @Override
   protected Processor createProcessor() {
-    return new ExpressionProcessor(expressionProcessorConfigs);
+    return new ExpressionProcessor(expressionProcessorConfigs, headerAttributeConfigs);
   }
 
 }
