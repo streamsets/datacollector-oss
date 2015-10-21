@@ -53,17 +53,14 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
   public static final ChangeLogFormat FORMAT = ChangeLogFormat.MSSQL;
   public static final String OP_FIELD = "/__$operation";
 
-  private final String connectionString;
   private final String tableName;
   private final DataSource dataSource;
 
   private List<String> primaryKeyColumns;
 
   public MicrosoftJdbcRecordWriter(
-    String connectionString,
     DataSource dataSource,
     String tableName) throws StageException {
-    this.connectionString = connectionString;
     this.dataSource = dataSource;
     this.tableName = tableName;
 
@@ -144,7 +141,7 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
               continue;
           }
 
-          LOG.debug("Query: {}", query);
+          LOG.debug("Prepared Query: {}", query);
           PreparedStatement statement = connection.prepareStatement(query);
 
           i = 1;
@@ -163,11 +160,13 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
                 continue recordLoop;
               }
               statement.setObject(i, columnMappings.get(key));
+              ++i;
             }
           }
 
           // Since we must commit all the changes in the same transaction, if one fails,
           // we should abort the entire transaction (batch).
+          LOG.debug("Bound Query: {}", statement.toString());
           statement.execute();
           statement.close();
         } else {

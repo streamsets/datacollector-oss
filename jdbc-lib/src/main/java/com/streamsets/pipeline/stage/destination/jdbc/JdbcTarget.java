@@ -188,7 +188,7 @@ public class JdbcTarget extends BaseTarget {
         }
         break;
       case MSSQL:
-        recordWriter = new MicrosoftJdbcRecordWriter(connectionString, dataSource, tableName);
+        recordWriter = new MicrosoftJdbcRecordWriter(dataSource, tableName);
         break;
       default:
         throw new IllegalStateException("Unrecognized format specified: " + changeLogFormat);
