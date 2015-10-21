@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import java.util.Map;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -144,34 +144,43 @@ public class JdbcDSource extends DSource {
   public String password;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      defaultValue = "",
-      label = "Additional JDBC Configuration Properties",
-      description = "Additional properties to pass to the underlying JDBC driver.",
-      displayPosition = 130,
-      group = "JDBC"
-  )
-  public Map<String, String> driverProperties;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LIST_MAP",
       label = "Record Type",
-      description = "",
-      displayPosition = 140,
+      displayPosition = 130,
       group = "JDBC"
   )
   @ValueChooserModel(JdbcRecordTypeChooserValues.class)
   public JdbcRecordType jdbcRecordType;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Batch Size (Records)",
+      displayPosition = 140,
+      group = "JDBC"
+  )
+  public int maxBatchSize;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Additional JDBC Configuration Properties",
+      description = "Additional properties to pass to the underlying JDBC driver.",
+      displayPosition = 150,
+      group = "JDBC"
+  )
+  public Map<String, String> driverProperties;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "JDBC Driver Class Name",
       description = "Class name for pre-JDBC 4 compliant drivers.",
-      displayPosition = 140,
+      displayPosition = 160,
       group = "LEGACY"
   )
   public String driverClassName;
@@ -182,7 +191,7 @@ public class JdbcDSource extends DSource {
       mode = ConfigDef.Mode.SQL,
       label = "Connection Health Test Query",
       description = "Not recommended for JDBC 4 compliant drivers. Runs when a new database connection is established.",
-      displayPosition = 150,
+      displayPosition = 170,
       group = "LEGACY"
   )
   public String connectionTestQuery;
@@ -192,7 +201,7 @@ public class JdbcDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "Transaction ID Column Name",
       description = "When reading a change data table, column identifying the transaction the change belongs to.",
-      displayPosition = 160,
+      displayPosition = 180,
       group = "CDC"
   )
   public String txnIdColumnName;
@@ -203,7 +212,7 @@ public class JdbcDSource extends DSource {
       label = "Max Transaction Size",
       description = "If transactions exceed this size, they will be applied in multiple batches.",
       defaultValue = "10000",
-      displayPosition = 170,
+      displayPosition = 190,
       group = "CDC"
   )
   public int txnMaxSize;
@@ -224,7 +233,8 @@ public class JdbcDSource extends DSource {
         connectionTestQuery,
         txnIdColumnName,
         txnMaxSize,
-        jdbcRecordType
+        jdbcRecordType,
+        maxBatchSize
       );
   }
 }

@@ -71,6 +71,7 @@ public class JdbcSource extends BaseSource {
   private final String txnColumnName;
   private final int txnMaxSize;
   private final JdbcRecordType recordType;
+  private final int maxBatchSize;
 
   private long queryIntervalMillis = Long.MIN_VALUE;
 
@@ -95,7 +96,9 @@ public class JdbcSource extends BaseSource {
       String connectionTestQuery,
       String txnColumnName,
       int txnMaxSize,
-      JdbcRecordType jdbcRecordType) {
+      JdbcRecordType jdbcRecordType,
+      int maxBatchSize
+  ) {
     this.isIncrementalMode = isIncrementalMode;
     this.connectionString = connectionString;
     this.query = query;
@@ -110,6 +113,7 @@ public class JdbcSource extends BaseSource {
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
     this.recordType = jdbcRecordType;
+    this.maxBatchSize = maxBatchSize;
   }
 
   @Override
@@ -172,8 +176,7 @@ public class JdbcSource extends BaseSource {
         LOG.debug(formattedError, e);
         issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, formattedError));
       }
-    }
-    catch (StageException e) {
+    } catch (StageException e) {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
     }
     return issues;
@@ -188,19 +191,23 @@ public class JdbcSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    int batchSize = Math.min(this.maxBatchSize, maxBatchSize);
     String nextSourceOffset = lastSourceOffset;
 
     long now = System.currentTimeMillis();
     long delay = Math.max(0, (lastQueryCompletedTime + queryIntervalMillis) - now);
 
-    LOG.debug("Sleeping for {}ms", delay);
-    if (ThreadUtil.sleep(delay)) {
+    if (delay > 0) {
+      // Sleep in one second increments so we don't tie up the app.
+      LOG.debug("{}ms remaining until next fetch.", delay);
+      ThreadUtil.sleep(Math.min(delay, 1000));
+    } else {
       try {
-        if (null == resultSet || resultSet.isClosed() ) {
+        if (null == resultSet || resultSet.isClosed()) {
           connection = dataSource.getConnection();
           statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-          int fetchSize = maxBatchSize;
+          int fetchSize = batchSize;
           // MySQL does not support cursors or fetch size except 0 and "streaming" (1 at a time).
           if (connectionString.toLowerCase().contains("mysql")) {
             // Enable MySQL streaming mode.
@@ -210,14 +217,14 @@ public class JdbcSource extends BaseSource {
           LOG.debug("Using query fetch size: {}", fetchSize);
 
           if (getContext().isPreview()) {
-            statement.setMaxRows(maxBatchSize);
+            statement.setMaxRows(batchSize);
           }
           resultSet = statement.executeQuery(prepareQuery(query, lastSourceOffset));
         }
         // Read Data and track last offset
         int rowCount = 0;
         String lastTransactionId = "";
-        while (continueReading(rowCount, maxBatchSize) && resultSet.next()) {
+        while (continueReading(rowCount, batchSize) && resultSet.next()) {
           final Record record = processRow(resultSet);
 
           if (null != record) {
@@ -268,9 +275,9 @@ public class JdbcSource extends BaseSource {
     return nextSourceOffset;
   }
 
-  private boolean continueReading(int rowCount, int maxBatchSize) {
+  private boolean continueReading(int rowCount, int batchSize) {
     if (txnColumnName.isEmpty()) {
-      return rowCount < maxBatchSize;
+      return rowCount < batchSize;
     } else {
       return rowCount < txnMaxSize;
     }
