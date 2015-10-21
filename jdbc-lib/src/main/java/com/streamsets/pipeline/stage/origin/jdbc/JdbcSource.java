@@ -43,10 +43,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class JdbcSource extends BaseSource {
@@ -135,7 +137,7 @@ public class JdbcSource extends BaseSource {
 
     final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
     Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(
-        String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b\\s+\\b%s\\b.*",
+        String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b).*\\bORDER BY\\b.*\\b%s\\b.*",
             formattedOffsetColumn,
             formattedOffsetColumn
         )
@@ -154,7 +156,22 @@ public class JdbcSource extends BaseSource {
           final String preparedQuery = prepareQuery(query, initialOffset);
           try (ResultSet resultSet = statement.executeQuery(preparedQuery)) {
             try {
-              resultSet.findColumn(offsetColumn);
+              Set<String> columnLabels = new HashSet<>();
+              ResultSetMetaData metadata = resultSet.getMetaData();
+              int columnIdx = metadata.getColumnCount() + 1;
+              while (--columnIdx > 0) {
+                String columnLabel = metadata.getColumnLabel(columnIdx);
+                if (columnLabels.contains(columnLabel)) {
+                  issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_08, columnLabel));
+                } else {
+                  columnLabels.add(columnLabel);
+                }
+              }
+              if (offsetColumn.contains(".")) {
+                issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_09, offsetColumn));
+              } else {
+                resultSet.findColumn(offsetColumn);
+              }
             } catch (SQLException e) {
               LOG.error(JdbcUtil.formatSqlException(e));
               issues.add(

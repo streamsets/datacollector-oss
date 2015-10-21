@@ -41,6 +41,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("Duplicates")
 public class TestJdbcSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestJdbcSource.class);
   private static final int BATCH_SIZE = 1000;
@@ -504,5 +505,93 @@ public class TestJdbcSource {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  public void testQualifiedOffsetColumnInQuery() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+  }
+
+  @Test
+  public void testDuplicateColumnLabels() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T, TEST.TEST_TABLE TB WHERE T.P_ID > ${offset} " +
+        "ORDER BY T.P_ID ASC LIMIT 10;";
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(3, issues.size());
+  }
+
+  @Test
+  public void testPrefixedOffsetColumn() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "T.P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
   }
 }
