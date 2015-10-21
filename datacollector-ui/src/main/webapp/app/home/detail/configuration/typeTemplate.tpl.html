@@ -283,16 +283,14 @@
 <script type="text/ng-template" id="fieldSelectorMultiValuedConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <ui-select multiple
-               tagging="tagTransform"
-               tagging-label=false
-               reset-search-input="true"
+               tagging
+               tagging-label=" - new field path"
                ng-disabled="isPipelineReadOnly || isPipelineRunning"
                tagging-tokens=",|ENTER"
                ng-model="detailPaneConfig.configuration[configIndex].value">
-      <ui-select-match>
-        {{$item}}
-      </ui-select-match>
-      <ui-select-choices repeat="fieldPath in fieldSelectorPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
+      <ui-select-match>{{$item}}</ui-select-match>
+      <ui-select-choices
+        repeat="fieldPath in fieldSelectorPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
         <div ng-bind-html="fieldPath | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
