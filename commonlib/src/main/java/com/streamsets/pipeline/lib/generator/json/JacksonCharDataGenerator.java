@@ -32,7 +32,7 @@ import java.io.Writer;
 
 public class JacksonCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
-  private final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
+  private static final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
 
   private final boolean isArray;
   private final JsonGenerator generator;

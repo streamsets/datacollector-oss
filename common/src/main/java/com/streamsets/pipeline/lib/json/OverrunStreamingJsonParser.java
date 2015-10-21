@@ -55,6 +55,17 @@ import java.util.Set;
  */
 public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+  static {
+    SimpleModule module = new SimpleModule();
+    module.addDeserializer(Map.class, new MapDeserializer());
+    module.addDeserializer(List.class, new ListDeserializer());
+    OBJECT_MAPPER.registerModule(module);
+    OBJECT_MAPPER.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    OBJECT_MAPPER.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+  }
+
   public static class EnforcerMap extends LinkedHashMap {
 
     @Override
@@ -165,14 +176,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   @Override
   protected ObjectMapper getObjectMapper() {
-    ObjectMapper objectMapper = super.getObjectMapper();
-    SimpleModule module = new SimpleModule();
-    module.addDeserializer(Map.class, new MapDeserializer());
-    module.addDeserializer(List.class, new ListDeserializer());
-    objectMapper.registerModule(module);
-    objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-    objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-    return objectMapper;
+    return OBJECT_MAPPER;
   }
 
   @Override

@@ -29,8 +29,8 @@ import java.io.Writer;
 
 public class JsonCharDataGenerator implements DataGenerator {
 
-  private static final String SDC_JSON_BOON_DISABLED_KEY = "sdc.json.boon.disabled";
-  private static final String SDC_JSON_BOON_DISABLED_DEFAULT = "false";
+  private static final String SDC_JSON_GENERATOR_BOON_ENABLED_KEY = "sdc.json.generator.boon.enabled";
+  private static final String SDC_JSON_GENERATOR_BOON_ENABLED_DEFAULT = "false";
 
   private DataGenerator dataGenerator;
   private boolean isArray;
@@ -41,12 +41,11 @@ public class JsonCharDataGenerator implements DataGenerator {
       isArray = true;
       dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
     } else {
-      String property = System.getProperty(SDC_JSON_BOON_DISABLED_KEY, SDC_JSON_BOON_DISABLED_DEFAULT);
+      String property = System.getProperty(SDC_JSON_GENERATOR_BOON_ENABLED_KEY, SDC_JSON_GENERATOR_BOON_ENABLED_DEFAULT);
       if("true".equalsIgnoreCase(property)) {
-        // Use jackson generator even in case of multiple objects based on the system property
-        dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
-      } else {
         dataGenerator = new BoonCharDataGenerator(writer, jsonMode);
+      } else {
+        dataGenerator = new JacksonCharDataGenerator(writer, jsonMode);
       }
     }
   }
