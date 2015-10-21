@@ -31,6 +31,8 @@ public enum Errors implements ErrorCode {
   JDBC_05("Query must include '{}' in WHERE clause and in ORDER BY clause before other columns."),
   JDBC_06("Failed to initialize connection pool: {}"),
   JDBC_07("The query interval expression must be greater than or equal to zero."),
+  JDBC_08("Query result has duplicate column label '{}'. Create an alias using 'AS' in your query."),
+  JDBC_09("Offset Column '{}' cannot contain a '.' or prefix."),
   ;
   private final String msg;
 

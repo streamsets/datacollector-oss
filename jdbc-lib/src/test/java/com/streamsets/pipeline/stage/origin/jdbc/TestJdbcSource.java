@@ -39,6 +39,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("Duplicates")
 public class TestJdbcSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestJdbcSource.class);
   private static final int BATCH_SIZE = 1000;
@@ -505,15 +506,14 @@ public class TestJdbcSource {
   }
 
   @Test
-  public void testEmptyResultSet() throws Exception {
-    Statement statement = connection.createStatement();
-    statement.execute("TRUNCATE TABLE TEST.TEST_TABLE");
+  public void testQualifiedOffsetColumnInQuery() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
 
     JdbcSource origin = new JdbcSource(
         true,
         h2ConnectionString,
         query,
-        initialOffset,
+        "1",
         "P_ID",
         queryInterval,
         username,
@@ -521,8 +521,8 @@ public class TestJdbcSource {
         new HashMap<String, String>(),
         "",
         "",
-        "",
-        1000,
+        "FIRST_NAME",
+        1,
         JdbcRecordType.LIST_MAP,
         BATCH_SIZE
     );
@@ -530,19 +530,66 @@ public class TestJdbcSource {
         .addOutputLane("lane")
         .build();
 
-    runner.runInit();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+  }
 
-    try {
-      // Check that existing rows are loaded.
-      StageRunner.Output output = runner.runProduce(null, 1000);
-      Map<String, List<Record>> recordMap = output.getRecords();
-      List<Record> parsedRecords = recordMap.get("lane");
+  @Test
+  public void testDuplicateColumnLabels() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T, TEST.TEST_TABLE TB WHERE T.P_ID > ${offset} " +
+        "ORDER BY T.P_ID ASC LIMIT 10;";
 
-      assertEquals(0, parsedRecords.size());
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
 
-      assertEquals(initialOffset, output.getNewOffset());
-    } finally {
-      runner.runDestroy();
-    }
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(3, issues.size());
+  }
+
+  @Test
+  public void testPrefixedOffsetColumn() throws Exception {
+    final String query = "SELECT * FROM TEST.TEST_TABLE T WHERE T.P_ID > ${offset} ORDER BY T.P_ID ASC LIMIT 10;";
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        "1",
+        "T.P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "FIRST_NAME",
+        1,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
   }
 }
