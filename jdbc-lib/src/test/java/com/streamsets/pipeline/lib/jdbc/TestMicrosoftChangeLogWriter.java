@@ -51,7 +51,6 @@ public class TestMicrosoftChangeLogWriter {
   private DataSource dataSource;
   private Connection connection;
 
-
   @Before
   public void setUp() throws SQLException {
     // Create a table in H2 and put some data in it for querying.
@@ -68,7 +67,11 @@ public class TestMicrosoftChangeLogWriter {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-              "(P_ID INT NOT NULL, MSG VARCHAR(255), UNIQUE(P_ID), PRIMARY KEY(P_ID));"
+              "(P_ID INT NOT NULL, MSG VARCHAR(255), PRIMARY KEY(P_ID));"
+      );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.COMPOSITE_KEY " +
+              "(P_ID INT NOT NULL, P_IDB INT NOT NULL, MSG VARCHAR(255), PRIMARY KEY(P_ID, P_IDB));"
       );
       String unprivUser = "unpriv_user";
       String unprivPassword = "unpriv_pass";
@@ -99,7 +102,7 @@ public class TestMicrosoftChangeLogWriter {
     fields.put("MSG", Field.create("unit test"));
     record.set(Field.create(fields));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(record));
     writer.writeBatch(batch);
 
@@ -127,7 +130,7 @@ public class TestMicrosoftChangeLogWriter {
     update.put("MSG", Field.create("second message"));
     updateRecord.set(Field.create(update));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, updateRecord));
     writer.writeBatch(batch);
 
@@ -156,13 +159,75 @@ public class TestMicrosoftChangeLogWriter {
     delete.put("MSG", Field.create("message"));
     deleteRecord.set(Field.create(delete));
 
-    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(connectionString, dataSource, "TEST.TEST_TABLE");
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.TEST_TABLE");
     Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, deleteRecord));
     writer.writeBatch(batch);
 
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
+      rs.next();
+      assertEquals(0, rs.getInt(1));
+    }
+  }
+
+  @Test
+  public void testUpdateWithCompositeKey() throws Exception {
+    Record insertRecord = RecordCreator.create();
+    Map<String, Field> insert = new HashMap<>();
+    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put("P_ID", Field.create(200));
+    insert.put("P_IDB", Field.create(250));
+    insert.put("MSG", Field.create("first message"));
+    insertRecord.set(Field.create(insert));
+
+    Record updateRecord = RecordCreator.create();
+    Map<String, Field> update = new HashMap<>();
+    update.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(4));
+    update.put("P_ID", Field.create(200));
+    update.put("P_IDB", Field.create(250));
+    update.put("MSG", Field.create("second message"));
+    updateRecord.set(Field.create(update));
+
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.COMPOSITE_KEY");
+    Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, updateRecord));
+    writer.writeBatch(batch);
+
+    connection = DriverManager.getConnection(connectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT * FROM TEST.COMPOSITE_KEY WHERE P_ID = 200 AND P_IDB = 250");
+      rs.next();
+      assertEquals(200, rs.getInt(1));
+      assertEquals(250, rs.getInt(2));
+      assertEquals("second message", rs.getString(3));
+    }
+  }
+
+  @Test
+  public void testDeleteWithCompositeKey() throws Exception {
+    Record insertRecord = RecordCreator.create();
+    Map<String, Field> insert = new HashMap<>();
+    insert.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(2));
+    insert.put("P_ID", Field.create(300));
+    insert.put("P_IDB", Field.create(350));
+    insert.put("MSG", Field.create("message"));
+    insertRecord.set(Field.create(insert));
+
+    Record deleteRecord = RecordCreator.create();
+    Map<String, Field> delete = new HashMap<>();
+    delete.put(MicrosoftJdbcRecordWriter.OP_FIELD.substring(1), Field.create(1));
+    delete.put("P_ID", Field.create(300));
+    delete.put("P_IDB", Field.create(350));
+    delete.put("MSG", Field.create("message"));
+    deleteRecord.set(Field.create(delete));
+
+    MicrosoftJdbcRecordWriter writer = new MicrosoftJdbcRecordWriter(dataSource, "TEST.COMPOSITE_KEY");
+    Batch batch = new BatchImpl("test", "0", ImmutableList.of(insertRecord, deleteRecord));
+    writer.writeBatch(batch);
+
+    connection = DriverManager.getConnection(connectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.COMPOSITE_KEY");
       rs.next();
       assertEquals(0, rs.getInt(1));
     }
