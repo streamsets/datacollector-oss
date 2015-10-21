@@ -33,11 +33,17 @@ public class JdbcSourceUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("maxBatchSize", 1000));
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
