@@ -42,6 +42,8 @@ public class AmazonS3Target extends BaseTarget {
 
   private final static Logger LOG = LoggerFactory.getLogger(AmazonS3Target.class);
 
+  private static final String GZIP_EXTENSION = ".gz";
+
   private final S3TargetConfigBean s3TargetConfigBean;
   private int fileCount = 0;
 
@@ -93,14 +95,18 @@ public class AmazonS3Target extends BaseTarget {
       // upload file on Amazon S3 only if at least one record was successfully written to the stream
       if (writtenRecordCount > 0) {
         fileCount++;
-        String fileName = keyPrefix + fileCount;
+        StringBuilder fileName = new StringBuilder();
+        fileName = fileName.append(keyPrefix).append(fileCount);
+        if(s3TargetConfigBean.compress) {
+          fileName = fileName.append(GZIP_EXTENSION);
+        }
 
         // Avoid making a copy of the internal buffer maintained by the ByteArrayOutputStream by using
         // ByRefByteArrayOutputStream
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bOut.getInternalBuffer(), 0, bOut.size());
 
-        PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket, fileName,
-          byteArrayInputStream, null);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(s3TargetConfigBean.s3Config.bucket,
+          fileName.toString(), byteArrayInputStream, null);
 
         LOG.debug("Uploading object {} into Amazon S3", s3TargetConfigBean.s3Config.bucket +
           s3TargetConfigBean.s3Config.delimiter + fileName);

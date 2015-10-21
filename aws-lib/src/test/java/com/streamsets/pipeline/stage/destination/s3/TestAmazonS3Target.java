@@ -153,6 +153,8 @@ public class TestAmazonS3Target {
     S3Object object = s3client.getObject(BUCKET_NAME, objectSummary.getKey());
     S3ObjectInputStream objectContent = object.getObjectContent();
 
+    Assert.assertTrue(object.getKey().endsWith(".gz"));
+
     List<String> stringList = IOUtils.readLines(new GZIPInputStream(objectContent));
     Assert.assertEquals(9, stringList.size());
     for(int i = 0 ; i < 9; i++) {
