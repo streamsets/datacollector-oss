@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
@@ -38,12 +39,14 @@ import java.util.Map;
 import java.util.Set;
 
 public class DelimitedDataParserFactory extends DataParserFactory {
-  public static final String DELIMITER_CONFIG = "delimiterChar";
-  public static final String ESCAPE_CONFIG = "escapeChar";
-  public static final String QUOTE_CONFIG = "quoteChar";
 
   public static final Map<String, Object> CONFIGS =
-      ImmutableMap.<String, Object>of(DELIMITER_CONFIG, '|', ESCAPE_CONFIG, '\\', QUOTE_CONFIG, '"');
+      ImmutableMap.<String, Object>of(
+        DelimitedDataConstants.DELIMITER_CONFIG, '|',
+        DelimitedDataConstants.ESCAPE_CONFIG, '\\',
+        DelimitedDataConstants.QUOTE_CONFIG, '"'
+      );
+
   public static final Set<Class<? extends Enum>> MODES =
       ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class, CsvRecordType.class);
 
@@ -66,9 +69,9 @@ public class DelimitedDataParserFactory extends DataParserFactory {
                                                          reader.getPos()));
     CSVFormat csvFormat = getSettings().getMode(CsvMode.class).getFormat();
     if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
-      csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DELIMITER_CONFIG))
-                                   .withEscape((char) getSettings().getConfig(ESCAPE_CONFIG))
-                                   .withQuote((char)getSettings().getConfig(QUOTE_CONFIG));
+      csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
+                                   .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
+                                   .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
     }
     try {
       return new DelimitedCharDataParser(getSettings().getContext(), id, reader, offset, csvFormat,

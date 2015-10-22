@@ -25,17 +25,15 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
-import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import org.apache.commons.csv.CSVFormat;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.StringReader;
 import java.util.Collections;
 
 public class TestDelimitedDataParserFactory {
@@ -117,9 +115,9 @@ public class TestDelimitedDataParserFactory {
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
     DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER)
                                        .setMode(CsvRecordType.LIST)
-                                       .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, '^')
-                                       .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, '!')
-                                       .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, '\'').build();
+                                       .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
+                                       .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
+                                       .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'').build();
     DataParser parser = factory.getParser("id", "A^'B'^!^");
     Record record = parser.parse();
     Assert.assertNotNull(record);

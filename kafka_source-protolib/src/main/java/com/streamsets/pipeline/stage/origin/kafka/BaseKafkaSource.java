@@ -41,10 +41,10 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -279,9 +279,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       case DELIMITED:
         builder.setMaxDataLen(csvMaxObjectLen)
           .setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
-          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
-          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
-          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
+          .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
+          .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+          .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen);

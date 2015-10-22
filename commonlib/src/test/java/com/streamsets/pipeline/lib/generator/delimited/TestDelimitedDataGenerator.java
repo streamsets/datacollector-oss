@@ -27,8 +27,10 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.data.DataFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.csv.CSVFormat;
@@ -42,6 +44,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -271,6 +274,43 @@ public class TestDelimitedDataGenerator {
     DataGenerator gen = new DelimitedCharDataGenerator(writer, CsvMode.CSV.getFormat(), CsvHeader.NO_HEADER, "h", "d", false);
     gen.close();
     gen.flush();
+  }
+
+  @Test
+  public void testCustomWithCustom() throws Exception {
+    Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD,
+      Collections.<String>emptyList());
+
+    DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(context, DataGeneratorFormat.DELIMITED);
+    DataGeneratorFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER)
+      .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
+      .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
+      .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
+      .setConfig(DelimitedDataGeneratorFactory.HEADER_KEY, "h")
+      .setConfig(DelimitedDataGeneratorFactory.VALUE_KEY, "d").build();
+
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    DataGenerator gen = factory.getGenerator(byteArrayOutputStream);
+
+    Record record = RecordCreator.create();
+    List<Field> list = new ArrayList<>();
+    Map<String,Field> map = new HashMap<>();
+    map.put("h", Field.create("A"));
+    map.put("d", Field.create("a"));
+    list.add(Field.create(map));
+    map.put("h", Field.create("B"));
+    map.put("d", Field.create("b"));
+    list.add(Field.create(map));
+    map.put("h", Field.create("C"));
+    map.put("d", Field.create("!^"));
+    list.add(Field.create(map));
+    record.set(Field.create(list));
+
+    gen.write(record);
+    gen.flush();
+
+    Assert.assertEquals("a^b^'!^'\r\n", byteArrayOutputStream.toString());
+    gen.close();
   }
 
 }

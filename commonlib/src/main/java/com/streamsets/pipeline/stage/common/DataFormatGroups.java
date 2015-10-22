@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.lib;
+package com.streamsets.pipeline.stage.common;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
@@ -30,6 +30,7 @@ public enum DataFormatGroups implements Label {
   XML("XML"),
   LOG("Log"),
   AVRO("Avro"),
+  BINARY("Binary"),
 
   ;
 

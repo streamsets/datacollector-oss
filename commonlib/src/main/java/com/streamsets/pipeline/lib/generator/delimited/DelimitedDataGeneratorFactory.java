@@ -24,7 +24,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
@@ -50,13 +50,16 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
     configs.put(HEADER_KEY, HEADER_DEFAULT);
     configs.put(VALUE_KEY, VALUE_DEFAULT);
     configs.put(REPLACE_NEWLINES_KEY, REPLACE_NEWLINES_DEFAULT);
+    configs.put(DelimitedDataConstants.DELIMITER_CONFIG, '|');
+    configs.put(DelimitedDataConstants.ESCAPE_CONFIG, '\\');
+    configs.put(DelimitedDataConstants.QUOTE_CONFIG, '"');
+
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
   @SuppressWarnings("unchecked")
   public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of(CsvMode.class, CsvHeader.class);
 
-  private final CSVFormat format;
   private final CsvHeader header;
   private final String headerKey;
   private final String valueKey;
@@ -64,7 +67,6 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
 
   public DelimitedDataGeneratorFactory(Settings settings) {
     super(settings);
-    this.format = settings.getMode(CsvMode.class).getFormat();
     this.header = settings.getMode(CsvHeader.class);
     headerKey = settings.getConfig(HEADER_KEY);
     valueKey = settings.getConfig(VALUE_KEY);
@@ -73,7 +75,13 @@ public class DelimitedDataGeneratorFactory extends DataGeneratorFactory {
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    return new DelimitedCharDataGenerator(createWriter(os), format, header, headerKey, valueKey, replaceNewLines);
+    CSVFormat csvFormat = getSettings().getMode(CsvMode.class).getFormat();
+    if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
+      csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
+        .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
+        .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
+    }
+    return new DelimitedCharDataGenerator(createWriter(os), csvFormat, header, headerKey, valueKey, replaceNewLines);
   }
 
 }

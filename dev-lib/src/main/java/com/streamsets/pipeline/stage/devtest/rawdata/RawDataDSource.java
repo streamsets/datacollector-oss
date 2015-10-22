@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ public class RawDataDSource extends DSource {
   public DataFormat dataFormat;
 
   @ConfigDefBean(groups = "RAW")
-  public DataFormatConfig dataFormatConfig;
+  public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDef(
     required = true,

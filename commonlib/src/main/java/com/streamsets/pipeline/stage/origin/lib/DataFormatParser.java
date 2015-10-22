@@ -32,10 +32,10 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -48,14 +48,14 @@ import java.util.Map;
 
 public class DataFormatParser {
   private final String parentName;
-  private final DataFormatConfig dataFormatConfig;
+  private final DataParserFormatConfig dataFormatConfig;
   private final MessageConfig messageConfig;
   private final DataFormat dataFormat;
   private LogDataFormatValidator logDataFormatValidator;
   private Charset messageCharset;
   private DataParserFactory parserFactory;
 
-  public DataFormatParser(String parentName, DataFormat dataFormat, DataFormatConfig dataFormatConfig, MessageConfig messageConfig) {
+  public DataFormatParser(String parentName, DataFormat dataFormat, DataParserFormatConfig dataFormatConfig, MessageConfig messageConfig) {
     this.parentName = parentName;
     this.dataFormatConfig = dataFormatConfig;
     this.messageConfig = messageConfig;
@@ -142,9 +142,9 @@ public class DataFormatParser {
         builder.setMaxDataLen(dataFormatConfig.csvMaxObjectLen)
           .setMode(dataFormatConfig.csvFileFormat).setMode(dataFormatConfig.csvHeader)
           .setMode(dataFormatConfig.csvRecordType)
-          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
-          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
-          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote);
+          .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
+          .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
+          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(dataFormatConfig.xmlMaxObjectLen);

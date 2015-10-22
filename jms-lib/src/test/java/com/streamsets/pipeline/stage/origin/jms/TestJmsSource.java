@@ -29,7 +29,7 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
@@ -76,7 +76,7 @@ public class TestJmsSource {
   private BrokerService broker;
   private BasicConfig basicConfig;
   private CredentialsConfig credentialsConfig;
-  private DataFormatConfig dataFormatConfig;
+  private DataParserFormatConfig dataFormatConfig;
   private MessageConfig messageConfig;
   private JmsConfig jmsConfig;
   private DataFormat dataFormat;
@@ -106,7 +106,7 @@ public class TestJmsSource {
 
     basicConfig = new BasicConfig();
     credentialsConfig = new CredentialsConfig();
-    dataFormatConfig = new DataFormatConfig();
+    dataFormatConfig = new DataParserFormatConfig();
     messageConfig = new MessageConfig();
     jmsConfig = new JmsConfig();
     credentialsConfig.useCredentials = true;

@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class S3ConfigBean {
   public DataFormat dataFormat;
 
   @ConfigDefBean(groups = {"S3"})
-  public DataFormatConfig dataFormatConfig;
+  public DataParserFormatConfig dataFormatConfig;
 
   @ConfigDefBean(groups = {"ERROR_HANDLING"})
   public S3ErrorConfig errorConfig;

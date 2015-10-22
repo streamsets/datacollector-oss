@@ -43,11 +43,10 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
-
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -352,9 +351,9 @@ public class SpoolDirSource extends BaseSource {
         break;
       case DELIMITED:
         builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
-               .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
-               .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
-               .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
+               .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
+               .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+               .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);

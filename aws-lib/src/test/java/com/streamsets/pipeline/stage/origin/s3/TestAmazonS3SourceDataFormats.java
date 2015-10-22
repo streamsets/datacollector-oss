@@ -41,7 +41,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.DataFormatConfig;
+import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Assume;
@@ -317,7 +317,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.LOG;
     s3ConfigBean.dataFormatConfig.logMode = LogMode.COMMON_LOG_FORMAT;
     s3ConfigBean.dataFormatConfig.logMaxObjectLen = 1024;
@@ -354,7 +354,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.DELIMITED;
     s3ConfigBean.dataFormatConfig.csvFileFormat = CsvMode.CSV;
     s3ConfigBean.dataFormatConfig.csvMaxObjectLen = 1024;
@@ -393,7 +393,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.SDC_JSON;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
 
@@ -428,7 +428,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.XML;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.xmlMaxObjectLen = 1024;
@@ -465,7 +465,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.JSON;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.jsonMaxObjectLen = 10000;
@@ -502,7 +502,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.basicConfig.maxWaitTime = 1000;
     s3ConfigBean.basicConfig.maxBatchSize = 60000;
 
-    s3ConfigBean.dataFormatConfig = new DataFormatConfig();
+    s3ConfigBean.dataFormatConfig = new DataParserFormatConfig();
     s3ConfigBean.dataFormat = DataFormat.AVRO;
     s3ConfigBean.dataFormatConfig.charset = "UTF-8";
     s3ConfigBean.dataFormatConfig.avroSchema = null;

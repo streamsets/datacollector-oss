@@ -17,35 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.lib;
+package com.streamsets.pipeline.lib.util;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+public class DelimitedDataConstants {
 
-@GenerateResourceBundle
-public enum DataFormatErrors implements ErrorCode {
-  // Configuration errors
-  DATA_FORMAT_01("Max data object length cannot be less than 1"),
-  DATA_FORMAT_02("XML delimiter element cannot be empty"),
-  DATA_FORMAT_03("Invalid XML element name '{}'"),
-  DATA_FORMAT_04("Unsupported data format '{}'"),
-  DATA_FORMAT_05("Unsupported charset '{}'"),
-  DATA_FORMAT_06("Cannot create the parser factory: {}"),
+  public static final String DELIMITER_CONFIG = "delimiterChar";
+  public static final String ESCAPE_CONFIG = "escapeChar";
+  public static final String QUOTE_CONFIG = "quoteChar";
 
-  ;
-  private final String msg;
-
-  DataFormatErrors(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
 }

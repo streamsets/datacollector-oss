@@ -43,6 +43,7 @@ import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.impl.Pair;
 
+import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.file.FileReader;
@@ -97,7 +98,6 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
-import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import javax.security.auth.Subject;
@@ -527,9 +527,9 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat)
           .setMode((csvHeader == CsvHeader.IGNORE_HEADER) ? CsvHeader.NO_HEADER: csvHeader)
           .setMode(csvRecordType)
-          .setConfig(DelimitedDataParserFactory.DELIMITER_CONFIG, csvCustomDelimiter)
-          .setConfig(DelimitedDataParserFactory.ESCAPE_CONFIG, csvCustomEscape)
-          .setConfig(DelimitedDataParserFactory.QUOTE_CONFIG, csvCustomQuote);
+          .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
+          .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
         break;
       case TEXT:
         builder.setMaxDataLen(textMaxLineLen);
