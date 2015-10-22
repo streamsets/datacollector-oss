@@ -209,7 +209,7 @@ public class JdbcSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(this.maxBatchSize, maxBatchSize);
-    String nextSourceOffset = lastSourceOffset;
+    String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
 
     long now = System.currentTimeMillis();
     long delay = Math.max(0, (lastQueryCompletedTime + queryIntervalMillis) - now);
