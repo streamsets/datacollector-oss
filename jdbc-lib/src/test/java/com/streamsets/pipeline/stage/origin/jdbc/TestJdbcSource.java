@@ -66,11 +66,11 @@ public class TestJdbcSource {
       statement.addBatch("CREATE SCHEMA IF NOT EXISTS TEST;");
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_TABLE " +
-          "(p_id INT NOT NULL, first_name VARCHAR(255), last_name VARCHAR(255), UNIQUE(p_id));"
+              "(p_id INT NOT NULL, first_name VARCHAR(255), last_name VARCHAR(255), UNIQUE(p_id));"
       );
       statement.addBatch(
           "CREATE TABLE IF NOT EXISTS TEST.TEST_ARRAY " +
-          "(p_id INT NOT NULL, non_scalar ARRAY, UNIQUE(p_id));"
+              "(p_id INT NOT NULL, non_scalar ARRAY, UNIQUE(p_id));"
       );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
@@ -214,7 +214,7 @@ public class TestJdbcSource {
   }
 
   private void runInsertNewRows() throws SQLException {
-    try (Connection connection = DriverManager.getConnection(h2ConnectionString, username, password)){
+    try (Connection connection = DriverManager.getConnection(h2ConnectionString, username, password)) {
       try (Statement statement = connection.createStatement()) {
         // Add some data
         statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (9, 'Arvind', 'Prabhakar')");
@@ -402,7 +402,7 @@ public class TestJdbcSource {
   }
 
   private void runInsertOldRows() throws SQLException {
-    try (Connection connection = DriverManager.getConnection(h2ConnectionString, username, password)){
+    try (Connection connection = DriverManager.getConnection(h2ConnectionString, username, password)) {
       try (Statement statement = connection.createStatement()) {
         // Add some data
         statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (5, 'Arvind', 'Prabhakar')");
@@ -499,6 +499,48 @@ public class TestJdbcSource {
       assertEquals(1, parsedRecords.size());
       assertEquals("3", output.getNewOffset());
 
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testEmptyResultSet() throws Exception {
+    Statement statement = connection.createStatement();
+    statement.execute("TRUNCATE TABLE TEST.TEST_TABLE");
+
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        query,
+        initialOffset,
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE
+    );
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(0, parsedRecords.size());
+
+      assertEquals(initialOffset, output.getNewOffset());
     } finally {
       runner.runDestroy();
     }
