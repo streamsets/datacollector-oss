@@ -376,8 +376,9 @@ angular.module('dataCollectorApp.common')
         xPos = relativeXPos || getXPos(pipelineConfig, firstOpenLane),
         yPos = relativeYPos || getYPos(pipelineConfig, firstOpenLane, xPos),
         stageLabel = self.getStageLabel(stage, pipelineConfig, options),
+        stageInstanceName = self.getStageInstanceName(stage, pipelineConfig, options),
         stageInstance = {
-          instanceName: stage.name + (new Date()).getTime() + (labelSuffix ? labelSuffix : ''),
+          instanceName: stageInstanceName + (labelSuffix ? labelSuffix : ''),
           library: stage.library,
           stageName: stage.name,
           stageVersion: stage.version,
@@ -490,6 +491,38 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    /**
+     * Return Stage Instance Name
+     *
+     * @param stage
+     * @param pipelineConfig
+     * @param options
+     * @returns {*}
+     */
+    this.getStageInstanceName = function(stage, pipelineConfig, options) {
+      var stageName = stage.name;
+
+      if(options.errorStage) {
+        return stageName + '_ErrorStage';
+      } else {
+        var similarStageInstancesNumber = [];
+        angular.forEach(pipelineConfig.stages, function(stageInstance) {
+          if(stageInstance.instanceName.indexOf(stageName) !== -1) {
+            var instanceNameArr = stageInstance.instanceName.split('_');
+            if(!isNaN(instanceNameArr[instanceNameArr.length - 1])) {
+              similarStageInstancesNumber.push(instanceNameArr[instanceNameArr.length - 1]);
+            }
+          }
+        });
+
+        if(similarStageInstancesNumber.length) {
+          similarStageInstancesNumber.sort();
+          return stageName + '_' + (parseInt(similarStageInstancesNumber[similarStageInstancesNumber.length - 1]) + 1);
+        } else {
+          return stageName + '_1';
+        }
+      }
+    };
 
     /**
      * Sets default value for config.
