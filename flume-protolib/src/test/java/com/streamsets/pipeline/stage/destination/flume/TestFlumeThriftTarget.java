@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.flume;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.FlumeTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -48,9 +50,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class TestFlumeThriftTarget {
 
@@ -85,23 +85,28 @@ public class TestFlumeThriftTarget {
   @Test
   public void testWriteStringRecords() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createStringRecords();
@@ -124,23 +129,28 @@ public class TestFlumeThriftTarget {
   @Test
   public void testWriteStringRecordsFromJSON() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/name";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/name")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -163,23 +173,28 @@ public class TestFlumeThriftTarget {
   @Test
   public void testWriteStringRecordsFromJSON2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/lastStatusChange";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -202,24 +217,30 @@ public class TestFlumeThriftTarget {
   @Test
   public void testWriteStringRecordsFromJSON3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/"; //MAP
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .setOnRecordError(OnRecordError.TO_ERROR)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget)
+      .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -242,21 +263,27 @@ public class TestFlumeThriftTarget {
   @Test
   public void testWriteJsonRecords() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -284,25 +311,30 @@ public class TestFlumeThriftTarget {
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
     //Test DELIMITED is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
+    dataGeneratorFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    dataGeneratorFormatConfig.csvReplaceNewLines = false;
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9051");
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        1,                          // batchSize
+        ClientType.THRIFT,
+        1000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9051"),
+        HostSelectionStrategy.RANDOM,
+        0,                          // maxBackOff
+        0,                          // maxRetryAttempts
+        1000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.DELIMITED,
+      dataGeneratorFormatConfig
+    );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.THRIFT)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createCsvRecords();

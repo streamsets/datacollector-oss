@@ -19,9 +19,17 @@
  */
 package com.streamsets.pipeline.lib;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.destination.flume.ClientType;
+import com.streamsets.pipeline.stage.destination.flume.FlumeConfig;
+import com.streamsets.pipeline.stage.destination.flume.FlumeConfigBean;
+import com.streamsets.pipeline.stage.destination.flume.FlumeTarget;
+import com.streamsets.pipeline.stage.destination.flume.HostSelectionStrategy;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -36,6 +44,10 @@ public class FlumeTestUtil {
 
   private static final String MIME = "text/plain";
   private static final String TEST_STRING = "Hello World";
+  public static final String TEST_STRING_255 = "StreamSets was founded in June 2014 by business and engineering " +
+    "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
+    "team that is laser-focused on solving hard problems so our customers don’t have to.";
+
 
   public static List<Record> produce20Records() throws IOException {
     List<Record> list = new ArrayList<>();
@@ -82,5 +94,73 @@ public class FlumeTestUtil {
       records.add(record);
     }
     return records;
+  }
+
+  public static List<Record> createBinaryRecords() {
+    List<Record> records = new ArrayList<>(9);
+    for (int i = 0; i < 9; i++) {
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("data", Field.create((TEST_STRING_255 + i).getBytes()));
+      record.set(Field.create(map));
+      records.add(record);
+    }
+    return records;
+  }
+
+  public static FlumeTarget createFlumeTarget(
+    FlumeConfig flumeConfig,
+    DataFormat dataFormat,
+    DataGeneratorFormatConfig dataGeneratorFormatConfig
+  ) {
+    FlumeConfigBean flumeConfigBean = new FlumeConfigBean();
+    flumeConfigBean.flumeConfig = flumeConfig;
+    flumeConfigBean.dataFormat = dataFormat;
+    flumeConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
+    return new FlumeTarget(flumeConfigBean);
+  }
+
+  public static FlumeConfig createFlumeConfig(
+    boolean backof,
+    int batchSize,
+    ClientType clientType,
+    int connectionTimeout,
+    Map<String, String> flumeHostsConfig,
+    HostSelectionStrategy hostSelectionStrategy,
+    int maxBackOff,
+    int maxRetryAttempts,
+    int requestTimeout,
+    boolean singleEventPerBatch,
+    int waitBetweenRetries
+  ) {
+    FlumeConfig flumeConfig = new FlumeConfig();
+    flumeConfig.backOff = backof;
+    flumeConfig.batchSize = batchSize;
+    flumeConfig.clientType = clientType;
+    flumeConfig.connectionTimeout = connectionTimeout;
+    flumeConfig.flumeHostsConfig = flumeHostsConfig;
+    flumeConfig.hostSelectionStrategy = hostSelectionStrategy;
+    flumeConfig.maxBackOff = maxBackOff;
+    flumeConfig.maxRetryAttempts = maxRetryAttempts;
+    flumeConfig.requestTimeout = requestTimeout;
+    flumeConfig.singleEventPerBatch = singleEventPerBatch;
+    flumeConfig.waitBetweenRetries = waitBetweenRetries;
+    return flumeConfig;
+  }
+
+  public static FlumeConfig createDefaultFlumeConfig(boolean singleEvent) {
+    return createFlumeConfig(
+      false,                      // backOff
+      1,                          // batchSize
+      ClientType.AVRO_FAILOVER,
+      1000,                       // connection timeout
+      ImmutableMap.of("h1", "localhost:9050"),
+      HostSelectionStrategy.RANDOM,
+      0,                          // maxBackOff
+      0,                          // maxRetryAttempts
+      1000,                       // requestTimeout
+      singleEvent,                      // singleEventPerBatch
+      0
+    );
   }
 }

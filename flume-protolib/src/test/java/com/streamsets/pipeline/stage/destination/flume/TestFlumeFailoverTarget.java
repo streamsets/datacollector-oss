@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.FlumeTestUtil;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -58,6 +59,7 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,49 +100,53 @@ public class TestFlumeFailoverTarget {
     Map<String, String> flumeHostsConfig = new HashMap<>();
     flumeHostsConfig.put("h1", "localhost:9050");
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", -1)
-      .addConfiguration("waitBetweenRetries", -1)
-      .addConfiguration("batchSize", 0)
-      .addConfiguration("connectionTimeout", 500)
-      .addConfiguration("requestTimeout", 500)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    FlumeConfig flumeConfig = new FlumeConfig();
+    flumeConfig.backOff = false;
+    flumeConfig.batchSize = 0;
+    flumeConfig.clientType = ClientType.AVRO_FAILOVER;
+    flumeConfig.connectionTimeout = 500;
+    flumeConfig.flumeHostsConfig = flumeHostsConfig;
+    flumeConfig.hostSelectionStrategy = HostSelectionStrategy.RANDOM;
+    flumeConfig.maxBackOff = 0;
+    flumeConfig.maxRetryAttempts = 0;
+    flumeConfig.requestTimeout = 500;
+    flumeConfig.singleEventPerBatch = false;
+    flumeConfig.waitBetweenRetries = 0;
+
+    FlumeConfigBean flumeConfigBean = new FlumeConfigBean();
+    flumeConfigBean.flumeConfig = flumeConfig;
+    flumeConfigBean.dataFormat = DataFormat.TEXT;
+    flumeConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
+    FlumeTarget flumeTarget = new FlumeTarget(flumeConfigBean);
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     try {
       targetRunner.runInit();
       Assert.fail("Expected Stage Exception as configuration options are not valid");
     } catch (StageException e) {
-
+      //batch size cannot be less than one
     }
   }
 
   @Test
   public void testWriteStringRecords() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createStringRecords();
@@ -163,23 +169,17 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteStringRecordsOneEventPerBatch() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", true)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(true),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createStringRecords();
@@ -201,23 +201,18 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteStringRecordsFromJSON() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/name";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/name")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -240,23 +235,17 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteStringRecordsFromJSON2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/lastStatusChange";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/lastStatusChange") //this is number field, should be converted to string
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -279,23 +268,18 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteStringRecordsFromJSON3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/"; //MAP
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget)
       .setOnRecordError(OnRecordError.TO_ERROR)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/") //this is map field, should not be converted to string
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
       .build();
 
     targetRunner.runInit();
@@ -319,21 +303,14 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteJsonRecords() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createJsonRecords();
@@ -361,25 +338,17 @@ public class TestFlumeFailoverTarget {
   public void testWriteCsvRecords() throws InterruptedException, StageException, IOException {
 
     //Test DELIMITED is - "2010,NLDS1,PHI,NL,CIN,NL,3,0,0"
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
+    dataGeneratorFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    dataGeneratorFormatConfig.csvReplaceNewLines = false;
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.DELIMITED,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = FlumeTestUtil.createCsvRecords();
@@ -399,26 +368,16 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteAvroRecords() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.includeSchema = true;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
-      .addConfiguration("includeSchema", true)
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.AVRO,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> records = SdcAvroTestUtil.getRecords1();
@@ -449,26 +408,15 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteAvroRecordsSingleEvent() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
-      .addConfiguration("includeSchema", true)
-      .build();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.includeSchema = true;
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(true),
+      DataFormat.AVRO,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> records = SdcAvroTestUtil.getRecords1();
@@ -502,26 +450,15 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteAvroRecordsDropSchema() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
-      .addConfiguration("includeSchema", false)
-      .build();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.includeSchema = false;
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(false),
+      DataFormat.AVRO,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> records = SdcAvroTestUtil.getRecords1();
@@ -551,26 +488,15 @@ public class TestFlumeFailoverTarget {
   @Test
   public void testWriteAvroRecordsDropSchemaSingleEvent() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_FAILOVER)
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .addConfiguration("batchSize", 1)
-      .addConfiguration("connectionTimeout", 1000)
-      .addConfiguration("requestTimeout", 1000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("singleEventPerBatch", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
-      .addConfiguration("includeSchema", false)
-      .build();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.includeSchema = false;
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createDefaultFlumeConfig(true),
+      DataFormat.AVRO,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<Record> records = SdcAvroTestUtil.getRecords1();
@@ -606,4 +532,35 @@ public class TestFlumeFailoverTarget {
     Assert.assertEquals(3, genericRecords.size());
     SdcAvroTestUtil.compare1(genericRecords);
   }
+
+  @Test
+  public void testWriteBinaryRecords() throws StageException {
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.binaryFieldPath = "/data";
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+        FlumeTestUtil.createDefaultFlumeConfig(false),
+        DataFormat.BINARY,
+        dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
+
+    targetRunner.runInit();
+    List<Record> logRecords = FlumeTestUtil.createBinaryRecords();
+    targetRunner.runWrite(logRecords);
+    targetRunner.runDestroy();
+
+    for(Record r : logRecords) {
+      Transaction transaction = ch.getTransaction();
+      transaction.begin();
+      Event event = ch.take();
+      Assert.assertNotNull(event);
+      Assert.assertTrue(Arrays.equals(r.get("/data").getValueAsByteArray(), event.getBody()));
+      Assert.assertTrue(event.getHeaders().containsKey("charset"));
+      Assert.assertEquals("UTF-8", event.getHeaders().get("charset"));
+      transaction.commit();
+      transaction.close();
+    }
+  }
+
 }

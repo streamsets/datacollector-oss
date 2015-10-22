@@ -19,11 +19,13 @@
  */
 package com.streamsets.pipeline.stage.destination.flume;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.FlumeTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;
@@ -92,28 +94,28 @@ public class TestFlumeLoadBalancingTarget {
   @Test
   public void testFlumeConfiguration() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-    flumeHostsConfig.put("h2", "localhost:9051");
-    flumeHostsConfig.put("h3", "localhost:9052");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_LOAD_BALANCING)
-      .addConfiguration("batchSize", 100)
-      .addConfiguration("backOff", true)
-      .addConfiguration("maxBackOff", -1)
-      .addConfiguration("hostSelectionStrategy", HostSelectionStrategy.ROUND_ROBIN)
-      .addConfiguration("connectionTimeout", 2000)
-      .addConfiguration("requestTimeout", 2000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        true,                      // backOff
+        100,                          // batchSize
+        ClientType.AVRO_LOAD_BALANCING,
+        2000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        HostSelectionStrategy.ROUND_ROBIN,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        2000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     try {
       targetRunner.runInit();
@@ -126,28 +128,29 @@ public class TestFlumeLoadBalancingTarget {
   @Test
   public void testWriteStringRecordsRoundRobin() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-    flumeHostsConfig.put("h2", "localhost:9051");
-    flumeHostsConfig.put("h3", "localhost:9052");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_LOAD_BALANCING)
-      .addConfiguration("batchSize", 100)
-      .addConfiguration("backOff", false)
-      .addConfiguration("maxBackOff", 0)
-      .addConfiguration("hostSelectionStrategy", HostSelectionStrategy.ROUND_ROBIN)
-      .addConfiguration("connectionTimeout", 2000)
-      .addConfiguration("requestTimeout", 2000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        100,                          // batchSize
+        ClientType.AVRO_LOAD_BALANCING,
+        2000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        HostSelectionStrategy.ROUND_ROBIN,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        2000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
     List<List<Record>> logRecords = new ArrayList<>(NUM_HOSTS);
@@ -180,27 +183,29 @@ public class TestFlumeLoadBalancingTarget {
   @Test
   public void testWriteStringRecordsRandom() throws StageException {
 
-    Map<String, String> flumeHostsConfig = new HashMap<>();
-    flumeHostsConfig.put("h1", "localhost:9050");
-    flumeHostsConfig.put("h2", "localhost:9051");
-    flumeHostsConfig.put("h3", "localhost:9052");
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = false;
 
-    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class)
-      .addConfiguration("flumeHostsConfig", flumeHostsConfig)
-      .addConfiguration("clientType", ClientType.AVRO_LOAD_BALANCING)
-      .addConfiguration("batchSize", 100)
-      .addConfiguration("backOff", false)
-      .addConfiguration("maxBackOff", 0)
-      .addConfiguration("hostSelectionStrategy", HostSelectionStrategy.RANDOM)
-      .addConfiguration("connectionTimeout", 2000)
-      .addConfiguration("requestTimeout", 2000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("singleEventPerBatch", false)
-      .addConfiguration("charset", "UTF-8").addConfiguration("maxRetryAttempts", 1)
-      .addConfiguration("waitBetweenRetries", 0)
-      .build();
+    FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
+      FlumeTestUtil.createFlumeConfig(
+        false,                      // backOff
+        100,                          // batchSize
+        ClientType.AVRO_LOAD_BALANCING,
+        2000,                       // connection timeout
+        ImmutableMap.of("h1", "localhost:9050", "h2", "localhost:9051", "h3", "localhost:9052"),
+        HostSelectionStrategy.RANDOM,
+        -1,                          // maxBackOff
+        1,                          // maxRetryAttempts
+        2000,                       // requestTimeout
+        false,                      // singleEventPerBatch
+        0
+      ),
+      DataFormat.TEXT,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(FlumeDTarget.class, flumeTarget).build();
 
     targetRunner.runInit();
 
