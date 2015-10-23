@@ -23,10 +23,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.KafkaConnectionException;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.KafkaStream;
 import kafka.server.KafkaServer;
 import org.junit.After;
@@ -80,22 +82,28 @@ public class TestKafkaTargetUnavailability {
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
 
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        false,
+        null,
+        null,
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
     //STOP PIPELINE
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", false)
-      .addConfiguration("topicExpression", null)
-      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -128,22 +136,28 @@ public class TestKafkaTargetUnavailability {
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
 
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        false,
+        null,
+        null,
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
     //STOP PIPELINE
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.TO_ERROR)
-      .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", false)
-      .addConfiguration("topicExpression", null)
-      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -176,22 +190,28 @@ public class TestKafkaTargetUnavailability {
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
 
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        false,
+        null,
+        null,
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
     //STOP PIPELINE
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.DISCARD)
-      .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", false)
-      .addConfiguration("topicExpression", null)
-      .addConfiguration("topicWhiteList", null)
       .build();
 
     targetRunner.runInit();
@@ -225,22 +245,28 @@ public class TestKafkaTargetUnavailability {
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
 
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        true,
+        "test",
+        "*",
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
     //TO ERROR
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.TO_ERROR)
-      .addConfiguration("topic", null)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", true)
-      .addConfiguration("topicExpression", "test")
-      .addConfiguration("topicWhiteList", "*")
       .build();
 
     targetRunner.runInit();
@@ -274,22 +300,28 @@ public class TestKafkaTargetUnavailability {
     kafkaProducerConfig.put("message.send.max.retries", "10");
     kafkaProducerConfig.put("retry.backoff.ms", "1000");
 
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        null,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        true,
+        "test",
+        "*",
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
     //TO ERROR
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .setOnRecordError(OnRecordError.DISCARD)
-      .addConfiguration("topic", null)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", kafkaProducerConfig)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", true)
-      .addConfiguration("topicExpression", "test")
-      .addConfiguration("topicWhiteList", "*")
       .build();
 
     targetRunner.runInit();
@@ -311,18 +343,26 @@ public class TestKafkaTargetUnavailability {
   //@Test
   public void testZookeeperDown() throws InterruptedException, StageException {
 
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("payloadType", DataFormat.TEXT)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("constants", null)
-      .addConfiguration("csvFileFormat", "DEFAULT")
-      .addConfiguration("runtimeTopicResolution", false)
-      .addConfiguration("topicExpression", null)
-      .addConfiguration("topicWhiteList", null)
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.textFieldPath = "/text";
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+        KafkaTestUtil.getMetadataBrokerURI(),
+        TOPIC,
+        "0",
+        null,
+        false,
+        PartitionStrategy.EXPRESSION,
+        false,
+        null,
+        null,
+        new KafkaConfig(),
+        DataFormat.TEXT,
+        dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget)
       .build();
 
     targetRunner.runInit();

@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import org.junit.AfterClass;
@@ -60,21 +62,25 @@ public class TestToErrorKafkaDTarget {
 
   @Test
   public void testWriteNoRecords() throws InterruptedException, StageException {
-    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("partition", "0")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("kafkaProducerConfigs", null)
-      .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-      .addConfiguration("singleMessagePerBatch", false)
-      .addConfiguration("partitionStrategy", PartitionStrategy.EXPRESSION)
-      .addConfiguration("textFieldPath", "/")
-      .addConfiguration("textEmptyLineIfNull", true)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("runtimeTopicResolution", false)
-      .addConfiguration("topicExpression", null)
-      .addConfiguration("topicWhiteList", null)
-      .build();
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
+      KafkaTestUtil.getMetadataBrokerURI(),
+      TOPIC1,
+      "0",
+      null,
+      false,
+      PartitionStrategy.ROUND_ROBIN,
+      false,
+      null,
+      null,
+      new KafkaConfig(),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
     List<Record> logRecords = KafkaTestUtil.createEmptyLogRecords();

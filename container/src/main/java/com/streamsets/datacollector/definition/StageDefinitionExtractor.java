@@ -41,10 +41,12 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,17 +63,29 @@ public abstract class StageDefinitionExtractor {
   }
 
   public static List<String> getGroups(Class<? extends Stage> klass) {
-    List<String> list = new ArrayList<>();
+    Set<String> set = new LinkedHashSet<>();
+    addGroupsToList(klass, set);
+    List<Class<?>> allSuperclasses = ClassUtils.getAllSuperclasses(klass);
+    for(Class<?> superClass : allSuperclasses) {
+      if(!superClass.isInterface() && superClass.isAnnotationPresent(ConfigGroups.class)) {
+        addGroupsToList(superClass, set);
+      }
+    }
+    if(set.isEmpty()) {
+      set.add(""); // the default empty group
+    }
+
+    return new ArrayList<>(set);
+  }
+
+  private static void addGroupsToList(Class<?> klass, Set<String> list) {
     ConfigGroups groups = klass.getAnnotation(ConfigGroups.class);
     if (groups != null) {
       Class<? extends Enum> groupKlass = (Class<? extends Enum>) groups.value();
       for (Enum e : groupKlass.getEnumConstants()) {
         list.add(e.name());
       }
-    } else {
-      list.add(""); // the default empty group
     }
-    return list;
   }
 
   public List<ErrorMessage> validate(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {

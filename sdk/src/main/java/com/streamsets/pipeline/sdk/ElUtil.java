@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.sdk;
 
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -53,6 +54,8 @@ class ElUtil {
             }
           }
         }
+      } else if (field.isAnnotationPresent(ConfigDefBean.class)) {
+        configToElDefMap.putAll(getConfigToElDefMap(field.getType()));
       }
     }
     return configToElDefMap;
