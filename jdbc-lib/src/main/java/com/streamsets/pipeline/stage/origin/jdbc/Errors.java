@@ -35,6 +35,8 @@ public enum Errors implements ErrorCode {
   JDBC_07("The query interval expression must be greater than or equal to zero."),
   JDBC_08("Query result has duplicate column label '{}'. Create an alias using 'AS' in your query."),
   JDBC_09("Offset Column '{}' cannot contain a '.' or prefix."),
+  JDBC_10("'{}' is less than the minimum value of '{}'"),
+  JDBC_11("Minimum Idle Connections ({}) must be less than or equal to Maximum Pool Size ({})"),
   ;
   private final String msg;
 

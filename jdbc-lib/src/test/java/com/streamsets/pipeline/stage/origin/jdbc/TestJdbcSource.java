@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.jdbc;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.After;
@@ -35,7 +36,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,24 +98,28 @@ public class TestJdbcSource {
     connection.close();
   }
 
+  private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
+    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+    bean.connectionString = connectionString;
+    bean.username = username;
+    bean.password = password;
+
+    return bean;
+  }
+
   @Test
   public void testIncrementalMode() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -161,20 +165,15 @@ public class TestJdbcSource {
   public void testNonIncrementalMode() throws Exception {
     JdbcSource origin = new JdbcSource(
         false,
-        h2ConnectionString,
         query,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -232,20 +231,15 @@ public class TestJdbcSource {
   public void testBadConnectionString() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
-        "some bad connection string",
         query,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean("some bad connection string", username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -261,20 +255,15 @@ public class TestJdbcSource {
     String queryMissingWhere = "SELECT * FROM TEST.TEST_TABLE ORDER BY P_ID ASC LIMIT 10;";
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         queryMissingWhere,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -290,20 +279,15 @@ public class TestJdbcSource {
     String queryMissingOrderBy = "SELECT * FROM TEST.TEST_TABLE WHERE P_ID > ${offset} LIMIT 10;";
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         queryMissingOrderBy,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -322,20 +306,15 @@ public class TestJdbcSource {
     String queryMissingWhereAndOrderBy = "SELECT * FROM TEST.TEST_TABLE;";
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         queryMissingWhereAndOrderBy,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -351,20 +330,15 @@ public class TestJdbcSource {
     String queryInvalid = "SELET * FORM TABLE WHERE P_ID > ${offset} ORDER BY P_ID LIMIT 10;";
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         queryInvalid,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -380,20 +354,15 @@ public class TestJdbcSource {
     String queryInvalid = "SELECT * FROM TEST.TEST_TABLE WHERE\nP_ID > ${offset}\nORDER BY P_ID ASC LIMIT 10;";
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         queryInvalid,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -420,20 +389,15 @@ public class TestJdbcSource {
   public void testCdcMode() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         "1",
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "FIRST_NAME",
         1000,
-        JdbcRecordType.MAP,
-        BATCH_SIZE
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -465,20 +429,15 @@ public class TestJdbcSource {
   public void testCdcSplitTransactionMode() throws Exception {
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         "1",
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "FIRST_NAME",
         1,
-        JdbcRecordType.LIST,
-        BATCH_SIZE
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -513,20 +472,15 @@ public class TestJdbcSource {
 
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         "1",
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -543,20 +497,15 @@ public class TestJdbcSource {
 
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         "1",
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -572,20 +521,15 @@ public class TestJdbcSource {
 
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         "1",
         "T.P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -602,20 +546,15 @@ public class TestJdbcSource {
 
     JdbcSource origin = new JdbcSource(
         true,
-        h2ConnectionString,
         query,
         initialOffset,
         "P_ID",
         queryInterval,
-        username,
-        password,
-        new HashMap<String, String>(),
-        "",
-        "",
-        "",
+        "FIRST_NAME",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        createConfigBean(h2ConnectionString, username, password)
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")

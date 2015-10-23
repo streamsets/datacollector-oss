@@ -21,23 +21,26 @@ package com.streamsets.pipeline.stage.destination.jdbc;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
 
 import java.util.HashMap;
 import java.util.List;
 
 /** {@inheritDoc} */
-public class JdbcTargetUpgrader implements StageUpgrader {
+public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
         upgradeV1toV2(configs);
-        upgradeV2toV3(configs);
-        break;
+        // fall through
       case 2:
         upgradeV2toV3(configs);
+        // fall through
+      case 3:
+        upgradeV3toV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -45,6 +48,7 @@ public class JdbcTargetUpgrader implements StageUpgrader {
     return configs;
   }
 
+  @SuppressWarnings("unchecked")
   private void upgradeV1toV2(List<Config> configs) {
     configs.add(new Config("changeLogFormat", "NONE"));
 
@@ -60,19 +64,20 @@ public class JdbcTargetUpgrader implements StageUpgrader {
       configs.remove(tableNameConfig);
     }
 
-    Config columnNamesConfig = null;
     for (Config config : configs) {
       if (config.getName().equals("columnNames")) {
-        columnNamesConfig = config;
+        for (HashMap<String, String> columnName : (List<HashMap<String, String>>) config.getValue()) {
+          columnName.put("paramValue", "?");
+        }
       }
-    }
-
-    for (HashMap<String, String> columnName : (List<HashMap<String, String>>)columnNamesConfig.getValue()) {
-      columnName.put("paramValue", "?");
     }
   }
 
   private void upgradeV2toV3(List<Config> configs) {
     configs.add(new Config("useMultiRowInsert", true));
+  }
+
+  private void upgradeV3toV4(List<Config> configs) {
+    upgradeToConfigBeanV1(configs);
   }
 }

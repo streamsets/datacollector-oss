@@ -26,7 +26,8 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   JDBC("JDBC"),
   CREDENTIALS("Credentials"),
-  LEGACY("Legacy Drivers")
+  LEGACY("Legacy Drivers"),
+  ADVANCED("Advanced"),
   ;
 
   private final String label;

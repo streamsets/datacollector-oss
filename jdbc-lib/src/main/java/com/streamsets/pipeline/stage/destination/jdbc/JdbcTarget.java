@@ -1,6 +1,6 @@
 /**
  * Copyright 2015 StreamSets Inc.
- * <p/>
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -8,9 +8,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * <p/>
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcGenericRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
 import com.streamsets.pipeline.lib.jdbc.JdbcRecordWriter;
@@ -53,10 +54,11 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
 
 /**
  * JDBC Destination for StreamSets Data Collector
@@ -67,12 +69,8 @@ public class JdbcTarget extends BaseTarget {
   private static final String CUSTOM_MAPPINGS = "columnNames";
   private static final String TABLE_NAME = "tableNameTemplate";
   private static final String CONNECTION_STRING = "connectionString";
-  private static final String DRIVER_CLASSNAME = "driverClassName";
   private static final String EL_PREFIX = "${";
 
-  private final String connectionString;
-  private final String username;
-  private final String password;
   private final boolean rollbackOnError;
   private final boolean useMultiRowInsert;
 
@@ -80,9 +78,8 @@ public class JdbcTarget extends BaseTarget {
   private final List<JdbcFieldMappingConfig> customMappings;
 
   private final Properties driverProperties = new Properties();
-  private final String driverClassName;
-  private final String connectionTestQuery;
   private final ChangeLogFormat changeLogFormat;
+  private final HikariPoolConfigBean hikariConfigBean;
 
   private HikariDataSource dataSource = null;
   private ELEval tableNameEval = null;
@@ -102,31 +99,20 @@ public class JdbcTarget extends BaseTarget {
       .build(new RecordWriterLoader());
 
   public JdbcTarget(
-      final String connectionString,
-      final String username,
-      final String password,
       final String tableNameTemplate,
       final List<JdbcFieldMappingConfig> customMappings,
       final boolean rollbackOnError,
       final boolean useMultiRowInsert,
-      final Map<String, String> driverProperties,
       final ChangeLogFormat changeLogFormat,
-      final String driverClassName,
-      final String connectionTestQuery
+      final HikariPoolConfigBean hikariConfigBean
   ) {
-    this.connectionString = connectionString;
-    this.username = username;
-    this.password = password;
     this.tableNameTemplate = tableNameTemplate;
     this.customMappings = customMappings;
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowInsert = useMultiRowInsert;
-    if (driverProperties != null) {
-      this.driverProperties.putAll(driverProperties);
-    }
+    this.driverProperties.putAll(hikariConfigBean.driverProperties);
     this.changeLogFormat = changeLogFormat;
-    this.driverClassName = driverClassName;
-    this.connectionTestQuery = connectionTestQuery;
+    this.hikariConfigBean = hikariConfigBean;
   }
 
   @Override
@@ -134,6 +120,8 @@ public class JdbcTarget extends BaseTarget {
     List<ConfigIssue> issues = super.init();
 
     Target.Context context = getContext();
+
+    issues = hikariConfigBean.validateConfigs(context, issues);
 
     tableNameEval = context.createELEval("tableNameTemplate");
     validateEL(tableNameEval, tableNameTemplate, "tableNameTemplate", Errors.JDBCDEST_20, Errors.JDBCDEST_21, issues);
@@ -171,7 +159,7 @@ public class JdbcTarget extends BaseTarget {
       case NONE:
         if (!useMultiRowInsert) {
           recordWriter = new JdbcGenericRecordWriter(
-              connectionString,
+              hikariConfigBean.connectionString,
               dataSource,
               tableName,
               rollbackOnError,
@@ -179,7 +167,7 @@ public class JdbcTarget extends BaseTarget {
           );
         } else {
           recordWriter = new JdbcMultiRowRecordWriter(
-              connectionString,
+              hikariConfigBean.connectionString,
               dataSource,
               tableName,
               rollbackOnError,
@@ -202,18 +190,25 @@ public class JdbcTarget extends BaseTarget {
     }
 
     HikariConfig config = new HikariConfig();
-    config.setJdbcUrl(connectionString);
-    config.setUsername(username);
-    config.setPassword(password);
+    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setUsername(hikariConfigBean.username);
+    config.setPassword(hikariConfigBean.password);
     config.setAutoCommit(false);
-    if (driverClassName != null && !driverClassName.isEmpty()) {
-      config.setDriverClassName(driverClassName);
+    config.setReadOnly(false);
+    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
+    config.setMinimumIdle(hikariConfigBean.minIdle);
+    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
+    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
+    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
+
+    if (hikariConfigBean.driverClassName != null && !hikariConfigBean.driverClassName.isEmpty()) {
+      config.setDriverClassName(hikariConfigBean.driverClassName);
     }
-    // These do not need to be user-configurable. 2 Is required for testing using H2 in-mem.
-    config.setMaximumPoolSize(2);
-    if (connectionTestQuery != null && !connectionTestQuery.isEmpty()) {
-      config.setConnectionTestQuery(connectionTestQuery);
+
+    if (hikariConfigBean.connectionTestQuery != null && !hikariConfigBean.connectionTestQuery.isEmpty()) {
+      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
     }
+
     // User configurable JDBC driver properties
     config.setDataSourceProperties(driverProperties);
 

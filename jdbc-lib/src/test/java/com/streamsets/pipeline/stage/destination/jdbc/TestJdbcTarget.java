@@ -25,7 +25,9 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.joda.time.Instant;
@@ -45,6 +47,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@SuppressWarnings("Duplicates")
 public class TestJdbcTarget {
 
   private final String username = "sa";
@@ -106,6 +109,15 @@ public class TestJdbcTarget {
     connection.close();
   }
 
+  private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
+    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+    bean.connectionString = connectionString;
+    bean.username = username;
+    bean.password = password;
+
+    return bean;
+  }
+
   @Test
   public void testEmptyBatch() throws Exception {
     List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
@@ -115,17 +127,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Record> emptyBatch = ImmutableList.of();
     targetRunner.runInit();
@@ -142,17 +152,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -183,17 +191,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     Record record = RecordCreator.create();
     List<Field> fields = new ArrayList<>();
@@ -225,18 +231,18 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
+
 
     Record record1 = RecordCreator.create();
     List<Field> fields1 = new ArrayList<>();
@@ -285,18 +291,18 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        true,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", true)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
+
 
     Record record1 = RecordCreator.create();
     List<Field> fields1 = new ArrayList<>();
@@ -345,17 +351,16 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
         .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
         .build();
 
     Record record1 = RecordCreator.create();
@@ -407,18 +412,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .setOnRecordError(OnRecordError.TO_ERROR)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", unprivUser)
-        .addConfiguration("password", unprivPassword)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, unprivUser, unprivPassword)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     Record record1 = RecordCreator.create();
     List<Field> fields1 = new ArrayList<>();
@@ -465,16 +467,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", "bad connection string")
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean("bad connection string", username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
     assertEquals(1, issues.size());
@@ -489,16 +490,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", "foo")
-        .addConfiguration("password", "bar")
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, "foo", "bar")
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
     assertEquals(1, issues.size());
@@ -513,17 +513,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .addConfiguration("tableNameTemplate", tableName)
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .build();
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Stage.ConfigIssue> issues = targetRunner.runValidateConfigs();
     assertEquals(2, issues.size());
@@ -538,17 +536,15 @@ public class TestJdbcTarget {
         new JdbcFieldMappingConfig("[3]", "TS")
     );
 
-    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class)
-        .addConfiguration("connectionString", h2ConnectionString)
-        .addConfiguration("useCredentials", true)
-        .addConfiguration("rollbackOnError", false)
-        .addConfiguration("useMultiRowInsert", false)
-        .addConfiguration("tableNameTemplate", "${record:attribute('tableName')}")
-        .addConfiguration("columnNames", fieldMappings)
-        .addConfiguration("username", username)
-        .addConfiguration("password", password)
-        .addConfiguration("changeLogFormat", ChangeLogFormat.NONE)
-        .build();
+    Target target = new JdbcTarget(
+        "${record:attribute('tableName')}",
+        fieldMappings,
+        false,
+        false,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target).build();
 
     List<Record> records = ImmutableList.of(
         generateRecord(1, "Adam", "Kunicki", "TEST.TABLE_ONE"),

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -51,6 +52,8 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS;
+
 public class JdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcSource.class);
 
@@ -61,61 +64,47 @@ public class JdbcSource extends BaseSource {
   private static final String QUERY_INTERVAL_EL = "queryInterval";
 
   private final boolean isIncrementalMode;
-  private final String connectionString;
   private final String query;
   private final String initialOffset;
   private final String offsetColumn;
-  private final String username;
-  private final String password;
   private final Properties driverProperties = new Properties();
-  private final String driverClassName;
-  private final String connectionTestQuery;
   private final String txnColumnName;
   private final int txnMaxSize;
   private final JdbcRecordType recordType;
   private final int maxBatchSize;
+  private final HikariPoolConfigBean hikariConfigBean;
 
   private long queryIntervalMillis = Long.MIN_VALUE;
 
   private HikariDataSource dataSource = null;
 
   private Connection connection = null;
-  private Statement statement = null;
   private ResultSet resultSet = null;
   private long lastQueryCompletedTime = 0L;
 
   public JdbcSource(
       boolean isIncrementalMode,
-      String connectionString,
       String query,
       String initialOffset,
       String offsetColumn,
       long queryInterval,
-      String username,
-      String password,
-      Map<String, String> driverPropertyMap,
-      String driverClassName,
-      String connectionTestQuery,
       String txnColumnName,
       int txnMaxSize,
       JdbcRecordType jdbcRecordType,
-      int maxBatchSize
+      int maxBatchSize,
+      HikariPoolConfigBean hikariConfigBean
   ) {
     this.isIncrementalMode = isIncrementalMode;
-    this.connectionString = connectionString;
     this.query = query;
     this.initialOffset = initialOffset;
     this.offsetColumn = offsetColumn;
     this.queryIntervalMillis = 1000 * queryInterval;
-    this.username = username;
-    this.password = password;
-    driverProperties.putAll(driverPropertyMap);
-    this.driverClassName = driverClassName;
-    this.connectionTestQuery = connectionTestQuery;
+    driverProperties.putAll(hikariConfigBean.driverProperties);
     this.txnColumnName = txnColumnName;
     this.txnMaxSize = txnMaxSize;
     this.recordType = jdbcRecordType;
     this.maxBatchSize = maxBatchSize;
+    this.hikariConfigBean = hikariConfigBean;
   }
 
   @Override
@@ -123,13 +112,15 @@ public class JdbcSource extends BaseSource {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
 
+    issues = hikariConfigBean.validateConfigs(context, issues);
+
     if (queryIntervalMillis < 0) {
       issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, Errors.JDBC_07));
     }
 
-    if (!driverClassName.isEmpty()) {
+    if (!hikariConfigBean.driverClassName.isEmpty()) {
       try {
-        Class.forName(driverClassName);
+        Class.forName(hikariConfigBean.driverClassName);
       } catch (ClassNotFoundException e) {
         issues.add(context.createConfigIssue(Groups.LEGACY.name(), DRIVER_CLASSNAME, Errors.JDBC_01, e.toString()));
       }
@@ -147,54 +138,56 @@ public class JdbcSource extends BaseSource {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_05, offsetColumn));
     }
 
-    try {
-      createDataSource();
-      try (Connection connection = dataSource.getConnection()) {
-        try (Statement statement = connection.createStatement()) {
-          statement.setFetchSize(1);
-          statement.setMaxRows(1);
-          final String preparedQuery = prepareQuery(query, initialOffset);
-          try (ResultSet resultSet = statement.executeQuery(preparedQuery)) {
-            try {
-              Set<String> columnLabels = new HashSet<>();
-              ResultSetMetaData metadata = resultSet.getMetaData();
-              int columnIdx = metadata.getColumnCount() + 1;
-              while (--columnIdx > 0) {
-                String columnLabel = metadata.getColumnLabel(columnIdx);
-                if (columnLabels.contains(columnLabel)) {
-                  issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_08, columnLabel));
-                } else {
-                  columnLabels.add(columnLabel);
+    if (issues.isEmpty()) {
+      try {
+        createDataSource();
+        try (Connection connection = dataSource.getConnection()) {
+          try (Statement statement = connection.createStatement()) {
+            statement.setFetchSize(1);
+            statement.setMaxRows(1);
+            final String preparedQuery = prepareQuery(query, initialOffset);
+            try (ResultSet resultSet = statement.executeQuery(preparedQuery)) {
+              try {
+                Set<String> columnLabels = new HashSet<>();
+                ResultSetMetaData metadata = resultSet.getMetaData();
+                int columnIdx = metadata.getColumnCount() + 1;
+                while (--columnIdx > 0) {
+                  String columnLabel = metadata.getColumnLabel(columnIdx);
+                  if (columnLabels.contains(columnLabel)) {
+                    issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_08, columnLabel));
+                  } else {
+                    columnLabels.add(columnLabel);
+                  }
                 }
-              }
-              if (offsetColumn.contains(".")) {
-                issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_09, offsetColumn));
-              } else {
-                resultSet.findColumn(offsetColumn);
+                if (offsetColumn.contains(".")) {
+                  issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_09, offsetColumn));
+                } else {
+                  resultSet.findColumn(offsetColumn);
+                }
+              } catch (SQLException e) {
+                LOG.error(JdbcUtil.formatSqlException(e));
+                issues.add(
+                    context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_02, offsetColumn, query)
+                );
               }
             } catch (SQLException e) {
-              LOG.error(JdbcUtil.formatSqlException(e));
+              String formattedError = JdbcUtil.formatSqlException(e);
+              LOG.error(formattedError);
+              LOG.debug(formattedError, e);
               issues.add(
-                  context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_02, offsetColumn, query)
+                  context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, formattedError)
               );
             }
-          } catch (SQLException e) {
-            String formattedError = JdbcUtil.formatSqlException(e);
-            LOG.error(formattedError);
-            LOG.debug(formattedError, e);
-            issues.add(
-                context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_04, preparedQuery, formattedError)
-            );
           }
+        } catch (SQLException e) {
+          String formattedError = JdbcUtil.formatSqlException(e);
+          LOG.error(formattedError);
+          LOG.debug(formattedError, e);
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, formattedError));
         }
-      } catch (SQLException e) {
-        String formattedError = JdbcUtil.formatSqlException(e);
-        LOG.error(formattedError);
-        LOG.debug(formattedError, e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, formattedError));
+      } catch (StageException e) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
       }
-    } catch (StageException e) {
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, Errors.JDBC_00, e.toString()));
     }
     return issues;
   }
@@ -222,11 +215,11 @@ public class JdbcSource extends BaseSource {
       try {
         if (null == resultSet || resultSet.isClosed()) {
           connection = dataSource.getConnection();
-          statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+          Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
           int fetchSize = batchSize;
           // MySQL does not support cursors or fetch size except 0 and "streaming" (1 at a time).
-          if (connectionString.toLowerCase().contains("mysql")) {
+          if (hikariConfigBean.connectionString.toLowerCase().contains("mysql")) {
             // Enable MySQL streaming mode.
             fetchSize = Integer.MIN_VALUE;
           }
@@ -316,15 +309,20 @@ public class JdbcSource extends BaseSource {
     }
 
     HikariConfig config = new HikariConfig();
-    config.setJdbcUrl(connectionString);
-    config.setUsername(username);
-    config.setPassword(password);
-    // These do not need to be user-configurable
-    config.setReadOnly(true);
-    config.setMaximumPoolSize(2);
-    if (!connectionTestQuery.isEmpty()) {
-      config.setConnectionTestQuery(connectionTestQuery);
+    config.setJdbcUrl(hikariConfigBean.connectionString);
+    config.setUsername(hikariConfigBean.username);
+    config.setPassword(hikariConfigBean.password);
+    config.setReadOnly(hikariConfigBean.readOnly);
+    config.setMaximumPoolSize(hikariConfigBean.maximumPoolSize);
+    config.setMinimumIdle(hikariConfigBean.minIdle);
+    config.setConnectionTimeout(hikariConfigBean.connectionTimeout * MILLISECONDS);
+    config.setIdleTimeout(hikariConfigBean.idleTimeout * MILLISECONDS);
+    config.setMaxLifetime(hikariConfigBean.maxLifetime * MILLISECONDS);
+
+    if (!hikariConfigBean.connectionTestQuery.isEmpty()) {
+      config.setConnectionTestQuery(hikariConfigBean.connectionTestQuery);
     }
+
     // User configurable JDBC driver properties
     config.setDataSourceProperties(driverProperties);
 

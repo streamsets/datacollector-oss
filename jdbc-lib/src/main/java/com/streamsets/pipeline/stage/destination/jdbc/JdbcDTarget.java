@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.stage.destination.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
@@ -31,13 +33,14 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 import java.util.List;
-import java.util.Map;
 
+@HideConfigs(value = {"hikariConfigBean.readOnly"})
 @GenerateResourceBundle
 @StageDef(
-    version = 3,
+    version = 4,
     label = "JDBC Producer",
     description = "Writes data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
@@ -45,60 +48,6 @@ import java.util.Map;
 )
 @ConfigGroups(value = Groups.class)
 public class JdbcDTarget extends DTarget {
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JDBC Connection String",
-      displayPosition = 10,
-      group = "JDBC"
-  )
-  public String connectionString;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      defaultValue = "",
-      label = "Additional JDBC Configuration Properties",
-      description = "Additional properties to pass to the underlying JDBC driver.",
-      displayPosition = 130,
-      group = "JDBC"
-  )
-  public Map<String, String> driverProperties;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Credentials",
-      defaultValue = "true",
-      displayPosition = 25,
-      group = "JDBC"
-  )
-  public boolean useCredentials;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Username",
-      defaultValue = "",
-      displayPosition = 10,
-      group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
-  )
-  public String username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Password",
-      defaultValue = "",
-      displayPosition = 20,
-      group = "CREDENTIALS",
-      dependsOn = "useCredentials",
-      triggeredByValue = "true"
-  )
-  public String password;
 
   @ConfigDef(
       required = true,
@@ -161,41 +110,18 @@ public class JdbcDTarget extends DTarget {
   )
   public boolean useMultiRowInsert;
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "JDBC Driver Class Name",
-      description = "Class name for pre-JDBC 4 compliant drivers.",
-      displayPosition = 140,
-      group = "LEGACY"
-  )
-  public String driverClassName;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.TEXT,
-      mode = ConfigDef.Mode.SQL,
-      label = "Connection Health Test Query",
-      description = "Not recommended for JDBC 4 compliant drivers. Runs when a new database connection is established.",
-      displayPosition = 150,
-      group = "LEGACY"
-  )
-  public String connectionTestQuery;
+  @ConfigDefBean()
+  public HikariPoolConfigBean hikariConfigBean;
 
   @Override
   protected Target createTarget() {
     return new JdbcTarget(
-        connectionString,
-        username,
-        password,
         tableNameTemplate,
         columnNames,
         rollbackOnError,
         useMultiRowInsert,
-        driverProperties,
         changeLogFormat,
-        driverClassName,
-        connectionTestQuery
+        hikariConfigBean
     );
   }
 }

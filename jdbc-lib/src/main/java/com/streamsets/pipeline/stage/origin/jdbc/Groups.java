@@ -27,7 +27,8 @@ public enum Groups implements Label {
   JDBC("JDBC"),
   CREDENTIALS("Credentials"),
   CDC("Change Data Capture"),
-  LEGACY("Legacy Drivers")
+  LEGACY("Legacy Drivers"),
+  ADVANCED("Advanced"),
   ;
 
   private final String label;

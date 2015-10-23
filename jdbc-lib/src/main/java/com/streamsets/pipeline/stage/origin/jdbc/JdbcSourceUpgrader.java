@@ -21,22 +21,28 @@ package com.streamsets.pipeline.stage.origin.jdbc;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.JdbcBaseUpgrader;
 
 import java.util.List;
 
 /** {@inheritDoc} */
-public class JdbcSourceUpgrader implements StageUpgrader {
+public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
       case 3:
         upgradeV3ToV4(configs);
+        // fall through
+      case 4:
+        upgradeV4toV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -55,5 +61,9 @@ public class JdbcSourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("jdbcRecordType", "MAP"));
+  }
+
+  private void upgradeV4toV5(List<Config> configs) {
+    upgradeToConfigBeanV1(configs);
   }
 }
