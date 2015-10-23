@@ -22,19 +22,22 @@ package com.streamsets.pipeline.stage.destination.s3;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
-  version = 1,
+  version = 2,
   label = "Amazon S3",
   description = "Writes to Amazon S3",
   icon = "s3.png",
-  privateClassLoader = true
+  privateClassLoader = true,
+  upgrader = AmazonS3TargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
+@HideConfigs(value = {"s3TargetConfigBean.dataGeneratorFormatConfig.includeSchema"})
 public class AmazonS3DTarget extends DTarget {
 
   @ConfigDefBean()

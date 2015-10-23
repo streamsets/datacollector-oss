@@ -34,6 +34,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3AdvancedConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import org.apache.commons.io.IOUtils;
@@ -200,19 +201,23 @@ public class TestAmazonS3Target {
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.advancedConfig = advancedConfig;
-    s3TargetConfigBean.avroSchema = null;
-    s3TargetConfigBean.binaryFieldPath = "/";
-    s3TargetConfigBean.charset = "UTF-8";
     s3TargetConfigBean.compress = useCompression;
-    s3TargetConfigBean.csvFileFormat = CsvMode.CSV;
-    s3TargetConfigBean.csvReplaceNewLines = false;
     s3TargetConfigBean.dataFormat = DataFormat.TEXT;
-    s3TargetConfigBean.csvHeader = CsvHeader.IGNORE_HEADER;
     s3TargetConfigBean.fileNamePrefix = "sdc-";
-    s3TargetConfigBean.jsonMode = JsonMode.MULTIPLE_OBJECTS;
     s3TargetConfigBean.s3Config = s3Config;
-    s3TargetConfigBean.textEmptyLineIfNull = true;
-    s3TargetConfigBean.textFieldPath = "/";
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = null;
+    dataGeneratorFormatConfig.binaryFieldPath = "/";
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
+    dataGeneratorFormatConfig.csvReplaceNewLines = false;
+    dataGeneratorFormatConfig.csvHeader = CsvHeader.IGNORE_HEADER;
+    dataGeneratorFormatConfig.jsonMode = JsonMode.MULTIPLE_OBJECTS;
+    dataGeneratorFormatConfig.textEmptyLineIfNull = true;
+    dataGeneratorFormatConfig.textFieldPath = "/";
+
+    s3TargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
 
     return new AmazonS3Target(s3TargetConfigBean);
   }

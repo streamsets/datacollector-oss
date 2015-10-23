@@ -215,7 +215,7 @@ public class DataGeneratorFormatConfig {
     dependsOn = "dataFormat^",
     triggeredByValue = "AVRO"
   )
-  public boolean includeSchema;
+  public boolean includeSchema = true;
 
   /********  For Binary Content  ***********/
 
