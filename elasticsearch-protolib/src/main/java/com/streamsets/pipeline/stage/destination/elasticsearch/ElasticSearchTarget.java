@@ -48,6 +48,7 @@ import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -208,7 +209,7 @@ public class ElasticSearchTarget extends BaseTarget {
         generator.close();
         String json = new String(baos.toByteArray());
         bulkRequest.add(elasticClient.prepareIndex(index, type, id).setContentType(XContentType.JSON).setSource(json));
-      } catch (Exception ex) {
+      } catch (IOException ex) {
         switch (getContext().getOnErrorRecord()) {
           case DISCARD:
             break;
