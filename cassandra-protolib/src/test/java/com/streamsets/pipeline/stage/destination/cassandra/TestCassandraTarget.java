@@ -293,6 +293,7 @@ public class TestCassandraTarget {
     fields.add(Field.create(1.3));
     fields.add(Field.create(2));
     fields.add(Field.create(3));
+    // intentionally passing doubles where these values are expected to be ints triggers errors!
     fields.add(Field.create(4.0));
     fields.add(Field.create(5.0));
     record.set(Field.create(fields));
