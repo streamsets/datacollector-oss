@@ -25,15 +25,20 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CloudSolrServer;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.common.SolrException;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -117,6 +122,9 @@ public class SolrTarget extends BaseTarget {
         SolrInputDocument document = new SolrInputDocument();
         for(SolrFieldMappingConfig fieldMapping: fieldNamesMap) {
           Field field = record.get(fieldMapping.field);
+          if (field == null) {
+            throw new OnRecordErrorException(record, Errors.SOLR_06, fieldMapping.field);
+          }
           document.addField(fieldMapping.solrFieldName, field.getValue());
         }
 
@@ -127,7 +135,7 @@ public class SolrTarget extends BaseTarget {
           solrClient.add(document);
         }
 
-      } catch (Exception ex) {
+      } catch (OnRecordErrorException | SolrServerException | IOException ex) {
         switch (getContext().getOnErrorRecord()) {
           case DISCARD:
             break;
@@ -149,11 +157,11 @@ public class SolrTarget extends BaseTarget {
           solrClient.add(solrDocuments);
         }
         solrClient.commit();
-      } catch (Exception ex) {
+      } catch (SolrException | SolrServerException | IOException ex) {
         try {
           solrClient.rollback();
           handleException(ex, recordsBackup);
-        } catch (Exception ex2) {
+        } catch (SolrServerException | IOException ex2) {
           handleException(ex2, recordsBackup);
         }
       }

@@ -219,6 +219,7 @@ public class TestSolrTarget  extends SolrJettyTestBase {
       List<Record> records = new ArrayList<>();
 
       Record record1 = RecordCreator.create();
+      // intentionally create Record with mismatching field name ("nota" instead of "a") to trigger an error
       record1.set(Field.create(ImmutableMap.of("nota", Field.create("Hello"),
         "b", Field.create("i1"), "c", Field.create("t1"))));
 
