@@ -34,15 +34,33 @@ fi
 done
 
 # Source function library.
+# RHEL/CentOS
 if [ -f /etc/rc.d/init.d/functions ]; then
   . /etc/rc.d/init.d/functions
+# openSUSE/Ubuntu
 elif [ -f /lib/lsb/init-functions ]; then
   . /lib/lsb/init-functions
+fi
+# RHEL/CentOS/openSUSE
+if [ -f /etc/rc.status ]; then
   . /etc/rc.status
   rc_reset
 fi
+
 BASEDIR=`dirname ${PRG}`
 BASEDIR=`cd ${BASEDIR}/..;pwd`
+
+if [ "$(type -t checkpid)" != function ]; then
+  # Check if any of $pid (could be plural) are running
+  checkpid() {
+    local i
+
+    for i in $* ; do
+      [ -d "/proc/$i" ] && return 0
+    done
+    return 1
+  }
+fi
 
 is_sdc_alive() {
   if [ -f $SDC_PID ]
@@ -51,7 +69,7 @@ is_sdc_alive() {
     then
       pidofproc -p $SDC_PID java > /dev/null
     else
-      checkpid `cat $SDC_PID`
+      checkpid $(cat $SDC_PID)
     fi
     return $?
   else
