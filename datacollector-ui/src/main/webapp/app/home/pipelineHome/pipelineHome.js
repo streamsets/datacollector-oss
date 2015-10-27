@@ -737,7 +737,8 @@ angular
         //Pipeline Configuration, Rules & Metrics
         if(results && results.length > 1) {
           var config = results[0].data,
-            rules = results[1].data;
+            rules = results[1].data,
+            clickedAlert = $rootScope.common.clickedAlert;
 
           $rootScope.common.pipelineMetrics = results[2].data;
           if(_.contains(['RUNNING', 'STARTING'], $rootScope.common.pipelineStatusMap[routeParamPipelineName].status)) {
@@ -749,10 +750,36 @@ angular
           }
 
           updateGraph(config, rules, undefined, undefined, true);
-          updateDetailPane({
-            selectedObject: undefined,
-            type: pipelineConstant.PIPELINE
-          });
+
+          if(clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+            var edges = $scope.edges,
+                edge;
+            $rootScope.common.clickedAlert = undefined;
+
+            if(clickedAlert.ruleDefinition.metricId) {
+              //Select Pipeline Config
+              updateDetailPane({
+                selectedObject: undefined,
+                type: pipelineConstant.PIPELINE,
+                detailTabName: 'summary'
+              });
+            } else {
+              //Select edge
+              edge = _.find(edges, function(ed) {
+                return ed.outputLane === clickedAlert.ruleDefinition.lane;
+              });
+              updateDetailPane({
+                selectedObject: edge,
+                type: pipelineConstant.LINK,
+                detailTabName: 'summary'
+              });
+            }
+          } else {
+            updateDetailPane({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            });
+          }
         }
         $scope.loaded = true;
       },function(resp) {
@@ -770,17 +797,45 @@ angular
         api.pipelineAgent.getPipelineRules(configName)]).
         then(function(results) {
           var config = results[0].data,
-            rules = results[1].data;
+            rules = results[1].data,
+            clickedAlert = $rootScope.common.clickedAlert;
+
           $rootScope.common.errors = [];
 
           archive = [];
           currArchivePos = null;
 
           updateGraph(config, rules);
-          updateDetailPane({
-            selectedObject: undefined,
-            type: pipelineConstant.PIPELINE
-          });
+
+          if(clickedAlert && clickedAlert.pipelineName === $scope.activeConfigInfo.name) {
+            var edges = $scope.edges,
+                edge;
+            $rootScope.common.clickedAlert = undefined;
+
+            if(clickedAlert.ruleDefinition.metricId) {
+              //Select Pipeline Config
+              updateDetailPane({
+                selectedObject: undefined,
+                type: pipelineConstant.PIPELINE,
+                detailTabName: 'summary'
+              });
+            } else {
+              //Select edge
+              edge = _.find(edges, function(ed) {
+                return ed.outputLane === clickedAlert.ruleDefinition.lane;
+              });
+              updateDetailPane({
+                selectedObject: edge,
+                type: pipelineConstant.LINK,
+                detailTabName: 'summary'
+              });
+            }
+          } else {
+            updateDetailPane({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE
+            });
+          }
         },function(resp) {
           $scope.pipelineConfig = undefined;
           $rootScope.common.errors = [resp.data];
@@ -1674,6 +1729,39 @@ angular
           refreshPipelineMetrics();
         }
         pageHidden = false;
+      }
+    });
+
+    $scope.$on('onAlertClick', function(event, alert) {
+      if(alert && alert.pipelineName === $scope.activeConfigInfo.name) {
+        var edges = $scope.edges,
+            edge;
+
+        $scope.$storage.maximizeDetailPane = false;
+        $scope.$storage.minimizeDetailPane = false;
+
+        if(alert.ruleDefinition.metricId) {
+          //Select Pipeline Config
+          $scope.$broadcast('selectNode');
+          $scope.changeStageSelection({
+            selectedObject: undefined,
+            type: pipelineConstant.PIPELINE,
+            detailTabName: 'summary'
+          });
+        } else {
+          //Select edge
+          edge = _.find(edges, function(ed) {
+            return ed.outputLane === alert.ruleDefinition.lane;
+          });
+          $scope.changeStageSelection({
+            selectedObject: edge,
+            type: pipelineConstant.LINK,
+            detailTabName: 'summary'
+          });
+        }
+      } else {
+        $rootScope.common.clickedAlert = alert;
+        $location.path('/collector/pipeline/' + alert.pipelineName);
       }
     });
 

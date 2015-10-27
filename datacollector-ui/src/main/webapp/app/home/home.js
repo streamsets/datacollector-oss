@@ -226,4 +226,10 @@ angular
       }
     );
 
+    $scope.$on('onAlertClick', function(event, alert) {
+      if(alert && alert.pipelineName) {
+        $rootScope.common.clickedAlert = alert;
+        $location.path('/collector/pipeline/' + alert.pipelineName);
+      }
+    });
   });

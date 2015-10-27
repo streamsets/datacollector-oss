@@ -260,35 +260,7 @@ angular.module('dataCollectorApp')
         onAlertClick: function(alert) {
           $rootScope.common.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION,
             'Notification Message', 1);
-
-          //var edges = $scope.edges,
-            //edge;
-
-          //$scope.$storage.maximizeDetailPane = false;
-          //$scope.$storage.minimizeDetailPane = false;
-
-          if(alert.ruleDefinition.metricId) {
-            //Select Pipeline Config
-            /*
-            $scope.$broadcast('selectNode');
-            $scope.changeStageSelection({
-              selectedObject: undefined,
-              type: pipelineConstant.PIPELINE
-            });*/
-            $location.path('/collector/pipeline/' + alert.pipelineName);
-          } else {
-            //Select edge
-            /*edge = _.find(edges, function(ed) {
-              return ed.outputLane === alert.rule.lane;
-            });
-
-            $scope.changeStageSelection({
-              selectedObject: edge,
-              type: pipelineConstant.LINK
-            });*/
-
-            $location.path('/collector/pipeline/' + alert.pipelineName);
-          }
+          $rootScope.$broadcast('onAlertClick', alert);
         },
 
         /**
