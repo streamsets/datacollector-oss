@@ -78,12 +78,12 @@ public abstract class StageDefinitionExtractor {
     return new ArrayList<>(set);
   }
 
-  private static void addGroupsToList(Class<?> klass, Set<String> list) {
+  private static void addGroupsToList(Class<?> klass, Set<String> set) {
     ConfigGroups groups = klass.getAnnotation(ConfigGroups.class);
     if (groups != null) {
       Class<? extends Enum> groupKlass = (Class<? extends Enum>) groups.value();
       for (Enum e : groupKlass.getEnumConstants()) {
-        list.add(e.name());
+        set.add(e.name());
       }
     }
   }

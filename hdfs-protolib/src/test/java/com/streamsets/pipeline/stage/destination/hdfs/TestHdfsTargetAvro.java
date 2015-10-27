@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.generic.GenericDatumReader;
@@ -59,31 +61,34 @@ public class TestHdfsTargetAvro {
 
     String dirPathTemplate = getTestDir() + "/hdfs/";
 
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      "file:///",
+      "foo",
+      false,
+      null,
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      dirPathTemplate,
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      3,
+      0,
+      "${time:now()}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_ERROR,
+      "",
+      DataFormat.AVRO,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
-      .addConfiguration("hdfsUri", "file:///")
-      .addConfiguration("hdfsUser", "foo")
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", null)
-      .addConfiguration("hdfsConfigs", new HashMap<>())
-      .addConfiguration("uniquePrefix", "foo")
-      .addConfiguration("dirPathTemplate", dirPathTemplate)
-      .addConfiguration("timeZoneID", "UTC")
-      .addConfiguration("fileType", HdfsFileType.TEXT)
-      .addConfiguration("keyEl", "${uuid()}")
-      .addConfiguration("compression", CompressionMode.NONE)
-      .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
-      .addConfiguration("maxRecordsPerFile", 3)
-      .addConfiguration("maxFileSize", 0)
-      .addConfiguration("timeDriver", "${time:now()}")
-      .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
-      .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_ERROR)
-      .addConfiguration("lateRecordsDirPathTemplate", "")
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", null)
-      .addConfiguration("csvReplaceNewLines", false)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("avroSchema", SdcAvroTestUtil.AVRO_SCHEMA1)
       .build();
     runner.runInit();
 

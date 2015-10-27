@@ -34,8 +34,10 @@ import com.streamsets.pipeline.configurablestage.DStage;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
 
+import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -45,7 +47,6 @@ import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.hdfs.server.namenode.EditLogFileOutputStream;
 import org.apache.hadoop.io.compress.CompressionCodec;
-import org.apache.hadoop.io.compress.Compressor;
 import org.apache.hadoop.io.compress.DeflateCodec;
 import org.apache.hadoop.security.UserGroupInformation;
 import org.junit.After;
@@ -118,57 +119,10 @@ public class TestBaseHdfsTarget {
     UserGroupInformation.setConfiguration(new Configuration());
   }
 
-  private void configure(HdfsDTarget target) {
-    target.hdfsUri = miniDFS.getURI().toString();
-    target.hdfsConfigs = new HashMap<>();
-    target.hdfsConfigs.put("x", "X");
-    target.timeZoneID = "UTC";
-    target.dirPathTemplate = "/${YYYY()}";
-    target.lateRecordsDirPathTemplate = "";
-    target.compression = CompressionMode.NONE;
-    target.otherCompression = null;
-    target.timeDriver = "${time:now()}";
-    target.lateRecordsLimit = "3600";
-    target.dataFormat = DataFormat.DELIMITED;
-    target.csvFileFormat = CsvMode.CSV;
-    target.csvHeader = CsvHeader.IGNORE_HEADER;
-    target.charset = "UTF-8";
-    target.hdfsUser = "";
-  }
-
   static class ForTestHdfsTarget extends HdfsDTarget {
     @Override
     protected Target createTarget() {
-      return new HdfsTarget(
-          hdfsUri,
-          hdfsUser,
-          hdfsKerberos,
-          hdfsConfDir,
-          hdfsConfigs,
-          uniquePrefix,
-          dirPathTemplate,
-          timeZoneID,
-          timeDriver,
-          maxRecordsPerFile,
-          maxFileSize,
-          compression,
-          otherCompression,
-          fileType,
-          keyEl,
-          seqFileCompressionType,
-          lateRecordsLimit,
-          lateRecordsAction,
-          lateRecordsDirPathTemplate,
-          dataFormat,
-          charset,
-          csvFileFormat,
-          csvHeader,
-          csvReplaceNewLines,
-          jsonMode,
-          textFieldPath,
-          textEmptyLineIfNull,
-          null
-      ) {
+      return new HdfsTarget(hdfsTargetConfigBean) {
         @Override
         public void write(Batch batch) throws StageException {
         }
@@ -201,7 +155,7 @@ public class TestBaseHdfsTarget {
                 new File(fooDir, "hdfs-site.xml"), StandardCharsets.UTF_8);
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.hdfsConfDir = fooDir.getName();
+    dTarget.hdfsTargetConfigBean.hdfsConfDir = fooDir.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -224,7 +178,7 @@ public class TestBaseHdfsTarget {
 
     dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.hdfsConfDir = absoluteFilePath.getAbsolutePath();
+    dTarget.hdfsTargetConfigBean.hdfsConfDir = absoluteFilePath.getAbsolutePath();
     target = (HdfsTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -252,16 +206,19 @@ public class TestBaseHdfsTarget {
     }
   }
 
-  private void testDir(String dir, String lateDir, boolean ok) {
+  private void testDir(String dir, String lateDir, boolean ok) throws StageException {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.dirPathTemplate = dir;
-    dTarget.lateRecordsDirPathTemplate = lateDir;
-    dTarget.hdfsUser = "foo";
+    dTarget.hdfsTargetConfigBean.dirPathTemplate = dir;
+    dTarget.hdfsTargetConfigBean.lateRecordsDirPathTemplate = lateDir;
+    dTarget.hdfsTargetConfigBean.hdfsUser = "foo";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, target)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
     try {
-      List<Stage.ConfigIssue> issues = target.init(null,
-          ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false, OnRecordError.TO_ERROR, null));
+      List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
       Assert.assertEquals((ok) ? 0 : 1 , issues.size());
     } finally {
       target.destroy();
@@ -307,7 +264,7 @@ public class TestBaseHdfsTarget {
   public void testDefinedCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = CompressionMode.GZIP;
+    dTarget.hdfsTargetConfigBean.compression = CompressionMode.GZIP;
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -331,8 +288,8 @@ public class TestBaseHdfsTarget {
   public void testCustomCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = CompressionMode.OTHER;
-    dTarget.otherCompression = DeflateCodec.class.getName();
+    dTarget.hdfsTargetConfigBean.compression = CompressionMode.OTHER;
+    dTarget.hdfsTargetConfigBean.otherCompression = DeflateCodec.class.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
       Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -348,8 +305,8 @@ public class TestBaseHdfsTarget {
   public void testInvalidCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = CompressionMode.OTHER;
-    dTarget.otherCompression = String.class.getName();
+    dTarget.hdfsTargetConfigBean.compression = CompressionMode.OTHER;
+    dTarget.hdfsTargetConfigBean.otherCompression = String.class.getName();
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
       OnRecordError.TO_ERROR, null);
@@ -360,8 +317,8 @@ public class TestBaseHdfsTarget {
   public void testUnknownCompressionCodec() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.compression = CompressionMode.OTHER;
-    dTarget.otherCompression = "foo";
+    dTarget.hdfsTargetConfigBean.compression = CompressionMode.OTHER;
+    dTarget.hdfsTargetConfigBean.otherCompression = "foo";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     Target.Context context = ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
       OnRecordError.TO_ERROR, null);
@@ -384,7 +341,7 @@ public class TestBaseHdfsTarget {
 
     dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.lateRecordsLimit = "${1 * MINUTES}";
+    dTarget.hdfsTargetConfigBean.lateRecordsLimit = "${1 * MINUTES}";
     target = (HdfsTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -417,7 +374,7 @@ public class TestBaseHdfsTarget {
   public void testTimeDriverElEvalRecordValue() throws Exception {
     HdfsDTarget dTarget = new ForTestHdfsTarget();
     configure(dTarget);
-    dTarget.timeDriver = "${record:value('/')}";
+    dTarget.hdfsTargetConfigBean.timeDriver = "${record:value('/')}";
     HdfsTarget target = (HdfsTarget) dTarget.createTarget();
     try {
       target.init(null, ContextInfoCreator.createTargetContext(HdfsDTarget.class, "n", false,
@@ -446,30 +403,34 @@ public class TestBaseHdfsTarget {
         }
       });
     }
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      miniDFS.getFileSystem().getUri().toString(),
+      user,
+      false,
+      "",
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      dir.toString(),
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      1,
+      1,
+      "${time:now()}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+      dir.toString(),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
         .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
-        .addConfiguration("hdfsUser", user)
-        .addConfiguration("hdfsKerberos", false)
-        .addConfiguration("hdfsConfDir", "")
-        .addConfiguration("hdfsConfigs", new HashMap<>())
-        .addConfiguration("uniquePrefix", "foo")
-        .addConfiguration("dirPathTemplate", dir.toString())
-        .addConfiguration("timeZoneID", "UTC")
-        .addConfiguration("fileType", HdfsFileType.TEXT)
-        .addConfiguration("keyEl", "${uuid()}")
-        .addConfiguration("compression", CompressionMode.NONE)
-        .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
-        .addConfiguration("maxRecordsPerFile", 1)
-        .addConfiguration("maxFileSize", 1)
-        .addConfiguration("timeDriver", "${record:value('/')}")
-        .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
-        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-        .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
-        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-        .addConfiguration("csvFileFormat", null)
-        .addConfiguration("csvReplaceNewLines", false)
-        .addConfiguration("charset", "UTF-8")
         .build();
     runner.runInit();
     try {
@@ -500,31 +461,36 @@ public class TestBaseHdfsTarget {
   public void testCustomFrequency() throws Exception {
     final Path dir = new Path("/" + UUID.randomUUID().toString());
       miniDFS.getFileSystem().mkdirs(dir);
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
-        .setOnRecordError(OnRecordError.STOP_PIPELINE)
-        .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
-        .addConfiguration("hdfsUser", "")
-        .addConfiguration("hdfsKerberos", false)
-        .addConfiguration("hdfsConfDir", "")
-        .addConfiguration("hdfsConfigs", new HashMap<>())
-        .addConfiguration("uniquePrefix", "foo")
-        .addConfiguration("dirPathTemplate", dir.toString() + "/${YY()}${MM()}${DD()}${hh()}${every(10, mm())}")
-        .addConfiguration("timeZoneID", "UTC")
-        .addConfiguration("fileType", HdfsFileType.TEXT)
-        .addConfiguration("keyEl", "${uuid()}")
-        .addConfiguration("compression", CompressionMode.NONE)
-        .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
-        .addConfiguration("maxRecordsPerFile", 1)
-        .addConfiguration("maxFileSize", 1)
-        .addConfiguration("timeDriver", "${record:value('/')}")
-        .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
-        .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-        .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
-        .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-        .addConfiguration("csvFileFormat", null)
-        .addConfiguration("csvReplaceNewLines", false)
-        .addConfiguration("charset", "UTF-8")
-        .build();
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      miniDFS.getFileSystem().getUri().toString(),
+      "",
+      false,
+      "",
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      dir.toString() + "/${YY()}${MM()}${DD()}${hh()}${every(10, mm())}",
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      1,
+      1,
+      "${record:value('/')}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+      dir.toString(),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
     runner.runInit();
     try {
       Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
@@ -551,31 +517,35 @@ public class TestBaseHdfsTarget {
   @Test
   public void testWriteBatch() throws Exception{
     final Path dir = new Path("/" + UUID.randomUUID().toString());
-    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class)
-    .setOnRecordError(OnRecordError.STOP_PIPELINE)
-    .addConfiguration("hdfsUri", miniDFS.getFileSystem().getUri().toString())
-    .addConfiguration("hdfsUser", "")
-    .addConfiguration("hdfsKerberos", false)
-    .addConfiguration("hdfsConfDir", "")
-    .addConfiguration("hdfsConfigs", new HashMap<>())
-    .addConfiguration("uniquePrefix", "foo")
-    .addConfiguration("dirPathTemplate", dir.toString())
-    .addConfiguration("timeZoneID", "UTC")
-    .addConfiguration("fileType", HdfsFileType.TEXT)
-    .addConfiguration("keyEl", "${uuid()}")
-    .addConfiguration("compression", CompressionMode.NONE)
-    .addConfiguration("seqFileCompressionType", HdfsSequenceFileCompressionType.BLOCK)
-    .addConfiguration("maxRecordsPerFile", 10)
-    .addConfiguration("maxFileSize", 100)
-    .addConfiguration("timeDriver", "${time:now()}")
-    .addConfiguration("lateRecordsLimit", "${30 * MINUTES}")
-    .addConfiguration("lateRecordsAction", LateRecordsAction.SEND_TO_LATE_RECORDS_FILE)
-    .addConfiguration("lateRecordsDirPathTemplate", dir.toString())
-    .addConfiguration("dataFormat", DataFormat.SDC_JSON)
-    .addConfiguration("csvFileFormat", null)
-    .addConfiguration("csvReplaceNewLines", false)
-    .addConfiguration("charset", "UTF-8")
-    .build();
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+      miniDFS.getFileSystem().getUri().toString(),
+      "",
+      false,
+      "",
+      new HashMap<String, String>(),
+      "foo",
+      "UTC",
+      dir.toString(),
+      HdfsFileType.TEXT,
+      "${uuid()}",
+      CompressionMode.NONE,
+      HdfsSequenceFileCompressionType.BLOCK,
+      10,
+      100,
+      "${time:now()}",
+      "${30 * MINUTES}",
+      LateRecordsAction.SEND_TO_LATE_RECORDS_FILE,
+      dir.toString(),
+      DataFormat.SDC_JSON,
+      dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+      .setOnRecordError(OnRecordError.STOP_PIPELINE)
+      .build();
+
     runner.runInit();
     Date date = new Date();
     Date recordDate = new Date(date.getTime());
@@ -585,9 +555,35 @@ public class TestBaseHdfsTarget {
     record2.set(Field.create("z"));
     runner.runWrite(Arrays.asList(record1, record2));
     RecordWriter recordWriter =
-      ((HdfsTarget) ((DStage) runner.getStage()).getStage()).getCurrentWriters().get(date, recordDate, record1);
+      ((HdfsTarget)( runner.getStage())).getCurrentWriters().get(date, recordDate, record1);
     Assert.assertEquals(2, recordWriter.getRecords());
     Assert.assertTrue(recordWriter.getLength() > 2);
     Assert.assertTrue(recordWriter.isTextFile());
   }
+
+  private void configure(HdfsDTarget target) {
+
+    HdfsTargetConfigBean hdfsTargetConfigBean = new HdfsTargetConfigBean();
+    hdfsTargetConfigBean.hdfsUri = miniDFS.getURI().toString();
+    hdfsTargetConfigBean.hdfsConfigs = new HashMap<>();
+    hdfsTargetConfigBean.hdfsConfigs.put("x", "X");
+    hdfsTargetConfigBean.timeZoneID = "UTC";
+    hdfsTargetConfigBean.dirPathTemplate = "/${YYYY()}";
+    hdfsTargetConfigBean.lateRecordsDirPathTemplate = "";
+    hdfsTargetConfigBean.compression = CompressionMode.NONE;
+    hdfsTargetConfigBean.otherCompression = null;
+    hdfsTargetConfigBean.timeDriver = "${time:now()}";
+    hdfsTargetConfigBean.lateRecordsLimit = "3600";
+    hdfsTargetConfigBean.dataFormat = DataFormat.DELIMITED;
+    hdfsTargetConfigBean.hdfsUser = "";
+
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+    dataGeneratorFormatConfig.csvFileFormat = CsvMode.CSV;
+    dataGeneratorFormatConfig.csvHeader = CsvHeader.IGNORE_HEADER;
+    dataGeneratorFormatConfig.charset = "UTF-8";
+    hdfsTargetConfigBean.dataGeneratorFormatConfig = dataGeneratorFormatConfig;
+
+    target.hdfsTargetConfigBean = hdfsTargetConfigBean;
+  }
+
 }
