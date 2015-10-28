@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -213,7 +214,7 @@ public class TestAvroTypeUtil {
 
     List<String> listString = (List<String>) avroObject;
     Assert.assertEquals("Hari", listString.get(0));
-    Assert.assertEquals("Kiran",listString.get(1));
+    Assert.assertEquals("Kiran", listString.get(1));
   }
 
   @Test
@@ -789,6 +790,86 @@ public class TestAvroTypeUtil {
 
     Assert.assertEquals("boss@ss.com", resultEmails.get(0));
     Assert.assertEquals("boss2@ss.com", resultEmails.get(1));
+  }
+
+  @Test
+  public void testBestEffortResolve1() throws StageException {
+
+    String schemaString = "{\n" +
+      "  \"type\" : \"record\",\n" +
+      "  \"name\" : \"TopLevel\",\n" +
+      "  \"namespace\" : \"com.streamsets.demo\",\n" +
+      "  \"fields\" : [ {\n" +
+      "    \"name\" : \"foo\",\n" +
+      "    \"type\" : [ {\n" +
+      "      \"type\" : \"record\",\n" +
+      "      \"name\" : \"Foo\",\n" +
+      "      \"fields\" : [ {\n" +
+      "        \"name\" : \"bar\",\n" +
+      "        \"type\" : \"int\"\n" +
+      "      } ]\n" +
+      "    }, \"null\" ]\n" +
+      "  } ]\n" +
+      "}";
+
+    // create sdc record matching the above schema
+    Map<String, Field> barField = new HashMap<>();
+    barField.put("bar", Field.create(45237));
+    Map<String, Field> fooField = new HashMap<>();
+    fooField.put("foo", Field.create(barField));
+    Record record = RecordCreator.create();
+    record.set(Field.create(fooField));
+
+    Schema schema = new Schema.Parser().parse(schemaString);
+
+    //convert record to avro record
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", schema);
+
+    GenericRecord avroRecord = (GenericRecord) avroObject;
+    GenericRecord foo = (GenericRecord) avroRecord.get("foo");
+    Object bar = foo.get("bar");
+    Assert.assertEquals(45237, bar);
+  }
+
+  @Test
+  public void testBestEffortResolve2() throws StageException {
+
+    String schemaString = "{\n" +
+      "  \"type\" : \"record\",\n" +
+      "  \"name\" : \"TopLevel\",\n" +
+      "  \"namespace\" : \"com.streamsets.demo\",\n" +
+      "  \"fields\" : [ {\n" +
+      "    \"name\" : \"foo\",\n" +
+      "    \"type\" : [ {\n" +
+      "      \"type\" : \"record\",\n" +
+      "      \"name\" : \"Foo\",\n" +
+      "      \"fields\" : [ {\n" +
+      "        \"name\" : \"bar\",\n" +
+      "        \"type\" : \"int\"\n" +
+      "      } ]\n" +
+      "    }, {\"type\" : \"map\", \"values\" : \"int\"} ]\n" +
+      "  } ]\n" +
+      "}";
+
+    // create sdc record matching the above schema
+    Map<String, Field> barField = new HashMap<>();
+    barField.put("bar", Field.create(45237));
+    Map<String, Field> fooField = new HashMap<>();
+    fooField.put("foo", Field.create(barField));
+    Record record = RecordCreator.create();
+    record.set(Field.create(fooField));
+
+    Schema schema = new Schema.Parser().parse(schemaString);
+
+    // convert record to avro record
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", schema);
+
+    GenericRecord avroRecord = (GenericRecord) avroObject;
+
+    // Avro will match this to map schema type from the union before going to the best effort resolve by sdc
+    Map<String, Integer> foo = (Map<String, Integer>) avroRecord.get("foo");
+    Object bar = foo.get("bar");
+    Assert.assertEquals(45237, bar);
   }
 
 }

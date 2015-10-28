@@ -156,9 +156,15 @@ public class AvroTypeUtil {
             int typeIndex = GenericData.get().resolveUnion(schema, object);
             schema = schema.getTypes().get(typeIndex);
           } catch (UnresolvedUnionException e) {
-            String objectType = object == null ? "null" : object.getClass().getName();
-            throw new StageException(CommonError.CMN_0106, objectType, field1.getType().name(), e.toString(),
-              e);
+            //Avro could not resolve schema. Make a best effort resolve
+            Schema match = bestEffortResolve(schema, field, object);
+            if(match == null) {
+              String objectType = object == null ? "null" : object.getClass().getName();
+              throw new StageException(CommonError.CMN_0106, objectType, field1.getType().name(), e.toString(),
+                e);
+            } else {
+              schema = match;
+            }
           }
         }
       }
@@ -264,6 +270,92 @@ public class AvroTypeUtil {
       default:
         throw new IllegalStateException(Utils.format("Unexpected schema type {}", type.getName()));
     }
+  }
+
+  public static Schema bestEffortResolve(Schema schema, Field field, Object value) {
+    // Go over the types in the union one by one and try to match the field type with the schema.
+    // First schema type which is a match is considered as the target schema.
+    Schema match = null;
+    for(Schema unionType : schema.getTypes()) {
+      if(schemaMatch(unionType, field, value)) {
+        match = unionType;
+        break;
+      }
+    }
+    return match;
+  }
+
+  private static boolean schemaMatch(Schema schema, Field field, Object value) {
+    boolean match = false;
+    switch(schema.getType()) {
+      case ENUM:
+        if(field.getType() == Field.Type.STRING) {
+          // Fields mapping to avro enums are expected to be of type string since we convert using
+          // GenericData.EnumSymbol
+          // Also when reading avro data, String fields are created from enums
+          match = true;
+        }
+        break;
+      case FIXED:
+        if(field.getType() == Field.Type.BYTE_ARRAY) {
+          match = true;
+        }
+        break;
+      case BOOLEAN:
+        if(field.getType() == Field.Type.BOOLEAN) {
+          match = true;
+        }
+        break;
+      case DOUBLE:
+        if(field.getType() == Field.Type.DOUBLE) {
+          match = true;
+        }
+        break;
+      case BYTES:
+        if(field.getType() == Field.Type.BYTE_ARRAY) {
+          match = true;
+        }
+        break;
+      case ARRAY:
+        if(field.getType() == Field.Type.LIST) {
+          match = true;
+        }
+        break;
+      case FLOAT:
+        if(field.getType() == Field.Type.FLOAT) {
+          match = true;
+        }
+        break;
+      case INT:
+        if(field.getType() == Field.Type.INTEGER) {
+          match = true;
+        }
+        break;
+      case LONG:
+        if(field.getType() == Field.Type.LONG) {
+          match = true;
+        }
+        break;
+      case RECORD:
+      case MAP:
+        if(field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST_MAP ) {
+          match = true;
+        }
+        break;
+      case NULL:
+        if(null == value) {
+          match = true;
+        }
+        break;
+      case STRING:
+        if(field.getType() == Field.Type.STRING) {
+          match = true;
+        }
+        break;
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected schema type {}", schema.getName()));
+    }
+    return match;
   }
 
 }
