@@ -183,6 +183,19 @@
           <span class="field-value STRING" ng-if="headerName !== 'errorTimestamp'">{{headerValue + ''}}</span>
           <span class="field-value DATE" ng-if="headerName === 'errorTimestamp'">{{headerValue + '' | date:'medium'}}</span>
         </li>
+
+        <li class="record-list-item">
+          <span class="field-name">values:</span>
+
+          <ul class="record-list">
+            <li class="record-list-item"
+                ng-repeat="(headerName, headerValue) in record.header.values">
+              <label class="pull-left"><span class="field-name">{{headerName}}:</span></label>
+              <span class="field-value STRING">{{headerValue + ''}}</span>
+            </li>
+          </ul>
+        </li>
+
       </ul>
   </li>
 
