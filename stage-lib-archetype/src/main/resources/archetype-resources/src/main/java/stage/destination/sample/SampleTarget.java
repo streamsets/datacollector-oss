@@ -89,10 +89,7 @@ public class SampleTarget extends BaseTarget {
           case DISCARD:
             break;
           case TO_ERROR:
-            Iterator<Record> failedRecords = batch.getRecords();
-            while (failedRecords.hasNext()) {
-              getContext().toError(record, Errors.SAMPLE_01, e.toString());
-            }
+            getContext().toError(record, Errors.SAMPLE_01, e.toString());
             break;
           case STOP_PIPELINE:
             throw new StageException(Errors.SAMPLE_01, e.toString());
