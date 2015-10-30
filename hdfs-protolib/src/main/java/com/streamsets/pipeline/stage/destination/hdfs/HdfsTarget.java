@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -629,7 +630,7 @@ public class HdfsTarget extends BaseTarget {
     }
   }
 
-  //visible for testing.
+  @VisibleForTesting
   Date setBatchTime() {
     batchTime = new Date();
     return batchTime;

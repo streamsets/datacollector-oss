@@ -20,6 +20,7 @@ package com.streamsets.pipeline.lib.generator.json;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.JsonMode;
@@ -35,7 +36,7 @@ import java.util.Map;
 
 public class JsonCharDataGenerator implements DataGenerator {
   final static String EOL = System.getProperty("line.separator");
-  private final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
+  private static final JsonFactory JSON_FACTORY = new ObjectMapper().getFactory();
 
   private final boolean isArray;
   private final JsonGenerator generator;
@@ -50,7 +51,7 @@ public class JsonCharDataGenerator implements DataGenerator {
     }
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   boolean isArrayObjects() {
     return isArray;
   }

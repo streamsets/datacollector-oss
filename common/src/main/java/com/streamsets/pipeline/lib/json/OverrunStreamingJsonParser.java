@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.json;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -51,6 +52,17 @@ import java.util.Set;
  * to change this. If an OverrunException is thrown the parser is not usable anymore.
  */
 public class OverrunStreamingJsonParser extends StreamingJsonParser {
+
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+  static {
+    SimpleModule module = new SimpleModule();
+    module.addDeserializer(Map.class, new MapDeserializer());
+    module.addDeserializer(List.class, new ListDeserializer());
+    OBJECT_MAPPER.registerModule(module);
+    OBJECT_MAPPER.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
+    OBJECT_MAPPER.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
+  }
 
   public static class EnforcerMap extends LinkedHashMap {
 
@@ -162,12 +174,7 @@ public class OverrunStreamingJsonParser extends StreamingJsonParser {
 
   @Override
   protected ObjectMapper getObjectMapper() {
-    ObjectMapper objectMapper = super.getObjectMapper();
-    SimpleModule module = new SimpleModule();
-    module.addDeserializer(Map.class, new MapDeserializer());
-    module.addDeserializer(List.class, new ListDeserializer());
-    objectMapper.registerModule(module);
-    return objectMapper;
+    return OBJECT_MAPPER;
   }
 
   @Override

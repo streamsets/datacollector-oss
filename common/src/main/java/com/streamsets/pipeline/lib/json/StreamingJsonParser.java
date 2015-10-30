@@ -37,6 +37,7 @@ import java.io.Reader;
 public class StreamingJsonParser {
 
   private static final int MAX_CHARS_TO_READ_FORWARD = 64;
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public enum Mode {ARRAY_OBJECTS, MULTIPLE_OBJECTS}
 
@@ -50,7 +51,7 @@ public class StreamingJsonParser {
   private Byte firstNonSpaceChar;
 
   protected ObjectMapper getObjectMapper() {
-    return new ObjectMapper();
+    return OBJECT_MAPPER;
   }
 
   public StreamingJsonParser(Reader reader, Mode mode) throws IOException {

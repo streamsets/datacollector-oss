@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.generator.delimited;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.CsvHeader;
@@ -53,22 +54,22 @@ public class DelimitedCharDataGenerator implements DataGenerator {
     this.replaceNewLines = replaceNewLines;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   CSVFormat getFormat() {
     return format;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   CsvHeader getHeader() {
     return header;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   String getHeaderKey() {
     return headerKey;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   String getValueKey() {
     return valueKey;
   }

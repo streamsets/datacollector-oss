@@ -17,6 +17,7 @@
  */
 package com.streamsets.pipeline.lib.generator.text;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -40,12 +41,12 @@ public class TextCharDataGenerator implements DataGenerator {
     this.emptyLineIfNull = emptyLineIfNull;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   String getFieldPath() {
     return fieldPath;
   }
 
-  //VisibleForTesting
+  @VisibleForTesting
   boolean isEmptyLineIfNull() {
     return emptyLineIfNull;
   }
