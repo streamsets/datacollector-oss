@@ -14,22 +14,23 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_agb_5c1_ct">
- <title>RPC </title>
- <shortdesc> The RPC origin enables connectivity between two StreamSets RPC pipelines. The RPC
-    origin reads data passed from an RPC destination. Use the RPC origin as part of an RPC
-    destination pipeline.</shortdesc>
+ <title>SDC RPC </title>
+ <shortdesc> The SDC RPC origin enables connectivity between two SDC RPC pipelines. The SDC RPC
+    origin reads data passed from an SDC RPC destination. Use the SDC RPC origin as part of an SDC
+    RPC destination pipeline.</shortdesc>
  <conbody>
-  <p><indexterm>origins<indexterm>RPC</indexterm></indexterm><indexterm>RPC
-          origins<indexterm>overview</indexterm></indexterm>You can use RPC pipelines across a
+  <p><indexterm>origins<indexterm>SDC RPC</indexterm></indexterm><indexterm>SDC RPC
+          origins<indexterm>overview</indexterm></indexterm>You can use SDC RPC pipelines across a
       single Data Collector instance on a single machine, or across a local network or the public
       internet to a remote Data Collector. You can configure the origin to use SSL for secure
       connectivity. </p>
-    <p>When you configure the RPC origin, you define the port that the origin listens to for data.
-      The port number must be specified in one of the RPC connections defined in the RPC
+    <p>When you configure the SDC RPC origin, you define the port that the origin listens to for
+      data. The port number must be specified in one of the RPC connections defined in the SDC RPC
       destination. </p>
-    <p>Similarly, the RPC ID in the RPC origin must match the RPC ID used in the RPC destination. </p>
+    <p>Similarly, the RPC ID in the SDC RPC origin must match the RPC ID used in the SDC RPC
+      destination. </p>
  </conbody>
   <related-links>
-    <link href="../RPC_Pipelines/RPCpipeline.dita#concept_lnh_z3z_bt"/>
+    <link href="../RPC_Pipelines/SDC_RPCpipeline.dita#concept_lnh_z3z_bt"/>
   </related-links>
 </concept>

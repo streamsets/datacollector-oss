@@ -14,14 +14,14 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pdh_glg_1s">
- <title>Using Runtime Properties</title>
- <shortdesc>Use the <cmdname>runtime:conf</cmdname> function to call a runtime property. You can use
-    runtime properties to represent any stage or pipeline property that allows the use of the
-    expression language. </shortdesc>
+ <title>Calling a Runtime Property</title>
+ <shortdesc>Use the <codeph>runtime:conf</codeph> function to call a runtime property. You can use
+        runtime properties to represent any stage or pipeline property that allows the use of the
+        expression language. </shortdesc>
  <conbody>
-  <p><indexterm>runtime properties<indexterm>using in the pipeline</indexterm></indexterm>To call a
-      runtime property, use the following syntax:
-      <codeblock>runtime:conf('&lt;property name>')</codeblock></p>
+  <p><indexterm>runtime properties<indexterm>calling from a pipeline</indexterm></indexterm>To call
+            a runtime property, use the following syntax:
+            <codeblock>runtime:conf('&lt;property name>')</codeblock></p>
   <p>For example, to use a LogDir runtime property that represents the source file directory for the
             Directory stage, enter the following syntax for the Files Directory
             property:<codeblock>${runtime:conf('LogDir')}</codeblock></p>

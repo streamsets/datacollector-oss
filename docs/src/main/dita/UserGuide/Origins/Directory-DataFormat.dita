@@ -44,11 +44,11 @@
         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
           <dt/>
           <dd/>
-        </dlentry><dlentry>
-          <dt>Avro</dt>
-          <dd>Generates a record for every record. </dd>
-          <dd>Directory assumes each file includes an Avro schema definition. But you can optionally
-            provide an alternate schema. </dd>
+        </dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
+          <dt/>
+          <dd/>
         </dlentry>
       </dl></p>
 

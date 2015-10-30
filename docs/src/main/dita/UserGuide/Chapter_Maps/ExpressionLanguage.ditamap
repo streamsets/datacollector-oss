@@ -20,6 +20,17 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Expression_Language/ExpressionExamples.dita"/>
+  </topicref>
+  <topicref href="../Expression_Language/Functions.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Expression_Language/RecordFunctions.dita"/>
+   <topicref href="../Expression_Language/RecordFunc-Delimited.dita"/>
+   <topicref href="../Expression_Language/ErrorFunctions.dita"/>
+   <topicref href="../Expression_Language/StringFunctions.dita"/>
+   <topicref href="../Expression_Language/MiscFunctions.dita"/>
   </topicref>
   <topicref href="../Expression_Language/Literals.dita">
    <topicmeta>
@@ -36,16 +47,6 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-  </topicref>
-  <topicref href="../Expression_Language/Functions.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Expression_Language/RecordFunctions.dita"/>
-   <topicref href="../Expression_Language/RecordFunc-Delimited.dita"/>
-   <topicref href="../Expression_Language/ErrorFunctions.dita"/>
-   <topicref href="../Expression_Language/StringFunctions.dita"/>
-   <topicref href="../Expression_Language/MiscFunctions.dita"/>
   </topicref>
  </topicref>
 </map>

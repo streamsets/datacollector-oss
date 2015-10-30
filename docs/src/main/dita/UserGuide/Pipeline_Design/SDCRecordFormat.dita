@@ -33,6 +33,7 @@
         <li>Kinesis Consumer</li>
    </ul></p>
   <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
+                <li>Amazon S3</li>
         <li>Flume</li>
     <li>Kafka Producer</li>
         <li>Kinesis Producer</li>

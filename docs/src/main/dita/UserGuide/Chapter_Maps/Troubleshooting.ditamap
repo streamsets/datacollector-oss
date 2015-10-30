@@ -26,6 +26,7 @@
     <shortdesc/>
    </topicmeta>
    <topicref href="../Troubleshooting/DataPreview.dita"/>
+   <topicref href="../Troubleshooting/GeneralValidation.dita"/>
   </topicref>
   <topicref href="../Troubleshooting/Origins.dita" chunk="to-content">
    <topicmeta>

@@ -73,8 +73,8 @@
               <li>string - The string for the replacement of a group of characters.</li>
               <li>regEx - A regular expression that describes the string to replace.</li>
               <li>newString - The set of characters to use for replacement.</li>
-            </ul><p>For example, ${str:replaceAll("shoes(*)","footwear")} returns:
-            footwear.</p></dd>
+            </ul><p>For example, ${str:replaceAll("shoes(*)","footwear")} replaces all strings that
+              start with "shoes" with "footwear".</p></dd>
         </dlentry>
         <dlentry>
           <dt>str:startsWith("&lt;string>", "&lt;subset>")</dt>

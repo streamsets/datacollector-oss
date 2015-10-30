@@ -20,14 +20,14 @@
   limitations under the License.
 --></head>
 <body onload="highlightSearchTerm()" class="frmBody"><script>
- (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
- ga('create', 'UA-67640002-1', 'auto');
- ga('send', 'pageview');
-
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language">Expression Language</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Expression_Language/ExpressionLanguage_title.html" title="Expression Language"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Expression Language</span></a></span>  </div></td></tr></tbody></table>
@@ -48,7 +48,7 @@
                   use constants or runtime properties throughout the pipeline. You can use
                   expression completion determine where you can use an expression and the expression
                   elements that you can use in that location. </p>
-<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d1740e490">
+<div class="p">You can use the following elements in an expression:<ul class="ul" id="concept_p54_4kl_vq__d1898e530">
                         <li class="li">Constants</li>
 
                         <li class="li">Field names</li>
@@ -71,6 +71,113 @@
   <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
 <div class="related_link"><a class="navheader_parent_path" href="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq" title="Precede all expressions with a dollar sign and enclose them with curly brackets, as follows: ${&lt;expression&gt;}.You can use quotation marks and the backslash character to handle special characters in field names. When a pipeline is valid for preview, you can generally select fields from a list. When a list is not available or when you are defining a new field name, you need to use the appropriate format for the field name. In some processors, you can use the asterisk wildcard (*) as indices in an array or key values in a map. Use a wildcard to help define the field paths for maps and arrays. Use the following information and tips when you invoke expression completion:When an expression requires, the expression language attempts implicit data type conversion - a.k.a. data type coercion. When coercion is not possible, the Data Collector passes the error records to the stage for error handling.">Expression Configuration</a></div>
 </div>
+</div>
+<div class="topic concept nested1" id="concept_r1w_tkp_tt">
+ <h2 class="title topictitle2">Expression Examples</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">Here are some examples of how you might use expressions in the <span class="ph">Data
+                  Collector</span>:</p>
+
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_zhy_jmp_tt" class="table" frame="border" border="1" rules="all">
+                
+                
+                <thead class="thead" align="left">
+                    <tr class="row">
+                        <th class="entry" valign="top" width="44.44444444444444%" id="d20104e109">Example</th>
+
+                        <th class="entry" valign="top" width="55.55555555555556%" id="d20104e112">Description</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody class="tbody">
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:value('/payment_type') == 'CRD'}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">In a Stream Selector, this condition routes records where the payment
+                            type is credit card to the stream.</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:value('[3]/State') == "MD"}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">The same as above, but for a record in list format.</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:valueOrDefault('/Payment', 'unknown')} </pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">Replaces missing values in the Payment field with "unknown".</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:errorCode()=="FIELD_MERGER_02"}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">Used in a Stream Selector in an error pipeline, this condition routes
+                            records with the FIELD_MERGER_02 error to a stream that corrects the
+                            error.</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${str:toUpper(record:value('/STATE')}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">Capitalizes all strings in the STATE field.</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:value('/total_amount') - 
+(record:value('/tip_amount') +
+record:value('/tolls') + record:value('/mta_tax'))}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">An expression that calculates trip revenue by subtracting the tip,
+                            taxes, and tolls from the total fare amount</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d20104e109 ">
+                            <pre class="pre codeblock">${record:value("[20]/value") == ""}</pre>
+
+                        </td>
+
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d20104e112 ">When used in an alert, triggers an alert when the specified field
+                            contains no data.</td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+</div>
+
+ </div>
+
 </div>
 </div>
 <div class="navfooter"><!---->

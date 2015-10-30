@@ -27,18 +27,25 @@
     <dd>Returns the value of the specified record attribute. Use to return data, for example, for
      the "tag" attribute that you set using the File Tail origin. </dd>
     <dd>Return type: String.</dd>
+    <dd>For example, the following expression returns the value of a tag attribute added by a File
+     Tail origin:<codeblock>${record:attribute('tag')}</codeblock></dd>
    </dlentry>
    <dlentry>
     <dt>record:creator()</dt>
     <dd>Returns the instance name of the stage that created the record, typically an origin stage.
      Data is stored in the stageCreator field of a record. </dd>
     <dd>Return type: String.</dd>
+    <dd>For example, the following expression returns the instance name of the stage that creates
+     each record:<codeblock>${record:creator()}</codeblock></dd>
    </dlentry>
    <dlentry>
     <dt>record:exists('&lt;field path>')</dt>
     <dd>Determines if the specified field is in a record. When the field is not in the record,
      returns 0. When the field is in the record, returns 1. </dd>
     <dd>Return type: Boolean.</dd>
+    <dd>For example, the following expression returns 1 when the Name field exists in a
+     record:<codeblock>${record:exists('/Name')}</codeblock></dd>
+    <dd>It returns 0 when the /Name field is not part of the record.</dd>
    </dlentry>
    <dlentry>
     <dt>record:id()</dt>

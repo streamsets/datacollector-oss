@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dys_tp1_1s">
- <title>Defining Runtime Properties</title>
+ <title>Defining a Runtime Property</title>
  <conbody>
     <p><indexterm>runtime properties<indexterm>defining</indexterm></indexterm>You can define
       runtime properties in the <ph

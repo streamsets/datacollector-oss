@@ -15,11 +15,11 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_a4w_5tf_ct">
  <title>Deployment Architecture</title>
- <shortdesc>When using RPC pipelines, consider your needs and environment carefully as you design
-  the deployment architecture. </shortdesc>
+ <shortdesc>When using SDC RPC pipelines, consider your needs and environment carefully as you
+    design the deployment architecture. </shortdesc>
  <conbody>
-  <p><indexterm>RPC pipelines<indexterm>deployment architecture</indexterm></indexterm>One key point
-      to consider:<dl>
+  <p><indexterm>SDC RPC pipelines<indexterm>deployment architecture</indexterm></indexterm>One key
+      point to consider:<dl>
         <dlentry>
           <dt>Use multiple destination pipelines to improve downstream availability</dt>
           <dd>To ensure downstream availability, you generally want to deploy multiple destination
@@ -27,10 +27,10 @@
           <dd>Note that the origin pipeline writes data to a single destination pipeline, but can
             round-robin through multiple pipelines. By using multiple destination pipelines, you can
             provide redundancy and avoid bottlenecks with a high-volume origin pipeline:</dd>
-          <dd><image href="../Graphics/RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
+          <dd><image href="../Graphics/SDC_RPCarch-oneSet.png" id="image_e1l_qmg_ct"/></dd>
           <dd>If you have multiple pipelines with similar data, you might deploy several sets of
             this model to provide load-balancing and redundancy:</dd>
-          <dd><image href="../Graphics/RPCarch-manySets.png" id="image_pbj_msg_ct" scale="100"
+          <dd><image href="../Graphics/SDC_RPCarch-manySets.png" id="image_pbj_msg_ct" scale="100"
             /></dd>
         </dlentry>
       </dl></p>

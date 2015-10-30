@@ -269,11 +269,24 @@
                                     improve performance.</dd>
                         </dlentry>
                   </dl>
+                  <draft-comment author="Loretta">AVRO-Files - used by Directory and Amazon
+                        S3.</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="OriginDF-AVROfiles">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every record. </dd>
+                              <dd>The origin assumes each file includes an Avro schema definition.
+                                    But you can optionally provide an alternate schema. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
-                        They also have an individual Avro description added to their list in the
-                        local file. Copying all but SDC Record to Hadoop FS
-                        destination.</draft-comment>
-                  <dl id="DataFormats-dest">
+                        They also have additional data formats specific to each destination. Copying
+                        all but SDC Record to Hadoop FS destination.</draft-comment>
+                  <dl id="DESTDataFormats">
                         <dlentry>
                               <dt>Text</dt>
                               <dd>The destination writes a single text field of a record. When you
@@ -310,6 +323,15 @@
                         </dlentry>
                   </dl>
             </p>
+            <draft-comment author="Loretta">the following is just for Kafka Producer and Amazon
+                  S3.</draft-comment>
+            <dl>
+                  <dlentry id="DESTDataFormat-Binary">
+                        <dt>Binary</dt>
+                        <dd>The destination writes binary data from a single field in the record.
+                        </dd>
+                  </dlentry>
+            </dl>
             <p>
                   <draft-comment author="Loretta">The following paragraphs are used for Expressions
                         (Pipeline Config chapter) and Expression Language (appendix).

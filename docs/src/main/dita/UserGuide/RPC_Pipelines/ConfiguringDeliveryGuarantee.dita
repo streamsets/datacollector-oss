@@ -16,14 +16,14 @@
 <concept id="concept_drd_wqb_dt">
  <title>Configuring the Delivery Guarantee</title>
  <shortdesc>The delivery guarantee determines when a pipeline commits the offset. When configuring
-  the delivery guarantee for RPC pipelines, use the same option in origin and destination
+  the delivery guarantee for SDC RPC pipelines, use the same option in origin and destination
   pipelines.</shortdesc>
  <conbody>
-  <p><indexterm>RPC Pipelines<indexterm>delivery
-    guarantee</indexterm></indexterm><indexterm>delivery guarantee<indexterm>configuration in RPC
-     pipelines</indexterm></indexterm>A set of RPC pipelines process data like a single pipeline:
-   The origin pipeline creates a batch, passes it through the pipeline, then passes it to the
-   destination pipeline. Only when the destination pipeline writes the batch to its destination
+  <p><indexterm>SDC RPC Pipelines<indexterm>delivery
+    guarantee</indexterm></indexterm><indexterm>delivery guarantee<indexterm>configuration in SDC
+     RPC pipelines</indexterm></indexterm>A set of SDC RPC pipelines process data like a single
+   pipeline: The origin pipeline creates a batch, passes it through the pipeline, then passes it to
+   the destination pipeline. Only when the destination pipeline writes the batch to its destination
    systems does the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> commit the
    offset. As with standard pipelines, you can use the delivery guarantee property to define how the
@@ -35,8 +35,8 @@
      of data. </li>
    </ul></p>
   <p>
-   <note>If the RPC pipelines are configured to use different delivery guarantees, the resulting
-        behavior is At Most Once.</note>
+   <note>If the SDC RPC pipelines are configured to use different delivery guarantees, the resulting
+    behavior is At Most Once.</note>
   </p>
  </conbody>
  <related-links>

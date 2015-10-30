@@ -108,5 +108,111 @@
     </tbody>
    </tgroup>
   </table>
+  <p>
+   <draft-comment author="Loretta">The following table is reused in configuring the Amazon S3 origin
+    and destination</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1*"/>
+     <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+     <thead>
+      <row>
+       <entry>File Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row id="S3-Region">
+       <entry>Region</entry>
+       <entry>Amazon S3 region. </entry>
+      </row>
+      <row id="S3AccessKeyId">
+       <entry>Access Key ID</entry>
+       <entry>Amazon S3 access key ID.</entry>
+      </row>
+      <row id="S3SecretAccessKey">
+       <entry>Secret Access Key</entry>
+       <entry>Amazon S3 secret access ID.</entry>
+      </row>
+      <row id="S3Bucket">
+       <entry>Bucket</entry>
+       <entry>Bucket where the data resides.</entry>
+      </row>
+      <row id="S3Folder">
+       <entry>Folder</entry>
+       <entry>Optional folder where the data resides. If used with a file name pattern, acts as a
+        root folder for the file name pattern and any directory included in the file name pattern.
+         <p>To read data from more than one folder, use glob patterns to represent the directory
+         structure in the file naming pattern. </p></entry>
+      </row>
+      <row id="S3ObjectPathDelimiter">
+       <entry>Object Path Delimiter</entry>
+       <entry>Delimiter used by Amazon S3 to define the directory structure.<p>Default is slash ( /
+         ).</p></entry>
+      </row>
+      <row>
+       <entry>File Name Pattern <xref href="../Origins/AmazonS3-Folder_FileNamePattern.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_tfr_bk5_ht"/>
+        </xref></entry>
+       <entry>
+        <p>Regular expression that describes the pattern of the file names to process. You can use
+         UNIX-style wildcards, such as * or ?. For example, *.log. </p>
+        <p>To process data in more than one folder, you can include the path to the files to be
+         processed and use wildcards to define glob patterns. </p>
+       </entry>
+      </row>
+      <row>
+       <entry>Buffer Limit (KB)</entry>
+       <entry>Maximum buffer size. The buffer size determines the size of the record that can be
+        processed. <p>Decrease when memory on the <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine
+         is limited. Increase to process larger records when memory is available. </p><p>Default is
+         64000.</p></entry>
+      </row>
+      <row>
+       <entry>Max Batch Size (records)</entry>
+       <entry>
+        <p>Number of records to pass through the pipeline at one time. Honors values up to the Data
+         Collector maximum batch size. </p>
+        <p>Default is 1000. The Data Collector default is 1000. </p>
+       </entry>
+      </row>
+      <row>
+       <entry>Batch Wait Time (ms) <xref href="../Origins/BatchSizeWaitTime.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+          id="image_rrh_3qw_rt"/></xref></entry>
+       <entry>
+        <p>Number of seconds to wait before sending a partial or empty batch. </p>
+       </entry>
+      </row>
+      <row id="S3DataFormat">
+       <entry>Data Format <xref href="../Origins/AmazonS3-DataFormat.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_w4w_q3p_ht"/>
+        </xref></entry>
+       <entry>Data format for source files. Use one of the following formats:<ul id="ul_y1t_wql_5q">
+         <li>Text</li>
+         <li>JSON</li>
+         <li>Log</li>
+         <li>Avro</li>
+         <li>Delimited</li>
+         <li>SDC Record <xref href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+           <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wjh_ycl_br"
+            placement="inline"/></xref></li>
+         <li>XML</li>
+        </ul></entry>
+      </row>
+      <row conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+       <entry/>
+      </row>
+      <row
+       conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+       <entry/>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
  </conbody>
 </concept>

@@ -20,14 +20,14 @@
   limitations under the License.
 --></head>
 <body onload="highlightSearchTerm()" class="frmBody"><script>
- (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
- ga('create', 'UA-67640002-1', 'auto');
- ga('send', 'pageview');
-
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
@@ -95,19 +95,20 @@
         
           <dt class="dt dlterm">Write to Another Pipeline</dt>
 
-          <dd class="dd">The pipeline writes error records to an RPC pipeline. The <span class="ph">Data
+          <dd class="dd">The pipeline writes error records to an SDC RPC pipeline. The <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
           <dd class="dd">When you write to another pipeline, the <span class="ph">Data
                   Collector</span>
-            effectively creates an RPC origin pipeline to pass the error records to another
+            effectively creates an SDC RPC origin pipeline to pass the error records to another
             pipeline. </dd>
 
-          <dd class="dd">You need to create an RPC destination pipeline to process the error records. The
-            pipeline must include an RPC origin configured to read error records from this pipeline. </dd>
+          <dd class="dd">You need to create an SDC RPC destination pipeline to process the error records. The
+            pipeline must include an SDC RPC origin configured to read error records from this
+            pipeline. </dd>
 
-          <dd class="dd">For more information about RPC pipelines, see <a class="xref" href="../RPC_Pipelines/RPCpipeline.html#concept_lnh_z3z_bt" title="Remote Protocol Call pipelines, a.k.a. RPC pipelines, are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system.">RPC Pipelines</a>.</dd>
+          <dd class="dd">For more information about SDC RPC pipelines, see <a class="xref" href="../RPC_Pipelines/SDC_RPCpipeline.html#concept_lnh_z3z_bt" title="Data Collector Remote Protocol Call pipelines, a.k.a. SDC RPC pipelines, are a set of StreamSets pipelines that pass data from one pipeline to another without writing to an intermediary system.">SDC RPC Pipelines</a>.</dd>
 
         
         

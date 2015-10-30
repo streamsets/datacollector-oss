@@ -179,9 +179,9 @@
                                             <li>Write to File - Writes error records to a file in
                                                 the specified directory. </li>
                                             <li>Write to Another Pipeline - Writes error records to
-                                                an RPC destination pipeline.<p>Requires an RPC
-                                                  destination pipeline to process the error records.
-                                                </p></li>
+                                                another  pipeline. To use this option, you need an
+                                                SDC RPC destination pipeline to process the error
+                                                records. </li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
                                         </ul><p>For cluster mode, Write to File is not supported at
@@ -305,7 +305,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When writing error records to an RPC pipeline, click the <wintitle>Error
+                <cmd>When writing error records to an SDC RPC pipeline, click the <wintitle>Error
                         Records - Write to Another Pipeline</wintitle> tab and configure the
                     following properties:</cmd>
                 <info>

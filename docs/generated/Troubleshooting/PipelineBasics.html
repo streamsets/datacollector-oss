@@ -20,14 +20,14 @@
   limitations under the License.
 --></head>
 <body onload="highlightSearchTerm()" class="frmBody"><script>
- (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
- ga('create', 'UA-67640002-1', 'auto');
- ga('send', 'pageview');
-
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting">Troubleshooting</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Troubleshooting/Troubleshooting_title.html" title="Troubleshooting"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Troubleshooting</span></a></span>  </div></td></tr></tbody></table>
@@ -156,6 +156,52 @@
 
         
    </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ydy_pj5_vt">
+ <h2 class="title topictitle2">General Validation Errors</h2>
+
+ <div class="body conbody">
+  <div class="p">Use the
+            following tips for help with general pipeline validation errors:<dl class="dl">
+                
+                    <dt class="dt dlterm">The pipeline has the following set of validation errors for a stage:</dt>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">CONTAINER_0901 - Could not find stage definition for &lt;stage library name&gt;:&lt;stage name&gt;.
+CREATION_006 - Stage definition not found. Library &lt;stage library name&gt;. Stage &lt;stage name&gt;. 
+Version &lt;version&gt;
+VALIDATION_0006 - Stage definition does not exist, library &lt;stage library name&gt;, 
+name &lt;stage name&gt;, version &lt;version&gt;</pre>
+
+                    </dd>
+
+                    <dd class="dd">The pipeline uses a stage that is not installed on the <span class="ph">Data
+                  Collector</span>. This might happen if you imported a pipeline from a different version of
+                        the <span class="ph">Data
+                  Collector</span> and the current <span class="ph">Data
+                  Collector</span> is not enabled to use the stage. </dd>
+
+                    <dd class="dd">If the <span class="ph">Data
+                  Collector</span> uses a different version of the stage, you might delete the invalid
+                        version and replace it with a local valid version. For example, if the
+                        pipeline uses an older version of the Hadoop FS destination, you might
+                        replace it with a version used by this <span class="ph">Data
+                  Collector</span>. </dd>
+
+                    <dd class="dd">If you need to use a stage that is not installed on the <span class="ph">Data
+                  Collector</span>, install the related stage library. For more information, see &lt;create
+                        cross ref&gt;. </dd>
+
+                    <dd class="dd">If the unavailable stage is a custom stage, you might have upgraded the <span class="ph">Data
+                  Collector</span> after creating the pipeline and neglected to reinstall the custom stage.
+                            </dd>
+
+                
+            </dl>
 </div>
 
  </div>

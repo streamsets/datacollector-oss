@@ -30,7 +30,7 @@
                 path depends on the complexity of the record: <codeph>/&lt;fieldname></codeph> for
                 simple records and <codeph>&lt;path to field>/&lt;fieldname></codeph> for more
                 complex records.  </p>
-            <p>When you import Delimited data as List-Map, you can use
+            <p>Because we're using the List-Map record type to for the delimited data, we can use
                     <codeph>/&lt;fieldname></codeph>. </p>
             <p>To start data preview, all stages must be connected and all required fields filled
                 (though not necessarily correctly). Since the origin is configured and the only
@@ -98,10 +98,13 @@
                     ordered list of field names and values with the data type of each field.
                         <p>Because the data is read from a file, all fields are strings.</p><p>Note
                         that in the Preview panel, the preview records display on the
-                            <wintitle>Records</wintitle> tab. You can click the <wintitle>Client
-                            Configuration </wintitle>tab to review or change properties. You can
-                        click the <wintitle>Preview Configuration</wintitle> tab to change preview
-                        properties.</p></stepresult>
+                            <wintitle>Records</wintitle> tab. You can click the <wintitle>Stage
+                            Configuration</wintitle> tab to review or change properties: <image
+                            href="../Graphics/icon_PrevStageConfig.png" id="image_gf2_kx1_tt"
+                            scale="80"/>You can click the <wintitle>Preview Configuration</wintitle>
+                        tab to change preview properties: <image
+                            href="../Graphics/icon_PrevPreviewConfig.png" id="image_a3l_mx1_tt"
+                            scale="80"/>.</p></stepresult>
             </step>
             <step>
                 <cmd>For a full view of the data, click the <uicontrol>Table View</uicontrol> icon:
@@ -124,8 +127,8 @@
             </step>
         </steps>
         <result>Now we know the following: <ul id="ul_glg_yj1_mt">
-                <li>Payment type information is in the payment_type field.</li>
-                <li>Credit card information is in the credit_card field.</li>
+                <li>Payment type information is in the payment_type field and credit card
+                    information is in the credit_card field.</li>
                 <li>To use these fields in expressions, we'll use their field paths: /payment_type
                     and /credit_card. </li>
                 <li>To route records paid by credit card, we'll look for records where the

@@ -20,7 +20,7 @@
         formats</indexterm></indexterm><indexterm>data formats<indexterm>Kafka Producer
           destinations</indexterm></indexterm>Kafka Producer writes data to Kafka based on the data
       format that you select. You can use the following data formats:<dl
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-dest">
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormats">
         <dlentry>
           <dt/>
           <dd/>
@@ -41,9 +41,10 @@
             Omitting the schema definition can improve performance, but requires the appropriate
             schema management to avoid losing track of the schema associated with the data.</dd>
         </dlentry>
-        <dlentry>
-          <dt>Binary</dt>
-          <dd>The destination writes binary data from a single field in the record. </dd>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormat-Binary">
+          <dt/>
+          <dd/>
         </dlentry>
       </dl></p>
  </conbody>

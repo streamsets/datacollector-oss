@@ -20,6 +20,7 @@
  <conbody>
   <p><indexterm>destinations<indexterm>overview</indexterm></indexterm>You can use the following
       types of destinations in a pipeline: <ul id="ul_mxz_jxm_jq">
+        <li>Amazon S3 - Writes data to Amazon S3. </li>
         <li>Cassandra - Writes data to a Cassandra cluster.</li>
         <li>Elasticsearch - Writes data to an Elasticsearch cluster.</li>
         <li>Flume - Writes data to a Flume source.</li>
@@ -29,7 +30,7 @@
         <li>JDBC Producer - Writes data to JDBC.</li>
         <li>Kafka Producer - Writes data to a Kafka cluster.</li>
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
-        <li>RPC - Passes data to an RPC origin in an RPC pipeline.</li>
+        <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>
         <li>Trash - Removes records from the pipeline.</li>

@@ -334,7 +334,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_igl_bq2_2t">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -413,7 +413,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.85*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Delimited Property</entry>
@@ -969,80 +969,28 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>DelimProps:</uicontrol> Use for the
-                        appropriate delimited destinations - currently Flume, Hadoop FS and Kafka
-                        Producer:</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>D-Binary</uicontrol> - Used by Kafka
+                        Consumer and Amazon S3 dest.</draft-comment>
                 </cmd>
             </step>
-            <step id="DelimProps">
-                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
-                    the following properties:</cmd>
+            <step id="D-Binary">
+                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                    following property:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
+                    <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Delimited Property</entry>
+                                    <entry>Binary Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Delimiter Format</entry>
-                                    <entry>Format for delimited data:<ul
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
-                                            id="ul_k3j_vvf_jr">
-                                            <li/>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Header Line</entry>
-                                    <entry>Indicates whether to create a header line.</entry>
-                                </row>
-                                <row>
-                                    <entry>Remove New Line Characters</entry>
-                                    <entry>Removes new line characters from within a record.
-                                            <p>Recommended when writing data as a single line of
-                                            text.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in
-                        KProducer.</draft-comment>
-                </cmd>
-            </step>
-            <step id="D-AVRO-Mess">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Avro Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Avro Schema</entry>
-                                    <entry>Schema definition to use when writing data. </entry>
-                                </row>
-                                <row>
-                                    <entry>Include Schema</entry>
-                                    <entry>Includes the schema in each message. <note>Omitting the
-                                            schema definition can improve performance, but requires
-                                            the appropriate schema management to avoid losing track
-                                            of the schema associated with the data.</note></entry>
+                                    <entry>Binary Field Path</entry>
+                                    <entry>Field that contains the binary data.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1088,8 +1036,122 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-File</uicontrol> - used in
+                        Hadoop FS and Amazon S3.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-File">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. The
+                                        destination includes the schema definition in each generated
+                                        file. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>D-AVRO-Mess</uicontrol> - Used in
+                        KProducer.</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-AVRO-Mess">
+                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Schema definition to use when writing data. </entry>
+                                </row>
+                                <row>
+                                    <entry>Include Schema</entry>
+                                    <entry>Includes the schema in each message. <note>Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</note></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>DelimProps:</uicontrol> Use for the
+                        appropriate delimited destinations - currently Flume, Hadoop FS and Kafka
+                        Producer:</draft-comment>
+                </cmd>
+            </step>
+            <step id="DelimProps">
+                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Delimiter Format</entry>
+                                    <entry>Format for delimited data:<ul
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul_delFileTypes"
+                                            id="ul_k3j_vvf_jr">
+                                            <li/>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>Indicates whether to create a header line.</entry>
+                                </row>
+                                <row>
+                                    <entry>Remove New Line Characters</entry>
+                                    <entry>Removes new line characters from within a record.
+                                            <p>Recommended when writing data as a single line of
+                                            text.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>JSONProps</uicontrol> - Used for
-                        Hadoop FS and Kafka Producer, like Delimited, above. </draft-comment>
+                        Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
                 </cmd>
             </step>
             <step id="JSONProps">
@@ -1127,7 +1189,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>TextProps</uicontrol> - Using for
-                        Hadoop FS and Kafka Producer.</draft-comment>
+                        Hadoop FS, Kafka Producer, and Amazon S3.</draft-comment>
                 </cmd>
             </step>
             <step id="TextProps">
@@ -1318,19 +1380,19 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bb2_k4b_ft"
                                         /></xref></entry>
-                                    <entry>Connection information for the RPC destination pipeline
-                                        to continue processing data. Use the following format:
+                                    <entry>Connection information for the destination pipeline to
+                                        continue processing data. Use the following format:
                                             <codeph>&lt;host>:&lt;port></codeph>. <p>Use a single
                                             RPC connection for each destination pipeline. Add
                                             additional connections as needed.</p><p>Use the port
-                                            number when you configure the RPC origin that receives
-                                            the data.</p></entry>
+                                            number when you configure the SDC RPC origin that
+                                            receives the data.</p></entry>
                                 </row>
                                 <row id="row-RPCID">
                                     <entry>RPC ID</entry>
                                     <entry>User-defined ID to allow the destination to pass data to
-                                        an RPC origin. Use this ID in all RPC origins to process
-                                        data from the destination.</entry>
+                                        an SDC RPC origin. Use this ID in all SDC RPC origins to
+                                        process data from the destination.</entry>
                                 </row>
                                 <row id="row-SSLenabled">
                                     <entry>SSL Enabled <xref href="../RPC_Pipelines/EnableSSL.dita">
@@ -1338,8 +1400,8 @@
                                                 placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
                                     <entry>Enables the secure transfer of data using SSL. <p>To use
-                                            SSL, both the RPC origin and RPC destination must be
-                                            enabled for SSL.</p></entry>
+                                            SSL, both the SDC RPC origin and SDC RPC destination
+                                            must be enabled for SSL.</p></entry>
                                 </row>
                                 <row id="row-TrustStore">
                                     <entry>Truststore File</entry>
@@ -1355,7 +1417,7 @@
                                 </row>
                                 <row id="row-verifyHost">
                                     <entry>Verify Host in Server Certificate</entry>
-                                    <entry>Verifies the host in the RPC origin keystore
+                                    <entry>Verifies the host in the SDC RPC origin keystore
                                         file.</entry>
                                 </row>
                             </tbody>
@@ -1365,8 +1427,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">RPCdestAdv - Used in RPC destination &amp;
-                        pipeline error config - write to pipeline.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>RPCdestAdv </uicontrol>- Used in RPC
+                        destination &amp; pipeline error config - write to pipeline.</draft-comment>
                 </cmd>
             </step>
             <step id="RPCadv">
@@ -1375,7 +1437,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_mhd_nd1_ft">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1387,20 +1449,20 @@
                                 <row id="row-RetriesBatch">
                                     <entry>Retries Per Batch</entry>
                                     <entry>Number of times the destination tries to write a batch to
-                                        the RPC origin. <p>When the destination cannot write the
+                                        the SDC RPC origin. <p>When the destination cannot write the
                                             batch within the configured number of retries, it fails
                                             the batch.</p><p>Default is 3.</p></entry>
                                 </row>
                                 <row id="row-ConTimeout">
                                     <entry>Connection Timeout (ms)</entry>
-                                    <entry>Milliseconds to establish a connection to the RPC origin.
-                                            <p>The destination retries the connection based on the
-                                            Retries Per Batch property.</p><p>Default is 5000
+                                    <entry>Milliseconds to establish a connection to the SDC RPC
+                                        origin. <p>The destination retries the connection based on
+                                            the Retries Per Batch property.</p><p>Default is 5000
                                             milliseconds.</p></entry>
                                 </row>
                                 <row id="row-ReadTimeout">
                                     <entry>Read Timeout (ms)</entry>
-                                    <entry>Milliseconds to wait for the RPC origin to read data
+                                    <entry>Milliseconds to wait for the SDC RPC origin to read data
                                         from a batch. <p>The destination retries the write based on
                                             the Retries Per Batch property.</p><p>Default is 2000
                                             milliseconds.</p></entry>
@@ -1408,7 +1470,7 @@
                                 <row id="row-UseCompression">
                                     <entry>Use Compression</entry>
                                     <entry>Enables the destination to use compression to pass data
-                                        to the RPC origin. Enabled by default. </entry>
+                                        to the SDC RPC origin. Enabled by default. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

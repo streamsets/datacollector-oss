@@ -108,7 +108,7 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/Omniture-Configuring.dita"/>
   </topicref>
-  <topicref href="../Origins/RPCorigin.dita" chunk="to-content">
+  <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/RPCorigin-Configuring.dita"/>
   </topicref>

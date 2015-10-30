@@ -16,10 +16,11 @@
 <concept id="concept_bs4_5nm_2s">
  <title>Runtime Resources</title>
  <shortdesc>Similar to runtime properties, runtime resources are values that you define in a file
-    local to the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> and call from within a pipeline. But with runtime resources, you can restrict the permissions
-    for the files to secure sensitive information. Use runtime properties to load sensitive
-    information from files at runtime.</shortdesc>
+        local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
+        call from within pipeline. But with runtime resources, you can restrict the permissions for
+        the files to secure sensitive information. Use runtime properties to load sensitive
+        information from files at runtime.</shortdesc>
  <conbody>
   <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>You can use runtime
       resources for any pipeline property that allows the use of the expression language. You can,
@@ -27,7 +28,7 @@
       authentication information. </p>
   <p>To implement runtime resources, perform the following steps: <ol id="ol_jzr_4sm_2s">
     <li>Define each runtime resource. </li>
-    <li>Use the runtime resource in the pipeline.</li>
+    <li>Use an expression in the pipeline to call a runtime resource.</li>
    </ol></p>
  </conbody>
 </concept>

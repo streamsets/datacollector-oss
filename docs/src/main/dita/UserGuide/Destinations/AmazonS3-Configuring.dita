@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_pxb_j3r_rt">
+    <title>Configuring an Amazon S3 Destination</title>
+    <taskbody>
+        <context><indexterm>Amazon S3
+            destination<indexterm>configuring</indexterm></indexterm>Configure an Amazon S3
+            destination to write files to Amazon S3.</context>
+        <steps id="steps_tzg_m3r_rt">
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">
+                <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Amazon S3</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fbj_bkw_rt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Amazon S3 Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3AccessKeyId">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Bucket</entry>
+                                    <entry>Bucket containing the folder to write to.</entry>
+                                </row>
+                                <row>
+                                    <entry>Foldre</entry>
+                                    <entry>Folder or directory to write to.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3ObjectPathDelimiter">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>File Name Prefix</entry>
+                                    <entry>Defines a prefix for output files. By default, file names
+                                        are prefixed by "sdc".</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format <xref
+                                            href="../Destinations/AmazonS3-DataFormat.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w4w_q3p_ht"/>
+                                        </xref></entry>
+                                    <entry>Data format to write data: <ul id="ul_lw1_2kx_rt">
+                                            <li>Text</li>
+                                            <li>JSON</li>
+                                            <li>Avro</li>
+                                            <li>Delimited</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_wjh_ycl_br"
+                                                  placement="inline"/></xref></li>
+                                            <li>Binary</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Charset</entry>
+                                    <entry>Character set to use when writing data.</entry>
+                                </row>
+                                <row>
+                                    <entry>Compress with Gzip</entry>
+                                    <entry>Compresses files before writing to Amazon S3.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure information to
+                    use a proxy:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ayn_lb1_tt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Use Proxy</entry>
+                                    <entry>Select to use a proxy server for Amazon S3.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Host</entry>
+                                    <entry>Proxy host.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Port</entry>
+                                    <entry>Proxy port. </entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy User</entry>
+                                    <entry>User name for the proxy.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Password</entry>
+                                    <entry>Password for the user name.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
+                <cmd/>
+            </step>
+        </steps>
+    </taskbody>
+</task>

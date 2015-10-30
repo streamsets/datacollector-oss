@@ -129,9 +129,10 @@
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>This defines a prefix for error record files. <p
+                                    <entry>This defines a prefix for error record files. Delete the
+                                        default and enter "err_".<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
-                                            /><p>Delete the default and enter "err_".</p></entry>
+                                        /></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>

@@ -20,7 +20,12 @@
    to define a runtime resources:<ol id="ol_j2q_ftm_2s">
     <li>For each resource, create a text file and save it in the following
             directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one
-            piece of information to be used when the resource is called.</p></li>
+            piece of information to be used when the resource is called. </p><note>When you call a
+            runtime resource, the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            replaces the expression with the entire contents of the file. Avoid including
+            unnecessary characters such as spaces or carriage returns. </note><p>Many text editors
+            add additional characters by default. <draft-comment author="Loretta"/></p></li>
     <li>Optionally, restrict the permissions for the file. <p>Generally, anyone can read a file. To
             restrict permissions, configure the file so only the owner has read or write permissions
             for the file - in octals, that's 600 or 400. And the owner must be the system user that

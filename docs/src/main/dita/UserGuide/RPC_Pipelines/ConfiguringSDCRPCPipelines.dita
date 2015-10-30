@@ -14,11 +14,11 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_mhl_1jc_dt">
- <title>Configuration Guidelines for RPC Pipelines</title>
+ <title>Configuration Guidelines for SDC RPC Pipelines</title>
  <conbody>
   <p><indexterm>RPC pipelines<indexterm>configuration guidelines</indexterm></indexterm>To create a
-   valid set of RPC pipelines, some configuration options must be aligned. Use the following
-   guidelines to configure RPC pipelines:</p>
+      valid set of SDC RPC pipelines, some configuration options must be aligned. Use the following
+      guidelines to configure SDC RPC pipelines:</p>
   <p>
    <dl>
     <dlentry>
@@ -26,10 +26,10 @@
      <dd>In the origin pipeline, configure the following elements:<ol id="ol_wkt_rrc_dt">
        <li>In the pipeline properties, set the Delivery Guarantee to the option you want to
         use.</li>
-       <li>In the pipeline, use the RPC destination.</li>
-       <li>When you configure the RPC destination, enter the RPC ID and RPC connection information.
-                  <p>To use multiple destination pipelines, enter the RPC connection information for
-                  each RPC origin that you want to use. </p></li>
+       <li>In the pipeline, use the SDC RPC destination.</li>
+       <li>When you configure the SDC RPC destination, enter the RPC ID and RPC connection
+                information. <p>To use multiple destination pipelines, enter the RPC connection
+                  information for each SDC RPC origin that you want to use. </p></li>
               <li>To use SSL to transfer data between the pipelines, enable SSL and configure
                 related properties.</li>
       </ol></dd>
@@ -41,12 +41,12 @@
                 origin pipeline. Using a different option causes the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 to default to At Most Once behavior.</li>
-              <li>In the pipeline, use the RPC origin.</li>
-              <li>When you configure the RPC origin, define the properties as follows:<ul
+              <li>In the pipeline, use the SDC RPC origin.</li>
+              <li>When you configure the SDC RPC origin, define the properties as follows:<ul
                   id="ul_ihl_zvw_dt">
-                  <li>Use the same RPC ID used in the RPC destination.</li>
+                  <li>Use the same RPC ID used in the SDC RPC destination.</li>
                   <li>For the RPC Listening Port, enter the appropriate port number. <p>It should be
-                      a port number specified in one of the RPC connections in the RPC
+                      a port number specified in one of the RPC connections in the SDC RPC
                       destination.</p></li>
                   <li>To use SSL to transfer data between the pipelines, enable SSL and configure
                     related properties.</li>

@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dgf_kkc_dt">
  <title>Defining the RPC ID</title>
- <shortdesc>The RPC ID is a user-defined identifier that allows an RPC origin and RPC destination to
-      recognize each other. </shortdesc>
+ <shortdesc>The RPC ID is a user-defined identifier that allows an SDC RPC origin and SDC RPC
+        destination to recognize each other. </shortdesc>
  <conbody>
-  <p><indexterm>RPC pipelines<indexterm>RPC ID</indexterm></indexterm><indexterm>RPC ID<indexterm>in
-                    RPC origins and destinations</indexterm></indexterm>To enable the RPC
-            destination to write directly to an RPC origin, use the same RPC ID in both stages. </p>
-      <p>To write to multiple pipelines, use the RPC ID in the RPC destination and all RPC
-         origins.</p>
+  <p><indexterm>SDC RPC pipelines<indexterm>RPC ID</indexterm></indexterm><indexterm>RPC
+                    ID<indexterm>in SDC RPC origins and destinations</indexterm></indexterm>To
+            enable the SDC RPC destination to write directly to an SDC RPC origin, use the same RPC
+            ID in both stages. </p>
+      <p>To write to multiple pipelines, use the RPC ID in the SDC RPC destination and all related
+            SDC RPC origins.</p>
  </conbody>
 </concept>

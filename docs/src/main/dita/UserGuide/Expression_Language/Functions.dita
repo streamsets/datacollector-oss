@@ -19,8 +19,9 @@
   <p><indexterm>expression
      language<indexterm>functions</indexterm></indexterm><indexterm>functions<indexterm>in the
      expression language</indexterm></indexterm>The following table lists all available functions.
-   For details about each function, see the related function type:<table frame="all" rowsep="1"
-    colsep="1" id="table_ocf_112_gs">
+   For details about each function, see the related function type:</p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_ocf_112_gs">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
      <colspec colname="c2" colnum="2" colwidth="2.2*"/>
@@ -114,6 +115,7 @@
       </row>
      </tbody>
     </tgroup>
-   </table></p>
+   </table>
+  </p>
  </conbody>
 </concept>

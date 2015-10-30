@@ -21,6 +21,13 @@
     <shortdesc/>
    </topicmeta>
   </topicref>
+  <topicref href="../Destinations/AmazonS3.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/AmazonS3-DataFormat.dita"/>
+   <topicref href="../Destinations/AmazonS3-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/Cassandra.dita" chunk="to-content">
    <topicmeta>
    <shortdesc/>
@@ -97,7 +104,7 @@
   </topicmeta>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/RPCdest.dita" chunk="to-content"> 
+  <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>
   </topicmeta>
