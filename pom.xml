@@ -190,7 +190,7 @@
             <exclude>**/*.json</exclude>
             <exclude>**/*.log</exclude>
             <exclude>**/*.html</exclude>
-            <exclude>commonlib/src/main/resources/*</exclude>
+            <exclude>common/src/main/resources/*</exclude>
 
             <!-- TestOverrunStreamingXmlParser relies on this file being small, cannot add license header -->
             <exclude>common/src/test/resources/TestStreamingXmlParser-records.xml</exclude>

@@ -19,10 +19,12 @@
  */
 package com.streamsets.datacollector.websockets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
-
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.apache.commons.io.input.TailerListenerAdapter;
@@ -34,6 +36,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LogMessageWebSocket extends WebSocketAdapter {
@@ -48,11 +52,14 @@ public class LogMessageWebSocket extends WebSocketAdapter {
   private String logFile;
   private Tailer tailer = null;
 
+  private final Grok logFileGrok;
+
   public LogMessageWebSocket(Configuration config, RuntimeInfo runtimeInfo) {
     this.config = config;
     try {
       logFile = LogUtils.getLogFile(runtimeInfo);
-    } catch (IOException ex) {
+      logFileGrok = LogUtils.getLogGrok(runtimeInfo);
+    } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
@@ -75,7 +82,17 @@ public class LogMessageWebSocket extends WebSocketAdapter {
       @Override
       public void handle(String line) {
         try {
-          session.getRemote().sendString(line);
+          Map<String, String> namedGroupToValuesMap = logFileGrok.extractNamedGroups(line);
+
+          if(namedGroupToValuesMap == null) {
+            namedGroupToValuesMap = new HashMap<>();
+            namedGroupToValuesMap.put("exceptionMessagePart", line);
+          }
+
+          ObjectMapper objectMapper = ObjectMapperFactory.get();
+          String logDataJson = objectMapper.writer().writeValueAsString(namedGroupToValuesMap);
+          session.getRemote().sendString(logDataJson);
+
         } catch (IOException ex) {
           LOG.warn("Error while sending log line through WebSocket message, {}", ex.toString(), ex);
         }

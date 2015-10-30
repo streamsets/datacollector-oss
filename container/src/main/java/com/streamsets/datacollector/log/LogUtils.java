@@ -22,6 +22,11 @@ package com.streamsets.datacollector.log;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.lib.parser.log.Log4jHelper;
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util.Grok;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +37,9 @@ import java.util.Properties;
 public class LogUtils {
   public static final String LOG4J_FILE_ATTR = "log4j.filename";
   public static final String LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY = "log4j.appender.streamsets.File";
+  public static final String LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN =
+      "log4j.appender.streamsets.layout.ConversionPattern";
+  public static final String LOG4J_GROK_ATTR = "log4j.grok";
 
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
     if(Boolean.getBoolean("sdc.transient-env")) {
@@ -78,6 +86,35 @@ public class LogUtils {
       }
     }
     return logFile;
+  }
+
+  public static Grok getLogGrok(RuntimeInfo runtimeInfo) throws IOException, DataParserException {
+    Grok logFileGrok = runtimeInfo.getAttribute(LOG4J_GROK_ATTR);
+    if(logFileGrok == null) {
+      URL log4jConfig = runtimeInfo.getAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR);
+      if (log4jConfig != null) {
+        try (InputStream is = log4jConfig.openStream()) {
+          Properties props = new Properties();
+          props.load(is);
+          String logPattern = props.getProperty(LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN);
+          if(logPattern != null) {
+            String grokPattern = Log4jHelper.translateLog4jLayoutToGrok(logPattern);
+            GrokDictionary grokDictionary = new GrokDictionary();
+            grokDictionary.addDictionary(LogUtils.class.getClassLoader().
+                getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
+            grokDictionary.addDictionary(LogUtils.class.getClassLoader().getResourceAsStream(
+                Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
+            grokDictionary.bind();
+            logFileGrok = grokDictionary.compileExpression(grokPattern);
+            runtimeInfo.setAttribute(LOG4J_GROK_ATTR, logFileGrok);
+          }
+        }
+      } else {
+        throw new IOException(Utils.format("RuntimeInfo does not has attribute '{}'",
+            RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR));
+      }
+    }
+    return logFileGrok;
   }
 
   @VisibleForTesting

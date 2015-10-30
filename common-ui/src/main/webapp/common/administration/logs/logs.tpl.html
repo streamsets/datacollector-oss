@@ -5,9 +5,92 @@
       <h3 translate="logs.title">Logs</h3>
     </div>
 
+
+    <div class="pull-left filter-toolbar">
+
+      <span class="sort-by-label">Severity:</span>
+      <div class="btn-group severity-dropdown">
+
+        <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
+          <span ng-if="!filterSeverity" translate="logs.all">All</span>
+          <span ng-if="filterSeverity">{{filterSeverity}}</span>
+        </button>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="severityFilterChanged(undefined);">
+              <span translate="logs.all">All</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="severityFilterChanged('INFO');">
+              <span>INFO</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="severityFilterChanged('DEBUG');">
+              <span>DEBUG</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="severityFilterChanged('WARN');">
+              <span>WARN</span>
+            </a>
+          </li>
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="severityFilterChanged('ERROR');">
+              <span>ERROR</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+
+      <span class="sort-by-label">Pipeline:</span>
+      <div class="btn-group pipeline-dropdown">
+
+        <button class="btn btn-link dropdown-toggle icon-button" type="button" data-toggle="dropdown">
+          <span ng-if="!filterPipeline" translate="logs.all">All</span>
+          <span ng-if="filterPipeline">{{filterPipeline}}</span>
+        </button>
+
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+          <li role="presentation">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="pipelineFilterChanged(undefined);">
+              <span translate="logs.all">All</span>
+            </a>
+          </li>
+
+
+          <li role="presentation" ng-repeat="pipeline in pipelines">
+            <a role="menuitem" tabindex="-1" href="#"
+               ng-click="pipelineFilterChanged(pipeline.name);">
+              <span>{{pipeline.name}}</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+
     <div class="pull-right">
+
       <button type="button"
-              ng-if="logMessages.length && logEndingOffset !== 0"
+              ng-if="logEndingOffset !== 0"
               class="btn btn-primary btn-sm"
               ng-disabled="fetchingLog"
               ng-click="loadPreviousLog()">
@@ -38,10 +121,45 @@
 
   </div>
 
-  <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
-    <div class="log-message">
-      <span ng-repeat="logMessage in logMessages">{{logMessage}}</span>
-    </div>
-    <pre ng-if="!logMessages || logMessages.length === 0">{{'logs.emptyMessage' | translate}}</pre>
+  <div class="panel-body"
+       ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
+    <table class="table log-table">
+      <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Pipeline</th>
+        <th>Severity</th>
+        <th>Message</th>
+        <th>Category</th>
+        <th>User</th>
+        <th>Thread</th>
+      </tr>
+      </thead>
+
+      <tbody>
+
+      <tr ng-if="logMessages.length && logEndingOffset !== 0">
+        <td colspan="7"> ........................................................................................................................................................................................................................................................................................</td>
+      </tr>
+
+      <tr ng-repeat-start="logMessage in logMessages track by $index" scroll-to-bottom="logMessages">
+        <td>{{logMessage.timestamp}}</td>
+        <td>{{logMessage['s-entity']}}</td>
+        <td>{{logMessage.severity}}</td>
+        <td>{{logMessage.message}}</td>
+        <td>{{logMessage.category}}</td>
+        <td>{{logMessage['s-user']}}</td>
+        <td>{{logMessage.thread}}</td>
+      </tr>
+
+      <tr ng-repeat-end ng-if="logMessage.exception">
+        <td colspan="7">
+          <div class="log-exception">
+            <span>{{logMessage.exception}}</span>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </div>

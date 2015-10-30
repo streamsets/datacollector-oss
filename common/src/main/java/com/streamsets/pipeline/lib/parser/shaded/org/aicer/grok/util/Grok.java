@@ -15,13 +15,12 @@
  */
 package com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.util;
 
-import java.util.Map;
-
-import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
-
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.MatchResult;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Matcher;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
+
+import java.util.Map;
 
 /**
  *

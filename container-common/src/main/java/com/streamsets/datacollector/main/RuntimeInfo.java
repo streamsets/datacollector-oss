@@ -25,9 +25,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.io.File;
 
 public class RuntimeInfo {
   public static final String SPLITTER = "|";
@@ -280,5 +279,4 @@ public class RuntimeInfo {
   public String getClusterCallbackURL() {
     return getBaseHttpUrl() + CALLBACK_URL;
   }
-
 }

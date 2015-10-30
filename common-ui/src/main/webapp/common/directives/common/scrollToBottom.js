@@ -18,54 +18,22 @@
  * limitations under the License.
  */
 
-@pre-bg:                    #f5f5f5;
-@pre-color:                 #333;
-@pre-border-color:          #ccc;
-@border-radius-base:        4px;
+/**
+ * Directive for scroll to bottom
+ */
 
-.logs-page {
-  .panel-heading {
-
-    .panel-title {
-      h3 {
-        padding-top: 3px;
+angular.module('dataCollectorApp.commonDirectives')
+  .directive('scrollToBottom', function () {
+    return {
+      scope: {
+        scrollBottom: "="
+      },
+      link: function (scope, element) {
+        scope.$watchCollection('scrollBottom', function (newValue) {
+          if (newValue) {
+            $(element).scrollTop($(element)[0].scrollHeight);
+          }
+        });
       }
-    }
-
-    .filter-toolbar {
-      padding-left: @defaultPadding * 6;
-      margin-top: 0;
-      margin-bottom: 0;
-      font-size: 16px;
-
-      .severity-dropdown {
-        min-width: 80px;
-      }
-
-    }
-
-    .download-btn-group {
-      padding-left: @defaultPadding;
-    }
-
-  }
-
-
-  .panel-body {
-    overflow: auto;
-    .log-table {
-      white-space: nowrap;
-
-
-      .log-exception {
-        word-wrap: normal;
-        span {
-          display: inline-block;
-          white-space: pre;
-          padding-left: 50px;
-        }
-      }
-
-    }
-  }
-}
+    };
+  });

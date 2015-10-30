@@ -504,6 +504,7 @@
     "settingsTitle": "JVM Metrics Settings"
   },
   "logs": {
+    "all": "All",
     "download": "Download",
     "emptyMessage": "Loading Logs...",
     "loadPreviousLog": "Load Previous Logs",

@@ -37,8 +37,21 @@ angular.module('dataCollectorApp.common')
        *
        * @param endingOffset
        */
-      getCurrentLog: function(endingOffset) {
+      getCurrentLog: function(endingOffset, extraMessage, filterPipeline, filterSeverity) {
         var url = apiBase + '/system/logs?endingOffset=' +  (endingOffset ? endingOffset : '-1');
+
+        if(extraMessage) {
+          url += '&extraMessage=' + extraMessage;
+        }
+
+        if(filterPipeline) {
+          url += '&pipeline=' + filterPipeline;
+         }
+
+        if(filterSeverity) {
+          url += '&severity=' + filterSeverity;
+        }
+
         return $http({
           method: 'GET',
           url: url
