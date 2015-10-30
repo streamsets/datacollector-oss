@@ -31,6 +31,8 @@ public enum DataFormatErrors implements ErrorCode {
   DATA_FORMAT_04("Unsupported data format '{}'"),
   DATA_FORMAT_05("Unsupported charset '{}'"),
   DATA_FORMAT_06("Cannot create the parser factory: {}"),
+  DATA_FORMAT_07(".proto file location must be specified"),
+  DATA_FORMAT_08("Message type must be specified"),
 
   DATA_FORMAT_200("Field cannot be empty"),
   DATA_FORMAT_201("Cannot create the parser factory: {}"),

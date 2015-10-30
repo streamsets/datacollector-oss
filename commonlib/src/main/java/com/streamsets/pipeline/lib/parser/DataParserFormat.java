@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.parser.binary.BinaryDataParserFactory;
 import com.streamsets.pipeline.lib.parser.delimited.DelimitedDataParserFactory;
 import com.streamsets.pipeline.lib.parser.json.JsonDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
+import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.sdcrecord.SdcRecordDataParserFactory;
 import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
@@ -46,6 +47,7 @@ public enum DataParserFormat implements DataFormat<DataParserFactory> {
   LOG(LogDataParserFactory.class, LogDataParserFactory.MODES, LogDataParserFactory.CONFIGS),
   AVRO(AvroDataParserFactory.class, AvroDataParserFactory.MODES, AvroDataParserFactory.CONFIGS),
   BINARY(BinaryDataParserFactory.class, BinaryDataParserFactory.MODES, BinaryDataParserFactory.CONFIGS),
+  PROTOBUF(ProtobufDataParserFactory.class, ProtobufDataParserFactory.MODES, ProtobufDataParserFactory.CONFIGS),
 
   ;
 

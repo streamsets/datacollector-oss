@@ -1,0 +1,41 @@
+package util;
+
+import "Person.proto";
+import "Engineer.proto";
+import "Executive.proto";
+import "Employee.proto";
+
+option java_package = "com.streamsets.pipeline.lib.util";
+option java_outer_classname = "ExtensionsProto";
+
+message PersonExtension {
+    message NestedPersonExtension {
+        extend Person {
+            optional string residenceAddress = 101;
+        }
+    }
+}
+
+message EngineerExtension {
+    extend Engineer {
+        optional string factoryAddress = 201;
+    }
+}
+
+message ExecutiveExtension {
+    extend Executive {
+        optional string officeAddress = 301;
+    }
+}
+
+extend Employee {
+    optional string stringField = 401 [default = "NY"];
+    optional double doubleField = 402 [default = 3534.234];
+    optional float floatField = 403 [default = 343.34];
+    optional bool boolField = 404 [default = true];
+    optional int32 intField = 405 [default = 43243];
+    optional int64 longField = 406 [default = 2343254354];
+    optional bytes bytesField = 407 [default = "NewYork"];
+}
+
+

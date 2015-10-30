@@ -49,6 +49,7 @@ This product includes components of the following software:
   Flume                           Apache License 2.0
   Geronimo                        Apache License 2.0
   Google Http-Client              Apache License 2.0
+  Google Protocol Buffers         Apache License 2.0
   Grovy                           Apache License 2.0
   GSon                            Apache License 2.0
   Guava                           Apache License 2.0

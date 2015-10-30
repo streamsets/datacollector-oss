@@ -17,24 +17,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.jms;
+package com.streamsets.pipeline.lib.parser.protobuf;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  PROTOBUF_PARSER_00("Could not find non-nested message type '{}' in Protobuf Descriptor File '{}'"),
+  PROTOBUF_PARSER_01("Error building FileDescriptor for '{}'. Could not satisfy the dependencies."),
 
-  public DataFormatChooserValues() {
-    super(
-        DataFormat.TEXT,
-        DataFormat.JSON,
-        DataFormat.LOG,
-        DataFormat.AVRO,
-        DataFormat.DELIMITED,
-        DataFormat.SDC_JSON,
-        DataFormat.XML,
-        DataFormat.PROTOBUF
-    );
+  ;
+
+  private final String msg;
+
+  Errors(String msg) {
+    this.msg = msg;
   }
 
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
 }

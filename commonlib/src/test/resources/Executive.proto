@@ -1,0 +1,15 @@
+package util;
+
+import "Person.proto";
+
+option java_package = "com.streamsets.pipeline.lib.util";
+option java_outer_classname = "ExecutiveProto";
+
+message Executive {
+
+    extensions 300 to 399;
+
+    required Person person = 1;
+    required string employeeId = 2;
+
+}

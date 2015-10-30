@@ -46,6 +46,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
@@ -483,6 +484,31 @@ public class DataParserFormatConfig {
   )
   public String avroSchema;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Protobuf Descriptor File",
+    description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
+    displayPosition = 850,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat^",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String protoFileLocation;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Message Type",
+    displayPosition = 860,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat^",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String messageType;
+
   public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, List<Stage.ConfigIssue> issues) {
     return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, issues);
   }
@@ -540,6 +566,26 @@ public class DataParserFormatConfig {
           onParseError, maxStackTraceLines, DataFormatGroups.LOG.name(),
           getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, context);
+        break;
+      case PROTOBUF:
+        if(protoFileLocation == null || protoFileLocation.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.PROTOBUF.name(),
+                  "protoFileLocation",
+                  DataFormatErrors.DATA_FORMAT_07
+              )
+          );
+        }
+        if(messageType == null || messageType.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.PROTOBUF.name(),
+                  "messageType",
+                  DataFormatErrors.DATA_FORMAT_08
+              )
+          );
+        }
         break;
       default:
         issues.add(context.createConfigIssue(stageGroup, "dataFormat", DataFormatErrors.DATA_FORMAT_04,
@@ -600,6 +646,11 @@ public class DataParserFormatConfig {
         break;
       case AVRO:
         builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
+        break;
+      case PROTOBUF:
+        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoFileLocation)
+          .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType)
+          .setMaxDataLen(-1);
         break;
     }
     try {

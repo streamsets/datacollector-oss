@@ -39,6 +39,7 @@
     <avro.version>1.7.7</avro.version>
     <commons-compress.version>1.10</commons-compress.version>
     <xz.version>1.5</xz.version>
+    <protobuf.java.version>2.5.0</protobuf.java.version>
   </properties>
 
   <dependencies>
@@ -150,6 +151,13 @@
       <groupId>org.tukaani</groupId>
       <artifactId>xz</artifactId>
       <version>${xz.version}</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>${protobuf.java.version}</version>
       <scope>compile</scope>
     </dependency>
 

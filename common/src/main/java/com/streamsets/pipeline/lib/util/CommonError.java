@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum CommonError implements ErrorCode {
 
-  //Kafka source and Target messages
   CMN_0100("Unsupported field type '{}' with value '{}' encountered in record '{}'"),
   CMN_0101("Error converting record '{}' to string: {}"),
   CMN_0102("Field Path to Column Name mapping must be configured to convert records to CSV."),
