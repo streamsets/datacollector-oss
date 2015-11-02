@@ -523,7 +523,7 @@ public class PipelineConfigurationValidator {
                 issueCreator.create(
                     stageConf.getInstanceName(),
                     ValidationError.VALIDATION_0014,
-                    stageDef.getType()
+                    "Processor"
                 )
             );
             preview = false;
@@ -552,7 +552,7 @@ public class PipelineConfigurationValidator {
                 issueCreator.create(
                     stageConf.getInstanceName(),
                     ValidationError.VALIDATION_0014,
-                    stageDef.getType()
+                    "Target"
                 )
             );
             preview = false;
