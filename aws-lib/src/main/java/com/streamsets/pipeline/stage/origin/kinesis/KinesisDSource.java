@@ -37,7 +37,8 @@ import com.streamsets.pipeline.stage.lib.kinesis.AWSRegionChooserValues;
     description = "Reads data from Kinesis",
     icon = "kinesis.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    resetOffset = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

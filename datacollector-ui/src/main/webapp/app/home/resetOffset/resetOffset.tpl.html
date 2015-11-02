@@ -21,15 +21,15 @@
 </div>
 <div class="modal-footer" ng-hide="showLoading">
   <button type="button" class="btn btn-default"
-          ng-hide="isOffsetResetSucceed"
+          ng-hide="isOffsetResetSucceed || common.errors.length"
           ng-click="no()"
           translate="global.form.no">No</button>
   <button type="button" class="btn btn-primary"
-          ng-hide="isOffsetResetSucceed"
+          ng-hide="isOffsetResetSucceed || common.errors.length"
           ng-click="yes()"
           translate="global.form.yes">Yes</button>
   <button type="button" class="btn btn-primary"
-          ng-show="isOffsetResetSucceed"
+          ng-show="isOffsetResetSucceed || common.errors.length"
           ng-click="close()"
           translate="global.form.close">Close</button>
 </div>

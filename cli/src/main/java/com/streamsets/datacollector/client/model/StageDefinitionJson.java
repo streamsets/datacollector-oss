@@ -89,6 +89,7 @@ public class StageDefinitionJson   {
   private String icon = null;
   private Boolean onRecordError = null;
   private Boolean preconditions = null;
+  private Boolean resetOffset = null;
 
 
   /**
@@ -342,6 +343,16 @@ public class StageDefinitionJson   {
     this.preconditions = preconditions;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("resetOffset")
+  public Boolean getResetOffset() {
+    return resetOffset;
+  }
+  public void setResetOffset(Boolean resetOffset) {
+    this.resetOffset = resetOffset;
+  }
 
 
   @Override

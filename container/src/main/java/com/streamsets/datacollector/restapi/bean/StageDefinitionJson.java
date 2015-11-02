@@ -42,6 +42,10 @@ public class StageDefinitionJson {
     return stageDefinition.isPrivateClassLoader();
   }
 
+  public boolean isResetOffset() {
+    return stageDefinition.isResetOffset();
+  }
+
   public String getClassName() {
     return stageDefinition.getClassName();
   }

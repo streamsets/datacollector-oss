@@ -46,7 +46,8 @@ import java.util.List;
     icon="fileTail.png",
     execution = ExecutionMode.STANDALONE,
     outputStreams = FileTailOutputStreams.class,
-    recordsByRef = true
+    recordsByRef = true,
+    resetOffset = true
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

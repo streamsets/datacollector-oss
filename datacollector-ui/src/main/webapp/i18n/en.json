@@ -444,6 +444,7 @@
       "title": "Reset Origin",
       "confirmationTitle": "Reset Origin Confirmation",
       "confirmationMessage": "The Data Collector will request all available data from the origin instead of continuing from the last processed record. This might result in processing data that was already processed. Continue?",
+      "noSupport": "Origin '{{label}}' doesn't support reset operation",
       "successMessage": "Reset Origin is successful."
     },
     "runningStatus": "Pipeline is running",

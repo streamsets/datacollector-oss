@@ -33,7 +33,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
     description = "Reads files from Amazon S3",
     icon="s3.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    resetOffset = true
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

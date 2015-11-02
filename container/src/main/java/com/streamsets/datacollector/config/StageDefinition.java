@@ -61,6 +61,7 @@ public class StageDefinition {
   private final boolean recordsByRef;
   private final StageUpgrader upgrader;
   private final List<String> libJarsRegex;
+  private final boolean resetOffset;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
@@ -69,7 +70,7 @@ public class StageDefinition {
       boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
       String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
-      StageUpgrader upgrader, List<String> libJarsRegex) {
+      StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -107,6 +108,7 @@ public class StageDefinition {
     this.recordsByRef = recordsByRef;
     this.upgrader = upgrader;
     this.libJarsRegex = libJarsRegex;
+    this.resetOffset = resetOffset;
 
   }
 
@@ -139,6 +141,7 @@ public class StageDefinition {
     recordsByRef = def.recordsByRef;
     upgrader = def.upgrader;
     libJarsRegex = def.libJarsRegex;
+    resetOffset = def.resetOffset;
   }
 
     public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass,
@@ -147,7 +150,7 @@ public class StageDefinition {
       List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
       ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
       String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
-        StageUpgrader upgrader, List<String> libJarsRegex) {
+        StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = libraryDefinition.getClassLoader();
@@ -184,6 +187,7 @@ public class StageDefinition {
     this.recordsByRef = recordsByRef;
     this.upgrader = upgrader;
     this.libJarsRegex = libJarsRegex;
+    this.resetOffset = resetOffset;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -309,6 +313,10 @@ public class StageDefinition {
     return libJarsRegex;
   }
 
+  public boolean isResetOffset() {
+    return resetOffset;
+  }
+
   public boolean getRecordsByRef() {
     return recordsByRef;
   }
@@ -411,7 +419,7 @@ public class StageDefinition {
                                getVersion(), label, description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes,
-                               recordsByRef, upgrader, libJarsRegex);
+                               recordsByRef, upgrader, libJarsRegex, resetOffset);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

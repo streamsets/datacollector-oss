@@ -59,7 +59,8 @@ import java.util.List;
     icon="directory.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    upgrader = SpoolDirSourceUpgrader.class
+    upgrader = SpoolDirSourceUpgrader.class,
+    resetOffset = true
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

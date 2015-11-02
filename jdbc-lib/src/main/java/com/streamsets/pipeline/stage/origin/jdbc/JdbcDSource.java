@@ -38,7 +38,8 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
     icon = "rdbms.png",
     execution = ExecutionMode.STANDALONE,
     upgrader = JdbcSourceUpgrader.class,
-    recordsByRef = true
+    recordsByRef = true,
+    resetOffset = true
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

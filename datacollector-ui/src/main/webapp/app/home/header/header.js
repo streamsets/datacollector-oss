@@ -223,7 +223,13 @@ angular
        */
       resetOffset: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Reset Offset', 1);
-        var modalInstance = $modal.open({
+
+        var originStageInstance = $scope.pipelineConfig.stages[0],
+            originStageDef = _.find($scope.stageLibraries, function(stageDef) {
+              return stageDef.name === originStageInstance.stageName;
+            });
+
+        $modal.open({
           templateUrl: 'app/home/resetOffset/resetOffset.tpl.html',
           controller: 'ResetOffsetModalInstanceController',
           size: '',
@@ -231,6 +237,9 @@ angular
           resolve: {
             pipelineInfo: function () {
               return $scope.activeConfigInfo;
+            },
+            originStageDef: function() {
+              return originStageDef;
             }
           }
         });

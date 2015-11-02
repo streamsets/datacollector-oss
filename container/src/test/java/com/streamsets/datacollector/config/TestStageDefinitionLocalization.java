@@ -22,21 +22,12 @@ package com.streamsets.datacollector.config;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.config.ConfigDefinition;
-import com.streamsets.datacollector.config.ConfigGroupDefinition;
-import com.streamsets.datacollector.config.ModelDefinition;
-import com.streamsets.datacollector.config.ModelType;
-import com.streamsets.datacollector.config.RawSourceDefinition;
-import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
-import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -88,7 +79,7 @@ public class TestStageDefinitionLocalization {
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
                                               Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
-                                              new StageUpgrader.Default(), Collections.<String>emptyList());
+                                              new StageUpgrader.Default(), Collections.<String>emptyList(), false);
     return def;
   }
 

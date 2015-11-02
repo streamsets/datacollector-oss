@@ -43,7 +43,6 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -227,10 +226,13 @@ public abstract class StageDefinitionExtractor {
             "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString(), ex));
       }
 
+      boolean resetOffset = sDef.resetOffset();
+
       return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
                                  errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
                                  configGroupDefinition, variableOutputStreams, outputStreams,
-                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex);
+                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex,
+                                 resetOffset);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }

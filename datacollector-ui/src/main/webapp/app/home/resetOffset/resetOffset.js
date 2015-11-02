@@ -24,7 +24,8 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ResetOffsetModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
+  .controller('ResetOffsetModalInstanceController', function ($scope, $modalInstance, pipelineInfo, originStageDef,
+                                                              $translate, api) {
     angular.extend($scope, {
       showLoading: false,
       isOffsetResetSucceed: false,
@@ -37,16 +38,23 @@ angular
        * Callback function Yes button
        */
       yes: function() {
-        $scope.showLoading = true;
-        api.pipelineAgent.resetOffset(pipelineInfo.name).
-          success(function() {
-            $scope.showLoading = false;
-            $scope.isOffsetResetSucceed = true;
-          }).
-          error(function(data) {
-            $scope.showLoading = false;
-            $scope.common.errors = [data];
-          });
+        if(originStageDef.resetOffset) {
+          $scope.showLoading = true;
+          api.pipelineAgent.resetOffset(pipelineInfo.name).
+              success(function() {
+                $scope.showLoading = false;
+                $scope.isOffsetResetSucceed = true;
+              }).
+              error(function(data) {
+                $scope.showLoading = false;
+                $scope.common.errors = [data];
+              });
+        } else {
+          $translate('home.resetOffset.noSupport', { label: originStageDef.label })
+              .then(function(translation) {
+                $scope.common.errors = [translation];
+              });
+        }
       },
 
       /**
