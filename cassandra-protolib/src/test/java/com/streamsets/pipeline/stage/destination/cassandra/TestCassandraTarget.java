@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.fail;
+
 public class TestCassandraTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestCassandraTarget.class);
 
@@ -407,5 +409,27 @@ public class TestCassandraTarget {
     Assert.assertEquals(3, row.getInt("time"));
     Assert.assertEquals(null, row.getBytesUnsafe("x"));
     Assert.assertEquals(5.0, row.getDouble("y"), EPSILON);
+  }
+
+  @Test(expected = StageException.class)
+  public void testMalformedTableName() throws Exception {
+    List<CassandraFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new CassandraFieldMappingConfig("/driver", "driver_id"),
+        new CassandraFieldMappingConfig("/trip", "trip_id"),
+        new CassandraFieldMappingConfig("/time", "time"),
+        new CassandraFieldMappingConfig("/x", "x"),
+        new CassandraFieldMappingConfig("/y", "y")
+    );
+
+    TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("contactNodes", ImmutableList.of("localhost"))
+        .addConfiguration("useCredentials", false)
+        .addConfiguration("compression", CassandraCompressionCodec.NONE)
+        .addConfiguration("qualifiedTableName", "tablename")
+        .addConfiguration("columnNames", fieldMappings)
+        .addConfiguration("port", CASSANDRA_NATIVE_PORT)
+        .build();
+    targetRunner.runInit();
+    fail("should have thrown a StageException!");
   }
 }

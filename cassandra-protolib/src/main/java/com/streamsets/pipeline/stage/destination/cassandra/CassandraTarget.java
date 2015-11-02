@@ -149,19 +149,19 @@ public class CassandraTarget extends BaseTarget {
 
     if (!qualifiedTableName.contains(".")) {
       issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "qualifiedTableName", Errors.CASSANDRA_02));
-    }
-
-    if (checkCassandraReachable(issues)) {
-      List<String> invalidColumns = checkColumnMappings();
-      if (invalidColumns.size() != 0) {
-        issues.add(
-            context.createConfigIssue(
-                Groups.CASSANDRA.name(),
-                "columnNames",
-                Errors.CASSANDRA_08,
-                Joiner.on(", ").join(invalidColumns)
-            )
-        );
+    } else {
+      if (checkCassandraReachable(issues)) {
+        List<String> invalidColumns = checkColumnMappings();
+        if (invalidColumns.size() != 0) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.CASSANDRA.name(),
+                  "columnNames",
+                  Errors.CASSANDRA_08,
+                  Joiner.on(", ").join(invalidColumns)
+              )
+          );
+        }
       }
     }
 
