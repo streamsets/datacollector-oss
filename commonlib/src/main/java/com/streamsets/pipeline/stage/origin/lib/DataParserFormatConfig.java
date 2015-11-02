@@ -52,6 +52,7 @@ import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
@@ -495,7 +496,7 @@ public class DataParserFormatConfig {
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
   )
-  public String protoFileLocation;
+  public String protoDescriptorFile;
 
   @ConfigDef(
     required = true,
@@ -568,13 +569,24 @@ public class DataParserFormatConfig {
         logDataFormatValidator.validateLogFormatConfig(issues, context);
         break;
       case PROTOBUF:
-        if(protoFileLocation == null || protoFileLocation.isEmpty()) {
+        if(protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   DataFormatGroups.PROTOBUF.name(),
-                  "protoFileLocation",
+                  "protoDescriptorFile",
                   DataFormatErrors.DATA_FORMAT_07
               )
+          );
+        }
+        File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+        if(!file.exists()) {
+          issues.add(
+            context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              "protoDescriptorFile",
+              DataFormatErrors.DATA_FORMAT_09,
+              file.getAbsolutePath()
+            )
           );
         }
         if(messageType == null || messageType.isEmpty()) {
@@ -648,7 +660,7 @@ public class DataParserFormatConfig {
         builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
         break;
       case PROTOBUF:
-        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoFileLocation)
+        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
           .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType)
           .setMaxDataLen(-1);
         break;

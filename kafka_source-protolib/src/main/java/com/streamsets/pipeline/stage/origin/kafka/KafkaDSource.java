@@ -582,6 +582,31 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
   )
   public int binaryMaxObjectLen;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Protobuf Descriptor File",
+    description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
+    displayPosition = 850,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String protoDescriptorFile;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Message Type",
+    displayPosition = 860,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String messageType;
+
   @Override
   protected Source createSource() {
     SourceArguments args = new SourceArguments(metadataBrokerList,
@@ -592,7 +617,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
       enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs,
       schemaInMessage, avroSchema, binaryMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
-      csvRecordType);
+      csvRecordType, protoDescriptorFile, messageType);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
       new ClusterKafkaSourceFactory(args));
     return delegatingKafkaSource;

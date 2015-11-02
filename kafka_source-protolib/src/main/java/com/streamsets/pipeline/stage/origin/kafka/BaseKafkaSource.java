@@ -43,9 +43,13 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import com.streamsets.pipeline.stage.common.DataFormatErrors;
+import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -97,6 +101,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private final char csvCustomQuote;
   private final CsvRecordType csvRecordType;
 
+  private final String protoDescriptorFile;
+  private final String messageType;
+
   protected int maxWaitTime;
   private LogDataFormatValidator logDataFormatValidator;
   private Charset messageCharset;
@@ -142,6 +149,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.csvCustomEscape = args.getCsvCustomEscape();
     this.csvCustomQuote = args.getCsvCustomQuote();
     this.csvRecordType = args.getCsvRecordType();
+    this.protoDescriptorFile = args.getProtoDescriptorFile();
+    this.messageType = args.getMessageType();
   }
 
   @Override
@@ -200,6 +209,37 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         if(!messageHasSchema && (avroSchema == null || avroSchema.isEmpty())) {
           issues.add(getContext().createConfigIssue(Groups.AVRO.name(), "avroSchema", KafkaErrors.KAFKA_43,
             avroSchema));
+        }
+        break;
+      case PROTOBUF:
+        if(protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.PROTOBUF.name(),
+                  "protoDescriptorFile",
+                  KafkaErrors.KAFKA_44
+              )
+          );
+        }
+        File file = new File(getContext().getResourcesDirectory(), protoDescriptorFile);
+        if(!file.exists()) {
+          issues.add(
+              getContext().createConfigIssue(
+                DataFormatGroups.PROTOBUF.name(),
+                "protoDescriptorFile",
+                DataFormatErrors.DATA_FORMAT_09,
+                file.getAbsolutePath()
+              )
+          );
+        }
+        if(messageType == null || messageType.isEmpty()) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.PROTOBUF.name(),
+                  "messageType",
+                  KafkaErrors.KAFKA_44
+              )
+          );
         }
         break;
       default:
@@ -301,6 +341,12 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         break;
       case BINARY:
         builder.setMaxDataLen(binaryMaxObjectLen);
+        break;
+      case PROTOBUF:
+        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+          .setMaxDataLen(Integer.MAX_VALUE)
+          .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType);
+        break;
     }
     parserFactory = builder.build();
   }

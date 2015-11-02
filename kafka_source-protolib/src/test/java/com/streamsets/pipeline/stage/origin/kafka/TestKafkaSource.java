@@ -20,6 +20,8 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.Files;
+import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -35,6 +37,7 @@ import com.streamsets.pipeline.lib.KafkaTestUtil;
 import com.streamsets.pipeline.lib.ProducerRunnable;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.log.Constants;
+import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import kafka.javaapi.producer.Producer;
@@ -48,12 +51,16 @@ import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.io.EncoderFactory;
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -95,13 +102,18 @@ public class TestKafkaSource {
   private static final String TOPIC12 = "TestKafkaSource12";
   private static final String TOPIC13 = "TestKafkaSource13";
   private static final String TOPIC14 = "TestKafkaSource14";
+  private static final String TOPIC15 = "TestKafkaSource15";
+  private static final String TOPIC16 = "TestKafkaSource16";
   private static final String CONSUMER_GROUP = "SDC";
 
   private static Producer<String, String> producer;
   private static String zkConnect;
 
+  private static File tempDir;
+  private static File protoDescFile;
+
   @BeforeClass
-  public static void setUp() {
+  public static void setUp() throws IOException {
     KafkaTestUtil.startZookeeper();
     KafkaTestUtil.startKafkaBrokers(3);
 
@@ -121,14 +133,24 @@ public class TestKafkaSource {
     KafkaTestUtil.createTopic(TOPIC12, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC13, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
     KafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC15, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    KafkaTestUtil.createTopic(TOPIC16, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
     producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
-
+    tempDir = Files.createTempDir();
+    protoDescFile = new File(tempDir, "Employee.desc");
+    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(protoDescFile));
+    Resources.copy(Resources.getResource("Employee.desc"), out);
+    out.flush();
+    out.close();
   }
 
   @AfterClass
   public static void tearDown() {
     KafkaTestUtil.shutdown();
+    if (tempDir != null) {
+      FileUtils.deleteQuietly(tempDir);
+    }
   }
 
   @Test
@@ -981,13 +1003,7 @@ public class TestKafkaSource {
     e1.put("boss", boss);
 
 
-    Properties props = new Properties();
-    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
-    props.put("serializer.class", "kafka.serializer.DefaultEncoder");
-    props.put("key.serializer.class", "kafka.serializer.StringEncoder");
-    props.put("request.required.acks", "1");
-    ProducerConfig config = new ProducerConfig(props);
-    Producer<String, byte[]> producer = new Producer<>(config);
+    Producer<String, byte[]> producer = createDefaultProducer();
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     GenericDatumWriter<GenericRecord> genericDatumWriter = new GenericDatumWriter<>(schema);
@@ -1179,12 +1195,130 @@ public class TestKafkaSource {
     sourceRunner.runDestroy();
   }
 
+  @Test
+  public void testProduceProtobufRecords() throws StageException, InterruptedException, IOException {
+
+    Producer<String, byte[]> producer = createDefaultProducer();
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    //send 10 protobuf messages to kafka topic
+    for(int i = 0; i < 10; i++) {
+      ProtobufTestUtil.getSingleProtobufData(bOut, i);
+      producer.send(new KeyedMessage<>(TOPIC15, "0", bOut.toByteArray()));
+      bOut.reset();
+    }
+    bOut.close();
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("topic", TOPIC15)
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 10)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("dataFormat", DataFormat.PROTOBUF)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("removeCtrlChars", false)
+      .addConfiguration("textMaxLineLen", 4096)
+      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
+      .addConfiguration("binaryMaxObjectLen", 1000)
+      .addConfiguration("protoDescriptorFile", protoDescFile.getPath())
+      .addConfiguration("messageType", "Employee")
+      .build();
+    sourceRunner.runInit();
+
+    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(10, records.size());
+
+    ProtobufTestUtil.compareProtoRecords(records, 0);
+
+    sourceRunner.runDestroy();
+  }
+
+  @Test
+  public void testMultipleProtobufSingleMessage() throws StageException, InterruptedException, IOException {
+
+    Producer<String, byte[]> producer = createDefaultProducer();
+    //send 10 protobuf messages to kafka topic
+    producer.send(new KeyedMessage<>(TOPIC16, "0", ProtobufTestUtil.getProtoBufData()));
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("topic", TOPIC16)
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 10)
+      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("dataFormat", DataFormat.PROTOBUF)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("removeCtrlChars", false)
+      .addConfiguration("textMaxLineLen", 4096)
+      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", null)
+      .addConfiguration("maxStackTraceLines", -1)
+      .addConfiguration("binaryMaxObjectLen", 1000)
+      .addConfiguration("protoDescriptorFile", protoDescFile.getPath())
+      .addConfiguration("messageType", "Employee")
+      .build();
+    sourceRunner.runInit();
+
+    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+    List<Record> records = output.getRecords().get("lane");
+    Assert.assertEquals(10, records.size());
+
+    ProtobufTestUtil.compareProtoRecords(records, 0);
+
+    sourceRunner.runDestroy();
+  }
+
   private void shutDownExecutorService(ExecutorService executorService) throws InterruptedException {
     executorService.shutdownNow();
     if(!executorService.awaitTermination(5000, TimeUnit.MILLISECONDS)) {
       //If it cant be stopped then throw exception
       throw new RuntimeException("Could not shutdown Executor service");
     }
+  }
+
+  private Producer<String, byte[]> createDefaultProducer() {
+    Properties props = new Properties();
+    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
+    props.put("serializer.class", "kafka.serializer.DefaultEncoder");
+    props.put("key.serializer.class", "kafka.serializer.StringEncoder");
+    props.put("request.required.acks", "1");
+    ProducerConfig config = new ProducerConfig(props);
+    return new Producer<>(config);
   }
 
 }

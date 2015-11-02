@@ -32,6 +32,7 @@ public enum Groups implements Label {
   LOG("Log"),
   AVRO("Avro"),
   BINARY("Binary"),
+  PROTOBUF("Protobuf")
   ;
 
   private final String label;

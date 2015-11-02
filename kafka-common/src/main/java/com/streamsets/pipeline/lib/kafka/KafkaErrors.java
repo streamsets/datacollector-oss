@@ -63,6 +63,8 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_41("Could not get partition count for topic '{}' : {}"),
   KAFKA_42("Could not get partition count for topic '{}'"),
   KAFKA_43("Avro Schema must be specified"),
+  KAFKA_44(".proto file location must be specified"),
+  KAFKA_45("Message type must be specified"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),

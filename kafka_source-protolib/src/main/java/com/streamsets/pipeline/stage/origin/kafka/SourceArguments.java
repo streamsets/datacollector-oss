@@ -78,6 +78,10 @@ public class SourceArguments {
   protected final String avroSchema;
   protected final int binaryMaxObjectLen;
 
+  private final String protoDescriptorFile;
+  private final String messageType;
+
+
   public SourceArguments(String metadataBrokerList, String zookeeperConnect, String consumerGroup, String topic,
                          DataFormat dataFormat, String charset, boolean removeCtrlChars,
                          boolean produceSingleRecordPerMessage, int maxBatchSize,
@@ -89,7 +93,8 @@ public class SourceArguments {
                          String log4jCustomLogFormat, int maxStackTraceLines, OnParseError onParseError,
                          Map<String, String> kafkaConsumerConfigs, boolean schemaInMessage, String avroSchema,
                          int binaryMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
-                         char csvCustomQuote, CsvRecordType csvRecordType) {
+                         char csvCustomQuote, CsvRecordType csvRecordType, String protoDescriptorFile,
+                         String messageType) {
     this.metadataBrokerList = metadataBrokerList;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
@@ -130,6 +135,8 @@ public class SourceArguments {
     this.csvCustomEscape = csvCustomEscape;
     this.csvCustomQuote = csvCustomQuote;
     this.csvRecordType = csvRecordType;
+    this.protoDescriptorFile = protoDescriptorFile;
+    this.messageType = messageType;
   }
 
   public String getMetadataBrokerList() {
@@ -282,5 +289,17 @@ public class SourceArguments {
 
   public CsvRecordType getCsvRecordType() {
     return csvRecordType;
+  }
+
+  public boolean isRemoveCtrlChars() {
+    return removeCtrlChars;
+  }
+
+  public String getProtoDescriptorFile() {
+    return protoDescriptorFile;
+  }
+
+  public String getMessageType() {
+    return messageType;
   }
 }
