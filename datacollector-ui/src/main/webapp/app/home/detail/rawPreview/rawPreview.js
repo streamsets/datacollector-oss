@@ -32,7 +32,7 @@ angular
         mode: {
           name: 'application/json'
         },
-        readOnly: 'nocursor',
+        readOnly: true,
         lineNumbers: true
       },
 
