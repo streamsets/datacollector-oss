@@ -165,7 +165,7 @@ public class FlumeConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.NUMBER,
-    defaultValue = "120000", //2 minutes
+    defaultValue = "10000", // 10 seconds
     label = "Retry Wait Time (ms)",
     description = "Time to wait before resending data to Flume",
     displayPosition = 110,
