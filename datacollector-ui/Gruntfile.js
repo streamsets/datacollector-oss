@@ -182,6 +182,8 @@ module.exports = function(grunt) {
         ' * <%= pkg.name %> - v<%= pkg.version %> - <%= buildTime %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
+        ' * Copyright 2015 StreamSets Inc.\n' +
+        ' *\n' +
         ' * Licensed under the Apache Software Foundation (ASF) under one\n' +
         ' * or more contributor license agreements.  See the NOTICE file\n' +
         ' * distributed with this work for additional information\n' +
