@@ -20,7 +20,7 @@
   <title ng-bind="common.title">StreamSets Data Collector</title>
 
   <script type="text/javascript">
-    var baseHref = document.location.pathname,
+    var baseHref = document.location.pathname.replace('j_security_check', ''),
       collectorIndex = baseHref.indexOf('/collector/');
 
     if(collectorIndex !== -1) {
@@ -73,8 +73,8 @@
   </div>
 
   <script>
-    var queryString = window.location.search;
-    if(queryString && queryString.indexOf('error=true') !== -1) {
+    var pathname = window.location.pathname;
+    if(pathname && pathname.indexOf('j_security_check') !== -1) {
       var errorDiv = document.getElementById('loginErrorMessageDivId');
       errorDiv.style.visibility = 'visible';
     }
