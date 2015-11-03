@@ -1,14 +1,8 @@
 {
-    "sdc": {
-      "destination": "/usr/bin/sdc",
-      "source": "bin/sdc",
-      "priority": 10,
-      "isDirectory": false
-    }
-    ,"sdc-conf": {
-      "destination": "/etc/sdc/conf",
-      "source": "etc/sdc/conf.dist",
-      "priority": 10,
-      "isDirectory": true
-    }
+  "streamsets-datacollector": {
+    "destination": "/usr/bin/streamsets",
+    "source": "bin/streamsets",
+    "priority": 10,
+    "isDirectory": false
+  }
 }

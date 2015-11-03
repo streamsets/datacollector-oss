@@ -27,6 +27,13 @@
   <name>The StreamSets CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-dist</artifactId>
+    </dependency>
+  </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -35,7 +42,7 @@
         <configuration>
           <appendAssemblyId>false</appendAssemblyId>
           <descriptors>
-            <descriptor>assembly.xml</descriptor>
+            <descriptor>src/main/assemblies/csd-assembly.xml</descriptor>
           </descriptors>
           <finalName>STREAMSETS-${project.version}</finalName>
         </configuration>
@@ -50,5 +57,5 @@
         </executions>
       </plugin>
     </plugins>
-   </build>
+  </build>
 </project>

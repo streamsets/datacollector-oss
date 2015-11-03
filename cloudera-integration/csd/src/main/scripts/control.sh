@@ -20,5 +20,37 @@
 #
 #
 
-#SDC_DIRNAME=${PARCEL_DIRNAME:-"STREAMSETS-1.0.0-sdc1.0.0b1"}
-export SDC_HOME=$PARCELS_ROOT/$PARCEL_DIRNAME
+# For better debugging
+date 1>&2
+
+CMD=$1
+
+function log {
+  timestamp=$(date)
+  echo "$timestamp: $1"       #stdout
+  echo "$timestamp: $1" 1>&2; #stderr
+}
+
+function update_users {
+  IFS=';' read -r -a array <<< "$CONFIGURED_USERS"
+  for element in "${array[@]}"; do
+    echo "$element" >> "$CONF_DIR"/"$AUTH_TYPE"-realm.properties
+  done
+  chmod 600 "$CONF_DIR"/"$AUTH_TYPE"-realm.properties
+}
+
+export SDC_CONF=$CONF_DIR
+
+case $CMD in
+
+  (start)
+    log "Starting StreamSets Data Collector"
+    update_users
+                source "$CONF_DIR"/sdc-env.sh
+    exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing
+
+  (update_users)
+    update_users
+    exit 0
+
+esac

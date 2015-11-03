@@ -1,0 +1,287 @@
+{
+  "name": "STREAMSETS",
+  "label": "StreamSets",
+  "description": "StreamSets Continuous Ingest",
+  "version": "${project.version}",
+  "compatibility": {
+    "generation": 1,
+    "cdhVersion": {"min": "5"}
+  },
+  "runAs": {
+    "user": "sdc",
+    "group": "sdc"
+  },
+  "parcel": {
+    "requiredTags": ["streamsets"]
+  },
+  "icon": "images/streamsets.png",
+  "roles": [
+    {
+      "name": "DATACOLLECTOR",
+      "label": "Data Collector",
+      "pluralLabel": "Data Collectors",
+      "startRunner": {
+        "program": "scripts/control.sh",
+        "args": ["start"],
+        "environmentVariables": {
+          "SDC_LOG": "${log_dir}",
+          "SDC_DATA": "${data.directory}",
+          "SDC_RESOURCES": "${resources.directory}",
+          "CONFIGURED_USERS": "${datacollector.users}",
+          "AUTH_TYPE": "${http.authentication}"
+        }
+      },
+      "logging": {
+        "dir": "/var/log/sdc",
+        "filename": "sdc.log",
+        "isModifiable": true,
+        "configName": "sdc.log4j.dir",
+        "loggingType": "log4j"
+      },
+      "commands": [
+        {
+          "name": "StreamSetsUpdateUsers",
+          "label": "Update Data Collector Users",
+          "description": "Updates the realm authentication file with the configured users.",
+          "expectedExitCodes": [0],
+          "requiredRoleState": "running",
+          "commandRunner": {
+            "program": "scripts/control.sh",
+            "args": ["update_users"],
+            "environmentVariables": {
+              "CONFIGURED_USERS": "${datacollector.users}",
+              "AUTH_TYPE": "${http.authentication}"
+            }
+          }
+        }
+      ],
+      "externalLink": {
+        "name": "datacollector_web_ui",
+        "label": "Data Collector Web UI",
+        "url": "http://${host}:${http.port}"
+      },
+      "configWriter": {
+        "generators": [
+          {
+            "filename": "sdc.properties",
+            "configFormat": "properties",
+            "includeParams": [
+              "http.port",
+              "https.port",
+              "https.keystore.path",
+              "https.keystore.password",
+              "http.authentication",
+              "http.realm.file.permission.check",
+              "kerberos.client.enabled",
+              "kerberos.client.principal",
+              "kerberos.client.keytab",
+              "preview.maxBatchSize",
+              "preview.maxBatches",
+              "production.maxBatchSize",
+              "production.maxErrorRecordsPerStage",
+              "production.maxPipelineErrors",
+              "mail.transport.protocol",
+              "mail.smtp.host",
+              "mail.smtp.port",
+              "mail.smtp.auth",
+              "mail.smtp.starttls.enable",
+              "mail.smtps.host",
+              "mail.smtps.port",
+              "mail.smtps.auth",
+              "xmail.username",
+              "xmail.password",
+              "xmail.from.address"
+            ],
+            "excludeParams": [
+              "datacollector.users"
+            ]
+          },
+          {
+            "filename": "stagelibswhitelist.properties",
+            "configFormat": "properties",
+            "includeParams": [
+              "system.stagelibs.whitelist",
+              "user.stagelibs.whitelist"
+            ],
+            "excludeParams": [
+              "datacollector.users"
+            ]
+          }
+        ],
+        "auxConfigGenerators": [
+          {
+            "filename": "sdc-security.policy",
+            "sourceFilename": "aux/sdc-security.policy"
+          },
+          {
+            "filename": "sdc-env.sh",
+            "sourceFilename": "aux/sdc-env.sh"
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "http.port",
+          "label": "Web UI Port",
+          "description": "The port that will be used for the Data Collector Web UI. If set to 0, port will be selected randomly",
+          "type": "port",
+          "zeroAllowed": "true",
+          "negativeOneAllowed": "true",
+          "default": 18630
+        },
+        {
+          "name": "https.port",
+          "label": "Secure Web UI Port",
+          "description": "The port that will be used for the Data Collector Web UI over HTTPS. If set to a value other than -1, the SDC will run SSL on this port",
+          "type": "port",
+          "zeroAllowed": "true",
+          "negativeOneAllowed": "true",
+          "default": -1
+        },
+        {
+          "name": "data.directory",
+          "label": "Data directory",
+          "description": "The directory where pipeline metadata will be stored",
+          "type": "path",
+          "default": "/var/lib/sdc",
+          "pathType": "localDataDir",
+          "required": "true",
+          "minLength": 1,
+          "maxLength": 100,
+          "configurableInWizard": true
+        },
+        {
+          "name": "resources.directory",
+          "label": "Resources directory",
+          "description": "The directory where additional resources for the Data Collector will be stored",
+          "type": "path",
+          "default": "/var/lib/sdc/resources",
+          "pathType": "localDataDir",
+          "required": "true",
+          "minLength": 1,
+          "maxLength": 100,
+          "configurableInWizard": true
+        },
+        {
+          "name": "http.authentication",
+          "label": "HTTP Authentication Method",
+          "description": "Authentication method for the Data Collector HTTP endpoint",
+          "type": "string_enum",
+          "validValues": [
+            "form",
+            "none",
+            "basic",
+            "digest"
+          ],
+          "default": "form"
+        },
+        {
+          "name": "datacollector.users",
+          "label": "Data Collector Users",
+          "description": "Users that should have access to Data Collectors. Users are specified in the format  \\<user\\>: MD5:\\<password_hash\\>,user[,\\<role\\>,\\<role\\>,...]. Supported roles are: admin, manager, creator, guest.",
+          "type": "string_array",
+          "default": [
+            "admin:   MD5:21232f297a57a5a743894a0e4a801fc3,user,admin",
+            "guest:   MD5:084e0343a0486ff05530df6c705c8bb4,user,guest",
+            "creator: MD5:ee2433259b0fe399b40e81d2c98a38b6,user,creator",
+            "manager: MD5:1d0258c2440a8d19e716292b231e3190,user,manager"
+          ],
+          "separator": ";"
+        },
+        {
+          "name": "https.keystore.path",
+          "label": "Java Keystore Path",
+          "description": "Path to Java keystore file",
+          "type": "path",
+          "pathType": "serviceSpecific",
+          "default": "keystore.jks"
+        },
+        {
+          "name": "https.keystore.password",
+          "label": "Java Keystore Password",
+          "description": "Password for Java Keystore file",
+          "type": "password",
+          "default": ""
+        },
+        {
+          "name": "http.realm.file.permission.check",
+          "label": "HTTP Realm File Permission Check",
+          "description": "Validate that the permissions of the realm file are owner-readable only",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "kerberos.client.enabled",
+          "label": "Enable Kerberos Client",
+          "description": "Runs the Data Collector within a Kerberos session which is propagated to all stagelibs",
+          "type": "boolean",
+          "default": "false"
+        },
+        {
+          "name": "kerberos.client.principal",
+          "label": "Kerberos Client Principal",
+          "description": "Kerberos client principal",
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "kerberos.client.keytab",
+          "label": "Kerberos Client Keytab",
+          "description": "Path to keytab file for Kerberos principal",
+          "type": "path",
+          "pathType": "serviceSpecific",
+          "default": ""
+        },
+        {
+          "name": "production.maxBatchSize",
+          "label": "Max Batch Size (Running)",
+          "description": "The maximum batch size while the pipeline is actively running",
+          "type": "long",
+          "default": 1000
+        },
+        {
+          "name": "preview.maxBatchSize",
+          "label": "Max Batch Size (Preview)",
+          "description": "The maximum batch size while the pipeline is in preview mode",
+          "type": "long",
+          "default": 10
+        },
+        {
+          "name": "preview.maxBatches",
+          "label": "Max Batches (Preview)",
+          "description": "The maximum number of batches that can be read in preview mode",
+          "type": "long",
+          "default": 10
+        },
+        {
+          "name": "production.maxErrorRecordsPerStage",
+          "label": "Max Error Records Per Stage",
+          "description": "The max number of error records, per stage, that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
+          "type": "long",
+          "default": 100
+        },
+        {
+          "name": "production.maxPipelineErrors",
+          "label": "Max Error Records Per Stage",
+          "description": "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
+          "type": "long",
+          "default": 100
+        },
+        {
+          "name": "system.stagelibs.whitelist",
+          "label": "System Stage Library Whitelist",
+          "description": "StreamSets libraries to load in the data collector, specify the library directory names separated by commas, use * for all",
+          "type": "string",
+          "default": "*"
+        },
+        {
+          "name": "user.stagelibs.whitelist",
+          "label": "User Stage Library Whitelist",
+          "description": "User libraries to load in the data collector, specify the library directory names separated by commas, use * for all",
+          "type": "string",
+          "default": "*"
+        }
+      ]
+    }
+  ]
+}
