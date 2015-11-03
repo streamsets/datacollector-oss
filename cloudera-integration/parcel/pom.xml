@@ -31,20 +31,13 @@
   <packaging>jar</packaging>
 
   <properties>
-    <dist.version>${project.version}</dist.version>
-    <!-- trick to avoid pulling files from 'ui', 'docs' & 'dummy-lib' if the profile is not active -->
-    <ui.dist-dir>${basedir}/../../dist/src/main/emptydir</ui.dist-dir>
-    <docs.dist-dir>${basedir}/../../dist/src/main/emptydir</docs.dist-dir>
-    <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
-    <dev.dist-dir>${basedir}/../../dist/src/main/emptydir</dev.dist-dir>
+    <parcel.name>STREAMSETS_DATACOLLECTOR-${project.version}</parcel.name>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-dist</artifactId>
-      <version>${dist.version}</version>
-      <scope>compile</scope>
     </dependency>
   </dependencies>
 
@@ -71,8 +64,9 @@
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
               <descriptors>
-                <descriptor>src/main/assemblies/cloudera-integration.xml</descriptor>
+                <descriptor>src/main/assemblies/parcel-assembly.xml</descriptor>
               </descriptors>
+              <finalName>${parcel.name}</finalName>
             </configuration>
           </execution>
         </executions>
@@ -87,8 +81,8 @@
             <phase>install</phase>
             <configuration>
               <tasks>
-                <copy file="${project.build.directory}/${project.build.finalName}.tar.gz"
-                  tofile="${project.build.directory}/STREAMSETS-${project.version}-cdh5-el6.parcel" />
+                <copy file="${project.build.directory}/${parcel.name}.tar.gz"
+                      tofile="${project.build.directory}/${parcel.name}-el6.parcel"/>
               </tasks>
             </configuration>
             <goals>
@@ -97,111 +91,8 @@
           </execution>
         </executions>
       </plugin>
+
+
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>dev</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-        <property>
-          <name>!release</name>
-        </property>
-      </activation>
-      <properties>
-        <!-- trick to avoid pulling dev-lib files if the 'release' profile is active -->
-        <dev-lib.dist-dir>${basedir}/../../dev-lib/target/stage-libs</dev-lib.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-dev-lib</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>ui</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <!-- trick to avoid pulling UI files if the 'ui' profile is not active -->
-        <ui.dist-dir>${basedir}/../../ui/target/dist</ui.dist-dir>
-
-        <!-- TODO: for now we copy committed generated docs  -->
-        <docs.dist-dir>${basedir}/../../docs/generated</docs.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-ui</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-    <profile>
-      <id>docs</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <docs.dist-dir>${basedir}/../../docs/target/dita/out</docs.dist-dir>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-docs</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.10.1</version>
-            <executions>
-              <execution>
-                <id>javadoc</id>
-                <phase>prepare-package</phase>
-                <goals>
-                  <goal>javadoc</goal>
-                </goals>
-                <configuration>
-                  <linksource>false</linksource>
-                  <quiet>true</quiet>
-                  <verbose>false</verbose>
-                  <charset>UTF-8</charset>
-
-                  <excludePackageNames>com.streamsets.pipeline.api.impl:com.streamsets.pipeline.sdk.annotationsprocessor</excludePackageNames>
-
-                  <groups>
-                    <group>
-                      <title>Pipeline API</title>
-                      <packages>
-                        com.streamsets.pipeline.api:com.streamsets.pipeline.api.base
-                      </packages>
-                    </group>
-                    <group>
-                      <title>Pipeline Stage SDK API</title>
-                      <packages>
-                        com.streamsets.pipeline.sdk
-                      </packages>
-                    </group>
-                  </groups>
-
-                  <includeDependencySources>true</includeDependencySources>
-                  <dependencySourceIncludes>
-                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-api</dependencySourceInclude>
-                    <dependencySourceInclude>com.streamsets:streamsets-datacollector-sdk</dependencySourceInclude>
-                  </dependencySourceIncludes>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
