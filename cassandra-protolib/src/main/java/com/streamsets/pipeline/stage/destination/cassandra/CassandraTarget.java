@@ -77,6 +77,7 @@ import java.util.TreeSet;
  */
 public class CassandraTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(CassandraTarget.class);
+  private static final int MAX_BATCH_SIZE = 65535;
 
   private final List<String> addresses;
   private final ProtocolOptions.Compression compression;
@@ -282,73 +283,88 @@ public class CassandraTarget extends BaseTarget {
     while (records.hasNext()) {
       final Record record = records.next();
 
-      ImmutableList.Builder<Object> values = new ImmutableList.Builder<>();
-      SortedSet<String> columnsPresent = Sets.newTreeSet(columnMappings.keySet());
-      for (Map.Entry<String, String> mapping : columnMappings.entrySet()) {
-        String columnName = mapping.getKey();
-        String fieldPath = mapping.getValue();
-
-        // If we're missing fields, skip them.
-        if (!record.has(fieldPath)) {
-          columnsPresent.remove(columnName);
-          continue;
-        }
-
-        final Object value = record.get(fieldPath).getValue();
-        // Special cases for handling SDC Lists and Maps,
-        // basically unpacking them into raw types.
-        if (value instanceof List) {
-          List<Object> unpackedList = new ArrayList<>();
-          for (Field item : (List<Field>) value) {
-            unpackedList.add(item.getValue());
-          }
-          values.add(unpackedList);
-        } else if (value instanceof Map) {
-          Map<Object, Object> unpackedMap = new HashMap<>();
-          for (Map.Entry<String, Field> entry : ((Map<String, Field>) value).entrySet()) {
-            unpackedMap.put(entry.getKey(), entry.getValue().getValue());
-          }
-          values.add(unpackedMap);
-        } else {
-          values.add(value);
-        }
-      }
-
-
-      PreparedStatement stmt = statementCache.getUnchecked(columnsPresent);
-      // .toArray required to pass in a list to a varargs method.
-      Object[] valuesArray = values.build().toArray();
-      BoundStatement boundStmt = null;
-      try {
-        boundStmt = stmt.bind(valuesArray);
-      } catch (InvalidTypeException | NullPointerException e) {
-        // NPE can occur if one of the values is a collection type with a null value inside it. Thus, it's a record
-        // error. Note that this runs the risk of mistakenly treating a bug as a record error.
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
-            break;
-          case STOP_PIPELINE:
-            throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
-          default:
-            throw new IllegalStateException(
-                Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
-            );
-        }
-      }
+      BoundStatement boundStmt = recordToBoundStatement(record);
 
       // if the bound statement is null here, it's probably because the record was an error record and should be
       // dropped or skipped. don't add it to batch statement.
       if (boundStmt != null) {
+        // if this batch is currently at the max batch size, then let's execute it and make a new batch before adding
+        // this latest statement to it.
+        if (batchedStatement.size() == MAX_BATCH_SIZE) {
+          session.execute(batchedStatement);
+          batchedStatement = new BatchStatement();
+        }
         batchedStatement.add(boundStmt);
       }
     }
 
+    // if there are any unexecuted statements, execute them now
     if (batchedStatement.size() > 0) {
       session.execute(batchedStatement);
     }
+  }
+
+  /**
+   * Convert a Record into a fully-bound statement.
+   */
+  private BoundStatement recordToBoundStatement(Record record) throws StageException {
+    ImmutableList.Builder<Object> values = new ImmutableList.Builder<>();
+    SortedSet<String> columnsPresent = Sets.newTreeSet(columnMappings.keySet());
+    for (Map.Entry<String, String> mapping : columnMappings.entrySet()) {
+      String columnName = mapping.getKey();
+      String fieldPath = mapping.getValue();
+
+      // If we're missing fields, skip them.
+      if (!record.has(fieldPath)) {
+        columnsPresent.remove(columnName);
+        continue;
+      }
+
+      final Object value = record.get(fieldPath).getValue();
+      // Special cases for handling SDC Lists and Maps,
+      // basically unpacking them into raw types.
+      if (value instanceof List) {
+        List<Object> unpackedList = new ArrayList<>();
+        for (Field item : (List<Field>) value) {
+          unpackedList.add(item.getValue());
+        }
+        values.add(unpackedList);
+      } else if (value instanceof Map) {
+        Map<Object, Object> unpackedMap = new HashMap<>();
+        for (Map.Entry<String, Field> entry : ((Map<String, Field>) value).entrySet()) {
+          unpackedMap.put(entry.getKey(), entry.getValue().getValue());
+        }
+        values.add(unpackedMap);
+      } else {
+        values.add(value);
+      }
+    }
+
+
+    PreparedStatement stmt = statementCache.getUnchecked(columnsPresent);
+    // .toArray required to pass in a list to a varargs method.
+    Object[] valuesArray = values.build().toArray();
+    BoundStatement boundStmt = null;
+    try {
+      boundStmt = stmt.bind(valuesArray);
+    } catch (InvalidTypeException | NullPointerException e) {
+      // NPE can occur if one of the values is a collection type with a null value inside it. Thus, it's a record
+      // error. Note that this runs the risk of mistakenly treating a bug as a record error.
+      switch (getContext().getOnErrorRecord()) {
+        case DISCARD:
+          break;
+        case TO_ERROR:
+          getContext().toError(record, Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
+          break;
+        case STOP_PIPELINE:
+          throw new StageException(Errors.CASSANDRA_06, record.getHeader().getSourceId(), e.toString());
+        default:
+          throw new IllegalStateException(
+              Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord(), e)
+          );
+      }
+    }
+    return boundStmt;
   }
 
   private Cluster getCluster() {
