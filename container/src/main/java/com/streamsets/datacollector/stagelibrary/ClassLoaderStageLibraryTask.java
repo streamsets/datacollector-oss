@@ -300,8 +300,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       for (Map.Entry<String, Set<Integer>> entry : stageVersions.entrySet()) {
         if (entry.getValue().size() > 1) {
           for (StageDefinition stage : stageList) {
-            errors.add(Utils.format("Stage='{}' Version='{}' Library='{}'", stage.getName(), stage.getVersion(),
-                                    stage.getLibrary()));
+            if (stage.getName().equals(entry.getKey())) {
+              errors.add(Utils.format("Stage='{}' Version='{}' Library='{}'", stage.getName(), stage.getVersion(),
+                stage.getLibrary()));
+            }
           }
         }
       }
