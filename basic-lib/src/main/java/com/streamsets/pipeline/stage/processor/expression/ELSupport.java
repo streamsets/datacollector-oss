@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.processor.expression;
 
 import com.streamsets.pipeline.api.ElFunction;
+import com.streamsets.pipeline.api.ElParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,5 +44,13 @@ public class ELSupport {
     description = "Creates an empty list")
   public static List createEmptyList() {
     return new ArrayList<>();
+  }
+
+  @ElFunction(
+      prefix = "",
+      name = "length",
+      description = "Returns the length of an array")
+  public static int length(@ElParam ("arr") List arr) {
+    return arr.size();
   }
 }

@@ -132,7 +132,7 @@ public abstract class
             Class<?>[] pTypes = method.getParameterTypes();
             for (int i = 0; i < pTypes.length; i++) {
               if (getParamAnnotation(pAnnotations[i]) == null) {
-                errors.add(new ErrorMessage(DefinitionError.DEF_052, contextMsg, klass.getSimpleName(), fName, i));
+                errors.add(new ErrorMessage(DefinitionError.DEF_055, contextMsg, klass.getSimpleName(), fName, i));
               }
             }
           }
