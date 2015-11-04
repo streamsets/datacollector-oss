@@ -42,7 +42,7 @@ public class ELEvaluator extends ELEval {
   private static final Logger LOG = LoggerFactory.getLogger(ELEvaluator.class);
   private final String configName;
   private final Map<String, Object> constants;
-  private final Map<String, Method> functions;
+  private final Map<String, Map<String,Method>> functionsByNamespace;
   private final FunctionMapperImpl functionMapper;
   private final List<ElFunctionDefinition> elFunctionDefinitions;
   private final List<ElConstantDefinition> elConstantDefinitions;
@@ -57,7 +57,7 @@ public class ELEvaluator extends ELEval {
   public ELEvaluator(String configName, Map<String, Object> constants, Class<?>... elFuncConstDefClasses) {
     this.configName = configName;
     this.constants = new HashMap<>(constants);
-    functions = new HashMap<>();
+    functionsByNamespace = new HashMap<>();
     elFunctionDefinitions = new ArrayList<>();
     elConstantDefinitions = new ArrayList<>();
     populateConstantsAndFunctions(elFuncConstDefClasses);
@@ -72,13 +72,34 @@ public class ELEvaluator extends ELEval {
     if(elFuncConstDefClasses != null) {
       for (ElFunctionDefinition function : ELDefinitionExtractor.get().extractFunctions(elFuncConstDefClasses, "")) {
         elFunctionDefinitions.add(function);
-        functions.put(function.getName(), function.getMethod());
+        registerFunction(function);
       }
       for (ElConstantDefinition constant : ELDefinitionExtractor.get().extractConstants(elFuncConstDefClasses, "")) {
         elConstantDefinitions.add(constant);
         constants.put(constant.getName(), constant.getValue());
       }
     }
+  }
+
+  // stuff a function into the namespace/name dual level map structure
+  private void registerFunction(ElFunctionDefinition function) {
+    String namespace;
+    String functionName;
+    if (function.getName().contains(":")) {
+      String[] tokens = function.getName().split(":");
+      namespace = tokens[0];
+      functionName = tokens[1];
+    } else {
+      namespace = "";
+      functionName = function.getName();
+    }
+
+    Map<String, Method> namespaceFunctions = functionsByNamespace.get(namespace);
+    if (namespaceFunctions == null) {
+      namespaceFunctions = new HashMap<>();
+      functionsByNamespace.put(namespace, namespaceFunctions);
+    }
+    namespaceFunctions.put(functionName, function.getMethod());
   }
 
   @Override
@@ -129,18 +150,15 @@ public class ELEvaluator extends ELEval {
     }
   }
 
-  private static String getFunctionName(String functionNamespace,String functionName) {
-    if (functionNamespace.length() > 0) {
-      functionName = functionNamespace + ":" + functionName;
-    }
-    return functionName;
-  }
-
   private class FunctionMapperImpl implements FunctionMapper {
 
     @Override
     public Method resolveFunction(String functionNamespace, String functionName) {
-      return functions.get(ELEvaluator.getFunctionName(functionNamespace, functionName));
+      Map<String, Method> namespaceFunctions = functionsByNamespace.get(functionNamespace);
+      if (namespaceFunctions == null) {
+        return null;
+      }
+      return namespaceFunctions.get(functionName);
     }
   }
 
