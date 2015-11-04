@@ -191,7 +191,7 @@ public class FlumeConfig {
       List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
-    FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(),
+    valid &= FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(),
       "flumeHostsConfig", context);
     if(batchSize < 1) {
       issues.add(context.createConfigIssue(Groups.FLUME.name(), "batchSize",
