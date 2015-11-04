@@ -21,10 +21,23 @@ To build the Data Collector you will need the following software :
 - Git 1.9+
 - JDK 1.7.*
 - Maven 3.2.3+
-- Node 0.10.32+1  (OSX, avail via macports: sudo install nodejs)
- - npm            (OSX, avail via macports: sudo install npm)
- - bower          (avail via npm          : sudo npm -g install bower)
- - grunt-cli      (avail via npm          : sudo npm -g install grunt-cli)
+- Node 0.10.32+1  (OSX, brew install nodejs       : Linux, sudo install nodejs)
+ - npm            (OSX, brew install npm          : Linux, sudo install npm)
+ - bower          (OSX, npm -g install bower      : Linux, sudo npm -g install bower)
+ - grunt-cli      (OSX, npm -g install grunt-cli  : Linux, sudo npm -g install grunt-cli)
+
+Prerequisites for Data Collector :
+
+If you're building master branch, then you need to install API module to your maven cache first before compiling Data Collector. Released versions
+are published to public maven repositories and for them this step can be skipped.
+
+- You can do that by getting the latest code from github
+
+`git clone http://github.com/streamsets/datacollector-api`
+
+- And install it to maven cache
+
+`mvn clean install -DskipTests`
 
 Follow these instructions to build the Data Collector :
 
