@@ -28,8 +28,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
-    label = "RPC",
-    description = "Sends records via RPC to a Data Collector pipeline that uses an RPC origin",
+    label = "SDC RPC",
+    description = "Sends records via SDC RPC to a Data Collector pipeline that uses an SDC RPC origin",
     icon="sdcipc.png"
 )
 @ConfigGroups(Groups.class)

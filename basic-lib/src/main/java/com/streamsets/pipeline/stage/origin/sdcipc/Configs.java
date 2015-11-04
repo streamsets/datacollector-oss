@@ -37,8 +37,8 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "20000",
-      label = "RPC Listening Port",
-      description = "Port number to listen for data. Must match one of the port numbers used by the RPC destination of the origin pipeline.",
+      label = "SDC RPC Listening Port",
+      description = "Port number to listen for data. Must match one of the port numbers used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 10,
       group = "RPC",
       min = 1,
@@ -49,8 +49,8 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "RPC ID",
-      description = "User-defined ID. Must match the RPC ID used by the RPC destination of the origin pipeline.",
+      label = "SDC RPC ID",
+      description = "User-defined ID. Must match the SDC RPC ID used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 20,
       group = "RPC"
   )

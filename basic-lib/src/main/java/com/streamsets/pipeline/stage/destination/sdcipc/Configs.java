@@ -53,7 +53,7 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.LIST,
       defaultValue = "[]",
-      label = "RPC Connection",
+      label = "SDC RPC Connection",
       description = "Connection information for the destination pipeline. Use the format <host>:<port>.",
       displayPosition = 10,
       group = "RPC"
@@ -63,8 +63,8 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "RPC ID",
-      description = "User-defined ID. Must match the RPC ID used in the RPC origin of the destination pipeline.",
+      label = "SDC RPC ID",
+      description = "User-defined ID. Must match the SDC RPC ID used in the SDC RPC origin of the destination pipeline.",
       displayPosition = 20,
       group = "RPC"
   )
@@ -85,7 +85,7 @@ public class Configs {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Truststore File",
-      description = "The truststore file is expected in  the Data Collector resources directory. Leave empty if none.",
+      description = "The truststore file is expected in the Data Collector resources directory. Leave empty if none.",
       displayPosition = 40,
       group = "RPC",
       dependsOn = "sslEnabled",
