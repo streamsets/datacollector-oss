@@ -542,7 +542,9 @@ angular
         });
     };
 
-    if($scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER) {
+    if($scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER &&
+        $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+        $scope.activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING) {
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {
           $scope.snapshotsInfo = res.data;
