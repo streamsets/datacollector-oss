@@ -400,7 +400,7 @@ public class WebServerTask extends AbstractTask {
           if (isSSLEnabled()) {
             baseHttpUrl = "https://";
           }
-          baseHttpUrl += InetAddress.getLocalHost().getHostName() + ":" + port;
+          baseHttpUrl += InetAddress.getLocalHost().getCanonicalHostName() + ":" + port;
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
         } catch(UnknownHostException ex) {
           LOG.debug("Exception during hostname resolution: {}", ex);
