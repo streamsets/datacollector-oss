@@ -50,7 +50,16 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+    boolean found = false;
+    for (Config config : configs) {
+      if (config.getName().equals("executionMode")) {
+        found = true;
+      }
+    }
+
+    if(!found) {
+      configs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+    }
   }
 
   private void upgradeV3ToV4(List<Config> configs) {
