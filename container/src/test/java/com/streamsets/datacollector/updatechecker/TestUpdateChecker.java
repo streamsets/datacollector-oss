@@ -24,10 +24,9 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
-import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.util.Configuration;
 
 import org.eclipse.jetty.server.Server;
@@ -84,7 +83,7 @@ public class TestUpdateChecker {
 
   private void assertUploadInfo(Map uploadInfo) {
     Assert.assertNotNull(uploadInfo.get("sdc.buildInfo"));
-    Assert.assertTrue(uploadInfo.get("sdc.buildInfo") instanceof BuildInfo);
+    Assert.assertTrue(uploadInfo.get("sdc.buildInfo") instanceof DataCollectorBuildInfo);
     Assert.assertNotNull(uploadInfo.get("sdc.sha256"));
     Assert.assertEquals(UpdateChecker.getSha256("hello"), uploadInfo.get("sdc.sha256"));
     Assert.assertNotNull(uploadInfo.get("sdc.stages"));

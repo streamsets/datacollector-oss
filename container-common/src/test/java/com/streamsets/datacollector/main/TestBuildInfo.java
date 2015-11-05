@@ -24,19 +24,16 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 
-import com.streamsets.datacollector.main.BuildInfo;
-
 public class TestBuildInfo {
 
   @Test
   public void testInfo() {
-    BuildInfo info = new BuildInfo();
+    BuildInfo info = new BuildInfo("test-buildinfo.properties"){};
     Assert.assertEquals("1", info.getVersion());
     Assert.assertEquals("today", info.getBuiltDate());
     Assert.assertEquals("foo", info.getBuiltBy());
     Assert.assertEquals("sha", info.getBuiltRepoSha());
-    Assert.assertEquals("container-checksum", info.getImplSourceMd5Checksum());
-    Assert.assertEquals("api-checksum", info.getApiSourceMd5Checksum());
+    Assert.assertEquals("checksum", info.getSourceMd5Checksum());
     Logger log = Mockito.mock(Logger.class);
     info.log(log);
   }

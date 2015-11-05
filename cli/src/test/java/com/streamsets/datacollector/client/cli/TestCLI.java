@@ -141,7 +141,7 @@ public class TestCLI {
     Assert.assertTrue(cliOutput.contains("builtDate"));
     Assert.assertTrue(cliOutput.contains("builtBy"));
     Assert.assertTrue(cliOutput.contains("builtRepoSha"));
-    Assert.assertTrue(cliOutput.contains("apiSourceMd5Checksum"));
+    Assert.assertTrue(cliOutput.contains("sourceMd5Checksum"));
     Assert.assertTrue(cliOutput.contains("version"));
   }
 

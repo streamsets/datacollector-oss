@@ -52,7 +52,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
-    return new BuildInfo();
+    return new DataCollectorBuildInfo();
   }
 
   @Provides @Singleton

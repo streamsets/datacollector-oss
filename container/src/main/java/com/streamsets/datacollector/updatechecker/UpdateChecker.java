@@ -26,7 +26,7 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.Configuration;
@@ -110,7 +110,7 @@ public class UpdateChecker implements Runnable {
 
       uploadInfo = new LinkedHashMap();
       uploadInfo.put("sdc.sha256", getSha256(runner.getToken()));
-      uploadInfo.put("sdc.buildInfo", new BuildInfo());
+      uploadInfo.put("sdc.buildInfo", new DataCollectorBuildInfo());
       uploadInfo.put("sdc.stages", stages);
     }
 
