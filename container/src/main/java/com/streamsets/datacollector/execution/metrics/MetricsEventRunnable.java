@@ -56,7 +56,7 @@ public class MetricsEventRunnable implements Runnable {
   public static final int REFRESH_INTERVAL_PROPERTY_DEFAULT = 2000;
 
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
-  private final static Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
+  private static final Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private final ConcurrentMap<String, MetricRegistryJson> slaveMetrics;
   private ThreadHealthReporter threadHealthReporter;
   private final EventListenerManager eventListenerManager;
@@ -102,7 +102,8 @@ public class MetricsEventRunnable implements Runnable {
         ObjectMapper objectMapper = ObjectMapperFactory.get();
         String metricsJSONStr;
         if (state.getExecutionMode() == ExecutionMode.CLUSTER_BATCH
-          || state.getExecutionMode() == ExecutionMode.CLUSTER_STREAMING) {
+          || state.getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
+          || state.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) {
           MetricRegistryJson metricRegistryJson = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {

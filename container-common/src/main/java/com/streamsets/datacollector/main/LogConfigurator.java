@@ -38,7 +38,8 @@ public class LogConfigurator {
   }
 
   public void configure() {
-    if (Boolean.getBoolean("sdc.transient-env")) {
+    if (Boolean.getBoolean("sdc.transient-env")
+        && System.getProperty("SDC_MESOS_BASE_DIR") == null) {
       Logger log = LoggerFactory.getLogger(this.getClass());
       log.info("SDC in transient environment, will not reconfigure log");
       return;

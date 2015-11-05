@@ -128,6 +128,14 @@ public abstract class PipelineBeanCreator {
     return mode;
   }
 
+  public String getMesosDispatcherURL(PipelineConfiguration pipelineConf) {
+    String value = null;
+    if (pipelineConf.getConfiguration("mesosDispatcherURL") != null) {
+      value = pipelineConf.getConfiguration("mesosDispatcherURL").getValue().toString();
+    }
+    return value;
+  }
+
   StageBean createStageBean(boolean forExecution, StageLibraryTask library, StageConfiguration stageConf,
       boolean errorStage, Map<String, Object> constants, List<Issue> errors) {
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());

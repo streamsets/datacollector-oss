@@ -172,7 +172,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 100,
       group = "CLUSTER",
       dependsOn = "executionMode",
-      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
+      triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
   public long clusterSlaveMemory;
 
@@ -186,7 +186,7 @@ public class PipelineConfigBean implements Stage {
     displayPosition = 110,
     group = "CLUSTER",
     dependsOn = "executionMode",
-    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
+    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
   public String clusterSlaveJavaOpts;
 
@@ -200,9 +200,21 @@ public class PipelineConfigBean implements Stage {
     displayPosition = 120,
     group = "CLUSTER",
     dependsOn = "executionMode",
-    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_STREAMING"}
+    triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
   public Map clusterLauncherEnv;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Mesos Dispatcher URL",
+    description = "URL for service which launches Mesos framework",
+    displayPosition = 130,
+    group = "CLUSTER",
+    dependsOn = "executionMode",
+    triggeredByValue = {"CLUSTER_MESOS_STREAMING"}
+  )
+  public String mesosDispatcherURL;
 
 
   @Override

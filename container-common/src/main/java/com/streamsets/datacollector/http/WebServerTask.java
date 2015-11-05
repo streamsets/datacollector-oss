@@ -89,7 +89,7 @@ public class WebServerTask extends AbstractTask {
   private static final String DIGEST_REALM_KEY = "http.digest.realm";
   private static final String REALM_POSIX_DEFAULT = "-realm";
 
-  private static final String REALM_FILE_PERMISSION_CHECK = "http.realm.file.permission.check";
+  public static final String REALM_FILE_PERMISSION_CHECK = "http.realm.file.permission.check";
   private static final boolean REALM_FILE_PERMISSION_CHECK_DEFAULT = true;
 
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
@@ -285,9 +285,13 @@ public class WebServerTask extends AbstractTask {
     noAuthConstraint.setAuthenticate(false);
     noAuthConstraint.setRoles(new String[]{"user"});
 
-
     ConstraintMapping resourceMapping = new ConstraintMapping();
     resourceMapping.setPathSpec("/login");
+    resourceMapping.setConstraint(noAuthConstraint);
+    securityHandler.addConstraintMapping(resourceMapping);
+
+    resourceMapping = new ConstraintMapping();
+    resourceMapping.setPathSpec("/mesos/*");
     resourceMapping.setConstraint(noAuthConstraint);
     securityHandler.addConstraintMapping(resourceMapping);
 

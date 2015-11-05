@@ -1,0 +1,9 @@
+2015-11-05 05:12:41,399 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Submitting a request for the status of submission driver-20151105051240-0011 in mesos://172.17.0.1:7077.
+2015-11-05 05:12:41,800 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Server responded with SubmissionStatusResponse:
+{
+  "action" : "SubmissionStatusResponse",
+  "driverState" : "QUEUED",
+  "serverSparkVersion" : "1.5.0",
+  "submissionId" : "driver-20151105051240-0011",
+  "success" : true
+}

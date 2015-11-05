@@ -134,7 +134,7 @@
     <module>cluster-common</module>
     <module>cluster-kafka-protolib</module>
     <module>spark-bootstrap</module>
-
+    <module>mesos-bootstrap</module>
     <module>cli</module>
     <module>common-ui</module>
   </modules>
@@ -407,6 +407,7 @@
         <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
+        <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
       </properties>
       <modules>
         <module>cdh_5_4-lib</module>
@@ -417,6 +418,7 @@
         <module>cdh_kafka_1_3-lib</module>
         <module>mongodb_3-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_3-lib</module>
+        <module>apache-kafka_0_8_2-lib</module>
       </modules>
     </profile>
 

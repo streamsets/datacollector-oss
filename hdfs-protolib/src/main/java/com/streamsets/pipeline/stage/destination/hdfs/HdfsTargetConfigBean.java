@@ -581,7 +581,8 @@ public class HdfsTargetConfigBean {
     if (hdfsConfDir != null && !hdfsConfDir.isEmpty()) {
       File hadoopConfigDir = new File(hdfsConfDir);
       if ((context.getExecutionMode() == ExecutionMode.CLUSTER_BATCH ||
-        context.getExecutionMode() == ExecutionMode.CLUSTER_STREAMING) &&
+        context.getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING ||
+        context.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) &&
         hadoopConfigDir.isAbsolute()
         ) {
         //Do not allow absolute hadoop config directory in cluster mode

@@ -55,7 +55,7 @@ public class PipelineStateJson   {
     CONNECTING("CONNECTING"),
     CONNECT_ERROR("CONNECT_ERROR");
 
-    private String value;
+    private final String value;
 
     StatusEnum(String value) {
       this.value = value;
@@ -75,10 +75,11 @@ public class PipelineStateJson   {
   public enum ExecutionModeEnum {
     STANDALONE("STANDALONE"),
     CLUSTER_BATCH("CLUSTER_BATCH"),
-    CLUSTER_STREAMING("CLUSTER_STREAMING"),
+    CLUSTER_YARN_STREAMING("CLUSTER_YARN_STREAMING"),
+    CLUSTER_MESOS_STREAMING("CLUSTER_MESOS_STREAMING"),
     SLAVE("SLAVE");
 
-    private String value;
+    private final String value;
 
     ExecutionModeEnum(String value) {
       this.value = value;

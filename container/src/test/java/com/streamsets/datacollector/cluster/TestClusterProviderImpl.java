@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -68,6 +69,7 @@ public class TestClusterProviderImpl {
   private Map<String, String> env;
   private Map<String, String> sourceInfo;
   private ClusterProviderImpl sparkProvider;
+  private final String SDC_TEST_PREFIX = "dummy";
 
 
   @Before
@@ -78,13 +80,15 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(tempDir.mkdir());
     providerTemp = new File(tempDir, "provider-temp");
     Assert.assertTrue(providerTemp.mkdir());
-    Assert.assertTrue(sparkManagerShell.createNewFile());
+   Assert.assertTrue(sparkManagerShell.createNewFile());
     sparkManagerShell.setExecutable(true);
     MockSystemProcess.reset();
     etcDir = new File(tempDir, "etc-src");
     Assert.assertTrue(etcDir.mkdir());
     File sdcProperties = new File(etcDir, "sdc.properties");
     Assert.assertTrue(sdcProperties.createNewFile());
+    File log4jPropertyDummyFile = new File(etcDir, SDC_TEST_PREFIX + RuntimeInfo.LOG4J_PROPERTIES);
+    Assert.assertTrue(log4jPropertyDummyFile.createNewFile());
     resourcesDir = new File(tempDir, "resources-src");
     Assert.assertTrue(resourcesDir.mkdir());
     Assert.assertTrue((new File(resourcesDir, "dir")).mkdir());
@@ -99,15 +103,18 @@ public class TestClusterProviderImpl {
     Assert.assertTrue(bootstrapMainLibDir.mkdirs());
     File bootstrapSparkLibDir = new File(bootstrapLibDir, "spark");
     Assert.assertTrue(bootstrapSparkLibDir.mkdirs());
+    File bootstrapMesosLibDir = new File(bootstrapLibDir, "mesos");
+    Assert.assertTrue(bootstrapMesosLibDir.mkdirs());
     Assert.assertTrue(new File(bootstrapMainLibDir, "streamsets-datacollector-bootstrap.jar").createNewFile());
     Assert.assertTrue(new File(bootstrapSparkLibDir, "streamsets-datacollector-spark-bootstrap.jar").createNewFile());
+    Assert.assertTrue(new File(bootstrapMesosLibDir, "streamsets-datacollector-mesos-bootstrap.jar").createNewFile());
     List<Config> configs = new ArrayList<Config>();
     configs.add(new Config("clusterSlaveMemory", 512));
     configs.add(new Config("clusterSlaveJavaOpts", ""));
     configs.add(new Config("clusterKerberos", false));
     configs.add(new Config("kerberosPrincipal", ""));
     configs.add(new Config("kerberosKeytab", ""));
-    configs.add(new Config("executionMode", ExecutionMode.CLUSTER_STREAMING));
+    configs.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING));
     pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
       UUID.randomUUID(), null, configs, null, new ArrayList<StageConfiguration>(),
       MockStages.getErrorStageConfig());
@@ -128,7 +135,9 @@ public class TestClusterProviderImpl {
     env = new HashMap<>();
     sourceInfo = new HashMap<>();
     sourceInfo.put(ClusterModeConstants.NUM_EXECUTORS_KEY, "64");
-    sparkProvider = new ClusterProviderImpl();
+    URLClassLoader emptyCL = new URLClassLoader(new URL[0]);
+    RuntimeInfo runtimeInfo = new RuntimeInfo(SDC_TEST_PREFIX, null, Arrays.asList(emptyCL), tempDir);
+    sparkProvider = new ClusterProviderImpl(runtimeInfo, null);
   }
 
   @After
@@ -173,10 +182,10 @@ public class TestClusterProviderImpl {
   }
 
   @Test
-  public void testStreamingExecutionMode() throws Throwable {
+  public void testYarnStreamingExecutionMode() throws Throwable {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     List<Config> list = new ArrayList<Config>();
-    list.add(new Config("executionMode", ExecutionMode.CLUSTER_STREAMING.name()));
+    list.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING.name()));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
       UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
       MockStages.getErrorStageConfig());
@@ -187,11 +196,34 @@ public class TestClusterProviderImpl {
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
         new ArrayList<String>(), UUID.randomUUID())).getId());
-    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_SPARK,
+    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
       MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args
       .contains("<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,"
         + "<masked>/spark-streaming-kafka-1.2.jar"));
+  }
+
+  @Test
+  public void testMesosStreamingExecutionMode() throws Throwable {
+    MockSystemProcess.output.add(" driver-20151105162031-0005 ");
+    List<Config> list = new ArrayList<Config>();
+    list.add(new Config("executionMode", ExecutionMode.CLUSTER_MESOS_STREAMING.name()));
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
+      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
+      MockStages.getErrorStageConfig());
+    pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
+      "aaa", null, null, null, true));
+    ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
+      providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
+      webDir, bootstrapLibDir, classLoader, classLoader,  60,
+      new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
+        new ArrayList<String>(), UUID.randomUUID()));
+    Assert.assertNotNull(appState.getId());
+    Assert.assertNotNull(appState.getUUID());
+    Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
+      MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
+    Assert.assertTrue(MockSystemProcess.args
+      .contains(RuntimeInfo.UNDEF + "/mesos/" + appState.getUUID() + "/streamsets-datacollector-mesos-bootstrap.jar"));
   }
 
   @Test

@@ -136,9 +136,9 @@ public class TestStageRunner {
     builder = new DummyStageRunner.Builder(new DummyStage1());
     runner = builder.build();
     Assert.assertEquals(ExecutionMode.STANDALONE, runner.getContext().getExecutionMode());
-    builder.setExecutionMode(ExecutionMode.CLUSTER_STREAMING);
+    builder.setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING);
     runner = builder.build();
-    Assert.assertEquals(ExecutionMode.CLUSTER_STREAMING, runner.getContext().getExecutionMode());
+    Assert.assertEquals(ExecutionMode.CLUSTER_YARN_STREAMING, runner.getContext().getExecutionMode());
   }
 
   @Test

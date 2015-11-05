@@ -4,7 +4,7 @@
   "description" : "",
   "configuration" : [ {
     "name" : "executionMode",
-    "value" : "CLUSTER_STREAMING"
+    "value" : "CLUSTER_YARN_STREAMING"
   }, {
     "name" : "clusterSlaveMemory",
     "value" : 1024

@@ -212,7 +212,7 @@ public class TestStageDefinitionExtractor {
     Assert.assertEquals(0, def.getConfigGroupDefinition().getGroupNames().size());
     Assert.assertEquals(3, def.getConfigDefinitions().size());
     Assert.assertEquals(1, def.getOutputStreams());
-    Assert.assertEquals(3, def.getExecutionModes().size());
+    Assert.assertEquals(4, def.getExecutionModes().size());
     Assert.assertEquals(2, def.getLibJarsRegex().size());
     Assert.assertEquals("TargetIcon.svg", def.getIcon());
     Assert.assertEquals(StageDef.DefaultOutputStreams.class.getName(), def.getOutputStreamLabelProviderClass());

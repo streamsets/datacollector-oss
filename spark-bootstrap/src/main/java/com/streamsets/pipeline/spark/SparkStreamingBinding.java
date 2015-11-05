@@ -62,15 +62,18 @@ public class SparkStreamingBinding implements ClusterBinding {
       throw new IllegalArgumentException(msg, ex);
     }
     ssc = new JavaStreamingContext(conf, new Duration(duration));
-    final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
-      @Override
-      public void run() {
-        LOG.debug("Gracefully stopping Spark Streaming Application");
-        ssc.stop(true, true);
-        LOG.info("Application stopped");
-      }
-    };
-    Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+    // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
+    if (System.getProperty("SDC_MESOS_BASE_DIR") == null) {
+      final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
+        @Override
+        public void run() {
+          LOG.debug("Gracefully stopping Spark Streaming Application");
+          ssc.stop(true, true);
+          LOG.info("Application stopped");
+        }
+      };
+      Runtime.getRuntime().addShutdownHook(shutdownHookThread);
+    }
     LOG.info("Making calls through spark context ");
     JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
     dStream.foreachRDD(new SparkDriverFunction());

@@ -30,8 +30,13 @@ import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +45,14 @@ import java.util.Properties;
 public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tuple2<T1, T2>>>, Serializable {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapSparkFunction.class);
   private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
+  private static final String MESOS_BOOTSTRAP_JAR_REGEX = "streamsets-datacollector-mesos-bootstrap";
+  private static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private volatile boolean initialized = false;
   private ClusterFunction clusterFunction;
   private Properties properties;
   private int batchSize;
+  private volatile static boolean isPreprocessingMesosDone;
 
   public BootstrapSparkFunction() {
   }
@@ -52,6 +60,11 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
   private synchronized void initialize() throws Exception {
     if (initialized) {
       return;
+    }
+    String mesosHomeDir = System.getenv("MESOS_DIRECTORY");
+    // If this is running under mesos
+    if (mesosHomeDir != null && !isPreprocessingMesosDone) {
+      isPreprocessingMesosDone = extractArchives(mesosHomeDir) ? true: false;
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
     properties = BootstrapCluster.getProperties();
@@ -88,4 +101,32 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     }
     return new String(chars);
   }
+
+  private boolean extractArchives(String mesosHomeDir)
+      throws IOException, InterruptedException {
+    // Extract archives from the uber jar
+    String[] cmd = { "/bin/bash", "-c",
+        "cd " + mesosHomeDir + "; "
+              + "mkdir " + SDC_MESOS_BASE_DIR + ";"
+              + " cd " + SDC_MESOS_BASE_DIR + ";" +
+              "jar -xf ../"  + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; " +
+              "tar -xf etc.tar.gz; " +
+              "mkdir libs; " +
+              "tar -xf libs.tar.gz -C libs/; " +
+              "tar -xf resources.tar.gz" };
+    ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+    processBuilder.redirectErrorStream(true);
+    Process process = processBuilder.start();
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+      }
+      process.waitFor();
+    }
+    System.setProperty("SDC_MESOS_BASE_DIR",
+        new File(mesosHomeDir, SDC_MESOS_BASE_DIR).getAbsolutePath());
+    return (process.exitValue() == 0) ? true: false;
+  }
+
 }

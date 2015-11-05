@@ -33,7 +33,8 @@ command=$1
 shift
 KINIT_COMMAND=${KINIT_COMMAND:-kinit}
 YARN_COMMAND=${YARN_COMMAND:-/usr/bin/yarn}
-SPARK_SUBMIT_COMMAND=${SPARK_SUBMIT_COMMAND:-/usr/bin/spark-submit}
+SPARK_SUBMIT_YARN_COMMAND=${SPARK_SUBMIT_YARN_COMMAND:-/usr/bin/spark-submit}
+SPARK_SUBMIT_MESOS_COMMAND=${SPARK_SUBMIT_MESOS_COMMAND:-/usr/bin/spark-submit}
 HADOOP_COMMAND=${HADOOP_COMMAND:-/usr/bin/hadoop}
 
 if [[ "$KERBEROS_AUTH" == "true" ]]
@@ -45,9 +46,36 @@ fi
 
 if [[ $command == "start" ]]
 then
-  if [[ "$CLUSTER_TYPE" == "spark" ]]
+  if [[ "$CLUSTER_TYPE" == "mesos" ]]
+  then 
+    if [[ -z "$STAGING_DIR" ]]
+    then 
+       echo "STAGING_DIR is not set"
+       exit 1
+    fi   
+    cd $STAGING_DIR
+    if [[ -z "MESOS_UBER_JAR_PATH" ]]
+    then 
+       echo "MESOS_UBER_JAR_PATH is not set"
+       exit 1
+    fi
+    cp $MESOS_UBER_JAR_PATH .
+    jar -uf $MESOS_UBER_JAR $ETC_TAR_ARCHIVE $LIBS_TAR_ARCHIVE $RESOURCES_TAR_ARCHIVE
+    if [ $? -eq 1 ]
+    then 
+       echo "Jar update failed"
+       exit 1
+    fi      
+    mv $MESOS_UBER_JAR $MESOS_HOSTING_JAR_DIR
+    if [ $? -eq 1 ]
+    then 
+       echo "Move of Uber jar failed"
+       exit 1
+    fi      
+    exec $SPARK_SUBMIT_MESOS_COMMAND "$@"
+  elif [[ "$CLUSTER_TYPE" == "yarn" ]]
   then
-    exec $SPARK_SUBMIT_COMMAND "$@"
+    exec $SPARK_SUBMIT_YARN_COMMAND "$@"
   elif [[ "$CLUSTER_TYPE" == "mr" ]]
   then
     exec $HADOOP_COMMAND "$@"
@@ -57,10 +85,20 @@ then
   fi
 elif [[ $command == "kill" ]]
 then
-  exec $YARN_COMMAND application -kill "$@"
+  if [[ "$CLUSTER_TYPE" == "yarn" ]] 
+  then
+     exec $YARN_COMMAND application -kill "$@"
+  else 
+     exec  $SPARK_SUBMIT_MESOS_COMMAND --kill "$@"
+  fi   
 elif [[ $command == "status" ]]
 then
-  exec $YARN_COMMAND application -status "$@"
+  if [[ "$CLUSTER_TYPE" == "yarn" ]] 
+  then
+    exec $YARN_COMMAND application -status "$@"
+  else 
+    exec $SPARK_SUBMIT_MESOS_COMMAND --status "$@"
+  fi    
 else
   echo "ERROR: Unknown command '$command'" 1>&2
   exit 1

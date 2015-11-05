@@ -96,6 +96,20 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
+  ContextConfigurator provideMesosDir(final RuntimeInfo runtimeInfo) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        ServletHolder servlet = new ServletHolder(new DefaultServlet());
+        // can't allow listing of dir as mesos dir will be hosting the jar file
+        servlet.setInitParameter("dirAllowed", "false");
+        servlet.setInitParameter("resourceBase", runtimeInfo.getDataDir());
+        context.addServlet(servlet, "/mesos/*");
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
   ContextConfigurator provideGzipFilter() {
     return new ContextConfigurator() {
       @Override

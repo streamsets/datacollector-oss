@@ -80,6 +80,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 import dagger.ObjectGraph;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -213,8 +214,8 @@ public class ClusterRunner extends AbstractRunner {
           msg = "Upgrading execution mode to " + ExecutionMode.CLUSTER_BATCH + " from " + ExecutionMode.CLUSTER;
           executionMode = ExecutionMode.CLUSTER_BATCH;
         } else {
-          msg = "Upgrading execution mode to " + ExecutionMode.CLUSTER_STREAMING + " from " + ExecutionMode.CLUSTER;
-          executionMode = ExecutionMode.CLUSTER_STREAMING;
+          msg = "Upgrading execution mode to " + ExecutionMode.CLUSTER_YARN_STREAMING + " from " + ExecutionMode.CLUSTER;
+          executionMode = ExecutionMode.CLUSTER_YARN_STREAMING;
 
         }
         PipelineState currentState = getState();
@@ -373,7 +374,8 @@ public class ClusterRunner extends AbstractRunner {
       Utils.checkState(!isClosed,
         Utils.formatL("Cannot start the pipeline '{}::{}' as the runner is already closed", name, rev));
       ExecutionMode executionMode = pipelineStateStore.getState(name, rev).getExecutionMode();
-      if (executionMode != ExecutionMode.CLUSTER_BATCH && executionMode != ExecutionMode.CLUSTER_STREAMING) {
+      if (executionMode != ExecutionMode.CLUSTER_BATCH && executionMode != ExecutionMode.CLUSTER_YARN_STREAMING
+          && executionMode != ExecutionMode.CLUSTER_MESOS_STREAMING) {
         throw new PipelineRunnerException(ValidationError.VALIDATION_0073);
       }
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", name, rev, getState());
@@ -649,17 +651,33 @@ public class ClusterRunner extends AbstractRunner {
       } else if (clusterPipelineState == ClusterPipelineStatus.FAILED) {
         msg = "Pipeline failed in cluster";
         LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.RUN_ERROR, msg);
+        postTerminate(appState, PipelineStatus.RUN_ERROR, msg);
       } else if (clusterPipelineState == ClusterPipelineStatus.KILLED) {
         msg = "Pipeline killed in cluster";
         LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.KILLED, msg);
+        postTerminate(appState, PipelineStatus.KILLED, msg);
       } else if (clusterPipelineState == ClusterPipelineStatus.SUCCEEDED) {
         msg = "Pipeline succeeded in cluster";
         LOG.debug(msg);
-        validateAndSetStateTransition(PipelineStatus.FINISHED, msg);
+        postTerminate(appState, PipelineStatus.FINISHED, msg);
       }
     }
+  }
+
+  private void postTerminate(ApplicationState appState,
+      PipelineStatus pipelineStatus, String msg)
+          throws PipelineStoreException, PipelineRunnerException {
+    String dirID = appState.getUUID();
+    // For mesos, remove dir hosting jar once job terminates
+    if (dirID != null) {
+      File hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirID);
+      FileUtils.deleteQuietly(hostingDir);
+    }
+    Map<String, Object> attributes = new HashMap<String, Object>();
+    attributes.putAll(getAttributes());
+    attributes.remove(APPLICATION_STATE);
+    attributes.remove(APPLICATION_STATE_START_TIME);
+    validateAndSetStateTransition(pipelineStatus, msg, attributes);
   }
 
   private synchronized void doStart(PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) throws PipelineStoreException,
@@ -769,6 +787,12 @@ public class ClusterRunner extends AbstractRunner {
     }
     Map<String, Object> attributes = new HashMap<>();
     if (stopped) {
+      String dirID = applicationState.getUUID();
+      //For mesos, remove dir hosting jar once job terminates
+      if (dirID != null) {
+        File hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirID);
+        FileUtils.deleteQuietly(hostingDir);
+      }
       attributes.putAll(getAttributes());
       attributes.remove(APPLICATION_STATE);
       attributes.remove(APPLICATION_STATE_START_TIME);

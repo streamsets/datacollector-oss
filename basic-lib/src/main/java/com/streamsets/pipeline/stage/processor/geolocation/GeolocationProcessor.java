@@ -75,7 +75,9 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> result = super.init();
     File database = new File(geoIP2DBFile);
-    if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING)
+    if ((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH
+        || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
+        || getContext().getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING)
       && database.isAbsolute()) {
     //Do not allow absolute geoIP2DBFile in cluster mode
       result.add(getContext().createConfigIssue("GEOLOCATION", "geoIP2DBFile", Errors.GEOIP_10, geoIP2DBFile));

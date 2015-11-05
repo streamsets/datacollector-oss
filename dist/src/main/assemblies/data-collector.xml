@@ -339,6 +339,17 @@
       </includes>
     </dependencySet>
 
+     <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <outputDirectory>/libexec/bootstrap-libs/mesos</outputDirectory>
+      <unpack>false</unpack>
+      <scope>compile</scope>
+      <includes>
+        <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
+      </includes>
+    </dependencySet>
+
     <dependencySet>
       <useProjectArtifact>false</useProjectArtifact>
       <useTransitiveDependencies>false</useTransitiveDependencies>

@@ -81,7 +81,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
       configs.remove(index);
       Utils.checkNotNull(sourceName, "Source stage name cannot be null");
       configs.add(new Config("executionMode", (sourceName.contains("ClusterHdfsDSource")) ? ExecutionMode.CLUSTER_BATCH
-        : ExecutionMode.CLUSTER_STREAMING));
+        : ExecutionMode.CLUSTER_YARN_STREAMING));
     }
   }
 

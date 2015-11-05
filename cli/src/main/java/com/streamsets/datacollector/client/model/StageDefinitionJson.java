@@ -38,7 +38,7 @@ public class StageDefinitionJson   {
   public enum TypeEnum {
     SOURCE("SOURCE"), PROCESSOR("PROCESSOR"), TARGET("TARGET");
 
-    private String value;
+    private final String value;
 
     TypeEnum(String value) {
       this.value = value;
@@ -65,10 +65,11 @@ public class StageDefinitionJson   {
   public enum ExecutionModesEnum {
     STANDALONE("STANDALONE"),
     CLUSTER_BATCH("CLUSTER_BATCH"),
-    CLUSTER_STREAMING("CLUSTER_STREAMING"),
+    CLUSTER_YARN_STREAMING("CLUSTER_YARN_STREAMING"),
+    CLUSTER_MESOS_STREAMING("CLUSTER_MESOS_STREAMING"),
     SLAVE("SLAVE");
 
-    private String value;
+    private final String value;
 
     ExecutionModesEnum(String value) {
       this.value = value;

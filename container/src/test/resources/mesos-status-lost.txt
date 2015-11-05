@@ -1,0 +1,11 @@
+2015-11-06 19:54:29,748 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Submitting a request for the status of submission driver-20151105232237-0014 in mesos://172.17.0.1:7077.
+2015-11-06 19:54:30,167 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Server responded with SubmissionStatusResponse:
+{
+  "action" : "SubmissionStatusResponse",
+  "driverState" : "FINISHED",
+  "message" : "task_id {\n  value: \"driver-20151105232237-0014\"\n}\nstate: TASK_LOST\nmessage: \"Slave node01.local removed: health check timed out\"\nslave_id {\n  value: \"20151024-174948-16781740-5050-106086-S5\"\n}\ntimestamp: 1.446769382485198E9\nsource: SOURCE_MASTER\nreason: REASON_SLAVE_REMOVED\n",
+  "serverSparkVersion" : "1.5.0",
+  "submissionId" : "driver-20151105232237-0014",
+  "success" : true
+}
+

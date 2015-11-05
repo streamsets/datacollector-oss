@@ -50,6 +50,8 @@ import java.util.UUID;
 
 public class TestLogServlet {
 
+  private static final String CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [thread:%t] %-5p %c{1} - %m%n";
+
   private String createTestDir() {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
@@ -108,7 +110,8 @@ public class TestLogServlet {
       writer.close();
       File log4fConfig = new File(baseDir, "log4j.properties");
       writer = new FileWriter(log4fConfig);
-      writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath());
+      writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath() + "\n");
+      writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN + "=" + CONVERSION_PATTERN);
       writer.close();
 
       int port = getRandomPort();

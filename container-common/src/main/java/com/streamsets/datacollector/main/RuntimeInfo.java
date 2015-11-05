@@ -52,7 +52,7 @@ public class RuntimeInfo {
   private final static String USER_ROLE = "user";
 
   public static final String LOG4J_CONFIGURATION_URL_ATTR = "log4j.configuration.url";
-  private static final String LOG4J_PROPERTIES = "-log4j.properties";
+  public static final String LOG4J_PROPERTIES = "-log4j.properties";
 
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;

@@ -1,0 +1,10 @@
+2015-11-05 06:28:28,679 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Submitting a request for the status of submission driver-20151105062757-0001 in mesos://172.17.0.1:7077.
+2015-11-05 06:28:29,152 [user:] [pipeline:] [thread:main]  INFO  RestSubmissionClient - Server responded with SubmissionStatusResponse:
+{
+  "action" : "SubmissionStatusResponse",
+  "driverState" : "FINISHED",
+  "message" : "task_id {\n  value: \"driver-20151105062757-0001\"\n}\nstate: TASK_FINISHED\nmessage: \"Command exited with status 0\"\nslave_id {\n  value: \"20151024-174948-16781740-5050-106086-S1\"\n}\ntimestamp: 1.446704884470297E9\nexecutor_id {\n  value: \"driver-20151105062757-0001\"\n}\nsource: SOURCE_EXECUTOR\n11: \"\\363\\351sa\\267^?B4\\206\\016\\016\\024%X1\\347\"\n",
+  "serverSparkVersion" : "1.5.0",
+  "submissionId" : "driver-20151105062757-0001",
+  "success" : true
+}

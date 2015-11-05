@@ -142,7 +142,8 @@ public class HBaseTarget extends BaseTarget {
     Configuration hbaseConf = HBaseConfiguration.create();
     if (hbaseConfDir != null && !hbaseConfDir.isEmpty()) {
       File hbaseConfigDir = new File(hbaseConfDir);
-      if((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING) && hbaseConfigDir.isAbsolute()) {
+      if((getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
+          || getContext().getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) && hbaseConfigDir.isAbsolute()) {
         //Do not allow absolute hdfs config directory in cluster mode
         issues.add(
             getContext().createConfigIssue(Groups.HBASE.name(), HBASE_CONF_DIR_CONFIG, Errors.HBASE_24, hbaseConfDir)

@@ -55,7 +55,7 @@ import java.util.Map;
   version = 2,
   label = "Kafka Consumer",
   description = "Reads data from Kafka",
-  execution = {ExecutionMode.CLUSTER_STREAMING, ExecutionMode.STANDALONE},
+  execution = {ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.STANDALONE},
   libJarsRegex = {"spark-streaming-kafka.*"},
   icon = "kafka.png",
   recordsByRef = true,

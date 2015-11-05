@@ -39,10 +39,17 @@ public class LogUtils {
   public static final String LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY = "log4j.appender.streamsets.File";
   public static final String LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN =
       "log4j.appender.streamsets.layout.ConversionPattern";
+  public static final String LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN = "log4j.appender.stderr.layout.ConversionPattern";
   public static final String LOG4J_GROK_ATTR = "log4j.grok";
 
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
     if(Boolean.getBoolean("sdc.transient-env")) {
+      // running under mesos
+      // TODO - find a better way, as this logs all spark stuff under sdc pipeline logs
+      String mesosRootDir = System.getenv("MESOS_DIRECTORY");
+      if (mesosRootDir!=null) {
+        return new File(mesosRootDir, "stderr").getAbsolutePath();
+      }
       // we are running under YARN
       String logDirs = System.getenv("LOG_DIRS");
       if (logDirs == null) {
@@ -50,8 +57,9 @@ public class LogUtils {
           logDirs = System.getProperty("user.dir") + "/target/";
         } else {
           throw new IllegalStateException("When running in transient environment, environment variable " +
-            "LOG_DIRS must be defined");
+              "LOG_DIRS must be defined");
         }
+
       }
       File syslog = new File(logDirs, "syslog");
       if (syslog.isFile()) {
@@ -97,7 +105,10 @@ public class LogUtils {
           Properties props = new Properties();
           props.load(is);
           String logPattern = props.getProperty(LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN);
-          if(logPattern != null) {
+          if (logPattern == null) {
+            logPattern = props.getProperty(LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN);
+          }
+          if (logPattern != null) {
             String grokPattern = Log4jHelper.translateLog4jLayoutToGrok(logPattern);
             GrokDictionary grokDictionary = new GrokDictionary();
             grokDictionary.addDictionary(LogUtils.class.getClassLoader().
@@ -107,6 +118,8 @@ public class LogUtils {
             grokDictionary.bind();
             logFileGrok = grokDictionary.compileExpression(grokPattern);
             runtimeInfo.setAttribute(LOG4J_GROK_ATTR, logFileGrok);
+          } else {
+            throw new IllegalStateException("Cannot find log4j layout conversion pattern");
           }
         }
       } else {

@@ -41,7 +41,9 @@ public class DelegatingKafkaSource extends BaseSource implements OffsetCommitter
   @Override
   protected List<ConfigIssue> init() {
     if (getContext().isPreview()
-      || !(getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH || getContext().getExecutionMode() == ExecutionMode.CLUSTER_STREAMING)) {
+      || !(getContext().getExecutionMode() == ExecutionMode.CLUSTER_BATCH
+           || getContext().getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
+           || getContext().getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING)) {
       delegate = standaloneKafkaSourceFactory.create();
     } else {
       delegate = clusterKafkaSourceFactory.create();

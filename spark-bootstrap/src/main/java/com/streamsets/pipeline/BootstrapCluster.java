@@ -75,10 +75,15 @@ public class BootstrapCluster {
       libraryRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
       etcRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
       resourcesRoot = (new File(System.getProperty("user.dir"), "target")).getAbsolutePath();
-    } else {
+    } else if (System.getProperty("SDC_MESOS_BASE_DIR") == null){
       libraryRoot = (new File(System.getProperty("user.dir"), "libs.tar.gz")).getAbsolutePath();
       etcRoot = (new File(System.getProperty("user.dir") + "/etc.tar.gz/etc/")).getAbsolutePath();
       resourcesRoot = (new File(System.getProperty("user.dir") + "/resources.tar.gz/resources/")).getAbsolutePath();
+    } else {
+      String sdcMesosBaseDir = System.getProperty("SDC_MESOS_BASE_DIR");
+      libraryRoot = new File(sdcMesosBaseDir, "libs").getAbsolutePath();
+      etcRoot = new File(sdcMesosBaseDir, "etc").getAbsolutePath();
+      resourcesRoot = new File(sdcMesosBaseDir, "resources").getAbsolutePath();
     }
     System.setProperty("sdc.transient-env", "true");
     System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "sdc-static-web")).getAbsolutePath());

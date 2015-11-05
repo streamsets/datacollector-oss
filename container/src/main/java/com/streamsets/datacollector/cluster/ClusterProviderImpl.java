@@ -90,11 +90,19 @@ import java.util.regex.Pattern;
 
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
+  static final Pattern MESOS_DRIVER_ID_REGEX = Pattern.compile("\\s(driver-[0-9]+-[0-9]+)(\\s|$)");
   static final Pattern NO_VALID_CREDENTIALS = Pattern.compile("(No valid credentials provided.*)");
   public static final String CLUSTER_TYPE = "CLUSTER_TYPE";
-  public static final String CLUSTER_TYPE_SPARK = "spark";
+  public static final String CLUSTER_TYPE_MESOS = "mesos";
   public static final String CLUSTER_TYPE_MAPREDUCE = "mr";
-  private static final String CLUSTER_TYPE_YARN = "yarn";
+  public static final String CLUSTER_TYPE_YARN = "yarn";
+  private static final String STAGING_DIR = "STAGING_DIR";
+  private static final String MESOS_UBER_JAR_PATH = "MESOS_UBER_JAR_PATH";
+  private static final String MESOS_UBER_JAR = "MESOS_UBER_JAR";
+  private static final String ETC_TAR_ARCHIVE = "ETC_TAR_ARCHIVE";
+  private static final String LIBS_TAR_ARCHIVE = "LIBS_TAR_ARCHIVE";
+  private static final String RESOURCES_TAR_ARCHIVE = "RESOURCES_TAR_ARCHIVE";
+  private static final String MESOS_HOSTING_JAR_DIR = "MESOS_HOSTING_JAR_DIR";
   private static final String KERBEROS_AUTH = "KERBEROS_AUTH";
   private static final String KERBEROS_KEYTAB = "KERBEROS_KEYTAB";
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
@@ -102,6 +110,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String ALL_STAGES = "*";
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
+  private final MesosStatusParser mesosStatusParser;
   /**
    * Only null in the case of tests
    */
@@ -119,24 +128,32 @@ public class ClusterProviderImpl implements ClusterProvider {
     this.runtimeInfo = runtimeInfo;
     this.securityConfiguration = securityConfiguration;
     this.yarnStatusParser = new YARNStatusParser();
+    this.mesosStatusParser = new MesosStatusParser();
   }
 
   @Override
   public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
                     String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
-    Map<String, String> environment = new HashMap<>();
+     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
     addKerberosConfiguration(environment);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
+    ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      String mesosDispatcherURL = Utils.checkNotNull(PipelineBeanCreator.get().getMesosDispatcherURL(pipelineConfiguration), "mesosDispatcherURL");
+      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
+      args.add("--master");
+      args.add(mesosDispatcherURL);
+    }
     SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
         logOutput(appId, process);
-        throw new TimeoutException(errorString("YARN kill command for {} timed out.", appId));
+        throw new TimeoutException(errorString("Kill command for {} timed out.", appId));
       }
     } finally {
       process.cleanup();
@@ -149,8 +166,8 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   private static void logOutput(String appId, SystemProcess process) {
     try {
-      LOG.info("YARN status command standard error: {} ", Joiner.on("\n").join(process.getAllError()));
-      LOG.info("YARN status command standard output: {} ", Joiner.on("\n").join(process.getAllOutput()));
+      LOG.info("Status command standard error: {} ", Joiner.on("\n").join(process.getAllError()));
+      LOG.info("Status command standard output: {} ", Joiner.on("\n").join(process.getAllOutput()));
     } catch (Exception e) {
       String msg = errorString("Could not read output of command '{}' for app {}: {}", process.getCommand(), appId, e);
       LOG.error(msg, e);
@@ -168,6 +185,13 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
+    ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      String mesosDispatcherURL = Utils.checkNotNull(PipelineBeanCreator.get().getMesosDispatcherURL(pipelineConfiguration), "mesosDispatcherURL");
+      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
+      args.add("--master");
+      args.add(mesosDispatcherURL);
+    }
     SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
@@ -177,11 +201,16 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
       if (process.exitValue() != 0) {
         logOutput(appId, process);
-        throw new IllegalStateException(errorString("YARN status command for {} failed with exit code {}.", appId,
+        throw new IllegalStateException(errorString("Status command for {} failed with exit code {}.", appId,
           process.exitValue()));
       }
       logOutput(appId, process);
-      String status = yarnStatusParser.parseStatus(process.getAllOutput());
+       String status;
+      if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+        status = mesosStatusParser.parseStatus(process.getAllOutput());
+      } else {
+        status = yarnStatusParser.parseStatus(process.getAllOutput());
+      }
       return ClusterPipelineStatus.valueOf(status);
     } finally {
       process.cleanup();
@@ -200,6 +229,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
       sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
         ExecutionMode.SLAVE.name());
+      sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
       if(runtimeInfo != null) {
         sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
@@ -273,7 +303,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     doCopyDirectory(srcDir, tempSrcDir);
     return tempSrcDir;
   }
-  private static void doCopyDirectory(final File srcDir, final File destDir)
+  private static void doCopyDirectory(File srcDir, File destDir)
     throws IOException {
     // code copied from commons-io FileUtils to work around files which cannot be read
     // recurse
@@ -423,7 +453,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     for (StageBean stageBean : pipelineBean.getStages()) {
       pipelineConfigurations.add(stageBean.getConfiguration());
     }
-    boolean isBatch = false;
+    ExecutionMode executionMode = ExecutionMode.STANDALONE;
     for (StageConfiguration stageConf : pipelineConfigurations.build()) {
       StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
                                                      false);
@@ -458,15 +488,8 @@ public class ClusterProviderImpl implements ClusterProvider {
             }
           }
         }
-        ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
-        if (executionMode == ExecutionMode.CLUSTER_BATCH) {
-          isBatch = true;
-        } else if (executionMode == ExecutionMode.CLUSTER_STREAMING) {
-          isBatch = false;
-        } else {
-          throw new IllegalStateException(Utils.format("Unsupported execution mode '{}' for cluster mode",
-            executionMode));
-        }
+        executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+
         List<String> libJarsRegex = stageDef.getLibJarsRegex();
         if (!libJarsRegex.isEmpty()) {
           for (URL jarUrl : ((URLClassLoader) stageDef.getStageClassLoader()).getURLs()) {
@@ -519,6 +542,18 @@ public class ClusterProviderImpl implements ClusterProvider {
     File sdcPropertiesFile;
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
+      InputStream clusterLog4jProperties = null;
+      if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+        clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
+          "Cluster Log4J Properties");
+        File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
+        if (!log4jProperty.isFile()) {
+          throw new IllegalStateException(Utils.format("Log4j config file doesn't exist: '{}'", log4jProperty.getAbsolutePath()));
+        }
+        LOG.info("Copying log4j properties for mesos cluster mode");
+        FileUtils.copyInputStreamToFile(clusterLog4jProperties,
+            log4jProperty);
+      }
       PipelineInfo pipelineInfo = Utils.checkNotNull(pipelineConfiguration.getInfo(), "Pipeline Info");
       String pipelineName = pipelineInfo.getName();
       File rootDataDir = new File(etcDir, "data");
@@ -543,19 +578,28 @@ public class ClusterProviderImpl implements ClusterProvider {
       throw new RuntimeException(msg, ex);
     }
     File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
-    File clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
-      "streamsets-datacollector-spark-bootstrap");
+    File clusterBootstrapJar = null;
+    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "mesos"),
+          "streamsets-datacollector-mesos-bootstrap");
+    } else {
+      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
+          "streamsets-datacollector-spark-bootstrap");
+    }
     File log4jProperties = new File(stagingDir, "log4j.properties");
     InputStream clusterLog4jProperties = null;
     try {
-      if (isBatch) {
+      if (executionMode == ExecutionMode.CLUSTER_BATCH) {
         clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-mr-log4j.properties"),
           "Cluster Log4J Properties");
-      } else {
+      } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
         clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
           "Cluster Log4J Properties");
       }
-      FileUtils.copyInputStreamToFile(clusterLog4jProperties, log4jProperties);
+      if (clusterLog4jProperties != null) {
+        FileUtils.copyInputStreamToFile(clusterLog4jProperties,
+            log4jProperties);
+      }
     } catch (IOException ex) {
       String msg = errorString("copying log4j configuration: {}", ex);
       throw new RuntimeException(msg, ex);
@@ -570,20 +614,39 @@ public class ClusterProviderImpl implements ClusterProvider {
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY);
     List<String> args;
-    if (isBatch) {
+    String dirUUID = null;
+    File hostingDir = null;
+    if (executionMode == ExecutionMode.CLUSTER_BATCH) {
       LOG.info("Submitting MapReduce Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MAPREDUCE);
       args = generateMRArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
         config.clusterSlaveJavaOpts, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
         sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath(), jarsToShip);
-    } else {
-      LOG.info("Submitting Spark Job");
-      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_SPARK);
+    } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
+      LOG.info("Submitting Spark Job on Yarn");
+      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
       args = generateSparkArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
         config.clusterSlaveJavaOpts, numExecutors, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
         resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
         jarsToShip, clusterBootstrapJar.getAbsolutePath());
+    } else if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      LOG.info("Submitting Spark Job on Mesos");
+      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
+      environment.put(STAGING_DIR, stagingDir.getAbsolutePath());
+      environment.put(MESOS_UBER_JAR_PATH, clusterBootstrapJar.getAbsolutePath());
+      environment.put(MESOS_UBER_JAR, clusterBootstrapJar.getName());
+      environment.put(ETC_TAR_ARCHIVE, "etc.tar.gz");
+      environment.put(LIBS_TAR_ARCHIVE, "libs.tar.gz");
+      environment.put(RESOURCES_TAR_ARCHIVE, "resources.tar.gz");
+      dirUUID = UUID.randomUUID().toString();
+      hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirUUID);
+      hostingDir.mkdirs();
+      environment.put(MESOS_HOSTING_JAR_DIR, hostingDir.getAbsolutePath());
+      String mesosURL = runtimeInfo.getBaseHttpUrl() + "/mesos/" + dirUUID + "/" + clusterBootstrapJar.getName();
+      args = generateMesosArgs(clusterManager.getAbsolutePath(), config.mesosDispatcherURL, mesosURL);
+    } else {
+      throw new IllegalStateException(Utils.format("Incorrect execution mode: {}" , executionMode));
     }
     SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), outputDir, args);
     LOG.info("Starting: " + process);
@@ -603,16 +666,27 @@ public class ClusterProviderImpl implements ClusterProvider {
           ApplicationState applicationState = new ApplicationState();
           applicationState.setId(appId);
           applicationState.setSdcToken(clusterToken);
+          if (dirUUID != null) {
+            applicationState.setUUID(dirUUID);
+          }
           return applicationState;
         }
         if (!ThreadUtil.sleep(1000)) {
+          if (hostingDir != null) {
+            FileUtils.deleteQuietly(hostingDir);
+          }
           throw new IllegalStateException("Interrupted while waiting for pipeline to start");
         }
         List<String> lines = new ArrayList<>();
         lines.addAll(process.getOutput());
         lines.addAll(process.getError());
+        Matcher m;
         for (String line : lines) {
-          Matcher m = YARN_APPLICATION_ID_REGEX.matcher(line);
+          if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+            m = MESOS_DRIVER_ID_REGEX.matcher(line);
+          } else {
+            m = YARN_APPLICATION_ID_REGEX.matcher(line);
+          }
           if (m.find()) {
             LOG.info("Found application id " + m.group(1));
             applicationIds.add(m.group(1));
@@ -628,6 +702,9 @@ public class ClusterProviderImpl implements ClusterProvider {
           logOutput("unknown", process);
           String msg = Utils.format("Timed out after waiting {} seconds for for cluster application to start. " +
             "Submit command {} alive.", elapsedSeconds, (process.isAlive() ? "is" : "is not"));
+          if (hostingDir != null) {
+            FileUtils.deleteQuietly(hostingDir);
+          }
           throw new IllegalStateException(msg);
         }
       }
@@ -635,6 +712,21 @@ public class ClusterProviderImpl implements ClusterProvider {
       process.cleanup();
     }
   }
+
+  private List<String> generateMesosArgs(String clusterManager, String mesosDispatcherURL, String mesosJar) {
+    List<String> args = new ArrayList<>();
+    args.add(clusterManager);
+    args.add("start");
+    args.add("--deploy-mode");
+    args.add("cluster");
+    args.add("--master");
+    args.add(mesosDispatcherURL);
+    args.add("--class");
+    args.add("com.streamsets.pipeline.mesos.BootstrapMesosDriver");
+    args.add(mesosJar);
+    return args;
+  }
+
   private List<String> generateMRArgs(String clusterManager, String slaveMemory, String javaOpts,
                                       String libsTarGz, String etcTarGz, String resourcesTarGz, String log4jProperties,
                                       String bootstrapJar, String sdcPropertiesFile,

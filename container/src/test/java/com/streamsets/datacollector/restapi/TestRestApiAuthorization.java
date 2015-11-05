@@ -57,6 +57,8 @@ import java.util.UUID;
 
 public class TestRestApiAuthorization {
 
+  private static final String CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [thread:%t] %-5p %c{1} - %m%n";
+
   private String createTestDir() {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
@@ -81,7 +83,8 @@ public class TestRestApiAuthorization {
     log4jConf = new File(baseDir, "log4j.properties").getAbsolutePath();
     File logFile = new File(baseDir, "x.log");
     Writer writer = new FileWriter(log4jConf);
-    IOUtils.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath(), writer);
+    writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_FILE_PROPERTY + "=" + logFile.getAbsolutePath() + "\n");
+    writer.write(LogUtils.LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN + "=" + CONVERSION_PATTERN);
     writer.close();
     Assert.assertTrue(new File(baseDir, "etc").mkdir());
     Assert.assertTrue(new File(baseDir, "data").mkdir());

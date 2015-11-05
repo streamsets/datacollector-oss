@@ -124,7 +124,7 @@ public class TestClusterModeDataFormats {
   public void testProduceStringRecords() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -184,7 +184,7 @@ public class TestClusterModeDataFormats {
   public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -237,7 +237,7 @@ public class TestClusterModeDataFormats {
   public void testProduceJsonRecordsArrayObjectsMultipleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -298,7 +298,7 @@ public class TestClusterModeDataFormats {
   public void testProduceJsonRecordsArrayObjectsSingleRecord() throws StageException, IOException {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
        .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -358,7 +358,7 @@ public class TestClusterModeDataFormats {
   public void testProduceXmlRecordsNoRecordElement() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -419,7 +419,7 @@ public class TestClusterModeDataFormats {
   public void testProduceXmlRecordsWithRecordElement() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")
@@ -479,7 +479,7 @@ public class TestClusterModeDataFormats {
   public void testProduceCsvRecords() throws Exception {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .setExecutionMode(ExecutionMode.CLUSTER_STREAMING)
+      .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
       .addConfiguration("metadataBrokerList", metadataBrokerList)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("consumerGroup", "dummyGroup")

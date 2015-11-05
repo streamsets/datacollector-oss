@@ -28,8 +28,9 @@ import java.util.Map;
 
 public class ApplicationState {
   private static final String ID = "id";
+  private static final String UUID = "uuid";
   private static final String SDC_TOKEN = "sdcToken";
-  private Map<String, Object> backingMap;
+  private final Map<String, Object> backingMap;
 
   public ApplicationState() {
     this.backingMap = new HashMap<>();
@@ -55,8 +56,18 @@ public class ApplicationState {
     }
   }
 
+  public void setUUID(String uuid) {
+    if (uuid != null) {
+      this.backingMap.put(UUID, uuid);
+    }
+  }
+
+  public String getUUID() {
+    return (String) backingMap.get(UUID);
+  }
+
   public String getId() {
-    return (String)backingMap.get(ID);
+    return (String) backingMap.get(ID);
   }
 
   public void setId(String id) {
