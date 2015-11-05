@@ -40,7 +40,7 @@ public class Main {
   private final Task task;
 
   @VisibleForTesting
-  Main(Class moduleClass) {
+  protected Main(Class moduleClass) {
     this(ObjectGraph.create(moduleClass), null);
   }
   @VisibleForTesting
