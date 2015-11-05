@@ -37,9 +37,24 @@ describe('StreamSets Data Collector App', function() {
     });
 
     it('should render log page view when user navigates to /collector/logs', function() {
-      element.all(by.repeater('logFile in logFiles')).then(function(logFiles) {
-        expect(logFiles.length > 0).toBeTruthy();
+      browser.sleep(1000);
+      element.all(by.repeater('logMessage in logMessages'))
+        .then(function(logMessages) {
+          expect(logMessages.length > 0).toBeTruthy();
+        });
+    });
+
+    it('should be able filter the logs', function() {
+      element(by.css('.severity-dropdown .btn')).click().then(function() {
+        element(by.css('[ng-click="severityFilterChanged(\'INFO\');"]')).click().then(function() {
+          browser.sleep(1000);
+          element.all(by.repeater('logMessage in logMessages'))
+            .then(function(logMessages) {
+              expect(logMessages.length > 0).toBeTruthy();
+            });
+        });
       });
     });
+
   });
 });
