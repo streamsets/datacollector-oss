@@ -26,10 +26,15 @@ import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.UnknownFieldSet;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.parser.protobuf.Errors;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,6 +72,35 @@ public class ProtobufTypeUtil {
   private static final String FORWARD_SLASH = "/";
   static final String PROTOBUF_UNKNOWN_FIELDS_PREFIX = "protobuf.unknown.fields.";
 
+  public static Descriptors.Descriptor getDescriptor(
+      Stage.Context context,
+      String protoDescriptorFile,
+      String messageType,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap
+  ) throws IOException, Descriptors.DescriptorValidationException {
+
+    FileInputStream fin = new FileInputStream(new File(context.getResourcesDirectory(), protoDescriptorFile));
+    DescriptorProtos.FileDescriptorSet set = DescriptorProtos.FileDescriptorSet.parseFrom(fin);
+
+    // Iterate over all the file descriptor set computed above and cache dependencies and all encountered
+    // file descriptors
+
+    // this map holds all the dependencies that a given file descriptor has.
+    // This cached map will be looked up while building FileDescriptor instances
+    Map<String, Set<Descriptors.FileDescriptor>> fileDescriptorDependentsMap = new HashMap<>();
+    // All encountered FileDescriptor instances cached based on their name.
+    Map<String, Descriptors.FileDescriptor> fileDescriptorMap = new HashMap<>();
+    ProtobufTypeUtil.getAllFileDescriptors(set, fileDescriptorDependentsMap, fileDescriptorMap);
+
+    // Get the descriptor for the expected message type
+    Descriptors.Descriptor descriptor = ProtobufTypeUtil.getDescriptor(set, fileDescriptorMap, protoDescriptorFile, messageType);
+
+    // Compute and cache all extensions defined for each message type
+    ProtobufTypeUtil.populateDefaultsAndExtensions(fileDescriptorMap, messageTypeToExtensionMap, defaultValueMap);
+    return descriptor;
+  }
+
   public static void getAllFileDescriptors(
     DescriptorProtos.FileDescriptorSet set,
     Map<String, Set<Descriptors.FileDescriptor>> dependenciesMap,
@@ -89,29 +123,32 @@ public class ProtobufTypeUtil {
         fileDescriptorMap.put(fdp.getName(), fileDescriptor);
       }
     }
-
   }
 
-  public static Map<String, Set<Descriptors.FieldDescriptor>> getAllExtensions(
-    Map<String, Descriptors.FileDescriptor> fileDescriptorMap
+  public static void populateDefaultsAndExtensions(
+    Map<String, Descriptors.FileDescriptor> fileDescriptorMap,
+    Map<String, Set<Descriptors.FieldDescriptor>> typeToExtensionMap,
+    Map<String, Object> defaultValueMap
   ) {
-    Map<String, Set<Descriptors.FieldDescriptor>> allExtensions = new HashMap<>();
     for(Descriptors.FileDescriptor f : fileDescriptorMap.values()) {
+      // go over every file descriptor and look for extensions and default values of those extensions
       for(Descriptors.FieldDescriptor fieldDescriptor : f.getExtensions()) {
-        String containingType = fieldDescriptor.getContainingType().getName();
-        Set<Descriptors.FieldDescriptor> fieldDescriptors = allExtensions.get(containingType);
+        String containingType = fieldDescriptor.getContainingType().getFullName();
+        Set<Descriptors.FieldDescriptor> fieldDescriptors = typeToExtensionMap.get(containingType);
         if(fieldDescriptors == null) {
           fieldDescriptors = new LinkedHashSet<>();
-          allExtensions.put(containingType, fieldDescriptors);
+          typeToExtensionMap.put(containingType, fieldDescriptors);
         }
         fieldDescriptors.add(fieldDescriptor);
+        if(fieldDescriptor.hasDefaultValue()) {
+          defaultValueMap.put(containingType + "." + fieldDescriptor.getName(), fieldDescriptor.getDefaultValue());
+        }
       }
+      // go over messages within file descriptor and look for all fields and extensions and their defaults
       for(Descriptors.Descriptor d : f.getMessageTypes()) {
-        addExtensions(allExtensions, d);
+        addDefaultsAndExtensions(typeToExtensionMap, defaultValueMap, d);
       }
-
     }
-    return allExtensions;
   }
 
   public static Descriptors.Descriptor getDescriptor(
@@ -178,8 +215,8 @@ public class ProtobufTypeUtil {
     }
 
     // handle applicable extensions for this message type
-    if(messageTypeToExtensionMap.containsKey(descriptor.getName())) {
-      for(Descriptors.FieldDescriptor fieldDescriptor : messageTypeToExtensionMap.get(descriptor.getName())) {
+    if(messageTypeToExtensionMap.containsKey(descriptor.getFullName())) {
+      for(Descriptors.FieldDescriptor fieldDescriptor : messageTypeToExtensionMap.get(descriptor.getFullName())) {
         if(values.containsKey(fieldDescriptor)) {
           Object value = values.get(fieldDescriptor);
           fieldMap.put(
@@ -376,7 +413,7 @@ public class ProtobufTypeUtil {
         // could not find the message type from all the proto files contained in the descriptor file
         throw new IOException(Utils.format(Errors.PROTOBUF_PARSER_01.getMessage(), file.getName()), null);
       }
-      Descriptors.FileDescriptor fileDescriptor = null;
+      Descriptors.FileDescriptor fileDescriptor;
       if(fileDescriptorMap.containsKey(fileDescriptorProto.getName())) {
         fileDescriptor = fileDescriptorMap.get(fileDescriptorProto.getName());
       } else {
@@ -398,21 +435,246 @@ public class ProtobufTypeUtil {
     return result;
   }
 
-  private static void addExtensions(
-      Map<String, Set<Descriptors.FieldDescriptor>> e,
-      Descriptors.Descriptor d
+  private static void addDefaultsAndExtensions(
+    Map<String, Set<Descriptors.FieldDescriptor>> e,
+    Map<String, Object> defaultValueMap,
+    Descriptors.Descriptor d
   ) {
     for(Descriptors.FieldDescriptor fieldDescriptor : d.getExtensions()) {
-      String containingType = fieldDescriptor.getContainingType().getName();
+      String containingType = fieldDescriptor.getContainingType().getFullName();
       Set<Descriptors.FieldDescriptor> fieldDescriptors = e.get(containingType);
       if(fieldDescriptors == null) {
         fieldDescriptors = new LinkedHashSet<>();
         e.put(containingType, fieldDescriptors);
       }
       fieldDescriptors.add(fieldDescriptor);
+      if(fieldDescriptor.hasDefaultValue()) {
+        defaultValueMap.put(
+          fieldDescriptor.getContainingType().getFullName() + "." + fieldDescriptor.getName(),
+          fieldDescriptor.getDefaultValue()
+        );
+      }
+    }
+    for(Descriptors.FieldDescriptor fieldDescriptor : d.getFields()) {
+      if(fieldDescriptor.hasDefaultValue()) {
+        defaultValueMap.put(d.getFullName() + "." + fieldDescriptor.getName(), fieldDescriptor.getDefaultValue());
+      }
     }
     for(Descriptors.Descriptor nestedType : d.getNestedTypes()) {
-      addExtensions(e, nestedType);
+      addDefaultsAndExtensions(e, defaultValueMap, nestedType);
     }
+  }
+
+  public static DynamicMessage sdcFieldToProtobufMsg(
+      Record record,
+      Descriptors.Descriptor desc,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap
+  ) throws DataGeneratorException, IOException {
+    return sdcFieldToProtobufMsg(record, record.get(), "", desc, messageTypeToExtensionMap, defaultValueMap);
+  }
+
+  private static DynamicMessage sdcFieldToProtobufMsg(
+      Record record,
+      Field field,
+      String fieldPath,
+      Descriptors.Descriptor desc,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap
+  ) throws DataGeneratorException, IOException {
+
+    if(field == null) {
+      return null;
+    }
+
+    // compute all fields to look for including extensions
+    DynamicMessage.Builder builder = DynamicMessage.newBuilder(desc);
+    List<Descriptors.FieldDescriptor> fields = new ArrayList<>();
+    fields.addAll(desc.getFields());
+    if(messageTypeToExtensionMap.containsKey(desc.getFullName())) {
+      fields.addAll(messageTypeToExtensionMap.get(desc.getFullName()));
+    }
+
+    // root field is always a Map in a record representing protobuf data
+    Map<String, Field> valueAsMap = field.getValueAsMap();
+
+    for (Descriptors.FieldDescriptor f : fields) {
+      field = valueAsMap.get(f.getName());
+      // Repeated field
+      if(f.isRepeated()) {
+        handleRepeatedField(
+            record,
+            field,
+            fieldPath,
+            messageTypeToExtensionMap,
+            defaultValueMap,
+            f,
+            builder
+        );
+      } else {
+        // non repeated field
+        handleNonRepeatedField(
+            record,
+            valueAsMap,
+            fieldPath,
+            messageTypeToExtensionMap,
+            defaultValueMap,
+            desc,
+            f,
+            builder
+        );
+      }
+    }
+
+    // if record has unknown fields for this field path, handle it
+    handleUnknownFields(record, fieldPath, builder);
+
+    return builder.build();
+  }
+
+  private static void handleUnknownFields(
+      Record record,
+      String fieldPath,
+      DynamicMessage.Builder builder
+  ) throws IOException {
+    if(fieldPath.isEmpty()) {
+      fieldPath = FORWARD_SLASH;
+    }
+    String attribute = record.getHeader().getAttribute(ProtobufTypeUtil.PROTOBUF_UNKNOWN_FIELDS_PREFIX + fieldPath);
+    if(attribute != null) {
+      UnknownFieldSet.Builder unknownFieldBuilder = UnknownFieldSet.newBuilder();
+      unknownFieldBuilder.mergeDelimitedFrom(
+          new ByteArrayInputStream(
+              org.apache.commons.codec.binary.Base64.decodeBase64(attribute.getBytes())
+          )
+      );
+      UnknownFieldSet unknownFieldSet = unknownFieldBuilder.build();
+      builder.setUnknownFields(unknownFieldSet);
+    }
+  }
+
+  private static void handleNonRepeatedField(
+      Record record,
+      Map<String, Field> valueAsMap,
+      String fieldPath,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap,
+      Descriptors.Descriptor desc,
+      Descriptors.FieldDescriptor f,
+      DynamicMessage.Builder builder) throws IOException, DataGeneratorException {
+    Object val;
+    if(valueAsMap.containsKey(f.getName())) {
+      val = getValue(
+        f,
+        valueAsMap.get(f.getName()),
+        record,
+        fieldPath + FORWARD_SLASH + f.getName(),
+        messageTypeToExtensionMap,
+        defaultValueMap
+      );
+    }  else {
+      // record does not contain field, look up default value
+      String key = desc.getFullName() + "." + f.getName();
+      if(!defaultValueMap.containsKey(key) && !f.isOptional()) {
+        throw new DataGeneratorException(
+          com.streamsets.pipeline.lib.generator.protobuf.Errors.PROTOBUF_GENERATOR_00,
+          record.getHeader().getSourceId(),
+          key
+        );
+      }
+      val = defaultValueMap.get(key);
+    }
+    if(val != null) {
+      builder.setField(f, val);
+    }
+  }
+
+  private static void handleRepeatedField(
+      Record record,
+      Field field,
+      String fieldPath,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap,
+      Descriptors.FieldDescriptor f,
+      DynamicMessage.Builder builder
+  ) throws IOException, DataGeneratorException {
+    List<Field> valueAsList = field.getValueAsList();
+    List<Object> toReturn = new ArrayList<>(valueAsList.size());
+    for(int i = 0; i < valueAsList.size(); i++) {
+      if(f.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE) {
+        // repeated field of type message
+        toReturn.add(
+          sdcFieldToProtobufMsg(
+            record,
+            valueAsList.get(i),
+            fieldPath + FORWARD_SLASH + f.getName() + "[" + i + "]",
+            f.getMessageType(),
+            messageTypeToExtensionMap,
+            defaultValueMap
+          )
+        );
+      } else {
+        // repeated field of primitive types
+        toReturn.add(
+          getValue(
+            f,
+            valueAsList.get(i),
+            record,
+            fieldPath + FORWARD_SLASH + f.getName(),
+            messageTypeToExtensionMap,
+            defaultValueMap
+          )
+        );
+      }
+    }
+    builder.setField(f, toReturn);
+  }
+
+  private static Object getValue(
+      Descriptors.FieldDescriptor f,
+      Field field,
+      Record record,
+      String protoFieldPath,
+      Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
+      Map<String, Object> defaultValueMap
+  ) throws DataGeneratorException, IOException {
+    Object value = null;
+    if(field.getValue() != null) {
+      switch (f.getJavaType()) {
+        case BOOLEAN:
+          value = field.getValueAsBoolean();
+          break;
+        case BYTE_STRING:
+          value = ByteString.copyFrom(field.getValueAsByteArray());
+          break;
+        case DOUBLE:
+          value = field.getValueAsDouble();
+          break;
+        case ENUM:
+          value = f.getEnumType().findValueByName(field.getValueAsString());
+          break;
+        case FLOAT:
+          value = field.getValueAsFloat();
+          break;
+        case INT:
+          value = field.getValueAsInteger();
+          break;
+        case LONG:
+          value = field.getValueAsLong();
+          break;
+        case STRING:
+          value = field.getValueAsString();
+          break;
+        case MESSAGE:
+          Descriptors.Descriptor messageType = f.getMessageType();
+          value = sdcFieldToProtobufMsg(record, field, protoFieldPath, messageType, messageTypeToExtensionMap, defaultValueMap);
+          break;
+        default:
+          throw new RuntimeException(
+            Utils.format("Unknown Field Descriptor type '{}'", f.getJavaType().name())
+          );
+      }
+    }
+    return value;
   }
 }

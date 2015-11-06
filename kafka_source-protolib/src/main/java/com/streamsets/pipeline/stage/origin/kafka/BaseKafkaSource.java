@@ -46,6 +46,7 @@ import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
@@ -343,9 +344,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         builder.setMaxDataLen(binaryMaxObjectLen);
         break;
       case PROTOBUF:
-        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+        builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
           .setMaxDataLen(Integer.MAX_VALUE)
-          .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType);
+          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
         break;
     }
     parserFactory = builder.build();

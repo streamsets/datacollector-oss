@@ -17,27 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.protobuf;
+package com.streamsets.pipeline.lib.generator.protobuf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.protobuf.Descriptors;
-import com.google.protobuf.ExtensionRegistry;
-import com.streamsets.pipeline.lib.parser.DataParser;
-import com.streamsets.pipeline.lib.parser.DataParserException;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.parser.Errors;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.generator.DataGenerator;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.Errors;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTypeUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class ProtobufDataParserFactory extends DataParserFactory {
+public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
 
   public static final Map<String, Object> CONFIGS;
 
@@ -57,10 +55,9 @@ public class ProtobufDataParserFactory extends DataParserFactory {
   // this map holds extensions that are defined for each of the message types present in the all the file descriptors
   // that is accessible via the configured Protobuf descriptor file
   private final Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap;
-  private final ExtensionRegistry extensionRegistry;
   private final Map<String, Object> defaultValueMap;
 
-  public ProtobufDataParserFactory(Settings settings) throws IOException, Descriptors.DescriptorValidationException {
+  public ProtobufDataGeneratorFactory(Settings settings) throws IOException, Descriptors.DescriptorValidationException {
     super(settings);
     this.protoDescriptorFile = settings.getConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY);
     this.messageType = settings.getConfig(ProtobufConstants.MESSAGE_TYPE_KEY);
@@ -68,44 +65,26 @@ public class ProtobufDataParserFactory extends DataParserFactory {
     defaultValueMap = new HashMap<>();
     // Get the descriptor for the expected message type
     descriptor = ProtobufTypeUtil.getDescriptor(
-      settings.getContext(),
-      protoDescriptorFile,
-      messageType,
-      messageTypeToExtensionMap,
-      defaultValueMap
+        settings.getContext(),
+        protoDescriptorFile,
+        messageType,
+        messageTypeToExtensionMap,
+        defaultValueMap
     );
-
-    // Build the extension registry based on the cached extension map
-    extensionRegistry = ExtensionRegistry.newInstance();
-    for(Map.Entry<String, Set<Descriptors.FieldDescriptor>> e : messageTypeToExtensionMap.entrySet()) {
-      Set<Descriptors.FieldDescriptor> value = e.getValue();
-      for (Descriptors.FieldDescriptor f : value) {
-        extensionRegistry.add(f);
-      }
-    }
   }
 
   @Override
-  public DataParser getParser(String id, InputStream is, String offset) throws DataParserException {
+  public DataGenerator getGenerator(OutputStream os) throws IOException {
     try {
-      return new ProtobufDataParser(
-          getSettings().getContext(),
-          id,
+      return new ProtobufDataGenerator(
+          os,
           descriptor,
           messageTypeToExtensionMap,
-          extensionRegistry,
-          is,
-          offset,
-          getSettings().getOverRunLimit()
+          defaultValueMap
       );
     } catch (IOException | Descriptors.DescriptorValidationException e) {
-      throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);
+        throw new IOException(Utils.format(Errors.DATA_GENERATOR_01.getMessage(), e.toString()), e);
     }
-  }
-
-  @Override
-  public DataParser getParser(String id, Reader reader, long offset) throws DataParserException {
-    throw new UnsupportedOperationException();
   }
 
 }

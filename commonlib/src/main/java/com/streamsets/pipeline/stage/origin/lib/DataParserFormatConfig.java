@@ -46,9 +46,9 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.lib.parser.protobuf.ProtobufDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
@@ -660,8 +660,8 @@ public class DataParserFormatConfig {
         builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
         break;
       case PROTOBUF:
-        builder.setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
-          .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType)
+        builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
           .setMaxDataLen(-1);
         break;
     }

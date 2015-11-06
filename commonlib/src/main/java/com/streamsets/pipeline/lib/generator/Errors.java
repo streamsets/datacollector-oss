@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   DATA_GENERATOR_00("Cannot open file '{}'"),
+  DATA_GENERATOR_01("Error creating data generator: '{}'"),
 
   ;
 

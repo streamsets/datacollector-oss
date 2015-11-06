@@ -32,6 +32,7 @@ public enum Groups implements Label {
   DELIMITED("Delimited"),
   AVRO("Avro"),
   BINARY("Binary"),
+  PROTOBUF("Protobuf"),
 
   ;
 

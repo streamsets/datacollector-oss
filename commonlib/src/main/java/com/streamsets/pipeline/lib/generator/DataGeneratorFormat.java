@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.json.JsonDataGeneratorFactory;
+import com.streamsets.pipeline.lib.generator.protobuf.ProtobufDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.sdcrecord.SdcRecordDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 
@@ -43,6 +44,7 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
     SdcRecordDataGeneratorFactory.CONFIGS),
   AVRO(AvroDataGeneratorFactory.class, AvroDataGeneratorFactory.MODES, AvroDataGeneratorFactory.CONFIGS),
   BINARY(BinaryDataGeneratorFactory.class, BinaryDataGeneratorFactory.MODES, BinaryDataGeneratorFactory.CONFIGS),
+  PROTOBUF(ProtobufDataGeneratorFactory.class, ProtobufDataGeneratorFactory.MODES, ProtobufDataGeneratorFactory.CONFIGS),
   ;
 
   private final Class<? extends DataGeneratorFactory> klass;
@@ -82,8 +84,12 @@ public enum DataGeneratorFormat implements DataFormat<DataGeneratorFactory> {
     try {
       return constructor.newInstance(settings);
     } catch (Exception ex) {
+      Throwable cause = ex;
+      if (ex.getCause() != null) {
+        cause = ex.getCause();
+      }
       throw new RuntimeException(Utils.format("Could not create DataFactory instance for '{}': {}",
-        klass.getName(), ex.toString(), ex));
+        klass.getName(), cause.toString(), cause));
     }
   }
 }

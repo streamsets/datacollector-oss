@@ -31,7 +31,8 @@ public class FlumeDestinationDataFormatChooserValues extends BaseEnumChooserValu
         DataFormat.JSON,
         DataFormat.DELIMITED,
         DataFormat.AVRO,
-        DataFormat.BINARY
+        DataFormat.BINARY,
+        DataFormat.PROTOBUF
     );
   }
 

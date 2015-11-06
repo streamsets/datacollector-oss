@@ -30,6 +30,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.parser.Errors;
 import com.streamsets.pipeline.lib.util.PersonProto;
+import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
@@ -123,8 +124,8 @@ public class TestProtobufDataParser {
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
       DataParserFormat.PROTOBUF);
     DataParserFactory factory = dataParserFactoryBuilder
-      .setConfig(ProtobufDataParserFactory.PROTO_DESCRIPTOR_FILE_KEY, Resources.getResource(protoFile).getPath())
-      .setConfig(ProtobufDataParserFactory.MESSAGE_TYPE_KEY, messageType)
+      .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, Resources.getResource(protoFile).getPath())
+      .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
       .setOverRunLimit(1000)
       .setMaxDataLen(Integer.MAX_VALUE)
       .build();

@@ -40,10 +40,12 @@ import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFac
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import org.apache.avro.Schema;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -240,6 +242,34 @@ public class DataGeneratorFormatConfig {
   @FieldSelectorModel(singleValued = true)
   public String binaryFieldPath;
 
+  /********  For Protobuf Content  ***********/
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Protobuf Descriptor File",
+    description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
+    displayPosition = 400,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat^",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String protoDescriptorFile;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = "",
+    label = "Message Type",
+    displayPosition = 410,
+    group = "PROTOBUF",
+    dependsOn = "dataFormat^",
+    triggeredByValue = "PROTOBUF"
+  )
+  public String messageType;
+
+
   private boolean validateDataGenerator (
       Stage.Context context,
       DataFormat dataFormat,
@@ -327,6 +357,10 @@ public class DataGeneratorFormatConfig {
       case BINARY:
         builder.setConfig(BinaryDataGeneratorFactory.FIELD_PATH_KEY, binaryFieldPath);
         break;
+      case PROTOBUF:
+        builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
+        break;
     }
     if(valid) {
       try {
@@ -367,6 +401,40 @@ public class DataGeneratorFormatConfig {
       case SDC_JSON:
       case AVRO:
         //no-op
+        break;
+      case PROTOBUF:
+        if(protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
+          issues.add(
+            context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              "protoDescriptorFile",
+              DataFormatErrors.DATA_FORMAT_07
+            )
+          );
+          valid = false;
+        }
+        File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+        if(!file.exists()) {
+          issues.add(
+            context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              "protoDescriptorFile",
+              DataFormatErrors.DATA_FORMAT_09,
+              file.getAbsolutePath()
+            )
+          );
+          valid = false;
+        }
+        if(messageType == null || messageType.isEmpty()) {
+          issues.add(
+            context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              "messageType",
+              DataFormatErrors.DATA_FORMAT_08
+            )
+          );
+          valid = false;
+        }
         break;
       default:
         issues.add(context.createConfigIssue(groupName, configName, DataFormatErrors.DATA_FORMAT_04, dataFormat));

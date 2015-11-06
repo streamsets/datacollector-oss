@@ -17,23 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.s3;
+package com.streamsets.pipeline.lib.util;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+public class ProtobufConstants {
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
-
-  public DataFormatChooserValues() {
-    super(
-      DataFormat.TEXT,
-      DataFormat.JSON,
-      DataFormat.AVRO,
-      DataFormat.DELIMITED,
-      DataFormat.SDC_JSON,
-      DataFormat.BINARY,
-      DataFormat.PROTOBUF
-    );
-  }
+  public static final String KEY_PREFIX = "protobuf.";
+  public static final String PROTO_DESCRIPTOR_FILE_KEY = KEY_PREFIX + "proto.descriptor.file";
+  public static final String PROTO_FILE_LOCATION_DEFAULT = "";
+  public static final String MESSAGE_TYPE_KEY = KEY_PREFIX + "message.type";
+  public static final String MESSAGE_TYPE_DEFAULT = "";
 
 }
