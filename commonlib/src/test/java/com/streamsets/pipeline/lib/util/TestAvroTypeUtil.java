@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.avro.Errors;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
@@ -32,9 +34,12 @@ import org.apache.avro.util.Utf8;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +55,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(true, field.getValueAsBoolean());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof Boolean);
     Assert.assertEquals(true, avroObject);
   }
@@ -65,7 +70,7 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(345823746923.863423 == field.getValueAsDouble());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof Double);
     Assert.assertTrue(345823746923.863423 == (Double) avroObject);
   }
@@ -80,9 +85,9 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(34582 == field.getValueAsInteger());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof Integer);
-    Assert.assertTrue(34582 == (Integer)avroObject);
+    Assert.assertTrue(34582 == (Integer) avroObject);
   }
 
   @Test
@@ -95,7 +100,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(3458236L, field.getValueAsLong());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof Long);
     Assert.assertTrue(3458236L == (Long) avroObject);
   }
@@ -110,7 +115,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("Hari", field.getValueAsString());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof String);
     Assert.assertEquals("Hari", avroObject);
   }
@@ -130,7 +135,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("CLUBS", field.getValueAsString());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof GenericData.EnumSymbol);
     Assert.assertEquals("CLUBS", avroObject.toString());
   }
@@ -138,8 +143,8 @@ public class TestAvroTypeUtil {
   @Test
   public void testCreateFixedField() throws Exception {
     byte[] bytes = new byte[16];
-    for(int i = 0; i < 16; i++) {
-      bytes[i] = (byte)i;
+    for (int i = 0; i < 16; i++) {
+      bytes[i] = (byte) i;
     }
 
     String schema = "{\"type\": \"fixed\", \"size\": 16, \"name\": \"md5\"}";
@@ -152,17 +157,17 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(Field.Type.BYTE_ARRAY, field.getType());
     byte[] valueAsByteArray = field.getValueAsByteArray();
     Assert.assertEquals(16, valueAsByteArray.length);
-    for(int i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
       Assert.assertEquals(i, valueAsByteArray[i]);
     }
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof GenericData.Fixed);
     GenericData.Fixed result = (GenericData.Fixed) avroObject;
 
     byte[] bytes1 = result.bytes();
-    for(int i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
       Assert.assertEquals(i, bytes1[i]);
     }
 
@@ -178,7 +183,7 @@ public class TestAvroTypeUtil {
     Assert.assertTrue(Arrays.equals("Hari".getBytes(), field.getValueAsByteArray()));
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof ByteBuffer);
     Assert.assertTrue(Arrays.equals("Hari".getBytes(), ((ByteBuffer) avroObject).array()));
   }
@@ -192,7 +197,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(null, field.getValue());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "/", schema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, schema, new HashMap<String, Object>());
     Assert.assertNull(avroObject);
   }
 
@@ -211,7 +216,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("Kiran", valueAsList.get(1).getValueAsString());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof List<?>);
 
     List<String> listString = (List<String>) avroObject;
@@ -240,27 +245,27 @@ public class TestAvroTypeUtil {
     Assert.assertEquals(2, hari.getValueAsInteger());
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroSchema);
-    Assert.assertTrue(avroObject instanceof Map<?,?>);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
+    Assert.assertTrue(avroObject instanceof Map<?, ?>);
 
     Map<String, Integer> map = (Map<String, Integer>) avroObject;
     Assert.assertTrue(map.containsKey("Hari"));
-    Assert.assertEquals(1, (int)map.get("Hari"));
+    Assert.assertEquals(1, (int) map.get("Hari"));
     Assert.assertTrue(map.containsKey("Kiran"));
-    Assert.assertEquals(2, (int)map.get("Kiran"));
+    Assert.assertEquals(2, (int) map.get("Kiran"));
   }
 
   @Test
-  public void testCreateRecordField() throws StageException {
+  public void testCreateRecordField() throws StageException, IOException {
     String schema = "{\n"
-      +"\"type\": \"record\",\n"
-      +"\"name\": \"Employee\",\n"
-      +"\"fields\": [\n"
-      +" {\"name\": \"name\", \"type\": \"string\"},\n"
-      +" {\"name\": \"age\", \"type\": \"int\"},\n"
-      +" {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}},\n"
-      +" {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
-      +"]}";
+      + "\"type\": \"record\",\n"
+      + "\"name\": \"Employee\",\n"
+      + "\"fields\": [\n"
+      + " {\"name\": \"name\", \"type\": \"string\"},\n"
+      + " {\"name\": \"age\", \"type\": \"int\"},\n"
+      + " {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}},\n"
+      + " {\"name\": \"boss\", \"type\": [\"Employee\",\"null\"]}\n"
+      + "]}";
 
     Schema avroSchema = new Schema.Parser().parse(schema);
 
@@ -313,13 +318,13 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("1", record.getHeader().getAttribute(AvroTypeUtil.AVRO_UNION_TYPE_INDEX_PREFIX + "/boss/boss"));
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof GenericRecord);
 
     GenericRecord result = (GenericRecord) avroObject;
     Assert.assertEquals("hari", result.get("name"));
     Assert.assertEquals(20, result.get("age"));
-    List<String> resultEmails = (List<String>)result.get("emails");
+    List<String> resultEmails = (List<String>) result.get("emails");
     Assert.assertEquals(2, resultEmails.size());
 
     Assert.assertEquals("hari@ss.com", resultEmails.get(0));
@@ -331,7 +336,7 @@ public class TestAvroTypeUtil {
     result = (GenericRecord) avroObject;
     Assert.assertEquals("boss", result.get("name"));
     Assert.assertEquals(60, result.get("age"));
-    resultEmails = (List<String>)result.get("emails");
+    resultEmails = (List<String>) result.get("emails");
     Assert.assertEquals(2, resultEmails.size());
 
     Assert.assertEquals("boss@ss.com", resultEmails.get(0));
@@ -340,7 +345,7 @@ public class TestAvroTypeUtil {
   }
 
   @Test
-  public void testCreateRecordListField() throws StageException {
+  public void testCreateRecordListField() throws StageException, IOException {
     String schema = "{\n"
       +"\"type\": \"record\",\n"
       +"\"name\": \"Employee\",\n"
@@ -425,7 +430,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("1", record.getHeader().getAttribute(AvroTypeUtil.AVRO_UNION_TYPE_INDEX_PREFIX + "/boss[1]/boss"));
 
     record.set(field);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof GenericRecord);
 
     GenericRecord result = (GenericRecord) avroObject;
@@ -464,7 +469,7 @@ public class TestAvroTypeUtil {
   }
 
   @Test
-  public void testCreateListRecordField() throws StageException {
+  public void testCreateListRecordField() throws StageException, IOException {
 
     String recordSchema = "{\n"
       +"\"type\": \"record\",\n"
@@ -576,7 +581,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("1", record.getHeader().getAttribute(AvroTypeUtil.AVRO_UNION_TYPE_INDEX_PREFIX + "[1]/boss/boss"));
 
     record.set(root);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroListSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroListSchema, new HashMap<String, Object>());
     Assert.assertTrue(avroObject instanceof List<?>);
 
     List<GenericRecord> genericRecordList = (List<GenericRecord>) avroObject;
@@ -627,7 +632,7 @@ public class TestAvroTypeUtil {
   }
 
   @Test
-  public void testCreateMapRecordField() throws StageException {
+  public void testCreateMapRecordField() throws StageException, IOException {
 
     String recordSchema = "{\n"
       +"\"type\": \"record\",\n"
@@ -742,7 +747,7 @@ public class TestAvroTypeUtil {
     Assert.assertEquals("1", record.getHeader().getAttribute(AvroTypeUtil.AVRO_UNION_TYPE_INDEX_PREFIX + "/Kiran/boss/boss"));
 
     record.set(root);
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", avroMapSchema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, avroMapSchema, new HashMap<String, Object>());
 
     Assert.assertTrue(avroObject instanceof Map);
 
@@ -795,7 +800,7 @@ public class TestAvroTypeUtil {
   }
 
   @Test
-  public void testBestEffortResolve1() throws StageException {
+  public void testBestEffortResolve1() throws StageException, IOException {
 
     String schemaString = "{\n" +
       "  \"type\" : \"record\",\n" +
@@ -825,7 +830,7 @@ public class TestAvroTypeUtil {
     Schema schema = new Schema.Parser().parse(schemaString);
 
     //convert record to avro record
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", schema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, schema, new HashMap<String, Object>());
 
     GenericRecord avroRecord = (GenericRecord) avroObject;
     GenericRecord foo = (GenericRecord) avroRecord.get("foo");
@@ -834,7 +839,7 @@ public class TestAvroTypeUtil {
   }
 
   @Test
-  public void testBestEffortResolve2() throws StageException {
+  public void testBestEffortResolve2() throws StageException, IOException {
 
     String schemaString = "{\n" +
       "  \"type\" : \"record\",\n" +
@@ -864,7 +869,7 @@ public class TestAvroTypeUtil {
     Schema schema = new Schema.Parser().parse(schemaString);
 
     // convert record to avro record
-    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, "", schema);
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(record, schema, new HashMap<String, Object>());
 
     GenericRecord avroRecord = (GenericRecord) avroObject;
 
@@ -872,6 +877,373 @@ public class TestAvroTypeUtil {
     Map<String, Integer> foo = (Map<String, Integer>) avroRecord.get("foo");
     Object bar = foo.get("bar");
     Assert.assertEquals(45237, bar);
+  }
+
+  @Test
+  public void testGetDefaultValuesFromSchema() throws IOException, StageException {
+
+    // Tests the AvroTypeUtil.getDefaultValuesFromSchema method
+
+    String schema = "{\n" +
+      "  \"namespace\": \"my.namespace\",\n" +
+      "  \"name\": \"Employee\",\n" +
+      "  \"type\" :  \"record\",\n" +
+      "  \"fields\" : [\n" +
+      "     {\"name\": \"id\", \"type\": \"int\", \"default\": 345678},\n" +
+      "     {\"name\": \"name\", \"type\": \"string\", \"default\": \"e1\"},\n" +
+      "     {\"name\": \"addresses\", \"type\": {\n" +
+      "        \"type\": \"array\",\n" +
+      "        \"items\": {\n" +
+      "            \"type\": \"record\",\n" +
+      "            \"namespace\": \"not.my.namespace\",\n" +
+      "            \"name\": \"Address\",\n" +
+      "            \"fields\": [\n" +
+      "                {\"name\": \"street\", \"type\": \"string\", \"default\": \"2 bryant\"},\n" +
+      "                {\"name\": \"phones\", \"type\": {\n" +
+      "                    \"type\": \"array\",\n" +
+      "                    \"items\": {\n" +
+      "                        \"type\": \"record\",\n" +
+      "                        \"name\": \"Phone\",\n" +
+      "                        \"fields\": [\n" +
+      "                            {\"name\": \"home\", \"type\": \"string\", \"default\": \"8675309\"},\n" +
+      "                            {\"name\": \"mobile\", \"type\": \"string\", \"default\": \"8675308\"}\n" +
+      "                        ]\n" +
+      "                    }" +
+      "                }}\n" +
+      "            ]\n" +
+      "        }\n" +
+      "     }}\n" +
+      "  ]\n" +
+      "}";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Map<String, Object> defaultValuesFromSchema = AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>());
+
+    Assert.assertEquals(5, defaultValuesFromSchema.size());
+    Assert.assertEquals(345678, defaultValuesFromSchema.get("my.namespace.Employee.id"));
+    Assert.assertEquals("e1", defaultValuesFromSchema.get("my.namespace.Employee.name"));
+    Assert.assertEquals("2 bryant", defaultValuesFromSchema.get("not.my.namespace.Address.street"));
+    Assert.assertEquals("8675309", defaultValuesFromSchema.get("not.my.namespace.Phone.home"));
+    // Phone inherits namespace from the enclosing type
+    Assert.assertEquals("8675308", defaultValuesFromSchema.get("not.my.namespace.Phone.mobile"));
+  }
+
+  @Test
+  public void testDefaultsForPrimitiveSchema() throws IOException {
+
+    // default values are read from a record schema for its fields. Since this schema is not a record, no default
+    // values are extracted form this schema.
+    String schema = "{\"name\": \"name\", \"type\": \"boolean\", \"default\" : true}";
+    Schema parse = new Schema.Parser().parse(schema);
+    Map<String, Object> defaultValuesFromSchema = AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>());
+
+    Assert.assertTrue(defaultValuesFromSchema.isEmpty());
+
+  }
+
+  @Test
+  public void testDefaultsForArraySchema() throws IOException {
+
+    // default values are read from a record schema for its fields. Since this schema is not a record, no default
+    // values are extracted form this schema.
+    String schema = "{ \"type\": \"array\", \"items\": {" +
+        "  \"type\": \"record\"," +
+        "  \"name\": \"Phone\"," +
+        "  \"fields\": [" +
+        "     {\"name\": \"home\", \"type\": \"string\", \"default\": \"8675309\"}," +
+        "     {\"name\": \"mobile\", \"type\": \"string\", \"default\": \"8675308\"}" +
+        "    ]" +
+        "  }" +
+        "}";
+    Schema parse = new Schema.Parser().parse(schema);
+    Map<String, Object> defaultValuesFromSchema = AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>());
+
+    Assert.assertEquals(2, defaultValuesFromSchema.size());
+    Assert.assertEquals("8675309", defaultValuesFromSchema.get("Phone.home"));
+    Assert.assertEquals("8675308", defaultValuesFromSchema.get("Phone.mobile"));
+
+  }
+
+  @Test
+  public void testDefaultsForMapSchema() throws IOException {
+
+    // default values are read from a record schema for its fields. Since this schema is not a record, no default
+    // values are extracted form this schema.
+    String schema = "{ \"type\": \"map\", \"values\": {" +
+      "  \"type\": \"record\"," +
+      "  \"name\": \"Phone\"," +
+      "  \"fields\": [" +
+      "     {\"name\": \"home\", \"type\": \"string\", \"default\": \"8675309\"}," +
+      "     {\"name\": \"mobile\", \"type\": \"string\", \"default\": \"8675308\"}" +
+      "    ]" +
+      "  }" +
+      "}";
+    Schema parse = new Schema.Parser().parse(schema);
+    Map<String, Object> defaultValuesFromSchema = AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>());
+
+    Assert.assertEquals(2, defaultValuesFromSchema.size());
+    Assert.assertEquals("8675309", defaultValuesFromSchema.get("Phone.home"));
+    Assert.assertEquals("8675308", defaultValuesFromSchema.get("Phone.mobile"));
+
+  }
+
+  @Test
+  public void testDefaultsForRecordSchema() throws StageException, IOException {
+
+    // tests schema with default values for most types
+
+    String schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"name\", \"type\": \"string\", \"default\": \"Hello\"},\n"
+      +" {\"name\": \"age\", \"type\": \"int\", \"default\": 25},\n"
+      +" {\"name\": \"resident\", \"type\": \"boolean\", \"default\": false},\n"
+      +" {\"name\": \"enum\",\"type\":{\"type\":\"enum\",\"name\":\"Suit\",\"symbols\":[\"SPADES\",\"HEARTS\",\"DIAMONDS\",\"CLUBS\"]}, \"default\": \"DIAMONDS\"},\n"
+      +" {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}, \"default\" : [\"SPADES\",\"HEARTS\",\"DIAMONDS\",\"CLUBS\"]},\n"
+      +" {\"name\": \"phones\", \"type\": {\"type\": \"map\", \"values\": \"long\"}, \"default\" : {\"home\" : 8675309, \"mobile\" : 8675308}},\n"
+      +" {\"name\": \"boss\", \"type\": [\"null\", \"Employee\"], \"default\" : null}\n"
+      +"]}";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+
+    Record record = RecordCreator.create();
+    Map<String, Field> employee = new HashMap<>();
+    // create empty record with no fields
+    record.set(Field.create(employee));
+
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(
+      record,
+      avroSchema,
+      AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>())
+    );
+
+    Assert.assertTrue(avroObject instanceof GenericRecord);
+
+    // expected fields with default values
+    GenericRecord result = (GenericRecord) avroObject;
+    Assert.assertEquals("Hello", result.get("name"));
+    Assert.assertEquals(25, result.get("age"));
+    Assert.assertEquals(false, result.get("resident"));
+    Assert.assertEquals("DIAMONDS", result.get("enum"));
+
+    List<String> emails = (List<String>) result.get("emails");
+    Assert.assertEquals(4, emails.size());
+    Assert.assertEquals("SPADES", emails.get(0));
+    Assert.assertEquals("HEARTS", emails.get(1));
+    Assert.assertEquals("DIAMONDS", emails.get(2));
+    Assert.assertEquals("CLUBS", emails.get(3));
+
+    Assert.assertEquals(null, result.get("boss"));
+
+    Map<String, Object> phones = (Map<String, Object>) result.get("phones");
+    Assert.assertEquals(8675309, (long)phones.get("home"));
+    Assert.assertEquals(8675308, (long)phones.get("mobile"));
+  }
+
+  @Test
+  public void testDefaultsForUnionSchema() throws IOException {
+
+    // default values are read from a record schema for its fields. Since this schema is not a record, no default
+    // values are extracted form this schema.
+    String schema = "[\"null\", {\"type\": \"record\"," +
+      "  \"name\": \"Phone\"," +
+      "  \"fields\": [" +
+      "     {\"name\": \"home\", \"type\": \"string\", \"default\": \"8675309\"}," +
+      "     {\"name\": \"mobile\", \"type\": \"string\", \"default\": \"8675308\"}" +
+      "    ]" +
+      "  }]";
+    Schema parse = new Schema.Parser().parse(schema);
+    Map<String, Object> defaultValuesFromSchema = AvroTypeUtil.getDefaultValuesFromSchema(parse, new HashSet<String>());
+
+    Assert.assertEquals(2, defaultValuesFromSchema.size());
+    Assert.assertEquals("8675309", defaultValuesFromSchema.get("Phone.home"));
+    Assert.assertEquals("8675308", defaultValuesFromSchema.get("Phone.mobile"));
+
+  }
+
+  @Test
+  public void testSdcToAvroWithDefaultValues() throws IOException, StageException {
+
+    // tests the AvroTypeUtil.sdcRecordToAvro method which takes in the default value map
+
+    String schema = "{\n" +
+      "  \"namespace\": \"my.namespace\",\n" +
+      "  \"name\": \"Employee\",\n" +
+      "  \"type\" :  \"record\",\n" +
+      "  \"fields\" : [\n" +
+      "     {\"name\": \"id\", \"type\": \"int\", \"default\": 345678},\n" +
+      "     {\"name\": \"name\", \"type\": \"string\", \"default\": \"e1\"},\n" +
+      "     {\"name\": \"addresses\", \"type\": {\n" +
+      "        \"type\": \"array\",\n" +
+      "        \"items\": {\n" +
+      "            \"type\": \"record\",\n" +
+      "            \"namespace\": \"my.namespace\",\n" +
+      "            \"name\": \"Address\",\n" +
+      "            \"fields\": [\n" +
+      "                {\"name\": \"street\", \"type\": \"string\", \"default\": \"2 bryant\"},\n" +
+      "                {\"name\": \"phones\", \"type\": {\n" +
+      "                    \"type\": \"array\",\n" +
+      "                    \"items\": {\n" +
+      "                        \"type\": \"record\",\n" +
+      "                        \"name\": \"Phone\",\n" +
+      "                        \"fields\": [\n" +
+      "                            {\"name\": \"home\", \"type\": \"string\", \"default\": \"8675309\"},\n" +
+      "                            {\"name\": \"mobile\", \"type\": \"string\", \"default\": \"8675308\"}\n" +
+      "                        ]\n" +
+      "                    }" +
+      "                }}\n" +
+      "            ]\n" +
+      "        }\n" +
+      "     }}\n" +
+      "  ]\n" +
+      "}";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+
+    Record record = RecordCreator.create();
+    Map<String, Field> employee = new HashMap<>();
+    Map<String, Field> address = new HashMap<>();
+    Map<String, Field> phone = new HashMap<>();
+    List<Field> phones = new ArrayList<>();
+    phones.add(Field.create(phone));
+    address.put("phones", Field.create(phones));
+    List<Field> addresses = new ArrayList<>();
+    addresses.add(Field.create(address));
+    employee.put("addresses", Field.create(addresses));
+    addresses.add(Field.create(addresses));
+    record.set(Field.create(employee));
+
+    Object avroObject = AvroTypeUtil.sdcRecordToAvro(
+      record,
+      avroSchema,
+      AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>())
+    );
+
+    Assert.assertTrue(avroObject instanceof GenericRecord);
+    GenericRecord result = (GenericRecord) avroObject;
+    Assert.assertEquals("e1", result.get("name"));
+    Assert.assertEquals(345678, result.get("id"));
+    List<GenericRecord> adds = (List<GenericRecord>) result.get("addresses");
+    Assert.assertEquals(1, adds.size());
+
+    result = adds.get(0);
+    Assert.assertEquals("2 bryant", result.get("street"));
+
+    List<GenericRecord> phs = (List<GenericRecord>) result.get("phones");
+    Assert.assertEquals(1, phs.size());
+    result = phs.get(0);
+    Assert.assertEquals("8675309", result.get("home"));
+    Assert.assertEquals("8675308", result.get("mobile"));
+  }
+
+  @Test
+  public void testInvalidUnionDefault1() {
+
+    // tests that union type with invalid default values are flagged
+    // in this case the default value can only be null since that is the first type in the union
+    String schema = "{\n"
+      + "\"type\": \"record\",\n"
+      + "\"name\": \"Employee\",\n"
+      + "\"fields\": [\n"
+      + " {\"name\": \"name\", \"type\": [\"null\", \"string\"], \"default\": \"Hello\"}\n"
+      + "]}";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    try {
+      AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>());
+      Assert.fail("IOException expected as the Avro Schema in invalid. " +
+        "Default value must be of the first type in the union");
+    } catch (IOException e) {
+      // Expected
+    }
+  }
+
+  @Test
+  public void testInvalidUnionDefault2() {
+
+    // tests that union type with invalid default values are flagged
+    // in this case the default value can only be null since that is the first type in the union
+    String schema = "{\n"
+      + "\"type\": \"record\",\n"
+      + "\"name\": \"Employee\",\n"
+      + "\"fields\": [\n"
+      + " {\"name\": \"name\", \"type\": [\"string\", \"null\"], \"default\": null}\n"
+      + "]}";
+
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    try {
+      AvroTypeUtil.getDefaultValuesFromSchema(avroSchema, new HashSet<String>());
+    } catch (IOException e) {
+      Assert.fail("Exception is not expected as null is a valid default for string type");
+    }
+  }
+
+  @Test
+  public void testNoDefaultsNoFields() throws StageException, IOException {
+
+    // tests that when there are no defaults in schema and record is missing those fields then it results in an
+    // exception
+
+    String schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"name\", \"type\": \"string\"}\n"
+      +"]}";
+
+    checkForMissingFieldsException(schema);
+
+    schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"boss\", \"type\": \"Employee\"}\n"
+      +"]}";
+
+    checkForMissingFieldsException(schema);
+
+    schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"emails\", \"type\": {\"type\": \"array\", \"items\": \"string\"}}\n"
+      +"]}";
+
+    checkForMissingFieldsException(schema);
+
+    schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"phones\", \"type\": {\"type\": \"map\", \"values\": \"long\"}}\n"
+      +"]}";
+
+    checkForMissingFieldsException(schema);
+
+    schema = "{\n"
+      +"\"type\": \"record\",\n"
+      +"\"name\": \"Employee\",\n"
+      +"\"fields\": [\n"
+      +" {\"name\": \"name\", \"type\": [\"null\", \"string\"]}\n"
+      +"]}";
+
+    checkForMissingFieldsException(schema);
+  }
+
+  private void checkForMissingFieldsException(String schema) throws StageException, IOException {
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    Map<String, Field> employee = new HashMap<>();
+    // create empty record with no fields
+    record.set(Field.create(employee));
+    try {
+      AvroTypeUtil.sdcRecordToAvro(record, avroSchema, new HashMap<String, Object>());
+      Assert.fail("Expected DataGeneratorException as the field name does not have a default value in the avro " +
+        "schema and the record does not contain that field");
+    } catch (DataGeneratorException e) {
+      Assert.assertEquals(Errors.AVRO_GENERATOR_00, e.getErrorCode());
+    }
   }
 
 }

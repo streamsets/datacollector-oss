@@ -22,8 +22,8 @@ package com.streamsets.pipeline.lib.generator.avro;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import org.apache.avro.Schema;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,6 +39,9 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   static final String SCHEMA_DEFAULT = "";
   public static final String INCLUDE_SCHEMA_KEY = KEY_PREFIX + "includeSchema";
   static final boolean INCLUDE_SCHEMA_DEFAULT = true;
+  public static final String DEFAULT_VALUES_KEY = KEY_PREFIX + "defaultValues";
+  static final Map<String, Object> DEFAULT_VALUES_DEFAULT = new HashMap<>();
+
 
   public static final Map<String, Object> CONFIGS;
 
@@ -46,20 +49,25 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
     Map<String, Object> configs = new HashMap<>();
     configs.put(SCHEMA_KEY, SCHEMA_DEFAULT);
     configs.put(INCLUDE_SCHEMA_KEY, INCLUDE_SCHEMA_DEFAULT);
+    configs.put(DEFAULT_VALUES_KEY, DEFAULT_VALUES_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
   @SuppressWarnings("unchecked")
   public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of();
 
-  private final String schema;
+  private final Schema schema;
   private final boolean includeSchema;
+  private final Map<String, Object> defaultValuesFromSchema;
 
-  public AvroDataGeneratorFactory(Settings settings) {
+  public AvroDataGeneratorFactory(Settings settings) throws IOException {
     super(settings);
-    schema = settings.getConfig(SCHEMA_KEY);
     includeSchema = settings.getConfig(INCLUDE_SCHEMA_KEY);
-
+    schema = new Schema.Parser()
+        .setValidate(true)
+        .setValidateDefaults(true)
+        .parse((String)settings.getConfig(SCHEMA_KEY));
+    defaultValuesFromSchema = settings.getConfig(DEFAULT_VALUES_KEY);
     Utils.checkNotNull(schema, "Avro Schema");
   }
 
@@ -67,9 +75,9 @@ public class AvroDataGeneratorFactory extends DataGeneratorFactory {
   public DataGenerator getGenerator(OutputStream os) throws IOException {
     DataGenerator dataGenerator;
     if(includeSchema) {
-      dataGenerator = new AvroDataOutputStreamGenerator(os, schema);
+      dataGenerator = new AvroDataOutputStreamGenerator(os, schema, defaultValuesFromSchema);
     } else {
-      dataGenerator = new AvroMessageGenerator(os, schema);
+      dataGenerator = new AvroMessageGenerator(os, schema, defaultValuesFromSchema);
     }
     return dataGenerator;
   }

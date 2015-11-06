@@ -17,31 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.common;
+package com.streamsets.pipeline.lib.generator.avro;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
-public enum DataFormatErrors implements ErrorCode {
-  // Configuration errors
-  DATA_FORMAT_01("Max data object length cannot be less than 1"),
-  DATA_FORMAT_02("XML delimiter element cannot be empty"),
-  DATA_FORMAT_03("Invalid XML element name '{}'"),
-  DATA_FORMAT_04("Unsupported data format '{}'"),
-  DATA_FORMAT_05("Unsupported charset '{}'"),
-  DATA_FORMAT_06("Cannot create the parser factory: {}"),
-
-  DATA_FORMAT_200("Field cannot be empty"),
-  DATA_FORMAT_201("Cannot create the parser factory: {}"),
-
-  DATA_FORMAT_300("Error validating avro schema : {}"),
-  DATA_FORMAT_301("Error getting default values from avro schema : {}"),
-
+public enum Errors implements ErrorCode {
+  AVRO_GENERATOR_00("Record '{}' is missing required avro field '{}'"),
+  AVRO_GENERATOR_01("Error getting default value for avro field '{}' : {}"),
+  AVRO_GENERATOR_02("Expected a default value of 'null' but found '{}'"),
   ;
+
   private final String msg;
 
-  DataFormatErrors(String msg) {
+  Errors(String msg) {
     this.msg = msg;
   }
 

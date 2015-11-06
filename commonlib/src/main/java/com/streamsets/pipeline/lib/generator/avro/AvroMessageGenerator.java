@@ -33,6 +33,7 @@ import org.apache.avro.io.EncoderFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class AvroMessageGenerator implements DataGenerator {
 
@@ -41,13 +42,18 @@ public class AvroMessageGenerator implements DataGenerator {
   private DatumWriter<GenericRecord> datumWriter;
   private BinaryEncoder binaryEncoder;
   private final OutputStream outputStream;
+  private final Map<String, Object> defaultValueMap;
 
-  public AvroMessageGenerator(OutputStream outputStream, String avroSchema)
-      throws IOException {
+  public AvroMessageGenerator(
+      OutputStream outputStream,
+      Schema schema,
+      Map<String, Object> defaultValueMap
+  ) throws IOException {
+    this.schema = schema;
     this.outputStream = outputStream;
-    schema = new Schema.Parser().setValidate(true).parse(avroSchema);
     datumWriter = new GenericDatumWriter<>(schema);
     binaryEncoder = EncoderFactory.get().binaryEncoder(outputStream, null);
+    this.defaultValueMap = defaultValueMap;
   }
 
   @Override
@@ -56,7 +62,10 @@ public class AvroMessageGenerator implements DataGenerator {
       throw new IOException("generator has been closed");
     }
     try {
-      datumWriter.write((GenericRecord) AvroTypeUtil.sdcRecordToAvro(record, schema), binaryEncoder);
+      datumWriter.write(
+          (GenericRecord) AvroTypeUtil.sdcRecordToAvro(record, schema, defaultValueMap),
+          binaryEncoder
+      );
     } catch (StageException e) {
       throw new DataGeneratorException(e.getErrorCode(), e.getParams()); // params includes cause
     }

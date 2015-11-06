@@ -38,14 +38,20 @@ import com.streamsets.pipeline.lib.generator.avro.AvroDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.binary.BinaryDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.delimited.DelimitedDataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
+import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
+import org.apache.avro.Schema;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class DataGeneratorFormatConfig {
 
@@ -279,18 +285,56 @@ public class DataGeneratorFormatConfig {
         builder.setMode(jsonMode);
         break;
       case AVRO:
+        Schema schema = null;
+        Map<String, Object> defaultValues = new HashMap<>();
+        try {
+          schema = new Schema.Parser()
+              .setValidate(true)
+              .setValidateDefaults(true)
+              .parse(avroSchema);
+        } catch (Exception e)  {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.AVRO.name(),
+                  "avroSchema",
+                  DataFormatErrors.DATA_FORMAT_300,
+                  e.toString(),
+                  e
+              )
+          );
+          valid &= false;
+        }
+        if(schema != null) {
+          try {
+            defaultValues.putAll(AvroTypeUtil.getDefaultValuesFromSchema(schema, new HashSet<String>()));
+          } catch (IOException e) {
+            issues.add(
+                context.createConfigIssue(
+                    DataFormatGroups.AVRO.name(),
+                    "avroSchema",
+                    DataFormatErrors.DATA_FORMAT_301,
+                    e.toString(),
+                    e
+                )
+            );
+            valid &= false;
+          }
+        }
         builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
         builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
+        builder.setConfig(AvroDataGeneratorFactory.DEFAULT_VALUES_KEY, defaultValues);
         break;
       case BINARY:
         builder.setConfig(BinaryDataGeneratorFactory.FIELD_PATH_KEY, binaryFieldPath);
         break;
     }
-    try {
-      dataGeneratorFactory = builder.build();
-    } catch (Exception ex) {
-      issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_201, ex.toString(), ex));
-      valid &= false;
+    if(valid) {
+      try {
+        dataGeneratorFactory = builder.build();
+      } catch (Exception ex) {
+        issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_201, ex.toString(), ex));
+        valid &= false;
+      }
     }
     return valid;
   }

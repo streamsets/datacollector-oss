@@ -32,19 +32,25 @@ import org.apache.avro.io.DatumWriter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class AvroDataOutputStreamGenerator implements DataGenerator {
 
   private final Schema schema;
   private boolean closed;
   private final DataFileWriter<GenericRecord> dataFileWriter;
+  private final Map<String, Object> defaultValueMap;
 
-  public AvroDataOutputStreamGenerator(OutputStream outputStream, String avroSchema)
-      throws IOException {
-    schema = new Schema.Parser().setValidate(true).parse(avroSchema);
+  public AvroDataOutputStreamGenerator(
+      OutputStream outputStream,
+      Schema schema,
+      Map<String, Object> defaultValueMap
+  ) throws IOException {
+    this.schema = schema;
     DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
     dataFileWriter = new DataFileWriter<>(datumWriter);
     dataFileWriter.create(schema, outputStream);
+    this.defaultValueMap = defaultValueMap;
   }
 
   @Override
@@ -53,7 +59,7 @@ public class AvroDataOutputStreamGenerator implements DataGenerator {
       throw new IOException("generator has been closed");
     }
     try {
-      dataFileWriter.append((GenericRecord)AvroTypeUtil.sdcRecordToAvro(record, schema));
+      dataFileWriter.append((GenericRecord)AvroTypeUtil.sdcRecordToAvro(record, schema, defaultValueMap));
     } catch (StageException e) {
       throw new DataGeneratorException(e.getErrorCode(), e.getParams()); // params includes cause
     }

@@ -20,29 +20,37 @@
 package com.streamsets.pipeline.lib.util;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.avro.Errors;
 import org.apache.avro.Schema;
 import org.apache.avro.UnresolvedUnionException;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericFixed;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.util.Utf8;
+import org.codehaus.jackson.JsonNode;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AvroTypeUtil {
 
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
   private static final String FORWARD_SLASH = "/";
+  public static final String SCHEMA_PATH_SEPARATOR = ".";
 
   public static Field avroToSdcField(Record record, Schema schema, Object value) {
     return avroToSdcField(record, "", schema, value);
@@ -131,12 +139,27 @@ public class AvroTypeUtil {
     return f;
   }
 
-  public static Object sdcRecordToAvro(Record record, Schema schema) throws StageException {
-    return sdcRecordToAvro(record, "", schema);
+  public static Object sdcRecordToAvro(
+    Record record,
+    Schema schema,
+    Map<String, Object> defaultValueMap
+  ) throws StageException, IOException {
+    return sdcRecordToAvro(
+      record,
+      "",
+      schema,
+      defaultValueMap
+    );
   }
 
   @VisibleForTesting
-  static Object sdcRecordToAvro(Record record, String avroFieldPath, Schema schema ) throws StageException {
+  private static Object sdcRecordToAvro(
+      Record record,
+      String avroFieldPath,
+      Schema schema,
+      Map<String, Object> defaultValueMap
+  ) throws StageException {
+
     String fieldPath = avroFieldPath;
     if(fieldPath != null) {
       Field field = record.get(fieldPath);
@@ -175,7 +198,14 @@ public class AvroTypeUtil {
           List<Field> valueAsList = field.getValueAsList();
           List<Object> toReturn = new ArrayList<>(valueAsList.size());
           for(int i = 0; i < valueAsList.size(); i++) {
-            toReturn.add(sdcRecordToAvro(record, avroFieldPath + "[" + i + "]", schema.getElementType()));
+            toReturn.add(
+                sdcRecordToAvro(
+                    record,
+                    avroFieldPath + "[" + i + "]",
+                    schema.getElementType(),
+                    defaultValueMap
+                )
+            );
           }
           obj = toReturn;
           break;
@@ -210,7 +240,7 @@ public class AvroTypeUtil {
             for (Map.Entry<String, Field> e : map.entrySet()) {
               if (map.containsKey(e.getKey())) {
                 toReturnMap.put(e.getKey(), sdcRecordToAvro(record, avroFieldPath + FORWARD_SLASH + e.getKey(),
-                  schema.getValueType()));
+                  schema.getValueType(), defaultValueMap));
               }
             }
           }
@@ -223,9 +253,26 @@ public class AvroTypeUtil {
           Map<String, Field> valueAsMap = field.getValueAsMap();
           GenericRecord genericRecord = new GenericData.Record(schema);
           for (Schema.Field f : schema.getFields()) {
+            // If the record does not contain a field corresponding to the schema field, look up the default value from
+            // the schema.
+            // If no default value was specified for the field and record does not contain it, then throw exception.
+            // Its an error record.
             if (valueAsMap.containsKey(f.name())) {
-              genericRecord.put(f.name(), sdcRecordToAvro(record, avroFieldPath + FORWARD_SLASH + f.name(),
-                f.schema()));
+              genericRecord.put(
+                  f.name(),
+                  sdcRecordToAvro(record, avroFieldPath + FORWARD_SLASH + f.name(), f.schema(), defaultValueMap)
+              );
+            } else {
+              String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
+              if(!defaultValueMap.containsKey(key)) {
+                  throw new DataGeneratorException(
+                    Errors.AVRO_GENERATOR_00,
+                    record.getHeader().getSourceId(),
+                    schema.getFullName() + "." + f.name()
+                  );
+              }
+              Object v = defaultValueMap.get(key);
+              genericRecord.put(f.name(), v);
             }
           }
           obj = genericRecord;
@@ -360,4 +407,142 @@ public class AvroTypeUtil {
     return match;
   }
 
+
+  public static Map<String, Object> getDefaultValuesFromSchema(
+    Schema schema,
+    Set<String> processedSchemaSet
+  ) throws IOException {
+    if (processedSchemaSet.contains(schema.getName()) || isPrimitive(schema.getType())) {
+      return Maps.newHashMap();
+    }
+    processedSchemaSet.add(schema.getName());
+
+    Map<String, Object> defValMap = new HashMap<>();
+    switch(schema.getType()) {
+      case RECORD:
+        // For schema of type Record, go over all the fields and get their default values if specified.
+        // Additionally, if the field is not primitive, visit its schema for default values
+        for(Schema.Field f : schema.getFields()) {
+          Object v;
+          JsonNode jsonNode = f.defaultValue();
+          if (jsonNode != null) {
+            try {
+              v = getDefaultValue(jsonNode, f.schema());
+              defValMap.put(schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name(), v);
+            } catch (IOException e) {
+              throw new IOException(
+                  Utils.format(
+                      Errors.AVRO_GENERATOR_01.getMessage(),
+                      schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name(),
+                      e.toString()
+                  ),
+                  e
+              );
+            }
+          }
+          // Visit schema of non primitive fields
+          if(!isPrimitive(f.schema().getType())) {
+            switch(f.schema().getType()) {
+              case RECORD:
+                defValMap.putAll(getDefaultValuesFromSchema(f.schema(), processedSchemaSet));
+                break;
+              case ARRAY:
+                defValMap.putAll(getDefaultValuesFromSchema(f.schema().getElementType(), processedSchemaSet));
+                break;
+              case MAP:
+                defValMap.putAll(getDefaultValuesFromSchema(f.schema().getValueType(), processedSchemaSet));
+                break;
+              case UNION:
+                for(Schema s : f.schema().getTypes()) {
+                  defValMap.putAll(getDefaultValuesFromSchema(s, processedSchemaSet));
+                }
+                break;
+            }
+          }
+        }
+        break;
+      case ARRAY:
+        defValMap.putAll(getDefaultValuesFromSchema(schema.getElementType(), processedSchemaSet));
+        break;
+      case MAP:
+        defValMap.putAll(getDefaultValuesFromSchema(schema.getValueType(), processedSchemaSet));
+        break;
+      case UNION:
+        for(Schema s : schema.getTypes()) {
+          defValMap.putAll(getDefaultValuesFromSchema(s, processedSchemaSet));
+        }
+        break;
+    }
+    return defValMap;
+  }
+
+  private static Object getDefaultValue(JsonNode jsonNode, Schema schema) throws IOException {
+    switch(schema.getType()) {
+      case UNION:
+        // When the default value is specified for a union field, the type of the default value must match the first
+        // element of the union
+        Schema unionSchema = schema.getTypes().get(0);
+        return getDefaultValue(jsonNode, unionSchema);
+      case ARRAY:
+        List<Object> values=  new ArrayList<>();
+        Iterator<JsonNode> elements = jsonNode.getElements();
+        while(elements.hasNext()) {
+          values.add(getDefaultValue(elements.next(), schema.getElementType()));
+        }
+        return values;
+      case BOOLEAN:
+        return jsonNode.getBooleanValue();
+      case BYTES:
+        return jsonNode.getBinaryValue();
+      case DOUBLE:
+        return jsonNode.getDoubleValue();
+      case ENUM:
+        return jsonNode.getTextValue();
+      case FIXED:
+        return jsonNode.getBinaryValue();
+      case FLOAT:
+        return jsonNode.getDoubleValue();
+      case INT:
+        return jsonNode.getIntValue();
+      case LONG:
+        return jsonNode.getLongValue();
+      case RECORD:
+      case MAP:
+        Map<String, Object> map = new HashMap<>();
+        Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.getFields();
+        while(fields.hasNext()) {
+          Map.Entry<String, JsonNode> next = fields.next();
+          map.put(next.getKey(), getDefaultValue(next.getValue(), schema.getValueType()));
+        }
+        return map;
+      case NULL:
+        if(!jsonNode.isNull()) {
+          throw new IOException(
+            Utils.format(
+              Errors.AVRO_GENERATOR_02.getMessage(),
+              jsonNode.toString()
+            )
+          );
+        }
+        return null;
+      case STRING:
+        return jsonNode.getTextValue();
+      default:
+        throw new IllegalStateException(Utils.format("Unexpected schema type {}", schema.getType().getName()));
+    }
+  }
+
+  private static boolean isPrimitive(Schema.Type type) {
+    boolean isPrimitive = true;
+    switch (type) {
+      case ARRAY:
+      case UNION:
+      case RECORD:
+      case MAP:
+        isPrimitive = false;
+        // Even though FIXED type is categorized as complex type in avro, we treat it as primitive byte[]
+        break;
+    }
+    return isPrimitive;
+  }
 }
