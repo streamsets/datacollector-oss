@@ -77,9 +77,9 @@ public class WebServerTask extends AbstractTask {
   public static final String HTTPS_PORT_KEY = "https.port";
   private static final int HTTPS_PORT_DEFAULT = -1;
   public static final String HTTPS_KEYSTORE_PATH_KEY = "https.keystore.path";
-  private static final String HTTPS_KEYSTORE_PATH_DEFAULT = "sdc-keystore.jks";
+  private static final String HTTPS_KEYSTORE_PATH_DEFAULT = "keystore.jks";
   public static final String HTTPS_KEYSTORE_PASSWORD_KEY = "https.keystore.password";
-  private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@sdc-keystore-password.txt@";
+  private static final String HTTPS_KEYSTORE_PASSWORD_DEFAULT = "@keystore-password.txt@";
 
   public static final String AUTHENTICATION_KEY = "http.authentication";
   public static final String AUTHENTICATION_DEFAULT = "none"; //"form";
@@ -393,7 +393,7 @@ public class WebServerTask extends AbstractTask {
       port = server.getURI().getPort();
       hashSessionManager.setSessionCookie(JSESSIONID_COOKIE + port);
       LOG.info("Running on URI '{}', HTTPS '{}' ", server.getURI(), isSSLEnabled());
-      System.out.println("Data Collector Running on URI : " + server.getURI());
+      System.out.println("Running on URI : " + server.getURI());
       if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
         try {
           String baseHttpUrl = "http://";
