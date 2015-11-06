@@ -22,16 +22,10 @@ package com.streamsets.datacollector.http;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 
 /**
- * For resources hosted by the root context of the web-server
+ * For web-apps
  */
-public abstract class ContextConfigurator {
+public interface WebAppProvider {
 
-  public abstract void init(ServletContextHandler context);
-
-  public void start() {
-  }
-
-  public void stop() {
-  }
+  ServletContextHandler get();
 
 }

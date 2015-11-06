@@ -20,9 +20,7 @@
 package com.streamsets.datacollector.http;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.http.ContextConfigurator;
-import com.streamsets.datacollector.http.ServerNotYetRunningException;
-import com.streamsets.datacollector.http.WebServerTask;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
@@ -68,8 +66,16 @@ public class TestWebServerTaskHttpHttps {
   }
 
   @SuppressWarnings("unchecked")
-  private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
-    RuntimeInfo ri = new RuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(), Collections.EMPTY_LIST) {
+  private WebServerTask createWebServerTask(
+      final String confDir,
+      final Configuration conf,
+      final Set<WebAppProvider> webAppProviders
+  ) throws Exception {
+    RuntimeInfo ri = new RuntimeInfo(
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Collections.<ClassLoader>emptyList()
+    ) {
       @Override
       public String getConfigDir() {
         return confDir;
@@ -79,10 +85,15 @@ public class TestWebServerTaskHttpHttps {
     configurators.add(new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        context.addServlet(new ServletHolder(new PingServlet()), "/*");
+        context.addServlet(new ServletHolder(new PingServlet()), "/ping");
       }
     });
-    return new WebServerTask(ri, conf, configurators);
+    return new WebServerTask(ri, conf, configurators, webAppProviders);
+  }
+
+  @SuppressWarnings("unchecked")
+  private WebServerTask createWebServerTask(final String confDir, final Configuration conf) throws Exception {
+    return createWebServerTask(confDir, conf, Collections.<WebAppProvider>emptySet());
   }
 
   private String createTestDir() {
@@ -177,7 +188,7 @@ public class TestWebServerTaskHttpHttps {
       }.start();
       Thread.sleep(1000);
 
-      HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort).openConnection();
+      HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort  + "/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
       ws.stopTask();
@@ -201,7 +212,7 @@ public class TestWebServerTaskHttpHttps {
       Thread.sleep(1000);
 
       HttpURLConnection conn =
-          (HttpURLConnection) new URL("http://127.0.0.1:" + ws.getServerURI().getPort())
+          (HttpURLConnection) new URL("http://127.0.0.1:" + ws.getServerURI().getPort() + "/ping")
               .openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
@@ -259,7 +270,8 @@ public class TestWebServerTaskHttpHttps {
         }
       }.start();
       Thread.sleep(1000);
-      HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort).openConnection();
+      HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort + "/ping")
+          .openConnection();
       configureHttpsUrlConnection(conn);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
@@ -292,7 +304,7 @@ public class TestWebServerTaskHttpHttps {
       Thread.sleep(1000);
 
       HttpsURLConnection conn =
-          (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort())
+          (HttpsURLConnection) new URL("https://127.0.0.1:" + ws.getServerURI().getPort() + "/ping")
               .openConnection();
       configureHttpsUrlConnection(conn);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
@@ -326,13 +338,48 @@ public class TestWebServerTaskHttpHttps {
         }
       }.start();
       Thread.sleep(1000);
-      HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort).openConnection();
+      HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/ping").openConnection();
       conn.setInstanceFollowRedirects(false);
       Assert.assertTrue(conn.getResponseCode() >= 300 && conn.getResponseCode() < 400);
       Assert.assertTrue(conn.getHeaderField("Location").startsWith("https://"));
       HttpsURLConnection conns = (HttpsURLConnection) new URL(conn.getHeaderField("Location")).openConnection();
       configureHttpsUrlConnection(conns);
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conns.getResponseCode());
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  @Test
+  public void testWebApp() throws Exception {
+    WebAppProvider webAppProvider = new WebAppProvider() {
+      @Override
+      public ServletContextHandler get() {
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.setContextPath("/webapp");
+        handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
+        return handler;
+      }
+    };
+    Configuration conf = new Configuration();
+    int httpPort = getRandomPort();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
+    conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
+    try {
+      ws.initTask();
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+
+      HttpURLConnection conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/webapp/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
     } finally {
       ws.stopTask();
     }

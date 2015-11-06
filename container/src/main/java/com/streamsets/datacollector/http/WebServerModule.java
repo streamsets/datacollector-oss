@@ -55,7 +55,9 @@ import org.glassfish.jersey.servlet.ServletProperties;
 
 import javax.servlet.DispatcherType;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Set;
 
 @Module(injects = {TaskWrapper.class, Manager.class}, library = true, complete = false)
 public class WebServerModule {
@@ -72,6 +74,11 @@ public class WebServerModule {
   }
 
   private final String SWAGGER_PACKAGE = "io.swagger.jaxrs.listing";
+
+  @Provides(type = Type.SET_VALUES)
+  Set<WebAppProvider> provideWebApps() {
+    return Collections.emptySet();
+  }
 
   @Provides(type = Type.SET)
   ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo) {

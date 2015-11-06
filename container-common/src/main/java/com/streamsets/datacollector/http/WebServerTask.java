@@ -43,6 +43,7 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
@@ -68,6 +69,7 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
@@ -98,6 +100,7 @@ public class WebServerTask extends AbstractTask {
 
   private final RuntimeInfo runtimeInfo;
   private final Configuration conf;
+  private final Set<WebAppProvider> webAppProviders;
   private final Set<ContextConfigurator> contextConfigurators;
   private int port;
   private Server server;
@@ -105,10 +108,16 @@ public class WebServerTask extends AbstractTask {
   private HashSessionManager hashSessionManager;
 
   @Inject
-  public WebServerTask(RuntimeInfo runtimeInfo, Configuration conf, Set<ContextConfigurator> contextConfigurators) {
+  public WebServerTask(
+      RuntimeInfo runtimeInfo,
+      Configuration conf,
+      Set<ContextConfigurator> contextConfigurators,
+      Set<WebAppProvider> webAppProviders
+  ) {
     super("webServer");
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
+    this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
   }
 
@@ -116,16 +125,36 @@ public class WebServerTask extends AbstractTask {
   public void initTask() {
     checkValidPorts();
     server = createServer();
-    int port = -1;
+
+    ContextHandlerCollection appHandlers = new ContextHandlerCollection();
+
+    // load web apps
+    Set<String> contextPaths = new HashSet<>();
+    for (WebAppProvider appProvider : webAppProviders) {
+      ServletContextHandler appHandler = appProvider.get();
+      String contextPath = appHandler.getContextPath();
+      if (contextPath.equals("/")) {
+        throw new RuntimeException("Webapps cannot be registered at the root context");
+      }
+      if (contextPaths.contains(contextPath)) {
+        throw new RuntimeException(Utils.format("Webapp already registered at '{}' context", contextPath));
+      }
+      contextPaths.add(contextPath);
+      appHandlers.addHandler(appHandler);
+    }
+
+    // configure root app
     ServletContextHandler appHandler = configureAppContext();
     Handler handler = configureAuthentication(server, appHandler);
     handler = configureRedirectionRules(handler);
-    server.setHandler(handler);
+    appHandlers.addHandler(handler);
+
+    server.setHandler(appHandlers);
+
     if (isRedirectorToSSLEnabled()) {
       redirector = createRedirectorServer();
     }
   }
-
 
   private ServletContextHandler configureAppContext() {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -392,8 +421,6 @@ public class WebServerTask extends AbstractTask {
       server.start();
       port = server.getURI().getPort();
       hashSessionManager.setSessionCookie(JSESSIONID_COOKIE + port);
-      LOG.info("Running on URI '{}', HTTPS '{}' ", server.getURI(), isSSLEnabled());
-      System.out.println("Running on URI : " + server.getURI());
       if(runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
         try {
           String baseHttpUrl = "http://";
@@ -402,6 +429,8 @@ public class WebServerTask extends AbstractTask {
           }
           baseHttpUrl += InetAddress.getLocalHost().getCanonicalHostName() + ":" + port;
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
+          LOG.info("Running on URI : '{}'", baseHttpUrl);
+          System.out.println(Utils.format("Running on URI : '{}'", baseHttpUrl));
         } catch(UnknownHostException ex) {
           LOG.debug("Exception during hostname resolution: {}", ex);
           runtimeInfo.setBaseHttpUrl(server.getURI().toString());
@@ -418,7 +447,7 @@ public class WebServerTask extends AbstractTask {
     if (redirector != null) {
       try {
         redirector.start();
-        LOG.debug("Running redirector to HTTPS on port '{}'", conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT));
+        LOG.debug("Running HTTP redirector to HTTPS on port '{}'", conf.get(HTTP_PORT_KEY, HTTP_PORT_DEFAULT));
       } catch (Exception ex) {
         throw new RuntimeException(ex);
       }
