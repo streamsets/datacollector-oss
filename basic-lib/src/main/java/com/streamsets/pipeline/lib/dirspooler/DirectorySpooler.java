@@ -218,6 +218,7 @@ public class DirectorySpooler {
       scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
 
       if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
+        // create and schedule file purger only if the retention time is > 0
         purger = new FilePurger();
         scheduledExecutor.scheduleAtFixedRate(purger, 1, 1, TimeUnit.MINUTES);
       }
