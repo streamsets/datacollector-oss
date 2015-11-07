@@ -206,7 +206,7 @@ public class SpoolDirSource extends BaseSource {
       } else {
         issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.SPOOLDIR_11));
       }
-      if (retentionTimeMins < 1) {
+      if (retentionTimeMins < 0) {
         issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
       }
     }

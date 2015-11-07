@@ -41,7 +41,7 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_16("Invalid GLOB file pattern '{}': {}"),
   SPOOLDIR_17("Max files in directory cannot be less than 1"),
   SPOOLDIR_18("First file to process '{}' does not match the file pattern '{}"),
-  SPOOLDIR_19("Archive retention time cannot be less than 1"),
+  SPOOLDIR_19("Archive retention time cannot be less than 0"),
   SPOOLDIR_20("Max data object length cannot be less than 1"),
   SPOOLDIR_23("Invalid XML element name '{}'"),
   SPOOLDIR_24("Cannot create the parser factory: '{}'"),
