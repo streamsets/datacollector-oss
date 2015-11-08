@@ -136,6 +136,7 @@
     <module>spark-bootstrap</module>
 
     <module>cli</module>
+    <module>common-ui</module>
   </modules>
 
   <build>
