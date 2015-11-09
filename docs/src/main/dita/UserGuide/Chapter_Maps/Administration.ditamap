@@ -45,6 +45,8 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Administration/RESTResponse-Viewing.dita"/>
+   <topicref href="../Administration/RESTResponse-Disabling.dita"/>
   </topicref>
   <topicref href="../Administration/CLI-Overview.dita" chunk="to-content">
   <topicmeta>

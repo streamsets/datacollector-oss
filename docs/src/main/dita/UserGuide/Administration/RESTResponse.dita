@@ -24,9 +24,6 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> details to
       a REST-based monitoring system. Or you might use the information in conjunction with the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> REST API. </p>
-    <p>You can access REST response information from the location where the relevant information
-      displays. For example, you can download the JVM Metrics REST response from the JVM Metrics
-      page. </p>
     <p>You can access the following REST response data:<ul>
         <li>Pipeline Configuration - Provides information about the pipeline and each stage in the
           pipeline.</li>
@@ -34,18 +31,14 @@
         <li>Definitions - Provides information about all available <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           stages.</li>
-        <li>Pipeline Preview - Provides information about the preview data moving through the
-          pipeline. Also includes monitoring information that is not used in preview.</li>
+        <li>Preview Data- Provides information about the preview data moving through the pipeline.
+          Also includes monitoring information that is not used in preview.</li>
         <li>Pipeline Monitoring - Provides monitoring information for the pipeline.</li>
         <li>Pipeline Status - Provides the current status of the pipeline.</li>
         <li>JVM Metrics - Provides JVM metrics for the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
+        <li>Thread Dump - Lists all active Java threads used by the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.</li>
       </ul></p>
-    <p>You can configure the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to hide
-      the display of REST responses. Click <menucascade>
-        <uicontrol>Help</uicontrol>
-        <uicontrol>Settings</uicontrol>
-      </menucascade>, and then click <uicontrol>Hide the REST Response Menu</uicontrol>.</p>
   </conbody>
 </concept>

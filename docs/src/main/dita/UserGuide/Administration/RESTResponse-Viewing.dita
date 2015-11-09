@@ -14,37 +14,41 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_cyb_rpw_wr">
-    <title>Accessing a REST Response</title>
+    <title>Viewing REST Response Data</title>
     <taskbody>
         <context>
-            <p><indexterm>REST responses<indexterm>accessing</indexterm></indexterm>You can access
-                REST response data from the following locations:<dl>
+            <p><indexterm>REST responses<indexterm>viewing</indexterm></indexterm>You can view REST
+                response data from the location where the relevant information displays. For
+                example, you can view JVM Metrics REST response data from the JVM Metrics page. </p>
+            <p>You can view REST response data from the following locations:<dl>
                     <dlentry>
                         <dt>Edit mode</dt>
                         <dd>From the <wintitle>Properties</wintitle> panel, you can use the
-                                <uicontrol>More</uicontrol> icon to access the following REST
-                                responses:<ul id="ul_crx_spw_wr">
+                                <uicontrol>More</uicontrol> icon (<image
+                                href="../Graphics/icon_MonMore.png" id="image_n3g_rz5_xt" scale="80"
+                            />) to view the following REST response data:<ul id="ul_crx_spw_wr">
                                 <li>Pipeline Configuration</li>
                                 <li>Pipeline Rules</li>
+                                <li>Pipeline Status</li>
                                 <li>Definitions</li>
                             </ul></dd>
                     </dlentry>
                     <dlentry>
                         <dt>Preview mode</dt>
                         <dd>From the <wintitle>Preview</wintitle> panel, you can use the
-                                <uicontrol>More</uicontrol> icon access the pipeline preview REST
-                            response.</dd>
+                                <uicontrol>More</uicontrol> icon to view the Preview Data REST
+                            response data.</dd>
                     </dlentry>
                     <dlentry>
                         <dt>Monitor mode</dt>
                         <dd>From the <wintitle>Monitor</wintitle> panel, you can use the
-                                <uicontrol>More</uicontrol> icon to access the following REST
-                            responses: <ul id="ul_hrx_spw_wr">
+                                <uicontrol>More</uicontrol> icon to view the following REST response
+                                data:<ul id="ul_hrx_spw_wr">
+                                <li>Pipeline Monitoring</li>
                                 <li>Pipeline Configuration</li>
                                 <li>Pipeline Rules</li>
-                                <li>Definitions</li>
-                                <li>Pipeline Monitoring</li>
                                 <li>Pipeline Status</li>
+                                <li>Definitions</li>
                             </ul></dd>
                     </dlentry>
                     <dlentry>
@@ -52,8 +56,11 @@
                         <dd>From the <wintitle>JVM Metrics</wintitle> page, <menucascade>
                                 <uicontrol>Administration</uicontrol>
                                 <uicontrol>JVM Metrics</uicontrol>
-                            </menucascade> , you can use the <uicontrol>Settings</uicontrol> icon to
-                            access the JVM metrics REST response. </dd>
+                            </menucascade> , you can use the <uicontrol>More</uicontrol> icon to
+                            view the following REST response data:<ul id="ul_hld_qgv_xt">
+                                <li>JVM Metrics</li>
+                                <li>Thread Dump</li>
+                            </ul></dd>
                     </dlentry>
                 </dl></p>
         </context>

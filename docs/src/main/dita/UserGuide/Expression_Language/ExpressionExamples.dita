@@ -21,8 +21,8 @@
  <conbody>
         <table frame="all" rowsep="1" colsep="1" id="table_zhy_jmp_tt">
             <tgroup cols="2">
-                <colspec colname="c1" colnum="1" colwidth="2*"/>
-                <colspec colname="c2" colnum="2" colwidth="2.5*"/>
+                <colspec colname="c1" colnum="1" colwidth="2.5*"/>
+                <colspec colname="c2" colnum="2" colwidth="2*"/>
                 <thead>
                     <row>
                         <entry>Example</entry>
