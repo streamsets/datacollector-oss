@@ -92,14 +92,14 @@ public class Configuration {
 
   }
 
-  private static class FileRef extends Ref {
+  public static class FileRef extends Ref {
     private static final String DELIMITER = "@";
 
     public static boolean isValueMyRef(String value) {
       return isValueMyRef(DELIMITER, value);
     }
 
-    protected FileRef(String unresolvedValue) {
+    public FileRef(String unresolvedValue) {
       super(unresolvedValue);
       Preconditions.checkState(fileRefsBaseDir != null, "fileRefsBaseDir has not been set");
     }

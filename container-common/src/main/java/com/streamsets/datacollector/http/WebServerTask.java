@@ -24,11 +24,13 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
-
+import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.rewrite.handler.RewriteRegexRule;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.DefaultIdentityService;
+import org.eclipse.jetty.security.DefaultUserIdentity;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.SecurityHandler;
@@ -43,6 +45,7 @@ import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.SslConnectionFactory;
+import org.eclipse.jetty.server.UserIdentity;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.session.HashSessionManager;
@@ -55,11 +58,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.security.auth.Subject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -68,8 +71,11 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
+import java.security.Principal;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class WebServerTask extends AbstractTask {
@@ -92,9 +98,17 @@ public class WebServerTask extends AbstractTask {
   public static final String REALM_FILE_PERMISSION_CHECK = "http.realm.file.permission.check";
   private static final boolean REALM_FILE_PERMISSION_CHECK_DEFAULT = true;
 
+  public static final String HTTP_AUTHENTICATION_LOGIN_MODULE = "http.authentication.login.module";
+  private static final String HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT = "file";
+
+  public static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING = "http.authentication.ldap.role.mapping";
+  private static final String HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT = "";
+
   private static final String JSESSIONID_COOKIE = "JSESSIONID_";
 
   private static final Set<String> AUTHENTICATION_MODES = ImmutableSet.of("none", "digest", "basic", "form");
+
+  private static final Set<String> LOGIN_MODULES = ImmutableSet.of("file", "ldap");
 
   private static final Logger LOG = LoggerFactory.getLogger(WebServerTask.class);
 
@@ -106,6 +120,7 @@ public class WebServerTask extends AbstractTask {
   private Server server;
   private Server redirector;
   private HashSessionManager hashSessionManager;
+  private Map<String, Set<String>> roleMapping;
 
   @Inject
   public WebServerTask(
@@ -196,7 +211,7 @@ public class WebServerTask extends AbstractTask {
         appHandler.setSecurityHandler(configureDigestBasic(server, auth));
         break;
       case "form":
-        appHandler.setSecurityHandler(configureForm(server));
+        appHandler.setSecurityHandler(configureForm(server, auth));
         break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
@@ -235,10 +250,7 @@ public class WebServerTask extends AbstractTask {
   }
 
   private SecurityHandler configureDigestBasic(Server server, String mode) {
-    String realm = conf.get(DIGEST_REALM_KEY, mode + REALM_POSIX_DEFAULT);
-    File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
-    validateRealmFile(realmFile);
-    LoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
+    LoginService loginService = getLoginService(mode);
     server.addBean(loginService);
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
@@ -262,11 +274,7 @@ public class WebServerTask extends AbstractTask {
     return security;
   }
 
-  private SecurityHandler configureForm(Server server) {
-    String realm = conf.get(DIGEST_REALM_KEY, "form" + REALM_POSIX_DEFAULT);
-    File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
-    validateRealmFile(realmFile);
-
+  private SecurityHandler configureForm(Server server, String mode) {
     ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 
     Constraint constraint = new Constraint();
@@ -331,7 +339,8 @@ public class WebServerTask extends AbstractTask {
     resourceMapping.setConstraint(noAuthConstraint);
     securityHandler.addConstraintMapping(resourceMapping);
 
-    HashLoginService loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
+    LoginService loginService = getLoginService(mode);
+
     server.addBean(loginService);
     securityHandler.setLoginService(loginService);
 
@@ -488,5 +497,89 @@ public class WebServerTask extends AbstractTask {
         LOG.error("Error while stopping redirector Jetty, {}", ex.toString(), ex);
       }
     }
+  }
+
+  private LoginService getLoginService(String mode) {
+    LoginService loginService = null;
+    String loginModule = this.conf.get(HTTP_AUTHENTICATION_LOGIN_MODULE, HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT);
+    switch (loginModule) {
+      case "file":
+        String realm = conf.get(DIGEST_REALM_KEY, mode + REALM_POSIX_DEFAULT);
+        File realmFile = new File(runtimeInfo.getConfigDir(), realm + ".properties").getAbsoluteFile();
+        validateRealmFile(realmFile);
+        loginService = new HashLoginService(realm, realmFile.getAbsolutePath());
+        break;
+      case "ldap":
+        File ldapConfigFile = new File(runtimeInfo.getConfigDir(), "ldap-login.conf").getAbsoluteFile();
+        System.setProperty("java.security.auth.login.config", ldapConfigFile.getAbsolutePath());
+
+        roleMapping = parseRoleMapping(conf.get(HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING,
+            HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING_DEFAULT));
+
+        loginService = new JAASLoginService("ldap");
+        loginService.setIdentityService(new DefaultIdentityService() {
+          @Override
+          public UserIdentity newUserIdentity(Subject subject, Principal userPrincipal, String[] roles) {
+            Set<String> rolesSet = new HashSet<>();
+            rolesSet.add("user");
+            for(String role: roles) {
+              Set<String> dcRoles = tryMappingRole(role);
+              if(dcRoles != null && dcRoles.size() > 0) {
+                rolesSet.addAll(dcRoles);
+              } else {
+                rolesSet.add(role);
+              }
+            }
+            return new DefaultUserIdentity(subject, userPrincipal, rolesSet.toArray(new String[rolesSet.size()]));
+          }
+        });
+        break;
+      default:
+        throw new RuntimeException(Utils.format("Invalid Authentication Login Module '{}', must be one of '{}'",
+            loginModule, LOGIN_MODULES));
+    }
+    return loginService;
+  }
+
+  private Map<String, Set<String>> parseRoleMapping(String option) {
+    if(option == null || option.trim().length() == 0) {
+      throw new RuntimeException(Utils.format("LDAP group to Data Collector role mapping configuration - '{}' is empty",
+          HTTP_AUTHENTICATION_LDAP_ROLE_MAPPING));
+    }
+    Map<String, Set<String>> roleMapping = new HashMap<>();
+    try {
+      String[] mappings = option.split(";");
+      for (String mapping : mappings) {
+        String[] map = mapping.split(":", 2);
+        String ldapRole = map[0].trim();
+        String[] streamSetsRoles = map[1].split(",");
+        if (roleMapping.get(ldapRole) == null) {
+          roleMapping.put(ldapRole, new HashSet<String>());
+        }
+        final Set<String> streamSetsRolesSet = roleMapping.get(ldapRole);
+        for (String streamSetsRole : streamSetsRoles) {
+          streamSetsRolesSet.add(streamSetsRole.trim());
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(Utils.format("Invalid LDAP group to Data Collector role mapping configuration - '{}'.",
+           option, e.getMessage()), e);
+    }
+    return roleMapping;
+  }
+
+  protected Set<String> tryMappingRole(String role) {
+    Set<String> roles = new HashSet<String>();
+    if (roleMapping == null || roleMapping.isEmpty()) {
+      return roles;
+    }
+    Set<String> streamSetsRoles = roleMapping.get(role);
+    if (streamSetsRoles != null) {
+      // add all mapped roles
+      for (String streamSetsRole : streamSetsRoles) {
+        roles.add(streamSetsRole);
+      }
+    }
+    return roles;
   }
 }

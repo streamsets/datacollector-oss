@@ -182,6 +182,7 @@
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
             <exclude>sdk/src/main/services/**</exclude>
+            <exclude>**/*.conf</exclude>
             <exclude>**/*.svg</exclude>
             <exclude>**/MANIFEST.MF</exclude>
             <exclude>**/service.sdl</exclude>

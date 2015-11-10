@@ -161,8 +161,10 @@ public class WebServerModule {
 
       @Override
       public void stop() {
-        reporter.stop();
-        reporter.close();
+        if(reporter != null) {
+          reporter.stop();
+          reporter.close();
+        }
       }
     };
   }
