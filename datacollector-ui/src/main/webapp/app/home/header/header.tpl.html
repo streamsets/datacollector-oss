@@ -14,7 +14,7 @@
         <span class="icon-bar"></span>
       </button>
 
-      <div class="panel-title pull-left" ng-if="activeConfigStatus.executionMode === pipelineConstant.CLUSTER || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_STREAMING">
+      <div class="panel-title pull-left" ng-if="activeConfigStatus.executionMode === pipelineConstant.CLUSTER || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING">
         <h3 class="pull-left" translate="home.header.clusterManagerNode">Cluster Manager: </h3>
       </div>
 
@@ -126,7 +126,7 @@
           </li>
 
           <li role="presentation"
-              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING">
+              ng-if="!isPipelineRunning && isAuthorized([userRoles.admin, userRoles.manager]) && activeConfigStatus.executionMode != pipelineConstant.CLUSTER  && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING">
             <a href="#" dropdown-toggle ng-click="viewSnapshots()">
               <i class="glyphicon glyphicon-camera"></i> {{'home.header.snapshots' | translate}}
             </a>

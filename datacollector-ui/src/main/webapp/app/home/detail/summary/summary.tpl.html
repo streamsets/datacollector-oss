@@ -137,7 +137,8 @@
 
 <script type="text/ng-template" id="summaryRecordHistogramTemplate">
   <div class="col-sm-4"
-       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING && timeRange === 'latest'"
+       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && timeRange === 'latest'"
        ng-controller="HistogramChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -158,7 +159,8 @@
 
 <script type="text/ng-template" id="summaryRecordsProcessedTemplate">
   <div class="col-sm-4"
-       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING && timeRange === 'latest'"
+       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && timeRange === 'latest'"
        ng-controller="BatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -179,7 +181,8 @@
 
 <script type="text/ng-template" id="memoryConsumedLineChartTemplate">
   <div class="col-sm-4"
-       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING && monitorMemoryEnabled"
+       ng-if="activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && monitorMemoryEnabled"
        ng-controller="MemoryConsumedLineChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -204,7 +207,8 @@
 
 <script type="text/ng-template" id="summaryRuntimeStatisticsTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING">
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+       activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.runtimeStatistics' | translate}}"
@@ -298,7 +302,8 @@
 
 <script type="text/ng-template" id="slaveSDCInstancesTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && (activeConfigStatus.executionMode === pipelineConstant.CLUSTER  || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_STREAMING)">
+       ng-if="selectedType === pipelineConstant.PIPELINE && (activeConfigStatus.executionMode === pipelineConstant.CLUSTER  || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_BATCH ||
+       activeConfigStatus.executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || activeConfigStatus.executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING)">
     <div class="panel panel-default">
       <div class="panel-heading">
         <span title="{{'home.detailPane.summaryTab.slaveSDCInstances' | translate}}"
@@ -327,7 +332,8 @@
 
 <script type="text/ng-template" id="summaryAllStageBatchTimerBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING"
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH &&
+ activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING"
        ng-controller="AllStageBatchTimerChartController">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -364,7 +370,8 @@
 
 <script type="text/ng-template" id="summaryAllStageMemoryConsumedBarChartTemplate">
   <div class="col-sm-4"
-       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_STREAMING && monitorMemoryEnabled"
+       ng-if="selectedType === pipelineConstant.PIPELINE && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_BATCH && 
+activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_YARN_STREAMING && activeConfigStatus.executionMode !== pipelineConstant.CLUSTER_MESOS_STREAMING && monitorMemoryEnabled"
        ng-controller="AllStageMemoryConsumedChartController">
     <div class="panel panel-default">
       <div class="panel-heading">

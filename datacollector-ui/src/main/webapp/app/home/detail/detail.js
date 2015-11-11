@@ -93,7 +93,7 @@ angular
         case pipelineConstant.PIPELINE:
           if(isPipelineRunning) {
             if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-                executionMode === pipelineConstant.CLUSTER_STREAMING) {
+                executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
@@ -106,7 +106,7 @@ angular
         case pipelineConstant.STAGE_INSTANCE:
           if(isPipelineRunning) {
             if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-                executionMode === pipelineConstant.CLUSTER_STREAMING ) {
+              executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               tabsList = [summaryTab, infoTab, configurationTab];
             } else {
               tabsList = [summaryTab, errorTab, infoTab, configurationTab];
@@ -123,7 +123,7 @@ angular
         case pipelineConstant.LINK:
           if(isPipelineRunning) {
             if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
-                executionMode === pipelineConstant.CLUSTER_STREAMING ) {
+              executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
               return [dataRulesTab, infoTab];
             } else {
               return [dataSummaryTab, dataRulesTab, infoTab];
