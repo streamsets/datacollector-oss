@@ -53,6 +53,8 @@ import javax.security.auth.Subject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
@@ -186,6 +188,13 @@ public class HBaseTarget extends BaseTarget {
     if (this.zookeeperQuorum == null || this.zookeeperQuorum.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "zookeeperQuorum",
         Errors.HBASE_04));
+    } else {
+      try {
+        InetAddress.getByName(this.zookeeperQuorum);
+      } catch (UnknownHostException ex) {
+        issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "zookeeperQuorum",
+          Errors.HBASE_06, ex));
+      }
     }
     if (this.zookeeperParentZnode == null || this.zookeeperParentZnode.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "zookeeperBaseDir",

@@ -165,6 +165,7 @@ public class TestHBaseTarget {
                     ContextInfoCreator.createTargetContext("n", false, OnRecordError.TO_ERROR));
     Assert.assertEquals(1, issues.size());
     assertTrue(issues.get(0).toString().contains("HBASE_06"));
+    assertTrue(issues.get(0).toString().contains("UnknownHostException"));
   }
 
   @Test(timeout=60000)
