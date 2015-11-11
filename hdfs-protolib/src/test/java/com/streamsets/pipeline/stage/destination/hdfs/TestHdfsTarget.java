@@ -247,6 +247,45 @@ public class TestHdfsTarget {
   }
 
   @Test
+  public void testNoLateRecordsDirValidation() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    // Create a read-only dir for late records. If this dir path is validated, a permission error will be thrown.
+    File readOnlyBaseDir = new File(testDir + "/readOnly");
+    readOnlyBaseDir.mkdirs();
+    readOnlyBaseDir.setReadOnly();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        getTestDir() + "/hdfs/${YYYY()}${MM()}${DD()}${hh()}${mm()}${record:value('/a')}",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_ERROR, // action is not SEND_TO_LATE_RECORDS_FILE
+        getTestDir() + "/readOnly/${YYYY()}", // lateRecordsDirPathTemplate is not empty
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+  }
+
+  @Test
   public void testClusterModeHadoopConfDirAbsPath() {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();

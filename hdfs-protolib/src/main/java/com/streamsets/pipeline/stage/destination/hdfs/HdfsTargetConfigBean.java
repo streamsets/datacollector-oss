@@ -355,7 +355,8 @@ public class HdfsTargetConfigBean {
     boolean validHadoopDir = false;
     if (validateHadoopFS(context, issues)) {
       validHadoopDir = validateHadoopDir(context, "dirPathTemplate", dirPathTemplate, issues);
-      if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
+      if (lateRecordsAction == LateRecordsAction.SEND_TO_LATE_RECORDS_FILE &&
+          lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         validHadoopDir &= validateHadoopDir(context, "lateRecordsDirPathTemplate", lateRecordsDirPathTemplate, issues);
       }
     }
