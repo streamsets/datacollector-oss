@@ -260,13 +260,6 @@
         <!-- TODO: for now we copy committed generated docs  -->
         <docs.dist-dir>${basedir}/../docs/generated</docs.dist-dir>
       </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.streamsets</groupId>
-          <artifactId>streamsets-datacollector-ui</artifactId>
-          <scope>compile</scope>
-        </dependency>
-      </dependencies>
     </profile>
     <profile>
       <id>release</id>
