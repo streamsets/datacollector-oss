@@ -962,7 +962,7 @@ public class MockStages {
     stages.add(target);
     return new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(), null,
                                      Arrays.asList(new Config("executionMode",
-                                                                           executionMode.name())), null, stages,
+                                                                           executionMode.name()), new Config("retryAttempts", 3)), null, stages,
                                      getErrorStageConfig());
   }
 

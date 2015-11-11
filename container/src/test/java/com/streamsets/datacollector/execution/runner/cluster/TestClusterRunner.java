@@ -117,20 +117,21 @@ public class TestClusterRunner {
     pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, new LockCache<String>());
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", NAME, "some desc");
-
-    //Create an invalid pipeline
+   //Create an invalid pipeline
     PipelineConfiguration pipelineConfiguration = pipelineStoreTask.create("user2", TestUtil.HIGHER_VERSION_PIPELINE,
       "description2");
     PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTargetHigherVersion();
     mockPipelineConf.getConfiguration().add(new Config("executionMode",
       ExecutionMode.CLUSTER_BATCH.name()));
+    mockPipelineConf.getConfiguration().add(new Config("shouldRetry", "true"));
+    mockPipelineConf.getConfiguration().add(new Config("retryAttempts", "3"));
     mockPipelineConf.setUuid(pipelineConfiguration.getUuid());
     pipelineStoreTask.save("user2", TestUtil.HIGHER_VERSION_PIPELINE, "0", "description"
       , mockPipelineConf);
 
     clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, sparkManagerShell,
       emptyCL, emptyCL, null);
-    setExecMode(ExecutionMode.CLUSTER_BATCH);
+    setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
   }
 
   @After
@@ -148,12 +149,31 @@ public class TestClusterRunner {
     }
   }
 
-  private void setExecMode(ExecutionMode mode) throws Exception {
+  private void setExecModeAndRetries(ExecutionMode mode) throws Exception {
     PipelineConfiguration pipelineConf = pipelineStoreTask.load(NAME, REV);
     PipelineConfiguration conf = MockStages.createPipelineConfigurationWithClusterOnlyStage(mode);
     conf.setUuid(pipelineConf.getUuid());
     pipelineStoreTask.save("admin", NAME, REV, "", conf);
+  }
 
+  @Test
+  public void testPipelineRetry() throws Exception {
+    Runner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStart();
+    Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
+    clusterRunner.start();
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 1, 0);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 2, 0);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
+    pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 3, 0);
+    ((ClusterRunner)clusterRunner).validateAndSetStateTransition(PipelineStatus.RUN_ERROR, "a", attributes);
+    assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getState().getStatus());
   }
 
   @Test

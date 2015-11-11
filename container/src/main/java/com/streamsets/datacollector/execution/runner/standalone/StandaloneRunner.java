@@ -263,7 +263,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       if (retryTimeStamp > currentTime) {
         delay = retryTimeStamp - currentTime;
       }
-      retryFuture = scheduleForRetries(delay);
+      retryFuture = scheduleForRetries(runnerExecutor, delay);
+      isRetrying = true;
+      metricsForRetry = getState().getMetrics();
     }
   }
 
@@ -489,7 +491,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           if (nextRetryTimeStamp > currentTime) {
             delay = nextRetryTimeStamp - currentTime;
           }
-          retryFuture = scheduleForRetries(delay);
+          retryFuture = scheduleForRetries(runnerExecutor, delay);
+          isRetrying = true;
+          metricsForRetry = getState().getMetrics();
         }
       } else if (!toStatus.isActive()) {
         retryAttempt = 0;
@@ -518,21 +522,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     eventListenerManager.broadcastStateChange(fromState, pipelineState, ThreadUsage.STANDALONE);
   }
 
-  private ScheduledFuture<Void> scheduleForRetries(long delay) {
-    LOG.info("Scheduling retry in '{}' milliseconds", delay);
-    ScheduledFuture<Void> future = runnerExecutor.schedule(new Callable<Void>() {
-      @Override
-      public Void call() throws StageException, PipelineException {
-        LOG.info("Starting the runner now");
-        isRetrying = true;
-        metricsForRetry = getState().getMetrics();
-        prepareForStart();
-        start();
-        return null;
-      }
-    }, delay, TimeUnit.MILLISECONDS);
-    return future;
-  }
+
 
   private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
     if (!expr) {
