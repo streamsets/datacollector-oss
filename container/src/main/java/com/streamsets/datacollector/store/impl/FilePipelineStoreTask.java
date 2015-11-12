@@ -388,11 +388,15 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       UUID uuid = UUID.randomUUID();
       ruleDefinitions.setUuid(uuid);
-      try (OutputStream os = new DataStore(getRulesFile(pipelineName)).getOutputStream()) {
+      DataStore dataStore = new DataStore(getRulesFile(pipelineName));
+      try (OutputStream os = dataStore.getOutputStream()) {
         ObjectMapperFactory.get().writeValue(os, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+        dataStore.commit(os);
         pipelineToRuleDefinitionMap.put(getPipelineKey(pipelineName, tag), ruleDefinitions);
       } catch (IOException ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0404, pipelineName, ex.toString(), ex);
+      } finally {
+        dataStore.release();
       }
       return ruleDefinitions;
     }

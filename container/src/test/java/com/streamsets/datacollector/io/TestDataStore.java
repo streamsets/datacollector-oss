@@ -24,8 +24,6 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.streamsets.datacollector.io.DataStore;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -56,7 +54,7 @@ public class TestDataStore {
   public void testReleaseNoNotLockedLock() throws IOException {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
     try {
-      ds.releaseLock();
+      ds.release();
     } finally {
       ds.close();
     }
@@ -94,7 +92,7 @@ public class TestDataStore {
           Thread.sleep(500);
         } catch (InterruptedException e) {
         }
-        ds.releaseLock();
+        ds.release();
       }
     };
     return thread;
@@ -105,9 +103,9 @@ public class TestDataStore {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
     try {
       ds.acquireLock();
-      ds.releaseLock();
+      ds.release();
       ds.acquireLock();
-      ds.releaseLock();
+      ds.release();
     } finally {
       ds.close();
     }
@@ -131,9 +129,16 @@ public class TestDataStore {
   public void testWriteRead() throws IOException {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
     try {
-      ds.getOutputStream().close();
+      OutputStream outputStream = ds.getOutputStream();
+      ds.commit(outputStream);
+      ds.release();
+
       ds.getInputStream().close();
-      ds.getOutputStream().close();
+
+      outputStream = ds.getOutputStream();
+      ds.commit(outputStream);
+      ds.release();
+
     } finally {
       ds.close();
     }
@@ -153,7 +158,10 @@ public class TestDataStore {
   public void testDataStoreCloseWithOpenRead() throws IOException {
     DataStore ds = new DataStore(new File(createTestDir(), "x"));
     try {
-      ds.getOutputStream().close();
+      OutputStream outputStream = ds.getOutputStream();
+      ds.commit(outputStream);
+      ds.release();
+
       ds.getInputStream();
     } finally {
       ds.close();

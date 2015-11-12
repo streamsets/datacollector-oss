@@ -109,12 +109,16 @@ public class ProductionSourceOffsetTracker implements SourceOffsetTracker {
 
   private void saveOffset(String pipelineName, String rev, SourceOffset s) {
     LOG.debug("Saving offset {} for pipeline {}", s.getOffset(), pipelineName);
-    try (OutputStream os = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo,
-          pipelineName, rev)).getOutputStream()) {
+    DataStore dataStore = new DataStore(OffsetFileUtil.getPipelineOffsetFile(runtimeInfo,
+      pipelineName, rev));
+    try (OutputStream os = dataStore.getOutputStream()) {
       ObjectMapperFactory.get().writeValue((os), BeanHelper.wrapSourceOffset(s));
+      dataStore.commit(os);
     } catch (IOException e) {
       LOG.error("Failed to save offset value {}. Reason {}", s.getOffset(), e.toString(), e);
       throw new RuntimeException(e);
+    } finally {
+      dataStore.release();
     }
   }
 

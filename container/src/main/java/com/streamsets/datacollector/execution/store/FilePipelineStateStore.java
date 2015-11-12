@@ -187,10 +187,14 @@ public class FilePipelineStateStore implements PipelineStateStore {
     } catch (JsonProcessingException e) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0210, e.toString(), e);
     }
-    try (OutputStream os = new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev())).getOutputStream()) {
+    DataStore dataStore = new DataStore(getPipelineStateFile(pipelineState.getName(), pipelineState.getRev()));
+    try (OutputStream os = dataStore.getOutputStream()) {
       os.write(pipelineString.getBytes());
+      dataStore.commit(os);
     } catch (IOException e) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0100, e.toString(), e);
+    } finally {
+      dataStore.release();
     }
     // In addition, append the state of the pipeline to the pipelineState.json present in the directory of that
     // pipeline

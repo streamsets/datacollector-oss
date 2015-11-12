@@ -104,8 +104,28 @@ public class DataStore {
     LOG.trace("Acquired lock for '{}'", file);
   }
 
-  @VisibleForTesting
-  void releaseLock() {
+  /**
+   * This method must be used after completing the write to output stream which was obtained by calling the
+   * {@link #getOutputStream()} method.
+   *
+   * If the write operation was successful, then this method must be called after calling the
+   * {@link #commit(java.io.OutputStream)} method. Otherwise it must be called after calling the {@link #close()} on the
+   * output stream.
+   *
+   * Example usage:
+   *
+   * DataStore dataStore = new DataStore(...);
+   * try (OutputStream os = dataStore.getOutputStream()) {
+   *   os.write(..);
+   *   dataStore.commit(os);
+   * } catch (IOException e) {
+   *   ...
+   * } finally {
+   *   dataStore.release();
+   * }
+   *
+   */
+  public void release() {
     ReentrantLock lock;
     synchronized (DataStore.class) {
       lock = FILE_LOCKS.remove(file);
@@ -117,7 +137,24 @@ public class DataStore {
     }
   }
 
-
+  /**
+   * Returns an input stream for the requested file.
+   *
+   * After completing the read the stream must be closed. It is not necessary to call the {@link #release()}
+   * method after reading from the input stream.
+   *
+   * Example usage:
+   *
+   * DataStore dataStore = new DataStore(...);
+   * try (InputStream is = dataStore.getInputStream()) {
+   *   // read from is
+   * } catch (IOException e) {
+   *   ...
+   * }
+   *
+   * @return
+   * @throws IOException
+   */
   public InputStream getInputStream() throws IOException {
     acquireLock();
     try {
@@ -134,7 +171,7 @@ public class DataStore {
           try {
             super.close();
           } finally {
-            releaseLock();
+            release();
             isClosed = true;
             stream = null;
           }
@@ -144,11 +181,32 @@ public class DataStore {
       stream = is;
       return is;
     } catch (Exception ex) {
-      releaseLock();
+      release();
       throw ex;
     }
   }
 
+  /**
+   * Returns an output stream for the requested file.
+   *
+   * After completing the write the contents must be committed using the {@link #commit(java.io.OutputStream)}
+   * method and the stream must be released using the {@link #release()} method.
+   *
+   * Example usage:
+   *
+   * DataStore dataStore = new DataStore(...);
+   * try (OutputStream os = dataStore.getOutputStream()) {
+   *   os.write(..);
+   *   dataStore.commit(os);
+   * } catch (IOException e) {
+   *   ...
+   * } finally {
+   *   dataStore.release();
+   * }
+   *
+   * @return
+   * @throws IOException
+   */
   public OutputStream getOutputStream() throws IOException {
     acquireLock();
     try {
@@ -168,16 +226,7 @@ public class DataStore {
           }
           try {
             super.close();
-            Files.move(fileTmp, fileNew);
-            LOG.trace("Finishing write, move '{}' to '{}'", fileTmp, fileNew);
-            Files.move(fileNew, file);
-            LOG.trace("Finishing write, move '{}' to '{}'", fileNew, file);
-            if (Files.exists(fileOld)) {
-              Files.delete(fileOld);
-              LOG.trace("Finishing write, deleting '{}'", fileOld);
-            }
           } finally {
-            releaseLock();
             isClosed = true;
             stream = null;
           }
@@ -187,11 +236,45 @@ public class DataStore {
       stream = os;
       return os;
     } catch (Exception ex) {
-      releaseLock();
+      release();
       throw ex;
     }
   }
 
+  /**
+   * This method must be used to commit contents written to the output stream which is obtained by calling
+   * the {@link #getOutputStream()} method. This method closes the argument output stream.
+   *
+   * Example usage:
+   *
+   * DataStore dataStore = new DataStore(...);
+   * try (OutputStream os = dataStore.getOutputStream()) {
+   *   os.write(..);
+   *   dataStore.commit(os);
+   * } catch (IOException e) {
+   *   ...
+   * } finally {
+   *   dataStore.release();
+   * }
+   *
+   * @throws IOException
+   */
+  public void commit(OutputStream out) throws IOException {
+    // close the stream in order to flush the contents into the disk
+    Utils.checkNotNull(out, "Argument output stream cannot be null");
+    Utils.checkState(stream == out, "The argument output stream must be the same as the output stream obtained " +
+      "from this data store instance");
+    out.close();
+    Files.move(fileTmp, fileNew);
+    LOG.trace("Committing write, move '{}' to '{}'", fileTmp, fileNew);
+    Files.move(fileNew, file);
+    LOG.trace("Committing write, move '{}' to '{}'", fileNew, file);
+    if (Files.exists(fileOld)) {
+      Files.delete(fileOld);
+      LOG.trace("Committing write, deleting '{}'", fileOld);
+    }
+    LOG.trace("Committed");
+  }
 
   private void verifyAndRecover() throws IOException {
     if (Files.exists(fileOld) || Files.exists(fileTmp) || Files.exists(fileNew)) {
