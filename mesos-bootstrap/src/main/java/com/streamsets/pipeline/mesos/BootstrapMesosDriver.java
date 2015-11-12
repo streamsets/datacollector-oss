@@ -23,20 +23,30 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Properties;
+
+import com.streamsets.pipeline.BootstrapCluster;
 
 public class BootstrapMesosDriver {
 
   private static final String MESOS_BOOTSTRAP_JAR_REGEX = "streamsets-datacollector-mesos-bootstrap";
   private static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
+
   /**
    * Bootstrapping the Driver which starts a Spark job on Mesos
    */
   public static void main(String[] args) throws Exception {
+
+    BootstrapCluster.printSystemPropsEnvVariables();
     String mesosHomeDir = System.getenv("MESOS_DIRECTORY");
+    String sparkHome = System.getenv("SPARK_HOME");
     // Extract archives from the uber jar
-    String[] cmd = {"/bin/bash", "-c", "cd " + mesosHomeDir + "; "
+    String[] cmd = {"/bin/bash", "-c",
+          "cd " + mesosHomeDir + "; "
         + "mkdir " + SDC_MESOS_BASE_DIR + "; cd " + SDC_MESOS_BASE_DIR + ";"
         + "jar -xf ../" + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; "
+        + "if [ $? -eq 1 ]; then jar -xf " + sparkHome + "/" + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; fi;"
         + "tar -xf etc.tar.gz; "
         + "mkdir libs; "
         + "tar -xf libs.tar.gz -C libs/; "

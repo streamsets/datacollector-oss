@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,9 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     // If this is running under mesos
     if (mesosHomeDir != null && !isPreprocessingMesosDone) {
       isPreprocessingMesosDone = extractArchives(mesosHomeDir) ? true: false;
+      if (!isPreprocessingMesosDone) {
+        throw new IllegalStateException("Cannot extract archives in dir:" + mesosHomeDir + "/" + SDC_MESOS_BASE_DIR + "; check the stdout file for more detailed errors");
+      }
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
     properties = BootstrapCluster.getProperties();
@@ -104,12 +106,15 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
 
   private boolean extractArchives(String mesosHomeDir)
       throws IOException, InterruptedException {
+    BootstrapCluster.printSystemPropsEnvVariables();
+    String sparkHome = System.getenv("SPARK_HOME");
     // Extract archives from the uber jar
     String[] cmd = { "/bin/bash", "-c",
         "cd " + mesosHomeDir + "; "
               + "mkdir " + SDC_MESOS_BASE_DIR + ";"
               + " cd " + SDC_MESOS_BASE_DIR + ";" +
               "jar -xf ../"  + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; " +
+              "if [ $? -eq 1 ]; then jar -xf " + sparkHome + "/" + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; fi;" +
               "tar -xf etc.tar.gz; " +
               "mkdir libs; " +
               "tar -xf libs.tar.gz -C libs/; " +
@@ -128,5 +133,4 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
         new File(mesosHomeDir, SDC_MESOS_BASE_DIR).getAbsolutePath());
     return (process.exitValue() == 0) ? true: false;
   }
-
 }

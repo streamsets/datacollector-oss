@@ -269,4 +269,17 @@ public class BootstrapCluster {
       Thread.currentThread().setContextClassLoader(originalClassLoader);
     }
   }
+
+  public static void printSystemPropsEnvVariables() {
+    Map<String, String> env = System.getenv();
+    System.out.println("Below are the environment variables: ");
+    for (Map.Entry<String, String> mapEntry : env.entrySet()) {
+       System.out.format("%s=%s%n", mapEntry.getKey(), mapEntry.getValue());
+    }
+    Properties p = System.getProperties();
+    System.out.println("\n\n Below are the Java system properties: ");
+    for (Map.Entry<Object, Object> mapEntry : p.entrySet()) {
+      System.out.format("%s=%s%n", (String)mapEntry.getKey(), (String)mapEntry.getValue());
+    }
+  }
 }
