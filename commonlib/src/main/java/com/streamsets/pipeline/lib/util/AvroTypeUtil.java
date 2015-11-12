@@ -146,6 +146,7 @@ public class AvroTypeUtil {
   ) throws StageException, IOException {
     return sdcRecordToAvro(
       record,
+      record.get(),
       "",
       schema,
       defaultValueMap
@@ -155,137 +156,147 @@ public class AvroTypeUtil {
   @VisibleForTesting
   private static Object sdcRecordToAvro(
       Record record,
+      Field field,
       String avroFieldPath,
       Schema schema,
       Map<String, Object> defaultValueMap
   ) throws StageException {
 
-    String fieldPath = avroFieldPath;
-    if(fieldPath != null) {
-      Field field = record.get(fieldPath);
-      if(field == null) {
-        return null;
-      }
-      Object obj;
-      if (schema.getType() == Schema.Type.UNION) {
-        String fieldPathAttribute = record.getHeader().getAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath);
-        if (fieldPathAttribute != null && !fieldPathAttribute.isEmpty()) {
-          int typeIndex = Integer.parseInt(fieldPathAttribute);
+    if(field == null) {
+      return null;
+    }
+    Object obj;
+    if (schema.getType() == Schema.Type.UNION) {
+      String fieldPathAttribute = record.getHeader().getAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + avroFieldPath);
+      if (fieldPathAttribute != null && !fieldPathAttribute.isEmpty()) {
+        int typeIndex = Integer.parseInt(fieldPathAttribute);
+        schema = schema.getTypes().get(typeIndex);
+      } else {
+        //Record does not have the avro union type index which means this record was not created from avro data.
+        //try our best to resolve the union type.
+        Object object = JsonUtil.fieldToJsonObject(record, field);
+        try {
+          int typeIndex = GenericData.get().resolveUnion(schema, object);
           schema = schema.getTypes().get(typeIndex);
-        } else {
-          //Record does not have the avro union type index which means this record was not created from avro data.
-          //try our best to resolve the union type.
-          Field field1 = record.get(fieldPath);
-          Object object = JsonUtil.fieldToJsonObject(record, field1);
-          try {
-            int typeIndex = GenericData.get().resolveUnion(schema, object);
-            schema = schema.getTypes().get(typeIndex);
-          } catch (UnresolvedUnionException e) {
-            //Avro could not resolve schema. Make a best effort resolve
-            Schema match = bestEffortResolve(schema, field, object);
-            if(match == null) {
-              String objectType = object == null ? "null" : object.getClass().getName();
-              throw new StageException(CommonError.CMN_0106, objectType, field1.getType().name(), e.toString(),
-                e);
-            } else {
-              schema = match;
-            }
+        } catch (UnresolvedUnionException e) {
+          //Avro could not resolve schema. Make a best effort resolve
+          Schema match = bestEffortResolve(schema, field, object);
+          if(match == null) {
+            String objectType = object == null ? "null" : object.getClass().getName();
+            throw new StageException(CommonError.CMN_0106, objectType, field.getType().name(), e.toString(),
+              e);
+          } else {
+            schema = match;
           }
         }
       }
-      switch(schema.getType()) {
-        case ARRAY:
-          List<Field> valueAsList = field.getValueAsList();
-          List<Object> toReturn = new ArrayList<>(valueAsList.size());
-          for(int i = 0; i < valueAsList.size(); i++) {
-            toReturn.add(
+    }
+    switch(schema.getType()) {
+      case ARRAY:
+        List<Field> valueAsList = field.getValueAsList();
+        List<Object> toReturn = new ArrayList<>(valueAsList.size());
+        for(int i = 0; i < valueAsList.size(); i++) {
+          toReturn.add(
+              sdcRecordToAvro(
+                  record,
+                  valueAsList.get(i),
+                  avroFieldPath + "[" + i + "]",
+                  schema.getElementType(),
+                  defaultValueMap
+              )
+          );
+        }
+        obj = toReturn;
+        break;
+      case BOOLEAN:
+        obj = field.getValueAsBoolean();
+        break;
+      case BYTES:
+        obj = ByteBuffer.wrap(field.getValueAsByteArray());
+        break;
+      case DOUBLE:
+        obj = field.getValueAsDouble();
+        break;
+      case ENUM:
+        obj = new GenericData.EnumSymbol(schema, field.getValueAsString());
+        break;
+      case FIXED:
+        obj = new GenericData.Fixed(schema, field.getValueAsByteArray());
+        break;
+      case FLOAT:
+        obj = field.getValueAsFloat();
+        break;
+      case INT:
+        obj = field.getValueAsInteger();
+        break;
+      case LONG:
+        obj = field.getValueAsLong();
+        break;
+      case MAP:
+        Map<String, Field> map = field.getValueAsMap();
+        Map<String, Object> toReturnMap = new LinkedHashMap<>();
+        if(map != null) {
+          for (Map.Entry<String, Field> e : map.entrySet()) {
+            if (map.containsKey(e.getKey())) {
+              toReturnMap.put(
+                  e.getKey(),
+                  sdcRecordToAvro(
+                      record,
+                      e.getValue(),
+                      avroFieldPath + FORWARD_SLASH + e.getKey(),
+                      schema.getValueType(),
+                      defaultValueMap
+                  )
+              );
+            }
+          }
+        }
+        obj = toReturnMap;
+        break;
+      case NULL:
+        obj = null;
+        break;
+      case RECORD:
+        Map<String, Field> valueAsMap = field.getValueAsMap();
+        GenericRecord genericRecord = new GenericData.Record(schema);
+        for (Schema.Field f : schema.getFields()) {
+          // If the record does not contain a field corresponding to the schema field, look up the default value from
+          // the schema.
+          // If no default value was specified for the field and record does not contain it, then throw exception.
+          // Its an error record.
+          if (valueAsMap.containsKey(f.name())) {
+            genericRecord.put(
+                f.name(),
                 sdcRecordToAvro(
                     record,
-                    avroFieldPath + "[" + i + "]",
-                    schema.getElementType(),
+                    valueAsMap.get(f.name()),
+                    avroFieldPath + FORWARD_SLASH + f.name(),
+                    f.schema(),
                     defaultValueMap
                 )
             );
-          }
-          obj = toReturn;
-          break;
-        case BOOLEAN:
-          obj = field.getValueAsBoolean();
-          break;
-        case BYTES:
-          obj = ByteBuffer.wrap(field.getValueAsByteArray());
-          break;
-        case DOUBLE:
-          obj = field.getValueAsDouble();
-          break;
-        case ENUM:
-          obj = new GenericData.EnumSymbol(schema, field.getValueAsString());
-          break;
-        case FIXED:
-          obj = new GenericData.Fixed(schema, field.getValueAsByteArray());
-          break;
-        case FLOAT:
-          obj = field.getValueAsFloat();
-          break;
-        case INT:
-          obj = field.getValueAsInteger();
-          break;
-        case LONG:
-          obj = field.getValueAsLong();
-          break;
-        case MAP:
-          Map<String, Field> map = field.getValueAsMap();
-          Map<String, Object> toReturnMap = new LinkedHashMap<>();
-          if(map != null) {
-            for (Map.Entry<String, Field> e : map.entrySet()) {
-              if (map.containsKey(e.getKey())) {
-                toReturnMap.put(e.getKey(), sdcRecordToAvro(record, avroFieldPath + FORWARD_SLASH + e.getKey(),
-                  schema.getValueType(), defaultValueMap));
-              }
+          } else {
+            String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
+            if(!defaultValueMap.containsKey(key)) {
+                throw new DataGeneratorException(
+                  Errors.AVRO_GENERATOR_00,
+                  record.getHeader().getSourceId(),
+                  schema.getFullName() + "." + f.name()
+                );
             }
+            Object v = defaultValueMap.get(key);
+            genericRecord.put(f.name(), v);
           }
-          obj = toReturnMap;
-          break;
-        case NULL:
-          obj = null;
-          break;
-        case RECORD:
-          Map<String, Field> valueAsMap = field.getValueAsMap();
-          GenericRecord genericRecord = new GenericData.Record(schema);
-          for (Schema.Field f : schema.getFields()) {
-            // If the record does not contain a field corresponding to the schema field, look up the default value from
-            // the schema.
-            // If no default value was specified for the field and record does not contain it, then throw exception.
-            // Its an error record.
-            if (valueAsMap.containsKey(f.name())) {
-              genericRecord.put(
-                  f.name(),
-                  sdcRecordToAvro(record, avroFieldPath + FORWARD_SLASH + f.name(), f.schema(), defaultValueMap)
-              );
-            } else {
-              String key = schema.getFullName() + SCHEMA_PATH_SEPARATOR + f.name();
-              if(!defaultValueMap.containsKey(key)) {
-                  throw new DataGeneratorException(
-                    Errors.AVRO_GENERATOR_00,
-                    record.getHeader().getSourceId(),
-                    schema.getFullName() + "." + f.name()
-                  );
-              }
-              Object v = defaultValueMap.get(key);
-              genericRecord.put(f.name(), v);
-            }
-          }
-          obj = genericRecord;
-          break;
-        case STRING:
-          obj = field.getValueAsString();
-          break;
-        default :
-          obj = null;
-      }
-      return obj;
+        }
+        obj = genericRecord;
+        break;
+      case STRING:
+        obj = field.getValueAsString();
+        break;
+      default :
+        obj = null;
     }
-    return null;
+    return obj;
   }
 
   private static Field.Type getFieldType(Schema.Type type) {
