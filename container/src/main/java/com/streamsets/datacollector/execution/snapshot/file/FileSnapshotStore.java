@@ -176,21 +176,29 @@ public class FileSnapshotStore implements SnapshotStore {
 
 
   private void persistSnapshotInfo(SnapshotInfo snapshotInfo) throws PipelineRuntimeException {
-    try (OutputStream out = new DataStore(getPipelineSnapshotInfoFile(snapshotInfo.getName(), snapshotInfo.getRev(),
-      snapshotInfo.getId())).getOutputStream()) {
+    DataStore dataStore = new DataStore(getPipelineSnapshotInfoFile(snapshotInfo.getName(), snapshotInfo.getRev(),
+      snapshotInfo.getId()));
+    try (OutputStream out = dataStore.getOutputStream()) {
       json.writeValue(out, new SnapshotInfoJson(snapshotInfo));
+      dataStore.commit(out);
     } catch (IOException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0602, snapshotInfo.getId(), snapshotInfo.getName(),
         snapshotInfo.getRev(), e.toString(), e);
+    } finally {
+      dataStore.release();
     }
   }
 
   private void persistSnapshot(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
     throws PipelineRuntimeException {
-    try (OutputStream out = new DataStore(getPipelineSnapshotFile(name, rev, id)).getOutputStream()) {
+    DataStore dataStore = new DataStore(getPipelineSnapshotFile(name, rev, id));
+    try (OutputStream out = dataStore.getOutputStream()) {
       json.writeValue(out, new SnapshotDataJson(new SnapshotData(snapshotBatches)));
+      dataStore.commit(out);
     } catch (IOException e) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0603, id, name, rev, e.toString(), e);
+    } finally {
+      dataStore.release();
     }
   }
 
