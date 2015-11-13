@@ -469,6 +469,9 @@ public class RecordEL {
   @ElConstant(name = "MAP", description = "Field Type Map")
   public static Field.Type MAP = Field.Type.MAP;
 
+  @ElConstant(name = "LIST_MAP", description = "Field Type List-Map")
+  public static Field.Type LIST_MAP = Field.Type.LIST_MAP;
+
   @ElConstant(name = "LONG", description = "Field Type Long")
   public static Field.Type LONG = Field.Type.LONG;
 
