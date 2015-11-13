@@ -133,7 +133,8 @@ angular.module('recordTreeDirectives', ['RecursionHelper'])
             }
           }
 
-          return scope.singleQuoteUnescape(lastFieldName);
+          //return scope.singleQuoteUnescape(lastFieldName);
+          return lastFieldName;
         },
 
         /**
