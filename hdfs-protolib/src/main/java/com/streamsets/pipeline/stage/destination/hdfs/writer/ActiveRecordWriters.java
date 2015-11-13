@@ -158,13 +158,15 @@ public class ActiveRecordWriters {
     if (IS_TRACE_ENABLED) {
       LOG.trace("Close all '{}'", toString());
     }
-    for (RecordWriter writer : writers.values()) {
-      if (!writer.isClosed()) {
-        try {
-          manager.commitWriter(writer);
-        } catch (IOException ex) {
-          String msg = Utils.format("Error closing writer {} : {}", writer, ex);
-          LOG.warn(msg, ex);
+    if(writers != null) {
+      for (RecordWriter writer : writers.values()) {
+        if (!writer.isClosed()) {
+          try {
+            manager.commitWriter(writer);
+          } catch (IOException ex) {
+            String msg = Utils.format("Error closing writer {} : {}", writer, ex);
+            LOG.warn(msg, ex);
+          }
         }
       }
     }
