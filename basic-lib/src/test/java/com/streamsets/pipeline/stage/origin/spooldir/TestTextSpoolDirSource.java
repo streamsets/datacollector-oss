@@ -32,8 +32,11 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
@@ -49,6 +52,9 @@ public class TestTextSpoolDirSource {
 
   private final static String LINE1 = "1234567890";
   private final static String LINE2 = "A1234567890";
+
+  private final static String GBK_STRING = "ÓÃ»§Ãû:ôâÈ»12";
+  private final static String UTF_STRING = "脫脙禄搂脙没:么芒脠禄12";
 
   private File createLogFile(String charset) throws Exception {
     File f = new File(createTestDir(), "test.log");
@@ -136,4 +142,36 @@ public class TestTextSpoolDirSource {
     }
   }
 
+  @Test
+  public void testGbkEncodedFile() throws Exception {
+    SpoolDirSource source = createSource("GBK");
+    SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane").build();
+    runner.runInit();
+    try {
+      // Write out a gbk-encoded file.
+      File f = new File(createTestDir(), "test_gbk.log");
+      Writer writer = new OutputStreamWriter(new FileOutputStream(f), "GBK");
+      IOUtils.write(UTF_STRING, writer);
+      writer.close();
+
+      // Read back the file to verify its content is gbk-encoded.
+      BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+      Assert.assertEquals(GBK_STRING, reader.readLine());
+      reader.close();
+
+      BatchMaker batchMaker = SourceRunner.createTestBatchMaker("lane");
+      Assert.assertEquals("-1", source.produce(f, "0", 10, batchMaker));
+      StageRunner.Output output = SourceRunner.getOutput(batchMaker);
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertNotNull(records);
+      Assert.assertEquals(1, records.size());
+      Assert.assertEquals(
+          UTF_STRING.substring(0, 10),
+          records.get(0).get().getValueAsMap().get("text").getValueAsString()
+      );
+      Assert.assertTrue(records.get(0).has("/truncated"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }
