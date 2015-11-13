@@ -46,7 +46,7 @@
             </goals>
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
-              <finalName>streamsets-datacollector-common-ui-${project.version}</finalName>
+              <finalName>common-ui</finalName>
               <descriptors>
                 <descriptor>src/main/assembly/common-ui.xml</descriptor>
               </descriptors>

@@ -25,7 +25,8 @@
         "useHelp": "Help:",
         "localHelp": "Local Help",
         "hostedHelp": "Hosted Help",
-        "restFulAPI": "RESTful API"
+        "restFulAPI": "RESTful API",
+        "settings": "Settings"
       },
       "home": "Home",
       "toggleNavigation": "Toggle navigation"
