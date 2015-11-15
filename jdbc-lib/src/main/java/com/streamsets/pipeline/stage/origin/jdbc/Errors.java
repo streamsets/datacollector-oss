@@ -33,6 +33,8 @@ public enum Errors implements ErrorCode {
   JDBC_07("The query interval expression must be greater than or equal to zero."),
   JDBC_08("Query result has duplicate column label '{}'. Create an alias using 'AS' in your query."),
   JDBC_09("Offset Column '{}' cannot contain a '.' or prefix."),
+  JDBC_10("The JDBC driver for this database does not support scrollable cursors, " +
+      "which are required when Transaction ID Column Name is specified."),
   ;
   private final String msg;
 
