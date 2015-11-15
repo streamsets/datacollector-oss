@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -57,11 +58,12 @@ import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS
 public class JdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcSource.class);
 
-  private static final String CONNECTION_STRING = "connectionString";
+  private static final String CONNECTION_STRING = "hikariConfigBean.connectionString";
   private static final String QUERY = "query";
   private static final String OFFSET_COLUMN = "offsetColumn";
-  private static final String DRIVER_CLASSNAME = "driverClassName";
+  private static final String DRIVER_CLASSNAME = "hikariConfigBean.driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
+  private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
 
   private final boolean isIncrementalMode;
   private final String query;
@@ -142,6 +144,11 @@ public class JdbcSource extends BaseSource {
       try {
         createDataSource();
         try (Connection connection = dataSource.getConnection()) {
+          DatabaseMetaData dbMetadata = connection.getMetaData();
+          // If CDC is enabled, scrollable cursors must be supported by JDBC driver.
+          if (!txnColumnName.isEmpty() && !dbMetadata.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)) {
+            issues.add(context.createConfigIssue(Groups.CDC.name(), TXN_ID_COLUMN_NAME, Errors.JDBC_12));
+          }
           try (Statement statement = connection.createStatement()) {
             statement.setFetchSize(1);
             statement.setMaxRows(1);
@@ -215,7 +222,13 @@ public class JdbcSource extends BaseSource {
       try {
         if (null == resultSet || resultSet.isClosed()) {
           connection = dataSource.getConnection();
-          Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+          Statement statement;
+          if (!txnColumnName.isEmpty()) {
+            // CDC requires scrollable cursors.
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+          } else {
+            statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+          }
 
           int fetchSize = batchSize;
           // MySQL does not support cursors or fetch size except 0 and "streaming" (1 at a time).
