@@ -69,6 +69,7 @@
     <elasticsearch_1_5-lib>none</elasticsearch_1_5-lib>
     <elasticsearch_1_6-lib>none</elasticsearch_1_6-lib>
     <elasticsearch_1_7-lib>none</elasticsearch_1_7-lib>
+    <influxdb_0_9-lib>none</influxdb_0_9-lib>
     <cassandra_2-lib>none</cassandra_2-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
 
@@ -404,6 +405,7 @@
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <elasticsearch_1_7-lib>elasticsearch_1_7-lib</elasticsearch_1_7-lib>
+        <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
@@ -414,6 +416,7 @@
         <module>hdp_2_3-lib</module>
         <module>jython_2_7-lib</module>
         <module>elasticsearch_1_7-lib</module>
+        <module>influxdb_0_9-lib</module>
         <module>cassandra_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>mongodb_3-lib</module>

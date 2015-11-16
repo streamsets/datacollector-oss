@@ -266,6 +266,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- InfluxDB libs -->
+    <fileSet>
+      <directory>${basedir}/../${influxdb_0_9-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Mongo libs -->
     <fileSet>
       <directory>${basedir}/../${mongodb_3-lib}/target/streamsets-libs/</directory>
