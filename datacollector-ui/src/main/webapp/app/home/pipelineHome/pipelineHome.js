@@ -292,18 +292,18 @@ angular
        * Capture the snapshot of running pipeline.
        *
        */
-      viewSnapshot: function(snapshotName) {
+      viewSnapshot: function(snapshotInfo) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'View Snapshot', 1);
         $scope.snapshotMode = true;
-        $scope.snapshotName = snapshotName;
+        $scope.activeSnapshotInfo = snapshotInfo;
         $rootScope.$storage.maximizeDetailPane = false;
         $rootScope.$storage.minimizeDetailPane = false;
         $scope.setGraphPreviewMode(true);
-        $scope.$broadcast('snapshotPipeline', snapshotName);
+        $scope.$broadcast('snapshotPipeline', snapshotInfo.id);
       },
 
-      setSnapshotName: function(snapshotName) {
-        $scope.snapshotName = snapshotName;
+      setActiveSnapshotInfo: function(snapshotInfo) {
+        $scope.activeSnapshotInfo = snapshotInfo;
       },
 
       /**

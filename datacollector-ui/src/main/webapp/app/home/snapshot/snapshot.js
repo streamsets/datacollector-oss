@@ -73,9 +73,9 @@ angular
       /**
        * Refresh Snapshot
        */
-      viewSnapshot: function(snapshotName) {
-        $scope.setSnapshotName(snapshotName);
-        viewSnapshot(snapshotName);
+      viewSnapshot: function(snapshotInfo) {
+        $scope.setActiveSnapshotInfo(snapshotInfo);
+        viewSnapshot(snapshotInfo.id);
       }
     });
 
@@ -136,7 +136,7 @@ angular
     });
 
     if($scope.snapshotMode) {
-      viewSnapshot($scope.snapshotName);
+      viewSnapshot($scope.activeSnapshotInfo.id);
 
       api.pipelineAgent.getSnapshotsInfo().then(function(res) {
         if(res && res.data && res.data.length) {

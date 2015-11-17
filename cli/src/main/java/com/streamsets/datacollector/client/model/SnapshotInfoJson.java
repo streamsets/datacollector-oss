@@ -22,17 +22,19 @@ package com.streamsets.datacollector.client.model;
 import com.streamsets.datacollector.client.StringUtil;
 
 
-
-import io.swagger.annotations.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen",
+    date = "2015-09-11T14:51:29.367-07:00")
 public class SnapshotInfoJson   {
 
   private String user = null;
   private String id = null;
+  private String label = null;
   private String name = null;
   private String rev = null;
   private Long timeStamp = null;
@@ -62,6 +64,16 @@ public class SnapshotInfoJson   {
     this.id = id;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("label")
+  public String getLabel() {
+    return id;
+  }
+  public void setLabel(String label) {
+    this.label = label;
+  }
 
   /**
    **/
@@ -119,6 +131,7 @@ public class SnapshotInfoJson   {
 
     sb.append("    user: ").append(StringUtil.toIndentedString(user)).append("\n");
     sb.append("    id: ").append(StringUtil.toIndentedString(id)).append("\n");
+    sb.append("    label: ").append(StringUtil.toIndentedString(label)).append("\n");
     sb.append("    name: ").append(StringUtil.toIndentedString(name)).append("\n");
     sb.append("    rev: ").append(StringUtil.toIndentedString(rev)).append("\n");
     sb.append("    timeStamp: ").append(StringUtil.toIndentedString(timeStamp)).append("\n");

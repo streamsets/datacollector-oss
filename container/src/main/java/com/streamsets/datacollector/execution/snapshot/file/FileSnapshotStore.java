@@ -66,10 +66,10 @@ public class FileSnapshotStore implements SnapshotStore {
   }
 
   @Override
-  public SnapshotInfo create(String user, String name, String rev, String id) throws PipelineException {
+  public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
       PipelineDirectoryUtil.createPipelineSnapshotDir(runtimeInfo, name, rev, id);
-      SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, name, rev, System.currentTimeMillis(), true);
+      SnapshotInfo snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, System.currentTimeMillis(), true);
       persistSnapshotInfo(snapshotInfo);
       return snapshotInfo;
     }
@@ -85,7 +85,29 @@ public class FileSnapshotStore implements SnapshotStore {
       }
       persistSnapshot(name, rev, id, snapshotBatches);
       SnapshotInfo updatedSnapshotInfo =
-        new SnapshotInfoImpl(existingInfo.getUser(), id, name, rev, System.currentTimeMillis(), false);
+        new SnapshotInfoImpl(existingInfo.getUser(), id, existingInfo.getLabel(), name, rev, System.currentTimeMillis(),
+            false);
+      persistSnapshotInfo(updatedSnapshotInfo);
+      return updatedSnapshotInfo;
+    }
+  }
+
+  @Override
+  public SnapshotInfo updateLabel(String name, String rev, String id, String snapshotLabel) throws PipelineException {
+    synchronized (lockCache.getLock(name)) {
+      SnapshotInfo existingInfo = getInfo(name, rev, id);
+      if (existingInfo == null) {
+        throw new PipelineException(ContainerError.CONTAINER_0605);
+      }
+      SnapshotInfo updatedSnapshotInfo =
+          new SnapshotInfoImpl(
+              existingInfo.getUser(),
+              existingInfo.getId(),
+              snapshotLabel,
+              existingInfo.getName(),
+              existingInfo.getRev(),
+              existingInfo.getTimeStamp(),
+              existingInfo.isInProgress());
       persistSnapshotInfo(updatedSnapshotInfo);
       return updatedSnapshotInfo;
     }
@@ -175,7 +197,6 @@ public class FileSnapshotStore implements SnapshotStore {
     return new File(PipelineDirectoryUtil.getPipelineSnapshotDir(runtimeInfo, name, rev, id),
       INFO_FILE_NAME);
   }
-
 
   private void persistSnapshotInfo(SnapshotInfo snapshotInfo) throws PipelineRuntimeException {
     try (OutputStream out = new DataStore(getPipelineSnapshotInfoFile(snapshotInfo.getName(), snapshotInfo.getRev(),

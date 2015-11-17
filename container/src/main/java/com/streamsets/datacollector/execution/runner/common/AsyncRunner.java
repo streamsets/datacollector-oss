@@ -20,16 +20,13 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.execution.PipelineInfo;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
-import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
-import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -42,7 +39,6 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -138,8 +134,13 @@ public class AsyncRunner implements Runner, PipelineInfo {
   }
 
   @Override
-  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException {
-    return runner.captureSnapshot(name, batches, batchSize);
+  public String captureSnapshot(String name, String label, int batches, int batchSize) throws PipelineException {
+    return runner.captureSnapshot(name, label, batches, batchSize);
+  }
+
+  @Override
+  public String updateSnapshotLabel(String snapshotName, String snapshotLabel) throws PipelineException {
+    return runner.updateSnapshotLabel(snapshotName, snapshotLabel);
   }
 
   @Override

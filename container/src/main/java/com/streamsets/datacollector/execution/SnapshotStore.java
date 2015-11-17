@@ -31,11 +31,14 @@ public interface SnapshotStore {
   // pipeline the store may need/have
 
   // creates a snapshot info, in progress
-  public SnapshotInfo create(String user, String name, String rev, String id) throws PipelineException;;
+  public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException;;
 
   // saves the data of the snapshot and updates the corresponding snapshot info.
   public SnapshotInfo save(String name, String rev, String id, List<List<StageOutput>> snapshotBatches)
     throws PipelineException;
+
+  // Updates the label of snapshot by updating the Snapshot Info
+  public SnapshotInfo updateLabel(String name, String rev, String id, String snapshotLabel) throws PipelineException;
 
   // retrieves a snapshot base on its ID
   // The caller must close the stream by calling close() on the Snapshot

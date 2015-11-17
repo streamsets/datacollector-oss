@@ -560,14 +560,36 @@ angular.module('dataCollectorApp.common')
        * @param pipelineName
        * @param rev
        * @param snapshotName
+       * @param snapshotLabel
        * @param batchSize
        * @returns {*}
        */
-      captureSnapshot: function(pipelineName, rev, snapshotName, batchSize) {
+      captureSnapshot: function(pipelineName, rev, snapshotName, snapshotLabel, batchSize) {
         var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName +
-          '?batchSize=' + batchSize + '&rev=' + rev;
+          '?batchSize=' + batchSize +
+          '&snapshotLabel=' + snapshotLabel +
+          '&rev=' + rev;
         return $http({
           method: 'PUT',
+          url: url
+        });
+      },
+
+      /**
+       * Update Snapshot label
+       *
+       * @param pipelineName
+       * @param rev
+       * @param snapshotName
+       * @param snapshotLabel
+       * @returns {*}
+       */
+      updateSnapshotLabel: function(pipelineName, rev, snapshotName, snapshotLabel) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName +
+          '?snapshotLabel=' + snapshotLabel +
+          '&rev=' + rev;
+        return $http({
+          method: 'POST',
           url: url
         });
       },

@@ -85,21 +85,16 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.log.LogConstants;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-
 import dagger.ObjectGraph;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -354,7 +349,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public String captureSnapshot(String snapshotName, int batches, int batchSize)
+  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
     throws PipelineException {
     int maxBatchSize = configuration.get(Constants.SNAPSHOT_MAX_BATCH_SIZE_KEY, Constants.SNAPSHOT_MAX_BATCH_SIZE_DEFAULT);
 
@@ -367,9 +362,19 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     if(batchSize <= 0) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0107, batchSize);
     }
-    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, snapshotName);
+    SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, snapshotName, snapshotLabel);
     prodPipeline.captureSnapshot(snapshotName, batchSize, batches);
     return snapshotInfo.getId();
+  }
+
+  public String updateSnapshotLabel(String snapshotName, String snapshotLabel)
+      throws PipelineException {
+    SnapshotInfo snapshotInfo = snapshotStore.updateLabel(name, rev, snapshotName, snapshotLabel);
+    if(snapshotInfo != null) {
+      return snapshotInfo.getId();
+    }
+
+    return null;
   }
 
   @Override

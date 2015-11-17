@@ -60,9 +60,9 @@ public class CacheSnapshotStore implements SnapshotStore {
   }
 
   @Override
-  public SnapshotInfo create(String user, String name, String rev, String id) throws PipelineException {
+  public SnapshotInfo create(String user, String name, String rev, String id, String label) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
-      SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, id);
+      SnapshotInfo snapshotInfo = snapshotStore.create(user, name, rev, id, label);
       snapshotStateCache.put(getCacheKey(name, rev, id), snapshotInfo);
       return snapshotInfo;
     }
@@ -84,6 +84,11 @@ public class CacheSnapshotStore implements SnapshotStore {
         throw new PipelineException(ContainerError.CONTAINER_0600, id, name, rev, e.toString(), e);
       }
     }
+  }
+
+  @Override
+  public SnapshotInfo updateLabel(String name, String rev, String id, String snapshotLabel) throws PipelineException {
+    return snapshotStore.updateLabel(name, rev, id, snapshotLabel);
   }
 
   @Override

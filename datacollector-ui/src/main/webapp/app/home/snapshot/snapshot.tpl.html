@@ -6,7 +6,7 @@
 
     <div class="btn-group pull-left detail-name-dropdown">
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <span ng-bind="snapshotName"></span>
+        <span>{{activeSnapshotInfo.label || activeSnapshotInfo.id}}</span>
 
         <span class="caret"></span>
       </button>
@@ -14,8 +14,8 @@
         <li role="presentation"
             ng-repeat="snapshotInfo in snapshotsInfo">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="viewSnapshot(snapshotInfo.id)"
-            >{{snapshotInfo.id}}</a>
+             ng-click="viewSnapshot(snapshotInfo)"
+            >{{snapshotInfo.label || snapshotInfo.id}}</a>
         </li>
       </ul>
     </div>

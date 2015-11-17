@@ -50,13 +50,11 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseProcessor;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -314,7 +312,8 @@ public class TestProductionPipeline {
     SnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
 
     Mockito.when(snapshotStore.getInfo(PIPELINE_NAME, REVISION, SNAPSHOT_NAME)).thenReturn(
-      new SnapshotInfoImpl("user", "SNAPSHOT_NAME", PIPELINE_NAME, REVISION, System.currentTimeMillis(), false));
+      new SnapshotInfoImpl("user", "SNAPSHOT_NAME", "SNAPSHOT LABEL", PIPELINE_NAME, REVISION,
+          System.currentTimeMillis(), false));
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /* FIFO */);
     Configuration config = new Configuration();
     config.set("monitor.memory", true);

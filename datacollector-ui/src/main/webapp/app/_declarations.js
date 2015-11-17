@@ -36,5 +36,6 @@ angular.module('dataCollectorApp', [
   'dataCollectorApp.logs',
   'dataCollectorApp.restapi',
   'ngStorage',
-  'angular-google-analytics'
+  'angular-google-analytics',
+  'xeditable'
 ]);

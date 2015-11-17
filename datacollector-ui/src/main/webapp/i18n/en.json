@@ -459,6 +459,7 @@
     "snapshotsPane": {
       "captureSnapshot": "Capture Snapshot",
       "captureSnapshotInProgress": "Capturing...",
+      "labelChangeTitle": "Click to change Snapshot label",
       "modalTitle": "Snapshots",
       "noSnapshots": "No Snapshots"
     },

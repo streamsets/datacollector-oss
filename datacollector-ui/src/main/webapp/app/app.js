@@ -84,7 +84,7 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions) {
 
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
@@ -105,6 +105,8 @@ angular.module('dataCollectorApp')
       statusWebSocket,
       webSocketAlertsURL = webSocketBaseURL + 'rest/v1/webSocket?type=alerts',
       alertsWebSocket;
+
+    editableOptions.theme = 'bs3';
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({

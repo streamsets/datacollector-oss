@@ -216,6 +216,7 @@ public class ManagerResource {
   public Response captureSnapshot(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
+      @QueryParam("snapshotLabel") String snapshotLabel,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("batches") @DefaultValue("1") int batches,
       @QueryParam("batchSize") int batchSize) throws PipelineException {
@@ -225,7 +226,23 @@ public class ManagerResource {
     Utils.checkState(runner != null && runner.getState().getStatus() == PipelineStatus.RUNNING,
       "Pipeline doesn't exist or it is not running currently");
 
-    runner.captureSnapshot(snapshotName, batches, batchSize);
+    runner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+    return Response.ok().build();
+  }
+
+
+  @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}")
+  @POST
+  @ApiOperation(value = "Capture Snapshot", authorizations = @Authorization(value = "basic"))
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  public Response updateSnapshotLabel(
+      @PathParam("pipelineName") String pipelineName,
+      @PathParam("snapshotName") String snapshotName,
+      @QueryParam("snapshotLabel") String snapshotLabel,
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
+    RestAPIUtils.injectPipelineInMDC(pipelineName);
+    Runner runner = manager.getRunner(user, pipelineName, rev);
+    runner.updateSnapshotLabel(snapshotName, snapshotLabel);
     return Response.ok().build();
   }
 

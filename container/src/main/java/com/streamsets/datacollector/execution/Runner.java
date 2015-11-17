@@ -19,14 +19,10 @@
  */
 package com.streamsets.datacollector.execution;
 
-import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.alerts.AlertEventListener;
 import com.streamsets.datacollector.callback.CallbackInfo;
-import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
-import com.streamsets.datacollector.metrics.MetricsEventListener;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.PipelineException;
@@ -98,7 +94,12 @@ public interface Runner {
 
   // triggers a snapshot request
   // delegates to SnapshotStore
-  public String captureSnapshot(String name, int batches, int batchSize) throws PipelineException;
+  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
+      throws PipelineException;
+
+  // Update Snapshot label
+  public String updateSnapshotLabel(String snapshotName, String snapshotLabel)
+      throws PipelineException;
 
   // retrieves a snapshot base on its ID
   // delegates to SnapshotStore

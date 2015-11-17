@@ -32,11 +32,12 @@ public class SnapshotInfoJson {
   @JsonCreator
   public SnapshotInfoJson(@JsonProperty("user") String user,
                           @JsonProperty("id") String id,
+                          @JsonProperty("label") String label,
                           @JsonProperty("name") String name,
                           @JsonProperty("rev") String rev,
                           @JsonProperty("timeStamp") long timeStamp,
                           @JsonProperty("inProgress") boolean inProgress) {
-    snapshotInfo = new SnapshotInfoImpl(user, id, name, rev, timeStamp, inProgress);
+    snapshotInfo = new SnapshotInfoImpl(user, id, label, name, rev, timeStamp, inProgress);
   }
 
 
@@ -46,6 +47,10 @@ public class SnapshotInfoJson {
 
   public String getId() {
     return snapshotInfo.getId();
+  }
+
+  public String getLabel() {
+    return snapshotInfo.getLabel();
   }
 
   public String getName() {

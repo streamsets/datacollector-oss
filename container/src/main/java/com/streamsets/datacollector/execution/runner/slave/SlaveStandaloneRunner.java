@@ -138,8 +138,14 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public String captureSnapshot(String snapshotName, int batches, int batchSize) throws PipelineException {
-    return standaloneRunner.captureSnapshot(snapshotName, batches, batchSize);
+  public String captureSnapshot(String snapshotName, String snapshotLabel, int batches, int batchSize)
+      throws PipelineException {
+    return standaloneRunner.captureSnapshot(snapshotName, snapshotLabel, batches, batchSize);
+  }
+
+  @Override
+  public String updateSnapshotLabel(String snapshotName, String snapshotLabel) throws PipelineException {
+    return standaloneRunner.updateSnapshotLabel(snapshotName, snapshotLabel);
   }
 
   @Override

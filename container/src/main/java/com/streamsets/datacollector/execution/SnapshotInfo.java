@@ -23,6 +23,8 @@ public interface SnapshotInfo {
 
   public String getId();
 
+  public String getLabel();
+
   public String getName();
 
   public String getRev();

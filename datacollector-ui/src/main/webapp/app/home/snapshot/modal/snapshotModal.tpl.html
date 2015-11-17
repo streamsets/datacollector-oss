@@ -1,4 +1,4 @@
-<form class="snapshots-modal-form" role="form">
+<div class="snapshots-modal-form">
   <div class="modal-header">
     <button type="button" class="close" ng-click="close()">
       <span aria-hidden="true">&times;</span>
@@ -19,22 +19,30 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>{{'global.form.name' | translate}}</th>
-          <th>{{'global.form.captured' | translate}}</th>
-          <th>{{'global.form.actions' | translate}}</th>
+          <th class="snapshot-label">{{'global.form.name' | translate}}</th>
+          <th class="snapshot-time">{{'global.form.captured' | translate}}</th>
+          <th class="snapshot-action">{{'global.form.actions' | translate}}</th>
         </tr>
       </thead>
 
       <tbody ng-hide="showLoading">
         <tr ng-repeat="snapshotInfo in snapshotsInfo">
-          <td>{{snapshotInfo.id}}</td>
+          <td>
+            <span ng-if="snapshotInfo.inProgress">{{ snapshotInfo.label || snapshotInfo.id }}</span>
+            <a href="#"
+               ng-if="!snapshotInfo.inProgress"
+               editable-text="snapshotInfo.label"
+               onaftersave="snapshotInfoLabelUpdated(snapshotInfo)"
+               title="{{'home.snapshotsPane.labelChangeTitle' | translate}}"
+            >{{ snapshotInfo.label || snapshotInfo.id }}</a>
+          </td>
           <td>
             {{!snapshotInfo.inProgress ? (snapshotInfo.timeStamp  | date:'medium') : ('home.snapshotsPane.captureSnapshotInProgress' | translate)}}
           </td>
           <td>
             <a href="javascript:;" translate="global.form.view"
                ng-if="!snapshotInfo.inProgress"
-               ng-click="viewSnapshot(snapshotInfo.id)"></a>
+               ng-click="viewSnapshot(snapshotInfo)"></a>
             <span class="separator" ng-if="!snapshotInfo.inProgress">|</span>
             <a href="javascript:;" translate="global.form.delete"
                ng-if="!snapshotInfo.inProgress"
@@ -61,4 +69,4 @@
     <button type="button" class="btn btn-primary" ng-click="close()"
             translate="global.form.close">close</button>
   </div>
-</form>
+</div>

@@ -342,7 +342,7 @@ public class TestStandaloneRunner {
     waitAndAssertState(runner, PipelineStatus.RUNNING);
 
     //request to capture snapshot and check the status
-    String snapshotId = runner.captureSnapshot("mySnapshot", 5, 10);
+    String snapshotId = runner.captureSnapshot("mySnapshot", "snapshot label", 5, 10);
     assertNotNull(snapshotId);
 
     Snapshot snapshot = runner.getSnapshot(snapshotId);
@@ -355,6 +355,16 @@ public class TestStandaloneRunner {
     assertEquals(snapshotId, info.getId());
     assertEquals(TestUtil.MY_PIPELINE, info.getName());
     assertEquals("0", info.getRev());
+
+    //update label
+    snapshotId = runner.updateSnapshotLabel("mySnapshot", "updated snapshot label");
+    assertNotNull(snapshotId);
+    snapshot = runner.getSnapshot(snapshotId);
+    assertNotNull(snapshot);
+    info = snapshot.getInfo();
+    assertNotNull(info);
+    assertEquals("mySnapshot", info.getId());
+    assertEquals("updated snapshot label", info.getLabel());
 
     //request cancel snapshot
     runner.deleteSnapshot(snapshotId);

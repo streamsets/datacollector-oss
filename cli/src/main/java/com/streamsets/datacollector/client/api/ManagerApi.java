@@ -38,7 +38,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen",
+    date = "2015-09-11T14:51:29.367-07:00")
 public class ManagerApi {
   private ApiClient apiClient;
 
@@ -71,14 +72,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteAlert");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteAlert");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/alerts".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -96,7 +97,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -132,14 +133,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorMessages");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorMessages");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/errorMessages".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -159,7 +160,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -175,7 +176,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<ErrorMessageJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -191,18 +193,19 @@ public class ManagerApi {
    * @param size
    * @return List<RecordJson>
    */
-  public List<RecordJson> getErrorRecords (String pipelineName, String rev, String stageInstanceName, Integer size) throws ApiException {
+  public List<RecordJson> getErrorRecords (String pipelineName, String rev, String stageInstanceName, Integer size)
+      throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorRecords");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getErrorRecords");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/errorRecords".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -222,7 +225,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -238,7 +241,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<RecordJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -257,14 +261,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getHistory");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getHistory");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/history".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -282,7 +286,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -298,7 +302,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<PipelineStateJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -316,14 +321,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteHistory");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteHistory");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/history".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -339,7 +344,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -354,7 +359,8 @@ public class ManagerApi {
 
 
 
-    apiClient.invokeAPI(path, "DELETE", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
+    apiClient.invokeAPI(path, "DELETE", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
 
 
 
@@ -372,14 +378,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getMetrics");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getMetrics");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/metrics".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -395,7 +401,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -411,7 +417,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<MetricRegistryJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -429,14 +436,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling resetOffset");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling resetOffset");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/resetOffset".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -452,7 +459,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -467,7 +474,8 @@ public class ManagerApi {
 
 
 
-    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
+    apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
 
 
 
@@ -483,18 +491,19 @@ public class ManagerApi {
    * @param sampleSize
    * @return List<SampledRecordJson>
    */
-  public List<SampledRecordJson> getSampledRecords (String pipelineName, String rev, String sampleId, Integer sampleSize) throws ApiException {
+  public List<SampledRecordJson> getSampledRecords (String pipelineName, String rev, String sampleId,
+                                                    Integer sampleSize) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSampledRecords");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSampledRecords");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/sampledRecords".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -514,7 +523,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -530,7 +539,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<SampledRecordJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -549,20 +559,20 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshot");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshot");
+    }
 
-     // verify the required parameter 'snapshotName' is set
-     if (snapshotName == null) {
-        throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling getSnapshot");
-     }
+    // verify the required parameter 'snapshotName' is set
+    if (snapshotName == null) {
+      throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling getSnapshot");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
-      .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+        .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -578,7 +588,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -594,7 +604,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<SnapshotDataJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -606,35 +617,39 @@ public class ManagerApi {
    *
    * @param pipelineName
    * @param snapshotName
+   * @param snapshotLabel
    * @param rev
    * @param batches
    * @param batchSize
    * @return void
    */
-  public void captureSnapshot (String pipelineName, String snapshotName, String rev, Integer batches, Integer batchSize) throws ApiException {
+  public void captureSnapshot (String pipelineName, String snapshotName, String snapshotLabel, String rev,
+                               Integer batches, Integer batchSize) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling captureSnapshot");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling captureSnapshot");
+    }
 
-     // verify the required parameter 'snapshotName' is set
-     if (snapshotName == null) {
-        throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling captureSnapshot");
-     }
+    // verify the required parameter 'snapshotName' is set
+    if (snapshotName == null) {
+      throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling captureSnapshot");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
-      .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+        .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
     Map<String, String> headerParams = new HashMap<String, String>();
     Map<String, Object> formParams = new HashMap<String, Object>();
 
+
+    queryParams.addAll(apiClient.parameterToPairs("", "snapshotLabel", snapshotLabel));
 
     queryParams.addAll(apiClient.parameterToPairs("", "rev", rev));
 
@@ -663,7 +678,8 @@ public class ManagerApi {
 
 
 
-    apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
+    apiClient.invokeAPI(path, "PUT", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
 
 
 
@@ -682,20 +698,20 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteSnapshot");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling deleteSnapshot");
+    }
 
-     // verify the required parameter 'snapshotName' is set
-     if (snapshotName == null) {
-        throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling deleteSnapshot");
-     }
+    // verify the required parameter 'snapshotName' is set
+    if (snapshotName == null) {
+      throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling deleteSnapshot");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
-      .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+        .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -711,7 +727,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -726,7 +742,8 @@ public class ManagerApi {
 
 
 
-    apiClient.invokeAPI(path, "DELETE", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, null);
+    apiClient.invokeAPI(path, "DELETE", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, null);
 
 
 
@@ -745,20 +762,20 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotStatus");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotStatus");
+    }
 
-     // verify the required parameter 'snapshotName' is set
-     if (snapshotName == null) {
-        throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling getSnapshotStatus");
-     }
+    // verify the required parameter 'snapshotName' is set
+    if (snapshotName == null) {
+      throw new ApiException(400, "Missing the required parameter 'snapshotName' when calling getSnapshotStatus");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/snapshot/{snapshotName}/status".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
-      .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()))
+        .replaceAll("\\{" + "snapshotName" + "\\}", apiClient.escapeString(snapshotName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -774,7 +791,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -790,7 +807,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<SnapshotInfoJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -808,14 +826,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotsInfo");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getSnapshotsInfo");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/snapshots".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -847,7 +865,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<SnapshotInfoJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -865,14 +884,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling startPipeline");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling startPipeline");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/start".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -888,7 +907,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -904,7 +923,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<PipelineStateJson>() {};
-    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -922,14 +942,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineStatus");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling getPipelineStatus");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/status".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -945,7 +965,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -961,7 +981,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<PipelineStateJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -979,14 +1000,14 @@ public class ManagerApi {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
-     // verify the required parameter 'pipelineName' is set
-     if (pipelineName == null) {
-        throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPipeline");
-     }
+    // verify the required parameter 'pipelineName' is set
+    if (pipelineName == null) {
+      throw new ApiException(400, "Missing the required parameter 'pipelineName' when calling stopPipeline");
+    }
 
     // create path and map variables
     String path = "/v1/pipeline/{pipelineName}/stop".replaceAll("\\{format\\}","json")
-      .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
+        .replaceAll("\\{" + "pipelineName" + "\\}", apiClient.escapeString(pipelineName.toString()));
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
@@ -1002,7 +1023,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -1018,7 +1039,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<PipelineStateJson>() {};
-    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "POST", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -1065,7 +1087,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<AlertInfoJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -1112,7 +1135,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<List<SnapshotInfoJson>>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 
@@ -1143,7 +1167,7 @@ public class ManagerApi {
 
 
     final String[] accepts = {
-      "application/json"
+        "application/json"
     };
     final String accept = apiClient.selectHeaderAccept(accepts);
 
@@ -1159,7 +1183,8 @@ public class ManagerApi {
 
 
     TypeRef returnType = new TypeRef<PipelineStateJson>() {};
-    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept, contentType, authNames, returnType);
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
 
 
 

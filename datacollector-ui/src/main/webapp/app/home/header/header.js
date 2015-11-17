@@ -195,7 +195,7 @@ angular
         var modalInstance = $modal.open({
           templateUrl: 'app/home/snapshot/modal/snapshotModal.tpl.html',
           controller: 'SnapshotModalInstanceController',
-          size: '',
+          size: 'lg',
           backdrop: 'static',
           resolve: {
             pipelineConfig: function () {

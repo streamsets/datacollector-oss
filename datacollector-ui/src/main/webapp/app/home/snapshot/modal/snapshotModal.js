@@ -43,12 +43,14 @@ angular
        * Capture Snapshot
        */
       captureSnapshot: function() {
-        var snapshotName = getNewSnapshotName();
-        api.pipelineAgent.captureSnapshot(pipelineConfig.info.name, 0, snapshotName, snapshotBatchSize).
+        var snapshotName = 'snapshot' + (new Date()).getTime(),
+          snapshotLabel = getNewSnapshotName();
+        api.pipelineAgent.captureSnapshot(pipelineConfig.info.name, 0, snapshotName, snapshotLabel, snapshotBatchSize).
           then(function() {
             $scope.snapshotsInfo.push({
               name: pipelineConfig.info.name,
               id: snapshotName,
+              label: snapshotLabel,
               inProgress: true
             });
             $scope.snapshotInProgress = true;
@@ -106,6 +108,19 @@ angular
        */
       close: function() {
         $modalInstance.dismiss('cancel');
+      },
+
+      /**
+       * SnapshotInfo Label Update Command handler
+       * @param snapshotInfo
+       */
+      snapshotInfoLabelUpdated: function(snapshotInfo) {
+        api.pipelineAgent.updateSnapshotLabel(pipelineConfig.info.name, 0, snapshotInfo.id, snapshotInfo.label).
+        then(function() {
+
+        }, function(res) {
+          $scope.common.errors = [res.data];
+        });
       }
     });
 
@@ -141,7 +156,7 @@ angular
     var getNewSnapshotName = function() {
       if($scope.snapshotsInfo.length) {
         var lastSnapshot = $scope.snapshotsInfo[$scope.snapshotsInfo.length - 1],
-          lastName = lastSnapshot ? lastSnapshot.id : '0',
+          lastName = lastSnapshot ? lastSnapshot.label : '0',
           indexStrArr = lastName.match(/\d+/),
           index = indexStrArr.length ? parseInt(indexStrArr[0]) : 0;
 
