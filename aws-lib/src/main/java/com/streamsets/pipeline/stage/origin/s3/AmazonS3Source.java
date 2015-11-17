@@ -145,6 +145,8 @@ public class AmazonS3Source extends AbstractAmazonS3Source {
           case DISCARD:
             break;
           case TO_ERROR:
+            // we failed to produce a record, which leaves the input file in an unknown state. all we can do here is
+            // throw an exception.
             throw new BadSpoolObjectException(s3Object.getKey(), exOffset, ex);
           case STOP_PIPELINE:
             getContext().reportError(Errors.S3_SPOOLDIR_03, s3Object.getKey(), exOffset, ex.toString());

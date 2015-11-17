@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   SPOOLDIR_00("Could not archive file '{}': {}"),
-  SPOOLDIR_01("Error while processing file '{}' at position '{}': {}"),
+  SPOOLDIR_01("Failed to process file '{}' at position '{}': {}"),
 
   SPOOLDIR_02("Object in file '{}' at offset '{}' exceeds maximum length"),
   SPOOLDIR_04("File '{}' could not be fully processed, failed on '{}' offset: {}"),

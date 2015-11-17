@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
 
-  S3_SPOOLDIR_01("Error while processing object '{}' at position '{}': {}"),
+  S3_SPOOLDIR_01("Failed to process object '{}' at position '{}': {}"),
   S3_SPOOLDIR_02("Object with key '{}' at offset '{}' exceeds maximum length"),
   S3_SPOOLDIR_03("Object '{}' could not be fully processed, failed on '{}' offset: {}"),
   S3_SPOOLDIR_04("Buffer Limit must be equal or greater than 64KB and equal or less than 1024MB"),

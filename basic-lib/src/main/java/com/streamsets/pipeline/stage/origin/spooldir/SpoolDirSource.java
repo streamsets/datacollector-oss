@@ -596,6 +596,8 @@ public class SpoolDirSource extends BaseSource {
           case DISCARD:
             break;
           case TO_ERROR:
+            // we failed to produce a record, which leaves the input file in an unknown state. all we can do here is
+            // throw an exception.
             throw new BadSpoolFileException(file.getAbsolutePath(), exOffset, ex);
           case STOP_PIPELINE:
             getContext().reportError(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
