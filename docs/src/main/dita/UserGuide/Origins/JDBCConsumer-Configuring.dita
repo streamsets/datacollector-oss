@@ -87,6 +87,16 @@
                                         database.</entry>
                                 </row>
                                 <row>
+                                    <entry>Record Type</entry>
+                                    <entry>Type of record to generate. <draft-comment
+                                            author="Loretta">get more on when you'd use list, map,
+                                            or list-map.</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size (records)</entry>
+                                    <entry>Maximum number of records to include in a batch.</entry>
+                                </row>
+                                <row>
                                     <entry>Additional JDBC Configuration</entry>
                                     <entry>
                                         <p>Additional JDBC configuration properties to use. To add

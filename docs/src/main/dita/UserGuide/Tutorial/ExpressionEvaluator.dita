@@ -14,17 +14,17 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wgb_t4p_ms">
-    <title>Add Corresponding Fields with the Expression Evaluator</title>
-    <shortdesc>The Jython Evaluator script added new fields to the credit payments branch. To ensure
-        all records have the same structure, we'll use the Expression Evaluator to add the same
-        fields to the non-credit payment branch. </shortdesc>
+    <title>Add a Corresponding Field with the Expression Evaluator</title>
+    <shortdesc>The Jython Evaluator script added a new field to the credit payments branch. To
+        ensure all records have the same structure, we'll use the Expression Evaluator to add the
+        same field to the non-credit payment branch. </shortdesc>
     <taskbody>
         <context>
             <p>This ensures that all records have the same format when written to the
                 destination.</p>
             <p>To do this, let's use data preview to verify how the Jython Evaluator adds the credit
                 card type to records.<draft-comment author="Loretta">come back to this when the
-                    script is working. take new screenshots.</draft-comment></p>
+                    Jython ordering is fixed. </draft-comment></p>
         </context>
         <steps id="steps_mr4_2pp_ms">
             <step>
@@ -35,9 +35,10 @@
                     output of that processor.</cmd>
             </step>
             <step>
-                <cmd>Expand the first output record, scroll down, and notice the new field,
-                    /cc_type.</cmd>
-                <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
+                <cmd>Expand the first output record, scroll down, and notice the new field
+                    highlighted in green: <uicontrol>/credit_card_type</uicontrol>.</cmd>
+                <info><draft-comment author="Loretta">need new screenshot</draft-comment><image
+                        href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
                         scale="80"/></info>
             </step>
             <step>
@@ -61,16 +62,22 @@
                             <stentry>Expression</stentry>
                         </sthead>
                         <strow>
-                            <stentry>/cc_type</stentry>
+                            <stentry>/credit_card_type</stentry>
                             <stentry>n/a</stentry>
                         </strow>
                     </simpletable>
                 </info>
-                <info>This creates a cc_type field that indicates the information is not
+                <info>This creates a credit_card_type field that indicates the information is not
                     applicable.</info>
                 <info>Since we're using "n/a" as a constant for the expression, we don't need to use
                     the dollar sign and brackets for the expression. But if we wanted to use them,
                     we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
+            </step>
+            <step>
+                <cmd>Since we don't need to change header attributes, use the
+                        <uicontrol>Subtract</uicontrol> icon (<image
+                        href="../Graphics/icon_ConfigSubtractIcon.png" id="image_arx_p5p_15"
+                        scale="55"/>) to delete the default header attribute expression. </cmd>
             </step>
             <step>
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>

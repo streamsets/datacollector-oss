@@ -26,9 +26,9 @@
             <p>The script in the Jython Evaluator creates error records for credit card transactions
                 without credit card numbers. We can create a data rule and alert to let us know when
                 the record count reaches a specified threshold. </p>
-            <p>We'll use an expression with the record:value('&lt;field path>') function to identify
-                when the credit card number field, <codeph>/credit_card</codeph>, is null. The
-                function returns the data in the specified field. </p>
+            <p>We'll use an expression with the record:value() function to identify when the credit
+                card number field, <codeph>/credit_card</codeph>, is null. The function returns the
+                data in the specified field. </p>
         </context>
         <steps id="steps_cw5_qqj_ps">
             <step>
@@ -60,17 +60,19 @@
                         </strow>
                         <strow>
                             <stentry>Sampling Percentage</stentry>
-                            <stentry>20</stentry>
+                            <stentry>35</stentry>
                         </strow>
                         <strow>
                             <stentry>Alert Text</stentry>
-                            <stentry>Over 10 missing credit card numbers!</stentry>
+                            <stentry>At least 10 missing credit card numbers!</stentry>
                         </strow>
                         <strow>
                             <stentry>Threshold Value</stentry>
                             <stentry>10</stentry>
                         </strow>
                     </simpletable>
+                    <p>This creates an alert that goes off after finding eleven records that don't
+                        include credit card numbers in the credit card payment stream.</p>
                     <note>With a larger data set, a smaller sampling percentage and higher threshold
                         value might be appropriate, but we'll use these numbers for the purposes of
                         the tutorial.</note>

@@ -32,9 +32,9 @@
                 complex records.  </p>
             <p>Because we're using the List-Map record type to for the delimited data, we can use
                     <codeph>/&lt;fieldname></codeph>. </p>
-            <p>To start data preview, all stages must be connected and all required fields filled
-                (though not necessarily correctly). Since the origin is configured and the only
-                stage, the pipeline should be ready to preview as is. </p>
+            <p>To start data preview, all stages must be connected and all required properties
+                defined (though not necessarily correctly). Since the origin is configured and the
+                only stage, the pipeline should be ready to preview as is. </p>
         </context>
         <steps id="steps_jxv_fpf_4s">
             <step>
@@ -69,14 +69,14 @@
                                 </row>
                                 <row>
                                     <entry>Write to Destinations</entry>
-                                    <entry>Make sure this checkbox is cleared. In general, you 'll
-                                        want to clear this property to avoid writing data to
-                                        destination systems.</entry>
+                                    <entry>By default, this property is not selected. In general,
+                                        you'll want to keep this property cleared to avoid writing
+                                        data to destination systems.</entry>
                                 </row>
                                 <row>
                                     <entry>Show Field Type</entry>
-                                    <entry>Select this so you can see the data type of fields in the
-                                        record. </entry>
+                                    <entry>By default, this property is selected. Keep it selected
+                                        so you can see the data type of fields in the record. </entry>
                                 </row>
                                 <row>
                                     <entry>Remember the Configuration</entry>
@@ -96,13 +96,16 @@
                 <stepresult>The Preview Panel displays a list of 10 output records for Directory in
                     list view. If you drill down a bit, you see that the each record displays an
                     ordered list of field names and values with the data type of each field.
-                        <p>Because the data is read from a file, all fields are strings.</p><p>Note
-                        that in the Preview panel, the preview records display on the
-                            <wintitle>Records</wintitle> tab. You can click the <wintitle>Stage
-                            Configuration</wintitle> tab to review or change properties: <image
+                        <p>Because the data is read from a file, all fields are
+                            strings:</p><p><image href="../Graphics/Tutorial-PreviewFirst.png"
+                            id="image_fyd_454_15" scale="40"/></p><p>Note that in the Preview panel,
+                        the preview records display on the <wintitle>Records</wintitle> tab: <image
+                            href="../Graphics/icon_PrevRecords.png" id="image_czm_lsl_zt" scale="80"
+                        />. To review or change properties, use the <wintitle>Stage
+                            Configuration</wintitle> tab: <image
                             href="../Graphics/icon_PrevStageConfig.png" id="image_gf2_kx1_tt"
-                            scale="80"/>You can click the <wintitle>Preview Configuration</wintitle>
-                        tab to change preview properties: <image
+                            scale="80"/>. To change preview properties, use the <wintitle>Preview
+                            Configuration</wintitle> tab: <image
                             href="../Graphics/icon_PrevPreviewConfig.png" id="image_a3l_mx1_tt"
                             scale="80"/>.</p></stepresult>
             </step>
@@ -116,9 +119,11 @@
             </step>
             <step>
                 <cmd>To view all columns, click <uicontrol>Show All</uicontrol>.</cmd>
-                <info>If you scroll to the right, you can verify that the credit_card field contains
-                    credit card numbers for the first three records. When you scroll back to the
-                    left, notice this corresponds to "CRD" in the payment_type field. </info>
+                <info>If you scroll to the right, you can verify that the
+                        <uicontrol>credit_card</uicontrol> field contains credit card numbers for
+                    the first three records. When you scroll back to the
+                        <uicontrol>payment_type</uicontrol> field, notice this corresponds to
+                    records where the payment type is "CRD".</info>
             </step>
             <step>
                 <cmd>Now that we have the information that we need, click the <uicontrol>Close
@@ -127,12 +132,13 @@
             </step>
         </steps>
         <result>Now we know the following: <ul id="ul_glg_yj1_mt">
-                <li>Payment type information is in the payment_type field and credit card
-                    information is in the credit_card field.</li>
-                <li>To use these fields in expressions, we'll use their field paths: /payment_type
-                    and /credit_card. </li>
-                <li>To route records paid by credit card, we'll look for records where the
-                    /payment_type = "CRD". </li>
+                <li>Payment type information is in the <uicontrol>payment_type </uicontrol>field and
+                    credit card information is in the <uicontrol>credit_card</uicontrol> field.</li>
+                <li>To use these fields in expressions, we'll use their field paths:
+                        <uicontrol>/payment_type</uicontrol> and
+                    <uicontrol>/credit_card</uicontrol>. </li>
+                <li>To route records paid by credit card, we'll look for records where the payment
+                    type is "CRD". </li>
             </ul></result>
     </taskbody>
 </task>

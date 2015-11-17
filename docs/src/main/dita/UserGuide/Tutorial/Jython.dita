@@ -51,7 +51,7 @@
                 <info>
                     <codeblock>try: 
   for record in records:
-    cc = record.value[20]['value']
+    cc = record.value['credit_card']
     if cc == '':
       err.write(record, "Payment type was CRD, but credit card was null")
       continue
@@ -72,7 +72,8 @@
     else:
       cc_type = 'Other'
 
-    record.value.append({'header':'credit_card_type','value':cc_type})
+    record.value['credit_card_type'] = cc_type
+
     out.write(record)
 except Exception as e:
   err.write(record, e.message)</codeblock>
@@ -87,7 +88,7 @@ except Exception as e:
             </step>
         </steps>
         <result>In the Jython Evaluator, the script should look like this:<p><image
-                    href="../Graphics/Tutorial-Jython.png" id="image_jt1_4ch_4s" scale="90"
+                    href="../Graphics/Tutorial-Jython.png" id="image_jt1_4ch_4s" scale="60"
             /></p></result>
     </taskbody>
 </task>

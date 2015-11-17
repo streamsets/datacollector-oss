@@ -100,7 +100,9 @@
                                             <li>/tip_amount</li>
                                             <li>/tolls_amount</li>
                                             <li>/total_amount</li>
-                                        </ul></entry>
+                                        </ul><p>If the field doesn't come up for selection, you can
+                                            type in the field name and use the Tab or Enter key to
+                                            complete the action.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Convert to Type</entry>

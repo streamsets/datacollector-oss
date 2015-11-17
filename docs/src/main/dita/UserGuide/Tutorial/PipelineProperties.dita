@@ -48,23 +48,25 @@
                             id="image_jnr_wtk_5s" scale="65"/></p></info>
                 <info>Note a few helpful areas: <table frame="all" rowsep="1" colsep="1"
                         id="table_ezq_5ys_lt">
-                        <tgroup cols="2">
+                        <tgroup cols="3">
                             <colspec colname="c1" colnum="1" colwidth=".5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="4*"/>
+                            <colspec colname="newCol2" colnum="2" colwidth="1*"/>
+                            <colspec colname="c2" colnum="3" colwidth="4*"/>
                             <thead>
                                 <row>
-                                    <entry>Area</entry>
+                                    <entry>Number</entry>
+                                    <entry>Name</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
                                     <entry>1</entry>
-                                    <entry>The Pipeline Creation Help Bar indicates that the origin
-                                        is missing and offers a list of origins to choose from.
-                                            <p>If the Pipeline Creation Help Bar does not display,
-                                            you might have disabled it. To enable it, in the top
-                                            right corner of the <ph
+                                    <entry>Pipeline Creation Help Bar </entry>
+                                    <entry>Indicates that the origin is missing and offers a list of
+                                        origins to choose from. <p>If the Pipeline Creation Help Bar
+                                            does not display, you might have disabled it. To enable
+                                            it, in the top right corner of the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> window, click the <menucascade>
                                                 <uicontrol>Help</uicontrol>
@@ -74,24 +76,26 @@
                                 </row>
                                 <row>
                                     <entry>2</entry>
-                                    <entry>Issues icon. Click to display the list of pipeline issues
-                                        found by implicit validation.</entry>
+                                    <entry>Issues icon</entry>
+                                    <entry>Click to display the list of pipeline issues found by
+                                        implicit validation.</entry>
                                 </row>
                                 <row>
                                     <entry>3</entry>
-                                    <entry>Stage library. Displays a list of available origins by
-                                        default.</entry>
+                                    <entry>Stage library</entry>
+                                    <entry>Displays a list of available origins by default.</entry>
                                 </row>
                                 <row>
                                     <entry>4</entry>
-                                    <entry>Drop-down menu to change the stages that display in the
-                                        stage library.</entry>
+                                    <entry>Stage menu</entry>
+                                    <entry>Changes the stages that display in the stage library.
+                                        Displays all stages by default.</entry>
                                 </row>
                                 <row>
                                     <entry><image href="../Graphics/icon_ConfigStageLibrary.png"
                                             id="image_ryw_gzs_lt" scale="90"/></entry>
-                                    <entry>Toggle Library Pane icon. Use to show and hide the stage
-                                        library.</entry>
+                                    <entry>Toggle Library Pane icon</entry>
+                                    <entry>Use to show and hide the stage library.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -124,13 +128,16 @@
                                 <row>
                                     <entry>Directory</entry>
                                     <entry>Directory for error record files. Enter the directory
-                                        that you set up for the tutorial.<note>To prevent validation
-                                            errors, the directory must already exist.</note></entry>
+                                        that you set up for the tutorial. We recommended:
+                                            <codeblock>/&lt;base directory>/tutorial/error</codeblock><note>To
+                                            prevent validation errors, the directory must already
+                                            exist.</note></entry>
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
                                     <entry>This defines a prefix for error record files. Delete the
-                                        default and enter "err_".<p
+                                        default and enter the following:
+                                            <uicontrol>err_</uicontrol><p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
                                         /></entry>
                                 </row>

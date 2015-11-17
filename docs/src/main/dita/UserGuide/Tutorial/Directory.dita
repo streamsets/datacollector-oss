@@ -21,8 +21,8 @@
     <taskbody>
         <context>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            provides a wide range of origins, but for the sake of this tutorial we will use the
-            Directory origin to process the static CSV sample file that you downloaded. </context>
+            provides a wide range of origins. In this tutorial, we will use the Directory origin to
+            process the CSV sample file that you downloaded. </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
                 <cmd>To add the stage to the canvas, from the Pipeline Creation Help Bar, click <menucascade>
@@ -54,12 +54,14 @@
                             <tbody>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Delimited.</entry>
+                                    <entry>The data in the sample file is delimited, so select
+                                            <uicontrol>Delimited</uicontrol>.</entry>
                                 </row>
                                 <row>
                                     <entry>Files Directory</entry>
-                                    <entry>Directory where you saved the source file. <p>For
-                                            example: <codeph>/myFiles/Tutorial</codeph>.</p></entry>
+                                    <entry>Directory where you saved the sample file. <p>We
+                                            recommended: <codeph>/&lt;base
+                                                directory>/tutorial/origin</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
@@ -67,13 +69,13 @@
                                         directory that match the file name pattern. <p>The tutorial
                                             sample file name is <codeph>nyc_taxi_data.csv</codeph>.
                                             If the file is the only file in the directory, you can
-                                            use the asterisk wild card (*) or something similarly
-                                            generic, like *.csv.</p><p>If you had other .csv files
-                                            in the directory that you don't want to process, you
-                                            might be more specific, like this:
-                                                <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you
-                                            want to process files with prefixes for  other cities,
-                                            you might use <codeph>*taxi*.csv</codeph>.</p></entry>
+                                            use something generic, like the asterisk wild card (*)
+                                            or *.csv.</p><p>If you had other .csv files in the
+                                            directory that you don't want to process, you might be
+                                            more specific, like this:
+                                            <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you want to
+                                            process files with prefixes for other cities, you might
+                                            use <codeph>*taxi*.csv</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process</entry>
@@ -136,8 +138,8 @@
         </steps>
         <result>This is how the stage and pipeline should look at this point:<p><image
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="65"
-                /></p><p>Notice the error icons on the page. If you click the Issues icon or hover
-                over the Directory error icon, you'll see a message that the origin isn't connected
-                to anything yet. We'll take care of that next.</p></result>
+                /></p><p>Notice the error icons on the page. When you hover over the Directory error
+                icon or click the Issues icon, a message states that the origin isn't connected to
+                anything yet. We'll take care of that next.</p></result>
     </taskbody>
 </task>

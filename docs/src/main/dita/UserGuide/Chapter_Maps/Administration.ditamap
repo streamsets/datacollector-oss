@@ -53,6 +53,9 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Administration/CLI-Launching.dita"/>
+   <topicref href="../Administration/CLI-Help.dita"/>
+   <topicref href="../Administration/CLI-Manager.dita"/>
+   <topicref href="../Administration/CLI-Store.dita"/>
  </topicref>
  </topicref>
 </map>

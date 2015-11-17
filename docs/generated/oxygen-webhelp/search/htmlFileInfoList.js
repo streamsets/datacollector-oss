@@ -1,6 +1,6 @@
 fil = new Array();
 fil["0"]= "Administration/Administration_title.html@@@Administration@@@...";
-fil["1"]= "Administration/CLI-Overview.html@@@Command Line Interface@@@The Data Collector provides a command line interface...";
+fil["1"]= "Administration/CLI-Overview.html@@@Command Line Interface@@@Use the help command to view additional information for the specified command...";
 fil["2"]= "Administration/RESTResponse.html@@@REST Response@@@You can view REST response JSON data for different aspects of the Data Collector, such as pipeline configuration information or monitoring details...";
 fil["3"]= "Administration/ShuttingDown.html@@@Shutting Down the Data Collector@@@Shut down and restart the Data Collector to apply changes to the Data Collector configuration file, environment configuration file, or user logins. To use the command line to shut down the Dat...";
 fil["4"]= "Administration/ViewingDCConfigs.html@@@Viewing Data Collector Configuration Properties@@@To view Data Collector configuration properties, click Administration &gt; Configuration . For details about the configuration properties or to edit the configuration file, see Configuring the Dat...";
@@ -158,4 +158,4 @@ fil["155"]= "Tutorial/BasicTutorial.html@@@Basic Tutorial@@@Now before we run th
 fil["156"]= "Tutorial/BeforeYouBegin.html@@@Before You Begin@@@Before you start this tutorial, you ll need to do a few things: Download sample data. You can download sample data from the following location...";
 fil["157"]= "Tutorial/ExtendedTutorial.html@@@Extended Tutorial@@@Now that the extended pipeline is complete, let s reset the origin and run the pipeline again...";
 fil["158"]= "Tutorial/Overview.html@@@Tutorial Overview@@@This tutorial walks through creating and running a pipeline. You can download sample data so you can perform data preview, run the completed pipeline, and monitor the results...";
-fil["159"]= "Tutorial/Tutorial-title.html@@@Data Collector Tutorial@@@...";
+fil["159"]= "Tutorial/Tutorial-title.html@@@Tutorial@@@...";

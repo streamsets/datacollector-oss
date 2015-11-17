@@ -27,12 +27,17 @@
               https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv</xref></p><p>You'll
             need a login to the password-protected section of the site - it just takes a moment to
             set up an account.</p></li>
-        <li>Set up a directory local to the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
-          save the sample data in the directory.<p>Let's use the same directory for the source,
-            destination, and error record files. Make sure the user who started the <ph
+        <li>Set up directories local to the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            <p>Let's use the same root directory for the origin, destination, and error files as
+              follows:<ul id="ul_a2m_dzk_zt">
+              <li>/&lt;base directory>/tutorial/origin</li>
+              <li>/&lt;base directory>/tutorial/destination</li>
+              <li>/&lt;base directory>/tutorial/error</li>
+            </ul>Make sure the user who started the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
-            read and write permission for the directory. </p></li>
+            read and write permission for the directories. </p></li>
+        <li> and then and save the sample data in the origin directory.</li>
         <li>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
           /> should be installed and running. </li>
         <li>To create and run the pipeline, you should have a <ph

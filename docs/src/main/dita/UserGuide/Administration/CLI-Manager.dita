@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_msh_k2q_yt">
+ <title>Manager Command</title>
+ <shortdesc>The <codeph>manager</codeph> command provides arguments to start and stop a pipeline,
+        view the status of all pipelines, and reset the origin for a pipeline.</shortdesc>
+ <conbody>
+        <p><indexterm>command line interface<indexterm>manager command</indexterm></indexterm>The
+                <codeph>manager</codeph> command returns the pipeline status object after it
+            successfully completes the specified argument. The following is a sample of the pipeline
+            status object:
+            <codeblock>{
+  "user" : "admin",
+  "name" : "testAnything",
+  "rev" : "0",
+  "status" : "STOPPING",
+  "message" : null,
+  "timeStamp" : 1447116703147,
+  "attributes" : { },
+  "executionMode" : "STANDALONE",
+  "metrics" : null,
+  "retryAttempt" : 0,
+  "nextRetryTimeStamp" : 0
+}</codeblock></p>
+        <p>Note that the timestamp is in the Long data format. </p>
+        <p>You can use the following <codeph>manager</codeph> arguments:</p>
+  <p>
+            <dl>
+                <dlentry>
+                    <dt>start</dt>
+                    <dd>Starts a pipeline. Returns the pipeline status when successful. </dd>
+                    <dd>The <codeph>start</codeph> argument uses the following
+                        syntax:<codeblock>manager start \
+(-n &lt;pipelineName> | --name &lt;pipelineName>) [--stack] \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_q2d_1pq_yt">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Start Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-n &lt;pipelineName><p>or </p><p>-name
+                                                &lt;pipelineName></p></entry>
+                                        <entry>Required. Name of the pipeline to start. <p>
+                                                <note>If the name includes spaces, surround the name
+                                                  in quotation marks.</note>
+                                            </p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot start the pipeline. <p>Use to debug the
+                                                problem or pass to StreamSets for help.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use to start
+                                            an older version of the pipeline. <p>By default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> starts the most recent version.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command starts the Write to Kafka
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager start -n "Write to Kafka"</codeblock></dd>
+                    <dd>The following command starts the first version of the CSV
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager start -n CSV -r 1</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>stop</dt>
+                    <dd>Stops a pipeline. Returns the pipeline status when successful. </dd>
+                    <dd>The <codeph>stop</codeph> argument uses the following
+                        syntax:<codeblock>manager stop \
+(-n &lt;pipelineName> | --name &lt;pipelineName>) [--stack] \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_xh1_3gr_yt">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Stop Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-n &lt;pipelineName><p>or </p><p>-name
+                                                &lt;pipelineName></p></entry>
+                                        <entry>Required. Name of the pipeline to stop. <p>
+                                                <note>If the name includes spaces, surround the name
+                                                  in quotation marks.</note>
+                                            </p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot stop the pipeline. <p>Use to debug the problem
+                                                or pass to StreamSets for help.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use to stop
+                                            an older version of the pipeline. <p>By default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> stops the most recent version.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command stops the Write to Kafka
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager stop -n "Write to Kafka"</codeblock></dd>
+                    <dd>The following command stops the first version of the CSV
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager stop -n CSV -r 1</codeblock></dd>
+                    <dd> </dd>
+                </dlentry>
+                <dlentry>
+                    <dt>status</dt>
+                    <dd>Returns the status of a pipeline. Returns the pipeline status when
+                        successful. </dd>
+                    <dd>The <codeph>status</codeph> argument uses the following
+                        syntax:<codeblock>manager status \
+(-n &lt;pipelineName> | --name &lt;pipelineName>) [--stack] \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_i4m_vjr_yt">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Status Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-n &lt;pipelineName><p>or </p><p>-name
+                                                &lt;pipelineName></p></entry>
+                                        <entry>Required. Name of the pipeline. <note>If the name
+                                                includes spaces, surround the name in quotation
+                                                marks.</note></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot return the status of the pipeline. <p>Use to
+                                                debug the problem or pass to StreamSets for
+                                                help.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use for older
+                                            versions of the pipeline. <p>By default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> returns information for the most recent
+                                                version.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command returns the pipeline status for the Write
+                        to Kafka
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager status -n "Write to Kafka"</codeblock></dd>
+                    <dd>The following command returns the pipeline status for the first version of
+                        the CSV
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630  manager status -n CSV -r 1</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>reset-origin</dt>
+                    <dd>Resets the origin of a pipeline. Use for pipeline origins that can be reset.
+                        Some pipeline origins cannot be reset. Returns the pipeline status when
+                        successful. </dd>
+                    <dd>The <codeph>reset-origin</codeph> argument uses the following
+                        syntax:<codeblock>manager reset-origin \
+(-n &lt;pipelineName> | --name &lt;pipelineName>) [--stack] \
+[(-r &lt;pipelineRev> | --revision &lt;pipelineRev>)]</codeblock></dd>
+                    <dd>
+                        <table frame="all" rowsep="1" colsep="1" id="table_y5t_vtw_yt">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Reset Origin Option</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>-n &lt;pipelineName><p>or </p><p>-name
+                                                &lt;pipelineName></p></entry>
+                                        <entry>Required. Name of the pipeline. <p>
+                                                <note>If the name includes spaces, surround the name
+                                                  in quotation marks.</note>
+                                            </p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>--stack</entry>
+                                        <entry>Optional. Returns additional information when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> cannot reset the origin. <p>Use to debug the problem
+                                                or pass to StreamSets for help.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>-r &lt;pipelineRev><p>or</p><p>-- revision
+                                                &lt;pipelineRev></p></entry>
+                                        <entry>Optional. The revision of the pipeline. Use to reset
+                                            the origin for an older version of the pipeline. <p>By
+                                                default, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> resets the origin for the most recent
+                                                version.</p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </dd>
+                    <dd>For example, the following command resets the origin for  the Read Files
+                        pipeline:<codeblock>bin/streamsets cli -U http://localhost:18630 manager reset-origin -n "Read Files"</codeblock></dd>
+                </dlentry>
+            </dl>
+        </p>
+       
+ </conbody>
+</concept>

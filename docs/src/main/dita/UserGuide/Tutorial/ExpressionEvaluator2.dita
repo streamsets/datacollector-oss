@@ -84,6 +84,12 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>Since we don't need to change header attributes, use the
+                        <uicontrol>Subtract</uicontrol> icon (<image
+                        href="../Graphics/icon_ConfigSubtractIcon.png" id="image_arx_p5p_15"
+                        scale="55"/>)  to delete the default header attribute expression. </cmd>
+            </step>
         </steps>
         <result>
             <p>Here's the Expression Evaluator in the extended pipeline:</p> <p>

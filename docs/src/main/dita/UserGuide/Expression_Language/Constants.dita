@@ -21,6 +21,20 @@
         <p><indexterm>expression
                     language<indexterm>constants</indexterm></indexterm><indexterm>constants<indexterm>in
                     the expression language</indexterm></indexterm>The expression language provides
-            a constant for each field data types and for NULL.</p>
+            the following constants:<dl>
+                <dlentry>
+                    <dt>data types</dt>
+                    <dd><ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> data types are available as constant. This allows you to check for types
+                        within an expression with the <codeph>record:type</codeph> function.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>NULL</dt>
+                    <dd>You can use NULL as a constant in expression logic. This allows you to check
+                        for null values or set values to NULL.</dd>
+                </dlentry>
+            </dl>
+        </p>
     </conbody>
 </concept>

@@ -62,7 +62,9 @@
                     records not captured by other conditions.</info>
             </step>
             <step>
-                <cmd>Click the <uicontrol>Add</uicontrol> icon.</cmd>
+                <cmd>Click the <uicontrol>Add</uicontrol> icon: <image
+                        href="../Graphics/icon_ConfigAddIcon.png" id="image_snw_l5p_15" scale="50"
+                    />.</cmd>
                 <info>A condition text box displays in the Property panel, and the corresponding
                     output location appears on the stage in the canvas.</info>
             </step>

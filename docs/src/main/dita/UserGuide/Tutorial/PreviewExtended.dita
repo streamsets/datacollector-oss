@@ -29,16 +29,15 @@
             the stage uses.</dd>
           <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
               <li>Select the Field Masker in the canvas, and then expand the first input and output
-                  record.<draft-comment author="Loretta">update all this when it's working. Index 20
-                  should be /credit_card</draft-comment></li>
-              <li>Scroll down and note that index 20 is highlighted. This indicates the stage
-                changed data in the field.</li>
-              <li> Expand index 20 for both the input and output data. Notice how all digits except
-                the last four are masked. We did this by using the Regular Expression mask type and
-                revealing the second group in the regex.<draft-comment author="Loretta">retake this
-                  screenshot!</draft-comment></li>
+                record.</li>
+              <li>Scroll down and note that the credit_card field is highlighted. This indicates the
+                stage changed data in the field.</li>
+              <li>Notice how all digits except the last four are masked. We did this by using the
+                Regular Expression mask type and revealing the second group in the
+                  regex.<draft-comment author="Loretta">retake this screenshot after Jython
+                  fix.</draft-comment></li>
             </ol></dd>
-          <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="70"
+          <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="50"
             /></dd>
           <dd>Say we want to mask the whole credit card number. To review the stage configuration
             and try a different option:<ol id="ol_vvw_wlg_qs">
@@ -54,11 +53,11 @@
                   Changes</uicontrol> tab: <image href="../Graphics/icon_PreviewRerun.png"
                   scale="95" id="image_apd_ztd_5s"/>.</li>
               <li>In the Preview panel, select the <uicontrol>Records</uicontrol> tab to view the
-                preview records: <image href="../Graphics/icon_PrevRecords.png"
+                updated preview records: <image href="../Graphics/icon_PrevRecords.png"
                   id="image_m3w_sdl_5s" scale="75"/>.</li>
-              <li> Expand an output record, expand index 20, and notice how the entire number is now
+              <li> Expand an output record, and notice how the entire credit card number is now
                     masked:<p><image href="../Graphics/Tutorial-PreviewFMasker2.png"
-                    id="image_chj_c2l_5s" scale="70"/></p></li>
+                    id="image_chj_c2l_5s" scale="50"/></p></li>
             </ol></dd>
         </dlentry>
         <dlentry>
@@ -102,8 +101,8 @@
                   test stage configuration:</p></li>
               <li>In the first input record, in the Input Data column, click on the Pickup Latitude
                   data,<uicontrol> 40.730068</uicontrol>, add a negative sign before the data. Hit
-                  <uicontrol>Enter</uicontrol> or click outside the data.<p>The edited input data
-                  becomes red to indicate a change. </p></li>
+                  <uicontrol>Enter</uicontrol> or click outside the data.<p>As shown below, the
+                  edited input data becomes red to indicate a change. </p></li>
               <li>To test the change, click the <uicontrol>Run with Changes</uicontrol> icon.<p>The
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -114,9 +113,10 @@
                   test some cases that didn't come up in the preview data. </p></li>
               <li>To revert that change, click the <uicontrol>Revert Data Changes</uicontrol> icon:
                   <image href="../Graphics/icon_PrevRevertChanges.png" id="image_pnr_bfp_rs"
-                  scale="95"/>.<p>This icon reverts changes to preview data. It does not revert
-                  changes to stage or pipeline configuration. Manually revert configuration changes
-                  that you don't want to keep, as we did earlier in the tutorial. </p></li>
+                  scale="95"/>.<p>This icon reverts changes to preview data.
+                    </p><note><uicontrol>Revert Data Changes</uicontrol> does not revert changes to
+                  stage or pipeline configuration. Manually revert configuration changes that you
+                  don't want to keep, as we did earlier in the tutorial. </note></li>
             </ol></dd>
         </dlentry>
       </dl></p>
