@@ -26,11 +26,13 @@ import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.cli.command.BaseCommand;
 import com.streamsets.datacollector.client.cli.command.PipelineConfigAndRulesJson;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
+import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
 import io.airlift.airline.Command;
 import io.airlift.airline.Option;
 
 import java.io.File;
+import java.util.List;
 
 @Command(name = "import", description = "Import Pipeline Configuration & Rules")
 public class ImportPipelineCommand extends BaseCommand {
@@ -55,6 +57,13 @@ public class ImportPipelineCommand extends BaseCommand {
   )
   public String fileName;
 
+  @Option(
+      name = {"-o", "--overwrite"},
+      description = "Overwrite if pipeline with name already exists",
+      required = false
+  )
+  public boolean overwrite;
+
   public void run() {
     ApiClient apiClient = getApiClient();
     StoreApi storeApi = new StoreApi(apiClient);
@@ -68,8 +77,28 @@ public class ImportPipelineCommand extends BaseCommand {
         RuleDefinitionsJson ruleDefinitionsJson = pipelineConfigAndRulesJson.getPipelineRules();
 
         // Import Pipeline is 3 steps: Create Pipeline, Update Pipeline & Update Rules
-        PipelineConfigurationJson newPipeline = storeApi.createPipeline(pipelineName,
-          pipelineDescription);
+        PipelineConfigurationJson newPipeline;
+        if(overwrite) {
+          List<PipelineInfoJson> pipelineInfoJsonList = storeApi.getPipelines();
+          boolean pipelineExists = false;
+
+          for(PipelineInfoJson pipelineInfoJson: pipelineInfoJsonList) {
+            if(pipelineInfoJson.getName().equals(pipelineName)) {
+              pipelineExists = true;
+              break;
+            }
+          }
+
+          if(pipelineExists) {
+            newPipeline = storeApi.getPipelineInfo(pipelineName, "0", "pipeline", false);
+          } else {
+            newPipeline = storeApi.createPipeline(pipelineName, pipelineDescription);
+          }
+
+        } else {
+          newPipeline = storeApi.createPipeline(pipelineName, pipelineDescription);
+        }
+
         RuleDefinitionsJson newPipelineRules = storeApi.getPipelineRules(pipelineName, "0");
 
 

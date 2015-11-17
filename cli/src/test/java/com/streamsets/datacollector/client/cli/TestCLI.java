@@ -288,16 +288,25 @@ public class TestCLI {
       "import", "-f", filename);
     Assert.assertTrue(cliOutput.contains("Required option '-n' is missing"));
 
-    //export - without file name
+    //import - without file name
     cliOutput = TestUtil.runCliCommand("-U", baseURL, "-a", authType, "-u", "admin", "-p", "admin", "store",
       "import", "-n", "Sample Pipeline");
     Assert.assertTrue(cliOutput.contains("Required option '-f' is missing"));
 
-    //export - with all parameters
+    //import - with all parameters
     cliOutput = TestUtil.runCliCommand("-U", baseURL, "-a", authType, "-u", "admin", "-p", "admin", "store",
       "import", "-n", "Imported Pipeline", "-f", filename);
     Assert.assertTrue(cliOutput.contains("Successfully imported from file"));
-    Assert.assertTrue((new File(filename)).exists());
+
+    //import - to existing pipeline, should throw error
+    cliOutput = TestUtil.runCliCommand("-U", baseURL, "-a", authType, "-u", "admin", "-p", "admin", "store",
+        "import", "-n", "Sample Pipeline", "-f", filename);
+    Assert.assertTrue(cliOutput.contains("CONTAINER_0201 - Pipeline 'Sample Pipeline' already exists"));
+
+    //import - to existing pipeline with overwrite option
+    cliOutput = TestUtil.runCliCommand("-U", baseURL, "-a", authType, "-u", "admin", "-p", "admin", "store",
+        "import", "-n", "Sample Pipeline", "-f", filename, "-o");
+    Assert.assertTrue(cliOutput.contains("Successfully imported from file"));
   }
 
 
