@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -45,10 +46,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashSet;
@@ -86,6 +91,8 @@ public class TestWebServerTaskHttpHttps {
       @Override
       public void init(ServletContextHandler context) {
         context.addServlet(new ServletHolder(new PingServlet()), "/ping");
+        context.addServlet(new ServletHolder(new PingServlet()), "/rest/v1/ping");
+        context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
     return new WebServerTask(ri, conf, configurators, webAppProviders);
@@ -385,4 +392,92 @@ public class TestWebServerTaskHttpHttps {
     }
   }
 
+  @Test
+  public void testAuthorizationConstraints() throws Exception {
+    WebAppProvider webAppProvider = new WebAppProvider() {
+      @Override
+      public ServletContextHandler get() {
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.setContextPath("/webapp");
+        handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
+        handler.addServlet(new ServletHolder(new PingServlet()), "/rest/v1/ping");
+        handler.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
+        return handler;
+      }
+    };
+    Configuration conf = new Configuration();
+    int httpPort = getRandomPort();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "basic");
+    conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
+    String confDir = createTestDir();
+    File realmFile = new File(confDir, "basic-realm.properties");
+    try (
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("basic-realm.properties");
+        OutputStream os = new FileOutputStream(realmFile)
+    ) {
+      IOUtils.copy(is, os);
+    }
+    Set<PosixFilePermission> set = new HashSet<>();
+    set.add(PosixFilePermission.OWNER_EXECUTE);
+    set.add(PosixFilePermission.OWNER_READ);
+    set.add(PosixFilePermission.OWNER_WRITE);
+    Files.setPosixFilePermissions(realmFile.toPath(), set);
+
+    final WebServerTask ws = createWebServerTask(confDir, conf, ImmutableSet.of(webAppProvider));
+    try {
+      ws.initTask();
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+
+      String baseUrl = "http://127.0.0.1:" + httpPort;
+
+      // root app
+      HttpURLConnection conn = (HttpURLConnection) new URL(baseUrl + "/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+      conn = (HttpURLConnection) new URL(baseUrl + "/rest/v1/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/rest/v1/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+      conn = (HttpURLConnection) new URL(baseUrl + "/public-rest/v1/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/public-rest/v1/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+      // web app
+      conn = (HttpURLConnection) new URL(baseUrl + "/webapp/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/webapp/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+      conn = (HttpURLConnection) new URL(baseUrl + "/webapp/rest/v1/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_UNAUTHORIZED, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/webapp/rest/v1/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+      conn = (HttpURLConnection) new URL(baseUrl + "/webapp/public-rest/v1/ping").openConnection();
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+      conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/webapp/public-rest/v1/ping"));
+      Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  private URLConnection openWithBasicAuth(URL url) throws Exception {
+    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    byte[] authEncBytes = Base64.encodeBase64("admin:admin".getBytes());
+    String authStringEnc = new String(authEncBytes);
+    conn.setRequestProperty("Authorization", "Basic " + authStringEnc);
+    return conn;
+  }
 }

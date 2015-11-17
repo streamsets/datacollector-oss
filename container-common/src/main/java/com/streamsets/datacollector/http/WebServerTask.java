@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -72,12 +73,28 @@ import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
+/**
+ * Automatic security configuration based on URL paths:
+ *
+ * public    /*
+ * public    /public-rest/*
+ * protected /rest/*
+ * public    /<APP>/*
+ * public    /<APP>/public-rest/*
+ * protected /<APP>/rest/*
+ *
+ * public means authentication IS NOT required.
+ * protected means authentication IS required.
+ *
+ */
 public class WebServerTask extends AbstractTask {
   public static final String HTTP_PORT_KEY = "http.port";
   private static final int HTTP_PORT_DEFAULT = 0;
@@ -141,12 +158,19 @@ public class WebServerTask extends AbstractTask {
     checkValidPorts();
     server = createServer();
 
+    // initialize a global session manager
+    hashSessionManager = new HashSessionManager();
+    SessionHandler sessionHandler = new SessionHandler(hashSessionManager);
+
     ContextHandlerCollection appHandlers = new ContextHandlerCollection();
 
+
     // load web apps
-    Set<String> contextPaths = new HashSet<>();
+    Set<String> contextPaths = new LinkedHashSet<>();
     for (WebAppProvider appProvider : webAppProviders) {
       ServletContextHandler appHandler = appProvider.get();
+      // all webapps must have a session manager
+      appHandler.setSessionHandler(sessionHandler);
       String contextPath = appHandler.getContextPath();
       if (contextPath.equals("/")) {
         throw new RuntimeException("Webapps cannot be registered at the root context");
@@ -159,10 +183,18 @@ public class WebServerTask extends AbstractTask {
     }
 
     // configure root app
-    ServletContextHandler appHandler = configureAppContext();
-    Handler handler = configureAuthentication(server, appHandler);
-    handler = configureRedirectionRules(handler);
+    contextPaths.add("");
+
+    ServletContextHandler appHandler = configureRootContext(sessionHandler);
+    Handler handler = configureRedirectionRules(appHandler);
     appHandlers.addHandler(handler);
+
+    SecurityHandler securityHandler = createSecurityHandler(server, new ArrayList<>(contextPaths));
+    for (Handler h : appHandlers.getChildHandlers()) {
+      if (h instanceof ServletContextHandler) {
+        ((ServletContextHandler) h).setSecurityHandler(securityHandler);
+      }
+    }
 
     server.setHandler(appHandlers);
 
@@ -171,11 +203,10 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private ServletContextHandler configureAppContext() {
+  private ServletContextHandler configureRootContext(SessionHandler sessionHandler) {
     ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
-    hashSessionManager = new HashSessionManager();
-    context.setSessionHandler(new SessionHandler(hashSessionManager));
+    context.setSessionHandler(sessionHandler);
 
     context.setContextPath("/");
     for (ContextConfigurator cc : contextConfigurators) {
@@ -201,23 +232,74 @@ public class WebServerTask extends AbstractTask {
     return handlerCollection;
   }
 
-  private Handler configureAuthentication(Server server, ServletContextHandler appHandler) {
+  private List<ConstraintMapping> createConstraintMappings(String context) {
+    // everything under /* public
+    Constraint noAuthConstraint = new Constraint();
+    noAuthConstraint.setName("auth");
+    noAuthConstraint.setAuthenticate(false);
+    noAuthConstraint.setRoles(new String[]{"user"});
+    ConstraintMapping noAuthMapping = new ConstraintMapping();
+    noAuthMapping.setPathSpec(context + "/*");
+    noAuthMapping.setConstraint(noAuthConstraint);
+
+    // everything under /public-rest/* public
+    Constraint publicRestConstraint = new Constraint();
+    publicRestConstraint.setName("auth");
+    publicRestConstraint.setAuthenticate(false);
+    publicRestConstraint.setRoles(new String[] { "user"});
+    ConstraintMapping publicRestMapping = new ConstraintMapping();
+    publicRestMapping.setPathSpec(context + "/public-rest/*");
+    publicRestMapping.setConstraint(publicRestConstraint);
+
+
+    // everything under /rest/* restricted
+    Constraint restConstraint = new Constraint();
+    restConstraint.setName("auth");
+    restConstraint.setAuthenticate(true);
+    restConstraint.setRoles(new String[] { "user"});
+    ConstraintMapping restMapping = new ConstraintMapping();
+    restMapping.setPathSpec(context + "/rest/*");
+    restMapping.setConstraint(restConstraint);
+
+    // index page is restricted to trigger login correctly when using form authentication
+    Constraint indexConstraint = new Constraint();
+    indexConstraint.setName("auth");
+    indexConstraint.setAuthenticate(true);
+    indexConstraint.setRoles(new String[] { "user"});
+    ConstraintMapping indexMapping = new ConstraintMapping();
+    indexMapping.setPathSpec(context);
+    indexMapping.setConstraint(indexConstraint);
+
+    return ImmutableList.of(restMapping, indexMapping, noAuthMapping, publicRestMapping);
+  }
+
+
+  private SecurityHandler createSecurityHandler(Server server, List<String> contexts) {
+    ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     switch (auth) {
       case "none":
+        securityHandler = null;
         break;
       case "digest":
       case "basic":
-        appHandler.setSecurityHandler(configureDigestBasic(server, auth));
+        securityHandler = configureDigestBasic(server, auth);
         break;
       case "form":
-        appHandler.setSecurityHandler(configureForm(server, auth));
+        securityHandler = configureForm(server, auth);
         break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
-                                                auth, AUTHENTICATION_MODES));
+            auth, AUTHENTICATION_MODES));
     }
-    return appHandler;
+    if (securityHandler != null) {
+      List<ConstraintMapping> constraintMappings = new ArrayList<>();
+      for (String context : contexts) {
+        constraintMappings.addAll(createConstraintMappings(context));
+      }
+      securityHandler.setConstraintMappings(constraintMappings);
+    }
+    return securityHandler;
   }
 
   public static final Set<PosixFilePermission> OWNER_PERMISSIONS = ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
@@ -249,19 +331,11 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private SecurityHandler configureDigestBasic(Server server, String mode) {
+  private ConstraintSecurityHandler configureDigestBasic(Server server, String mode) {
     LoginService loginService = getLoginService(mode);
     server.addBean(loginService);
 
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    Constraint constraint = new Constraint();
-    constraint.setName("auth");
-    constraint.setAuthenticate(true);
-    constraint.setRoles(new String[] { "user"});
-    ConstraintMapping mapping = new ConstraintMapping();
-    mapping.setPathSpec("/*");
-    mapping.setConstraint(constraint);
-    security.setConstraintMappings(Collections.singletonList(mapping));
     switch (mode) {
       case "digest":
         security.setAuthenticator(new ProxyAuthenticator(new DigestAuthenticator(), runtimeInfo));
@@ -274,73 +348,10 @@ public class WebServerTask extends AbstractTask {
     return security;
   }
 
-  private SecurityHandler configureForm(Server server, String mode) {
+  private ConstraintSecurityHandler configureForm(Server server, String mode) {
     ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 
-    Constraint constraint = new Constraint();
-    constraint.setName("auth");
-    constraint.setAuthenticate(true);
-    constraint.setRoles(new String[]{"user"});
-
-    ConstraintMapping constraintMapping = new ConstraintMapping();
-    constraintMapping.setPathSpec("/*");
-    constraintMapping.setConstraint(constraint);
-
-    securityHandler.addConstraintMapping(constraintMapping);
-
-    Constraint noAuthConstraint = new Constraint();
-    noAuthConstraint.setName("auth");
-    noAuthConstraint.setAuthenticate(false);
-    noAuthConstraint.setRoles(new String[]{"user"});
-
-    ConstraintMapping resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/login");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/mesos/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/rest/v1/authentication/login");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    // TODO - remove after refactoring
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/rest/v1/cluster/callback");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/app/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/assets/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/bower_components/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/fonts/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
-    resourceMapping = new ConstraintMapping();
-    resourceMapping.setPathSpec("/i18n/*");
-    resourceMapping.setConstraint(noAuthConstraint);
-    securityHandler.addConstraintMapping(resourceMapping);
-
     LoginService loginService = getLoginService(mode);
-
     server.addBean(loginService);
     securityHandler.setLoginService(loginService);
 

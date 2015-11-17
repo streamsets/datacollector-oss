@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
@@ -211,11 +212,20 @@ public class WebServerModule {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
-        ServletHolder servlet = new ServletHolder(new ServletContainer());
-        servlet.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
-          SWAGGER_PACKAGE + "," + RestAPI.class.getPackage().getName());
-        servlet.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
-        context.addServlet(servlet, "/rest/*");
+        // REST API that requires authentication
+        ServletHolder protectedRest = new ServletHolder(new ServletContainer());
+        protectedRest.setInitParameter(
+            ServerProperties.PROVIDER_PACKAGES, SWAGGER_PACKAGE + "," +
+            RestAPI.class.getPackage().getName()
+        );
+        protectedRest.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
+        context.addServlet(protectedRest, "/rest/*");
+
+        // REST API that it does not require authentication
+        ServletHolder publicRest = new ServletHolder(new ServletContainer());
+        publicRest.setInitParameter(ServerProperties.PROVIDER_PACKAGES, PublicRestAPI.class.getPackage().getName());
+        publicRest.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
+        context.addServlet(publicRest, "/public-rest/*");
       }
     };
   }
