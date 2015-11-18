@@ -373,4 +373,55 @@ public class TestJythonProcessor {
     }
   }
 
+  @Test
+  public void testListMapOrder() throws Exception {
+    Processor processor = new JythonProcessor(ProcessingMode.RECORD,
+        "records[0].value['A0'] = 0\n" +
+        "records[0].value['A1'] = 1\n" +
+        "records[0].value['A2'] = 2\n" +
+        "records[0].value['A3'] = 3\n" +
+        "records[0].value['A4'] = 4\n" +
+        "records[0].value['A5'] = 5\n" +
+        "records[0].value['A6'] = 6\n" +
+        "records[0].value['A7'] = 7\n" +
+        "records[0].value['A8'] = 8\n" +
+        "records[0].value['A9'] = 9\n" +
+        "records[0].value['A10'] = 10\n" +
+        "records[0].value['A11'] = 11\n" +
+        "records[0].value['A12'] = 12\n" +
+        "records[0].value['A13'] = 13\n" +
+        "records[0].value['A14'] = 14\n" +
+        "records[0].value['A15'] = 15\n" +
+        "records[0].value['A16'] = 16\n" +
+        "records[0].value['A17'] = 17\n" +
+        "records[0].value['A18'] = 18\n" +
+        "records[0].value['A19'] = 19\n" +
+        "out.write(records[0])\n" +
+        "");
+    ProcessorRunner runner = new ProcessorRunner.Builder(JythonDProcessor.class, processor)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+    try {
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      for (int i = 0; i < 20; i++) {
+        listMap.put("A" + i, Field.create(1));
+      }
+
+      Record record = RecordCreator.create();
+      record.set(Field.createListMap(listMap));
+      List<Record> input = Arrays.asList(record);
+      StageRunner.Output output = runner.runProcess(input);
+
+      Assert.assertEquals(1, output.getRecords().get("lane").size());
+      Record outRec = output.getRecords().get("lane").get(0);
+      Assert.assertEquals(Field.Type.LIST_MAP, outRec.get().getType());
+
+      Assert.assertEquals(20, outRec.get("/").getValueAsListMap().size());
+      Assert.assertEquals(new ArrayList(listMap.keySet()), new ArrayList(outRec.get("/").getValueAsListMap().keySet()));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
