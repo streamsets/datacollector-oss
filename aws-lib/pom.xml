@@ -30,8 +30,8 @@
   <packaging>jar</packaging>
 
   <properties>
-    <kinesis.version>1.6.0</kinesis.version>
-    <s3.version>1.10.11</s3.version>
+    <kinesis.client.version>1.6.1</kinesis.client.version>
+    <aws.sdk.version>1.10.20</aws.sdk.version>
     <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
@@ -90,7 +90,25 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>amazon-kinesis-client</artifactId>
-      <version>${kinesis.version}</version>
+      <version>${kinesis.client.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-kinesis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-dynamodb</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-cloudwatch</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -103,7 +121,7 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk</artifactId>
       <scope>compile</scope>
-      <version>${s3.version}</version>
+      <version>${aws.sdk.version}</version>
     </dependency>
 
   </dependencies>
