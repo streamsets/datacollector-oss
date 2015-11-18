@@ -25,14 +25,20 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ScriptObjectFactory;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
+import org.python.core.PyObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.script.ScriptEngine;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 public class JythonProcessor extends AbstractScriptingProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(JythonProcessor.class);
@@ -59,10 +65,147 @@ public class JythonProcessor extends AbstractScriptingProcessor {
       ((PyDictionary) obj).put(key, value);
     }
 
+    //crude ConcurrentMap implementation (fully synchronized) baked by a LinkedHashMap to preserve Map entries ordering.
+    private static class ConcurrentLinkedHashMap<K, V> extends LinkedHashMap<K, V> implements ConcurrentMap<K, V> {
+
+      @Override
+      public synchronized boolean containsValue(Object value) {
+        return super.containsValue(value);
+      }
+
+      @Override
+      public synchronized V get(Object key) {
+        return super.get(key);
+      }
+
+      @Override
+      public synchronized void clear() {
+        super.clear();
+      }
+
+      @Override
+      protected synchronized boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+        return super.removeEldestEntry(eldest);
+      }
+
+      @Override
+      public synchronized int size() {
+        return super.size();
+      }
+
+      @Override
+      public synchronized boolean isEmpty() {
+        return super.isEmpty();
+      }
+
+      @Override
+      public synchronized boolean containsKey(Object key) {
+        return super.containsKey(key);
+      }
+
+      @Override
+      public synchronized V put(K key, V value) {
+        return super.put(key, value);
+      }
+
+      @Override
+      public synchronized void putAll(Map<? extends K, ? extends V> m) {
+        super.putAll(m);
+      }
+
+      @Override
+      public synchronized V remove(Object key) {
+        return super.remove(key);
+      }
+
+      @Override
+      public synchronized Object clone() {
+        return super.clone();
+      }
+
+      @Override
+      public synchronized Set<K> keySet() {
+        return super.keySet();
+      }
+
+      @Override
+      public synchronized Collection<V> values() {
+        return super.values();
+      }
+
+      @Override
+      public synchronized Set<Map.Entry<K, V>> entrySet() {
+        return super.entrySet();
+      }
+
+      @Override
+      public synchronized boolean equals(Object o) {
+        return super.equals(o);
+      }
+
+      @Override
+      public synchronized int hashCode() {
+        return super.hashCode();
+      }
+
+      @Override
+      public synchronized String toString() {
+        return super.toString();
+      }
+
+      @Override
+      public synchronized V putIfAbsent(K key, V value) {
+        if (!containsKey(key)) {
+          return put(key, value);
+        } else {
+          return get(key);
+        }
+      }
+
+      @Override
+      public synchronized boolean remove(Object key, Object value) {
+        if (containsKey(key)) {
+          if ((get(key) != null && get(key).equals(value)) || (get(key) == null && value == null)) {
+            remove(key);
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+
+      @Override
+      public synchronized boolean replace(K key, V oldValue, V newValue) {
+        if (containsKey(key)) {
+          if ((get(key) != null && get(key).equals(oldValue)) || (get(key) == null && oldValue == null)) {
+            put(key, newValue);
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      }
+
+      @Override
+      public synchronized V replace(K key, V value) {
+        if (containsKey(key)) {
+          return put(key, value);
+        } else {
+          return null;
+        }
+      }
+
+    }
+
     private static class PyDictionaryMapInfo extends PyDictionary implements MapInfo {
       private final boolean isListMap;
 
       public PyDictionaryMapInfo(boolean isListMap) {
+        super(new ConcurrentLinkedHashMap<PyObject, PyObject>(), true);
         this.isListMap = isListMap;
       }
 
