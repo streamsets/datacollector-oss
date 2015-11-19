@@ -15,9 +15,10 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wsj_5tm_ls">
     <title>Write to the Destination</title>
-    <shortdesc>StreamSets lets you write data to many destinations. The Hadoop FS destination writes
-        to HDFS or a local directory. For the tutorial, we'll write to a local
-        directory.</shortdesc>
+    <shortdesc>The <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
+        write data to many destinations. The Hadoop FS destination writes to HDFS or a local
+        directory. For the tutorial, we'll use it to write to a local directory.</shortdesc>
     <taskbody>
         <context>
             <p>When you configure the Hadoop FS destination, you define the directory template. This
@@ -77,7 +78,7 @@
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>Defines a prefix for output files. <p
+                                    <entry>Defines a prefix for output file names.<p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
                                         />Let's simplify and use "out_" instead.</entry>
                                 </row>
@@ -87,9 +88,10 @@
                                         variables to create a directory structure for output files.
                                         This is intended for writing large volumes of data to HDFS.
                                             <p>Since we only have the sample file to process, we
-                                            don't need the datetime variables. So delete the default
-                                            and enter the directory where you want the files to be
-                                            written. </p><p>We suggested: <codeph>/&lt;base
+                                            don't need the datetime variables. Go ahead and delete
+                                            the default and enter the directory where you want the
+                                            files to be written. </p><p>We suggested:
+                                                <codeph>/&lt;base
                                                 directory>/tutorial/destination</codeph>.</p></entry>
                                 </row>
                                 <row>
@@ -122,7 +124,7 @@
             </step>
         </steps>
         <result>This completes the primary branch:<p><image href="../Graphics/Tutorial-HDFS.png"
-                    id="image_svj_rvq_ps" scale="60"/></p><p> Now, let's go back to the Stream
+                    id="image_svj_rvq_ps" scale="60"/></p><p> Now, we'll go back to the Stream
                 Selector and complete the secondary branch.</p></result>
     </taskbody>
 </task>

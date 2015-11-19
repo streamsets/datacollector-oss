@@ -17,7 +17,7 @@
     <title>Add a Corresponding Field with the Expression Evaluator</title>
     <shortdesc>The Jython Evaluator script added a new field to the credit payments branch. To
         ensure all records have the same structure, we'll use the Expression Evaluator to add the
-        same field to the non-credit payment branch. </shortdesc>
+        same field to the non-credit branch. </shortdesc>
     <taskbody>
         <context>
             <p>This ensures that all records have the same format when written to the
@@ -82,10 +82,8 @@
             <step>
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
                 <info>This streams the data from this branch to the destination, merging data from
-                    both branches: <draft-comment author="Loretta">take new
-                        screenshot</draft-comment>
-                    <image href="../Graphics/Tutorial-Expression.png" id="image_adv_r2r_ps"
-                        scale="80"/></info>
+                    both branches:  <p><image href="../Graphics/Tutorial-Expression.png"
+                            id="image_adv_r2r_ps" scale="60"/></p></info>
             </step>
         </steps>
     </taskbody>

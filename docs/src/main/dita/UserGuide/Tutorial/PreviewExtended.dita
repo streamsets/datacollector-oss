@@ -15,9 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_u4h_mwf_qs">
  <title>Preview and Edit the Pipeline</title>
- <shortdesc>The extended tutorial is almost done, so let's use data preview to see how stages
-    transform data. In data preview, we'll make some configuration changes and do some testing by
-    editing preview data.</shortdesc>
+ <shortdesc>The extended tutorial is almost done, so let's use data preview to see how different
+    stages transform data.  We'll make some configuration changes and do some testing by editing
+    preview data.</shortdesc>
  <conbody>
   <p>To preview the pipeline, click the <uicontrol>Preview</uicontrol> icon: <image
         href="../Graphics/icon_Preview.png" id="image_wvk_tpd_5s" scale="80"/>.</p>
@@ -25,17 +25,15 @@
       and output records in the Preview panel. Let's focus on the following stages:<dl>
         <dlentry>
           <dt>Field Masker</dt>
-          <dd>Let's see how the Field Masker masks credit card numbers and change the mask type that
-            the stage uses.</dd>
+          <dd>Let's see how the Field Masker masks credit card numbers and change the mask that the
+            stage uses.</dd>
           <dd>To see how the Field Masker masks credit card numbers: <ol id="ol_ht2_5lg_qs">
               <li>Select the Field Masker in the canvas, and then expand the first input and output
                 record.</li>
               <li>Scroll down and note that the credit_card field is highlighted. This indicates the
                 stage changed data in the field.</li>
               <li>Notice how all digits except the last four are masked. We did this by using the
-                Regular Expression mask type and revealing the second group in the
-                  regex.<draft-comment author="Loretta">retake this screenshot after Jython
-                  fix.</draft-comment></li>
+                Regular Expression mask type and revealing the second group in the regex.</li>
             </ol></dd>
           <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="50"
             /></dd>
@@ -50,7 +48,7 @@
                   Length</uicontrol> to mask all numbers while showing how many numbers there are in
                 the data. </li>
               <li>To view the results of this change, click the <uicontrol>Run with
-                  Changes</uicontrol> tab: <image href="../Graphics/icon_PreviewRerun.png"
+                  Changes</uicontrol> icon: <image href="../Graphics/icon_PreviewRerun.png"
                   scale="95" id="image_apd_ztd_5s"/>.</li>
               <li>In the Preview panel, select the <uicontrol>Records</uicontrol> tab to view the
                 updated preview records: <image href="../Graphics/icon_PrevRecords.png"
@@ -66,18 +64,20 @@
             stage and try changing stage configuration. <ol id="ol_ajx_pmm_qs">
               <li>Instead of selecting the Field Converter in the pipeline, click the
                   <uicontrol>Next Stage</uicontrol> icon: <image
-                  href="../Graphics/icon_PrevNextStage.png" id="image_i41_ssd_5s"/>.<p>You might
-                  notice a red message that indicates the first record has an unparsable date - it
-                  shows that the date data includes invalid characters at the end. </p><p>So what
-                  happens to this bad record? It depends on how the stage is configured. We used the
-                  default configuration, but let's see what that is.</p></li>
-              <li>Click the <uicontrol>Stage Configuration</uicontrol> icon. Notice the
-                  <uicontrol>On Record Error</uicontrol> property is set to <uicontrol>Send to
-                  Error</uicontrol>. <p>This means error records are sent to the pipeline for error
-                  handling. And you might recall we configured the pipeline to write all error
-                  records to file. So with this configuration, the error record will be dropped from
-                  the pipeline and written to file. </p><p>You can configure this property to stop
-                  the pipeline on encountering an error record or to discard error records.</p></li>
+                  href="../Graphics/icon_PrevNextStage.png" id="image_i41_ssd_5s"/> and select
+                  <uicontrol>Field Converter</uicontrol>.<p>You might notice a red message that
+                  indicates the first record has an unparsable date - it shows that the date data
+                  includes invalid characters at the end. </p><p>So what happens to this bad record?
+                  It depends on how the stage is configured. We used the default configuration, but
+                  let's see what that is.</p></li>
+              <li>On the left side of the panel, click the <uicontrol>Stage
+                  Configuration</uicontrol> icon: <image href="../Graphics/icon_PrevStageConfig.png"
+                  id="image_ehm_svw_15" scale="80"/>. Notice the <uicontrol>On Record
+                  Error</uicontrol> property is set to <uicontrol>Send to Error</uicontrol>. <p>This
+                  means error records are sent to the pipeline for error handling. We configured the
+                  pipeline to write all error records to file, so error records from this stage are
+                  written to file. </p><p>You can configure this property to stop the pipeline on
+                  encountering an error record or to discard error records.</p></li>
               <li>To see how it looks when you discard errors, set <uicontrol>On Record
                   Error</uicontrol> to <uicontrol>Discard</uicontrol>, and then click the
                   <uicontrol>Run with Changes</uicontrol> icon.</li>

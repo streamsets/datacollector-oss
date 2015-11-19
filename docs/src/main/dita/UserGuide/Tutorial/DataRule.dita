@@ -43,8 +43,10 @@
             </step>
             <step>
                 <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
-                    properties:</cmd>
+                    properties. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <simpletable frame="all" id="simpletable_z34_ctj_ps" relcolwidth="1.0* 2.29*">
                         <sthead>
                             <stentry>Data Rule Property</stentry>
@@ -71,7 +73,7 @@
                             <stentry>10</stentry>
                         </strow>
                     </simpletable>
-                    <p>This creates an alert that goes off after finding eleven records that don't
+                    <p>This creates an alert that goes off after finding ten records that don't
                         include credit card numbers in the credit card payment stream.</p>
                     <note>With a larger data set, a smaller sampling percentage and higher threshold
                         value might be appropriate, but we'll use these numbers for the purposes of

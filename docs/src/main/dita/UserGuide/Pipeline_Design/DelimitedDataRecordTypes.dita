@@ -19,7 +19,9 @@
     <p><indexterm>delimited data<indexterm>record types</indexterm></indexterm><indexterm>pipeline
           design<indexterm>delimited data record types</indexterm></indexterm><indexterm>list-map
         record type<indexterm>delimited data</indexterm></indexterm><indexterm>list record
-          type<indexterm>delimited data</indexterm></indexterm>When reading delimited data, the <ph
+          type<indexterm>delimited data</indexterm></indexterm><indexterm>list-map record
+          types<indexterm>in scripts for scripting processors</indexterm></indexterm>When reading
+      delimited data, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
       convert the data in a list or list-map record type. Use the default list-map record type to
       easily process delimited data.<dl>
@@ -58,7 +60,9 @@
             record:value expressions to return data in the TransactionID
             field:<codeblock>${record:value('/TransactionID')}
 ${record:value('[0]'}</codeblock></dd>
-          <dd>For more information about standard record functions, see <xref
+          <dd><note>In scripts for scripting processors, such as the Jython Evaluator or JavaScript
+              Evaluator, treat list-map records as maps.</note>For more information about standard
+            record functions, see <xref
               href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
         </dlentry>
         <dlentry>
@@ -97,8 +101,18 @@ ${record:value('[0]'}</codeblock></dd>
 [1]/value = &lt;value>
 [2]/value = &lt;value>
 ...</codeblock></dd>
-          <dd>In an expression, you can use delimited data functions or use the full field path with
-            standard functions. </dd>
+          <dd>For data in the list record type, you should either use the delimited data functions
+            or include the full field path in standard record functions. For example, you can use
+            the <codeph>record:dValue('&lt;header>')</codeph> delimited data function to return the
+            value associated with the specified header. </dd>
+          <dd>
+            <p>
+              <note type="tip">You can use the <codeph>record:dToMap()</codeph> function to convert
+                the record to a map, and then use standard functions for record processing.</note>
+            </p>
+            <p>For the full list of delimited data record functions and their syntax, see <xref
+                href="../Expression_Language/RecordFunc-Delimited.dita#concept_s2c_q14_fs"/>.</p>
+          </dd>
         </dlentry>
       </dl></p>
   </conbody>

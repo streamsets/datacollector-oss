@@ -20,9 +20,11 @@
     record functions.</shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>delimited data</indexterm></indexterm><indexterm>delimited data
-          functions<indexterm>description</indexterm></indexterm>For more information about the
-      delimited data record types, see <xref
-        href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.</p>
+     functions<indexterm>description</indexterm></indexterm>For more information about the delimited
+   data record types, see <xref
+    href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.<draft-comment
+    author="Loretta">decide if some of the Processing List Data info should go
+   here.</draft-comment></p>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
      <dt>record:dExists('&lt;header name>')</dt>

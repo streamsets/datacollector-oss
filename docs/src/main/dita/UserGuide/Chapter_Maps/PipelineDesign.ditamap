@@ -46,7 +46,6 @@
   </topicref>
   <topicref href="../Pipeline_Design/DelimitedDataRecordTypes.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
-   <topicref href="../Pipeline_Design/DelimitedData-Processing.dita"/>
   </topicref>
   <topicref href="../Pipeline_Design/ControlCharacters.dita">
    <topicmeta>

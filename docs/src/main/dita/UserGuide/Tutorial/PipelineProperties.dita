@@ -20,8 +20,7 @@
     <taskbody>
         <context>
             <p>Write error records to one of these locations as a convenient way to deal with error
-                records without having to stop the pipeline. Allowing you to keep your operations
-                running. </p>
+                records without having to stop the pipeline. </p>
             <p>This tutorial writes the records to a local file, but if you prefer to write error
                 records to Kafka, feel free. </p>
         </context>
@@ -135,16 +134,15 @@
                                 </row>
                                 <row>
                                     <entry>Files Prefix</entry>
-                                    <entry>This defines a prefix for error record files. Delete the
-                                        default and enter the following:
-                                            <uicontrol>err_</uicontrol><p
+                                    <entry>This defines a prefix for error record files. <p
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/FilePrefix"
-                                        /></entry>
+                                            /><p>Delete the default and enter the following prefix:
+                                                <uicontrol>err_</uicontrol></p></entry>
                                 </row>
                                 <row>
                                     <entry>Max File Size</entry>
-                                    <entry>Let's reduce the files size to something more manageable,
-                                        such as 5 or 1 MB.</entry>
+                                    <entry>For the tutorial, reduce the files size to something more
+                                        manageable, such as 5 or 1 MB.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

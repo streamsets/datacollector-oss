@@ -15,11 +15,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_xb5_2sf_4s">
     <title>Preview Data </title>
-    <shortdesc>Let's preview the source data to become more familiar with the data set and gather
-        some important details. </shortdesc>
+    <shortdesc>To become more familiar with the data set and gather some important details for
+        pipeline configuration, let's preview the source data.</shortdesc>
     <taskbody>
         <context>
-            <p> This is the information that we'll need to configure the pipeline: <ul
+            <p>Here are some key details that we need to configure the pipeline: <ul
                     id="ul_a41_hvh_4s">
                     <li>The field that contains payment information - We'll use this to route data
                         in the Stream Selector. </li>
@@ -30,10 +30,10 @@
                 path depends on the complexity of the record: <codeph>/&lt;fieldname></codeph> for
                 simple records and <codeph>&lt;path to field>/&lt;fieldname></codeph> for more
                 complex records.  </p>
-            <p>Because we're using the List-Map record type to for the delimited data, we can use
+            <p>Because we're using the List-Map record type, we can use
                     <codeph>/&lt;fieldname></codeph>. </p>
             <p>To start data preview, all stages must be connected and all required properties
-                defined (though not necessarily correctly). Since the origin is configured and the
+                defined - though not necessarily correctly. Since the origin is configured and the
                 only stage, the pipeline should be ready to preview as is. </p>
         </context>
         <steps id="steps_jxv_fpf_4s">
@@ -43,7 +43,9 @@
                     />.</cmd>
                 <info>If the icon is not enabled, make sure you completed all the previous steps for
                     the tutorial. If more than one issue displays in the list, correct any issue
-                    except Validation_0011 for the unconnected Directory stage. </info>
+                    except Validation_0011. <p>Validation_0011 just indicates that Directory origin
+                        isn't connected to anything yet and does not prevent data
+                    preview.</p></info>
             </step>
             <step>
                 <cmd>In the <wintitle>Preview Configuration</wintitle> dialog box, configure the
@@ -70,21 +72,20 @@
                                 <row>
                                     <entry>Write to Destinations</entry>
                                     <entry>By default, this property is not selected. In general,
-                                        you'll want to keep this property cleared to avoid writing
-                                        data to destination systems.</entry>
+                                        you should keep this property clear to avoid writing data to
+                                        destination systems.</entry>
                                 </row>
                                 <row>
                                     <entry>Show Field Type</entry>
                                     <entry>By default, this property is selected. Keep it selected
-                                        so you can see the data type of fields in the record. </entry>
+                                        to see the data type of fields in the record. </entry>
                                 </row>
                                 <row>
                                     <entry>Remember the Configuration</entry>
                                     <entry>Select to use these properties each time you run data
                                         preview. <p>When you select this option, the console enters
-                                            data preview without showing this dialog box again. To
-                                            change data preview options, click the Preview
-                                            Configuration icon in the properties panel. </p></entry>
+                                            data preview without showing this dialog box again.
+                                        </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

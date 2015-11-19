@@ -26,8 +26,8 @@
                     <dt>data types</dt>
                     <dd><ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> data types are available as constant. This allows you to check for types
-                        within an expression with the <codeph>record:type</codeph> function.</dd>
+                        /> data types are available as constants. This allows you to check for types
+                        within an expression with the <codeph>record:type()</codeph> function.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>NULL</dt>

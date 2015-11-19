@@ -31,53 +31,44 @@
                 </thead>
                 <tbody>
                     <row>
-                        <entry>
-                            <codeblock>${record:value('/payment_type') == 'CRD'}</codeblock>
-                        </entry>
+                        <entry>${record:value('/payment_type') == 'CRD'}</entry>
                         <entry>In a Stream Selector, this condition routes records where the payment
                             type is credit card to the stream.</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${record:value('[3]/State') == "MD"}</codeblock>
-                        </entry>
+                        <entry>${record:value('[3]/State') == "MD"}</entry>
                         <entry>The same as above, but for a record in list format.</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${record:valueOrDefault('/Payment', 'unknown')} </codeblock>
-                        </entry>
+                        <entry>${record:valueOrDefault('/Payment', 'unknown')} </entry>
                         <entry>Replaces missing values in the Payment field with "unknown".</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${record:errorCode()=="FIELD_MERGER_02"}</codeblock>
-                        </entry>
+                        <entry>${record:errorCode()=="FIELD_MERGER_02"}</entry>
                         <entry>Used in a Stream Selector in an error pipeline, this condition routes
                             records with the FIELD_MERGER_02 error to a stream that corrects the
                             error.</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${str:toUpper(record:value('/STATE')}</codeblock>
-                        </entry>
+                        <entry>${str:toUpper(record:value('/STATE')}</entry>
                         <entry>Capitalizes all strings in the STATE field.</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${record:value('/total_amount') - 
-(record:value('/tip_amount') +
-record:value('/tolls') + record:value('/mta_tax'))}</codeblock>
-                        </entry>
+                        <entry>${record:value('/total_amount') -  (record:value('/tip_amount') +
+                            record:value('/tolls') + record:value('/mta_tax'))}</entry>
                         <entry>An expression that calculates trip revenue by subtracting the tip,
                             taxes, and tolls from the total fare amount</entry>
                     </row>
                     <row>
-                        <entry>
-                            <codeblock>${record:value("[20]/value") == ""}</codeblock>
-                        </entry>
+                        <entry>${record:value("[20]/value") == ""}</entry>
                         <entry>When used in an alert, triggers an alert when the specified field
                             contains no data.</entry>
+                    </row>
+                    <row>
+                        <entry>${record:type(/ID)=STRING}</entry>
+                        <entry>In the Stream Selector, routes records where the ID is a String to a
+                            branch that includes a Field Converter to convert the field to a numeric
+                            data type.</entry>
                     </row>
                 </tbody>
             </tgroup>

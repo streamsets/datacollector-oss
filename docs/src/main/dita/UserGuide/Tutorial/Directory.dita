@@ -15,14 +15,14 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ftt_2vq_ks">
     <title>Configure the Origin</title>
-    <shortdesc>The origin represents the source data for the pipeline. When you configure the
+    <shortdesc>The origin represents the incoming data for the pipeline. When you configure the
         origin, you define how to connect to the origin system, the type of data to be processed,
-        and other origin-specific properties. </shortdesc>
+        and other properties specific to the origin.</shortdesc>
     <taskbody>
         <context>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            provides a wide range of origins. In this tutorial, we will use the Directory origin to
-            process the CSV sample file that you downloaded. </context>
+            provides a wide range of origins. We'll use the Directory origin to process the  sample
+            CSV file that you downloaded. </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
                 <cmd>To add the stage to the canvas, from the Pipeline Creation Help Bar, click <menucascade>
@@ -32,8 +32,8 @@
                         <uicontrol>Directory</uicontrol> origin: <image
                         href="../Graphics/Tutorial_DirectoryIcon.png" id="image_cwb_2vt_lt"
                         scale="40"/>.</cmd>
-                <info>The origin displays in the canvas and the Properties panel displays the stage
-                    properties. </info>
+                <info>The origin displays in the canvas and the Properties panel displays the
+                    properties for the stage.</info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Files</wintitle> tab and configure
@@ -43,8 +43,8 @@
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_w5c_jyq_ks">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.78*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Directory Property</entry>
@@ -68,10 +68,10 @@
                                     <entry>The Directory origin processes only the files in the
                                         directory that match the file name pattern. <p>The tutorial
                                             sample file name is <codeph>nyc_taxi_data.csv</codeph>.
-                                            If the file is the only file in the directory, you can
-                                            use something generic, like the asterisk wild card (*)
-                                            or *.csv.</p><p>If you had other .csv files in the
-                                            directory that you don't want to process, you might be
+                                            Since the file is the only file in the directory, you
+                                            can use something generic, like the asterisk wild card
+                                            (*) or *.csv.</p><p>If you had other .csv files in the
+                                            directory that you didn't want to process, you might be
                                             more specific, like this:
                                             <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you want to
                                             process files with prefixes for other cities, you might
@@ -84,8 +84,8 @@
                                         continues in lexicographically ascending order, e.g.
                                         nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. <p>If you
                                             wanted to skip some files, you would enter the file to
-                                            start with. In this case, we're processing a single
-                                            file, so let's leave this empty. </p></entry>
+                                            start with. Since we're processing a single file, let's
+                                            leave this empty. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -93,7 +93,7 @@
                 </info>
             </step>
             <step>
-                <cmd>For delimited data, additional properties are available, so click the
+                <cmd>For delimited data additional properties are available, so click the
                         <wintitle>Delimited</wintitle> tab and configure the following
                     properties.</cmd>
                 <info>
@@ -112,8 +112,8 @@
                             <tbody>
                                 <row>
                                     <entry>File Type</entry>
-                                    <entry>The sample file is a standard CSV file, so use the
-                                        default, <uicontrol>Default CSV</uicontrol>.</entry>
+                                    <entry>Since the sample file is a standard CSV file, use the
+                                        default: <uicontrol>Default CSV</uicontrol>.</entry>
                                 </row>
                                 <row>
                                     <entry>Header Line</entry>
@@ -122,7 +122,7 @@
                                 </row>
                                 <row>
                                     <entry>Record Type</entry>
-                                    <entry>Determines how the <ph
+                                    <entry>This property determines how the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> processes delimited data. Use the default
                                             <uicontrol>List-Map</uicontrol>. <p>This allows you to
@@ -139,7 +139,8 @@
         <result>This is how the stage and pipeline should look at this point:<p><image
                     href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="65"
                 /></p><p>Notice the error icons on the page. When you hover over the Directory error
-                icon or click the Issues icon, a message states that the origin isn't connected to
-                anything yet. We'll take care of that next.</p></result>
+                icon or click the Issues icon, a validation message states that the origin has open
+                streams - that means that it's not connected to anything yet. We'll take care of
+                that next.</p></result>
     </taskbody>
 </task>

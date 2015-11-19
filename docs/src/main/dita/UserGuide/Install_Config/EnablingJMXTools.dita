@@ -34,13 +34,12 @@
       variable. Or, you can add the variables to the SDC_JAVA_OPTS environment variable in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment file. </p>
-  <p>For example, the following set of variables passes JMX metrics through port 3333 using
-      authentication but without SSL:</p>
+  <p>For example, the following set of variables passes JMX metrics through port 3333:</p>
   <p>
    <codeblock>export SDC_JAVA_OPTS="-Dcom.sun.management.jmxremote \
 -Dcom.sun.management.jmxremote.port=3333 \
 -Dcom.sun.management.jmxremote.local.only=false \
--Dcom.sun.management.jmxremote.authenticate=true \
+-Dcom.sun.management.jmxremote.authenticate=false \
 -Dcom.sun.management.jmxremote.ssl=false"</codeblock>
   </p>
  </conbody>

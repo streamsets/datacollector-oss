@@ -15,22 +15,24 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_br5_rzq_ks">
     <title>Route Data with the Stream Selector</title>
-    <shortdesc>To route credit card transactions to a separate branch for processing, we'll use the
-        Stream Selector processor.</shortdesc>
+    <shortdesc>To route data to different streams for processing, we use the Stream Selector
+        processor.</shortdesc>
     <taskbody>
         <context><p>The Stream Selector routes data to different streams based on user-defined
                 conditions. Any data not captured by a user-defined condition routes to the default
-                stream.</p><p>We'll also define a required field to drop records with no payment
-                type. When you defined a required field, a record must include data for the
-                specified field to enter the stage. Records that don't meet the requirement are sent
-                to the pipeline for error handling. If you configured the pipeline to write to file,
-                that's where error records will go. </p>To represent data in a field, we use the
+                stream.</p><p>We'll route credit card transactions to a credit card stream for
+                processing. All other transactions will go to the default stream.</p><p>We'll also
+                define a required field to drop records with no payment type. When you define a
+                required field, a record must include data for the specified field to enter the
+                stage. Records that don't include data in required fields are sent to the pipeline
+                for error handling. If you configured the pipeline to write to file, that's where
+                error records go. </p>To represent data in a field, we use the
                 <codeph>record:value</codeph> function. This returns field values associated with
             the field.<p>To capture records with credit card payments, use the following condition:
-                <codeblock>${record:value('/payment_type') == 'CRD'}</codeblock></p><p>From this,
-                you see that we enclose expressions in a dollar sign and curly brackets. You can use
-                single or double quotation marks around strings. For more information about the
-                expression language, see <xref
+                <codeblock>${record:value('/payment_type') == 'CRD'}</codeblock></p><p>Note that we
+                enclose expressions in a dollar sign and curly brackets. You can use single or
+                double quotation marks around strings. For more information about the expression
+                language, see <xref
                     href="../Expression_Language/ExpressionLanguage_overview.dita#concept_p54_4kl_vq"
                 />.</p></context>
         <steps id="steps_xhx_3rk_ls">
@@ -46,7 +48,7 @@
             <step>
                 <cmd>On the <wintitle>General</wintitle> tab, click in the <uicontrol>Required
                         Fields</uicontrol> text box. </cmd>
-                <info>A list of available fields displays because you've already performed data
+                <info>A list of available fields displays because you already performed data
                     preview. It also displays when the pipeline is valid for data preview. </info>
             </step>
             <step>

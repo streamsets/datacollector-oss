@@ -95,10 +95,7 @@
 
                 <tbody class="tbody">
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:value('/payment_type') == 'CRD'}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:value('/payment_type') == 'CRD'}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">In a Stream Selector, this condition routes records where the payment
                             type is credit card to the stream.</td>
@@ -106,30 +103,21 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:value('[3]/State') == "MD"}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:value('[3]/State') == "MD"}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">The same as above, but for a record in list format.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:valueOrDefault('/Payment', 'unknown')} </pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">Replaces missing values in the Payment field with "unknown".</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:errorCode()=="FIELD_MERGER_02"}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">Used in a Stream Selector in an error pipeline, this condition routes
                             records with the FIELD_MERGER_02 error to a stream that corrects the
@@ -138,22 +126,15 @@
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${str:toUpper(record:value('/STATE')}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${str:toUpper(record:value('/STATE')}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">Capitalizes all strings in the STATE field.</td>
 
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:value('/total_amount') - 
-(record:value('/tip_amount') +
-record:value('/tolls') + record:value('/mta_tax'))}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:value('/total_amount') -  (record:value('/tip_amount') +
+                            record:value('/tolls') + record:value('/mta_tax'))}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">An expression that calculates trip revenue by subtracting the tip,
                             taxes, and tolls from the total fare amount</td>
@@ -161,13 +142,19 @@ record:value('/tolls') + record:value('/mta_tax'))}</pre>
                     </tr>
 
                     <tr class="row">
-                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">
-                            <pre class="pre codeblock">${record:value("[20]/value") == ""}</pre>
-
-                        </td>
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:value("[20]/value") == ""}</td>
 
                         <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">When used in an alert, triggers an alert when the specified field
                             contains no data.</td>
+
+                    </tr>
+
+                    <tr class="row">
+                        <td class="entry" valign="top" width="55.55555555555556%" headers="d21272e109 ">${record:type(/ID)=STRING}</td>
+
+                        <td class="entry" valign="top" width="44.44444444444444%" headers="d21272e112 ">In the Stream Selector, routes records where the ID is a String to a
+                            branch that includes a Field Converter to convert the field to a numeric
+                            data type.</td>
 
                     </tr>
 
