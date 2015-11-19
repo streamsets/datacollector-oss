@@ -62,11 +62,4 @@ class PreparedStatementMap {
   public final Collection<PreparedStatement> getStatements() {
     return cache.values();
   }
-
-  public void executeStatements() throws SQLException {
-    for (PreparedStatement statement : cache.values()) {
-      statement.executeBatch();
-      statement.close();
-    }
-  }
 }

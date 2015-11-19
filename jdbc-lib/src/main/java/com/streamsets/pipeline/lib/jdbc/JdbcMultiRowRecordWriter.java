@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.hash.Funnel;
@@ -33,6 +34,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.destination.jdbc.Errors;
 import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +65,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     }
   };
 
+  public static int UNLIMITED_PARAMETERS = -1;
+  private int maxPrepStmtParameters;
+
   /**
    * Class constructor
    * @param connectionString database connection string
@@ -70,6 +75,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param tableName the name of the table to write to
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
+   * @param maxPrepStmtParameters
    * @throws StageException
    */
   public JdbcMultiRowRecordWriter(
@@ -77,9 +83,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       DataSource dataSource,
       String tableName,
       boolean rollbackOnError,
-      List<JdbcFieldMappingConfig> customMappings
-  ) throws StageException {
+      List<JdbcFieldMappingConfig> customMappings,
+      int maxPrepStmtParameters)
+      throws StageException
+  {
     super(connectionString, dataSource, tableName, rollbackOnError, customMappings);
+    this.maxPrepStmtParameters =
+        maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE : maxPrepStmtParameters;
   }
 
   /** {@inheritDoc} */
@@ -91,70 +101,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     try {
       connection = getDataSource().getConnection();
 
-      MultiRowInsertMap statementsForBatch = new MultiRowInsertMap(connection, getTableName());
-
       // Since we are doing multi-row inserts we have to partition the batch into groups of the same
       // set of fields. We'll also sort each partition for optimal inserts into column stores.
-
       Multimap<Long, Record> partitions = partitionBatch(batch);
 
       for (Long partitionKey : partitions.keySet()) {
-        Collection<Record> partition = partitions.get(partitionKey);
-        // Fetch the base insert query for this partition.
-        SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(
-            getColumnsToParameters(), partition.iterator().next()
-        );
-        PreparedStatement statement = statementsForBatch.getInsertFor(
-            // Multimap collections are never empty so this is a safe operation
-            columnsToParameters,
-            partition.size()
-        );
-        // Add each record's values to the query.
-        int i = 1;
-        for (Record record : partition) {
-          for (String column : columnsToParameters.keySet()) {
-
-            Field field = record.get(getColumnsToFields().get(column));
-            Field.Type fieldType = field.getType();
-            Object value = field.getValue();
-
-            switch (fieldType) {
-              case LIST:
-                List<Object> unpackedList = new ArrayList<>();
-                for (Field item : (List<Field>) value) {
-                  unpackedList.add(item.getValue());
-                }
-                Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-                statement.setArray(i, array);
-                break;
-              case DATE:
-              case DATETIME:
-                // Java Date types are not accepted by JDBC drivers, so we need to convert ot java.sql.Date
-                java.util.Date date = field.getValueAsDate();
-                statement.setObject(i, new java.sql.Date(date.getTime()));
-                break;
-              default:
-                statement.setObject(i, value);
-                break;
-            }
-            ++i;
-          }
-        }
-        // Done populating the INSERT for this partition
-        statement.addBatch();
+        processPartition(connection, partitions, partitionKey);
       }
-
-      for (PreparedStatement statement : statementsForBatch.getStatements()) {
-        try {
-          statement.executeBatch();
-        } catch (SQLException e) {
-          if (getRollbackOnError()) {
-            connection.rollback();
-          }
-          handleBatchUpdateException(batch, e, errorRecords);
-        }
-      }
-      connection.commit();
     } catch (SQLException e) {
       handleSqlException(e);
     } finally {
@@ -167,6 +120,107 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       }
     }
     return errorRecords;
+  }
+
+  private void processPartition(Connection connection, Multimap<Long, Record> partitions, Long partitionKey)
+      throws SQLException, OnRecordErrorException
+  {
+    Collection<Record> partition = partitions.get(partitionKey);
+    // Fetch the base insert query for this partition.
+    SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(
+        getColumnsToParameters(), partition.iterator().next()
+    );
+
+    // put all the records in a queue for consumption
+    LinkedList<Record> queue = new LinkedList<>(partition);
+
+    // compute number of rows per batch
+    int maxRowsPerBatch = (int) Math.floor(maxPrepStmtParameters / columnsToParameters.size());
+
+    PreparedStatement statement = null;
+
+    // parameters are indexed starting with 1
+    int paramIdx = 1;
+    int rowCount = 0;
+    while (!queue.isEmpty()) {
+      // we're at the start of a batch.
+      if (statement == null) {
+        // instantiate the new statement
+        statement = generatePreparedStatement(
+            columnsToParameters,
+            // the next batch will have either the max number of records, or however many are left.
+            Math.min(maxRowsPerBatch, queue.size()),
+            getTableName(),
+            connection
+        );
+      }
+
+      // process the next record into the current statement
+      Record r = queue.removeFirst();
+      for (String column : columnsToParameters.keySet()) {
+        Field field = r.get(getColumnsToFields().get(column));
+        Field.Type fieldType = field.getType();
+        Object value = field.getValue();
+
+        switch (fieldType) {
+          case LIST:
+            List<Object> unpackedList = new ArrayList<>();
+            for (Field item : (List<Field>) value) {
+              unpackedList.add(item.getValue());
+            }
+            Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
+            statement.setArray(paramIdx, array);
+            break;
+          case DATE:
+          case DATETIME:
+            // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Date
+            java.util.Date date = field.getValueAsDate();
+            statement.setObject(paramIdx, new java.sql.Date(date.getTime()));
+            break;
+          default:
+            statement.setObject(paramIdx, value);
+            break;
+        }
+        ++paramIdx;
+      }
+
+      rowCount++;
+
+      // check if we've filled up the current batch
+      if (rowCount == maxRowsPerBatch) {
+        // time to execute the current batch
+        statement.addBatch();
+        statement.execute();
+        statement.close();
+        statement = null;
+
+        // reset our counters
+        rowCount = 0;
+        paramIdx = 1;
+      }
+    }
+
+    // check if there are any records left. this should occur whenever there isn't *exactly* maxRowsPerBatch records in
+    // this partition.
+    if (statement != null) {
+      statement.addBatch();
+      statement.execute();
+      statement.close();
+    }
+  }
+
+  private PreparedStatement generatePreparedStatement(SortedMap<String, String> columns, int numRecords, Object tableName, Connection connection) throws SQLException {
+    String valuePlaceholder = String.format("(%s)", Joiner.on(", ").join(columns.values()));
+    String valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
+    String query = String.format(
+        "INSERT INTO %s (%s) VALUES %s",
+        tableName,
+        // keySet and values will both return the same ordering, due to using a SortedMap
+        Joiner.on(", ").join(columns.keySet()),
+        valuePlaceholders
+    );
+
+    return connection.prepareStatement(query);
   }
 
   private SortedMap<String, String> getFilteredColumnsToParameters(Map<String, String> parameters, Record record) {

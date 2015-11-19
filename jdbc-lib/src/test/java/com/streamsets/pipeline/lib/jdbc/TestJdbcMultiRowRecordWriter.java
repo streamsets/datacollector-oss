@@ -38,6 +38,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +46,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestMultiRowRecordWriter {
+public class TestJdbcMultiRowRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(TestMicrosoftChangeLogWriter.class);
 
   private final String username = "sa";
@@ -105,11 +106,37 @@ public class TestMultiRowRecordWriter {
         dataSource,
         "TEST.TEST_TABLE",
         false,
-        mappings
-    );
+        mappings,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS);
     List<Record> batch = generateRecords(10);
     writer.writeBatch(batch);
 
+    connection = DriverManager.getConnection(connectionString, username, password);
+    try (Statement statement = connection.createStatement()) {
+      ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
+      rs.next();
+      assertEquals(10, rs.getInt(1));
+    }
+  }
+
+  @Test
+  public void testParameterLimit() throws Exception {
+    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+
+    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST.TEST_TABLE",
+        false,
+        mappings,
+        8);
+
+    Collection<Record> records = generateRecords(10);
+    writer.writeBatch(records);
+
+
+    // note that unfortunately we have no way to directly observe that the expected batching is actually occurring -
+    // only that the correct number of rows comes out even when we enable a meaningful parameter limit.
     connection = DriverManager.getConnection(connectionString, username, password);
     try (Statement statement = connection.createStatement()) {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.joda.time.Instant;
@@ -132,6 +133,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -157,6 +159,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -196,6 +199,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -236,6 +240,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -296,6 +301,7 @@ public class TestJdbcTarget {
         fieldMappings,
         true,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -356,6 +362,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        -1,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -417,6 +424,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, unprivUser, unprivPassword)
     );
@@ -472,6 +480,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean("bad connection string", username, password)
     );
@@ -495,6 +504,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, "foo", "bar")
     );
@@ -518,6 +528,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );
@@ -541,6 +552,7 @@ public class TestJdbcTarget {
         fieldMappings,
         false,
         false,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS,
         ChangeLogFormat.NONE,
         createConfigBean(h2ConnectionString, username, password)
     );

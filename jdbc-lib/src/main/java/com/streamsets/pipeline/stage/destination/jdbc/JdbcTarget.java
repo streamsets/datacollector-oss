@@ -73,6 +73,7 @@ public class JdbcTarget extends BaseTarget {
 
   private final boolean rollbackOnError;
   private final boolean useMultiRowInsert;
+  private final int maxPrepStmtParameters;
 
   private final String tableNameTemplate;
   private final List<JdbcFieldMappingConfig> customMappings;
@@ -103,6 +104,7 @@ public class JdbcTarget extends BaseTarget {
       final List<JdbcFieldMappingConfig> customMappings,
       final boolean rollbackOnError,
       final boolean useMultiRowInsert,
+      int maxPrepStmtParameters,
       final ChangeLogFormat changeLogFormat,
       final HikariPoolConfigBean hikariConfigBean
   ) {
@@ -110,6 +112,7 @@ public class JdbcTarget extends BaseTarget {
     this.customMappings = customMappings;
     this.rollbackOnError = rollbackOnError;
     this.useMultiRowInsert = useMultiRowInsert;
+    this.maxPrepStmtParameters = maxPrepStmtParameters;
     this.driverProperties.putAll(hikariConfigBean.driverProperties);
     this.changeLogFormat = changeLogFormat;
     this.hikariConfigBean = hikariConfigBean;
@@ -171,7 +174,8 @@ public class JdbcTarget extends BaseTarget {
               dataSource,
               tableName,
               rollbackOnError,
-              customMappings
+              customMappings,
+              maxPrepStmtParameters
           );
         }
         break;
