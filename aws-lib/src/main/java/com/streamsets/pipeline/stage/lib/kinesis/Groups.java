@@ -17,32 +17,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
-import com.streamsets.pipeline.stage.lib.kinesis.Groups;
+import com.streamsets.pipeline.api.Label;
 
-@StageDef(
-    version = 2,
-    label = "Kinesis Producer",
-    description = "Writes data to Amazon Kinesis",
-    icon = "kinesis.png",
-    upgrader = KinesisTargetUpgrader.class
-)
-@ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class KinesisDTarget extends DTarget {
+public enum Groups implements Label {
+  KINESIS("Kinesis"),
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  XML("XML"),
+  LOG("Log"),
+  AVRO("Avro"),
+  BINARY("Binary"),
+  PROTOBUF("Protobuf"),
+  ;
 
-  @ConfigDefBean(groups = "KINESIS")
-  public KinesisProducerConfigBean kinesisConfig;
+  private final String label;
+
+  private Groups(String label) {
+    this.label = label;
+  }
 
   @Override
-  protected Target createTarget() {
-    return new KinesisTarget(kinesisConfig);
+  public String getLabel() {
+    return this.label;
   }
 }

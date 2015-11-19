@@ -33,8 +33,10 @@
 
   <properties>
     <kinesis.client.version>1.6.1</kinesis.client.version>
+    <kpl.version>0.10.1</kpl.version>
     <aws.sdk.version>1.10.20</aws.sdk.version>
     <commons-lang3.version>3.4</commons-lang3.version>
+    <commons-math3.version>3.5</commons-math3.version>
   </properties>
 
   <dependencies>
@@ -78,7 +80,18 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-common</artifactId>
@@ -88,6 +101,15 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <!-- Kinesis Producer Library currently relies on 2.6
+               so we exclude version 2.5 from commonlib for now.
+          -->
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
@@ -113,9 +135,37 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>amazon-kinesis-producer</artifactId>
+      <version>${kpl.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-kinesis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-dynamodb</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.amazonaws</groupId>
+          <artifactId>aws-java-sdk-cloudwatch</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>${commons-math3.version}</version>
     </dependency>
 
     <!-- S3 related-->

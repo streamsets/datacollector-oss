@@ -56,6 +56,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,448 +68,450 @@ import java.util.Map;
 public class DataParserFormatConfig {
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "UTF-8",
-    label = "Charset",
-    displayPosition = 3010,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      displayPosition = 3010,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
-  public String charset;
+  public String charset = "UTF-8";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Ignore Control Characters",
-    description = "Use only if required as it impacts reading performance",
-    displayPosition = 3020,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Ignore Control Characters",
+      description = "Use only if required as it impacts reading performance",
+      displayPosition = 3020,
+      group = "#0"
   )
-  public boolean removeCtrlChars;
+  public boolean removeCtrlChars = false;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
-      "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
-    defaultValue = "NONE",
-    label = "Compression Format",
-    displayPosition = 3030,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Compression formats gzip, bzip2, xz, lzma, Pack200, DEFLATE and Z are supported. " +
+          "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
+      defaultValue = "NONE",
+      label = "Compression Format",
+      displayPosition = 3030,
+      group = "#0"
   )
   @ValueChooserModel(CompressionChooserValues.class)
   public Compression compression = Compression.NONE;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "File Name Pattern within Compressed Directory",
-    description = "A glob or regular expression that defines the pattern of the file names within the compressed directory",
-    defaultValue = "*",
-    displayPosition = 3040,
-    group = "#0",
-    dependsOn = "compression",
-    triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "File Name Pattern within Compressed Directory",
+      description = "A glob or regular expression that defines the pattern of the file names within the compressed " +
+          "directory.",
+      defaultValue = "*",
+      displayPosition = 3040,
+      group = "#0",
+      dependsOn = "compression",
+      triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
   )
   public String filePatternInArchive = "*";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "1024",
-    label = "Max Line Length",
-    description = "Longer lines are truncated",
-    displayPosition = 100,
-    group = "TEXT",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "TEXT",
-    min = 1,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1024",
+      label = "Max Line Length",
+      description = "Longer lines are truncated",
+      displayPosition = 100,
+      group = "TEXT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "TEXT",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
   public int textMaxLineLen = 1024;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "MULTIPLE_OBJECTS",
-    label = "JSON Content",
-    description = "",
-    displayPosition = 100,
-    group = "JSON",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "JSON"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MULTIPLE_OBJECTS",
+      label = "JSON Content",
+      description = "",
+      displayPosition = 100,
+      group = "JSON",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "JSON"
   )
   @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonContent;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "4096",
-    label = "Max Object Length (chars)",
-    description = "Larger objects are not processed",
-    displayPosition = 110,
-    group = "JSON",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "JSON",
-    min = 1,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "4096",
+      label = "Max Object Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 110,
+      group = "JSON",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "JSON",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
-  public int jsonMaxObjectLen;
+  public int jsonMaxObjectLen = 4096;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "CSV",
-    label = "Delimiter Format Type",
-    description = "",
-    displayPosition = 200,
-    group = "DELIMITED",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "CSV",
+      label = "Delimiter Format Type",
+      description = "",
+      displayPosition = 200,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvModeChooserValues.class)
-  public CsvMode csvFileFormat;
+  public CsvMode csvFileFormat = CsvMode.CSV;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "NO_HEADER",
-    label = "Header Line",
-    description = "",
-    displayPosition = 210,
-    group = "DELIMITED",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_HEADER",
+      label = "Header Line",
+      description = "",
+      displayPosition = 210,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvHeaderChooserValues.class)
-  public CsvHeader csvHeader;
+  public CsvHeader csvHeader = CsvHeader.NO_HEADER;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "1024",
-    label = "Max Record Length (chars)",
-    description = "Larger objects are not processed",
-    displayPosition = 220,
-    group = "DELIMITED",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED",
-    min = 1,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1024",
+      label = "Max Record Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 220,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
-  public int csvMaxObjectLen;
+  public int csvMaxObjectLen = 1024;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "|",
-    label = "Delimiter Character",
-    displayPosition = 330,
-    group = "DELIMITED",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "|",
+      label = "Delimiter Character",
+      displayPosition = 330,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
-  public char csvCustomDelimiter;
+  public char csvCustomDelimiter = '|';
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "\\",
-    label = "Escape Character",
-    displayPosition = 340,
-    group = "DELIMITED",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\\",
+      label = "Escape Character",
+      displayPosition = 340,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
-  public char csvCustomEscape;
+  public char csvCustomEscape = '\\';
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "\"",
-    label = "Quote Character",
-    displayPosition = 350,
-    group = "DELIMITED",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\"",
+      label = "Quote Character",
+      displayPosition = 350,
+      group = "DELIMITED",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
-  public char csvCustomQuote;
+  public char csvCustomQuote = '\"';
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "LIST_MAP",
-    label = "Root Field Type",
-    description = "",
-    displayPosition = 310,
-    group = "DELIMITED",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LIST_MAP",
+      label = "Root Field Type",
+      description = "",
+      displayPosition = 310,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvRecordTypeChooserValues.class)
-  public CsvRecordType csvRecordType;
+  public CsvRecordType csvRecordType = CsvRecordType.LIST_MAP;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Delimiter Element",
-    defaultValue = "",
-    description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
-    displayPosition = 300,
-    group = "XML",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "XML"
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Delimiter Element",
+      defaultValue = "",
+      description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
+      displayPosition = 300,
+      group = "XML",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML"
   )
-  public String xmlRecordElement;
+  public String xmlRecordElement = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "4096",
-    label = "Max Record Length (chars)",
-    description = "Larger records are not processed",
-    displayPosition = 310,
-    group = "XML",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "XML",
-    min = 1,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "4096",
+      label = "Max Record Length (chars)",
+      description = "Larger records are not processed",
+      displayPosition = 310,
+      group = "XML",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
-  public int xmlMaxObjectLen;
+  public int xmlMaxObjectLen = 4096;
 
   // LOG Configuration
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "COMMON_LOG_FORMAT",
-    label = "Log Format",
-    description = "",
-    displayPosition = 700,
-    group = "LOG",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "LOG"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "COMMON_LOG_FORMAT",
+      label = "Log Format",
+      description = "",
+      displayPosition = 700,
+      group = "LOG",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "LOG"
   )
   @ValueChooserModel(LogModeChooserValues.class)
-  public LogMode logMode;
+  public LogMode logMode = LogMode.COMMON_LOG_FORMAT;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "1024",
-    label = "Max Line Length",
-    description = "Longer lines are truncated",
-    displayPosition = 710,
-    group = "LOG",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "LOG",
-    min = 1,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1024",
+      label = "Max Line Length",
+      description = "Longer lines are truncated",
+      displayPosition = 710,
+      group = "LOG",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "LOG",
+      min = 1,
+      max = Integer.MAX_VALUE
   )
-  public int logMaxObjectLen;
+  public int logMaxObjectLen = 1024;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Retain Original Line",
-    description = "Indicates if the original line of log should be retained in the record",
-    displayPosition = 720,
-    group = "LOG",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "LOG"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Retain Original Line",
+      description = "Indicates if the original line of log should be retained in the record",
+      displayPosition = 720,
+      group = "LOG",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "LOG"
   )
-  public boolean retainOriginalLine;
+  public boolean retainOriginalLine = false;
 
   //APACHE_CUSTOM_LOG_FORMAT
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "%h %l %u %t \"%r\" %>s %b",
-    label = "Custom Log Format",
-    description = "",
-    displayPosition = 730,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "%h %l %u %t \"%r\" %>s %b",
+      label = "Custom Log Format",
+      description = "",
+      displayPosition = 730,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
   )
-  public String customLogFormat;
+  public String customLogFormat = "%h %l %u %t \"%r\" %>s %b";
 
   //REGEX
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)",
-    label = "Regular Expression",
-    description = "The regular expression which is used to parse the log line.",
-    displayPosition = 740,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "REGEX"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)",
+      label = "Regular Expression",
+      description = "The regular expression which is used to parse the log line.",
+      displayPosition = 740,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "REGEX"
   )
-  public String regex;
+  public String regex =
+      "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "",
-    label = "Field Path To RegEx Group Mapping",
-    description = "Map groups in the regular expression to field paths",
-    displayPosition = 750,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "REGEX"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Field Path To RegEx Group Mapping",
+      description = "Map groups in the regular expression to field paths",
+      displayPosition = 750,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "REGEX"
   )
   @ListBeanModel
-  public List<RegExConfig> fieldPathsToGroupName;
+  public List<RegExConfig> fieldPathsToGroupName = new ArrayList<>();
 
   //GROK
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.TEXT,
-    defaultValue = "",
-    label = "Grok Pattern Definition",
-    description = "Define your own grok patterns which will be used to parse the logs",
-    displayPosition = 760,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "GROK",
-    mode = ConfigDef.Mode.PLAIN_TEXT
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      defaultValue = "",
+      label = "Grok Pattern Definition",
+      description = "Define your own grok patterns which will be used to parse the logs",
+      displayPosition = 760,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "GROK",
+      mode = ConfigDef.Mode.PLAIN_TEXT
   )
-  public String grokPatternDefinition;
+  public String grokPatternDefinition = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "%{COMMONAPACHELOG}",
-    label = "Grok Pattern",
-    description = "The grok pattern which is used to parse the log line",
-    displayPosition = 780,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "GROK"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "%{COMMONAPACHELOG}",
+      label = "Grok Pattern",
+      description = "The grok pattern which is used to parse the log line",
+      displayPosition = 780,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "GROK"
   )
-  public String grokPattern;
+  public String grokPattern = "%{COMMONAPACHELOG}";
 
   //LOG4J
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "ERROR",
-    label = "On Parse Error",
-    description = "",
-    displayPosition = 790,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "LOG4J"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ERROR",
+      label = "On Parse Error",
+      description = "",
+      displayPosition = 790,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "LOG4J"
   )
   @ValueChooserModel(OnParseErrorChooserValues.class)
-  public OnParseError onParseError;
+  public OnParseError onParseError = OnParseError.ERROR;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.NUMBER,
-    defaultValue = "50",
-    label = "Trim Stack Trace to Length",
-    description = "Any line that does not match the expected pattern will be treated as a Stack trace as long as it " +
-      "is part of the same message. The stack trace will be trimmed to the specified number of lines.",
-    displayPosition = 800,
-    group = "LOG",
-    dependsOn = "onParseError",
-    triggeredByValue = "INCLUDE_AS_STACK_TRACE",
-    min = 0,
-    max = Integer.MAX_VALUE
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "50",
+      label = "Trim Stack Trace to Length",
+      description = "Any line that does not match the expected pattern will be treated as a Stack trace as long as it " +
+          "is part of the same message. The stack trace will be trimmed to the specified number of lines.",
+      displayPosition = 800,
+      group = "LOG",
+      dependsOn = "onParseError",
+      triggeredByValue = "INCLUDE_AS_STACK_TRACE",
+      min = 0,
+      max = Integer.MAX_VALUE
   )
-  public int maxStackTraceLines;
+  public int maxStackTraceLines = 50;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Use Custom Log Format",
-    description = "",
-    displayPosition = 810,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "LOG4J"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Custom Log Format",
+      description = "",
+      displayPosition = 810,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "LOG4J"
   )
-  public boolean enableLog4jCustomLogFormat;
+  public boolean enableLog4jCustomLogFormat = false;
 
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "%r [%t] %-5p %c %x - %m%n",
-    label = "Custom Log4J Format",
-    description = "Specify your own custom log4j format.",
-    displayPosition = 820,
-    group = "LOG",
-    dependsOn = "enableLog4jCustomLogFormat",
-    triggeredByValue = "true"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "%r [%t] %-5p %c %x - %m%n",
+      label = "Custom Log4J Format",
+      description = "Specify your own custom log4j format.",
+      displayPosition = 820,
+      group = "LOG",
+      dependsOn = "enableLog4jCustomLogFormat",
+      triggeredByValue = "true"
   )
-  public String log4jCustomLogFormat;
+  public String log4jCustomLogFormat = "%r [%t] %-5p %c %x - %m%n";
 
   //AVRO
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Message includes Schema",
-    description = "The Kafka message includes the Avro schema",
-    displayPosition = 830,
-    group = "AVRO",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "AVRO"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Message includes Schema",
+      description = "The Kafka message includes the Avro schema",
+      displayPosition = 830,
+      group = "AVRO",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "AVRO"
   )
-  public boolean schemaInMessage;
+  public boolean schemaInMessage = true;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.TEXT,
-    defaultValue = "",
-    label = "Avro Schema",
-    description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
-    displayPosition = 840,
-    group = "AVRO",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "AVRO",
-    mode = ConfigDef.Mode.JSON
+      required = false,
+      type = ConfigDef.Type.TEXT,
+      defaultValue = "",
+      label = "Avro Schema",
+      description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
+      displayPosition = 840,
+      group = "AVRO",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "AVRO",
+      mode = ConfigDef.Mode.JSON
   )
-  public String avroSchema;
+  public String avroSchema = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "",
-    label = "Protobuf Descriptor File",
-    description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
-    displayPosition = 850,
-    group = "PROTOBUF",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "PROTOBUF"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Protobuf Descriptor File",
+      description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
+      displayPosition = 850,
+      group = "PROTOBUF",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "PROTOBUF"
   )
-  public String protoDescriptorFile;
+  public String protoDescriptorFile = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "",
-    label = "Message Type",
-    displayPosition = 860,
-    group = "PROTOBUF",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "PROTOBUF"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Message Type",
+      displayPosition = 860,
+      group = "PROTOBUF",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "PROTOBUF"
   )
-  public String messageType;
+  public String messageType = "";
 
   public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, List<Stage.ConfigIssue> issues) {
     return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, issues);
@@ -520,38 +523,38 @@ public class DataParserFormatConfig {
       case JSON:
         if (jsonMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.JSON.name(), "jsonMaxObjectLen",
-            DataFormatErrors.DATA_FORMAT_01));
+              DataFormatErrors.DATA_FORMAT_01));
           valid &= false;
         }
         break;
       case TEXT:
         if (textMaxLineLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(), "textMaxLineLen",
-            DataFormatErrors.DATA_FORMAT_01));
+              DataFormatErrors.DATA_FORMAT_01));
           valid &= false;
         }
         break;
       case DELIMITED:
         if (csvMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.DELIMITED.name(), "csvMaxObjectLen",
-            DataFormatErrors.DATA_FORMAT_01));
+              DataFormatErrors.DATA_FORMAT_01));
           valid &= false;
         }
         break;
       case XML:
         if (xmlMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlMaxObjectLen",
-            DataFormatErrors.DATA_FORMAT_01));
+              DataFormatErrors.DATA_FORMAT_01));
           valid &= false;
         }
         if (xmlRecordElement == null || xmlRecordElement.isEmpty()) {
           issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlRecordElement",
-            DataFormatErrors.DATA_FORMAT_02));
+              DataFormatErrors.DATA_FORMAT_02));
           valid &= false;
         } else if (!XMLChar.isValidName(xmlRecordElement)) {
           issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlRecordElement",
-            DataFormatErrors.DATA_FORMAT_03,
-            xmlRecordElement));
+              DataFormatErrors.DATA_FORMAT_03,
+              xmlRecordElement));
           valid &= false;
         }
         break;
@@ -561,15 +564,15 @@ public class DataParserFormatConfig {
         break;
       case LOG:
         logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
-          retainOriginalLine, customLogFormat, regex,
-          grokPatternDefinition, grokPattern,
-          enableLog4jCustomLogFormat, log4jCustomLogFormat,
-          onParseError, maxStackTraceLines, DataFormatGroups.LOG.name(),
-          getFieldPathToGroupMap(fieldPathsToGroupName));
+            retainOriginalLine, customLogFormat, regex,
+            grokPatternDefinition, grokPattern,
+            enableLog4jCustomLogFormat, log4jCustomLogFormat,
+            onParseError, maxStackTraceLines, DataFormatGroups.LOG.name(),
+            getFieldPathToGroupMap(fieldPathsToGroupName));
         logDataFormatValidator.validateLogFormatConfig(issues, context);
         break;
       case PROTOBUF:
-        if(protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
+        if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   DataFormatGroups.PROTOBUF.name(),
@@ -579,7 +582,7 @@ public class DataParserFormatConfig {
           );
         } else {
           File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
-          if(!file.exists()) {
+          if (!file.exists()) {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
@@ -589,7 +592,7 @@ public class DataParserFormatConfig {
                 )
             );
           }
-          if(messageType == null || messageType.isEmpty()) {
+          if (messageType == null || messageType.isEmpty()) {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
@@ -602,7 +605,7 @@ public class DataParserFormatConfig {
         break;
       default:
         issues.add(context.createConfigIssue(stageGroup, "dataFormat", DataFormatErrors.DATA_FORMAT_04,
-          dataFormat));
+            dataFormat));
         valid &= false;
         break;
     }
@@ -613,10 +616,10 @@ public class DataParserFormatConfig {
   }
 
   private boolean validateDataParser(Stage.Context context, DataFormat dataFormat, String stageGroup,
-    int overrunLimit, List<Stage.ConfigIssue> issues) {
+                                     int overrunLimit, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context,
-      dataFormat.getParserFormat());
+        dataFormat.getParserFormat());
 
     try {
       fileCharset = Charset.forName(charset);
@@ -641,15 +644,15 @@ public class DataParserFormatConfig {
         break;
       case DELIMITED:
         builder.setMaxDataLen(csvMaxObjectLen)
-          .setMode(csvFileFormat).setMode(csvHeader)
-          .setMode(csvRecordType)
-          .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
-          .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
-          .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
+            .setMode(csvFileFormat).setMode(csvHeader)
+            .setMode(csvRecordType)
+            .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
+            .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
+            .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY,
-          xmlRecordElement);
+            xmlRecordElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
@@ -662,8 +665,8 @@ public class DataParserFormatConfig {
         break;
       case PROTOBUF:
         builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
-          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
-          .setMaxDataLen(-1);
+            .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+            .setMaxDataLen(-1);
         break;
       default:
         throw new IllegalStateException("Unexpected data format" + dataFormat);
@@ -686,14 +689,13 @@ public class DataParserFormatConfig {
   private DataParserFactory parserFactory;
 
   private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
-    if(fieldPathsToGroupName == null) {
+    if (fieldPathsToGroupName == null) {
       return new HashMap<>();
     }
     Map<String, Integer> fieldPathToGroup = new HashMap<>();
-    for(RegExConfig r : fieldPathsToGroupName) {
+    for (RegExConfig r : fieldPathsToGroupName) {
       fieldPathToGroup.put(r.fieldPath, r.group);
     }
     return fieldPathToGroup;
   }
-
 }

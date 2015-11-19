@@ -19,210 +19,233 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.kinesis.AmazonKinesisClient;
-import com.amazonaws.services.kinesis.model.DescribeStreamResult;
-import com.amazonaws.services.kinesis.model.PutRecordsRequest;
-import com.amazonaws.services.kinesis.model.PutRecordsRequestEntry;
-import com.amazonaws.services.kinesis.model.PutRecordsResult;
-import com.amazonaws.services.kinesis.model.PutRecordsResultEntry;
+import com.amazonaws.services.kinesis.producer.Attempt;
+import com.amazonaws.services.kinesis.producer.KinesisProducer;
+import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
+import com.amazonaws.services.kinesis.producer.UserRecordResult;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
+import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
+import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
+import com.streamsets.pipeline.stage.lib.kinesis.Groups;
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
+import com.streamsets.pipeline.stage.lib.kinesis.Partitioner;
+import com.streamsets.pipeline.stage.lib.kinesis.RandomPartitioner;
+import com.streamsets.pipeline.stage.lib.kinesis.RoundRobinPartitioner;
+import com.streamsets.pipeline.stage.lib.kinesis.ShardMap;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 
 public class KinesisTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisTarget.class);
 
-  // Only Batch size is enforced. Records or batches
-  // that are too large in KB will be sent to error
-  // pipeline per configuration.
-  public static final int MAX_BATCH_SIZE = 500;
-  public static final int MAX_RECORD_SIZE_KB = 50;
-  public static final int MAX_BATCH_SIZE_KB = 4500;
-
-  /** Kinesis Configurations */
-  private final Regions region;
-  private final String streamName;
-  private final PartitionStrategy partitionStrategy;
-
-  /** Data Format Configurations */
-  private final DataFormat dataFormat;
-
-  private ClientConfiguration kinesisConfiguration;
-  private AmazonKinesisClient kinesisClient;
+  private final KinesisProducerConfigBean conf;
+  private final Properties additionalConfigs = new Properties();
 
   private DataGeneratorFactory generatorFactory;
+  private KinesisProducer kinesisProducer;
+  private Partitioner partitioner;
+  private long numShards;
+  private ShardMap shardMap;
 
-  public KinesisTarget(
-      final Regions region,
-      final String streamName,
-      final DataFormat dataFormat,
-      final PartitionStrategy partitionStrategy,
-      final String awsAccessKeyId,
-      final String awsSecretAccessKey
-  ) {
-    this.region = region;
-    this.streamName = streamName;
-    this.dataFormat = dataFormat;
-    this.partitionStrategy = partitionStrategy;
+  private ELEval partitionEval;
+  private ELVars partitionVars;
 
-    System.setProperty("aws.accessKeyId", awsAccessKeyId);
-    System.setProperty("aws.secretKey", awsSecretAccessKey);
+  public KinesisTarget(KinesisProducerConfigBean conf) {
+    this.conf = conf;
+    additionalConfigs.putAll(conf.producerConfigs);
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    checkStreamExists(issues);
+    shardMap = new ShardMap();
+
+    createPartitioner(issues);
+
+    partitionEval = getContext().createELEval("partitionExpression");
+    partitionVars = getContext().createELVars();
+
+    // There is no scope to provide partitionVars for the Kinesis target as of today, create empty partitionVars
+    if (conf.partitionStrategy == PartitionStrategy.EXPRESSION) {
+      ELUtils.validateExpression(
+          partitionEval,
+          getContext().createELVars(),
+          conf.partitionExpression,
+          getContext(),
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".partitionExpression",
+          Errors.KINESIS_05,
+          Object.class,
+          issues
+      );
+    }
+
+    numShards = KinesisUtil.checkStreamExists(
+        conf.region,
+        conf.streamName,
+        issues,
+        getContext()
+    );
 
     if (issues.isEmpty()) {
-      kinesisConfiguration = new ClientConfiguration();
-      //TODO Set additional configuration options here.
-      createKinesisClient();
+      conf.dataFormatConfig.init(
+          getContext(),
+          conf.dataFormat,
+          Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN + ".dataGeneratorFormatConfig",
+          issues
+      );
+      generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
 
-      generatorFactory = createDataGeneratorFactory();
+      KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
+          .fromProperties(additionalConfigs)
+          .setCredentialsProvider(KinesisUtil.getCredentialsProvider(conf))
+          .setRegion(conf.region.getName());
+
+      // Mock injected during testing, we shouldn't clobber it.
+      if (kinesisProducer == null) {
+        kinesisProducer = new KinesisProducer(producerConfig);
+      }
     }
+
     return issues;
   }
 
-  private void checkStreamExists(List<ConfigIssue> issues) {
-    ClientConfiguration kinesisConfiguration = new ClientConfiguration();
-    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
-    kinesisClient.setRegion(Region.getRegion(region));
-
-    try {
-      DescribeStreamResult result = kinesisClient.describeStream(streamName);
-      LOG.info("Connected successfully to stream: {} with description: {}",
-          streamName,
-          result.getStreamDescription().toString()
-      );
-    } catch (Exception e) {
-      issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.origin.kinesis.Groups.KINESIS.name(),
-                                                "streamName", Errors.KINESIS_01, e.toString()));
-    } finally {
-      kinesisClient.shutdown();
+  private void createPartitioner(List<ConfigIssue> issues) {
+    switch (conf.partitionStrategy) {
+      case ROUND_ROBIN:
+        partitioner = new RoundRobinPartitioner();
+        break;
+      case RANDOM:
+        partitioner = new RandomPartitioner();
+        break;
+      case EXPRESSION:
+        partitioner = new ExpressionPartitioner();
+        break;
+      default:
+        issues.add(getContext().createConfigIssue(
+            Groups.KINESIS.name(),
+            KINESIS_CONFIG_BEAN + ".partitionStrategy",
+            Errors.KINESIS_02,
+            conf.partitionStrategy
+        ));
     }
   }
 
   @Override
   public void destroy() {
-    if (kinesisClient != null) {
-      kinesisClient.shutdown(); // This call is optional per Amazon docs.
+    if (kinesisProducer != null) {
+      kinesisProducer.flushSync();
+      kinesisProducer.destroy();
     }
     super.destroy();
-  }
-
-  private void createKinesisClient() {
-    kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
-    kinesisClient.setRegion(Region.getRegion(region));
-  }
-
-  private DataGeneratorFactory createDataGeneratorFactory() {
-    DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
-        dataFormat.getGeneratorFormat());
-    if (dataFormat == DataFormat.JSON) {
-      builder.setMode(JsonMode.MULTIPLE_OBJECTS);
-    }
-    return builder.build();
   }
 
   @Override
   public void write(Batch batch) throws StageException {
     Iterator<Record> batchIterator = batch.getRecords();
 
-    while (batchIterator.hasNext()) {
-      List<Record> records = new ArrayList<>(MAX_BATCH_SIZE);
-      int numRecords = 0;
-      while (numRecords < MAX_BATCH_SIZE && batchIterator.hasNext()) {
-        records.add(batchIterator.next());
-        ++numRecords;
-      }
-      processBulkPut(records);
-    }
-  }
-
-  private void processBulkPut(List<Record> records) throws StageException {
-    PutRecordsRequest request = new PutRecordsRequest();
-    request.setStreamName(streamName);
-
-    List<PutRecordsRequestEntry> requestEntries = new ArrayList<>();
+    List<Pair<ListenableFuture<UserRecordResult>, String>> putFutures = new LinkedList<>();
 
     int i = 0;
-    for (Record record : records) {
-      final PutRecordsRequestEntry entry = new PutRecordsRequestEntry();
-
-      ByteArrayOutputStream bytes = new ByteArrayOutputStream(1024 * records.size());
+    while (batchIterator.hasNext()) {
+      Record record = batchIterator.next();
+      ByteArrayOutputStream bytes = new ByteArrayOutputStream(ONE_MB);
       try {
         DataGenerator generator = generatorFactory.getGenerator(bytes);
         generator.write(record);
         generator.close();
 
-        entry.setData(ByteBuffer.wrap(bytes.toByteArray()));
-        entry.setPartitionKey(getPartitionKey(i));
+        ByteBuffer data = ByteBuffer.wrap(bytes.toByteArray());
 
-        requestEntries.add(entry);
+        Object partitionerKey;
+        if (conf.partitionStrategy == PartitionStrategy.EXPRESSION) {
+          RecordEL.setRecordInContext(partitionVars, record);
+          try {
+            partitionerKey = partitionEval.eval(partitionVars, conf.partitionExpression, Object.class);
+          } catch (ELEvalException e) {
+            throw new StageException(
+                Errors.KINESIS_06, conf.partitionExpression, record.getHeader().getSourceId(), e.toString()
+            );
+          }
+        } else {
+          partitionerKey = i;
+        }
+
+        String partitionKey = partitioner.partition(partitionerKey, numShards);
+
+        // To preserve ordering we flush after each record.
+        if (conf.preserveOrdering) {
+          Future<UserRecordResult> resultFuture = kinesisProducer
+              .addUserRecord(conf.streamName, partitionKey, data);
+          getAndCheck(resultFuture, partitionKey);
+          kinesisProducer.flushSync();
+        } else {
+          putFutures.add(
+              Pair.of(kinesisProducer.addUserRecord(conf.streamName, partitionKey, data), partitionKey)
+          );
+        }
+
         ++i;
       } catch (IOException e) {
-        handleFailedRecord(record, "Failed to serialize record");
+        handleFailedRecord(record, e.toString());
       }
     }
 
-    request.setRecords(requestEntries);
-    try {
-      PutRecordsResult result = kinesisClient.putRecords(request);
+    // This has no effect when preserveOrdering is true because the list is empty.
+    for (Pair<ListenableFuture<UserRecordResult>, String> pair : putFutures) {
+      getAndCheck(pair.getLeft(), pair.getRight());
+    }
+    kinesisProducer.flushSync();
+  }
 
-      final Integer failedRecordCount = result.getFailedRecordCount();
-      if (failedRecordCount > 0) {
-        List<PutRecordsResultEntry> resultEntries = result.getRecords();
-        i = 0;
-        for (PutRecordsResultEntry resultEntry : resultEntries) {
-          final String errorCode = resultEntry.getErrorCode();
-          if (null != errorCode) {
-            switch (errorCode) {
-              case "ProvisionedThroughputExceededException":
-              case "InternalFailure":
-                // Records are processed in the order you submit them,
-                // so this will align with the initial record batch
-                handleFailedRecord(records.get(i), errorCode + ":" + resultEntry.getErrorMessage());
-                break;
-              default:
-                validateSuccessfulRecord(records.get(i), resultEntry);
-                break;
-            }
-          } else {
-            validateSuccessfulRecord(records.get(i), resultEntry);
-          }
-          ++i;
+  private void getAndCheck(Future<UserRecordResult> future, String partitionKey) throws StageException {
+    try {
+      UserRecordResult result = future.get();
+      if (result.isSuccessful()) {
+        if (shardMap.put(partitionKey, result.getShardId())) {
+          LOG.warn("Expected a different shardId. The stream may have been resharded. Updating shard count.");
+          long oldNumShards = numShards;
+          numShards = KinesisUtil.getShardCount(conf.region, conf.streamName);
+          LOG.info("Updated shard count from {} to {}", oldNumShards, numShards);
         }
+      } else {
+        for (Attempt attempt : result.getAttempts()) {
+          LOG.error("Failed to put record: {}", attempt.getErrorMessage());
+        }
+        throw new StageException(Errors.KINESIS_00, result.getAttempts().get(0).getErrorMessage());
       }
-    } catch (AmazonClientException e) {
-      // Unrecoverable exception -- invalidate the entire batch
-      LOG.debug("Exception while putting records", e);
-      for (Record record : records) {
-        handleFailedRecord(record, "Batch failed due to Amazon service exception: " + e.getMessage());
-      }
+    } catch (InterruptedException | ExecutionException e) {
+      LOG.error("Pipeline is shutting down.", e);
+      // We should flush if we encounter an error.
+      kinesisProducer.flushSync();
     }
   }
 
@@ -231,35 +254,13 @@ public class KinesisTarget extends BaseTarget {
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().toError(record, Errors.KINESIS_00, record, cause);
+        getContext().toError(record, Errors.KINESIS_05, record, cause);
         break;
       case STOP_PIPELINE:
-        throw new StageException(Errors.KINESIS_00, record, cause);
+        throw new StageException(Errors.KINESIS_05, record, cause);
       default:
         throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
             getContext().getOnErrorRecord()));
-    }
-  }
-
-  private String getPartitionKey(final int recordPosition) throws StageException {
-    String partitionKey;
-
-    switch (partitionStrategy) {
-      case ROUND_ROBIN:
-        partitionKey = String.format("partitionKey-%d", recordPosition);
-        break;
-      default:
-        // Should never reach here.
-        throw new StageException(Errors.KINESIS_02, partitionStrategy);
-    }
-    return partitionKey;
-  }
-
-  private void validateSuccessfulRecord(Record record, PutRecordsResultEntry resultEntry) throws StageException {
-    if (null == resultEntry.getSequenceNumber() || null == resultEntry.getShardId() ||
-        resultEntry.getSequenceNumber().isEmpty() || resultEntry.getShardId().isEmpty()) {
-      // Some kind of other error, handle it.
-      handleFailedRecord(record, "Missing SequenceId or ShardId.");
     }
   }
 }

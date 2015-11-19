@@ -17,24 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
-import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
+import java.util.HashMap;
 
-import java.util.concurrent.BlockingQueue;
+public class ShardMap {
+  private final HashMap<String, String> map = new HashMap<>();
 
-public class StreamSetsRecordProcessorFactory implements IRecordProcessorFactory {
-  final BlockingQueue<RecordsAndCheckpointer> batchQueue;
+  /**
+   * Adds a shardId for a particular partitionKey to the map and returns
+   * whether or not we should re-count the shards in the stream.
+   * @param partitionKey partitionKey for a UserRecord
+   * @param shardId The shardId returned by a UserRecordResult
+   * @return whether or not the caller should invalidate their shard count.
+   */
+  public boolean put(String partitionKey, String shardId) {
+    boolean shouldInvalidate = false;
+    String predictedShard = map.get(partitionKey);
+    if (predictedShard != null && !shardId.equals(predictedShard)) {
+      shouldInvalidate = true;
+      map.clear();
+    }
 
-  public StreamSetsRecordProcessorFactory(BlockingQueue<RecordsAndCheckpointer> batchQueue) {
-    this.batchQueue = batchQueue;
+    map.put(partitionKey, shardId);
+    return shouldInvalidate;
   }
-
-  @Override
-  public IRecordProcessor createProcessor() {
-    return new StreamSetsRecordProcessor(batchQueue);
-  }
-
 }

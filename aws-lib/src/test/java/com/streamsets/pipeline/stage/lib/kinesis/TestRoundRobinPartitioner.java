@@ -17,24 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
-import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
+import org.junit.Test;
 
-import java.util.concurrent.BlockingQueue;
+import static org.junit.Assert.assertEquals;
 
-public class StreamSetsRecordProcessorFactory implements IRecordProcessorFactory {
-  final BlockingQueue<RecordsAndCheckpointer> batchQueue;
+public class TestRoundRobinPartitioner {
 
-  public StreamSetsRecordProcessorFactory(BlockingQueue<RecordsAndCheckpointer> batchQueue) {
-    this.batchQueue = batchQueue;
+  @Test
+  public void testRoundRobinPartitioner() {
+    Partitioner partitioner = new RoundRobinPartitioner();
+
+    int numShards = 3;
+    assertEquals("0000000000000000000", partitioner.partition(null, numShards));
+    assertEquals("0000000000000000001", partitioner.partition(null, numShards));
+    assertEquals("0000000000000000002", partitioner.partition(null, numShards));
+    assertEquals("0000000000000000000", partitioner.partition(null, numShards));
   }
-
-  @Override
-  public IRecordProcessor createProcessor() {
-    return new StreamSetsRecordProcessor(batchQueue);
-  }
-
 }

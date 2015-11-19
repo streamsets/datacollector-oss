@@ -19,21 +19,11 @@
  */
 package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionInStream;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  KINESIS("Kinesis"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return this.label;
+public class InitialPositionInStreamChooserValues extends BaseEnumChooserValues<InitialPositionInStream> {
+  public InitialPositionInStreamChooserValues() {
+    super(InitialPositionInStream.values());
   }
 }

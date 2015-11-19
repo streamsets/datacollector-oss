@@ -17,23 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  KINESIS("Kinesis"),
-  ;
+public class TestExpressionPartitioner {
+  @Test
+  public void testExpressionPartitioner() {
+    Partitioner partitioner = new ExpressionPartitioner();
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return this.label;
+    long numShards = 100;
+    String partitionKey = "abcdef";
+    assertEquals(partitionKey, partitioner.partition(partitionKey, numShards));
   }
 }

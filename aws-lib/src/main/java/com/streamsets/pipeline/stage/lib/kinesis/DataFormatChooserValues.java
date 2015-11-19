@@ -17,24 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessor;
-import com.amazonaws.services.kinesis.clientlibrary.interfaces.v2.IRecordProcessorFactory;
-import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-import java.util.concurrent.BlockingQueue;
-
-public class StreamSetsRecordProcessorFactory implements IRecordProcessorFactory {
-  final BlockingQueue<RecordsAndCheckpointer> batchQueue;
-
-  public StreamSetsRecordProcessorFactory(BlockingQueue<RecordsAndCheckpointer> batchQueue) {
-    this.batchQueue = batchQueue;
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+  public DataFormatChooserValues() {
+    super(
+        DataFormat.AVRO,
+        DataFormat.BINARY,
+        DataFormat.DELIMITED,
+        DataFormat.JSON,
+        DataFormat.LOG,
+        DataFormat.SDC_JSON,
+        DataFormat.TEXT,
+        DataFormat.XML
+    );
   }
-
-  @Override
-  public IRecordProcessor createProcessor() {
-    return new StreamSetsRecordProcessor(batchQueue);
-  }
-
 }
