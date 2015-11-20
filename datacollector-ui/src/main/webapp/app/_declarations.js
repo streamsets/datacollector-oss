@@ -34,5 +34,6 @@ angular.module('dataCollectorApp', [
   'dataCollectorApp.logs',
   'dataCollectorApp.restapi',
   'ngStorage',
+  'ngSanitize',
   'angular-google-analytics'
 ]);
