@@ -21,7 +21,7 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;

@@ -21,15 +21,12 @@ package com.streamsets.datacollector.flume.cluster;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
-import com.streamsets.datacollector.hdfs.cluster.TestKafkaToHDFS;
 import com.streamsets.datacollector.util.ClusterUtil;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-
 import org.apache.flume.Channel;
 import org.apache.flume.ChannelSelector;
 import org.apache.flume.Context;

@@ -36,6 +36,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_08("Unsupported charset '{}'"),
   KAFKA_09("Invalid Zookeeper connect string '{}' : {}"),
   KAFKA_10("Cannot validate configuration: {}"),
+  KAFKA_11("Cannot retrieve metadata for topic '{}' from broker '{}': {}"),
 
   //Kafka source messages
     /* LC Hari says the first one is not being used right now  */
@@ -69,7 +70,6 @@ public enum KafkaErrors implements ErrorCode {
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),
   KAFKA_51("Error serializing record '{}': {}"),
-  KAFKA_52("Cannot retrieve metadata for topic '{}' from broker '{}': {}"),
   KAFKA_54("Error evaluating the partition expression '{}' for record '{}': {}"),
   KAFKA_55("Error converting the partition expression '{}' to a partition ID for topic '{}': {}"),
   KAFKA_56("Partition expression generated an invalid partition ID '{}'. Topic '{}' has {} partitions. Record '{}'."),

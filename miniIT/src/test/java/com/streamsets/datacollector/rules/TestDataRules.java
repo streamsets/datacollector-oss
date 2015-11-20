@@ -23,8 +23,7 @@ import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.datacollector.MiniSDCTestingUtility;
 import com.streamsets.datacollector.util.VerifyUtils;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

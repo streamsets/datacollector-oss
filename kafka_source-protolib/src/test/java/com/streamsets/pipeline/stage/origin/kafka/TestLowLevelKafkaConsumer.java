@@ -20,8 +20,10 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.KafkaBroker;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.api.KafkaBroker;
+import com.streamsets.pipeline.kafka.api.MessageAndOffset;
+import com.streamsets.pipeline.kafka.impl.KafkaLowLevelConsumer08;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaServer;
@@ -67,7 +69,7 @@ public class TestLowLevelKafkaConsumer {
       producer.send(d);
     }
 
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testReadAfterZookeeperShutdown", 0,
+    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadAfterZookeeperShutdown", 0,
       new KafkaBroker(HOST, port), 0, 8000,
       2000, "testKafkaConsumer" + "_client");
     kafkaConsumer.init();
@@ -87,13 +89,13 @@ public class TestLowLevelKafkaConsumer {
       producer.send(d);
     }
 
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testGetOffsetAfterZookeeperShutdown", 0, new KafkaBroker(HOST, port), 0, 8000,
+    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testGetOffsetAfterZookeeperShutdown", 0, new KafkaBroker(HOST, port), 0, 8000,
       2000, "testKafkaConsumer" + "_client");
     kafkaConsumer.init();
     //shutdown zookeeper server
     kafkaServer.shutdown();
     //attempt to read
-    kafkaConsumer.getOffsetToRead(true);
+    kafkaConsumer.read(0);
   }
 
   @Test
@@ -106,7 +108,7 @@ public class TestLowLevelKafkaConsumer {
       producer.send(d);
     }
 
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testReadInvalidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
+    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadInvalidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
       2000, "testKafkaConsumer" + "_client");
     kafkaConsumer.init();
     //attempt to read invalid offset
@@ -124,7 +126,7 @@ public class TestLowLevelKafkaConsumer {
       producer.send(d);
     }
 
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer("testReadValidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
+    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadValidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
       2000, "testKafkaConsumer" + "_client");
     kafkaConsumer.init();
     //attempt to read invalid offset

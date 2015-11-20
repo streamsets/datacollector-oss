@@ -21,10 +21,8 @@ package com.streamsets.datacollector.kafka.standalone;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.base.TestPipelineRunStandalone;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
-
 import org.junit.After;
 import org.junit.Before;
 

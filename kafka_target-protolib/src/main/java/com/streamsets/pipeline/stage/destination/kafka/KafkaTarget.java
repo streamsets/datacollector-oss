@@ -24,7 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.KafkaConnectionException;
+import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
+import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class KafkaTarget extends BaseTarget {
   private final KafkaConfigBean kafkaConfigBean;
 
   private long recordCounter = 0;
-  private KafkaProducer kafkaProducer;
+  private SdcKafkaProducer kafkaProducer;
 
   public KafkaTarget(KafkaConfigBean kafkaConfigBean) {
     this.kafkaConfigBean = kafkaConfigBean;
@@ -141,7 +142,7 @@ public class KafkaTarget extends BaseTarget {
               kafkaProducer.enqueueMessage(entryTopic, bytes, partition);
             } catch (IOException | StageException ex) {
               //clear the message list
-              kafkaProducer.getMessageList().clear();
+              kafkaProducer.clearMessages();
               String sourceId = (currentRecord == null) ? "<NONE>" : currentRecord.getHeader().getSourceId();
               switch (getContext().getOnErrorRecord()) {
                 case DISCARD:

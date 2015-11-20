@@ -25,7 +25,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -130,7 +131,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -182,7 +183,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -242,7 +243,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -295,7 +296,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -324,7 +325,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -360,7 +361,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -395,7 +396,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -431,7 +432,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -482,7 +483,7 @@ public class TestKafkaTargetMultiPartition {
         true,                              // runtimeTopicResolution
         "${record:value('/topic')}",                               // topicExpression
         "*",                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -560,7 +561,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -614,7 +615,7 @@ public class TestKafkaTargetMultiPartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );

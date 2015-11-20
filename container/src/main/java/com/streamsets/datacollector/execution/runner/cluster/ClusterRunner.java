@@ -619,7 +619,7 @@ public class ClusterRunner extends AbstractRunner {
       }
       return new ClusterSourceInfo(parallelism,
                                    clusterSource.getConfigsToShip());
-    } catch (IOException ex) {
+    } catch (IOException | StageException ex) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0117, ex.toString(), ex);
     }
   }

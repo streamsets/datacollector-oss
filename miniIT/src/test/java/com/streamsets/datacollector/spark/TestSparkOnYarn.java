@@ -21,15 +21,13 @@ package com.streamsets.datacollector.spark;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
-import com.streamsets.datacollector.MiniSDCTestingUtility;
 import com.streamsets.datacollector.MiniSDC.ExecutionMode;
+import com.streamsets.datacollector.MiniSDCTestingUtility;
 import com.streamsets.datacollector.util.ClusterUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;

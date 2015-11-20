@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import org.junit.Assert;
 import org.junit.Test;
 

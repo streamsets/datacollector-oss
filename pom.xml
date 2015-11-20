@@ -117,6 +117,8 @@
     <module>hdfs-protolib</module>
     <module>hive-protolib</module>
 
+    <module>sdc-kafka-api</module>
+    <module>sdc-kafka_0_8</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_target-protolib</module>

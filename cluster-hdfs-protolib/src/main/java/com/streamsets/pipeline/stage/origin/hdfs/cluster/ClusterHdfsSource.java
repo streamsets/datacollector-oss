@@ -751,7 +751,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   }
 
   @Override
-  public int getParallelism() throws IOException {
+  public int getParallelism() {
     return 1; // not used as MR calculates splits
   }
 

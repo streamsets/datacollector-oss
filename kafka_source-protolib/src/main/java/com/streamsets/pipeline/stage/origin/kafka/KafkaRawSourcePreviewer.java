@@ -21,7 +21,10 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
-import com.streamsets.pipeline.lib.KafkaBroker;
+import com.streamsets.pipeline.kafka.api.LowLevelConsumerFactorySettings;
+import com.streamsets.pipeline.kafka.api.MessageAndOffset;
+import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumer;
+import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -92,8 +95,21 @@ public class KafkaRawSourcePreviewer implements RawSourcePreviewer {
 
   @Override
   public InputStream preview(int maxLength) {
-    LowLevelKafkaConsumer kafkaConsumer = new LowLevelKafkaConsumer(topic, partition, new KafkaBroker(brokerHost, brokerPort),
-      0, maxLength, maxWaitTime, CLIENT_PREFIX + DOT + topic + DOT + partition);
+    LowLevelConsumerFactorySettings lowLevelConsumerFactorySettings =
+      new LowLevelConsumerFactorySettings(
+          topic,
+          partition,
+          brokerHost,
+          brokerPort,
+          CLIENT_PREFIX + DOT + topic + DOT + partition,
+          0,
+          maxLength,
+          maxWaitTime
+      );
+    SdcKafkaLowLevelConsumer kafkaConsumer =
+      SdcKafkaLowLevelConsumerFactory.create(
+          lowLevelConsumerFactorySettings
+      ).create();
     try {
       kafkaConsumer.init();
       List<MessageAndOffset> messages = kafkaConsumer.read(kafkaConsumer.getOffsetToRead(true));

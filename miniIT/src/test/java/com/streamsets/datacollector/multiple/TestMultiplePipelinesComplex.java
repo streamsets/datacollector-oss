@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.base.TestMultiplePipelinesBase;
 import com.streamsets.datacollector.util.TestUtil;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;

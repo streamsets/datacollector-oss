@@ -46,6 +46,7 @@ import com.streamsets.pipeline.config.LogModeChooserValues;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.OnParseErrorChooserValues;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 
 import java.util.List;
@@ -63,7 +64,7 @@ import java.util.Map;
   onlineHelpRefUrl = "index.html#Origins/KConsumer.html#task_npx_xgf_vq"
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
-@ConfigGroups(value = Groups.class)
+@ConfigGroups(value = KafkaOriginGroups.class)
 @GenerateResourceBundle
 public class KafkaDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
 

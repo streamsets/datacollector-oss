@@ -22,7 +22,8 @@ package com.streamsets.pipeline.stage.destination.kafka;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -75,7 +76,7 @@ public class TestToErrorKafkaDTarget {
       false,
       null,
       null,
-      new KafkaConfig(),
+      new KafkaTargetConfig(),
       DataFormat.SDC_JSON,
       dataGeneratorFormatConfig
     );

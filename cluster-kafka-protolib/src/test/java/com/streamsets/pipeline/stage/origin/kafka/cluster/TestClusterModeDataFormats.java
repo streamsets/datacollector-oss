@@ -19,23 +19,22 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
-import com.streamsets.pipeline.config.CsvRecordType;
-import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.configurablestage.DSource;
-import com.streamsets.pipeline.lib.DataType;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.impl.Pair;
+import com.streamsets.pipeline.kafka.impl.DataType;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
-
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
@@ -44,7 +43,6 @@ import kafka.utils.TestUtils;
 import kafka.utils.TestZKUtils;
 import kafka.utils.ZKStringSerializer$;
 import kafka.zk.EmbeddedZookeeper;
-
 import org.I0Itec.zkclient.ZkClient;
 import org.junit.AfterClass;
 import org.junit.Assert;

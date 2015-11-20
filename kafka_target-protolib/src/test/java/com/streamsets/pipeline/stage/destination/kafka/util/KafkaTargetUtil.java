@@ -20,10 +20,10 @@
 package com.streamsets.pipeline.stage.destination.kafka.util;
 
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaConfig;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTarget;
-import com.streamsets.pipeline.stage.destination.kafka.PartitionStrategy;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.Map;
@@ -40,7 +40,7 @@ public class KafkaTargetUtil {
       boolean runtimeTopicResolution,
       String topicExpression,
       String topicWhiteList,
-      KafkaConfig kafkaConfig,
+      KafkaTargetConfig kafkaConfig,
       DataFormat dataFormat,
       DataGeneratorFormatConfig dataGeneratorFormatConfig
   ) {

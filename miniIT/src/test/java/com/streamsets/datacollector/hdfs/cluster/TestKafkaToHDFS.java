@@ -21,14 +21,11 @@ package com.streamsets.datacollector.hdfs.cluster;
 
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
-import com.streamsets.datacollector.kafka.cluster.TestKafkaOriginMultiPartition;
 import com.streamsets.datacollector.util.ClusterUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
-
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;

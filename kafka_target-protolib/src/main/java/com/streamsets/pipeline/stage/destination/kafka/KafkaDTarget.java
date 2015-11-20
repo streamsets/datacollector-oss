@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 
 @StageDef(
   version = 2,
@@ -34,7 +35,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   upgrader = KafkaTargetUpgrader.class,
   onlineHelpRefUrl = "index.html#Destinations/KProducer.html#task_q4d_4yl_zq"
 )
-@ConfigGroups(value = Groups.class)
+@ConfigGroups(value = KafkaDestinationGroups.class)
 @GenerateResourceBundle
 public class KafkaDTarget extends DTarget {
 

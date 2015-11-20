@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 public class KafkaConfigBean {
 
   @ConfigDefBean(groups = {"KAFKA"})
-  public KafkaConfig kafkaConfig;
+  public KafkaTargetConfig kafkaConfig;
 
   @ConfigDef(
     required = true,
@@ -49,7 +50,7 @@ public class KafkaConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    dataGeneratorFormatConfig.init(context, dataFormat, Groups.KAFKA.name(), "dataGeneratorFormatConfig", issues);
+    dataGeneratorFormatConfig.init(context, dataFormat, KafkaDestinationGroups.KAFKA.name(), "dataGeneratorFormatConfig", issues);
     kafkaConfig.init(context, dataFormat, issues);
   }
 

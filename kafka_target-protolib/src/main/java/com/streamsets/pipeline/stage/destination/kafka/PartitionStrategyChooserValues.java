@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.kafka;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 
 public class PartitionStrategyChooserValues extends BaseEnumChooserValues {
 

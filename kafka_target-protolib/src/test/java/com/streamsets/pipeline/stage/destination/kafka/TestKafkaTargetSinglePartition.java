@@ -29,17 +29,16 @@ import com.streamsets.pipeline.api.ext.RecordReader;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
+import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.zk.EmbeddedZookeeper;
-
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -188,7 +187,7 @@ public class TestKafkaTargetSinglePartition {
       false,                              // runtimeTopicResolution
       null,                               // topicExpression
       null,                               // topic white list
-      new KafkaConfig(),
+      new KafkaTargetConfig(),
       DataFormat.TEXT,
       dataGeneratorFormatConfig
     );
@@ -234,7 +233,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -284,7 +283,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -335,7 +334,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -387,7 +386,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -435,7 +434,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -489,7 +488,7 @@ public class TestKafkaTargetSinglePartition {
         false,                              // runtimeTopicResolution
         null,                               // topicExpression
         null,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.DELIMITED,
         dataGeneratorFormatConfig
     );
@@ -540,7 +539,7 @@ public class TestKafkaTargetSinglePartition {
         true,                              // runtimeTopicResolution
         "${record:value('/topic')}",                               // topicExpression
         TOPIC8 + ", " + TOPIC9 + ", " + TOPIC10,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -601,7 +600,7 @@ public class TestKafkaTargetSinglePartition {
         true,                              // runtimeTopicResolution
         "${record:value('/topic')}",                               // topicExpression
         TOPIC8 + ", " + TOPIC9 + ", " + TOPIC10,                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -673,7 +672,7 @@ public class TestKafkaTargetSinglePartition {
         true,                              // runtimeTopicResolution
         "${record:value('/topic')}",                               // topicExpression
         "*",                               // topic white list
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -734,7 +733,7 @@ public class TestKafkaTargetSinglePartition {
         true,                              // runtimeTopicResolution
         "${record:value('/topic')}",       // topicExpression
         "*",
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -807,7 +806,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "${record:value('/topic')}",
         TOPIC15,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -847,7 +846,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "${record:value('/topic')}",
         TOPIC15,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -900,7 +899,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "${record:value('/topic')}",
         "*",
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -928,7 +927,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "${record:value('/topic')}",
         TOPIC15,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -967,7 +966,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "${record:value('/topic')}",
         "*",
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -1019,7 +1018,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -1074,7 +1073,7 @@ public class TestKafkaTargetSinglePartition {
         true,
         "hello",
         "badTopic",
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.TEXT,
         dataGeneratorFormatConfig
     );
@@ -1108,7 +1107,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.AVRO,
         dataGeneratorFormatConfig
     );
@@ -1160,7 +1159,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.AVRO,
         dataGeneratorFormatConfig
     );
@@ -1215,7 +1214,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.AVRO,
         dataGeneratorFormatConfig
     );
@@ -1269,7 +1268,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.AVRO,
         dataGeneratorFormatConfig
     );
@@ -1333,7 +1332,7 @@ public class TestKafkaTargetSinglePartition {
         false,
         null,
         null,
-        new KafkaConfig(),
+        new KafkaTargetConfig(),
         DataFormat.BINARY,
         dataGeneratorFormatConfig
     );
