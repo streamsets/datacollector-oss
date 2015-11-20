@@ -108,6 +108,18 @@ angular.module('dataCollectorApp')
 
     editableOptions.theme = 'bs3';
 
+    // Math.random() does not provide cryptographically secure random numbers,
+    // so overriding to use window.crypto.getRandomValues for getting random values.
+    var randomFunction = Math.random;
+    Math.random = function() {
+      if(window.crypto && typeof window.crypto.getRandomValues === "function") {
+        var array = new Uint32Array(10);
+        window.crypto.getRandomValues(array);
+        return array[0]/10000000000;
+      }
+      return randomFunction();
+    };
+
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({
       displayDensity: pipelineConstant.DENSITY_COMFORTABLE,

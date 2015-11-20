@@ -34,7 +34,6 @@ angular
     'angularMoment',
     'nvd3',
     'dataCollectorApp.filters',
-    'ngSanitize',
     'ui.select',
     'showLoadingDirectives',
     'recordTreeDirectives',
