@@ -719,6 +719,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("start");
     args.add("--deploy-mode");
     args.add("cluster");
+    // total executor cores option currently doesn't work for spark on mesos
+    args.add("--total-executor-cores");
+    args.add("1");
     args.add("--master");
     args.add(mesosDispatcherURL);
     args.add("--class");

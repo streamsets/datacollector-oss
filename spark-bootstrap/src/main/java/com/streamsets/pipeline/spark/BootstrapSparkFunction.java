@@ -52,7 +52,7 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
   private Properties properties;
   private int batchSize;
   private volatile static boolean isPreprocessingMesosDone;
-
+  private static Object lockObject = new Object();
   public BootstrapSparkFunction() {
   }
 
@@ -61,11 +61,16 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
       return;
     }
     String mesosHomeDir = System.getenv("MESOS_DIRECTORY");
-    // If this is running under mesos
-    if (mesosHomeDir != null && !isPreprocessingMesosDone) {
-      isPreprocessingMesosDone = extractArchives(mesosHomeDir) ? true: false;
-      if (!isPreprocessingMesosDone) {
-        throw new IllegalStateException("Cannot extract archives in dir:" + mesosHomeDir + "/" + SDC_MESOS_BASE_DIR + "; check the stdout file for more detailed errors");
+    if (mesosHomeDir != null) {
+      synchronized (lockObject) {
+        // If this is running under mesos
+        if (!isPreprocessingMesosDone) {
+          isPreprocessingMesosDone = extractArchives(mesosHomeDir) ? true : false;
+          if (!isPreprocessingMesosDone) {
+            throw new IllegalStateException("Cannot extract archives in dir:" + mesosHomeDir + "/" + SDC_MESOS_BASE_DIR
+              + "; check the stdout file for more detailed errors");
+          }
+        }
       }
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
