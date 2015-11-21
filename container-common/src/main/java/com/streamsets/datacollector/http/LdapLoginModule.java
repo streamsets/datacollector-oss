@@ -491,7 +491,7 @@ public class LdapLoginModule extends AbstractLoginModule
     environment.put(Context.SECURITY_CREDENTIALS, password.toString());
 
     DirContext dirContext = new InitialDirContext(environment);
-    List<String> roles = getUserRoles(_rootContext, username);
+    List<String> roles = getUserRolesByDn(_rootContext, userDn);
 
     UserInfo userInfo = new UserInfo(username, null, roles);
     setCurrentUser(new JAASUserInfo(userInfo));
