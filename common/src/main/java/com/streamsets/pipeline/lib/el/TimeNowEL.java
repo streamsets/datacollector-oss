@@ -32,7 +32,9 @@ public class TimeNowEL {
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")
   public static Date getTimeNowFunc() {
     Date now = (Date) ELEval.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);
-    Utils.checkArgument(now != null, "time:now() function has not been properly initialized");
+    if(null == now) {
+      now = new Date();
+    }
     return now;
   }
 

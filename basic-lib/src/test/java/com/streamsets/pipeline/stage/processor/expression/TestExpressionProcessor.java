@@ -538,4 +538,41 @@ public class TestExpressionProcessor {
     }
   }
 
+  @Test
+  public void testTimeExpression() throws StageException {
+
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${time:now()}";
+    expressionProcessorConfig.fieldToSet = "/myDateTime";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+      .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+      .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name", Field.create("Hello"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      long startTime = System.currentTimeMillis();
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      long endTime = System.currentTimeMillis();
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals(2, result.size());
+      Assert.assertTrue(result.containsKey("myDateTime"));
+      long myDate = result.get("myDateTime").getValueAsDatetime().getTime();
+      Assert.assertTrue(myDate >= startTime);
+      Assert.assertTrue(myDate <= endTime);
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
