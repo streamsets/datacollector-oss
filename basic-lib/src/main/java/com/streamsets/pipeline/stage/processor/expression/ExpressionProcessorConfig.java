@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.processor.expression;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class ExpressionProcessorConfig {
 
@@ -46,7 +47,7 @@ public class ExpressionProcessorConfig {
       label = "Field Expression",
       description = "Use the expression language to modify values in a field.",
       displayPosition = 20,
-      elDefs = {RecordEL.class, ELSupport.class},
+      elDefs = {RecordEL.class, ELSupport.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "EXPRESSIONS"
   )
