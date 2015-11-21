@@ -76,7 +76,6 @@ public class ElUtil {
   }
 
   public static Class<?>[] getElDefs(StageDefinition stageDef, ConfigDefinition configDefinition) {
-    ClassLoader cl = stageDef.getStageClassLoader();
     List<Class> elDefs = configDefinition.getElDefs();
     if(elDefs != null && elDefs.size() > 0) {
       return elDefs.toArray(new Class[elDefs.size()]);

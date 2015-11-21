@@ -110,7 +110,7 @@ public class TestFileTailSource {
     }
   }
 
-  private static final Charset UTF8 = Charset.forName("UTF-8");
+  private static final Charset UTF8 = StandardCharsets.UTF_8;
 
   @Test
   public void testTailLogSameFilesInSameDir() throws Exception {
@@ -317,7 +317,7 @@ public class TestFileTailSource {
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
     runner.runInit();
-    Files.write(logFile.toPath(), Arrays.asList("{\"a\": 1}", "[{\"b\": 2}]"), Charset.forName("UTF-8"));
+    Files.write(logFile.toPath(), Arrays.asList("{\"a\": 1}", "[{\"b\": 2}]"), StandardCharsets.UTF_8);
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 1000);
@@ -432,7 +432,7 @@ public class TestFileTailSource {
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
     runner.runInit();
-    Files.write(logFile.toPath(), Arrays.asList(LINE1, LINE2), Charset.forName("UTF-8"));
+    Files.write(logFile.toPath(), Arrays.asList(LINE1, LINE2), StandardCharsets.UTF_8);
     try {
       long start = System.currentTimeMillis();
       StageRunner.Output output = runner.runProduce(null, 10);
@@ -503,7 +503,7 @@ public class TestFileTailSource {
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
     runner.runInit();
-    Files.write(logFile.toPath(), Arrays.asList(LINE1, LOG_LINE_WITH_STACK_TRACE, LINE2), Charset.forName("UTF-8"));
+    Files.write(logFile.toPath(), Arrays.asList(LINE1, LOG_LINE_WITH_STACK_TRACE, LINE2), StandardCharsets.UTF_8);
     try {
       StageRunner.Output out = runner.runProduce(null, 100);
       Assert.assertEquals(2, out.getRecords().get("lane").size());

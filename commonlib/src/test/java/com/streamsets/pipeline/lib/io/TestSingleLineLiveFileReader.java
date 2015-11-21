@@ -29,6 +29,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,7 +77,7 @@ public class TestSingleLineLiveFileReader {
     Path file = createFile(Arrays.asList("Hello1\n", "Hello2\n"));
     LiveFile lf = new LiveFile(file);
     new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("US-ASCII"), 0, 10);
-    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("UTF-8"), 0, 10);
+    new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, StandardCharsets.UTF_8, 0, 10);
     new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("GBK"), 0, 10);
     new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("ISO-8859-1"), 0, 10);
     new SingleLineLiveFileReader(LogRollModeFactory.REVERSE_COUNTER.get(file.getFileName().toString(), ""),null, lf, Charset.forName("shift_jis"), 0, 10);

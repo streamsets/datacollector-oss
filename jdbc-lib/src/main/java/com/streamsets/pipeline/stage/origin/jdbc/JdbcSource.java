@@ -236,10 +236,11 @@ public class JdbcSource extends BaseSource {
       LOG.debug("{}ms remaining until next fetch.", delay);
       ThreadUtil.sleep(Math.min(delay, 1000));
     } else {
+      Statement statement = null;
       try {
         if (null == resultSet || resultSet.isClosed()) {
           connection = dataSource.getConnection();
-          Statement statement;
+
           if (!txnColumnName.isEmpty()) {
             // CDC requires scrollable cursors.
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

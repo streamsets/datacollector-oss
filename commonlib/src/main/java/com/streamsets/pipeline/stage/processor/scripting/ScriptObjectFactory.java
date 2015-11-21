@@ -110,6 +110,9 @@ public class ScriptObjectFactory {
             }
             scriptObject = createArray(scripArrayElements);
             break;
+          default:
+            // no action
+            break;
         }
       }
     }

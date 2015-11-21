@@ -105,6 +105,8 @@ public class PipelineConfigurationUpgrader {
           issues.add(IssueCreator.getStage(conf.getInstanceName()).create(ContainerError.CONTAINER_0902,
               conf.getLibrary(), conf.getStageName(), def.getVersion(), conf.getStageVersion(), conf.getInstanceName()));
           break;
+        default:
+          throw new IllegalStateException("Unexpected version diff " + versionDiff);
       }
     }
     return upgrade;

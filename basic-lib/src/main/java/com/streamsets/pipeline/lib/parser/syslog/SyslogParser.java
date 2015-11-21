@@ -140,7 +140,6 @@ public class SyslogParser extends AbstractParser {
 
     // no timestamp specified; use relay current time
     if (dateStartChar == '-') {
-      tsString = Character.toString(dateStartChar);
       ts = System.currentTimeMillis();
       if (msgLen <= curPos + 2) {
         throw new OnRecordErrorException(Errors.SYSLOG_03, msg);
@@ -285,7 +284,7 @@ public class SyslogParser extends AbstractParser {
         try {
           int hourOffset = Integer.parseInt(msg.substring(curPos + 1, curPos + 3));
           int minOffset = Integer.parseInt(msg.substring(curPos + 4, curPos + 6));
-          ts -= polarity * ((hourOffset * 60) + minOffset) * 60000;
+          ts -= polarity * ((hourOffset * 60L) + minOffset) * 60000L;
         } catch (NumberFormatException nfe) {
           throw new OnRecordErrorException(Errors.SYSLOG_08, msg, nfe);
         }

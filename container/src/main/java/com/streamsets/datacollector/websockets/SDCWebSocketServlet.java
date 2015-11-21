@@ -107,7 +107,6 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
     HttpServletRequest httpRequest = req.getHttpServletRequest();
     String webSocketType = httpRequest.getParameter("type");
     final String pipelineName = httpRequest.getParameter("pipelineName");
-    String rev = httpRequest.getParameter("rev");
     if(webSocketType != null) {
       switch (webSocketType) {
         case LogMessageWebSocket.TYPE:

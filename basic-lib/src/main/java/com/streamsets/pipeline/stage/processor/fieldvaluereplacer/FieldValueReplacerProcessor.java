@@ -29,6 +29,8 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -104,7 +106,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
       case BYTE:
         return Byte.valueOf(stringValue);
       case BYTE_ARRAY:
-        return stringValue.getBytes();
+        return stringValue.getBytes(StandardCharsets.UTF_8);
       case CHAR:
         return stringValue.charAt(0);
       case DATE:

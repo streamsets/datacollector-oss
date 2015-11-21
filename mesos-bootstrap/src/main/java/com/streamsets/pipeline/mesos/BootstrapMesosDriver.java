@@ -23,6 +23,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
 
@@ -54,7 +56,7 @@ public class BootstrapMesosDriver {
     ProcessBuilder processBuilder = new ProcessBuilder(cmd);
     processBuilder.redirectErrorStream(true);
     Process process = processBuilder.start();
-    try (BufferedReader stdOutReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+    try (BufferedReader stdOutReader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
       String line = null;
       while ((line = stdOutReader.readLine()) != null) {
         System.out.println(line);

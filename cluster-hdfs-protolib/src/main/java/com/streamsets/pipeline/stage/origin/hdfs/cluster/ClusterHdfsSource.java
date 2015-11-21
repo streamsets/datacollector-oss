@@ -545,6 +545,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         builder.setMaxDataLen(Integer.MAX_VALUE).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema)
         .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, true);
         break;
+      default:
+        throw new IllegalStateException("Unexpected data format " + dataFormat);
     }
     parserFactory = builder.build();
   }
@@ -556,20 +558,18 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
       // we support text and csv today
       List<Map.Entry> records = new ArrayList<>();
       int count = 0;
-      Iterator<String> keys = previewBuffer.keySet().iterator();
+      Iterator<Map.Entry<String, Object>> keys = previewBuffer.entrySet().iterator();
       while (count < maxBatchSize && count < previewBuffer.size() && keys.hasNext()) {
-        String key =  keys.next();
-        String[] keyParts = key.split("::");
+        Map.Entry<String, Object> entry =  keys.next();
+        String[] keyParts = entry.getKey().split("::");
         if (count == 0 && DataFormat.DELIMITED == dataFormat && CsvHeader.NO_HEADER != csvHeader
           && keyParts.length > 1 && keyParts[1].equals("0")) {
           // add header
           if (CsvHeader.WITH_HEADER == csvHeader) {
-            records.add(new Pair(previewBuffer.get(key), null));
-          } else if (CsvHeader.IGNORE_HEADER == csvHeader) {
-            // this record will be ignored - don't increment the count
+            records.add(new Pair(entry.getValue(), null));
           }
         } else {
-          records.add(new Pair(key, previewBuffer.get(key)));
+          records.add(new Pair(entry.getKey(), entry.getValue()));
           count++;
         }
 

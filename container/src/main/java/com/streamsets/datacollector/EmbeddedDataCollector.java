@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -73,13 +74,21 @@ public class EmbeddedDataCollector implements DataCollector {
     Subject.doAs(securityContext.getSubject(), new PrivilegedExceptionAction<Void>() {
       @Override
       public Void run() throws Exception {
-      File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
+        File sdcProperties = new File(runtimeInfo.getConfigDir(), "sdc.properties");
         Utils.checkState(sdcProperties.exists(), Utils.format("sdc property file doesn't exist at '{}'",
           sdcProperties.getAbsolutePath()));
         Properties properties = new Properties();
-        InputStream is  = new FileInputStream(sdcProperties);
-        properties.load(is);
-        is.close();
+
+        InputStream is = null;
+        try {
+          is = new FileInputStream(sdcProperties);
+          properties.load(is);
+        } finally {
+          if (is != null) {
+            is.close();
+          }
+        }
+
         String pipelineName = Utils.checkNotNull(properties.getProperty("cluster.pipeline.name"), "Pipeline name");
         String pipelineUser = Utils.checkNotNull(properties.getProperty("cluster.pipeline.user"), "Pipeline user");
         String pipelineRev = Utils.checkNotNull(properties.getProperty("cluster.pipeline.rev"), "Pipeline revision");

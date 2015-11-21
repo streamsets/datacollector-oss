@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -217,7 +219,7 @@ public abstract class ConfigValueExtractor {
                 value = valueStr;
                 break;
             }
-          } catch (Exception ex) {
+          } catch (IOException ex) {
             throw new RuntimeException(Utils.format("Unexpected exception: {}", ex.toString()), ex);
           }
         }

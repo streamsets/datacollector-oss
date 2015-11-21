@@ -118,4 +118,8 @@ public class CallbackInfo implements Comparable<CallbackInfo> {
   public int compareTo(CallbackInfo o) {
     return sdcURL.compareToIgnoreCase(o.sdcURL);
   }
+
+  public boolean equals(Object o) {
+    return compareTo((CallbackInfo)o) == 0;
+  }
 }

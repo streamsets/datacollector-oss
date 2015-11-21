@@ -256,7 +256,7 @@ public abstract class PipelineBeanCreator {
       if (field.getAnnotation(ConfigDef.class) != null) {
         ConfigDefinition configDef = configDefMap.get(configName);
         if (configDef == null) {
-          errors.add(issueCreator.create(configDef.getGroup(), configName, CreationError.CREATION_002, configName));
+          errors.add(issueCreator.create(configName, CreationError.CREATION_002, configName));
         } else {
           Object value = valueMap.get(configName);
           if (value == null) {

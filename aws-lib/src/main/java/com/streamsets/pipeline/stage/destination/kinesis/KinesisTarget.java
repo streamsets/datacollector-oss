@@ -142,12 +142,8 @@ public class KinesisTarget extends BaseTarget {
   private DataGeneratorFactory createDataGeneratorFactory() {
     DataGeneratorFactoryBuilder builder = new DataGeneratorFactoryBuilder(getContext(),
         dataFormat.getGeneratorFormat());
-    switch (dataFormat) {
-      case SDC_JSON:
-        break;
-      case JSON:
-        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
-        break;
+    if (dataFormat == DataFormat.JSON) {
+      builder.setMode(JsonMode.MULTIPLE_OBJECTS);
     }
     return builder.build();
   }

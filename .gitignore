@@ -31,3 +31,6 @@ __MACOSX
 
 # maven shade
 dependency-reduced-pom.xml
+
+container/runInfo
+container/var

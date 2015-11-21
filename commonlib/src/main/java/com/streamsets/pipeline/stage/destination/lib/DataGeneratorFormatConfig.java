@@ -361,6 +361,9 @@ public class DataGeneratorFormatConfig {
         builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
           .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType);
         break;
+      default:
+        // no action needed
+        break;
     }
     if(valid) {
       try {
@@ -412,28 +415,29 @@ public class DataGeneratorFormatConfig {
             )
           );
           valid = false;
-        }
-        File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
-        if(!file.exists()) {
-          issues.add(
-            context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
-              "protoDescriptorFile",
-              DataFormatErrors.DATA_FORMAT_09,
-              file.getAbsolutePath()
-            )
-          );
-          valid = false;
-        }
-        if(messageType == null || messageType.isEmpty()) {
-          issues.add(
-            context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
-              "messageType",
-              DataFormatErrors.DATA_FORMAT_08
-            )
-          );
-          valid = false;
+        } else {
+          File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+          if(!file.exists()) {
+            issues.add(
+                context.createConfigIssue(
+                    DataFormatGroups.PROTOBUF.name(),
+                    "protoDescriptorFile",
+                    DataFormatErrors.DATA_FORMAT_09,
+                    file.getAbsolutePath()
+                )
+            );
+            valid = false;
+          }
+          if(messageType == null || messageType.isEmpty()) {
+            issues.add(
+                context.createConfigIssue(
+                    DataFormatGroups.PROTOBUF.name(),
+                    "messageType",
+                    DataFormatErrors.DATA_FORMAT_08
+                )
+            );
+            valid = false;
+          }
         }
         break;
       default:

@@ -38,7 +38,7 @@ public class EmbeddedDataCollectorFactory {
     embeddedDataCollector.startPipeline();
     long startTime = System.currentTimeMillis();
     long endTime = startTime;
-    long diff = endTime - startTime;
+    long diff = 0;
     while (embeddedDataCollector.getPipeline() == null && diff < 60000) {
       LOG.debug("Waiting for pipeline to be created");
       Thread.sleep(100);

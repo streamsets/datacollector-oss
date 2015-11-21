@@ -121,27 +121,27 @@ public class FuzzyMatch {
       LOG.trace("Sorted rest of 2 --> {}", sb2.toString());
     }
 
-    String t0 = "";
-    String t1 = "";
-    String t2 = "";
+    StringBuilder t0Builder = new StringBuilder("");
+    StringBuilder t1Builder = new StringBuilder("");
+    StringBuilder t2Builder = new StringBuilder("");
 
     for (String s : sortedIntersection) {
-      t0 = t0 + " " + s;
+      t0Builder.append(" ").append(s);
     }
-    t0 = t0.trim();
+    String t0 = t0Builder.toString().trim();
 
     Set<String> setT1 = Sets.union(sortedIntersection, sortedRestOfSet1);
     for (String s : setT1) {
-      t1 = t1 + " " + s;
+      t1Builder.append(" ").append(s);
     }
-    t1 = t1.trim();
+    String t1 = t1Builder.toString().trim();
 
     Set<String> setT2 = Sets.union(intersection, sortedRestOfSet2);
     for (String s : setT2) {
-      t2 = t2 + " " + s;
+      t2Builder.append(" ").append(s);
     }
 
-    t2 = t2.trim();
+    String t2 = t2Builder.toString().trim();
 
     int amt1 = calculateLevenshteinDistance(t0, t1);
     int amt2 = calculateLevenshteinDistance(t0, t2);
@@ -176,7 +176,7 @@ public class FuzzyMatch {
   private static int calculateLevenshteinDistance(String s1, String s2) {
     int distance = StringUtils.getLevenshteinDistance(s1, s2);
     double ratio = ((double) distance) / (Math.max(s1.length(), s2.length()));
-    return 100 - new Double(ratio * 100).intValue();
+    return 100 - (int)(ratio * 100);
   }
 
   private static String escapeString(String token) {

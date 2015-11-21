@@ -24,10 +24,11 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Issue {
+public class Issue implements Serializable {
   private final String instanceName;
   private final String configGroup;
   private final String configName;

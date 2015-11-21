@@ -32,6 +32,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
@@ -133,7 +135,7 @@ public class RandomDataGeneratorSource extends BaseSource {
       case STRING:
         return UUID.randomUUID().toString();
       case BYTE_ARRAY:
-        return "StreamSets Inc, San Francisco".getBytes();
+        return "StreamSets Inc, San Francisco".getBytes(StandardCharsets.UTF_8);
     }
     return null;
   }

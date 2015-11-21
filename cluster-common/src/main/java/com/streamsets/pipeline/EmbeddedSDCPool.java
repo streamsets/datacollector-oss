@@ -84,7 +84,7 @@ public class EmbeddedSDCPool {
     if (source instanceof DSource) {
       long startTime = System.currentTimeMillis();
       long endTime = startTime;
-      long diff = endTime - startTime;
+      long diff = 0;
       Source actualSource = ((DSource) source).getSource();
       while (actualSource == null && diff < 60000) {
         Thread.sleep(100);
@@ -182,7 +182,7 @@ public class EmbeddedSDCPool {
     if (timeout < 0) throw new IllegalArgumentException("Timeout shouldn't be less than zero");
     long startTime = System.currentTimeMillis();
     long endTime = startTime;
-    long diff = endTime - startTime;
+    long diff = 0;
     int counter = 1000;
     while (diff < timeout) {
       Utils.checkState(open, "Not open");

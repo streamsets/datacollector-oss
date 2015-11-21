@@ -19,13 +19,14 @@
  */
 package com.streamsets.pipeline.impl;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Common interface for cluster mode sources which push data.
  */
-public interface ClusterFunction {
+public interface ClusterFunction extends Serializable {
 
   /**
    * Invoke pipeline to process a batch. List passed to this interface

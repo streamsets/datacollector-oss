@@ -29,6 +29,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -159,7 +161,7 @@ public class JsonUtil {
     try {
       return jsonToField(objectMapper.readValue(bytes, Object.class));
     } catch (Exception e) {
-      throw new StageException(CommonError.CMN_0101, new String(bytes), e.toString(), e);
+      throw new StageException(CommonError.CMN_0101, new String(bytes, StandardCharsets.UTF_8), e.toString(), e);
     }
   }
 }

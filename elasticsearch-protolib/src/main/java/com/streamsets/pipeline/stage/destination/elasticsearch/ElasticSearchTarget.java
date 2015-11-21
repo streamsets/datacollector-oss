@@ -50,6 +50,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -207,7 +208,7 @@ public class ElasticSearchTarget extends BaseTarget {
         DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
         generator.close();
-        String json = new String(baos.toByteArray());
+        String json = new String(baos.toByteArray(), StandardCharsets.UTF_8);
         bulkRequest.add(elasticClient.prepareIndex(index, type, id).setContentType(XContentType.JSON).setSource(json));
       } catch (IOException ex) {
         switch (getContext().getOnErrorRecord()) {

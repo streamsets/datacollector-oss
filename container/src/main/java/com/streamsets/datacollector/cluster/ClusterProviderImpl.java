@@ -409,8 +409,7 @@ public class ClusterProviderImpl implements ClusterProvider {
                        File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
                        URLClassLoader containerCL, long timeToWaitForFailure, RuleDefinitions ruleDefinitions) throws IOException, TimeoutException {
     File stagingDir = new File(outputDir, "staging");
-    stagingDir.mkdirs();
-    if (!stagingDir.isDirectory()) {
+    if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
       String msg = Utils.format("Could not create staging directory: {}", stagingDir);
       throw new IllegalStateException(msg);
     }
@@ -560,7 +559,9 @@ public class ClusterProviderImpl implements ClusterProvider {
       File pipelineBaseDir = new File(rootDataDir, PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
       File pipelineDir = new File(pipelineBaseDir, PipelineUtils.escapedPipelineName(pipelineName));
       if (!pipelineDir.exists()) {
-        pipelineDir.mkdirs();
+        if (!pipelineDir.mkdirs()) {
+          throw new RuntimeException("Failed to create pipeline directory " + pipelineDir.getPath());
+        }
       }
       File pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
@@ -573,7 +574,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);
       TarFileCreator.createTarGz(etcDir, etcTarGz);
-    } catch (Exception ex) {
+    } catch (RuntimeException ex) {
       String msg = errorString("serializing etc directory: {}", ex);
       throw new RuntimeException(msg, ex);
     }
@@ -641,7 +642,9 @@ public class ClusterProviderImpl implements ClusterProvider {
       environment.put(RESOURCES_TAR_ARCHIVE, "resources.tar.gz");
       dirUUID = UUID.randomUUID().toString();
       hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirUUID);
-      hostingDir.mkdirs();
+      if (!hostingDir.mkdirs()) {
+        throw new RuntimeException("Couldn't create hosting dir: " + hostingDir.toString());
+      }
       environment.put(MESOS_HOSTING_JAR_DIR, hostingDir.getAbsolutePath());
       String mesosURL = runtimeInfo.getBaseHttpUrl() + "/mesos/" + dirUUID + "/" + clusterBootstrapJar.getName();
       args = generateMesosArgs(clusterManager.getAbsolutePath(), config.mesosDispatcherURL, mesosURL);
@@ -745,11 +748,11 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("-D");
     args.add("mapreduce.job.log4j-properties-file=" + log4jProperties);
     args.add("-libjars");
-    String libJarString = bootstrapJar;
+    StringBuilder libJarString = new StringBuilder(bootstrapJar);
     for (String jarToShip: jarsToShip) {
-      libJarString = libJarString + "," + jarToShip;
+      libJarString.append(",").append(jarToShip);
     }
-    args.add(libJarString);
+    args.add(libJarString.toString());
     args.add(sdcPropertiesFile);
     args.add(Joiner.on(" ").join(String.format("-Xmx%sm", slaveMemory), javaOpts,
       "-javaagent:./" + (new File(bootstrapJar)).getName()));
@@ -784,11 +787,11 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("--files");
     args.add(log4jProperties);
     args.add("--jars");
-    String libJarString = bootstrapJar;
+    StringBuilder libJarString = new StringBuilder(bootstrapJar);
     for (String jarToShip: jarsToShip) {
-      libJarString = libJarString + "," + jarToShip;
+      libJarString.append(",").append(jarToShip);
     }
-    args.add(libJarString);
+    args.add(libJarString.toString());
     // use our javaagent and java opt configs
     args.add("--conf");
     args.add("spark.executor.extraJavaOptions=" + Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(),

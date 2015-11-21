@@ -53,7 +53,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,8 +64,6 @@ import java.util.Set;
 public class MongoDBSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MongoDBSource.class);
   public static final String _ID = "_id";
-
-  private static final DateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
 
   private final String mongoConnectionString;
   private final String mongoDatabaseName;
@@ -121,7 +118,7 @@ public class MongoDBSource extends BaseSource {
     List<ConfigIssue> issues = super.init();
 
     try {
-      initialObjectId = new ObjectId(dateFormat.parse(initialOffset));
+      initialObjectId = new ObjectId(new SimpleDateFormat("YYYY-MM-DD HH:mm:ss").parse(initialOffset));
     } catch (ParseException e) {
       issues.add(getContext()
               .createConfigIssue(

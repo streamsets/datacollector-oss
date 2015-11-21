@@ -98,17 +98,12 @@ public class Pipeline {
   }
 
   public Source getSource() {
-    Source source = null;
     for (Pipe pipe : pipes) {
       if (pipe.getStage().getStage() instanceof Source) {
-        source = (Source)pipe.getStage().getStage();
-        break;
+        return (Source)pipe.getStage().getStage();
       }
     }
-    if (source == null) {
-      throw new NullPointerException("Cannot find pipeline source");
-    }
-    return source;
+    throw new NullPointerException("Cannot find pipeline source");
   }
 
   public PipelineRunner getRunner() {
@@ -329,6 +324,8 @@ public class Pipeline {
               laneResolver.getStageOutputLanes(idx), scheduledExecutor, memoryUsageCollectorResourceBundle, runner.getMetricRegistryJson());
             pipes.add(pipe);
             break;
+          default:
+            throw new IllegalStateException("Unexpected DefinitionType " + stage.getDefinition().getType());
         }
       }
       return pipes.toArray(new Pipe[pipes.size()]);

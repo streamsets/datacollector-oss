@@ -110,8 +110,6 @@ public class ClusterRunner extends AbstractRunner {
   static final String APPLICATION_STATE = "cluster.application.state";
   private static final String APPLICATION_STATE_START_TIME = "cluster.application.startTime";
 
-  @Inject RuntimeInfo runtimeInfo;
-  @Inject Configuration configuration;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject ResourceManager resourceManager;
@@ -191,8 +189,7 @@ public class ClusterRunner extends AbstractRunner {
     this.objectGraph.inject(this);
     this.tempDir = new File(new File(runtimeInfo.getDataDir(), "temp"), PipelineUtils.
       escapedPipelineName(Utils.format("pipeline-{}-{}-{}", user, name, rev)));
-    this.tempDir.mkdirs();
-    if (!this.tempDir.isDirectory()) {
+    if (!(this.tempDir.mkdirs() && this.tempDir.isDirectory())) {
       throw new IllegalStateException(Utils.format("Could not create temp directory: {}", tempDir));
     }
     this.clusterHelper = new ClusterHelper(runtimeInfo, new SecurityConfiguration(runtimeInfo,

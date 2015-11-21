@@ -83,6 +83,9 @@ public class KafkaTargetUpgrader implements StageUpgrader {
           configsToRemove.add(config);
           configsToAdd.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig." + config.getName(), config.getValue()));
           break;
+        default:
+          // no upgrade required
+          break;
       }
     }
 

@@ -361,12 +361,14 @@ public class DirectorySpooler {
       @Override
       public boolean accept(Path entry) throws IOException {
         boolean accept = false;
-        if (fileMatcher.matches(entry.getFileName())) {
-          if (startingFile == null) {
-            accept = true;
-          } else {
-            int compares = entry.getFileName().toString().compareTo(startingFile);
-            accept = (compares == 0 && includeStartingFile) || (compares > 0);
+        if (entry != null) {
+          if (fileMatcher.matches(entry.getFileName())) {
+            if (startingFile == null) {
+              accept = true;
+            } else {
+              int compares = entry.getFileName().toString().compareTo(startingFile);
+              accept = (compares == 0 && includeStartingFile) || (compares > 0);
+            }
           }
         }
         return accept;
@@ -404,7 +406,7 @@ public class DirectorySpooler {
       DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
         @Override
         public boolean accept(Path entry) throws IOException {
-          return fileMatcher.matches(entry.getFileName()) &&
+          return entry != null && fileMatcher.matches(entry.getFileName()) &&
                  (startingFile != null && entry.getFileName().toString().compareTo(startingFile) < 0);
         }
       };
@@ -419,6 +421,11 @@ public class DirectorySpooler {
               LOG.debug("Archiving old file '{}'", file);
               Files.move(file, archiveDirPath.resolve(file.getFileName()));
               break;
+            case NONE:
+              // no action required
+              break;
+            default:
+              throw new IllegalStateException("Unexpected post processing option " + postProcessing);
           }
         }
       }

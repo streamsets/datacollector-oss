@@ -22,10 +22,11 @@ package com.streamsets.datacollector.store;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
-public class PipelineInfo {
+public class PipelineInfo implements Serializable {
   private String name;
   private String description;
   private Date created;

@@ -54,4 +54,8 @@ class MatchCandidate implements Comparable<MatchCandidate> {
   public int compareTo(MatchCandidate other) {
     return Integer.compare(this.score, other.getScore());
   }
+
+  public boolean equals(MatchCandidate other) {
+    return compareTo(other) == 0;
+  }
 }

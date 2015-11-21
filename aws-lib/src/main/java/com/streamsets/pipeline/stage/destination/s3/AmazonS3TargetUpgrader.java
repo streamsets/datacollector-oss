@@ -71,6 +71,9 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
               )
           );
           break;
+        default:
+          // no upgrade needed
+          break;
       }
     }
 

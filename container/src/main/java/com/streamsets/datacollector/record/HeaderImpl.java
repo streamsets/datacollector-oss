@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class HeaderImpl implements Record.Header, Predicate<String> {
+public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable {
   private static final String RESERVED_PREFIX = "_.";
   private static final String STAGE_CREATOR_INSTANCE_ATTR = RESERVED_PREFIX + "stageCreator";
   private static final String RECORD_SOURCE_ID_ATTR = RESERVED_PREFIX + "recordSourceId";

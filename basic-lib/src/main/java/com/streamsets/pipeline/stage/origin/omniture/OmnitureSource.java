@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -153,7 +155,7 @@ public class OmnitureSource extends BaseSource {
     entityQueue.drainTo(chunks, chunksToFetch);
     for (String chunk : chunks) {
       String sourceId = getOffset();
-      try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes())) {
+      try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
         Record record = parser.parse();
         if (record != null) {
           batchMaker.addRecord(record);

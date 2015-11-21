@@ -218,7 +218,7 @@ public class HBaseTarget extends BaseTarget {
         if (hbaseConf.get(MASTER_KERBEROS_PRINCIPAL) == null) {
           try {
             hbaseConf.set(MASTER_KERBEROS_PRINCIPAL, "hbase/_HOST@" + KerberosUtil.getDefaultRealm());
-          } catch (Exception e) {
+          } catch (ReflectiveOperationException e) {
             issues.add(getContext().createConfigIssue(Groups.HBASE.name(), "masterPrincipal", Errors.HBASE_22));
           }
         }

@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
@@ -107,7 +109,7 @@ public class RecordWriter {
       DataGenerator dg = generatorFactory.getGenerator(baos);
       dg.write(record);
       dg.close();
-      value.set(new String(baos.toByteArray()));
+      value.set(new String(baos.toByteArray(), StandardCharsets.UTF_8));
       seqWriter.append(key, value);
     } else {
       throw new IOException(Utils.format("RecordWriter '{}' is closed", path));

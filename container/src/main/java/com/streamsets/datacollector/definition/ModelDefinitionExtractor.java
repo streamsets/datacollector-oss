@@ -154,8 +154,6 @@ public abstract class ModelDefinitionExtractor {
       try {
         ValueChooserModel valueChooserModel = field.getAnnotation(ValueChooserModel.class);
         ChooserValues values = valueChooserModel.value().newInstance();
-        values.getValues();
-        values.getLabels();
       } catch (Exception ex) {
         errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.toString()));
       }
@@ -188,8 +186,6 @@ public abstract class ModelDefinitionExtractor {
       try {
         MultiValueChooserModel multiValueChooserModel = field.getAnnotation(MultiValueChooserModel.class);
         ChooserValues values = multiValueChooserModel.value().newInstance();
-        values.getValues();
-        values.getLabels();
       } catch (Exception ex) {
         errors.add(new ErrorMessage(DefinitionError.DEF_220, contextMsg, ex.toString()));
       }
@@ -240,7 +236,6 @@ public abstract class ModelDefinitionExtractor {
       if (!List.class.isAssignableFrom(field.getType())) {
         errors.add(new ErrorMessage(DefinitionError.DEF_230, contextMsg));
       } else {
-        configPrefix += field.getName() + ".";
         Class listBeanClass = (Class)((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0];
         errors.addAll(ConfigDefinitionExtractor.get().validateComplexField("", listBeanClass,
                                                                            Collections.<String>emptyList(),contextMsg));

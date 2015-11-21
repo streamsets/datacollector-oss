@@ -444,10 +444,6 @@ public class StageDefinition {
     return list;
   }
 
-  private List<String> getOutputStreamLabels(ClassLoader classLoader) {
-    return _getOutputStreamLabels(classLoader, false);
-  }
-
   private List<String> getLocalizedOutputStreamLabels(ClassLoader classLoader) {
     return _getOutputStreamLabels(classLoader, true);
   }

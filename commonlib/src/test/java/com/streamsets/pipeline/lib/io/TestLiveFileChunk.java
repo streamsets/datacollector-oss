@@ -26,13 +26,14 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class TestLiveFileChunk {
 
   @Test
   public void testChunkGetters() throws IOException {
     LiveFile file = Mockito.mock(LiveFile.class);
-    LiveFileChunk chunk = new LiveFileChunk("tag", file, Charset.forName("UTF-8"), "Hola\nHello".getBytes(), 1, 9, true);
+    LiveFileChunk chunk = new LiveFileChunk("tag", file, StandardCharsets.UTF_8, "Hola\nHello".getBytes(), 1, 9, true);
     Assert.assertEquals("tag", chunk.getTag());
     Assert.assertEquals(file, chunk.getFile());
     Assert.assertEquals("Hola", IOUtils.readLines(chunk.getReader()).get(0));
@@ -55,8 +56,8 @@ public class TestLiveFileChunk {
 
   @Test
   public void testChunkLinesLF() throws IOException {
-    byte[] data = "Hello\nBye\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, null, Charset.forName("UTF-8"), data, 1, data.length, true);
+    byte[] data = "Hello\nBye\n".getBytes(StandardCharsets.UTF_8);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, StandardCharsets.UTF_8, data, 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());
@@ -66,8 +67,8 @@ public class TestLiveFileChunk {
 
   @Test
   public void testChunkLinesCRLF() throws IOException {
-    byte[] data = "Hello\r\nBye\r\n".getBytes(Charset.forName("UTF-8"));
-    LiveFileChunk chunk = new LiveFileChunk(null, null, Charset.forName("UTF-8"), data, 1, data.length, true);
+    byte[] data = "Hello\r\nBye\r\n".getBytes(StandardCharsets.UTF_8);
+    LiveFileChunk chunk = new LiveFileChunk(null, null, StandardCharsets.UTF_8, data, 1, data.length, true);
     Assert.assertEquals(2, chunk.getLines().size());
     Assert.assertEquals("Hello\r\n", chunk.getLines().get(0).getText());
     Assert.assertEquals(1, chunk.getLines().get(0).getFileOffset());

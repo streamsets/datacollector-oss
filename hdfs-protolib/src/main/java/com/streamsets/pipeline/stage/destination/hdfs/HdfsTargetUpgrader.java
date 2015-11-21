@@ -93,6 +93,9 @@ public class HdfsTargetUpgrader implements StageUpgrader {
           configsToRemove.add(config);
           configsToAdd.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig." + config.getName(), config.getValue()));
           break;
+        default:
+          // no upgrade required
+          break;
       }
     }
 

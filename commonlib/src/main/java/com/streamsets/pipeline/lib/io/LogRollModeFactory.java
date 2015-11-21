@@ -21,6 +21,7 @@ package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.Comparator;
 
@@ -134,11 +135,11 @@ public enum LogRollModeFactory implements RollModeFactory {
 
   private interface LiveFileNameSetter {
 
-    public void setName(String name);
+    void setName(String name);
 
   }
 
-  static class StringComparator implements Comparator<Path>, LiveFileNameSetter {
+  static class StringComparator implements Comparator<Path>, LiveFileNameSetter, Serializable {
     private int liveNameLength;
 
     @Override
@@ -154,7 +155,7 @@ public enum LogRollModeFactory implements RollModeFactory {
     }
   }
 
-  static class ReverseCounterComparator implements Comparator<Path>, LiveFileNameSetter {
+  static class ReverseCounterComparator implements Comparator<Path>, LiveFileNameSetter, Serializable {
     private int liveNameLength;
 
     @Override

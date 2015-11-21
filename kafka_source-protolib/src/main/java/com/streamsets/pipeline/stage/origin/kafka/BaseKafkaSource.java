@@ -221,26 +221,27 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
                   KafkaErrors.KAFKA_44
               )
           );
-        }
-        File file = new File(getContext().getResourcesDirectory(), protoDescriptorFile);
-        if(!file.exists()) {
-          issues.add(
-              getContext().createConfigIssue(
-                DataFormatGroups.PROTOBUF.name(),
-                "protoDescriptorFile",
-                DataFormatErrors.DATA_FORMAT_09,
-                file.getAbsolutePath()
-              )
-          );
-        }
-        if(messageType == null || messageType.isEmpty()) {
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.PROTOBUF.name(),
-                  "messageType",
-                  KafkaErrors.KAFKA_44
-              )
-          );
+        } else {
+          File file = new File(getContext().getResourcesDirectory(), protoDescriptorFile);
+          if(!file.exists()) {
+            issues.add(
+                getContext().createConfigIssue(
+                    DataFormatGroups.PROTOBUF.name(),
+                    "protoDescriptorFile",
+                    DataFormatErrors.DATA_FORMAT_09,
+                    file.getAbsolutePath()
+                )
+            );
+          }
+          if(messageType == null || messageType.isEmpty()) {
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.PROTOBUF.name(),
+                    "messageType",
+                    KafkaErrors.KAFKA_44
+                )
+            );
+          }
         }
         break;
       default:

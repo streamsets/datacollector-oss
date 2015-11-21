@@ -68,8 +68,8 @@ public class RuntimeModule {
     Configuration conf = new Configuration();
     File configFile = new File(runtimeInfo.getConfigDir(), "sdc.properties");
     if (configFile.exists()) {
-      try {
-        conf.load(new FileReader(configFile));
+      try(FileReader reader = new FileReader(configFile)) {
+        conf.load(reader);
         runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
         // Remove this config;
         String executionMode = conf.get(PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.STANDALONE.name());

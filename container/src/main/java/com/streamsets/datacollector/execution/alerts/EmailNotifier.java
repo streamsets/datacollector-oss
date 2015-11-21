@@ -120,6 +120,8 @@ public class EmailNotifier implements StateEventListener {
               emailBody = emailBody.replace(EmailConstants.MESSAGE_KEY, "was started");
               subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + toState.getName() + " - CONNECTING";
               break;
+            default:
+              throw new IllegalStateException("Unexpected PipelineState " + toState);
           }
         } catch (IOException e) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_01000, e.toString(), e);

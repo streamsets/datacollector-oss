@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,7 +118,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
       case BYTE:
         return Field.create(NumberFormat.getInstance(dataLocale).parse(stringValue).byteValue());
       case BYTE_ARRAY:
-        return Field.create(stringValue.getBytes());
+        return Field.create(stringValue.getBytes(StandardCharsets.UTF_8));
       case CHAR:
         return Field.create(stringValue.charAt(0));
       case DATE:

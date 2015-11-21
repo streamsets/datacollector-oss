@@ -75,7 +75,9 @@ public class ProductionSourceOffsetCommitterOffsetTracker implements SourceOffse
         LOG.trace("Commit offset '{}'", newOffset);
       }
       offsetCommitter.commit(newOffset);
-      offsetFile.setLastModified(System.currentTimeMillis());
+      if (!offsetFile.setLastModified(System.currentTimeMillis())) {
+        LOG.warn("Failed to set Last Modified on file " + offsetFile);
+      }
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }

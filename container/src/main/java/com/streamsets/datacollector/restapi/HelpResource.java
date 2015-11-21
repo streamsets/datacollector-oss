@@ -37,6 +37,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
 
@@ -51,7 +53,7 @@ public class HelpResource {
       URL helpRef = Utils.checkNotNull(HelpResource.class.getClassLoader().getResource(HELP_REF_NAME),
         Utils.formatL("Could not find {}", HELP_REF_NAME));
       try (InputStream is = helpRef.openStream()) {
-        try (Reader reader = new InputStreamReader(is)) {
+        try (Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
           Properties helpRefs = new Properties();
           helpRefs.load(reader);
           HELP_REF_PROPERTIES = helpRefs;

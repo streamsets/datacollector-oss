@@ -69,8 +69,7 @@ public class FilePipelineStateStore implements PipelineStateStore {
     this.runtimeInfo = runtimeInfo;
     this.configuration = conf;
     File stateDir = new File(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_BASE_DIR);
-    stateDir.mkdirs();
-    if (!stateDir.isDirectory()) {
+    if (!(stateDir.exists() || stateDir.mkdirs()) || !stateDir.isDirectory()) {
       throw new RuntimeException(Utils.format("Could not create directory '{}'", stateDir));
     }
   }
@@ -101,7 +100,10 @@ public class FilePipelineStateStore implements PipelineStateStore {
 
   @Override
   public void delete(String name, String rev) {
-    getPipelineStateFile(name, rev).delete();
+    File pipelineStateFile = getPipelineStateFile(name, rev);
+    if (!pipelineStateFile.delete()){
+      LOG.warn("Failed to delete pipeline state file " + pipelineStateFile.getPath().toString());
+    }
   }
 
   @Override
@@ -168,7 +170,9 @@ public class FilePipelineStateStore implements PipelineStateStore {
   @Override
   public void deleteHistory(String pipelineName, String rev) {
     for (File f : getHistoryStateFiles(pipelineName, rev)) {
-      f.delete();
+      if (!f.delete()) {
+        LOG.warn("Failed to delete history file " + f);
+      }
     }
     LogUtil.resetRollingFileAppender(pipelineName, rev, STATE);
   }

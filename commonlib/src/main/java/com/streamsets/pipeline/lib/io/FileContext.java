@@ -170,6 +170,9 @@ public class FileContext {
             break;
           case ARCHIVE:
             Path fileArchive = Paths.get(archiveDir, file.getPath().toString());
+            if (fileArchive == null) {
+              throw new IOException("Could not find archive file");
+            }
             try {
               Files.createDirectories(fileArchive.getParent());
               Files.move(file.getPath(), fileArchive);

@@ -369,6 +369,9 @@ public class SpoolDirSource extends BaseSource {
       case AVRO:
         builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
         break;
+      default:
+        // no action needed
+        break;
     }
     try {
       parserFactory = builder.build();

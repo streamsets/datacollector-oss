@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import javax.crypto.Cipher;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.Set;
 
 public class TestCollectdParser {
   private static final Logger LOG = LoggerFactory.getLogger(TestCollectdParser.class);
-  private static final Charset CHARSET = Charset.forName("UTF-8");
+  private static final Charset CHARSET = StandardCharsets.UTF_8;
 
   // Common Record Values
   private static final Field HOST = Field.create("ip-192-168-42-24.us-west-2.compute.internal");

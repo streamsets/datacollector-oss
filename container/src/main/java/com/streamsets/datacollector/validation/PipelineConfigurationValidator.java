@@ -570,6 +570,8 @@ public class PipelineConfigurationValidator {
             preview = false;
           }
           break;
+        default:
+          throw new IllegalStateException("Unexpected stage type " + stageDef.getType());
       }
       for (ConfigDefinition confDef : stageDef.getConfigDefinitions()) {
         Config config = stageConf.getConfig(confDef.getName());
@@ -773,7 +775,6 @@ public class PipelineConfigurationValidator {
       Config conf,
       IssueCreator issueCreator
   ) {
-    String instanceName = stageConf.getInstanceName();
     boolean preview = true;
     switch (confDef.getModel().getModelType()) {
       case VALUE_CHOOSER:

@@ -51,7 +51,9 @@ public class MiniSDCSystemProcessImpl extends SystemProcessImpl {
     }
     File yarnCommand = new File(tempDir, "yarn-command");
     if (!yarnCommand.isFile() || !yarnCommand.canExecute()) {
-      yarnCommand.delete();
+      if (!yarnCommand.delete()) {
+        LOG.warn("Failed to delete yarn command file " + yarnCommand);
+      }
       try {
         Files.write(YARN_COMMAND_TEXT, yarnCommand, StandardCharsets.UTF_8);
       } catch (IOException e) {

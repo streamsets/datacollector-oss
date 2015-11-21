@@ -59,6 +59,10 @@ public class ActiveRecordWriters {
       return (diff > 0) ? 1 : (diff < 0) ? -1 : 0;
     }
 
+    public boolean equals(Delayed o) {
+      return compareTo(o) == 0;
+    }
+
     public RecordWriter getWriter() {
       return writer;
     }

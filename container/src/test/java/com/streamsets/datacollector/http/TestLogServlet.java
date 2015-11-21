@@ -143,8 +143,8 @@ public class TestLogServlet {
 
   @Test
   public void testLogs() throws Exception {
-      String baseLogUrl = startServer() + "/rest/v1/system/logs";
-      try {
+    String baseLogUrl = startServer() + "/rest/v1/system/logs";
+    try {
       HttpURLConnection conn = (HttpURLConnection) new URL(baseLogUrl + "/files").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
       Assert.assertTrue(conn.getContentType().startsWith("application/json"));
@@ -165,10 +165,9 @@ public class TestLogServlet {
       List<String> lines = IOUtils.readLines(conn.getInputStream());
       Assert.assertEquals(1, lines.size());
       Assert.assertEquals("bye", lines.get(0));
-      } finally {
-        stopServer();
-      }
-
+    } finally {
+      stopServer();
+    }
   }
 
 }

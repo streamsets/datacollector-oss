@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -358,7 +359,7 @@ public class CollectdParser extends AbstractParser {
     // N-bytes
     byte[] bytes = new byte[length - 5];
     buf.getBytes(offset, bytes, 0, length - 5);
-    return new String(bytes);
+    return new String(bytes, StandardCharsets.UTF_8);
   }
 
   /**
@@ -426,7 +427,7 @@ public class CollectdParser extends AbstractParser {
     int userLength = buf.getUnsignedShort(offset);
     byte[] userBytes = new byte[userLength];
     buf.getBytes(offset + 2, userBytes, 0, userLength);
-    return new String(userBytes);
+    return new String(userBytes, StandardCharsets.UTF_8);
   }
 
   private byte[] parseIv(int offset, ByteBuf buf) {
@@ -443,7 +444,9 @@ public class CollectdParser extends AbstractParser {
 
     if (length < 33) {
       LOG.warn("No username");
-    } else if (length < 32) {
+    }
+
+    if (length < 32) {
       LOG.warn("invalid signature");
     }
 
@@ -453,7 +456,7 @@ public class CollectdParser extends AbstractParser {
     int userLength = length - offset - 32;
     byte[] userBytes = new byte[userLength];
     buf.getBytes(offset + 32, userBytes, 0, userLength);
-    String username = new String(userBytes);
+    String username = new String(userBytes, StandardCharsets.UTF_8);
 
     if (!authKeys.containsKey(username)) {
       throw new OnRecordErrorException(Errors.COLLECTD_03, "Auth File doesn't contain requested user: " + username);

@@ -44,6 +44,9 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -294,7 +297,7 @@ public class LdapLoginModule extends AbstractLoginModule
         {
           byte[] value = (byte[]) attribute.get();
 
-          ldapCredential = new String(value);
+          ldapCredential = new String(value, StandardCharsets.UTF_8);
         }
         catch (NamingException e)
         {
@@ -490,8 +493,8 @@ public class LdapLoginModule extends AbstractLoginModule
     environment.put(Context.SECURITY_PRINCIPAL, userDn);
     environment.put(Context.SECURITY_CREDENTIALS, password.toString());
 
-    DirContext dirContext = new InitialDirContext(environment);
-    List<String> roles = getUserRolesByDn(_rootContext, userDn);
+    new InitialDirContext(environment);
+    List<String> roles = getUserRoles(_rootContext, username);
 
     UserInfo userInfo = new UserInfo(username, null, roles);
     setCurrentUser(new JAASUserInfo(userInfo));

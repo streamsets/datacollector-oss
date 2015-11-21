@@ -181,7 +181,7 @@ public class DataRuleEvaluator {
             }
             break;
           case PERCENTAGE:
-            if ((matchingRecordCounter.getCount() * 100 / evaluatedRecordCounter.getCount()) > threshold
+            if ((matchingRecordCounter.getCount() * 100.0 / evaluatedRecordCounter.getCount()) > threshold
                 && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
               alertManager.alert(matchingRecordCounter.getCount(), emailIds, dataRuleDefinition);
             }

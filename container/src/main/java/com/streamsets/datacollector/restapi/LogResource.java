@@ -47,6 +47,8 @@ import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,11 +89,11 @@ public class LogResource {
     streamer.stream(outputStream);
 
     if(extraMessage != null) {
-      outputStream.write(extraMessage.getBytes());
+      outputStream.write(extraMessage.getBytes(StandardCharsets.UTF_8));
     }
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-        new ByteArrayInputStream(outputStream.toByteArray())));
+        new ByteArrayInputStream(outputStream.toByteArray()), StandardCharsets.UTF_8));
 
     fetchLogData(bufferedReader, logData, pipeline, severity);
 
@@ -106,7 +108,7 @@ public class LogResource {
 
         //merge last message if it is part of new messages
         if(logData.size() > 0 && logData.get(0).get("timestamp") == null && logData.get(0).get("exception") != null) {
-          outputStream.write(logData.get(0).get("exception").getBytes());
+          outputStream.write(logData.get(0).get("exception").getBytes(StandardCharsets.UTF_8));
           logData.remove(0);
         }
 
@@ -176,13 +178,13 @@ public class LogResource {
       }
     }
     if (logFile != null) {
+      FileInputStream logStream = new FileInputStream(logFile);
       if(attachment) {
         return Response.ok().
-          header("Content-Disposition", "attachment; filename=" + logName).entity(new FileInputStream(logFile)).build();
+            header("Content-Disposition", "attachment; filename=" + logName).entity(logStream).build();
       } else {
-        response = Response.ok(new FileInputStream(logFile)).build();
+        response = Response.ok(logStream).build();
       }
-
     } else {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }

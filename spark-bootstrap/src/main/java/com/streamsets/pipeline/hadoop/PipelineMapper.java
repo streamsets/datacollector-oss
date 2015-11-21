@@ -40,6 +40,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -173,7 +175,7 @@ public class PipelineMapper extends Mapper {
     BufferedReader br = null;
     try {
       FileSystem fs = FileSystem.get(hadoopConf);
-      br = new BufferedReader(new InputStreamReader(fs.open(path)));
+      br = new BufferedReader(new InputStreamReader(fs.open(path), StandardCharsets.UTF_8));
       // read one line - the header
       header = br.readLine();
     } finally {

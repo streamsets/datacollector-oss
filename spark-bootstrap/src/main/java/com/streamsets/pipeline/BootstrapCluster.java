@@ -95,7 +95,9 @@ public class BootstrapCluster {
       throw new IllegalStateException(msg);
     }
     properties = new Properties();
-    properties.load(new FileInputStream(sdcProperties));
+    try (FileInputStream inStream = new FileInputStream(sdcProperties)) {
+      properties.load(inStream);
+    }
     File rootDataDir = new File(etcRoot, "data");
     dataDir = rootDataDir.getAbsolutePath();
     File basePipelineDir = new File(rootDataDir, "pipelines");

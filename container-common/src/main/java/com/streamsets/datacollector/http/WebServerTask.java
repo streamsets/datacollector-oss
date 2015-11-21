@@ -343,6 +343,9 @@ public class WebServerTask extends AbstractTask {
       case "basic":
         security.setAuthenticator(new ProxyAuthenticator(new BasicAuthenticator(), runtimeInfo));
         break;
+      default:
+        // no action
+        break;
     }
     security.setLoginService(loginService);
     return security;

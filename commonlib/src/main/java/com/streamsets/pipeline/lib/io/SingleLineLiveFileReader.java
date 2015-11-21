@@ -125,7 +125,7 @@ public class SingleLineLiveFileReader implements LiveFileReader {
     channel = Files.newByteChannel(currentFile.getPath(), StandardOpenOption.READ);
     open = true;
 
-    long actualSize = -1;
+    long actualSize;
     try {
       actualSize = channel.size();
     } catch (IOException ex) {
@@ -308,7 +308,6 @@ public class SingleLineLiveFileReader implements LiveFileReader {
           int chunkSize = lastEolIdx - buffer.position();
           buffer.get(chunkBytes, 0, chunkSize);
           // create reader with exactly the chunk
-          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
           liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, false);
         } else if (buffer.limit() == buffer.capacity()) {
           // buffer is full and we don't have an EOL, return truncated chunk and go into truncate mode.
@@ -316,7 +315,6 @@ public class SingleLineLiveFileReader implements LiveFileReader {
           int chunkSize = buffer.limit() - buffer.position();
           buffer.get(chunkBytes, 0, chunkSize);
           // create reader with exactly the chunk
-          Reader reader = new InputStreamReader(new ByteArrayInputStream(chunkBytes, 0, chunkSize), charset);
           liveFileChunk = new LiveFileChunk(tag, currentFile, charset, chunkBytes, offset, chunkSize, true);
           truncateMode = true;
         } else {

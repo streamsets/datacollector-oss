@@ -577,26 +577,27 @@ public class DataParserFormatConfig {
                   DataFormatErrors.DATA_FORMAT_07
               )
           );
-        }
-        File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
-        if(!file.exists()) {
-          issues.add(
-            context.createConfigIssue(
-              DataFormatGroups.PROTOBUF.name(),
-              "protoDescriptorFile",
-              DataFormatErrors.DATA_FORMAT_09,
-              file.getAbsolutePath()
-            )
-          );
-        }
-        if(messageType == null || messageType.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.PROTOBUF.name(),
-                  "messageType",
-                  DataFormatErrors.DATA_FORMAT_08
-              )
-          );
+        } else {
+          File file = new File(context.getResourcesDirectory(), protoDescriptorFile);
+          if(!file.exists()) {
+            issues.add(
+                context.createConfigIssue(
+                    DataFormatGroups.PROTOBUF.name(),
+                    "protoDescriptorFile",
+                    DataFormatErrors.DATA_FORMAT_09,
+                    file.getAbsolutePath()
+                )
+            );
+          }
+          if(messageType == null || messageType.isEmpty()) {
+            issues.add(
+                context.createConfigIssue(
+                    DataFormatGroups.PROTOBUF.name(),
+                    "messageType",
+                    DataFormatErrors.DATA_FORMAT_08
+                )
+            );
+          }
         }
         break;
       default:
@@ -664,6 +665,8 @@ public class DataParserFormatConfig {
           .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
           .setMaxDataLen(-1);
         break;
+      default:
+        throw new IllegalStateException("Unexpected data format" + dataFormat);
     }
     try {
       parserFactory = builder.build();

@@ -36,6 +36,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -240,7 +242,7 @@ public class ProtobufTypeUtil {
         path = FORWARD_SLASH;
       }
       byte[] bytes = org.apache.commons.codec.binary.Base64.encodeBase64(bOut.toByteArray());
-      record.getHeader().setAttribute(PROTOBUF_UNKNOWN_FIELDS_PREFIX + path, new String(bytes));
+      record.getHeader().setAttribute(PROTOBUF_UNKNOWN_FIELDS_PREFIX + path, new String(bytes, StandardCharsets.UTF_8));
     }
 
     return Field.create(fieldMap);
@@ -256,7 +258,7 @@ public class ProtobufTypeUtil {
     Field f;
     if(value == null) {
       // If the message does not contain required fields then builder.build() throws UninitializedMessageException
-      f = Field.create(getFieldType(fieldDescriptor.getJavaType()), value);
+      f = Field.create(getFieldType(fieldDescriptor.getJavaType()), null);
     } else if(fieldDescriptor.isRepeated()) {
       List<?> list = (List<?>) value;
       List<Field> listField = new ArrayList<>();
@@ -545,7 +547,7 @@ public class ProtobufTypeUtil {
       UnknownFieldSet.Builder unknownFieldBuilder = UnknownFieldSet.newBuilder();
       unknownFieldBuilder.mergeDelimitedFrom(
           new ByteArrayInputStream(
-              org.apache.commons.codec.binary.Base64.decodeBase64(attribute.getBytes())
+              org.apache.commons.codec.binary.Base64.decodeBase64(attribute.getBytes(StandardCharsets.UTF_8))
           )
       );
       UnknownFieldSet unknownFieldSet = unknownFieldBuilder.build();

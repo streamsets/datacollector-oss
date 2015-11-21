@@ -35,6 +35,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -127,7 +129,7 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     ProcessBuilder processBuilder = new ProcessBuilder(cmd);
     processBuilder.redirectErrorStream(true);
     Process process = processBuilder.start();
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
       String line = null;
       while ((line = reader.readLine()) != null) {
         System.out.println(line);

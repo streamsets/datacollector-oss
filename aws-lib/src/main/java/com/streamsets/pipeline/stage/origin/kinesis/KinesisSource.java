@@ -114,13 +114,8 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
 
       DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat())
           .setMaxDataLen(50 * 1024); // Max Message for Kinesis is 50KiB
-
-      switch (dataFormat) {
-        case SDC_JSON:
-          break;
-        case JSON:
-          builder.setMode(JsonMode.MULTIPLE_OBJECTS);
-          break;
+      if (dataFormat == DataFormat.JSON){
+        builder.setMode(JsonMode.MULTIPLE_OBJECTS);
       }
 
       parserFactory = builder.build();

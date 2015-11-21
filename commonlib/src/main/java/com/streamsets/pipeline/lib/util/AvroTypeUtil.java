@@ -63,7 +63,7 @@ public class AvroTypeUtil {
       record.getHeader().setAttribute(AVRO_UNION_TYPE_INDEX_PREFIX + fieldPath, String.valueOf(typeIndex));
     }
     if(value == null) {
-      return Field.create(getFieldType(schema.getType()), value);
+      return Field.create(getFieldType(schema.getType()), null);
     }
     Field f = null;
     switch(schema.getType()) {
@@ -135,6 +135,8 @@ public class AvroTypeUtil {
       case STRING:
         f = Field.create(Field.Type.STRING, value.toString());
         break;
+      default:
+        throw new IllegalStateException("Unexpected schema type " + schema.getType());
     }
     return f;
   }
@@ -544,16 +546,9 @@ public class AvroTypeUtil {
   }
 
   private static boolean isPrimitive(Schema.Type type) {
-    boolean isPrimitive = true;
-    switch (type) {
-      case ARRAY:
-      case UNION:
-      case RECORD:
-      case MAP:
-        isPrimitive = false;
-        // Even though FIXED type is categorized as complex type in avro, we treat it as primitive byte[]
-        break;
-    }
-    return isPrimitive;
+    return !(type == Schema.Type.ARRAY
+        || type == Schema.Type.UNION
+        || type == Schema.Type.RECORD
+        || type == Schema.Type.MAP);
   }
 }

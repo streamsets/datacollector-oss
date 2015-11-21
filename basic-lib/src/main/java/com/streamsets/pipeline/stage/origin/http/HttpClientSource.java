@@ -37,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -193,7 +195,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     if(httpConsumer.getLastResponseStatus() == 200) {
       for (String chunk : chunks) {
         String sourceId = getOffset();
-        try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes())) {
+        try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
           Record record = parser.parse();
           // A chunk only contains a single Record, so we only parse it once.
           if (record != null) {

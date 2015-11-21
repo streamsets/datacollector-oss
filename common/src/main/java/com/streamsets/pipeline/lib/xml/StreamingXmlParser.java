@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.Characters;
@@ -112,14 +113,11 @@ public class StreamingXmlParser {
       // we need to skip first level elements that are not the record delimiter and we have to ignore record delimiter
       // elements deeper than first level
       while (hasNext(xmlEventReader) && !isStartOfRecord(peek(xmlEventReader), depth)) {
-        XMLEvent event  = read(xmlEventReader);
-        switch (event.getEventType()) {
-          case XMLEvent.START_ELEMENT:
-            depth++;
-            break;
-          case XMLEvent.END_ELEMENT:
-            depth--;
-            break;
+        XMLEvent event = read(xmlEventReader);
+        if (event.getEventType() == XMLEvent.START_ELEMENT) {
+          depth++;
+        } else if (event.getEventType() == XMLEvent.END_ELEMENT) {
+          depth--;
         }
       }
       if (hasNext(xmlEventReader)) {
@@ -149,14 +147,7 @@ public class StreamingXmlParser {
   }
 
   boolean isIgnorable(XMLEvent event) {
-    boolean ignore = false;
-    switch (event.getEventType()) {
-      case XMLEvent.PROCESSING_INSTRUCTION:
-      case XMLEvent.COMMENT:
-        ignore = true;
-        break;
-    }
-    return ignore;
+    return event.getEventType() == XMLEvent.PROCESSING_INSTRUCTION || event.getEventType() == XMLEvent.COMMENT;
   }
 
   void skipIgnorable(XMLEventReader reader) throws XMLStreamException {

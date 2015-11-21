@@ -78,6 +78,9 @@ public class FlumeTargetUpgrader implements StageUpgrader {
           configsToRemove.add(config);
           configsToAdd.add(new Config("flumeConfigBean.dataGeneratorFormatConfig." + config.getName(), config.getValue()));
           break;
+        default:
+          // no upgrade action required
+          break;
       }
     }
 

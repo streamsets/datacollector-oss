@@ -30,6 +30,8 @@ import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class RawDataSource extends BaseSource  {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    List<Record> records = parser.parse(this.getContext(), "rawData", rawData.getBytes());
+    List<Record> records = parser.parse(this.getContext(), "rawData", rawData.getBytes(StandardCharsets.UTF_8));
     for(Record record: records) {
       batchMaker.addRecord(record);
     }

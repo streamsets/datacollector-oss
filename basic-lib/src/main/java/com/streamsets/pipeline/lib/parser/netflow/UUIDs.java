@@ -34,6 +34,8 @@ import com.google.common.base.Charsets;
  */
 public final class UUIDs {
 
+  public static final Random RAND = new Random(System.currentTimeMillis());
+
   private UUIDs() {};
 
   // http://www.ietf.org/rfc/rfc4122.txt
@@ -113,7 +115,7 @@ public final class UUIDs {
   }
 
   private static long makeClockSeqAndNode() {
-    long clock = new Random(System.currentTimeMillis()).nextLong();
+    long clock = RAND.nextLong();
     long node = makeNode();
 
     long lsb = 0;

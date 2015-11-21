@@ -122,7 +122,7 @@ public final class GrokDictionary {
 
         String originalExpression = entry.getValue();
         String digestedExpression = digestExpressionAux(originalExpression);
-        wasModified = (originalExpression != digestedExpression);
+        wasModified = (!originalExpression.equals(digestedExpression));
 
         if (wasModified) {
           entry.setValue(digestedExpression);
@@ -241,7 +241,7 @@ public final class GrokDictionary {
       throw new GrokCompilationException("The path specfied could not be found: " + file);
     }
 
-    if (false == file.canRead()) {
+    if (!file.canRead()) {
       throw new GrokCompilationException("The path specified is not readable" + file);
     }
 

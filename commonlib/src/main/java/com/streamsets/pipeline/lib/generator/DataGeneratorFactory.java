@@ -42,8 +42,9 @@ public abstract class DataGeneratorFactory extends DataFactory {
       fileOutputStream = new FileOutputStream(file);
       return getGenerator(fileOutputStream);
     } catch (IOException ex) {
-      IOUtils.closeQuietly(fileOutputStream);
       throw ex;
+    } finally {
+      IOUtils.closeQuietly(fileOutputStream);
     }
   }
 

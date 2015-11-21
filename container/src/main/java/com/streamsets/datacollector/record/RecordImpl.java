@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RecordImpl implements Record {
+public class RecordImpl implements Record, Cloneable {
   private final HeaderImpl header;
   private Field value;
 
@@ -255,6 +255,8 @@ public class RecordImpl implements Record {
               }
             }
             break;
+          default:
+            break;
         }
         current = next;
       }
@@ -278,18 +280,23 @@ public class RecordImpl implements Record {
     int fieldPos = fields.size();
     if (elements.size() == fieldPos) {
       fieldPos--;
+
       if (fieldPos == 0) {
+        // the field to delete must be a primitive. delete it directly.
         deleted = value;
         value = null;
       } else {
-        switch (elements.get(fieldPos).getType()) {
+        // the field to delete is a map or list element, so to delete, you must remove it from the parent collection.
+        PathElement element = elements.get(fieldPos);
+        switch (element.getType()) {
           case MAP:
-            deleted = fields.get(fieldPos - 1).getValueAsMap().remove(elements.get(fieldPos).getName());
+            deleted = fields.get(fieldPos - 1).getValueAsMap().remove(element.getName());
             break;
           case LIST:
-            deleted = fields.get(fieldPos - 1).getValueAsList().remove(elements.get(fieldPos).getIndex());
+            deleted = fields.get(fieldPos - 1).getValueAsList().remove(element.getIndex());
             break;
-
+          default:
+            throw new IllegalStateException("Unexpected field type " + element.getType());
         }
       }
     }
@@ -318,6 +325,8 @@ public class RecordImpl implements Record {
         case LIST_MAP:
           gatherPaths("", value.getValueAsListMap(), paths);
           break;
+        default:
+          break;
       }
     }
     return paths;
@@ -338,7 +347,9 @@ public class RecordImpl implements Record {
           case LIST_MAP:
             gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsListMap(), paths);
             break;
-
+          default:
+            // not a collection type, so don't need to do anything
+            break;
         }
       }
     }
@@ -362,6 +373,9 @@ public class RecordImpl implements Record {
             break;
           case LIST_MAP:
             gatherPaths(base + "[" + i + "]", element.getValueAsListMap(), paths);
+            break;
+          default:
+            // not a collection type, no further effort needed
             break;
         }
       }

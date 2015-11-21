@@ -132,12 +132,12 @@ public class RBGenMojo extends AbstractMojo {
       }
     }
     // we want to preserve the order, thus we cannot use JDK Properties for this.
-    Writer writer = new FileWriter(bundleFile);
-    for (Map.Entry<String, String> entry : extractResources(klass).entrySet()) {
-      writer.write(escapeValue(entry.getKey(), true) + "=" + escapeValue(entry.getValue(), false) + "\n");
+    try (Writer writer = new FileWriter(bundleFile)) {
+      for (Map.Entry<String, String> entry : extractResources(klass).entrySet()) {
+        writer.write(escapeValue(entry.getKey(), true) + "=" + escapeValue(entry.getValue(), false) + "\n");
+      }
+      getLog().debug("Generated bundle: " + bundleName);
     }
-    writer.close();
-    getLog().debug("Generated bundle: " + bundleName);
     return bundleFile;
   }
 

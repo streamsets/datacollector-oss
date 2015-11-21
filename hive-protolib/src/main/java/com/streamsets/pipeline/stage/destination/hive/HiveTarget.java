@@ -115,7 +115,7 @@ public class HiveTarget extends BaseTarget {
     }
   }
 
-  class HiveConnectionRemovalListener implements RemovalListener<HiveEndPoint, StreamingConnection> {
+  static class HiveConnectionRemovalListener implements RemovalListener<HiveEndPoint, StreamingConnection> {
     @Override
     public void onRemoval(RemovalNotification<HiveEndPoint, StreamingConnection> notification) {
       LOG.debug("Evicting StreamingConnection from pool: {}", notification);

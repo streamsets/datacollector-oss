@@ -130,6 +130,8 @@ public class MetricRuleEvaluator {
         case TIMER_STD_DEV:
           value = t.getSnapshot().getStdDev();
           break;
+        default:
+          throw new IllegalArgumentException("Unexpected metric element " + metricsRuleDefinition.getMetricElement());
       }
       evaluate(value);
     }
@@ -143,6 +145,8 @@ public class MetricRuleEvaluator {
         case COUNTER_COUNT:
           value = c.getCount();
           break;
+        default:
+          throw new IllegalStateException("Unexpected metric element type " + metricsRuleDefinition.getMetricElement());
       }
       evaluate(value);
     }
@@ -183,6 +187,8 @@ public class MetricRuleEvaluator {
         case METER_MEAN_RATE:
           value = m.getMeanRate();
           break;
+        default:
+          throw new IllegalStateException("Unexpected metric element type " + metricsRuleDefinition.getMetricElement());
       }
       evaluate(value);
     }
@@ -226,6 +232,8 @@ public class MetricRuleEvaluator {
         case HISTOGRAM_STD_DEV:
           value = h.getSnapshot().getStdDev();
           break;
+        default:
+          throw new IllegalStateException("Unexpected metric element type " + metricsRuleDefinition.getMetricElement());
       }
       evaluate(value);
     }
@@ -246,6 +254,8 @@ public class MetricRuleEvaluator {
         case TIME_OF_LAST_RECEIVED_RECORD:
           value =  runtimeStats.getTimeOfLastReceivedRecord();
           break;
+        default:
+          throw new IllegalStateException("Unexpected metric element type " + metricsRuleDefinition.getMetricElement());
       }
       evaluate(value);
     }

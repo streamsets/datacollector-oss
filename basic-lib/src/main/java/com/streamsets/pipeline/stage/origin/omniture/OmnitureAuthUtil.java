@@ -22,6 +22,8 @@ package com.streamsets.pipeline.stage.origin.omniture;
 import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,7 +61,7 @@ public class OmnitureAuthUtil {
 
   private static byte[] generateNonce() {
     String nonce = Long.toString(new Date().getTime());
-    return nonce.getBytes();
+    return nonce.getBytes(StandardCharsets.UTF_8);
   }
 
   private static String generateTimestamp() {

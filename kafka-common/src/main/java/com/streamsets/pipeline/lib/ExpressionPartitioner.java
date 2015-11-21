@@ -29,7 +29,7 @@ public class ExpressionPartitioner implements Partitioner {
   }
 
   public int partition(Object key, int numPartitions) {
-    return Integer.valueOf((String)key);
+    return Integer.parseInt((String)key);
   }
 
 }

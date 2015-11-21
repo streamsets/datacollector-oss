@@ -28,6 +28,8 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
@@ -92,7 +94,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     } catch (NoSuchAlgorithmException e) {
       throw new StageException(Errors.HASH_00, hashType.getDigest(), e.toString(), e);
     }
-    messageDigest.update(valueAsString.getBytes());
+    messageDigest.update(valueAsString.getBytes(StandardCharsets.UTF_8));
     byte byteData[] = messageDigest.digest();
 
     //encode byte[] into hex
@@ -109,7 +111,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     } else if (field.getType() == Field.Type.BYTE) {
       return String.valueOf(field.getValueAsByte());
     } else if (field.getType() == Field.Type.BYTE_ARRAY) {
-      return new String(field.getValueAsByteArray());
+      return new String(field.getValueAsByteArray(), StandardCharsets.UTF_8);
     } else if (field.getType() == Field.Type.CHAR) {
       return String.valueOf(field.getValueAsChar());
     } else if (field.getType() == Field.Type.DATE) {

@@ -46,7 +46,7 @@ import java.util.regex.Pattern;
 
 public abstract class
     ELDefinitionExtractor {
-  public static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class};
+  static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class};
 
   private static final ELDefinitionExtractor EXTRACTOR = new ELDefinitionExtractor() {};
 

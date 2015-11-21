@@ -65,6 +65,9 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
           case "GZIP":
             compressionConfig = new Config(FILE_COMPRESSION, Compression.COMPRESSED_FILE.name());
             break;
+          default:
+            // no action needed
+            break;
         }
         compressionConfigIndex = i;
         break;

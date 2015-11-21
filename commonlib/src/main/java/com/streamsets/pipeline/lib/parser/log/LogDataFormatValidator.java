@@ -154,7 +154,7 @@ public class LogDataFormatValidator {
       grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
       grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(
         Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
-      if(grokPatternDefinition != null || !grokPatternDefinition.isEmpty()) {
+      if(grokPatternDefinition != null && !grokPatternDefinition.isEmpty()) {
         grokDictionary.addDictionary(new StringReader(grokPatternDefinition));
       }
       grokDictionary.bind();

@@ -194,13 +194,13 @@ public class RulesConfigLoader {
   }
 
   private boolean areStringsSame(String lhs, String rhs) {
-    if(lhs == null && rhs != null) {
-      return false;
+    if(lhs != null) {
+      if (rhs == null) {
+        return false;
+      }
+      return lhs.equals(rhs);
     }
-    if(lhs != null && rhs == null) {
-      return false;
-    }
-    return lhs.equals(rhs);
+    return false;
   }
 
   void setPreviousRuleDefinitions(RuleDefinitions previousRuleDefinitions) {

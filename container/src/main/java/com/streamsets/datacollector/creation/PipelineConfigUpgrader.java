@@ -36,6 +36,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
                               List<Config> configs) throws StageException {
     switch(fromVersion) {
       case 0:
+        // nothing to do from 0 to 1
       case 1:
         upgradeV1ToV2(configs);
       case 2:
