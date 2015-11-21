@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import java.util.Map;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -163,12 +163,22 @@ public class JdbcDSource extends DSource {
   public int maxBatchSize;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Clob Size (Characters)",
+      displayPosition = 150,
+      group = "JDBC"
+  )
+  public int maxClobSize;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
-      displayPosition = 150,
+      displayPosition = 160,
       group = "JDBC"
   )
   public Map<String, String> driverProperties;
@@ -178,7 +188,7 @@ public class JdbcDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "JDBC Driver Class Name",
       description = "Class name for pre-JDBC 4 compliant drivers.",
-      displayPosition = 160,
+      displayPosition = 170,
       group = "LEGACY"
   )
   public String driverClassName;
@@ -189,7 +199,7 @@ public class JdbcDSource extends DSource {
       mode = ConfigDef.Mode.SQL,
       label = "Connection Health Test Query",
       description = "Not recommended for JDBC 4 compliant drivers. Runs when a new database connection is established.",
-      displayPosition = 170,
+      displayPosition = 180,
       group = "LEGACY"
   )
   public String connectionTestQuery;
@@ -199,7 +209,7 @@ public class JdbcDSource extends DSource {
       type = ConfigDef.Type.STRING,
       label = "Transaction ID Column Name",
       description = "When reading a change data table, column identifying the transaction the change belongs to.",
-      displayPosition = 180,
+      displayPosition = 190,
       group = "CDC"
   )
   public String txnIdColumnName;
@@ -210,7 +220,7 @@ public class JdbcDSource extends DSource {
       label = "Max Transaction Size",
       description = "If transactions exceed this size, they will be applied in multiple batches.",
       defaultValue = "10000",
-      displayPosition = 190,
+      displayPosition = 200,
       group = "CDC"
   )
   public int txnMaxSize;
@@ -232,7 +242,8 @@ public class JdbcDSource extends DSource {
         txnIdColumnName,
         txnMaxSize,
         jdbcRecordType,
-        maxBatchSize
+        maxBatchSize,
+        maxClobSize
       );
   }
 }

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,11 +39,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
 public class TestJdbcSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestJdbcSource.class);
   private static final int BATCH_SIZE = 1000;
+  private static final int CLOB_SIZE = 1000;
 
   private final String username = "sa";
   private final String password = "sa";
@@ -73,12 +76,19 @@ public class TestJdbcSource {
           "CREATE TABLE IF NOT EXISTS TEST.TEST_ARRAY " +
               "(p_id INT NOT NULL, non_scalar ARRAY, UNIQUE(p_id));"
       );
+      statement.addBatch(
+          "CREATE TABLE IF NOT EXISTS TEST.TEST_CLOB " +
+              "(p_id INT NOT NULL, clob_col CLOB, UNIQUE(p_id));"
+      );
       // Add some data
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (1, 'Adam', 'Kunicki')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (2, 'Jon', 'Natkins')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (3, 'Jon', 'Daulton')");
       statement.addBatch("INSERT INTO TEST.TEST_TABLE VALUES (4, 'Girish', 'Pancha')");
       statement.addBatch("INSERT INTO TEST.TEST_ARRAY VALUES (1, (1,2,3))");
+      statement.addBatch("INSERT INTO TEST.TEST_CLOB VALUES  (1, 'short string for clob')");
+      statement.addBatch("INSERT INTO TEST.TEST_CLOB VALUES  (2, 'long string for clob" +
+          RandomStringUtils.randomAlphanumeric(CLOB_SIZE) + "')");
 
       statement.executeBatch();
     }
@@ -90,6 +100,7 @@ public class TestJdbcSource {
       // Setup table
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_TABLE;");
       statement.execute("DROP TABLE IF EXISTS TEST.TEST_ARRAY;");
+      statement.execute("DROP TABLE IF EXISTS TEST.TEST_CLOB;");
     }
 
     // Last open connection terminates H2
@@ -113,7 +124,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -172,7 +184,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -243,7 +256,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -272,7 +286,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -301,7 +316,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -333,7 +349,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -362,7 +379,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -391,7 +409,8 @@ public class TestJdbcSource {
         "",
         1000,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
 
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
@@ -431,7 +450,8 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1000,
         JdbcRecordType.MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -476,7 +496,8 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -524,7 +545,8 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -554,7 +576,8 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -583,7 +606,8 @@ public class TestJdbcSource {
         "FIRST_NAME",
         1,
         JdbcRecordType.LIST_MAP,
-        BATCH_SIZE
+        BATCH_SIZE,
+        CLOB_SIZE
     );
     SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
         .addOutputLane("lane")
@@ -591,5 +615,54 @@ public class TestJdbcSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
+  }
+
+  @Test
+  public void testClobColumn() throws Exception {
+    String queryClob = "SELECT * FROM TEST.TEST_CLOB WHERE P_ID > ${offset} ORDER BY P_ID ASC LIMIT 10;";
+    JdbcSource origin = new JdbcSource(
+        true,
+        h2ConnectionString,
+        queryClob,
+        initialOffset,
+        "P_ID",
+        queryInterval,
+        username,
+        password,
+        new HashMap<String, String>(),
+        "",
+        "",
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        BATCH_SIZE,
+        CLOB_SIZE
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      // Check that existing rows are loaded.
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(2, parsedRecords.size());
+
+      assertEquals("2", output.getNewOffset());
+
+      // First record is shorter than CLOB_SIZE, so it must be as is.
+      assertEquals("short string for clob", parsedRecords.get(0).get("/CLOB_COL").getValueAsString());
+
+      // Second record is longer than CLOB_SIZE, so it must be truncated.
+      assertEquals(CLOB_SIZE, parsedRecords.get(1).get("/CLOB_COL").getValueAsString().length());
+      assertTrue(parsedRecords.get(1).get("/CLOB_COL").getValueAsString().startsWith("long string for clob"));
+    } finally {
+      runner.runDestroy();
+    }
   }
 }

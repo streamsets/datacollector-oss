@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -74,6 +75,7 @@ public class JdbcSource extends BaseSource {
   private final int txnMaxSize;
   private final JdbcRecordType recordType;
   private final int maxBatchSize;
+  private final int maxClobSize;
 
   private long queryIntervalMillis = Long.MIN_VALUE;
 
@@ -99,7 +101,8 @@ public class JdbcSource extends BaseSource {
       String txnColumnName,
       int txnMaxSize,
       JdbcRecordType jdbcRecordType,
-      int maxBatchSize
+      int maxBatchSize,
+      int maxClobSize
   ) {
     this.isIncrementalMode = isIncrementalMode;
     this.connectionString = connectionString;
@@ -116,6 +119,7 @@ public class JdbcSource extends BaseSource {
     this.txnMaxSize = txnMaxSize;
     this.recordType = jdbcRecordType;
     this.maxBatchSize = maxBatchSize;
+    this.maxClobSize = maxClobSize;
   }
 
   @Override
@@ -362,7 +366,14 @@ public class JdbcSource extends BaseSource {
     for (int i = 1; i <= numColumns; i++) {
       Object value = resultSet.getObject(i);
       try {
+        // Convert clob to string by truncating it by maxClobSize.
+        if (value instanceof Clob) {
+          // The first character is at position 1.
+          value = ((Clob) value).getSubString(1, maxClobSize);
+        }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
+      } catch (SQLException e) {
+        handleError(Errors.JDBC_11, e.getCause().toString());
       } catch (IOException e) {
         handleError(Errors.JDBC_03, md.getColumnName(i), value);
       }

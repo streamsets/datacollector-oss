@@ -35,6 +35,7 @@ public enum Errors implements ErrorCode {
   JDBC_09("Offset Column '{}' cannot contain a '.' or prefix."),
   JDBC_10("The JDBC driver for this database does not support scrollable cursors, " +
       "which are required when Transaction ID Column Name is specified."),
+  JDBC_11("Failed to convert CLOB to string: {}"),
   ;
   private final String msg;
 
