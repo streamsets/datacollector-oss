@@ -32,7 +32,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "JDBC Consumer",
     description = "Reads data from a JDBC source.",
     icon = "rdbms.png",
@@ -125,6 +125,16 @@ public class JdbcDSource extends DSource {
   public int maxBatchSize;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Clob Size (Characters)",
+      displayPosition = 150,
+      group = "JDBC"
+  )
+  public int maxClobSize;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Transaction ID Column Name",
@@ -160,6 +170,7 @@ public class JdbcDSource extends DSource {
         txnMaxSize,
         jdbcRecordType,
         maxBatchSize,
+        maxClobSize,
         hikariConfigBean
       );
   }

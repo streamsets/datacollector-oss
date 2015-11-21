@@ -43,6 +43,9 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         // fall through
       case 4:
         upgradeV4toV5(configs);
+        // fall through
+      case 5:
+        upgradeV5toV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -65,5 +68,9 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
 
   private void upgradeV4toV5(List<Config> configs) {
     upgradeToConfigBeanV1(configs);
+  }
+
+  private void upgradeV5toV6(List<Config> configs) {
+    configs.add(new Config("maxClobSize", 1000));
   }
 }

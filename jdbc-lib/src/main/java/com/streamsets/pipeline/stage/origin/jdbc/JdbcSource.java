@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -64,6 +65,9 @@ public class JdbcSource extends BaseSource {
   private static final String DRIVER_CLASSNAME = "hikariConfigBean.driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
+  private static final String TXN_MAX_SIZE = "txnMaxSize";
+  private static final String MAX_BATCH_SIZE = "maxBatchSize";
+  private static final String MAX_CLOB_SIZE = "maxClobSize";
 
   private final boolean isIncrementalMode;
   private final String query;
@@ -74,6 +78,7 @@ public class JdbcSource extends BaseSource {
   private final int txnMaxSize;
   private final JdbcRecordType recordType;
   private final int maxBatchSize;
+  private final int maxClobSize;
   private final HikariPoolConfigBean hikariConfigBean;
 
   private long queryIntervalMillis = Long.MIN_VALUE;
@@ -94,6 +99,7 @@ public class JdbcSource extends BaseSource {
       int txnMaxSize,
       JdbcRecordType jdbcRecordType,
       int maxBatchSize,
+      int maxClobSize,
       HikariPoolConfigBean hikariConfigBean
   ) {
     this.isIncrementalMode = isIncrementalMode;
@@ -106,6 +112,7 @@ public class JdbcSource extends BaseSource {
     this.txnMaxSize = txnMaxSize;
     this.recordType = jdbcRecordType;
     this.maxBatchSize = maxBatchSize;
+    this.maxClobSize = maxClobSize;
     this.hikariConfigBean = hikariConfigBean;
   }
 
@@ -138,6 +145,16 @@ public class JdbcSource extends BaseSource {
 
     if (!offsetColumnInWhereAndOrderByClause.matcher(query.toUpperCase()).matches()) {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, Errors.JDBC_05, offsetColumn));
+    }
+
+    if (txnMaxSize < 0) {
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), TXN_MAX_SIZE, Errors.JDBC_10, txnMaxSize, 0));
+    }
+    if (maxBatchSize < 0) {
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_BATCH_SIZE, Errors.JDBC_10, maxBatchSize, 0));
+    }
+    if (maxClobSize < 0) {
+      issues.add(context.createConfigIssue(Groups.ADVANCED.name(), MAX_CLOB_SIZE, Errors.JDBC_10, maxClobSize, 0));
     }
 
     if (issues.isEmpty()) {
@@ -362,7 +379,14 @@ public class JdbcSource extends BaseSource {
     for (int i = 1; i <= numColumns; i++) {
       Object value = resultSet.getObject(i);
       try {
+        // Convert clob to string by truncating it by maxClobSize.
+        if (value instanceof Clob) {
+          // The first character is at position 1.
+          value = ((Clob) value).getSubString(1, maxClobSize);
+        }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
+      } catch (SQLException e) {
+        handleError(Errors.JDBC_13, e.getCause().toString());
       } catch (IOException e) {
         handleError(Errors.JDBC_03, md.getColumnName(i), value);
       }

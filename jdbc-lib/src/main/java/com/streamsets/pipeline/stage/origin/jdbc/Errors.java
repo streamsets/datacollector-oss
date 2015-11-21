@@ -39,6 +39,7 @@ public enum Errors implements ErrorCode {
   JDBC_11("Minimum Idle Connections ({}) must be less than or equal to Maximum Pool Size ({})"),
   JDBC_12("The JDBC driver for this database does not support scrollable cursors, " +
       "which are required when Transaction ID Column Name is specified."),
+  JDBC_13("Failed to convert CLOB to string: {}"),
   ;
   private final String msg;
 
