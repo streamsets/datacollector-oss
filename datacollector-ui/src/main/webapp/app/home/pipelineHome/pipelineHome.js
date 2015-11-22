@@ -1414,7 +1414,7 @@ angular
       var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
         config = $scope.pipelineConfig;
       return (pipelineStatus && config && pipelineStatus.name === config.info.name &&
-      _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY'], pipelineStatus.status));
+      _.contains(['RUNNING', 'STARTING', 'CONNECT_ERROR', 'RETRY', 'STOPPING'], pipelineStatus.status));
     };
 
     /**
