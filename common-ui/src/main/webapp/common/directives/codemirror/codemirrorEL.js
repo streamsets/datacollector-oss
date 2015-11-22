@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 
-angular.module('dataCollectorApp.codemirrorDirectives')
+angular.module('commonUI.codemirrorDirectives')
   .directive('codemirrorEl', function($parse, $timeout) {
     'use strict';
     return {

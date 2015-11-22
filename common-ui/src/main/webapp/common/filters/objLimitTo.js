@@ -22,7 +22,7 @@
  * Object limitTo filter
  */
 
-angular.module('dataCollectorApp.filters')
+angular.module('commonUI.filters')
   .filter('objLimitTo', function() {
     return function(obj, limit){
       if(obj === null) {

@@ -22,7 +22,7 @@
  * ng-model for <input type=“file”/>
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive("fileread", [function () {
     return {
       scope: {

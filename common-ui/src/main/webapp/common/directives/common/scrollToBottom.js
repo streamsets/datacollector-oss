@@ -22,7 +22,7 @@
  * Directive for scroll to bottom
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive('scrollToBottom', function () {
     return {
       scope: {

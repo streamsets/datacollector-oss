@@ -23,4 +23,4 @@
  */
 
 angular
-  .module('dataCollectorApp.codemirrorDirectives', []);
+  .module('commonUI.codemirrorDirectives', []);

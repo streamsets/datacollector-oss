@@ -33,7 +33,10 @@ describe('Controller: SDCDirectoriesModalInstanceController', function() {
       staticWebDir: "/Users/madhu/Documents/projects/datacollector/ui/target/dist"
     };
 
-  beforeEach(module('dataCollectorApp'));
+  beforeEach(function() {
+    module('commonUI');
+    module('dataCollectorApp');
+  });
 
   beforeEach(inject(function(_$rootScope_, _$controller_, _api_){
     $rootScope = _$rootScope_;

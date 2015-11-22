@@ -23,7 +23,7 @@
  */
 
 angular
-  .module('dataCollectorApp.jvmMetrics')
+  .module('commonUI.jvmMetrics')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/jvmMetrics',
       {

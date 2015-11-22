@@ -25,7 +25,7 @@
  *
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive("focusMe", function($timeout, $parse) {
     return {
       link: function(scope, element, attrs) {

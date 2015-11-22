@@ -23,6 +23,6 @@
  */
 
 angular
-  .module('dataCollectorApp.jvmMetrics', [
+  .module('commonUI.jvmMetrics', [
     'ngRoute'
   ]);

@@ -23,6 +23,6 @@
  */
 
 angular
-  .module('dataCollectorApp.logs', [
+  .module('commonUI.logs', [
     'ngRoute'
   ]);

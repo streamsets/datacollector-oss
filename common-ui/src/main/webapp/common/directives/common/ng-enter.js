@@ -22,7 +22,7 @@
  * Directive for submitting form or calling function on pressing Enter.
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive('ngEnter', function() {
     return function(scope, element, attrs) {
       element.bind("keydown keypress", function(event) {

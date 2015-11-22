@@ -20,7 +20,7 @@
 
 describe('Controller: modules/sdcConfiguration/SDCConfigurationController', function () {
 
-  beforeEach(module('dataCollectorApp.sdcConfiguration'));
+  beforeEach(module('commonUI.sdcConfiguration'));
 
   var $controller, $q, $scope, configuration, Analytics;
 

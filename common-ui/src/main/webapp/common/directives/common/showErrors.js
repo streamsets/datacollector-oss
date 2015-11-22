@@ -3,7 +3,7 @@
  * MIT License
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .provider('showErrorsConfig', function() {
     var _showSuccess, _trigger;
     _showSuccess = false;

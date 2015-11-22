@@ -5,7 +5,7 @@
  * MIT License
  *
  */
-angular.module('dataCollectorApp.codemirrorDirectives')
+angular.module('commonUI.codemirrorDirectives')
   .constant('uiCodemirrorConfig', {})
   .directive('uiCodemirror', uiCodemirrorDirective);
 

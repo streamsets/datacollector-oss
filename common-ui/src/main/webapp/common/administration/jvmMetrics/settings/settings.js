@@ -23,7 +23,7 @@
  */
 
 angular
-  .module('dataCollectorApp.jvmMetrics')
+  .module('commonUI.jvmMetrics')
   .controller('JVMMetricsSettingsModalInstanceController', function ($scope, $modalInstance, availableCharts, selectedCharts) {
     angular.extend($scope, {
       showLoading: false,

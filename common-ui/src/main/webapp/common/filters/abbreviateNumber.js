@@ -22,7 +22,7 @@
  * Editing Text In-Place using HTML5 ContentEditable
  */
 
-angular.module('dataCollectorApp.filters')
+angular.module('commonUI.filters')
   .filter('abbreviateNumber', function() {
     return function (value) {
       var newValue = value;

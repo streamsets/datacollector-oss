@@ -23,7 +23,7 @@
  */
 
 angular
-  .module('dataCollectorApp.sdcConfiguration')
+  .module('commonUI.sdcConfiguration')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/configuration',
       {

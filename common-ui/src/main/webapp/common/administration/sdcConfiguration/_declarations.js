@@ -23,6 +23,6 @@
  */
 
 angular
-  .module('dataCollectorApp.sdcConfiguration', [
+  .module('commonUI.sdcConfiguration', [
     'ngRoute'
   ]);

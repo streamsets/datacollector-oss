@@ -23,7 +23,7 @@
  */
 
 angular
-  .module('dataCollectorApp.jvmMetrics')
+  .module('commonUI.jvmMetrics')
   .controller('ThreadDumpModalInstanceController', function ($scope, $modalInstance, api) {
     angular.extend($scope, {
       showLoading: true,

@@ -23,7 +23,7 @@
  */
 
 angular
-  .module('dataCollectorApp.logs')
+  .module('commonUI.logs')
   .config(['$routeProvider', function ($routeProvider) {
     $routeProvider.when('/collector/logs',
       {

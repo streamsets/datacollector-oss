@@ -22,7 +22,7 @@
  * Directive for droppable.
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive("droppable", function () {
     return {
       scope: {

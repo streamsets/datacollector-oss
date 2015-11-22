@@ -22,7 +22,7 @@
  * Directive for draggable.
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive("draggable", function () {
     return {
       scope: {

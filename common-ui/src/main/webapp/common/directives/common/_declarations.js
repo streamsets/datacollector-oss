@@ -23,4 +23,4 @@
  */
 
 angular
-  .module('dataCollectorApp.commonDirectives', []);
+  .module('commonUI.commonDirectives', []);

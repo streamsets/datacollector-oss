@@ -23,4 +23,4 @@
  */
 
 angular
-  .module('dataCollectorApp.filters', []);
+  .module('commonUI.filters', []);

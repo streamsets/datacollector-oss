@@ -22,7 +22,7 @@
  * Editing Text In-Place using HTML5 ContentEditable
  */
 
-angular.module('dataCollectorApp.commonDirectives')
+angular.module('commonUI.commonDirectives')
   .directive('contenteditable', function() {
     return {
       restrict: 'A',
