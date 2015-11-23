@@ -20,6 +20,12 @@
   <title ng-bind="common.title">StreamSets Data Collector</title>
 
   <script type="text/javascript">
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
     var baseHref = document.location.pathname,
       collectorIndex = baseHref.indexOf('/collector/');
 
@@ -27,7 +33,7 @@
       baseHref = baseHref.substr(0, collectorIndex + 1);
     }
 
-    document.write("<base href='" + baseHref + "' />");
+    document.write("<base href='" + escapeHtml(baseHref) + "' />");
   </script>
 
   <link rel="icon" type="image/png" href="assets/favicon.png">
