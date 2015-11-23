@@ -34,6 +34,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 public class JmsSource extends BaseSource implements OffsetCommitter {
@@ -72,6 +73,9 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
         jmsConfig.initialContextFactory);
       contextProperties.setProperty(
         javax.naming.Context.PROVIDER_URL, jmsConfig.providerURL);
+      if (jmsConfig.initialContextFactory.toLowerCase(Locale.ENGLISH).contains("oracle")) {
+        contextProperties.setProperty("db_url", jmsConfig.providerURL); // workaround for SDC-2068
+      }
       initialContext = initialContextFactory.create(contextProperties);
     } catch (NamingException ex) {
       LOG.info(Utils.format(JmsErrors.JMS_00.getMessage(), jmsConfig.initialContextFactory,
