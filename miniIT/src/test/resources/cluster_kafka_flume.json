@@ -48,7 +48,7 @@
   },
   "stages" : [ {
     "instanceName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource1432854934849",
-    "library" : "streamsets-datacollector-cdh_5_4-cluster-cdh_kafka_1_3-lib",
+    "library" : "streamsets-datacollector-cdh_5_5-cluster-cdh_kafka_1_3-lib",
     "stageName" : "com_streamsets_pipeline_stage_origin_kafka_KafkaDSource",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
@@ -314,7 +314,7 @@
     "outputLanes" : [ ]
   }, {
     "instanceName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget1432855334685",
-    "library" : "streamsets-datacollector-cdh_5_4-lib",
+    "library" : "streamsets-datacollector-cdh_5_5-lib",
     "stageName" : "com_streamsets_pipeline_stage_destination_flume_FlumeDTarget",
     "stageVersion" : "1.0.0",
     "configuration" : [ {
@@ -390,7 +390,7 @@
       "xPos" : 1816,
       "yPos" : 140,
       "stageType" : "TARGET",
-      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_flume_FlumeDTarget&library=streamsets-datacollector-cdh5_3_2-lib&version=1.0.0"
+      "icon" : "/rest/v1/definitions/stages/icon?name=com_streamsets_pipeline_stage_destination_flume_FlumeDTarget&library=streamsets-datacollector-cdh_5_5-lib&version=1.0.0"
     },
     "inputLanes" : [ "com_streamsets_pipeline_stage_processor_fieldfilter_FieldFilterDProcessor1432855248714OutputLane14328552487140" ],
     "outputLanes" : [ ]
