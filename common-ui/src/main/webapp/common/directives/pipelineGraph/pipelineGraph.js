@@ -585,6 +585,10 @@ angular.module('pipelineGraphDirectives', [])
         stageErrorCounts = thisGraph.stageErrorCounts,
         firstConfigIssue;
 
+      if(graph.isPreviewMode) {
+        stageErrorCounts = graph.previewStageErrorCounts;
+      }
+
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
         return String(d.source.instanceName) + '+' + String(d.target.instanceName);
       });
@@ -1461,6 +1465,9 @@ angular.module('pipelineGraphDirectives', [])
       if(graph) {
         graph.rects.selectAll('span.badge')
           .style('visibility', function(d) {
+            if(graph.isPreviewMode) {
+              graph.previewStageErrorCounts = stageInstanceErrorCounts;
+            }
             if(stageInstanceErrorCounts[d.instanceName] &&
               parseInt(stageInstanceErrorCounts[d.instanceName]) > 0) {
               return 'visible';
