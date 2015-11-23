@@ -121,10 +121,13 @@ public class TestDelimitedDataGenerator {
     map.put("h", Field.create("B"));
     map.put("d", Field.create("b"));
     list.add(Field.create(map));
+    map.put("h", Field.create("C"));
+    map.put("d", Field.create((String)null));
+    list.add(Field.create(map));
     record.set(Field.create(list));
     gen.write(record);
     gen.close();
-    Assert.assertEquals("\"a  \",b\r\n", writer.toString());
+    Assert.assertEquals("\"a  \",b,\r\n", writer.toString());
   }
 
   @Test

@@ -130,13 +130,17 @@ public class DelimitedCharDataGenerator implements DataGenerator {
       } else {
         value = column.getValueAsString();
       }
-      if (replaceNewLines) {
-        if (value.contains("\n")) {
-          value = value.replace('\n', ' ');
+      if (value != null) {
+        if (replaceNewLines) {
+          if (value.contains("\n")) {
+            value = value.replace('\n', ' ');
+          }
+          if (value.contains("\r")) {
+            value = value.replace('\r', ' ');
+          }
         }
-        if (value.contains("\r")) {
-          value = value.replace('\r', ' ');
-        }
+      } else {
+        value = "";
       }
       values.add(value);
     }
