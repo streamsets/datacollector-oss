@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 public class JmsConfig {
   @ConfigDef(
@@ -70,4 +71,16 @@ public class JmsConfig {
     group = "JMS"
   )
   public String messageSelector;
+
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    defaultValue = "UNKNOWN",
+    label = "JMS Destination Type",
+    description = "Specify the JMS destination type when validation fails with NamingException, destination not found",
+    displayPosition = 20,
+    group = "JMS"
+  )
+  @ValueChooserModel(DestinationTypeChooserValues.class)
+  public DestinationType destinationType = DestinationType.UNKNOWN; // NOTE: same as above
 }

@@ -110,11 +110,24 @@ public class JmsMessageConsumerImpl implements JmsMessageConsumer {
     }
     if (issues.isEmpty()) {
       try {
-        destination = (Destination) initialContext.lookup(jmsConfig.destinationName);
-      } catch (NamingException ex) {
+        switch (jmsConfig.destinationType) {
+          case UNKNOWN:
+            destination = (Destination) initialContext.lookup(jmsConfig.destinationName);
+            break;
+          case QUEUE:
+            destination = session.createQueue(jmsConfig.destinationName);
+            break;
+          case TOPIC:
+            destination = session.createTopic(jmsConfig.destinationName);
+            break;
+          default:
+            throw new IllegalArgumentException(Utils.format("Unknown destination type: {}", jmsConfig.destinationType));
+        }
+     } catch (JMSException | NamingException ex) {
         issues.add(context.createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.destinationName", JmsErrors.JMS_05,
-          jmsConfig.destinationName, ex.toString()));
-        LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsConfig.destinationName, ex.toString()), ex);
+          jmsConfig.destinationName, String.valueOf(ex)));
+        LOG.info(Utils.format(JmsErrors.JMS_05.getMessage(), jmsConfig.destinationName,
+          String.valueOf(ex)), ex);
       }
     }
     if (issues.isEmpty()) {
