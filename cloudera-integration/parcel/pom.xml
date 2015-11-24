@@ -81,7 +81,7 @@
             <phase>install</phase>
             <configuration>
               <tasks>
-                <copy file="${project.build.directory}/${parcel.name}.tar.gz"
+                <move file="${project.build.directory}/${parcel.name}.tar.gz"
                       tofile="${project.build.directory}/${parcel.name}-el6.parcel"/>
               </tasks>
             </configuration>

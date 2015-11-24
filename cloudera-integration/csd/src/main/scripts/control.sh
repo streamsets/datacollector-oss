@@ -47,7 +47,7 @@ case $CMD in
     log "Starting StreamSets Data Collector"
     update_users
                 source "$CONF_DIR"/sdc-env.sh
-    exec $SDC_HOME/bin/streamsets dc -verbose -skipenvsourcing
+    exec $SDC_DIST/bin/streamsets dc -verbose -skipenvsourcing
 
   (update_users)
     update_users
