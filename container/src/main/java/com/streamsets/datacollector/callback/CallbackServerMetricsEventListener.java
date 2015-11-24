@@ -23,6 +23,7 @@ import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,7 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
       }
       Response response = ClientBuilder
         .newClient()
+        .register(new CsrfProtectionFilter("CSRF"))
         .target(callbackServerURL)
         .request()
         .post(Entity.json(BeanHelper.wrapCallbackInfo(callbackInfo)));

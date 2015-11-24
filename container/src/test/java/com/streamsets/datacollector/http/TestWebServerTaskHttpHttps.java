@@ -28,6 +28,7 @@ import com.streamsets.datacollector.util.Configuration;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.Assert;
 import org.junit.Test;
 

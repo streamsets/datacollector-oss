@@ -32,6 +32,7 @@ import io.swagger.jaxrs.listing.SwaggerSerializers;
 import io.swagger.models.Info;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 import java.net.URI;
@@ -55,6 +56,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
     });
 
     register(RolesAllowedDynamicFeature.class);
+    register(CsrfProtectionFilter.class);
 
     //Hooking up Swagger-Core
     register(ApiListingResource.class);

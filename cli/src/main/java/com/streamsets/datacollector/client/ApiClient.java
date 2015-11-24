@@ -17,39 +17,34 @@
  */
 package com.streamsets.datacollector.client;
 
+import com.streamsets.datacollector.client.auth.Authentication;
+import com.streamsets.datacollector.client.auth.HttpBasicAuth;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.api.client.WebResource.Builder;
-
+import com.sun.jersey.api.client.filter.CsrfProtectionFilter;
+import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
-import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.MediaType;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
-
-import java.net.URLEncoder;
-
-import java.io.IOException;
-import java.io.File;
-import java.io.UnsupportedEncodingException;
+import javax.ws.rs.core.Response.Status.Family;
 import java.io.DataInputStream;
-
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import com.streamsets.datacollector.client.auth.Authentication;
-import com.streamsets.datacollector.client.auth.HttpBasicAuth;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TimeZone;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public class ApiClient {
@@ -624,6 +619,8 @@ public class ApiClient {
       Client client = Client.create();
       if (debugging)
         client.addFilter(new LoggingFilter());
+
+      client.addFilter(new CsrfProtectionFilter("CSRF"));
       hostMap.put(basePath, client);
     }
     return hostMap.get(basePath);
