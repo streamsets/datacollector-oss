@@ -107,7 +107,7 @@ public class JdbcDSource extends DSource {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "LIST_MAP",
-      label = "Record Type",
+      label = "Root Field Type",
       displayPosition = 130,
       group = "JDBC"
   )

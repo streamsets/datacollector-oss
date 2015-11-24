@@ -243,7 +243,7 @@ public class DataParserFormatConfig {
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "LIST_MAP",
-    label = "Record Type",
+    label = "Root Field Type",
     description = "",
     displayPosition = 310,
     group = "DELIMITED",
