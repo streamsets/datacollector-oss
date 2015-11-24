@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.util;
 
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,6 +109,7 @@ public class VerifyUtils {
     throws IOException, InterruptedException {
     LOG.info("Retrieving counters from Slave URI " + serverURI);
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/metrics")
       .queryParam("name", name).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -118,6 +120,7 @@ public class VerifyUtils {
 
   public static void deleteAlert(URI serverURI, String name, String rev, String alertId) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/alerts").queryParam("rev", rev)
       .queryParam("alertId", alertId);
@@ -127,6 +130,7 @@ public class VerifyUtils {
 
   public static void startPipeline(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/start").queryParam("rev", rev);
 
@@ -137,6 +141,7 @@ public class VerifyUtils {
 
   public static void stopPipeline(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/stop").queryParam("rev", rev);
     Response response =
@@ -146,6 +151,7 @@ public class VerifyUtils {
 
   public static String getPipelineState(URI serverURI, String name, String rev) throws IOException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/status").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -156,6 +162,7 @@ public class VerifyUtils {
 
   public static void deleteHistory(URI serverURI, String name, String rev) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/history").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).delete();
@@ -164,6 +171,7 @@ public class VerifyUtils {
 
   public static List<Map<String, Object>> getHistory(URI serverURI, String name, String rev) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/history").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -174,6 +182,7 @@ public class VerifyUtils {
   public static void captureSnapshot(URI serverURI, String name, String rev, String snapshotName, int batchSize)
     throws IOException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + name + "/snapshot/" + snapshotName)
       .queryParam("batchSize", batchSize).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
@@ -183,6 +192,7 @@ public class VerifyUtils {
 
   public static boolean snapShotExists(URI serverURI, String name, String rev, String snapshotName) throws IOException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString())
         .path("/rest/v1/pipeline/" + name + "/snapshot/" + snapshotName + "/status").queryParam("rev", rev);
@@ -196,6 +206,7 @@ public class VerifyUtils {
                                                                    String snapshotName) throws MalformedURLException {
     ///snapshots/{pipelineName}/{snapshotName}
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + pipelineName
       + "/snapshot/" + snapshotName).queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -206,6 +217,7 @@ public class VerifyUtils {
   public static String preview(URI serverURI, String pipelineName, String rev)
     throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/" + pipelineName
       + "/preview").queryParam("rev", rev);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity("", MediaType.APPLICATION_JSON));
@@ -217,6 +229,7 @@ public class VerifyUtils {
 
   public static boolean isPreviewDone(URI serverURI, String previewerId) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target =
       client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/foo/preview/" + previewerId + "/" + "status");
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
@@ -229,6 +242,7 @@ public class VerifyUtils {
 
   public static Map<String, Object> getPreviewOutput(URI serverURI, String previewerId) throws MalformedURLException {
     Client client = ClientBuilder.newClient();
+    client.register(new CsrfProtectionFilter("CSRF"));
     WebTarget target = client.target(serverURI.toURL().toString()).path("/rest/v1/pipeline/foo/preview/" + previewerId);
     Response response = target.request(MediaType.APPLICATION_JSON_TYPE).get();
     checkResponse(response, Response.Status.OK);

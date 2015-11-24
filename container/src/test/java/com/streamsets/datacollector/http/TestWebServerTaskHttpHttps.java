@@ -29,6 +29,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -438,6 +439,7 @@ public class TestWebServerTaskHttpHttps {
 
       // root app
       HttpURLConnection conn = (HttpURLConnection) new URL(baseUrl + "/ping").openConnection();
+      conn.setRequestProperty(CsrfProtectionFilter.HEADER_NAME, "CSRF");
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
       conn = (HttpURLConnection) openWithBasicAuth(new URL(baseUrl + "/ping"));
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());

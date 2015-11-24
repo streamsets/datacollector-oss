@@ -24,6 +24,7 @@ import com.streamsets.datacollector.client.auth.HttpBasicAuth;
 import com.streamsets.datacollector.client.auth.HttpDigestAuth;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.filter.LoggingFilter;
 
 import javax.ws.rs.client.Client;
@@ -519,6 +520,7 @@ public class ApiClient {
       ClientConfig config = new ClientConfig();
       config.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
       Client client = ClientBuilder.newClient(config);
+      client.register(new CsrfProtectionFilter("CSRF"));
       hostMap.put(basePath, client);
     }
     return hostMap.get(basePath);

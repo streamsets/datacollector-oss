@@ -84,7 +84,7 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService,
-                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http) {
 
     var defaultTitle = 'StreamSets Data Collector',
       pipelineStatusTimer,
@@ -119,6 +119,8 @@ angular.module('dataCollectorApp')
       }
       return randomFunction();
     };
+
+    $http.defaults.headers.common['X-Requested-By'] = 'Data Collector' ;
 
     $rootScope.pipelineConstant = pipelineConstant;
     $rootScope.$storage = $localStorage.$default({

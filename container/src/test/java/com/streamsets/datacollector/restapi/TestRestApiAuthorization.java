@@ -35,6 +35,7 @@ import dagger.ObjectGraph;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -167,6 +168,7 @@ public class TestRestApiAuthorization {
           user = "guest";
           URL url = new URL(baseUrl + api.uriPath);
           HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+          conn.setRequestProperty(CsrfProtectionFilter.HEADER_NAME, "CSRF");
           if (authzEnabled) {
             conn.setRequestProperty("Authorization", "Basic " + Base64.encodeBase64URLSafeString((user + ":" + user).getBytes()));
           }
