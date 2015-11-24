@@ -134,16 +134,9 @@
                                             directory contains more files, the pipeline fails.</p>
                                     </entry>
                                 </row>
-                                <row>
-                                    <entry>File Compression</entry>
-                                    <entry>The compression type of the files:<ul id="ul_vph_jp2_qs">
-                                            <li>Uncompressed - Processes only uncompressed
-                                                files.</li>
-                                            <li>Zip - Processes only Zip compressed files.</li>
-                                            <li>GZip - Processes only GZip compressed files.</li>
-                                            <li>By Extension - Processes uncompressed, Zip and GZip
-                                                compressed files. </li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>

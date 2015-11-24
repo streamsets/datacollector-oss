@@ -24,7 +24,8 @@
       delimited data, the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
       convert the data in a list or list-map record type. Use the default list-map record type to
-      easily process delimited data.<dl>
+      easily process delimited data.<draft-comment author="Loretta">rewrite after SDC 2057 is
+        resolved.</draft-comment><dl>
         <dlentry>
           <dt>List-Map Record Type</dt>
           <dd>Provides easy use of field names or column position in expressions. Recommended for

@@ -1106,8 +1106,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DelimProps:</uicontrol> Use for the
-                        appropriate delimited destinations - currently Flume, Hadoop FS and Kafka
-                        Producer:</draft-comment>
+                        appropriate delimited destinations - currently Amazon S3, Flume, Hadoop FS
+                        and Kafka Producer:</draft-comment>
                 </cmd>
             </step>
             <step id="DelimProps">
@@ -1142,6 +1142,27 @@
                                     <entry>Removes new line characters from within a record.
                                             <p>Recommended when writing data as a single line of
                                             text.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Delimiter Character</entry>
+                                    <entry>Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p>Default is the pipe character ( |
+                                        ).</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Escape Character </entry>
+                                    <entry>Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p>Default is the backslash character ( \
+                                        ).</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Quote Character</entry>
+                                    <entry>Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p>Default is the quotation mark character ( "
+                                            ).</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

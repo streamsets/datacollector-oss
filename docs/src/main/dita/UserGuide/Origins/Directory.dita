@@ -24,7 +24,9 @@
             you configure the Directory origin, you define the directory to use, the file name
             pattern, the first file to process, and the compression type. These properties determine
             the files that the origin processes. After processing a file, Directory can keep,
-            archive, or delete the file. </p>
+            archive, or delete the file. <draft-comment author="Loretta">Might need to rename
+                "compression type" after they pick a single label for Dir &amp;
+            S3.</draft-comment></p>
         <p>When the pipeline stops, Directory notes where it stops reading. When the pipeline starts
             again, Directory continues processing from where it stopped by default. You can reset
             the origin to process all requested files. </p>

@@ -26,7 +26,7 @@
                 development destination system available to you.</p>
             <p>The Trash destination requires no configuration, so just add it to the canvas and
                 connect the Expression Evaluator to it: </p>
-            <p><image href="../Graphics/Tutorial-Trash.png" id="image_bpg_nwd_5s" scale="60"/></p>
+            <p><image href="../Graphics/Tutorial-Trash.png" id="image_bpg_nwd_5s" scale="55"/></p>
         </context>
     </taskbody>
 </task>

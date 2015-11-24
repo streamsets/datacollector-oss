@@ -82,8 +82,8 @@
             <step>
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
                 <info>This streams the data from this branch to the destination, merging data from
-                    both branches:  <p><image href="../Graphics/Tutorial-Expression.png"
-                            id="image_adv_r2r_ps" scale="60"/></p></info>
+                    both branches: <p><image href="../Graphics/Tutorial-Expression.png"
+                            id="image_adv_r2r_ps" scale="55"/></p></info>
             </step>
         </steps>
     </taskbody>

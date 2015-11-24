@@ -107,6 +107,101 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_uxr_g52_qs">
+ <h2 class="title topictitle2">File Compression Types</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The Amazon S3 and Directory origins can read uncompressed, compressed files, archives,
+    and compressed archives. </p>
+
+  <p class="p">When you configure the origin, you indicate the types of
+      files you want to read. </p>
+
+    <div class="p">The following table lists the supported file types by extension:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_uxr_g52_qs__table_fwr_k3s_b5" class="table" frame="border" border="1" rules="all">
+          
+          
+          <thead class="thead" align="left">
+            <tr class="row">
+              <th class="entry" valign="top" width="30%" id="d44853e173">File Type</th>
+
+              <th class="entry" valign="top" width="70%" id="d44853e176">Description</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody class="tbody">
+            <tr class="row">
+              <td class="entry" valign="top" width="30%" headers="d44853e173 ">Uncompressed</td>
+
+              <td class="entry" valign="top" width="70%" headers="d44853e176 ">Processes uncompressed files of the configured data format.</td>
+
+            </tr>
+
+            <tr class="row">
+              <td class="entry" valign="top" width="30%" headers="d44853e173 ">Compressed</td>
+
+              <td class="entry" valign="top" width="70%" headers="d44853e176 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+                  <li class="li">gzip</li>
+
+                  <li class="li">bgzip2</li>
+
+                  <li class="li">xz</li>
+
+                  <li class="li">lzma</li>
+
+                  <li class="li">Pack200</li>
+
+                  <li class="li">DEFLATE</li>
+
+                  <li class="li">Z</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr class="row">
+              <td class="entry" valign="top" width="30%" headers="d44853e173 ">Archive</td>
+
+              <td class="entry" valign="top" width="70%" headers="d44853e176 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+                  <li class="li">7z</li>
+
+                  <li class="li">ar</li>
+
+                  <li class="li">arj</li>
+
+                  <li class="li">cplo</li>
+
+                  <li class="li">dump</li>
+
+                  <li class="li">tar</li>
+
+                  <li class="li">zip</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr class="row">
+              <td class="entry" valign="top" width="30%" headers="d44853e173 ">Compressed Archive</td>
+
+              <td class="entry" valign="top" width="70%" headers="d44853e176 ">Processes files in compressed archives created by supported compression and
+                archive formats.</td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+</div>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_jp5_ql1_tq">
     <h2 class="title topictitle2">Previewing Raw Source Data</h2>
 
@@ -144,9 +239,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44537e210">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44853e352">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44537e213">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44853e355">Description</th>
 
                                 </tr>
 
@@ -154,38 +249,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44537e210 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44853e352 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44537e213 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44537e210 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44537e213 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44853e355 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44537e210 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44853e352 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44537e213 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44853e355 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44853e352 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44853e355 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44537e210 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44853e352 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44537e213 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44853e355 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44537e210 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44853e352 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44537e213 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44853e355 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

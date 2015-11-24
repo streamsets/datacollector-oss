@@ -17,14 +17,14 @@
  <title>Processing List-Map Data</title>
  <shortdesc>In scripts that process List-Map data, treat the data as Map. </shortdesc>
  <conbody>
-        <p><indexterm>JavaScript Evaluator processor<indexterm>processing List-Map
+        <p><indexterm>Jython Evaluator processor<indexterm>processing List-Map
                 data</indexterm></indexterm>List-map is a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             data type that allows you to use standard record functions to work with delimited data.
             When an origin reads delimited data, it generates List-Map fields by default.
                 <draft-comment author="Loretta">add a comment about the new EL when it
                 comes?</draft-comment></p>
-        <p>The JavaScript Evaluator reads and passes List-Map data. But to process data in a
-            List-Map field, treat the field as a Map in the script.</p>
+        <p>The Jython Evaluator reads and passes List-Map data. But to process data in a List-Map
+            field, treat the field as a Map in the script.</p>
  </conbody>
 </concept>

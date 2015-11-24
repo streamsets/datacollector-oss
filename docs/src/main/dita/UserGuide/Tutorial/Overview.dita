@@ -24,8 +24,8 @@
    development destination that we use to test a pipeline without writing to a destination system.
    If you prefer, you can write to any destination that works for you. </p>
   <p>For sample data, the tutorial uses publicly available fare payment information from a taxi
-   company that we've tweaked to add fake credit card data and invalid information so we show you
-   some error records in the tutorial. </p>
+   company that we've tweaked to add fake credit card data and invalid information to produce some
+   error records for the tutorial. </p>
   <p>The basic pipeline assesses the credit card vendors that customers use. (In the real world, you
    could use this information later to end contracts with low volume vendors.) The pipeline then
    masks the credit card numbers before writing the results to file. A secondary branch standardizes

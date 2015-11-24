@@ -20,7 +20,9 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Install_Config/Requirements.dita"/>
+   <topicref href="../Install_Config/Requirements.dita">
+    <topicref href="../Install_Config/JCEforAES.dita"/>
+   </topicref>
    <topicref href="../Install_Config/Installing_the_DC.dita"/>
    <topicref href="../Install_Config/Installing_the_DC-Service.dita"/>
   </topicref>

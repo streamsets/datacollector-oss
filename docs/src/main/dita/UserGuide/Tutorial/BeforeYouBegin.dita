@@ -30,11 +30,10 @@
         <li>Create directories local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.<p>Let's use the same root directory for the origin, destination, and error files as
-              follows:<ul id="ul_a2m_dzk_zt">
-              <li>/&lt;base directory>/tutorial/origin</li>
-              <li>/&lt;base directory>/tutorial/destination</li>
-              <li>/&lt;base directory>/tutorial/error</li>
-            </ul>Make sure the user who started the <ph
+            follows:<codeblock>/&lt;base directory>/tutorial/origin
+/&lt;base directory>/tutorial/destination
+/&lt;base directory>/tutorial/error</codeblock>Make
+            sure the user who started the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
             read and write permission for the directories. </p></li>
         <li>Save the sample data in the origin directory.</li>

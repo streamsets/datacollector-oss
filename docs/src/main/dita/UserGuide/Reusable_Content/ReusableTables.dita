@@ -38,7 +38,7 @@
   </p>
   <p>
    <draft-comment author="Loretta">The following MaxBatchSize and BatchWaitTime rows are used in
-    Configuring Kafka Consumer, JMS Consumer. See if the go anywhere else.</draft-comment>
+    Configuring Kafka Consumer, JMS Consumer. See if they should go anywhere else.</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_tft_4jk_dt">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -109,8 +109,9 @@
    </tgroup>
   </table>
   <p>
-   <draft-comment author="Loretta">The following table is reused in configuring the Amazon S3 origin
-    and destination</draft-comment>
+   <draft-comment author="Loretta">The following table is used in full for the Amazon S3 origin and
+    the Amazon S3 destination reuses individual rows. File Compression row is also used in Directory
+    configuring.</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
@@ -209,6 +210,18 @@
       <row
        conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
        <entry/>
+      </row>
+      <row id="Origin-FileCompression">
+       <entry>File Compression <xref href="../Origins/FileCompressionTypes.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+          id="image_xqq_yv4_c5"/></xref></entry>
+       <entry>The compression type of the files:<ul id="ul_vph_jp2_qs">
+         <li>None - Processes only uncompressed files.</li>
+         <li>Compressed File - Processes files compressed by the supported compression formats.</li>
+         <li>Archive - Processes files archived by the supported archive formats.</li>
+         <li>Compressed Archive - Processes files archived and compressed by the supported archive
+          and compression formats.</li>
+        </ul></entry>
       </row>
      </tbody>
     </tgroup>
