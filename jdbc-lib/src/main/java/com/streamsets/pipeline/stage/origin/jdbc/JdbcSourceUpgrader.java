@@ -67,10 +67,10 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
   }
 
   private void upgradeV4toV5(List<Config> configs) {
-    upgradeToConfigBeanV1(configs);
+    configs.add(new Config("maxClobSize", 1000));
   }
 
   private void upgradeV5toV6(List<Config> configs) {
-    configs.add(new Config("maxClobSize", 1000));
+    upgradeToConfigBeanV1(configs);
   }
 }
