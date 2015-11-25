@@ -54,10 +54,10 @@ import java.util.regex.Pattern;
 public class JdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcSource.class);
 
-  private static final String CONNECTION_STRING = "hikariConfigBean.connectionString";
+  private static final String CONNECTION_STRING = "connectionString";
   private static final String QUERY = "query";
   private static final String OFFSET_COLUMN = "offsetColumn";
-  private static final String DRIVER_CLASSNAME = "hikariConfigBean.driverClassName";
+  private static final String DRIVER_CLASSNAME = "driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
 
