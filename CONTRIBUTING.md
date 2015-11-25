@@ -22,7 +22,7 @@ You can help in several different ways :
 - [Open an issue](http://issues.streamsets.com) and submit your suggestions for improvements.
 - Fork this repo and submit a pull request.
 
-To begin you first need to sign our [Contributor License Agreement](http://streamsets.com/cla....).
+To begin you first need to sign our [Contributor License Agreement](http://streamsets.com/contributing/).
 
 - To submit a pull request, fork [this repository](http://github.com/streamsets/datacollector) and clone your fork:
 
