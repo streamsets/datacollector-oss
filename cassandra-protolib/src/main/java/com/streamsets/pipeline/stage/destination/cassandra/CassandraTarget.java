@@ -370,6 +370,7 @@ public class CassandraTarget extends BaseTarget {
   private Cluster getCluster() {
     return Cluster.builder()
         .addContactPoints(contactPoints)
+        .withCredentials(username, password)
         .withPort(port)
         .build();
   }
