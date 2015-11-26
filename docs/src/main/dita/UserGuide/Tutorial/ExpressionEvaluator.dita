@@ -14,11 +14,14 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_wgb_t4p_ms">
-    <title>Add Corresponding Fields with the Expression Evaluator</title>
-    <shortdesc>Use an Expression Editor to add the credit card type fields to the non-credit card
-        stream so all records have the same format when written to the destination.</shortdesc>
+    <title>Add a Corresponding Field with the Expression Evaluator</title>
+    <shortdesc>The Jython Evaluator script added a new field to the credit payments branch. To
+        ensure all records have the same structure, we'll use the Expression Evaluator to add the
+        same field to the non-credit branch. </shortdesc>
     <taskbody>
         <context>
+            <p>This ensures that all records have the same format when written to the
+                destination.</p>
             <p>To do this, let's use data preview to verify how the Jython Evaluator adds the credit
                 card type to records.</p>
         </context>
@@ -31,11 +34,10 @@
                     output of that processor.</cmd>
             </step>
             <step>
-                <cmd>Expand the first output record, scroll down, and expand index 21. Note the
-                    header and value information:</cmd>
+                <cmd>Expand the first output record, scroll down, and notice the new field
+                    highlighted in green: <uicontrol>/credit_card_type</uicontrol>.</cmd>
                 <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
-                        scale="80"/><p>From this, we can see that we need to add a map with an index
-                        of 21, as well as the header and value fields.</p></info>
+                        scale="55"/></info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Close Preview</uicontrol>.</cmd>
@@ -58,31 +60,22 @@
                             <stentry>Expression</stentry>
                         </sthead>
                         <strow>
-                            <stentry>[21]</stentry>
-                            <stentry>${emptyMap()}</stentry>
-                        </strow>
-                        <strow>
-                            <stentry>[21]/header</stentry>
-                            <stentry>credit_card_type</stentry>
-                        </strow>
-                        <strow>
-                            <stentry>[21]/value</stentry>
-                            <stentry>N/A</stentry>
+                            <stentry>/credit_card_type</stentry>
+                            <stentry>n/a</stentry>
                         </strow>
                     </simpletable>
                 </info>
-                <info>Each row creates a field: The first creates a map for index 21. The second
-                    creates a header field with the name credit_card_type. The third creates a value
-                    field that indicates the information is not applicable.</info>
-                <info>For the last two rows, we're using constants as the last two expressions, so
-                    we don't need the dollar sign and brackets for the expression. But if we wanted
-                    to use them, we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
+                <info>This creates a credit_card_type field that indicates the information is not
+                    applicable.</info>
+                <info>Since we're using "n/a" as a constant for the expression, we don't need to use
+                    the dollar sign and brackets for the expression. But if we wanted to use them,
+                    we could define them as ${'credit_card_type'} and ${'N/A'}. </info>
             </step>
             <step>
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
                 <info>This streams the data from this branch to the destination, merging data from
-                    both branches: <image href="../Graphics/Tutorial-Expression.png"
-                        id="image_adv_r2r_ps" scale="80"/></info>
+                    both branches: <p><image href="../Graphics/Tutorial-Expression.png"
+                            id="image_adv_r2r_ps" scale="55"/></p></info>
             </step>
         </steps>
     </taskbody>

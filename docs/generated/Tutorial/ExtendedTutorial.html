@@ -1,0 +1,543 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to perform some data transformations and write to the Trash development destination. We'll also use data preview ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Extended Tutorial"></meta><meta name="abstract" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to perform some data transformations and write to the Trash development destination. We'll also use data preview to test stage configuration."></meta><meta name="description" content="The extended tutorial builds on the basic tutorial, using an additional set of stages to perform some data transformations and write to the Trash development destination. We'll also use data preview to test stage configuration."></meta><meta name="DC.Relation" scheme="URI" content="../Tutorial/Tutorial-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_w4n_gjt_ls"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Extended Tutorial</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.</head>
+<body onload="highlightSearchTerm()" class="frmBody">Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Tutorial/Tutorial-title.html" title="Tutorial">Tutorial</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_w4n_gjt_ls">
+ <h1 class="title topictitle1">Extended Tutorial</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The extended tutorial builds on the basic tutorial, using an additional set of stages to
+        perform some data transformations and write to the Trash development destination. We'll also
+        use data preview to test stage configuration. </p>
+
+  <p class="p">You can write to a real destination instead of the Trash destination. The Trash destination
+      allows you to run the pipeline without writing to a real destination system. </p>
+
+    <div class="p">The extended tutorial continues with the following steps:<ol class="ol" id="concept_w4n_gjt_ls__ol_m23_hhk_ps">
+        <li class="li">Configure a Field Converter to convert field types.</li>
+
+        <li class="li">Manipulate data with the Expression Evaluator.</li>
+
+        <li class="li">Use data preview to test and update pipeline configuration.</li>
+
+        <li class="li">Complete the pipeline with the placeholder Trash destination.</li>
+
+                <li class="li">Reset the origin and run the extended pipeline.</li>
+
+      </ol>
+</div>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_kxl_tvk_ps">
+    <h2 class="title topictitle2">Convert Types with a Field Converter</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Since the sample data is read from a file, the fields are all String. Let's use a
+        Field Converter to convert some data types.</p>
+
+        <div class="section context">Let's convert datetime fields to Datetime, and convert monetary fields as well as
+            the longitude and latitude fields to Double. </div>
+
+        <ol class="ol steps" id="task_kxl_tvk_ps__steps_wx1_xvk_ps"><li class="li step stepexpand">
+                <span class="ph cmd">Add a <span class="ph uicontrol">Field Converter</span> to the canvas.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To route all data from the pipeline through the new stage, connect the Field
+                    Masker and the Expression Evaluator to it as shown:</span>
+                <div class="itemgroup info"><img class="image" id="task_kxl_tvk_ps__image_fsy_3nk_ps" src="../Graphics/Tutorial-AddFieldConverter.png" height="193" width="734"></img></div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Conversions</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Convert fields with datetime data to Datetime as follows:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__table_h3v_yhz_ps" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="28.49002849002849%" id="d63982e115">Field Converter Property</th>
+
+                                    <th class="entry" valign="top" width="71.5099715099715%" id="d63982e118">Datetime Conversion</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d63982e115 ">Fields to Convert</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d63982e118 ">Click in the field. From the list of fields, select the
+                                        following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_v3g_23z_ps">
+                                            <li class="li">/dropoff_datetime</li>
+
+                                            <li class="li">/pickup_datetime</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d63982e115 ">Convert to Type</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d63982e118 ">Datetime</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="28.49002849002849%" headers="d63982e115 ">Date Format</td>
+
+                                    <td class="entry" valign="top" width="71.5099715099715%" headers="d63982e118 ">Date format used by the data. <p class="p">Select the following
+                                            format: <span class="ph uicontrol">YYYY-MM-DD
+                                        hh:mm:ss</span>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To convert fields that contain monetary information to Double, click the
+                        <span class="ph uicontrol">Add</span> icon and configure the properties as follows. </span>
+                <div class="itemgroup info">
+                    <p class="p">Use the defaults for properties that aren't listed:</p>
+
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kxl_tvk_ps__table_xkg_g3z_ps" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="31.545741324921135%" id="d63982e195">Field Converter Property</th>
+
+                                    <th class="entry" valign="top" width="68.45425867507886%" id="d63982e198">Double Conversion</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d63982e195 ">Fields to Convert</td>
+
+                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d63982e198 ">Click in the field and select the following fields:<ul class="ul" id="task_kxl_tvk_ps__ul_tlc_33z_ps">
+                                            <li class="li">/fare_amount</li>
+
+                                            <li class="li">/dropoff_latitude</li>
+
+                                            <li class="li">/dropoff_longitude</li>
+
+                                            <li class="li">/mta_tax</li>
+
+                                            <li class="li">/pickup_latitude</li>
+
+                                            <li class="li">/pickup_longitude</li>
+
+                                            <li class="li">/surcharge</li>
+
+                                            <li class="li">/tip_amount</li>
+
+                                            <li class="li">/tolls_amount</li>
+
+                                            <li class="li">/total_amount</li>
+
+                                        </ul>
+<p class="p">If a field display in a list, you can type in the
+                                            field name and use the Tab or Enter key to complete the
+                                            action.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.545741324921135%" headers="d63982e195 ">Convert to Type</td>
+
+                                    <td class="entry" valign="top" width="68.45425867507886%" headers="d63982e198 ">Double</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+        <div class="section result">The pipeline and Field Converter should look like this:<p class="p"><img class="image" id="task_kxl_tvk_ps__image_lhs_bjq_ps" src="../Graphics/Tutorial-FieldConverter.png" height="443" width="780"></img></p>
+</div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_rlk_tdq_ps">
+    <h2 class="title topictitle2">Manipulate Data with the Expression Evaluator</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Now we'll use an Expression Evaluator to create pickup and dropoff location fields
+        that merge the latitude and longitude details. We'll also calculate the basic trip revenue
+        by subtracting the tip from the total fare. </p>
+
+        <ol class="ol steps" id="task_rlk_tdq_ps__steps_dzt_j3q_ps"><li class="li step stepexpand">
+                <span class="ph cmd">Add an <span class="ph uicontrol">Expression Evaluator</span> to the canvas and connect
+                    the Field Converter to the stage. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Expressions</span> tab, click the
+                        <span class="ph uicontrol">Add</span> icon, and then enter the following information to
+                    generate the pickup and dropoff location data:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rlk_tdq_ps__table_dr1_hld_5s" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="20%" id="d63982e319">Output Field</th>
+
+                                    <th class="entry" valign="top" width="80%" id="d63982e322">Expression</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="20%" headers="d63982e319 ">/pickup_location</td>
+
+                                    <td class="entry" valign="top" width="80%" headers="d63982e322 ">${record:value('/pickup_latitude')},
+                                        ${record:value('/pickup_longitude')}</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="20%" headers="d63982e319 ">/dropoff_location</td>
+
+                                    <td class="entry" valign="top" width="80%" headers="d63982e322 ">${record:value('/dropoff_latitude')},
+                                        ${record:value('/dropoff_longitude')}</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+                <div class="itemgroup info">These expressions return the data from the two fields in the following format:
+                        <samp class="ph codeph">&lt;latitude&gt;, &lt;longitude&gt;</samp>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add another expression, click the <span class="ph uicontrol">Add</span> icon and enter
+                    the following information to subtract the tip from the total fare: </span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_rlk_tdq_ps__table_z4k_pld_5s" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="18.181818181818183%" id="d63982e380">Output Field</th>
+
+                                    <th class="entry" valign="top" width="81.81818181818183%" id="d63982e383">Expression</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="18.181818181818183%" headers="d63982e380 ">/trip_revenue</td>
+
+                                    <td class="entry" valign="top" width="81.81818181818183%" headers="d63982e383 ">${record:value('/total_amount') -
+                                            record:value('/tip_amount')}<p class="p">This expression subtracts
+                                            the tip from the total fare.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Since we don't need to change header attributes, use the
+                        <span class="ph uicontrol">Subtract</span> icon (<img class="image" id="task_rlk_tdq_ps__image_arx_p5p_15" src="../Graphics/icon_ConfigSubtractIcon.png" height="13" width="14"></img>)  to delete the default header attribute expression. </span>
+            </li>
+</ol>
+
+        <div class="section result">
+            <p class="p">Here's the Expression Evaluator in the extended pipeline:</p>
+ <p class="p">
+                <img class="image" id="task_rlk_tdq_ps__image_w4n_hpy_ps" src="../Graphics/Tutorial-Expression2.png" height="302" width="797"></img></p>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_u4h_mwf_qs">
+ <h2 class="title topictitle2">Preview and Edit the Pipeline</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The extended tutorial is almost done, so let's use data preview to see how different
+    stages transform data.  We'll make some configuration changes and do some testing by editing
+    preview data.</p>
+
+  <p class="p">To preview the pipeline, click the <span class="ph uicontrol">Preview</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_wvk_tpd_5s" src="../Graphics/icon_Preview.png" height="15" width="20"></img>.</p>
+
+  <div class="p">You can explore how each stage transforms data by selecting the stage and reviewing the input
+      and output records in the Preview panel. Let's focus on the following stages:<dl class="dl">
+        
+          <dt class="dt dlterm">Field Masker</dt>
+
+          <dd class="dd">Let's see how the Field Masker masks credit card numbers and change the mask that the
+            stage uses.</dd>
+
+          <dd class="dd">To see how the Field Masker masks credit card numbers: <ol class="ol" id="concept_u4h_mwf_qs__ol_ht2_5lg_qs">
+              <li class="li">Select the Field Masker in the canvas, and then expand the first input and output
+                record.</li>
+
+              <li class="li">Scroll down and note that the credit_card field is highlighted. This indicates the
+                stage changed data in the field.</li>
+
+              <li class="li">Notice how all digits except the last four are masked. We did this by using the
+                Regular Expression mask type and revealing the second group in the regex.</li>
+
+            </ol>
+</dd>
+
+          <dd class="dd"><img class="image" id="concept_u4h_mwf_qs__image_u3z_gdl_5s" src="../Graphics/Tutorial-PreviewFMasker.png" height="471" width="804"></img></dd>
+
+          <dd class="dd">Say we want to mask the whole credit card number. To review the stage configuration
+            and try a different option:<ol class="ol" id="concept_u4h_mwf_qs__ol_vvw_wlg_qs">
+              <li class="li">Scroll up to the top of the Preview panel. Then, on the left, select the
+                  <span class="ph uicontrol">Stage Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_xnl_lmg_qs" src="../Graphics/icon_PrevStageConfig.png" height="13" width="16"></img>.</li>
+
+              <li class="li">Click the <span class="ph uicontrol">Mask</span> tab.</li>
+
+              <li class="li">Change the <span class="ph uicontrol">Mask Type</span> to <span class="ph uicontrol">Variable
+                  Length</span> to mask all numbers while showing how many numbers there are in
+                the data. </li>
+
+              <li class="li">To view the results of this change, click the <span class="ph uicontrol">Run with
+                  Changes</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_apd_ztd_5s" src="../Graphics/icon_PreviewRerun.png" height="12" width="19"></img>.</li>
+
+              <li class="li">In the Preview panel, select the <span class="ph uicontrol">Records</span> tab to view the
+                updated preview records: <img class="image" id="concept_u4h_mwf_qs__image_m3w_sdl_5s" src="../Graphics/icon_PrevRecords.png" height="15" width="18"></img>.</li>
+
+              <li class="li"> Expand an output record, and notice how the entire credit card number is now
+                    masked:<p class="p"><img class="image" id="concept_u4h_mwf_qs__image_chj_c2l_5s" src="../Graphics/Tutorial-PreviewFMasker2.png" height="201" width="739"></img></p>
+</li>
+
+            </ol>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">Field Converter</dt>
+
+          <dd class="dd">The Field Converter changes the data type of a few fields. We'll take a look at that
+            stage and try changing stage configuration. <ol class="ol" id="concept_u4h_mwf_qs__ol_ajx_pmm_qs">
+              <li class="li">Instead of selecting the Field Converter in the pipeline, click the
+                  <span class="ph uicontrol">Next Stage</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_i41_ssd_5s" src="../Graphics/icon_PrevNextStage.png"></img> and select
+                  <span class="ph uicontrol">Field Converter</span>.<p class="p">You might notice a red message that
+                  indicates the first record has an unparsable date - it shows that the date data
+                  includes invalid characters at the end. </p>
+<p class="p">So what happens to this bad record?
+                  It depends on how the stage is configured. We used the default configuration, but
+                  let's see what that is.</p>
+</li>
+
+              <li class="li">On the left side of the panel, click the <span class="ph uicontrol">Stage
+                  Configuration</span> icon: <img class="image" id="concept_u4h_mwf_qs__image_ehm_svw_15" src="../Graphics/icon_PrevStageConfig.png" height="12" width="15"></img>. Notice the <span class="ph uicontrol">On Record
+                  Error</span> property is set to <span class="ph uicontrol">Send to Error</span>. <p class="p">This
+                  means error records are sent to the pipeline for error handling. We configured the
+                  pipeline to write all error records to file, so error records from this stage are
+                  written to file. </p>
+<p class="p">You can configure this property to stop the pipeline on
+                  encountering an error record or to discard error records.</p>
+</li>
+
+              <li class="li">To see how it looks when you discard errors, set <span class="ph uicontrol">On Record
+                  Error</span> to <span class="ph uicontrol">Discard</span>, and then click the
+                  <span class="ph uicontrol">Run with Changes</span> icon.</li>
+
+              <li class="li">In the Preview panel, click the <span class="ph uicontrol">Records</span> icon. <p class="p">Notice the
+                  first record is discarded without notice of the error that occurred. </p>
+</li>
+
+              <li class="li">We prefer to keep error records, so go back to the Stage Configuration tab and
+                change <span class="ph uicontrol">On Record Error</span> back to <span class="ph uicontrol">Send to
+                  Error</span>.</li>
+
+            </ol>
+</dd>
+
+        
+        
+          <dt class="dt dlterm">Second Expression Evaluator</dt>
+
+          <dd class="dd">The second Expression Evaluator manipulates data. Let's try editing the preview
+              data:<ol class="ol" id="concept_u4h_mwf_qs__ol_u54_mx3_rs">
+              <li class="li">Click the <span class="ph uicontrol">Next Stage</span> icon or select the Expression
+                Evaluator.</li>
+
+              <li class="li">Click the <span class="ph uicontrol">Records</span> icon and expand the first input and
+                output record. <p class="p">Notice the fields created by the stage - dropoff_location,
+                  pickup_location and trip_location - are highlighted in green.</p>
+<p class="p">Though it
+                  isn't necessary for these calculations, let's see how you can edit preview data to
+                  test stage configuration:</p>
+</li>
+
+              <li class="li">In the first input record, in the Input Data column, click on the Pickup Latitude
+                  data,<span class="ph uicontrol"> 40.730068</span>, add a negative sign before the data. Hit
+                  <span class="ph uicontrol">Enter</span> or click outside the data.<p class="p">As shown below, the
+                  edited input data becomes red to indicate a change. </p>
+</li>
+
+              <li class="li">To test the change, click the <span class="ph uicontrol">Run with Changes</span> icon.<p class="p">The
+                    <span class="ph">Data
+                  Collector</span> runs the preview with the change. Notice the corresponding output record now
+                  has -40.730068 for both pickup_latitude and pickup_location. </p>
+<p class="p"><img class="image" id="concept_u4h_mwf_qs__image_bgm_cfj_rs" src="../Graphics/Tutorial-PreviewEditData.png" height="363" width="649"></img></p>
+<p class="p">You can see how this functionality might come in handy when you want to
+                  test some cases that didn't come up in the preview data. </p>
+</li>
+
+              <li class="li">To revert that change, click the <span class="ph uicontrol">Revert Data Changes</span> icon:
+                  <img class="image" id="concept_u4h_mwf_qs__image_pnr_bfp_rs" src="../Graphics/icon_PrevRevertChanges.png" height="11" width="12"></img>.<p class="p">This icon reverts changes to preview data.
+                    </p>
+<div class="note note"><span class="notetitle">Note:</span> <span class="ph uicontrol">Revert Data Changes</span> does not revert changes to
+                  stage or pipeline configuration. Manually revert configuration changes that you
+                  don't want to keep, as we did earlier in the tutorial. </div>
+</li>
+
+            </ol>
+</dd>
+
+        
+      </dl>
+</div>
+
+    <p class="p">When you're done exploring the preview data, click <span class="ph uicontrol">Close Preview</span>.</p>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_lh2_yhy_ps">
+    <h2 class="title topictitle2">Write to Trash</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">To wrap up the extended tutorial, let's use the Trash destination as a temporary
+        placeholder.</p>
+
+        <div class="section context">
+            <p class="p">The Trash destination deletes any records that pass to it. This allows you to test a
+                pipeline without writing data to a production system. </p>
+
+            <p class="p">If you prefer, you can use the Hadoop FS destination to write to file as we did
+                earlier in the tutorial, or you can use another destination to write to a
+                development destination system available to you.</p>
+
+            <p class="p">The Trash destination requires no configuration, so just add it to the canvas and
+                connect the Expression Evaluator to it: </p>
+
+            <p class="p"><img class="image" id="task_lh2_yhy_ps__image_bpg_nwd_5s" src="../Graphics/Tutorial-Trash.png" height="144" width="799"></img></p>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_fsb_1my_ps">
+    <h2 class="title topictitle2">Run the Extended Pipeline</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Now that the extended pipeline is complete, let's reset the origin and run the
+        pipeline again. </p>
+
+        <div class="section context">
+            <p class="p">Reset the origin when you want the Data Collector to process all available data
+                instead of processing data from the last-saved offset. Not all origins can be reset,
+                but you can reset the origin for Directory.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_fsb_1my_ps__steps_qhq_bwj_rs"><li class="li step">
+                <span class="ph cmd">In the console menu bar, click the <span class="ph uicontrol">More</span> icon: <img class="image" id="task_fsb_1my_ps__image_c5c_pkk_zs" src="../Graphics/icon_ConfigMore.png" height="9" width="13"></img>.
+                    Then, click <span class="ph uicontrol">Reset Origin</span>.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">When the confirmation dialog box displays, click <span class="ph uicontrol">Yes</span>,
+                    then close the dialog box.</span>
+            </li>
+<li class="li step">
+                <span class="ph cmd">To start the pipeline, click the <span class="ph uicontrol">Start</span> icon.</span>
+            </li>
+</ol>
+
+        <div class="section result">The console goes into monitor mode and the data alert triggers again. Before long,
+            you'll see some error records in the Jython Evaluator and the Field Converter. <p class="p">For
+                each stage, you can see the error messages for latest error records. </p>
+<p class="p">To look
+                at all the error records, you can review the error record files in the directory
+                that you specified. Error records are written in the SDC Record data format so you
+                can create an error pipeline to process error records. We'll show you how to create
+                an error pipeline to process these error records in a future tutorial.</p>
+<p class="p">That's
+                it for this tutorial. Hope you found it helpful! </p>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Tutorial/Tutorial-title.html" title="Tutorial"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Tutorial</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

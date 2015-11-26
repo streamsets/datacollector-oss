@@ -16,7 +16,8 @@
 <task id="task_ets_dkj_ps">
     <title>Create a Data Rule and Alert</title>
     <shortdesc>Now before we run the basic pipeline, let's add a data rule and alert. Data rules are
-        user-defined rules used to inspect data moving between two stages. </shortdesc>
+        user-defined rules used to inspect data moving between two stages. They are a powerful way
+        to look for outliers and anomalous data. </shortdesc>
     <taskbody>
         <context>
             <p>Data rules and alerts require a detailed understanding of the data passing through
@@ -25,9 +26,9 @@
             <p>The script in the Jython Evaluator creates error records for credit card transactions
                 without credit card numbers. We can create a data rule and alert to let us know when
                 the record count reaches a specified threshold. </p>
-            <p>We'll use an expression with the record:value('&lt;field path>') function to identify
-                when the credit card number field, <codeph>[20]/value</codeph>, is null. The
-                function returns the data in the specified field. </p>
+            <p>We'll use an expression with the record:value() function to identify when the credit
+                card number field, <codeph>/credit_card</codeph>, is null. The function returns the
+                data in the specified field. </p>
         </context>
         <steps id="steps_cw5_qqj_ps">
             <step>
@@ -42,8 +43,10 @@
             </step>
             <step>
                 <cmd>In the <wintitle>Data Rule</wintitle> dialog box, configure the following
-                    properties:</cmd>
+                    properties. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <simpletable frame="all" id="simpletable_z34_ctj_ps" relcolwidth="1.0* 2.29*">
                         <sthead>
                             <stentry>Data Rule Property</stentry>
@@ -55,21 +58,23 @@
                         </strow>
                         <strow>
                             <stentry>Condition</stentry>
-                            <stentry>${record:value("[20]/value") == ""}</stentry>
+                            <stentry>${record:value("/credit_card") == ""}</stentry>
                         </strow>
                         <strow>
                             <stentry>Sampling Percentage</stentry>
-                            <stentry>20</stentry>
+                            <stentry>35</stentry>
                         </strow>
                         <strow>
                             <stentry>Alert Text</stentry>
-                            <stentry>Over 10 missing credit card numbers!</stentry>
+                            <stentry>At least 10 missing credit card numbers!</stentry>
                         </strow>
                         <strow>
                             <stentry>Threshold Value</stentry>
                             <stentry>10</stentry>
                         </strow>
                     </simpletable>
+                    <p>This creates an alert that goes off after finding ten records that don't
+                        include credit card numbers in the credit card payment stream.</p>
                     <note>With a larger data set, a smaller sampling percentage and higher threshold
                         value might be appropriate, but we'll use these numbers for the purposes of
                         the tutorial.</note>

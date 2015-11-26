@@ -385,5 +385,10 @@
                   <li>hdfs-site.xml</li>
                   <li>hive-site.xml</li>
             </ul>
+            <p>
+                  <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the
+                        tutorial as a disclaimer:</draft-comment>
+            </p>
+            <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>
       </conbody>
 </concept>

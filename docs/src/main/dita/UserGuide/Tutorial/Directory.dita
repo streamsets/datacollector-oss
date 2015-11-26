@@ -15,33 +15,36 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ftt_2vq_ks">
     <title>Configure the Origin</title>
-    <shortdesc>The origin represents the source data for the pipeline. When you configure the
+    <shortdesc>The origin represents the incoming data for the pipeline. When you configure the
         origin, you define how to connect to the origin system, the type of data to be processed,
-        and other origin-specific properties. </shortdesc>
+        and other properties specific to the origin.</shortdesc>
     <taskbody>
-        <context>
-            <p>To process data in a static file, we'll use the Directory origin. If we wanted to
-                tail an active file, we would use the File Tail origin.</p>
-        </context>
+        <context>The <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            provides a wide range of origins. We'll use the Directory origin to process the  sample
+            CSV file that you downloaded. </context>
         <steps id="steps_ckz_gvq_ks">
             <step>
-                <cmd>To add the stage to the canvas, in the Stage list, click the
-                        <uicontrol>Directory</uicontrol> origin. Or, from the Pipeline Creation Help
-                    Bar, click <menucascade>
+                <cmd>To add the stage to the canvas, from the Pipeline Creation Help Bar, click <menucascade>
                         <uicontrol>Select Origin</uicontrol>
                         <uicontrol>Directory</uicontrol>
-                    </menucascade>.</cmd>
-                <info>The origin displays in the canvas and the Properties panel displays the stage
-                    properties. </info>
+                    </menucascade>. Or, in the stage library, click the
+                        <uicontrol>Directory</uicontrol> origin: <image
+                        href="../Graphics/Tutorial_DirectoryIcon.png" id="image_cwb_2vt_lt"
+                        scale="40"/>.</cmd>
+                <info>The origin displays in the canvas and the Properties panel displays the
+                    properties for the stage.</info>
             </step>
             <step>
                 <cmd>In the Properties panel, click the <wintitle>Files</wintitle> tab and configure
-                    the following properties. Use defaults for all other properties.</cmd>
+                    the following properties. </cmd>
                 <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
                     <table frame="all" rowsep="1" colsep="1" id="table_w5c_jyq_ks">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
-                            <colspec colname="c2" colnum="2" colwidth="1.78*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Directory Property</entry>
@@ -51,26 +54,28 @@
                             <tbody>
                                 <row>
                                     <entry>Data Format</entry>
-                                    <entry>Delimited.</entry>
+                                    <entry>The data in the sample file is delimited, so select
+                                            <uicontrol>Delimited</uicontrol>.</entry>
                                 </row>
                                 <row>
                                     <entry>Files Directory</entry>
-                                    <entry>Directory where you saved the source file. <p>For
-                                            example: <codeph>/myFiles/Tutorial</codeph>.</p></entry>
+                                    <entry>Directory where you saved the sample file. <p>We
+                                            recommended: <codeph>/&lt;base
+                                                directory>/tutorial/origin</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>File Name Pattern</entry>
                                     <entry>The Directory origin processes only the files in the
                                         directory that match the file name pattern. <p>The tutorial
                                             sample file name is <codeph>nyc_taxi_data.csv</codeph>.
-                                            If the file is the only file in the directory, you can
-                                            use the asterisk wild card (*) or something similarly
-                                            generic, like *.csv.</p><p>If you had other .csv files
-                                            in the directory that you don't want to process, you
-                                            might be more specific, like this:
-                                                <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you
-                                            want to process files with prefixes for  other cities,
-                                            you might use <codeph>*taxi*.csv</codeph>.</p></entry>
+                                            Since the file is the only file in the directory, you
+                                            can use something generic, like the asterisk wild card
+                                            (*) or *.csv.</p><p>If you had other .csv files in the
+                                            directory that you didn't want to process, you might be
+                                            more specific, like this:
+                                            <codeph>nyc_taxi*.csv</codeph>. </p><p>Or if you want to
+                                            process files with prefixes for other cities, you might
+                                            use <codeph>*taxi*.csv</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>First File to Process</entry>
@@ -79,8 +84,8 @@
                                         continues in lexicographically ascending order, e.g.
                                         nyc_taxi_data.csv, then nyc_taxi_data2.csv, etc. <p>If you
                                             wanted to skip some files, you would enter the file to
-                                            start with. In this case, we're processing a single
-                                            file, so let's leave this empty. </p></entry>
+                                            start with. Since we're processing a single file, let's
+                                            leave this empty. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -88,19 +93,54 @@
                 </info>
             </step>
             <step>
-                <cmd>For delimited data, additional properties are available, so click the
-                        <wintitle>Delimited</wintitle> tab. </cmd>
-            </step>
-            <step>
-                <cmd>The sample data includes a header row, so for the <uicontrol>Header
-                        Line</uicontrol> property, use <uicontrol>With Header
-                    Line</uicontrol>.</cmd>
+                <cmd>For delimited data additional properties are available, so click the
+                        <wintitle>Delimited</wintitle> tab and configure the following
+                    properties.</cmd>
+                <info>
+                    <p
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/UseDefaults"/>
+                    <table frame="all" rowsep="1" colsep="1" id="table_hnn_d15_lt">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Delimited Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>File Type</entry>
+                                    <entry>Since the sample file is a standard CSV file, use the
+                                        default: <uicontrol>Default CSV</uicontrol>.</entry>
+                                </row>
+                                <row>
+                                    <entry>Header Line</entry>
+                                    <entry>The sample file includes a header, so select
+                                            <uicontrol>With Header Line</uicontrol>.</entry>
+                                </row>
+                                <row>
+                                    <entry>Record Type</entry>
+                                    <entry>This property determines how the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> processes delimited data. Use the default
+                                            <uicontrol>List-Map</uicontrol>. <p>This allows you to
+                                            use standard functions to process delimited data. With
+                                            the List record type, you need to use delimited data
+                                            functions.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
         <result>This is how the stage and pipeline should look at this point:<p><image
-                    href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="70"
-                /></p><p>Notice the error icons on the page. If you click the Issues icon or hover
-                over the Directory error icon, you see a warning that the origin isn't connected to
-                anything yet. We'll take care of that next.</p></result>
+                    href="../Graphics/Tutorial-Directory.png" id="image_kj1_c5f_4s" scale="65"
+                /></p><p>Notice the error icons on the page. When you hover over the Directory error
+                icon or click the Issues icon, a validation message states that the origin has open
+                streams - that means that it's not connected to anything yet. We'll take care of
+                that next.</p></result>
     </taskbody>
 </task>

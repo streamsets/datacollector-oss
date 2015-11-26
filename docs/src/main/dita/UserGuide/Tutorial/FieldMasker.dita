@@ -15,14 +15,14 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_qbw_d3m_ls">
     <title>Mask Credit Card Numbers</title>
-    <shortdesc>Now we've evaluated the credit card type, let's use a Field Masker to mask the credit
-        card numbers. </shortdesc>
+    <shortdesc> Now let's prevent sensitive information from reaching internal databases by using a
+        Field Masker to mask the credit card numbers. </shortdesc>
     <taskbody>
         <context>
-            <p>The Field Masker provides fixed and variable-length masks to mask all data. To reveal
-                specified positions in the data, you can create a custom mask. To reveal a group of
-                positions within the data, you can use a regular expression mask to define the
-                structure of the data and then reveal one or more groups.</p>
+            <p>The Field Masker provides fixed and variable-length masks to mask all data in a
+                field. To reveal specified positions in the data, you can use custom mask. To reveal
+                a group of positions within the data, you can use a regular expression mask to
+                define the structure of the data and then reveal one or more groups.</p>
             <p>For the credit card numbers, we'll use the following regular expression to mask all
                 but the last four digits:<codeblock>(.*)([0-9]{4})</codeblock></p>
             <p>The regular expression defines two groups so we can reveal the second group.</p>
@@ -36,9 +36,9 @@
                 <cmd>In the Properties panel, click the <wintitle>Mask</wintitle> tab.</cmd>
             </step>
             <step>
-                <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll down the list
-                    of fields and select the field that represents credit card data:
-                        <uicontrol>[20]/value</uicontrol>. </cmd>
+                <cmd>Click in the <uicontrol>Fields to Mask</uicontrol> field. Scroll through the
+                    list of fields and select the field that represents credit card data:
+                        <uicontrol>/credit_card</uicontrol>. </cmd>
                 <info>A list of fields displays when the pipeline is valid for data preview. If the
                     list does not display, you can enter the field path manually.</info>
             </step>
@@ -77,7 +77,7 @@
             </step>
         </steps>
         <result>Here's how the Field Masker should look in the pipeline:<p><image
-                    href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="80"
+                    href="../Graphics/Tutorial-FieldMasker.png" id="image_v1y_35q_ps" scale="55"
                 /></p></result>
     </taskbody>
 </task>

@@ -20,14 +20,13 @@
         Evaluator is easier.</shortdesc>
     <taskbody>
         <context>
-            <p>The <ph
+            <p>You can use custom scripts with the JavaScript Evaluator and the Jython Evaluator to
+                perform processing that is not easily performed using other <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> provides the JavaScript Evaluator and the Jython Evaluator so you can use custom
-                scripts to perform processing that is not easily performed using other <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> processors.</p>
-            <p>The Jython script that we'll use creates an additional field, credit_card_type, and
-                generates the credit card type based on the first few digits of the credit card
+                /> processors. When using scripts to handle list-map data, the script must treat the
+                data as maps.</p>
+            <p>The Jython script that we provide creates an additional field, credit_card_type, and
+                generates the credit card type by evaluating the first few digits of the credit card
                 number. The script returns an error message if the record has a credit card payment
                 type without a corresponding credit card number. </p>
         </context>
@@ -51,7 +50,7 @@
                 <info>
                     <codeblock>try: 
   for record in records:
-    cc = record.value[20]['value']
+    cc = record.value['credit_card']
     if cc == '':
       err.write(record, "Payment type was CRD, but credit card was null")
       continue
@@ -72,7 +71,8 @@
     else:
       cc_type = 'Other'
 
-    record.value.append({'header':'credit_card_type','value':cc_type})
+    record.value['credit_card_type'] = cc_type
+
     out.write(record)
 except Exception as e:
   err.write(record, e.message)</codeblock>
@@ -87,7 +87,7 @@ except Exception as e:
             </step>
         </steps>
         <result>In the Jython Evaluator, the script should look like this:<p><image
-                    href="../Graphics/Tutorial-Jython.png" id="image_jt1_4ch_4s" scale="90"
+                    href="../Graphics/Tutorial-Jython.png" id="image_jt1_4ch_4s" scale="60"
             /></p></result>
     </taskbody>
 </task>
