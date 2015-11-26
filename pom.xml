@@ -110,6 +110,7 @@
 
     <module>jdbc-lib</module>
     <module>jms-lib</module>
+    <module>rabbitmq-lib</module>
 
     <module>hdfs-protolib</module>
     <module>hive-protolib</module>

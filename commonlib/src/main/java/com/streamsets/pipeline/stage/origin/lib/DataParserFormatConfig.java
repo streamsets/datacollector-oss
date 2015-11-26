@@ -61,11 +61,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
+/**
  * Instances of this object must be called 'dataFormatConfig' exactly for error
  * messages to be placed in the correct location on the UI.
  */
 public class DataParserFormatConfig {
+  private static final String DEFAULT_REGEX =
+      "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
+  private static final String DEFAULT_APACHE_CUSTOM_LOG_FORMAT = "%h %l %u %t \"%r\" %>s %b";
+  private static final String DEFAULT_GROK_PATTERN = "%{COMMONAPACHELOG}";
+  private static final String DEFAULT_LOG4J_CUSTOM_FORMAT = "%r [%t] %-5p %c %x - %m%n";
 
   @ConfigDef(
       required = true,
@@ -145,7 +150,7 @@ public class DataParserFormatConfig {
       triggeredByValue = "JSON"
   )
   @ValueChooserModel(JsonModeChooserValues.class)
-  public JsonMode jsonContent;
+  public JsonMode jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
   @ConfigDef(
       required = true,
@@ -329,33 +334,32 @@ public class DataParserFormatConfig {
 
   //APACHE_CUSTOM_LOG_FORMAT
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "%h %l %u %t \"%r\" %>s %b",
-      label = "Custom Log Format",
-      description = "",
-      displayPosition = 730,
-      group = "LOG",
-      dependsOn = "logMode",
-      triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = DEFAULT_APACHE_CUSTOM_LOG_FORMAT,
+    label = "Custom Log Format",
+    description = "",
+    displayPosition = 730,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
   )
-  public String customLogFormat = "%h %l %u %t \"%r\" %>s %b";
+  public String customLogFormat = DEFAULT_APACHE_CUSTOM_LOG_FORMAT;
 
   //REGEX
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)",
-      label = "Regular Expression",
-      description = "The regular expression which is used to parse the log line.",
-      displayPosition = 740,
-      group = "LOG",
-      dependsOn = "logMode",
-      triggeredByValue = "REGEX"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = DEFAULT_REGEX,
+    label = "Regular Expression",
+    description = "The regular expression which is used to parse the log line.",
+    displayPosition = 740,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "REGEX"
   )
-  public String regex =
-      "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
+  public String regex = DEFAULT_REGEX;
 
   @ConfigDef(
       required = true,
@@ -388,17 +392,17 @@ public class DataParserFormatConfig {
   public String grokPatternDefinition = "";
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "%{COMMONAPACHELOG}",
-      label = "Grok Pattern",
-      description = "The grok pattern which is used to parse the log line",
-      displayPosition = 780,
-      group = "LOG",
-      dependsOn = "logMode",
-      triggeredByValue = "GROK"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = DEFAULT_GROK_PATTERN,
+    label = "Grok Pattern",
+    description = "The grok pattern which is used to parse the log line",
+    displayPosition = 780,
+    group = "LOG",
+    dependsOn = "logMode",
+    triggeredByValue = "GROK"
   )
-  public String grokPattern = "%{COMMONAPACHELOG}";
+  public String grokPattern = DEFAULT_GROK_PATTERN;
 
   //LOG4J
 
@@ -447,17 +451,17 @@ public class DataParserFormatConfig {
 
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "%r [%t] %-5p %c %x - %m%n",
-      label = "Custom Log4J Format",
-      description = "Specify your own custom log4j format.",
-      displayPosition = 820,
-      group = "LOG",
-      dependsOn = "enableLog4jCustomLogFormat",
-      triggeredByValue = "true"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    defaultValue = DEFAULT_LOG4J_CUSTOM_FORMAT,
+    label = "Custom Log4J Format",
+    description = "Specify your own custom log4j format.",
+    displayPosition = 820,
+    group = "LOG",
+    dependsOn = "enableLog4jCustomLogFormat",
+    triggeredByValue = "true"
   )
-  public String log4jCustomLogFormat = "%r [%t] %-5p %c %x - %m%n";
+  public String log4jCustomLogFormat = DEFAULT_LOG4J_CUSTOM_FORMAT;
 
   //AVRO
 

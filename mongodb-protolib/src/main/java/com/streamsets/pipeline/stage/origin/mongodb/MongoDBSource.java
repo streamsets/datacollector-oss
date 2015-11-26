@@ -35,15 +35,14 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
 import org.apache.commons.io.IOUtils;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -79,7 +78,7 @@ public class MongoDBSource extends BaseSource {
   private final ReadPreference readPreference;
 
   private ObjectId initialObjectId;
-
+  private ErrorRecordHandler errorRecordHandler;
   private MongoClient mongoClient;
   private MongoDatabase mongoDatabase;
   private MongoCollection<Document> mongoCollection;
@@ -116,6 +115,8 @@ public class MongoDBSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     try {
       initialObjectId = new ObjectId(new SimpleDateFormat("YYYY-MM-DD HH:mm:ss").parse(initialOffset));
@@ -197,12 +198,12 @@ public class MongoDBSource extends BaseSource {
             fields.put(entry.getKey(), value);
           }
         } catch (IOException e) {
-          handleError(Errors.MONGODB_10, e.toString(), e);
+          errorRecordHandler.onError(Errors.MONGODB_10, e.toString(), e);
           continue;
         }
 
         if (!doc.containsKey(_ID)) {
-          handleError(Errors.MONGODB_11, offsetField, doc.toString());
+          errorRecordHandler.onError(Errors.MONGODB_11, offsetField, doc.toString());
           continue;
         }
         nextSourceOffset = doc.getObjectId(offsetField).toHexString();
@@ -268,22 +269,6 @@ public class MongoDBSource extends BaseSource {
       credentials.add(credential);
     }
     return credentials;
-  }
-
-  private void handleError(ErrorCode errorCode, Object... params) throws StageException {
-    Source.Context context = getContext();
-    switch (context.getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        context.reportError(errorCode, params);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(errorCode, params);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            context.getOnErrorRecord()));
-    }
   }
 
   private void createMongoClient() {

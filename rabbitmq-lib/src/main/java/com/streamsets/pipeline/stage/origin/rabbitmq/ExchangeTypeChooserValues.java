@@ -17,41 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.lib;
+package com.streamsets.pipeline.stage.origin.rabbitmq;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class CredentialsConfig {
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
-  )
-  public boolean useCredentials = true;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Username",
-    displayPosition = 10,
-    group = "CREDENTIALS"
-  )
-  public String username = "";
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
-  )
-  public String password = "";
+public class ExchangeTypeChooserValues extends BaseEnumChooserValues<ExchangeType> {
+  public ExchangeTypeChooserValues() {
+    super(ExchangeType.class);
+  }
 }

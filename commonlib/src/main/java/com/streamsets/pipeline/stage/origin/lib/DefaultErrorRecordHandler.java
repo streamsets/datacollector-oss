@@ -19,39 +19,30 @@
  */
 package com.streamsets.pipeline.stage.origin.lib;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
 
-public class CredentialsConfig {
+public class DefaultErrorRecordHandler implements ErrorRecordHandler {
+  private final Source.Context context;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
-  )
-  public boolean useCredentials = true;
+  public DefaultErrorRecordHandler(Source.Context context) {
+    this.context = context;
+  }
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Username",
-    displayPosition = 10,
-    group = "CREDENTIALS"
-  )
-  public String username = "";
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
-  )
-  public String password = "";
+  public void onError(ErrorCode errorCode, Object... params) throws StageException {
+    switch (context.getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        context.reportError(errorCode, params);
+        break;
+      case STOP_PIPELINE:
+        throw new StageException(errorCode, params);
+      default:
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
+            context.getOnErrorRecord()));
+    }
+  }
 }

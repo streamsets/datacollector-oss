@@ -17,41 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.lib;
+package com.streamsets.pipeline.stage.origin.rabbitmq;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Label;
 
-public class CredentialsConfig {
+public enum ExchangeType implements Label {
+  DIRECT("Direct", "direct"),
+  FANOUT("Fanout", "fanout"),
+  TOPIC("Topic", "topic"),
+  //TODO: Support for headers exchange. HEADERS("Headers", "headers"),
+  ;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
-  )
-  public boolean useCredentials = true;
+  private final String label;
+  private final String value;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Username",
-    displayPosition = 10,
-    group = "CREDENTIALS"
-  )
-  public String username = "";
+  ExchangeType(String label, String value) {
+    this.label = label;
+    this.value = value;
+  }
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
-  )
-  public String password = "";
+  @Override
+  public String getLabel() {
+    return label;
+  }
+
+  public String getValue() { return value; }
+
 }

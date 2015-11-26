@@ -19,39 +19,9 @@
  */
 package com.streamsets.pipeline.stage.origin.lib;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.StageException;
 
-public class CredentialsConfig {
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
-  )
-  public boolean useCredentials = true;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Username",
-    displayPosition = 10,
-    group = "CREDENTIALS"
-  )
-  public String username = "";
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
-  )
-  public String password = "";
+public interface ErrorRecordHandler {
+  void onError(ErrorCode errorCode, Object... params) throws StageException;
 }

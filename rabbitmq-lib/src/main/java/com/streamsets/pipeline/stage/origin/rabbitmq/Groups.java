@@ -17,41 +17,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.lib;
+package com.streamsets.pipeline.stage.origin.rabbitmq;
 
-import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.config.DataFormat;
 
-public class CredentialsConfig {
+@GenerateResourceBundle
+public enum Groups implements Label {
+  RABBITMQ("RabbitMQ"),
+  QUEUE("Queue"),
+  EXCHANGE("Exchange"),
+  CREDENTIALS("Credentials"),
+  ADVANCED("Advanced"),
+  TEXT(DataFormat.TEXT.getLabel()),
+  JSON(DataFormat.JSON.getLabel()),
+  DELIMITED(DataFormat.DELIMITED.getLabel()),
+  XML(DataFormat.XML.getLabel()),
+  LOG(DataFormat.LOG.getLabel()),
+  AVRO(DataFormat.AVRO.getLabel()),
+  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
+  ;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
-  )
-  public boolean useCredentials = true;
+  private final String label;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Username",
-    displayPosition = 10,
-    group = "CREDENTIALS"
-  )
-  public String username = "";
+  Groups(String label) {
+    this.label = label;
+  }
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
-  )
-  public String password = "";
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }

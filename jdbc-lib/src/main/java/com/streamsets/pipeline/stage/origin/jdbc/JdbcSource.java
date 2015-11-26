@@ -20,17 +20,17 @@
 package com.streamsets.pipeline.stage.origin.jdbc;
 
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.util.JsonUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -81,6 +81,8 @@ public class JdbcSource extends BaseSource {
   private final int maxClobSize;
   private final HikariPoolConfigBean hikariConfigBean;
 
+  private ErrorRecordHandler errorRecordHandler;
+
   private long queryIntervalMillis = Long.MIN_VALUE;
 
   private HikariDataSource dataSource = null;
@@ -121,6 +123,7 @@ public class JdbcSource extends BaseSource {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
 
+    errorRecordHandler = new DefaultErrorRecordHandler(context);
     issues = hikariConfigBean.validateConfigs(context, issues);
 
     if (queryIntervalMillis < 0) {
@@ -310,7 +313,7 @@ public class JdbcSource extends BaseSource {
         closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         LOG.debug("Query failed at: {}", lastQueryCompletedTime);
-        handleError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), formattedError);
+        errorRecordHandler.onError(Errors.JDBC_04, prepareQuery(query, lastSourceOffset), formattedError);
       }
     }
     return nextSourceOffset;
@@ -387,9 +390,9 @@ public class JdbcSource extends BaseSource {
         }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
       } catch (SQLException e) {
-        handleError(Errors.JDBC_13, e.getCause().toString());
+        errorRecordHandler.onError(Errors.JDBC_13, e.getCause().toString());
       } catch (IOException e) {
-        handleError(Errors.JDBC_03, md.getColumnName(i), value);
+        errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value);
       }
     }
 
@@ -415,21 +418,5 @@ public class JdbcSource extends BaseSource {
       record.set(Field.create(row));
     }
     return record;
-  }
-
-  private void handleError(ErrorCode errorCode, Object... params) throws StageException {
-    Source.Context context = getContext();
-    switch (context.getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        context.reportError(errorCode, params);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(errorCode, params);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            context.getOnErrorRecord()));
-    }
   }
 }
