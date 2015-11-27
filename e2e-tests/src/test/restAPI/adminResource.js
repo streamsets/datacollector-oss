@@ -84,7 +84,8 @@ frisby.create('Login to StreamSets Data Collector using creator role')
     frisby.create('Should throw 403 forbidden error when non admin user requests for shutdown')
       .post(browser.baseUrl + 'rest/v1/system/shutdown', {}, {
         headers:  {
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .expectStatus(403)

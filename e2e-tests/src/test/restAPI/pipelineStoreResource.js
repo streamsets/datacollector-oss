@@ -59,7 +59,8 @@ frisby.create('Login to StreamSets Data Collector')
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .inspectJSON()
@@ -110,7 +111,8 @@ frisby.create('Login to StreamSets Data Collector')
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .inspectJSON()
@@ -132,7 +134,8 @@ frisby.create('Login to StreamSets Data Collector')
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .inspectJSON()
@@ -282,7 +285,8 @@ frisby.create('Login to StreamSets Data Collector')
         headers:  {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .expectStatus(200)

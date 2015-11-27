@@ -34,7 +34,8 @@ frisby.create('Login to StreamSets Data Collector')
     frisby.create('Should be able to logout SDC')
       .post(browser.baseUrl + 'rest/v1/logout', {
         headers:  {
-          "Cookie": cookie
+          "Cookie": cookie,
+          "X-Requested-By": "CSRF"
         }
       })
       .expectStatus(200)
