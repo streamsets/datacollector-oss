@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 
 @StageDef(
     version = 1,
-    label = "Write To File",
+    label = "Write to File",
     description = "Writes records to a local File System as SDC records",
     icon="",
     execution = ExecutionMode.STANDALONE
