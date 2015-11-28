@@ -21,29 +21,43 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ErrorHandlingChooserValues implements ChooserValues {
   private static List<String> values;
   private static List<String> labels;
 
-  private static List<String> getOptions(StageLibraryTask stageLibrary, boolean value) {
+  private static List<String> getOptions(List<StageDefinition> errorStageDefinitions, boolean value) {
     List<String> list = new ArrayList<>();
-    for (StageDefinition def : stageLibrary.getStages()) {
-      if (def.getType() == StageType.TARGET && def.isErrorStage()) {
-        if (value) {
-          list.add(def.getLibrary() + "::" + def.getName() + "::" + def.getVersion());
-        } else {
-          list.add(def.getLabel() + " (Library: " + def.getLibraryLabel() + ")");
-        }
+    for (StageDefinition def : errorStageDefinitions) {
+      if (value) {
+        list.add(def.getLibrary() + "::" + def.getName() + "::" + def.getVersion());
+      } else {
+        list.add(def.getLabel() + " (Library: " + def.getLibraryLabel() + ")");
       }
     }
     return list;
   }
 
   public static void setErrorHandlingOptions(StageLibraryTask stageLibraryTask) {
-    ErrorHandlingChooserValues.values = getOptions(stageLibraryTask, true);
-    ErrorHandlingChooserValues.labels = getOptions(stageLibraryTask, false);
+    List<StageDefinition> errorStageDefinitions = new ArrayList<>();
+    for (StageDefinition def : stageLibraryTask.getStages()) {
+      if (def.getType() == StageType.TARGET && def.isErrorStage()) {
+        errorStageDefinitions.add(def);
+      }
+    }
+
+    Collections.sort(errorStageDefinitions, new Comparator<StageDefinition>() {
+      @Override
+      public int compare(StageDefinition o1, StageDefinition o2) {
+        return o1.getLabel().compareToIgnoreCase(o2.getLabel());
+      }
+    });
+
+    ErrorHandlingChooserValues.values = getOptions(errorStageDefinitions, true);
+    ErrorHandlingChooserValues.labels = getOptions(errorStageDefinitions, false);
   }
 
   @Override
