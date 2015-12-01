@@ -17,15 +17,15 @@
  <title>Installation with Cloudera Manager</title>
  <shortdesc>You can install the StreamSets <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
-        the Cloudera Manager. </shortdesc>
+        Cloudera Manager. </shortdesc>
  <conbody>
         <p><indexterm>Cloudera Manager<indexterm>installing and administering the Data
                     Collector</indexterm></indexterm>When you install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            through Cloudera Manager, you can easily download, distribute, and activate the <ph
+            through Cloudera Manager, you can easily install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            across the cluster. Then, you use Cloudera Manager to manage the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            across the cluster as an add-on service. And then, use Cloudera Manager to manage the
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
         <p>
             <note>When you use Cloudera Manager to install the <ph
@@ -42,9 +42,11 @@
                 <li>Install the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> using Cloudera Manager parcels.</li>
-                <li>Configure the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to run as a Cloudera Manager add-on service.</li>
+                <li>Install the StreamSets custom service descriptor (CSD). </li>
+                <li>Create and configure a StreamSets service.</li>
             </ol></p>
+        <p>This documentation includes details about Cloudera Manager to simplify the installation
+            and configuration process. For more information about using Cloudera Manager, see the
+            Cloudera documentation.</p>
     </conbody>
 </concept>

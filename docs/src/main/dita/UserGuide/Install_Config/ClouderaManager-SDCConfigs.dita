@@ -18,8 +18,8 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         Configuration</title>
     <shortdesc>When administering the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        through Cloudera Manager, configure all <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
+        Cloudera Manager, configure all <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         configuration properties and environment variables through Cloudera Manager. </shortdesc>
     <taskbody>
@@ -30,15 +30,15 @@
         </context>
         <steps id="steps_tvq_xsn_25">
             <step>
-                <cmd>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service and
-                    then click <uicontrol>Configuration</uicontrol>.</cmd>
-                <info>The Configuration page displays <ph
+                <cmd>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service, then
+                    click <uicontrol>Configuration</uicontrol>.</cmd>
+                <info>The <wintitle>Configuration</wintitle> page displays <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> configuration properties. </info>
             </step>
             <step>
-                <cmd>On the <wintitle>Configuration</wintitle> page, in the navigation panel, select
-                    a category to configure related properties.</cmd>
+                <cmd>On the <wintitle>Configuration</wintitle> page, in the navigation panel, you
+                    can select a category to configure related properties. </cmd>
             </step>
         </steps>
     </taskbody>

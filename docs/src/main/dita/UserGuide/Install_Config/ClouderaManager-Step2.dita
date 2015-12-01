@@ -14,19 +14,13 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hzt_dgn_25">
-    <title>Step 2. Configuring the Data Collector as a Service</title>
-    <shortdesc>After installing the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        parcel, you can create a StreamSets service in Cloudera Manager.</shortdesc>
+    <title>Step 2. Installing the StreamSets Custom Service Descriptor</title>
     <taskbody>
         <context>
-            <p>When you create a StreamSets service, you select the nodes you want to run the <ph
+            <p><indexterm>Cloudera Manager<indexterm>installing the Streamsets
+                    CSD</indexterm></indexterm>After installing the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> role.</p>
-            <note>To run the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> in cluster mode, colocate the Data Collector role with a Spark Streaming
-                Gateway.</note>
+                /> parcel, install the StreamSets custom service descriptor (CSD).</p>
         </context>
         <steps id="steps_end_bln_25">
             <step>
@@ -38,10 +32,10 @@
                         <uicontrol>Administration</uicontrol>
                         <uicontrol>Settings</uicontrol>
                     </menucascade>. In the navigation panel, select the <uicontrol>Custom Service
-                        Descriptors</uicontrol> category. <p>Place the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> parcel file in the path configured for <uicontrol>Local Descriptor
-                            Repository Path</uicontrol>. </p></info>
+                        Descriptors</uicontrol> category. Place the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> parcel file in the path configured for <uicontrol>Local Descriptor Repository
+                        Path</uicontrol>. </info>
             </step>
             <step>
                 <cmd>Set the file ownership to <codeph>cloudera-scm:cloudera-scm</codeph> with
