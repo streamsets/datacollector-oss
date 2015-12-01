@@ -1,0 +1,359 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="You can install the StreamSets Data Collector with Cloudera Manager. When you install the Data Collector through Cloudera Manager, you can easily install the Data Collector across the cluster as an ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation with Cloudera Manager"></meta><meta name="abstract" content="You can install the StreamSets Data Collector with Cloudera Manager."></meta><meta name="description" content="You can install the StreamSets Data Collector with Cloudera Manager."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_nb5_c3m_25"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation with Cloudera Manager</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_nb5_c3m_25">
+ <h1 class="title topictitle1">Installation with Cloudera Manager</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can install the StreamSets <span class="ph">Data
+                  Collector</span> with
+        Cloudera Manager. </p>
+
+        <p class="p">When you install the <span class="ph">Data
+                  Collector</span>
+            through Cloudera Manager, you can easily install the <span class="ph">Data
+                  Collector</span>
+            across the cluster as an add-on service. And then, use Cloudera Manager to manage the
+                <span class="ph">Data
+                  Collector</span>.</p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> When you use Cloudera Manager to install the <span class="ph">Data
+                  Collector</span>, you must use the Cloudera Manager to configure the <span class="ph">Data
+                  Collector</span> properties and environment. Manual changes to the <span class="ph">Data
+                  Collector</span> properties or environment file are not recognized by Cloudera Manager.</div>
+
+        </div>
+
+        <div class="p">To install the <span class="ph">Data
+                  Collector</span>
+            with the Cloudera Manager, perform the following steps:<ol class="ol" id="concept_nb5_c3m_25__ol_n14_bf4_25">
+                <li class="li">Install the <span class="ph">Data
+                  Collector</span> using Cloudera Manager parcels.</li>
+
+                <li class="li">Install the StreamSets custom service descriptor (CSD). </li>
+
+                <li class="li">Create and configure a StreamSets service.</li>
+
+            </ol>
+</div>
+
+        <p class="p">This documentation includes details about Cloudera Manager to simplify the installation
+            and configuration process. For more information about using Cloudera Manager, see the
+            Cloudera documentation.</p>
+
+    </div>
+
+<div class="related-links"></div>
+<div class="topic task nested1" id="task_opg_yrm_25">
+    <h2 class="title topictitle2">Step 1. Installing the <span class="ph">Data
+                  Collector</span></h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">You can use Cloudera Manager to install the
+                    <span class="ph">Data
+                  Collector</span> on a cluster. When working with multiple clusters, perform the following steps
+                for each cluster.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_opg_yrm_25__steps_zj3_4sm_25"><li class="li step stepexpand">
+                <span class="ph cmd">Copy the StreamSets <span class="ph">Data
+                  Collector</span> parcel file to the <span class="ph uicontrol">Cloudera Manager Local Parcel Repository
+                        Path</span>. By default, the path is
+                        <samp class="ph codeph">/opt/cloudera/parcel-repo</samp>.</span>
+                <div class="itemgroup info">StreamSets provides different parcel files for different operating systems.
+                    Use the parcel file appropriate for the target operating system.</div>
+                <div class="itemgroup info">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the
+                        <span class="ph uicontrol">Parcels</span> category.  Place the <span class="ph">Data
+                  Collector</span> parcel file in the path configured for <span class="ph uicontrol">Local Parcel Repository
+                        Path</span>. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To view the list of available parcels, in the menu bar, click the
+                        <span class="ph uicontrol">Parcels</span> icon: <img class="image" id="task_opg_yrm_25__image_qpz_lg4_25" src="../Graphics/icon_CM-Parcel.png" height="13" width="13"></img>.</span>
+                <div class="itemgroup info">The StreamSets parcel displays in the list of available parcels. If it doesn't
+                    display, click <span class="ph uicontrol">Check for New Parcels</span>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To download the <span class="ph">Data
+                  Collector</span> parcel to the local repository, click <span class="ph uicontrol">Download</span>.</span>
+                <div class="itemgroup info">After the parcel is downloaded, the Download button becomes the Distribute
+                    button.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To distribute the <span class="ph">Data
+                  Collector</span> parcel to the cluster, click <span class="ph uicontrol">Distribute</span>. </span>
+                <div class="itemgroup info">After distribution, the Distribute button becomes the Activate button.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To activate the <span class="ph">Data
+                  Collector</span> parcel, click <span class="ph uicontrol">Activate</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_hzt_dgn_25">
+    <h2 class="title topictitle2">Step 2. Installing the StreamSets Custom Service Descriptor</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">After installing the <span class="ph">Data
+                  Collector</span> parcel, install the StreamSets custom service descriptor (CSD).</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_hzt_dgn_25__steps_end_bln_25"><li class="li step stepexpand">
+                <span class="ph cmd">Copy the Custom Service Descriptor (CSD) file for the <span class="ph">Data
+                  Collector</span> in the<span class="ph uicontrol"> Local Descriptor Repository Path</span>. By default,
+                    the path is <samp class="ph codeph">/opt/cloudera/csd</samp>.</span>
+                <div class="itemgroup info">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the <span class="ph uicontrol">Custom Service
+                        Descriptors</span> category. Place the <span class="ph">Data
+                  Collector</span> parcel file in the path configured for <span class="ph uicontrol">Local Descriptor Repository
+                        Path</span>. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Set the file ownership to <samp class="ph codeph">cloudera-scm:cloudera-scm</samp> with
+                    permission <span class="ph uicontrol">644</span>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use the following command to restart the Cloudera Manager Server:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock">/etc/init.d/cloudera-scm-server restart</pre>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Cloudera Manager, to restart the Cloudera Management Service, click <span class="ph menucascade"><span class="ph uicontrol">Home</span> &gt; <span class="ph uicontrol">Status</span></span>. To the right of Cloudera Management Service, click the
+                        <span class="ph uicontrol">Menu</span> icon and select
+                    <span class="ph uicontrol">Restart</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_u1v_nkt_25">
+    <h2 class="title topictitle2">Step 3. Create and Configure a StreamSets Service</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">After you install the StreamSets CSD, create and
+                configure a StreamSets service. When you configure the service, you assign the <span class="ph">Data
+                  Collector</span> to the hosts where you want it to run.</p>
+
+            <div class="note note"><span class="notetitle">Note:</span> To run the <span class="ph">Data
+                  Collector</span> in cluster mode, colocate the Data Collector role with a Spark Streaming
+                Gateway.</div>
+
+            <p class="p"> When working with multiple clusters, perform the following steps for each
+                cluster.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_u1v_nkt_25__steps_vy1_wkt_25"><li class="li step stepexpand">
+                <span class="ph cmd">In Cloudera Manager, click the menu for the cluster you want to use, then click
+                        <span class="ph uicontrol">Add a Service</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Service Types</span> list, select
+                        <span class="ph uicontrol">StreamSets</span>, then click
+                        <span class="ph uicontrol">Continue</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To select the hosts where you want to install StreamSets, on the
+                        <span class="keyword wintitle">Customize Role Assignments for StreamSets</span> page, click
+                        <span class="ph uicontrol">Select Hosts</span> to open a list of available hosts.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select one or more hosts, then click <span class="ph uicontrol">OK</span>. Click
+                        <span class="ph uicontrol">Continue</span>.</span>
+                <div class="itemgroup info">The <span class="keyword wintitle">Review Changes</span> page displays the Data and Resource
+                    directories for the <span class="ph">Data
+                  Collector</span>. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally change the directories, then click
+                    <span class="ph uicontrol">Continue</span>.</span>
+                <div class="itemgroup info">The <span class="keyword wintitle">First Run Command</span> page displays status updates as
+                    Cloudera Manager starts the <span class="ph">Data
+                  Collector</span> on the selected hosts. If necessary, you can abort starting the <span class="ph">Data
+                  Collector</span>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Continue</span>, then click
+                    <span class="ph uicontrol">Finish</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_zn4_qrn_25">
+    <h2 class="title topictitle2">Changing <span class="ph">Data
+                  Collector</span>
+        Configuration</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When administering the <span class="ph">Data
+                  Collector</span> with
+        Cloudera Manager, configure all <span class="ph">Data
+                  Collector</span>
+        configuration properties and environment variables through Cloudera Manager. </p>
+
+        <div class="section context">
+            <p class="p">Manual changes to the <span class="ph">Data
+                  Collector</span> configuration files can be overwritten by Cloudera Manager. </p>
+
+        </div>
+
+        <ol class="ol steps" id="task_zn4_qrn_25__steps_tvq_xsn_25"><li class="li step stepexpand">
+                <span class="ph cmd">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service, then
+                    click <span class="ph uicontrol">Configuration</span>.</span>
+                <div class="itemgroup info">The <span class="keyword wintitle">Configuration</span> page displays <span class="ph">Data
+                  Collector</span> configuration properties. </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Configuration</span> page, in the navigation panel, you
+                    can select a category to configure related properties. </span>
+            </li>
+</ol>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="DCConfig.html#concept_pq5_xjq_kr" title="You can edit the Data Collector configuration file, sdc.properties, to configure properties such as the host name and port number and account information for email alerts.">Data Collector Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="DCEnvironmentConfig.html#concept_rng_qym_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB. When you use the Data Collector with Java 7, you can define the Java Permanent Generation size, also known as the PermGen size.The Data Collector can provide JMX metrics to external tools. The Data Collector includes a Java Security Manager that is enabled by default. You can customize the Data Collector environment by editing the Data Collector environment configuration file.">Data Collector Environment Configuration</a></div>
+</div>
+</div>
+</div>
+<div class="topic task nested1" id="task_tzk_l4n_25">
+    <h2 class="title topictitle2">Installing Additional Stage Libraries (Cloudera Manager)</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">The <span class="ph">Data
+                  Collector</span> includes a wide range of stages for pipeline development, but you might need
+                additional functionality. You can install stage libraries to provide access to
+                additional stages. For a list of available stage libraries, see <a class="xref" href="AdditionalStageLibraries.html#concept_zhl_k4f_cr" title="The Data Collector includes a wide range of stages for pipeline development, but you might need additional functionality. You can install stage libraries to provide access to additional stages.">Additional Stage Libraries</a>.</p>
+
+            <p class="p">To install additional stage libraries for <span class="ph">Data
+                  Collector</span>s installed through Cloudera Manager, download the library and untar it into the
+                    <span class="ph uicontrol">Local Parcel Repository Path</span>. By default, the path is
+                    <samp class="ph codeph">/opt/cloudera/parcels/STREAMSETS</samp>.</p>
+
+            <p class="p">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the <span class="ph uicontrol">Parcels</span>
+                category. Place the Data Collector parcel file in the path configured for
+                    <span class="ph uicontrol">Local Parcel Repository Path</span>.</p>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_yhv_1pn_25">
+    <h2 class="title topictitle2">Installing Additional Drivers (Cloudera Manager)</h2>
+
+    <div class="body taskbody">
+        <div class="section context">You can install additional drivers for
+            stages. <p class="p">Before you use the JMS Consumer and JDBC Consumer origins or the JDBC
+                Producer destination, you need to install drivers for the implementation that you
+                want to use. For example, to use the JDBC Consumer or JDBC Producer with Oracle,
+                install the Oracle JDBC drivers.</p>
+<p class="p">Additional drivers for other stages are
+                optional. For example, you can install custom classes for the JavaScript or Jython
+                Evaluators. </p>
+<p class="p">To install additional drivers for a <span class="ph">Data
+                  Collector</span> administered by Cloudera Manager, perform the following steps:</p>
+<ol class="ol" id="task_yhv_1pn_25__ol_f3s_hrw_ft">
+                <li class="li">Copy the drivers to the Resources directory defined for the StreamSets service.
+                    By default, the path is<samp class="ph codeph">/var/lib/sdc</samp>. Use a directory structure
+                    for each set of drivers based on the stage library name and directory structure
+                    as follows: <div class="p">
+                        <pre class="pre codeblock">&lt;stage library name&gt;/lib/&lt;driver name&gt;</pre>
+
+                    </div>
+<div class="p">For example to install drivers for JMS in an opt/sdc-extras directory,
+                        you would copy them to the following directory:
+                        <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
+</div>
+</li>
+
+                <li class="li">In Cloudera Manager, select the <span class="ph uicontrol">StreamSets</span> service and
+                    then click <span class="ph uicontrol">Configuration</span>. </li>
+
+                <li class="li">On the <span class="keyword wintitle">Configuration</span> page, in the <span class="ph uicontrol">Data Collector
+                        Advanced Configuration Snippet (Safety Valve) for sdc-env.sh</span>
+                    field, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it
+                    to the driver directory, as
+                        follows:<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = &lt;driver directory&gt;</pre>
+<p class="p">For
+                        example:
+                    </p>
+<pre class="pre codeblock">export STREAMSETS_LIBRARIES_EXTRA_DIR = /opt/sdc-extras/</pre>
+</li>
+
+                <li class="li">When using the Java Security Manager, which is enabled by default, update the
+                        <span class="ph uicontrol">Data Collector Advanced Configuration Snippet (Safety Valve) for
+                        sdc-security.policy</span> property to include the driver directory as follows:<div class="p">
+                        <pre class="pre codeblock">// user-defined additional driver directory
+grant codebase "file://&lt;driver directory&gt;-" {
+  permission java.security.AllPermission;
+};</pre>
+
+                    </div>
+<div class="p">For example:
+                        <pre class="pre codeblock">// user-defined additional driver directory
+grant codebase "file:///opt/sdc-extras/-" {
+  permission java.security.AllPermission;
+};</pre>
+</div>
+</li>
+
+                <li class="li">Restart the <span class="ph">Data
+                  Collector</span>.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

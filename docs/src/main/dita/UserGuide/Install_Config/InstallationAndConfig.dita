@@ -23,5 +23,9 @@
       customize the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
       configure the environment.</p>
+    <p>If you use Cloudera Manager, you can alternatively install and administer the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
+      Cloudera Manager. For more information, see <xref
+        href="ClouderaManagerInstallation.dita#concept_nb5_c3m_25"/>.</p>
   </conbody>
 </concept>

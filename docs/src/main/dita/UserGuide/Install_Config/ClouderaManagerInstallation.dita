@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_nb5_c3m_25">
+ <title>Installation with Cloudera Manager</title>
+ <shortdesc>You can install the StreamSets <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
+        Cloudera Manager. </shortdesc>
+ <conbody>
+        <p><indexterm>Cloudera Manager<indexterm>installing and administering the Data
+                    Collector</indexterm></indexterm>When you install the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            through Cloudera Manager, you can easily install the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            across the cluster as an add-on service. And then, use Cloudera Manager to manage the
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            />.</p>
+        <p>
+            <note>When you use Cloudera Manager to install the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                />, you must use the Cloudera Manager to configure the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> properties and environment. Manual changes to the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> properties or environment file are not recognized by Cloudera Manager.</note>
+        </p>
+        <p>To install the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            with the Cloudera Manager, perform the following steps:<ol id="ol_n14_bf4_25">
+                <li>Install the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> using Cloudera Manager parcels.</li>
+                <li>Install the StreamSets custom service descriptor (CSD). </li>
+                <li>Create and configure a StreamSets service.</li>
+            </ol></p>
+        <p>This documentation includes details about Cloudera Manager to simplify the installation
+            and configuration process. For more information about using Cloudera Manager, see the
+            Cloudera documentation.</p>
+    </conbody>
+</concept>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_hzt_dgn_25">
+    <title>Step 2. Installing the StreamSets Custom Service Descriptor</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Cloudera Manager<indexterm>installing the Streamsets
+                    CSD</indexterm></indexterm>After installing the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> parcel, install the StreamSets custom service descriptor (CSD).</p>
+        </context>
+        <steps id="steps_end_bln_25">
+            <step>
+                <cmd>Copy the Custom Service Descriptor (CSD) file for the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> in the<uicontrol> Local Descriptor Repository Path</uicontrol>. By default,
+                    the path is <codeph>/opt/cloudera/csd</codeph>.</cmd>
+                <info>To verify the path to use, in Cloudera Manager, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. In the navigation panel, select the <uicontrol>Custom Service
+                        Descriptors</uicontrol> category. Place the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> parcel file in the path configured for <uicontrol>Local Descriptor Repository
+                        Path</uicontrol>. </info>
+            </step>
+            <step>
+                <cmd>Set the file ownership to <codeph>cloudera-scm:cloudera-scm</codeph> with
+                    permission <uicontrol>644</uicontrol>. </cmd>
+            </step>
+            <step>
+                <cmd>Use the following command to restart the Cloudera Manager Server:</cmd>
+                <info>
+                    <codeblock>/etc/init.d/cloudera-scm-server restart</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>In the Cloudera Manager, to restart the Cloudera Management Service, click <menucascade>
+                        <uicontrol>Home</uicontrol>
+                        <uicontrol>Status</uicontrol>
+                    </menucascade>. To the right of Cloudera Management Service, click the
+                        <uicontrol>Menu</uicontrol> icon and select
+                    <uicontrol>Restart</uicontrol>.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

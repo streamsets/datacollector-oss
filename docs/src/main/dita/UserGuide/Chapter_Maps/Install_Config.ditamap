@@ -66,5 +66,15 @@
    <topicref href="../Install_Config/JavaSecurityManager.dita"/>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
   </topicref>
+  <topicref href="../Install_Config/ClouderaManagerInstallation.dita" chunk="to-content">  <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Install_Config/ClouderaManager-Step1.dita"/>
+   <topicref href="../Install_Config/ClouderaManager-Step2.dita"/>
+   <topicref href="../Install_Config/ClouderaManager-Step3.dita"/>
+   <topicref href="../Install_Config/ClouderaManager-SDCConfigs.dita"/>
+   <topicref href="../Install_Config/AdditionalStageLibraries-Installing-CM.dita"/>
+   <topicref href="../Install_Config/AdditionalDrivers-Installing-CM.dita"/>
+  </topicref>
   </topicref>
 </map>
