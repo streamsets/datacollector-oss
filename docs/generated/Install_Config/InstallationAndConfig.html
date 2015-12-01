@@ -6,18 +6,8 @@
           
           var prefix = "../index.html";
           
-          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script>Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.</head>
-<body onload="highlightSearchTerm()" class="frmBody">Licensed under the Apache License, Version 2.0 (the "License");
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
 
@@ -28,6 +18,17 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_gbn_4lv_1r">
@@ -36,12 +37,16 @@
  
   <div class="body conbody"><p class="shortdesc">You can install the <span class="ph">Data
                   Collector</span> and start it
-    manually or run it  as a service. </p>
+    manually or run it as a service. </p>
 
     <p class="p">After installation, you can optionally install additional stages, create additional users,
       customize the <span class="ph">Data
                   Collector</span>, and
       configure the environment.</p>
+
+    <p class="p">If you use Cloudera Manager, you can alternatively install and administer the <span class="ph">Data
+                  Collector</span> through
+      Cloudera Manager. For more information, see <a class="xref" href="ClouderaManagerInstallation.html#concept_nb5_c3m_25" title="You can install the StreamSets Data Collector with the Cloudera Manager.">Installation with Cloudera Manager</a>.</p>
 
   </div>
 
@@ -60,9 +65,9 @@
         
         <thead class="thead" align="left">
           <tr class="row">
-            <th class="entry" valign="top" width="28.49002849002849%" id="d24873e65">Requirement</th>
+            <th class="entry" valign="top" width="28.49002849002849%" id="d25751e81">Requirement</th>
 
-            <th class="entry" valign="top" width="71.5099715099715%" id="d24873e72">Description</th>
+            <th class="entry" valign="top" width="71.5099715099715%" id="d25751e88">Description</th>
 
           </tr>
 
@@ -70,9 +75,9 @@
 
         <tbody class="tbody">
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d24873e65 ">Operating Systems</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d25751e81 ">Operating Systems</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d24873e72 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d25751e88 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
                 <li class="li">Mac OS X</li>
 
                 <li class="li">CentOS 6 or 7</li>
@@ -87,16 +92,16 @@
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d24873e65 ">Java</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d25751e81 ">Java</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d24873e72 ">Oracle Java 7 or 8</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d25751e88 ">Oracle Java 7 or 8</td>
 
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d24873e65 ">Browser</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d25751e81 ">Browser</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d24873e72 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d25751e88 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
                 <li class="li">Chrome</li>
 
                 <li class="li">Firefox</li>

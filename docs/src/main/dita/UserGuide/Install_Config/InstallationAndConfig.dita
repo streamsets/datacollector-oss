@@ -17,11 +17,15 @@
  <title>Installation and Configuration</title>
  <shortdesc>You can install the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and start it
-    manually or run it  as a service. </shortdesc>
+    manually or run it as a service. </shortdesc>
   <conbody>
     <p>After installation, you can optionally install additional stages, create additional users,
       customize the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
       configure the environment.</p>
+    <p>If you use Cloudera Manager, you can alternatively install and administer the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
+      Cloudera Manager. For more information, see <xref
+        href="ClouderaManagerInstallation.dita#concept_nb5_c3m_25"/>.</p>
   </conbody>
 </concept>

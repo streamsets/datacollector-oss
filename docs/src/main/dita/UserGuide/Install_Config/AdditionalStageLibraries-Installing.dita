@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zvt_f4f_cr">
-    <title>Installing Additional Stage Libraries</title>
+    <title>Installing Additional Stage Libraries (Standard)</title>
     <shortdesc>You can install a stage library by downloading the library and untarring it into the
             <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         installation directory.</shortdesc>

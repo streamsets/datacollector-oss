@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_zn4_qrn_25">
+    <title>Changing <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        Configuration</title>
+    <shortdesc>When administering the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        through Cloudera Manager, configure all <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        configuration properties and environment variables through Cloudera Manager. </shortdesc>
+    <taskbody>
+        <context>
+            <p>Manual changes to the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration files can be overwritten by Cloudera Manager. </p>
+        </context>
+        <steps id="steps_tvq_xsn_25">
+            <step>
+                <cmd>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service and
+                    then click <uicontrol>Configuration</uicontrol>.</cmd>
+                <info>The Configuration page displays <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration properties. </info>
+            </step>
+            <step>
+                <cmd>On the <wintitle>Configuration</wintitle> page, in the navigation panel, select
+                    a category to configure related properties.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+    <related-links>
+        <link href="DCConfig.dita#concept_pq5_xjq_kr"/>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr"/>
+    </related-links>
+</task>
