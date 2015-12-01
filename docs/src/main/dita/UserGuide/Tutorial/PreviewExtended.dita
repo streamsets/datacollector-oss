@@ -35,7 +35,7 @@
               <li>Notice how all digits except the last four are masked. We did this by using the
                 Regular Expression mask type and revealing the second group in the regex.</li>
             </ol></dd>
-          <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="50"
+          <dd><image href="../Graphics/Tutorial-PreviewFMasker.png" id="image_u3z_gdl_5s" scale="45"
             /></dd>
           <dd>Say we want to mask the whole credit card number. To review the stage configuration
             and try a different option:<ol id="ol_vvw_wlg_qs">
