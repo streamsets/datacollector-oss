@@ -214,7 +214,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecords() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -264,7 +264,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -315,7 +315,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -367,7 +367,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteStringRecordsFromJSON3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -523,7 +523,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression1() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -656,7 +656,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression2() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -790,7 +790,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression3() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -883,7 +883,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testTopicExpression4() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -950,7 +950,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testInvalidPartition() throws InterruptedException, StageException, IOException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -998,7 +998,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testTopicConstant() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 
@@ -1053,7 +1053,7 @@ public class TestKafkaTargetSinglePartition {
    */
   public void testInvalidTopicWhiteList() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
     kafkaProducerConfig.put("message.send.max.retries", "10");
@@ -1315,7 +1315,7 @@ public class TestKafkaTargetSinglePartition {
   @Test
   public void testWriteBinaryRecords() throws InterruptedException, StageException {
 
-    Map<String, String> kafkaProducerConfig = new HashMap();
+    Map<String, Object> kafkaProducerConfig = new HashMap();
     kafkaProducerConfig.put("request.required.acks", "2");
     kafkaProducerConfig.put("request.timeout.ms", "2000");
 

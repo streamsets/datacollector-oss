@@ -25,13 +25,13 @@ import java.util.Map;
 
 public class ProducerFactorySettings {
 
-  private final Map<String, String> kafkaProducerConfigs;
+  private final Map<String, Object> kafkaProducerConfigs;
   private final PartitionStrategy partitionStrategy;
   private final String metadataBrokerList;
   private final DataFormat dataFormat;
 
   public ProducerFactorySettings(
-      Map<String, String> kafkaProducerConfigs,
+      Map<String, Object> kafkaProducerConfigs,
       PartitionStrategy partitionStrategy,
       String metadataBrokerList,
       DataFormat dataFormat
@@ -42,7 +42,7 @@ public class ProducerFactorySettings {
     this.dataFormat = dataFormat;
   }
 
-  public Map<String, String> getKafkaProducerConfigs() {
+  public Map<String, Object> getKafkaProducerConfigs() {
     return kafkaProducerConfigs;
   }
 

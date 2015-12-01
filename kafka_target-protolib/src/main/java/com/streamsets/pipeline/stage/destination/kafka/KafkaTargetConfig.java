@@ -178,7 +178,7 @@ public class KafkaTargetConfig {
     displayPosition = 60,
     group = "#0"
   )
-  public Map<String, String> kafkaProducerConfigs;
+  public Map<String, Object> kafkaProducerConfigs;
 
 
   // Private members
@@ -380,7 +380,7 @@ public class KafkaTargetConfig {
     if(kafkaProducerConfigs != null) {
       if(kafkaProducerConfigs.containsKey(MESSAGE_SEND_MAX_RETRIES_KEY)) {
         try {
-          messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).trim());
+          messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).toString().trim());
         } catch (NullPointerException | NumberFormatException e) {
           issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             MESSAGE_SEND_MAX_RETRIES_KEY, "integer", e.toString(), e));
@@ -395,7 +395,7 @@ public class KafkaTargetConfig {
 
       if(kafkaProducerConfigs.containsKey(RETRY_BACKOFF_MS_KEY)) {
         try {
-          retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).trim());
+          retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).toString().trim());
         } catch (NullPointerException | NumberFormatException e) {
           issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
             RETRY_BACKOFF_MS_KEY, "long", e.toString(), e));

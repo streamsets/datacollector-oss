@@ -58,14 +58,14 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   /*Topic to readData from*/
   /*Host on which the seed broker is running*/
   private final String metadataBrokerList;
-  private final Map<String, String> kafkaProducerConfigs;
+  private final Map<String, Object> kafkaProducerConfigs;
   private final DataFormat producerPayloadType;
   private final PartitionStrategy partitionStrategy;
   private List<KeyedMessage<String, byte[]>> messageList;
   private Producer<String, byte[]> producer;
 
   public KafkaProducer08(String metadataBrokerList, DataFormat producerPayloadType,
-                         PartitionStrategy partitionStrategy, Map<String, String> kafkaProducerConfigs) {
+                         PartitionStrategy partitionStrategy, Map<String, Object> kafkaProducerConfigs) {
     this.metadataBrokerList = metadataBrokerList;
     this.producerPayloadType = producerPayloadType;
     this.partitionStrategy = partitionStrategy;
@@ -156,7 +156,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
       kafkaProducerConfigs.remove(KEY_SERIALIZER_CLASS_KEY);
       kafkaProducerConfigs.remove(SERIALIZER_CLASS_KEY);
 
-      for (Map.Entry<String, String> producerConfig : kafkaProducerConfigs.entrySet()) {
+      for (Map.Entry<String, Object> producerConfig : kafkaProducerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
     }

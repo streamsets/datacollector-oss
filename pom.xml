@@ -66,6 +66,7 @@
     <cdh_5_5-cluster-cdh_kafka_1_3-lib>none</cdh_5_5-cluster-cdh_kafka_1_3-lib>
     <apache-kafka_0_8_1-lib>none</apache-kafka_0_8_1-lib>
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
+    <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
     <jython_2_7-lib>none</jython_2_7-lib>
     <elasticsearch_1_4-lib>none</elasticsearch_1_4-lib>
     <elasticsearch_1_5-lib>none</elasticsearch_1_5-lib>
@@ -119,6 +120,7 @@
 
     <module>sdc-kafka-api</module>
     <module>sdc-kafka_0_8</module>
+    <module>sdc-kafka_0_9</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_target-protolib</module>
@@ -388,6 +390,7 @@
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
+        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
         <cdh_5_5-cluster-cdh_kafka_1_2-lib>cdh_5_5-cluster-cdh_kafka_1_2-lib</cdh_5_5-cluster-cdh_kafka_1_2-lib>
         <elasticsearch_1_4-lib>elasticsearch_1_4-lib</elasticsearch_1_4-lib>
@@ -402,6 +405,7 @@
         <module>hdp_2_2-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
+        <module>apache-kafka_0_9-lib</module>
         <module>cdh_kafka_1_2-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_2-lib</module>
         <module>cdh_5_4-cluster-cdh_kafka_1_3-lib</module>
@@ -429,6 +433,7 @@
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_5-cluster-cdh_kafka_1_3-lib>cdh_5_5-cluster-cdh_kafka_1_3-lib</cdh_5_5-cluster-cdh_kafka_1_3-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
+        <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
       </properties>
       <modules>
         <module>cdh_5_5-lib</module>
@@ -440,6 +445,7 @@
         <module>mongodb_3-lib</module>
         <module>cdh_5_5-cluster-cdh_kafka_1_3-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
+        <module>apache-kafka_0_9-lib</module>
       </modules>
     </profile>
 
