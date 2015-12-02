@@ -56,14 +56,21 @@ rm -rf cloudera-integration/parcel/target/cm_ext
 # compile and install
 mvn clean install -Pdist,all-libs,ui,rpm,miniIT,cloudera -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
 # package and run tests (if appropiate)
-set +e
 pushd cloudera-integration/parcel/target
 git clone https://github.com/cloudera/cm_ext.git
 parcel=$(ls STREAMSETS_DATACOLLECTOR-*.parcel)
+# the parcel maven generates cannot be read by python tarfile
+# the workaround is to re-generate with guntar
+rm -r ${parcel%-el6*}
+tar -zxf $parcel
+rm $parcel
+tar -zcf $parcel ${parcel%-el6*}
+# we can use the same parcel for multiple os
 ln -s $parcel ${parcel%-el6*}-el7.parcel
 ln -s $parcel ${parcel%-el6*}-trusty.parcel
 python cm_ext/make_manifest/make_manifest.py .
 popd
+set +e
 export JAVA_HOME=${TEST_JVM}
 mvn package -fae -Pdist,ui,rpm,miniIT -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${TEST_OPTS[@]}
 exitCode=$?
