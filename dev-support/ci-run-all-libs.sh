@@ -60,8 +60,8 @@ set +e
 pushd cloudera-integration/parcel/target
 git clone https://github.com/cloudera/cm_ext.git
 parcel=$(ls STREAMSETS_DATACOLLECTOR-*.parcel)
-ln -s $parcel ${file%-el6*}-el7.parcel
-ln -s $parcel ${file%-el6*}-trusty.parcel
+ln -s $parcel ${parcel%-el6*}-el7.parcel
+ln -s $parcel ${parcel%-el6*}-trusty.parcel
 python cm_ext/make_manifest/make_manifest.py .
 popd
 export JAVA_HOME=${TEST_JVM}
