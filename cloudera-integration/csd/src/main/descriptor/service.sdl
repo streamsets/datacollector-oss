@@ -12,6 +12,7 @@
     "group": "sdc"
   },
   "parcel": {
+    "repoUrl": "https://archives.streamsets.com/datacollector/latest/parcel/",
     "requiredTags": ["streamsets"]
   },
   "icon": "images/streamsets.png",
