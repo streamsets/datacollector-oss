@@ -52,10 +52,18 @@ git show
 /opt/scripts/docker-stop-all-running-containers.sh || true
 /opt/scripts/docker-delete-stopped-containers.sh || true
 /opt/scripts/docker-delete-local-images.sh || true
+rm -rf cloudera-integration/parcel/target/cm_ext
 # compile and install
 mvn clean install -U -Pdist,all-libs,ui,rpm,miniIT,cloudera -Drelease -Dtest=DoesNotExist -DfailIfNoTests=false
 # package and run tests (if appropiate)
 set +e
+pushd cloudera-integration/parcel/target
+git clone https://github.com/cloudera/cm_ext.git
+parcel=$(ls STREAMSETS_DATACOLLECTOR-*.parcel)
+ln -s $parcel ${file%-el6*}-el7.parcel
+ln -s $parcel ${file%-el6*}-trusty.parcel
+python cm_ext/make_manifest/make_manifest.py .
+popd
 export JAVA_HOME=${TEST_JVM}
 mvn package -U -fae -Pdist,ui,rpm,miniIT -Dmaven.main.skip=true -DlastModGranularityMs=604800000 ${TEST_OPTS[@]}
 exitCode=$?
