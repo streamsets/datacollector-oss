@@ -534,7 +534,7 @@ angular.module('dataCollectorApp.common')
     this.setDefaultValueForConfig = function(configDefinition, stageInstance) {
       var config = {
           name: configDefinition.name,
-          value: configDefinition.defaultValue || undefined
+          value: (configDefinition.defaultValue !== undefined && configDefinition.defaultValue !== null) ? configDefinition.defaultValue : undefined
         };
 
       if(configDefinition.type === 'MODEL') {
