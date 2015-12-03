@@ -61,7 +61,7 @@ angular.module('dataCollectorApp.common')
       this.configInitPromise.then(function() {
         var uiHelpBaseURL, helpURL;
         if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
-          uiHelpBaseURL = configuration.getUIHostedHelpBaseURL();
+          uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';
         } else {
           uiHelpBaseURL = configuration.getUILocalHelpBaseURL();
         }
