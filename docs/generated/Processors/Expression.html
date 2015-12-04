@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Expression Evaluator performs calculations with record data. It writes the results of the calculations to new or existing fields in the record. To create an expression, you define the name of the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Evaluator"></meta><meta name="abstract" content="The Expression Evaluator performs calculations with record data. It writes the results of the calculations to new or existing fields in the record."></meta><meta name="description" content="The Expression Evaluator performs calculations with record data. It writes the results of the calculations to new or existing fields in the record."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConstants.html#concept_rjh_ntz_qr"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zm2_pp3_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Expression Evaluator performs calculations and writes the results to new or existing fields. You can also use the Expression Evaluator to add or modify record header attributes. To create an ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Expression Evaluator"></meta><meta name="abstract" content="The Expression Evaluator performs calculations and writes the results to new or existing fields. You can also use the Expression Evaluator to add or modify record header attributes."></meta><meta name="description" content="The Expression Evaluator performs calculations and writes the results to new or existing fields. You can also use the Expression Evaluator to add or modify record header attributes."></meta><meta name="DC.Relation" scheme="URI" content="../Processors/Processors_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq"></meta><meta name="DC.Relation" scheme="URI" content="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConstants.html#concept_rjh_ntz_qr"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zm2_pp3_wq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Expression Evaluator</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,16 +35,20 @@
  <h1 class="title topictitle1">Expression Evaluator</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Expression Evaluator performs calculations with record data. It writes the results
-    of the calculations to new or existing fields in the record.</p>
+ <div class="body conbody"><p class="shortdesc">The Expression Evaluator performs calculations and writes the results to new or existing
+        fields. You can also use the Expression Evaluator to add or modify record header attributes. </p>
 
-  <p class="p">To create an expression, you define
-      the name of the field to receive the results of the expression and the expression that you
-      want to use. Use the expression language to define the calculations that you want to use. </p>
+  <p class="p">To create an expression, you
+            define the name of the field or header attribute to receive the results of the
+            expression. And then, use the expression language to define the expression to use.</p>
 
-  <p class="p">You can use  pipeline constants in any expression in the processor. Define a pipeline constant
-      when you have a constant value that you use in more than one expression or that you want to
-      change easily. </p>
+  <p class="p">You can use pipeline constants in expressions. Define a pipeline constant when you have a
+            constant value that you use in more than one expression in the pipeline or that you want
+            to change easily. </p>
+
+        <p class="p">You can also use the time:now() function to include the <span class="ph">Data
+                  Collector</span>
+            server time in the record.</p>
 
  </div>
 
@@ -58,12 +62,34 @@
  <h2 class="title topictitle2">Expression Output Fields</h2>
 
  
- <div class="body conbody"><p class="shortdesc">When you configure an expression, the Expression Evaluator writes the results of the
-  expression to a field. You can use an existing field or create a new field.</p>
+ <div class="body conbody"><p class="shortdesc">When you configure a field expression, the Expression Evaluator writes the results of
+        the expression to a field. You can use an existing field or create a new field.</p>
 
-  <p class="p">When you use an existing field, the Expression Evaluator
-      replaces the incoming value with the new value. When you use a new field, the Expression
-      Evaluator adds the new field to the record and passes the value of the expression.</p>
+  <p class="p">When you use an
+            existing field, the Expression Evaluator replaces the incoming value with the new value.
+            When you use a new field, the Expression Evaluator adds the new field to the record and
+            passes the value of the expression.</p>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_qf3_mfq_f5">
+ <h2 class="title topictitle2">Header Attribute Expressions</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can use expressions to add or modify header attributes for a record. </p>
+
+  <p class="p">For example, you
+            could use the time:now() function to note the time when the <span class="ph">Data
+                  Collector</span>
+            processes the record. </p>
+
+        <div class="p">
+            <div class="note note"><span class="notetitle">Note:</span> Avoid altering header attributes automatically generated by the <span class="ph">Data
+                  Collector</span>. Altering <span class="ph">Data
+                  Collector</span> attributes can cause unexpected results.</div>
+
+        </div>
 
  </div>
 
@@ -85,9 +111,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55154e142">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55154e184">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55154e145">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55154e187">Description</th>
 
                                 </tr>
 
@@ -95,24 +121,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e142 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e184 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e145 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e142 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e145 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e187 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e142 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e184 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e187 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e184 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_x2h_tv4_yq__d6231e1348" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e145 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e187 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -120,10 +146,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e142 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e184 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_x2h_tv4_yq__d6231e1362" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e145 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e187 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -131,9 +157,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e142 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e184 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e145 ">Error record handling for the stage: <ul class="ul" id="task_x2h_tv4_yq__d6231e1378">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e187 ">Error record handling for the stage: <ul class="ul" id="task_x2h_tv4_yq__d6231e1378">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -155,8 +181,8 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To configure an expression, click the <span class="keyword wintitle">Expressions</span> tab and
-                    configure the following information:</span>
+                <span class="ph cmd">To configure a field expression, click the <span class="keyword wintitle">Expressions</span> tab
+                    and configure the following information:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_x2h_tv4_yq__table_zfp_zy4_yq" class="table" frame="border" border="1" rules="all">
@@ -164,9 +190,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55154e254">Expression Evaluator Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55154e296">Field Expression Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55154e257">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55154e299">Description</th>
 
                                 </tr>
 
@@ -174,9 +200,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e254 ">Output Field</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e296 ">Output Field</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e257 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e299 ">
                                         <p class="p">The field to pass the results of the expression to the
                                             next stage. Enter the name of a new or existing field as
                                             follows: /FieldName. </p>
@@ -194,9 +220,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e254 ">Expression</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e296 ">Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e257 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e299 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
                   creating the expression. </p>
 </td>
 
@@ -210,8 +236,66 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To add additional expressions, click the <span class="ph uicontrol">Add</span> icon.
+                <span class="ph cmd">To add additional field expressions, click the <span class="ph uicontrol">Add</span> icon.
                 </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To configure a header attribute expression, configure the following
+                    information:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_x2h_tv4_yq__table_kcj_xhq_f5" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55154e379">Header Attribute Expression Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55154e382">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e379 ">Header Attribute  <a class="xref" href="Expression.html#concept_qf3_mfq_f5" title="You can use expressions to add or modify header attributes for a record.">
+                                            <img class="image" id="task_x2h_tv4_yq__image_off_qlq_f5" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e382 ">
+                                        <p class="p">The header attribute to pass the results of the
+                                            expression to the next stage. Enter the name of a new or
+                                            existing attribute as follows: /Attribute. </p>
+
+                                        <div class="p">If you use an existing attribute, the Expression
+                                            Evaluator replaces existing values.<div class="note note"><span class="notetitle">Note:</span> Avoid changing
+                                                values for header attributes generated by the <span class="ph">Data
+                  Collector</span>.</div>
+</div>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55154e379 ">Expression</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55154e382 ">Expression to evaluate. <p class="p">Optionally, click <span class="ph uicontrol">Ctrl + Space Bar</span> for help with
+                  creating the expression. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To add additional header attribute expressions, click the
+                        <span class="ph uicontrol">Add</span> icon. </span>
             </li>
 </ol>
 

@@ -15,13 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pzk_fz4_yq">
  <title>Expression Output Fields</title>
- <shortdesc>When you configure an expression, the Expression Evaluator writes the results of the
-  expression to a field. You can use an existing field or create a new field.</shortdesc>
+ <shortdesc>When you configure a field expression, the Expression Evaluator writes the results of
+        the expression to a field. You can use an existing field or create a new field.</shortdesc>
  <conbody>
   <p><indexterm>Expression Evaluator processor<indexterm>expression output
-        field</indexterm></indexterm><indexterm>output field<indexterm>Expression
-          Evaluator</indexterm></indexterm>When you use an existing field, the Expression Evaluator
-      replaces the incoming value with the new value. When you use a new field, the Expression
-      Evaluator adds the new field to the record and passes the value of the expression.</p>
+                field</indexterm></indexterm><indexterm>field expression output
+                    fields<indexterm>Expression Evaluator</indexterm></indexterm>When you use an
+            existing field, the Expression Evaluator replaces the incoming value with the new value.
+            When you use a new field, the Expression Evaluator adds the new field to the record and
+            passes the value of the expression.</p>
  </conbody>
 </concept>
