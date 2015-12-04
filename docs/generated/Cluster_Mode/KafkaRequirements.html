@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the following requirements to configure a cluster mode pipeline to read from a Kafka cluster: Verify the installation of Kafka, Spark Streaming, and YARN. Install the Data Collector on a Spark and ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Kafka Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/KConsumer.html#concept_msz_wnr_5q"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_gmd_msw_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Requirements</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the following requirements to configure a cluster mode pipeline to read from a Kafka cluster: Verify the installation of Kafka, Spark Streaming, and either YARN or Mesos as the cluster manager. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="task"></meta><meta name="DC.Title" content="Kafka Requirements"></meta><meta name="DC.Relation" scheme="URI" content="../Cluster_Mode/ClusterPipelines_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/ConfiguringAPipeline.html#task_xlv_jdw_kq"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/KConsumer.html#concept_msz_wnr_5q"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="task_gmd_msw_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kafka Requirements</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -39,14 +39,37 @@
             <div class="p">Use
                 the following requirements to configure a cluster mode pipeline to read from a Kafka
                 cluster: <ol class="ol" id="task_gmd_msw_yr__ol_e32_llw_yr">
-                    <li class="li">Verify the installation of Kafka, Spark Streaming, and YARN.</li>
+                    <li class="li">Verify the installation of Kafka, Spark Streaming, and either YARN or Mesos
+                        as the cluster manager.</li>
 
                     <li class="li">Install the <span class="ph">Data
-                  Collector</span> on a Spark and YARN gateway node.</li>
+                  Collector</span> on a Spark and YARN or a Spark and Mesos gateway node.</li>
+
+                    <li class="li">If necessary, specify the location of the spark-submit script. <div class="p">The <span class="ph">Data
+                  Collector</span> assumes that the spark-submit script, used to submit job requests to
+                            Spark, is located in the following directory:
+                            <pre class="pre codeblock">/usr/bin/spark-submit</pre>
+</div>
+If the script is not in
+                        this directory, use the following environment variables to define the
+                        location of the script:<ul class="ul" id="task_gmd_msw_yr__ul_xzc_bqj_f5">
+                            <li class="li">For Spark on YARN, use the SPARK_SUBMIT_COMMAND environment
+                                variable.</li>
+
+                            <li class="li">For Spark on Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
+                                variable.</li>
+
+                        </ul>
+</li>
 
                     <li class="li">In the pipeline properties, on the <span class="keyword wintitle">General</span> tab, set the
                             <span class="ph uicontrol">Execution Mode</span> property to
                             <span class="ph uicontrol">Cluster</span>.</li>
+
+                    <li class="li">For Spark on Mesos, on the <span class="ph uicontrol">Cluster</span> tab, enter the
+                            <span class="ph uicontrol">Dispatcher URL</span>. <p class="p">The Mesos dispatcher must be
+                            running to run a pipeline. </p>
+</li>
 
                     <li class="li">In the pipeline, use a Kafka Consumer origin for cluster mode. <p class="p">If you
                             have more than one Kafka stage library installed, select the cluster

@@ -43,9 +43,9 @@
    the pipeline. A pipeline runs in standalone mode by default. </p>
 
   <p class="p">In cluster mode, the <span class="ph">Data
-                  Collector</span> utilizes YARN
-   and a cluster application to spawn additional workers as needed. Use cluster mode to process data
-   from a Kafka cluster or HDFS.</p>
+                  Collector</span> utilizes a
+   cluster manager and a cluster application to spawn additional workers as needed. Use cluster mode
+   to write data to a Kafka cluster or HDFS.</p>
 
   <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
@@ -64,12 +64,16 @@
 
      <dd class="dd">When processing data from a Kafka cluster, the <span class="ph">Data
                   Collector</span> processes
-      data continuously until you stop the pipeline. </dd>
+      data continuously until you stop the pipeline. This is known as cluster streaming execution
+      mode. </dd>
 
      <dd class="dd">The <span class="ph">Data
                   Collector</span>
       runs as an application within Spark Streaming, an open source cluster-computing application.
-      YARN and Spark Streaming spawn a <span class="ph">Data
+      Spark Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
+      cluster.</dd>
+
+     <dd class="dd">The cluster manager and Spark Streaming spawn a <span class="ph">Data
                   Collector</span> worker for
       each partition in the Kafka cluster. So each partition has a <span class="ph">Data
                   Collector</span> worker to
@@ -89,9 +93,11 @@
 
      <dd class="dd">The <span class="ph">Data
                   Collector</span>
-      runs as an application on top of MapReduce, an open-source cluster-computing framework. YARN
-      and MapReduce generate additional worker nodes as needed. MapReduce creates one map task for
-      each HDFS block. </dd>
+      runs as an application on top of MapReduce, an open-source cluster-computing framework.
+      MapReduce runs on the YARN cluster manager. </dd>
+
+     <dd class="dd">YARN and MapReduce generate additional worker nodes as needed. MapReduce creates one map
+      task for each HDFS block. </dd>
 
      <dd class="dd">Use the Hadoop FS origin to process data from HDFS in cluster mode.</dd>
 
@@ -108,9 +114,9 @@
  <h2 class="title topictitle2">Kerberos Authentication for the Cluster</h2>
 
  
- <div class="body conbody"><p class="shortdesc">If the YARN cluster uses Kerberos authentication, make sure to configure the <span class="ph">Data
-                  Collector</span> to use Kerberos
-  authentication.</p>
+ <div class="body conbody"><p class="shortdesc">If a YARN cluster uses Kerberos authentication, make sure to configure the <span class="ph">Data
+                  Collector</span> to use
+    Kerberos authentication.</p>
 
   <p class="p">When you configure Kerberos authentication for the <span class="ph">Data
                   Collector</span>, you enable
@@ -121,6 +127,7 @@
                   Collector</span> automatically
    uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
 
+    
  </div>
 
   <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>

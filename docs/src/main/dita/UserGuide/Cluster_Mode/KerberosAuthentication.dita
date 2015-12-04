@@ -15,9 +15,9 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_swq_1bg_xs">
  <title>Kerberos Authentication for the Cluster</title>
- <shortdesc>If the YARN cluster uses Kerberos authentication, make sure to configure the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use Kerberos
-  authentication.</shortdesc>
+ <shortdesc>If a YARN cluster uses Kerberos authentication, make sure to configure the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+    Kerberos authentication.</shortdesc>
  <conbody>
   <p><indexterm>Kerberos authentication<indexterm>cluster
     pipelines</indexterm></indexterm><indexterm>cluster mode<indexterm>Kerberos
@@ -28,6 +28,8 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, the <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> automatically
    uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
+    <draft-comment author="Loretta">do I need to add a note stating that we don't support Kerberos
+      for Mesos?</draft-comment>
  </conbody>
   <related-links>
     <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>

@@ -25,9 +25,9 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> process runs
    the pipeline. A pipeline runs in standalone mode by default. </p>
   <p>In cluster mode, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> utilizes YARN
-   and a cluster application to spawn additional workers as needed. Use cluster mode to process data
-   from a Kafka cluster or HDFS.</p>
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> utilizes a
+   cluster manager and a cluster application to spawn additional workers as needed. Use cluster mode
+   to write data to a Kafka cluster or HDFS.</p>
   <p>When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to Kafka. And then use a
@@ -42,10 +42,14 @@
      <dt>Kafka cluster</dt>
      <dd>When processing data from a Kafka cluster, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-      data continuously until you stop the pipeline. </dd>
+      data continuously until you stop the pipeline. This is known as cluster streaming execution
+      mode. <draft-comment author="Loretta">add something about streaming mode here?
+      </draft-comment></dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application within Spark Streaming, an open source cluster-computing application.
-      YARN and Spark Streaming spawn a <ph
+      Spark Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
+      cluster.</dd>
+     <dd>The cluster manager and Spark Streaming spawn a <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker for
       each partition in the Kafka cluster. So each partition has a <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker to
@@ -57,11 +61,13 @@
      <dt>HDFS</dt>
      <dd>When processing data from HDFS, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-      all available data and then stops the pipeline. </dd>
+      all available data and then stops the pipeline. <draft-comment author="Loretta">add something
+       about batch mode here? </draft-comment></dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      runs as an application on top of MapReduce, an open-source cluster-computing framework. YARN
-      and MapReduce generate additional worker nodes as needed. MapReduce creates one map task for
-      each HDFS block. </dd>
+      runs as an application on top of MapReduce, an open-source cluster-computing framework.
+      MapReduce runs on the YARN cluster manager. </dd>
+     <dd>YARN and MapReduce generate additional worker nodes as needed. MapReduce creates one map
+      task for each HDFS block. </dd>
      <dd>Use the Hadoop FS origin to process data from HDFS in cluster mode.</dd>
     </dlentry>
    </dl></p>
