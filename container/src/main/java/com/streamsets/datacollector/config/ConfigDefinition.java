@@ -269,6 +269,7 @@ public class ConfigDefinition {
     if(getType() == ConfigDef.Type.MODEL) {
       switch (model.getModelType()) {
         case VALUE_CHOOSER:
+        case MULTI_VALUE_CHOOSER:
           try {
             Class klass = classLoader.loadClass(model.getValuesProviderClass());
             ChooserValues chooserValues = (ChooserValues) klass.newInstance();
