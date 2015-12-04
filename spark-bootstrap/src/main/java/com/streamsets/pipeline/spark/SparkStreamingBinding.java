@@ -22,17 +22,23 @@ package com.streamsets.pipeline.spark;
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
 import kafka.serializer.DefaultDecoder;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.api.java.JavaStreamingContextFactory;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Properties;
 
 public class SparkStreamingBinding implements ClusterBinding {
@@ -51,9 +57,12 @@ public class SparkStreamingBinding implements ClusterBinding {
 
   @Override
   public void init() throws Exception {
-    SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
+    for (Object key : properties.keySet()) {
+      LOG.info("Property => " + key + " => " + properties.getProperty(key.toString()));
+    }
+    final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-    long duration;
+    final long duration;
     String durationAsString = getProperty(MAX_WAIT_TIME);
     try {
       duration = Long.parseLong(durationAsString);
@@ -61,7 +70,42 @@ public class SparkStreamingBinding implements ClusterBinding {
       String msg = "Invalid " + MAX_WAIT_TIME  + " '" + durationAsString + "' : " + ex;
       throw new IllegalArgumentException(msg, ex);
     }
-    ssc = new JavaStreamingContext(conf, new Duration(duration));
+    Configuration hadoopConf = new Configuration();
+    URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
+    LOG.info("Default FS URI: {}", hdfsURI);
+    FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
+    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"  + getProperty("sdc.id"));
+    hdfs.mkdirs(sdcCheckpointPath);
+    if (!hdfs.isDirectory(sdcCheckpointPath)) {
+      throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);
+    }
+    final String checkpointPathName = (new Path(sdcCheckpointPath, getProperty("cluster.pipeline.name"))).toString();
+    ssc = JavaStreamingContext.getOrCreate(checkpointPathName, new JavaStreamingContextFactory() {
+      @Override
+      public JavaStreamingContext create() {
+        JavaStreamingContext result = new JavaStreamingContext(conf, new Duration(duration));
+        result.checkpoint(checkpointPathName);
+        Map<String, String> props = new HashMap<String, String>();
+        // Check for null values
+        // require only the broker list for direct stream API (low level consumer API)
+        String metaDataBrokerList = getProperty(METADATA_BROKER_LIST);
+        String topic = getProperty(TOPIC);
+        props.put("metadata.broker.list", metaDataBrokerList);
+        String autoOffsetValue = properties.getProperty(AUTO_OFFSET_RESET, "").trim();
+        if (!autoOffsetValue.isEmpty()) {
+          props.put(AUTO_OFFSET_RESET, autoOffsetValue);
+        }
+        String[] topicList = topic.split(",");
+        LOG.info("Meta data broker list " + metaDataBrokerList);
+        LOG.info("topic list " + topic);
+        LOG.info("Auto offset is set to " + autoOffsetValue);
+        JavaPairInputDStream<byte[], byte[]> dStream =
+          KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
+            new HashSet<String>(Arrays.asList(topicList)));
+        dStream.foreachRDD(new SparkDriverFunction());
+        return result;
+      }
+    });
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
     if (System.getProperty("SDC_MESOS_BASE_DIR") == null) {
       final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
@@ -75,8 +119,6 @@ public class SparkStreamingBinding implements ClusterBinding {
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     }
     LOG.info("Making calls through spark context ");
-    JavaPairInputDStream<byte[], byte[]> dStream = createDirectStreamForKafka();
-    dStream.foreachRDD(new SparkDriverFunction());
     ssc.start();
   }
 
@@ -86,26 +128,6 @@ public class SparkStreamingBinding implements ClusterBinding {
     return properties.getProperty(name).trim();
   }
 
-  private JavaPairInputDStream<byte[], byte[]> createDirectStreamForKafka() {
-    HashMap<String, String> props = new HashMap<String, String>();
-    // Check for null values
-    // require only the broker list for direct stream API (low level consumer API)
-    String metaDataBrokerList = getProperty(METADATA_BROKER_LIST);
-    String topic = getProperty(TOPIC);
-    props.put("metadata.broker.list", metaDataBrokerList);
-    String autoOffsetValue = properties.getProperty(AUTO_OFFSET_RESET, "").trim();
-    if (!autoOffsetValue.isEmpty()) {
-      props.put(AUTO_OFFSET_RESET, autoOffsetValue);
-    }
-    String[] topicList = topic.split(",");
-    LOG.info("Meta data broker list " + metaDataBrokerList);
-    LOG.info("topic list " + topic);
-    LOG.info("Auto offset is set to " + autoOffsetValue);
-    JavaPairInputDStream<byte[], byte[]> dStream =
-      KafkaUtils.createDirectStream(ssc, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
-        new HashSet<String>(Arrays.asList(topicList)));
-    return dStream;
-  }
 
   @Override
   public void awaitTermination() {

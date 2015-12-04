@@ -231,6 +231,8 @@ public class ClusterProviderImpl implements ClusterProvider {
         ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
       if(runtimeInfo != null) {
+        String id = String.valueOf(runtimeInfo.getId());
+        sdcProperties.setProperty(Constants.SDC_ID, id);
         sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
