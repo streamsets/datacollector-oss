@@ -36,7 +36,7 @@ download() {
   curl -Sso $DOWNLOAD_DIR/$tarName $url
  fi
  tar -zxf $DOWNLOAD_DIR/$tarName -C $BASE_DIR
- mv $BASE_DIR/spark-1.3.0-bin-hadoop-2.5.0 $BASE_DIR/$finalName
+ mv $BASE_DIR/spark-1.3.1-bin-hadoop-2.5.0 $BASE_DIR/$finalName
 }
 mkdir -p $DOWNLOAD_DIR
-download "https://s3-us-west-2.amazonaws.com/streamsets-public/thirdparty/spark-1.3.0-bin-hadoop-2.5.0.tar.gz" "spark"
+download "https://s3-us-west-2.amazonaws.com/streamsets-public/thirdparty/spark-1.3.1-bin-hadoop-2.5.0.tar.gz" "spark"
