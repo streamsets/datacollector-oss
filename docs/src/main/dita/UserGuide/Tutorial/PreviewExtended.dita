@@ -108,7 +108,7 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                   /> runs the preview with the change. Notice the corresponding output record now
                   has -40.730068 for both pickup_latitude and pickup_location. </p><p><image
-                    href="../Graphics/Tutorial-PreviewEditData.png" id="image_bgm_cfj_rs" scale="60"
+                    href="../Graphics/Tutorial-PreviewEditData.png" id="image_bgm_cfj_rs" scale="50"
                   /></p><p>You can see how this functionality might come in handy when you want to
                   test some cases that didn't come up in the preview data. </p></li>
               <li>To revert that change, click the <uicontrol>Revert Data Changes</uicontrol> icon:

@@ -383,7 +383,7 @@
                                 <row>
                                     <entry>Dispatcher URL</entry>
                                     <entry>Master URL of the Mesos dispatcher. For example,
-                                        mesos://dispatcher:7077.<p/></entry>
+                                        mesos://dispatcher:7077.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

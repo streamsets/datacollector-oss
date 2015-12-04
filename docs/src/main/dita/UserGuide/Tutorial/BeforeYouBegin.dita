@@ -22,7 +22,7 @@
       <ol id="ol_dtv_bzs_zs">
         <li>Download sample data. <p>You can download sample data from the following location:
             </p><draft-comment author="Loretta">verify the link</draft-comment><p><xref
-              href="https://www.streamsets.com/documentation/datacollector/1.1.0/tutorial/sample_data/nyc_taxi_data.csv"
+              href="https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv"
               format="html" scope="external">
               https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv</xref></p><p>You'll
             need a login to the password-protected section of the site - it just takes a moment to

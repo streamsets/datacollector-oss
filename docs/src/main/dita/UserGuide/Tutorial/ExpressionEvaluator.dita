@@ -23,8 +23,7 @@
             <p>This ensures that all records have the same format when written to the
                 destination.</p>
             <p>To do this, let's use data preview to verify how the Jython Evaluator adds the credit
-                card type to records.<draft-comment author="Loretta">come back to this when the
-                    Jython ordering is fixed. </draft-comment></p>
+                card type to records.</p>
         </context>
         <steps id="steps_mr4_2pp_ms">
             <step>
@@ -37,9 +36,8 @@
             <step>
                 <cmd>Expand the first output record, scroll down, and notice the new field
                     highlighted in green: <uicontrol>/credit_card_type</uicontrol>.</cmd>
-                <info><draft-comment author="Loretta">need new screenshot</draft-comment><image
-                        href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
-                        scale="80"/></info>
+                <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
+                        scale="50"/></info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Close Preview</uicontrol>.</cmd>
@@ -83,7 +81,7 @@
                 <cmd>Link the Expression Evaluator to the Hadoop FS destination. </cmd>
                 <info>This streams the data from this branch to the destination, merging data from
                     both branches: <p><image href="../Graphics/Tutorial-Expression.png"
-                            id="image_adv_r2r_ps" scale="55"/></p></info>
+                            id="image_adv_r2r_ps" scale="50"/></p></info>
             </step>
         </steps>
     </taskbody>
