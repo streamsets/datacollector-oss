@@ -41,7 +41,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       defaultValue = "JSON",
       label = "Data Format",
       description = "Data format to use when receiving records from Kinesis",
-      displayPosition = 40,
+      displayPosition = 30,
       group = "#0"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -53,7 +53,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       defaultValue = "ROUND_ROBIN",
       label = "Partitioning Strategy",
       description = "Partitioning strategy for partition key generation",
-      displayPosition = 50,
+      displayPosition = 40,
       group = "#0"
   )
   @ValueChooserModel(PartitionStrategyChooserValues.class)
@@ -65,7 +65,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       defaultValue = "${0}",
       label = "Partition Expression",
       description = "EL that is used to evaluate the partitionKey when producing messages.",
-      displayPosition = 55,
+      displayPosition = 45,
       group = "#0",
       dependsOn = "partitionStrategy",
       triggeredByValue = "EXPRESSION",
@@ -79,7 +79,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       type = ConfigDef.Type.MAP,
       label = "Kinesis Producer Configuration",
       description = "Additional Kinesis Producer properties to set.",
-      displayPosition = 60,
+      displayPosition = 50,
       group = "#0"
   )
   public Map<String, String> producerConfigs;
@@ -91,7 +91,7 @@ public class KinesisProducerConfigBean extends KinesisConfigBean {
       defaultValue = "false",
       description = "Enabling this option will guarantee records will be written in-order to the stream. However, " +
           "enabling this option will disable batching and comes at the expense of throughput.",
-      displayPosition = 70,
+      displayPosition = 60,
       group =  "#0"
   )
   public boolean preserveOrdering;

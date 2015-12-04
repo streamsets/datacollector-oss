@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
@@ -107,7 +108,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         new KinesisClientLibConfiguration(
             conf.applicationName,
             conf.streamName,
-            KinesisUtil.getCredentialsProvider(conf),
+            AWSUtil.getCredentialsProvider(conf.awsConfig),
             getWorkerId()
         );
 

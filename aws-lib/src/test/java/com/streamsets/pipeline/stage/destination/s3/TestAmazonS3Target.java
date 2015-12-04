@@ -191,8 +191,8 @@ public class TestAmazonS3Target {
     S3Config s3Config = new S3Config();
     s3Config.setEndPointForTest("http://localhost:" + port);
     s3Config.bucket = BUCKET_NAME;
-    s3Config.accessKeyId = "foo";
-    s3Config.secretAccessKey = "bar";
+    s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3Config.folder = folder;
     s3Config.delimiter = DELIMITER;
 

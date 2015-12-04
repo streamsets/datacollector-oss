@@ -28,7 +28,7 @@ public class RabbitAdvancedConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       label = "Automatic Recovery Enabled",
       defaultValue = "true",
-      displayPosition = 20,
+      displayPosition = 10,
       group = "#0"
   )
   public boolean automaticRecoveryEnabled = true;
@@ -40,7 +40,7 @@ public class RabbitAdvancedConfigBean {
       label = "Network Recovery Interval",
       description = "How long automatic recovery will wait before attempting to reconnect, in ms",
       defaultValue = "5000",
-      displayPosition = 30,
+      displayPosition = 20,
       min = 0,
       group = "#0"
   )
@@ -51,7 +51,7 @@ public class RabbitAdvancedConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Connection Timeout (ms)",
       defaultValue = "0",
-      displayPosition = 10,
+      displayPosition = 30,
       min = 0,
       group = "#0"
   )
@@ -62,7 +62,7 @@ public class RabbitAdvancedConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Handshake Timeout (ms)",
       defaultValue = "10000",
-      displayPosition = 10,
+      displayPosition = 40,
       min = 0,
       group = "#0"
   )
@@ -73,7 +73,7 @@ public class RabbitAdvancedConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Shutdown Timeout (ms)",
       defaultValue = "10000",
-      displayPosition = 10,
+      displayPosition = 50,
       min = 0,
       group = "#0"
   )
@@ -85,7 +85,7 @@ public class RabbitAdvancedConfigBean {
       label = "Heartbeat Interval (s)",
       description = "Heartbeat interval, in seconds; zero to disable heartbeats",
       defaultValue = "0",
-      displayPosition = 10,
+      displayPosition = 60,
       min = 0,
       group = "#0"
   )
@@ -97,7 +97,7 @@ public class RabbitAdvancedConfigBean {
       label = "Maximum Frame Size (bytes)",
       description = "Zero for no limit",
       defaultValue = "0",
-      displayPosition = 10,
+      displayPosition = 70,
       min = 0,
       group = "#0"
   )
@@ -109,7 +109,7 @@ public class RabbitAdvancedConfigBean {
       label = "Maximum Channel Number",
       description = "Zero for no limit",
       defaultValue = "0",
-      displayPosition = 10,
+      displayPosition = 80,
       min = 0,
       group = "#0"
   )

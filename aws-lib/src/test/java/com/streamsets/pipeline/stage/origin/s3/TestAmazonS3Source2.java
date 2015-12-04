@@ -323,8 +323,8 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
-    s3ConfigBean.s3Config.accessKeyId = "foo";
-    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
@@ -362,8 +362,8 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
-    s3ConfigBean.s3Config.accessKeyId = "foo";
-    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
@@ -401,8 +401,8 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
-    s3ConfigBean.s3Config.accessKeyId = "foo";
-    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 
@@ -440,8 +440,8 @@ public class TestAmazonS3Source2 {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
-    s3ConfigBean.s3Config.accessKeyId = "foo";
-    s3ConfigBean.s3Config.secretAccessKey = "bar";
+    s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
+    s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
     s3ConfigBean.s3Config.delimiter = "/";
 

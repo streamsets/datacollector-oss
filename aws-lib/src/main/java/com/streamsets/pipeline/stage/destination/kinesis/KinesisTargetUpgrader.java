@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        // fall through
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -73,5 +77,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".partitionExpression", "${0}"));
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".preserveOrdering", false));
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".producerConfigs", new ArrayList<Map<String, String>>()));
+  }
+
+  private void upgradeV2toV3(List<Config> configs) {
+    AWSUtil.renameAWSCredentialsConfigs(configs);
   }
 }

@@ -17,14 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.s3;
+package com.streamsets.pipeline.stage.lib.aws;
 
+import com.amazonaws.regions.Regions;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class S3RegionChooserValues extends BaseEnumChooserValues {
+public class AWSRegionChooserValues extends BaseEnumChooserValues {
 
-  public S3RegionChooserValues() {
-    super(S3Regions.class);
+  public AWSRegionChooserValues() {
+    super(Regions.class);
   }
 
 }

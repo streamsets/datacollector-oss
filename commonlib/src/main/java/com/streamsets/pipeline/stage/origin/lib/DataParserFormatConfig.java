@@ -77,7 +77,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Charset",
-      displayPosition = 3010,
+      displayPosition = 300,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
@@ -91,7 +91,7 @@ public class DataParserFormatConfig {
       defaultValue = "false",
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
-      displayPosition = 3020,
+      displayPosition = 310,
       group = "#0"
   )
   public boolean removeCtrlChars = false;
@@ -103,7 +103,7 @@ public class DataParserFormatConfig {
           "Archive formats 7z, ar, arj, cpio, dump, tar and zip are supported.",
       defaultValue = "NONE",
       label = "Compression Format",
-      displayPosition = 3030,
+      displayPosition = 320,
       group = "#0"
   )
   @ValueChooserModel(CompressionChooserValues.class)
@@ -116,7 +116,7 @@ public class DataParserFormatConfig {
       description = "A glob or regular expression that defines the pattern of the file names within the compressed " +
           "directory.",
       defaultValue = "*",
-      displayPosition = 3040,
+      displayPosition = 330,
       group = "#0",
       dependsOn = "compression",
       triggeredByValue = {"ARCHIVE", "COMPRESSED_ARCHIVE"}
@@ -129,7 +129,7 @@ public class DataParserFormatConfig {
       defaultValue = "1024",
       label = "Max Line Length",
       description = "Longer lines are truncated",
-      displayPosition = 100,
+      displayPosition = 340,
       group = "TEXT",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT",
@@ -144,7 +144,7 @@ public class DataParserFormatConfig {
       defaultValue = "MULTIPLE_OBJECTS",
       label = "JSON Content",
       description = "",
-      displayPosition = 100,
+      displayPosition = 350,
       group = "JSON",
       dependsOn = "dataFormat^",
       triggeredByValue = "JSON"
@@ -158,7 +158,7 @@ public class DataParserFormatConfig {
       defaultValue = "4096",
       label = "Max Object Length (chars)",
       description = "Larger objects are not processed",
-      displayPosition = 110,
+      displayPosition = 360,
       group = "JSON",
       dependsOn = "dataFormat^",
       triggeredByValue = "JSON",
@@ -173,7 +173,7 @@ public class DataParserFormatConfig {
       defaultValue = "CSV",
       label = "Delimiter Format Type",
       description = "",
-      displayPosition = 200,
+      displayPosition = 370,
       group = "DELIMITED",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
@@ -187,7 +187,7 @@ public class DataParserFormatConfig {
       defaultValue = "NO_HEADER",
       label = "Header Line",
       description = "",
-      displayPosition = 210,
+      displayPosition = 380,
       group = "DELIMITED",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
@@ -201,7 +201,7 @@ public class DataParserFormatConfig {
       defaultValue = "1024",
       label = "Max Record Length (chars)",
       description = "Larger objects are not processed",
-      displayPosition = 220,
+      displayPosition = 390,
       group = "DELIMITED",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED",
@@ -215,7 +215,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "|",
       label = "Delimiter Character",
-      displayPosition = 330,
+      displayPosition = 400,
       group = "DELIMITED",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
@@ -227,7 +227,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\\",
       label = "Escape Character",
-      displayPosition = 340,
+      displayPosition = 410,
       group = "DELIMITED",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
@@ -239,7 +239,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\"",
       label = "Quote Character",
-      displayPosition = 350,
+      displayPosition = 420,
       group = "DELIMITED",
       dependsOn = "csvFileFormat",
       triggeredByValue = "CUSTOM"
@@ -252,7 +252,7 @@ public class DataParserFormatConfig {
       defaultValue = "LIST_MAP",
       label = "Root Field Type",
       description = "",
-      displayPosition = 310,
+      displayPosition = 430,
       group = "DELIMITED",
       dependsOn = "dataFormat^",
       triggeredByValue = "DELIMITED"
@@ -266,7 +266,7 @@ public class DataParserFormatConfig {
       label = "Delimiter Element",
       defaultValue = "",
       description = "XML element that acts as a record delimiter. No delimiter will treat the whole XML document as one record.",
-      displayPosition = 300,
+      displayPosition = 440,
       group = "XML",
       dependsOn = "dataFormat^",
       triggeredByValue = "XML"
@@ -279,7 +279,7 @@ public class DataParserFormatConfig {
       defaultValue = "4096",
       label = "Max Record Length (chars)",
       description = "Larger records are not processed",
-      displayPosition = 310,
+      displayPosition = 450,
       group = "XML",
       dependsOn = "dataFormat^",
       triggeredByValue = "XML",
@@ -296,7 +296,7 @@ public class DataParserFormatConfig {
       defaultValue = "COMMON_LOG_FORMAT",
       label = "Log Format",
       description = "",
-      displayPosition = 700,
+      displayPosition = 460,
       group = "LOG",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG"
@@ -310,7 +310,7 @@ public class DataParserFormatConfig {
       defaultValue = "1024",
       label = "Max Line Length",
       description = "Longer lines are truncated",
-      displayPosition = 710,
+      displayPosition = 470,
       group = "LOG",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG",
@@ -325,7 +325,7 @@ public class DataParserFormatConfig {
       defaultValue = "false",
       label = "Retain Original Line",
       description = "Indicates if the original line of log should be retained in the record",
-      displayPosition = 720,
+      displayPosition = 480,
       group = "LOG",
       dependsOn = "dataFormat^",
       triggeredByValue = "LOG"
@@ -339,7 +339,7 @@ public class DataParserFormatConfig {
     defaultValue = DEFAULT_APACHE_CUSTOM_LOG_FORMAT,
     label = "Custom Log Format",
     description = "",
-    displayPosition = 730,
+    displayPosition = 490,
     group = "LOG",
     dependsOn = "logMode",
     triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
@@ -354,7 +354,7 @@ public class DataParserFormatConfig {
     defaultValue = DEFAULT_REGEX,
     label = "Regular Expression",
     description = "The regular expression which is used to parse the log line.",
-    displayPosition = 740,
+    displayPosition = 500,
     group = "LOG",
     dependsOn = "logMode",
     triggeredByValue = "REGEX"
@@ -367,7 +367,7 @@ public class DataParserFormatConfig {
       defaultValue = "",
       label = "Field Path To RegEx Group Mapping",
       description = "Map groups in the regular expression to field paths",
-      displayPosition = 750,
+      displayPosition = 510,
       group = "LOG",
       dependsOn = "logMode",
       triggeredByValue = "REGEX"
@@ -383,7 +383,7 @@ public class DataParserFormatConfig {
       defaultValue = "",
       label = "Grok Pattern Definition",
       description = "Define your own grok patterns which will be used to parse the logs",
-      displayPosition = 760,
+      displayPosition = 520,
       group = "LOG",
       dependsOn = "logMode",
       triggeredByValue = "GROK",
@@ -397,7 +397,7 @@ public class DataParserFormatConfig {
     defaultValue = DEFAULT_GROK_PATTERN,
     label = "Grok Pattern",
     description = "The grok pattern which is used to parse the log line",
-    displayPosition = 780,
+    displayPosition = 530,
     group = "LOG",
     dependsOn = "logMode",
     triggeredByValue = "GROK"
@@ -412,7 +412,7 @@ public class DataParserFormatConfig {
       defaultValue = "ERROR",
       label = "On Parse Error",
       description = "",
-      displayPosition = 790,
+      displayPosition = 540,
       group = "LOG",
       dependsOn = "logMode",
       triggeredByValue = "LOG4J"
@@ -427,7 +427,7 @@ public class DataParserFormatConfig {
       label = "Trim Stack Trace to Length",
       description = "Any line that does not match the expected pattern will be treated as a Stack trace as long as it " +
           "is part of the same message. The stack trace will be trimmed to the specified number of lines.",
-      displayPosition = 800,
+      displayPosition = 550,
       group = "LOG",
       dependsOn = "onParseError",
       triggeredByValue = "INCLUDE_AS_STACK_TRACE",
@@ -442,7 +442,7 @@ public class DataParserFormatConfig {
       defaultValue = "false",
       label = "Use Custom Log Format",
       description = "",
-      displayPosition = 810,
+      displayPosition = 560,
       group = "LOG",
       dependsOn = "logMode",
       triggeredByValue = "LOG4J"
@@ -456,7 +456,7 @@ public class DataParserFormatConfig {
     defaultValue = DEFAULT_LOG4J_CUSTOM_FORMAT,
     label = "Custom Log4J Format",
     description = "Specify your own custom log4j format.",
-    displayPosition = 820,
+    displayPosition = 570,
     group = "LOG",
     dependsOn = "enableLog4jCustomLogFormat",
     triggeredByValue = "true"
@@ -471,7 +471,7 @@ public class DataParserFormatConfig {
       defaultValue = "true",
       label = "Message includes Schema",
       description = "The Kafka message includes the Avro schema",
-      displayPosition = 830,
+      displayPosition = 580,
       group = "AVRO",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO"
@@ -484,7 +484,7 @@ public class DataParserFormatConfig {
       defaultValue = "",
       label = "Avro Schema",
       description = "Overrides the schema associated with the message. Optionally use the runtime:loadResource function to use a schema stored in a file",
-      displayPosition = 840,
+      displayPosition = 590,
       group = "AVRO",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO",
@@ -498,7 +498,7 @@ public class DataParserFormatConfig {
       defaultValue = "",
       label = "Protobuf Descriptor File",
       description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
-      displayPosition = 850,
+      displayPosition = 600,
       group = "PROTOBUF",
       dependsOn = "dataFormat^",
       triggeredByValue = "PROTOBUF"
@@ -510,7 +510,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Message Type",
-      displayPosition = 860,
+      displayPosition = 610,
       group = "PROTOBUF",
       dependsOn = "dataFormat^",
       triggeredByValue = "PROTOBUF"

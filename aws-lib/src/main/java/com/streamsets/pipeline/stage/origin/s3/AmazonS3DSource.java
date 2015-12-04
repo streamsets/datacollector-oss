@@ -28,13 +28,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    resetOffset = true
+    resetOffset = true,
+    upgrader = AmazonS3SourceUpgrader.class
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

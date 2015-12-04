@@ -20,18 +20,21 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.S3ClientOptions;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +45,9 @@ import java.util.List;
 public class S3Config {
   private final static Logger LOG = LoggerFactory.getLogger(S3Config.class);
 
+  @ConfigDefBean(groups = "S3")
+  public AWSConfig awsConfig;
+
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
@@ -50,35 +56,15 @@ public class S3Config {
     displayPosition = 10,
     group = "#0"
   )
-  @ValueChooserModel(S3RegionChooserValues.class)
+  @ValueChooserModel(AWSRegionChooserValues.class)
   public Regions region;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Access Key ID",
-    description = "",
-    displayPosition = 20,
-    group = "#0"
-  )
-  public String accessKeyId;
-
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Secret Access Key",
-    description = "",
-    displayPosition = 30,
-    group = "#0"
-  )
-  public String secretAccessKey;
 
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.STRING,
     label = "Bucket",
     description = "",
-    displayPosition = 40,
+    displayPosition = 20,
     group = "#0"
   )
   public String bucket;
@@ -88,7 +74,7 @@ public class S3Config {
     type = ConfigDef.Type.STRING,
     label = "Folder",
     description = "",
-    displayPosition = 50,
+    displayPosition = 30,
     group = "#0"
   )
   public String folder;
@@ -99,7 +85,7 @@ public class S3Config {
     label = "Object Path Delimiter",
     description = "",
     defaultValue = "/",
-    displayPosition = 70,
+    displayPosition = 40,
     group = "#0"
   )
   public String delimiter;
@@ -132,9 +118,7 @@ public class S3Config {
   private AmazonS3Client s3Client;
 
   private void validateConnection(Stage.Context context, List<Stage.ConfigIssue> issues, S3AdvancedConfig advancedConfig) {
-    //Access Key ID - username [unique in aws]
-    //secret access key - password
-    AWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
+    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     // Optional proxy settings
@@ -165,8 +149,7 @@ public class S3Config {
       s3Client.listBuckets();
     } catch (AmazonS3Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
-      issues.add(context.createConfigIssue(Groups.S3.name(), "accessKeyId", Errors.S3_SPOOLDIR_20,
-        e.toString()));
+      issues.add(context.createConfigIssue(Groups.S3.name(), "awsAccessKeyId", Errors.S3_SPOOLDIR_20, e.toString()));
     }
   }
 }

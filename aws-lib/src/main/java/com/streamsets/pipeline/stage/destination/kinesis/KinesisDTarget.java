@@ -28,7 +28,7 @@ import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",

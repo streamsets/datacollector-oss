@@ -23,6 +23,7 @@ import com.amazonaws.services.kinesis.clientlibrary.lib.worker.InitialPositionIn
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.List;
@@ -43,6 +44,9 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     switch (fromVersion) {
       case 1:
         upgradeV1toV2(configs);
+        // fall through
+      case 2:
+        upgradeV2toV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -77,5 +81,9 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     commitMove(configs);
 
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".initialPositionInStream", InitialPositionInStream.LATEST));
+  }
+
+  private void upgradeV2toV3(List<Config> configs) {
+    AWSUtil.renameAWSCredentialsConfigs(configs);
   }
 }

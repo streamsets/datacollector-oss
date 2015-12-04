@@ -29,6 +29,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
@@ -99,9 +100,10 @@ public class TestKinesisSource {
   private KinesisConsumerConfigBean getKinesisConsumerConfig() {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();
     conf.dataFormatConfig = new DataParserFormatConfig();
+    conf.awsConfig = new AWSConfig();
 
-    conf.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
-    conf.awsSecretAccessKey = StringUtils.repeat("a", 40);
+    conf.awsConfig.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
+    conf.awsConfig.awsSecretAccessKey = StringUtils.repeat("a", 40);
     conf.region = Regions.US_WEST_1;
     conf.streamName = STREAM_NAME;
 

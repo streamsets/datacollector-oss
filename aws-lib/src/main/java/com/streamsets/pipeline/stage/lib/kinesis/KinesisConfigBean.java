@@ -21,9 +21,16 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 import com.amazonaws.regions.Regions;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 
 public class KinesisConfigBean {
+
+  @ConfigDefBean(groups = "KINESIS")
+  public AWSConfig awsConfig;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -43,26 +50,4 @@ public class KinesisConfigBean {
       group = "KINESIS"
   )
   public String streamName;
-
-  /** Authentication Options */
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "AWS Access Key ID",
-      description = "Leave blank to use IAM Instance Profile.",
-      displayPosition = 9998,
-      group = "KINESIS"
-  )
-  public String awsAccessKeyId;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "AWS Secret Access Key",
-      description = "Leave blank to use IAM Instance Profile.",
-      displayPosition = 9999,
-      group = "KINESIS"
-  )
-  public String awsSecretAccessKey;
 }

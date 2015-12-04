@@ -29,7 +29,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis.png",

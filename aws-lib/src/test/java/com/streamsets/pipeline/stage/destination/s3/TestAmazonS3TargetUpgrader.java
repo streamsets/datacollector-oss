@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.JsonMode;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertEquals(12, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
-    for(Config c : configs) {
+    for (Config c : configs) {
       configValues.put(c.getName(), c.getValue());
     }
 
@@ -95,5 +96,22 @@ public class TestAmazonS3TargetUpgrader {
     Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
     Assert.assertEquals('\"', configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
 
+    //renamed configs
+
+    configs = new ArrayList<>();
+    configs.add(new Config("accessKeyId", "MY_KEY_ID"));
+    configs.add(new Config("secretAccessKey", "MY_ACCESS_KEY"));
+
+    amazonS3TargetUpgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    configValues = new HashMap<>();
+    for (Config c : configs) {
+      configValues.put(c.getName(), c.getValue());
+    }
+
+    Assert.assertTrue(configValues.containsKey(AWSUtil.AWS_CONFIG_BEAN + ".awsAccessKeyId"));
+    Assert.assertEquals("MY_KEY_ID", configValues.get(AWSUtil.AWS_CONFIG_BEAN + ".awsAccessKeyId"));
+    Assert.assertTrue(configValues.containsKey(AWSUtil.AWS_CONFIG_BEAN + ".awsSecretAccessKey"));
+    Assert.assertEquals("MY_ACCESS_KEY", configValues.get(AWSUtil.AWS_CONFIG_BEAN + ".awsSecretAccessKey"));
   }
 }

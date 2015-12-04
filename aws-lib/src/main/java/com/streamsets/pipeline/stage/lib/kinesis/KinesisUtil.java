@@ -21,10 +21,6 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
-import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
@@ -110,18 +106,6 @@ public class KinesisUtil {
     } finally {
       kinesisClient.shutdown();
     }
-  }
-
-  public static AWSCredentialsProvider getCredentialsProvider(KinesisConfigBean conf) {
-    AWSCredentialsProvider credentialsProvider;
-    if (!conf.awsAccessKeyId.isEmpty() && !conf.awsSecretAccessKey.isEmpty()) {
-      credentialsProvider = new StaticCredentialsProvider(
-          new BasicAWSCredentials(conf.awsAccessKeyId, conf.awsSecretAccessKey)
-      );
-    } else {
-      credentialsProvider = new InstanceProfileCredentialsProvider();
-    }
-    return credentialsProvider;
   }
 
   public static void checkpoint(IRecordProcessorCheckpointer checkpointer) {

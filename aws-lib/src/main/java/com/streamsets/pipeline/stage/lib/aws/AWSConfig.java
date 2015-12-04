@@ -17,15 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.kinesis;
+package com.streamsets.pipeline.stage.lib.aws;
 
-import com.amazonaws.regions.Regions;
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.common.InterfaceAudience;
+import com.streamsets.pipeline.common.InterfaceStability;
 
-public class AWSRegionChooserValues extends BaseEnumChooserValues {
+@InterfaceAudience.LimitedPrivate
+@InterfaceStability.Unstable
+public class AWSConfig {
 
-  public AWSRegionChooserValues() {
-    super(Regions.class);
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Access Key ID",
+      description = "",
+      defaultValue = "",
+      displayPosition = -110,
+      group = "#0"
+  )
+  public String awsAccessKeyId;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Secret Access Key",
+      description = "",
+      defaultValue = "",
+      displayPosition = -100,
+      group = "#0"
+  )
+  public String awsSecretAccessKey;
 }

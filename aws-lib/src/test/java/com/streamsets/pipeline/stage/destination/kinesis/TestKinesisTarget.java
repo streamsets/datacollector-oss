@@ -28,6 +28,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -138,9 +139,10 @@ public class TestKinesisTarget {
   private KinesisProducerConfigBean getKinesisTargetConfig() {
     KinesisProducerConfigBean conf = new KinesisProducerConfigBean();
     conf.dataFormatConfig = new DataGeneratorFormatConfig();
+    conf.awsConfig = new AWSConfig();
 
-    conf.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
-    conf.awsSecretAccessKey = StringUtils.repeat("a", 40);
+    conf.awsConfig.awsAccessKeyId = "AKIAAAAAAAAAAAAAAAAA";
+    conf.awsConfig.awsSecretAccessKey = StringUtils.repeat("a", 40);
     conf.region = Regions.US_WEST_1;
     conf.streamName = STREAM_NAME;
 

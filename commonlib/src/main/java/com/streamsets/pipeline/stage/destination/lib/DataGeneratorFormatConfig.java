@@ -64,7 +64,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "UTF-8",
     label = "Charset",
-    displayPosition = 3010,
+    displayPosition = 300,
     group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
@@ -80,7 +80,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "CSV",
     label = "Delimiter Format",
     description = "",
-    displayPosition = 150,
+    displayPosition = 310,
     group = "DELIMITED",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
@@ -94,7 +94,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "NO_HEADER",
     label = "Header Line",
     description = "",
-    displayPosition = 160,
+    displayPosition = 320,
     group = "DELIMITED",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
@@ -108,7 +108,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "true",
     label = "Remove New Line Characters",
     description = "Replaces new lines characters with white spaces",
-    displayPosition = 170,
+    displayPosition = 330,
     group = "DELIMITED",
     dependsOn = "dataFormat^",
     triggeredByValue = "DELIMITED"
@@ -120,7 +120,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.CHARACTER,
     defaultValue = "|",
     label = "Delimiter Character",
-    displayPosition = 330,
+    displayPosition = 340,
     group = "DELIMITED",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
@@ -132,7 +132,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.CHARACTER,
     defaultValue = "\\",
     label = "Escape Character",
-    displayPosition = 340,
+    displayPosition = 350,
     group = "DELIMITED",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
@@ -144,7 +144,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.CHARACTER,
     defaultValue = "\"",
     label = "Quote Character",
-    displayPosition = 350,
+    displayPosition = 360,
     group = "DELIMITED",
     dependsOn = "csvFileFormat",
     triggeredByValue = "CUSTOM"
@@ -159,7 +159,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "MULTIPLE_OBJECTS",
     label = "JSON Content",
     description = "",
-    displayPosition = 180,
+    displayPosition = 370,
     group = "JSON",
     dependsOn = "dataFormat^",
     triggeredByValue = "JSON"
@@ -175,7 +175,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "/",
     label = "Text Field Path",
     description = "Field to write data to Kafka",
-    displayPosition = 190,
+    displayPosition = 380,
     group = "TEXT",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
@@ -189,7 +189,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "false",
     label = "Empty Line If No Text",
     description = "",
-    displayPosition = 200,
+    displayPosition = 390,
     group = "TEXT",
     dependsOn = "dataFormat^",
     triggeredByValue = "TEXT"
@@ -204,7 +204,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "",
     label = "Avro Schema",
     description = "Optionally use the runtime:loadResource function to use a schema stored in a file",
-    displayPosition = 320,
+    displayPosition = 400,
     group = "AVRO",
     dependsOn = "dataFormat^",
     triggeredByValue = {"AVRO"},
@@ -218,7 +218,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "true",
     label = "Include Schema",
     description = "Includes the Avro schema in the Flume event",
-    displayPosition = 330,
+    displayPosition = 410,
     group = "AVRO",
     dependsOn = "dataFormat^",
     triggeredByValue = "AVRO"
@@ -233,7 +233,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "/",
     label = "Binary Field Path",
     description = "Field to write data to Kafka",
-    displayPosition = 120,
+    displayPosition = 420,
     group = "BINARY",
     dependsOn = "dataFormat^",
     triggeredByValue = "BINARY",
@@ -250,7 +250,7 @@ public class DataGeneratorFormatConfig {
     defaultValue = "",
     label = "Protobuf Descriptor File",
     description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
-    displayPosition = 400,
+    displayPosition = 430,
     group = "PROTOBUF",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
@@ -262,7 +262,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.STRING,
     defaultValue = "",
     label = "Message Type",
-    displayPosition = 410,
+    displayPosition = 440,
     group = "PROTOBUF",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"

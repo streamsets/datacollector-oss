@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -46,5 +50,9 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.add(new Config("s3ConfigBean.advancedConfig.proxyPassword", ""));
     configs.add(new Config("s3ConfigBean.dataFormatConfig.compressionInputFormat", Compression.NONE.name()));
     configs.add(new Config("s3ConfigBean.dataFormatConfig.compressedFilePattern", "*"));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    AWSUtil.renameAWSCredentialsConfigs(configs);
   }
 }

@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
 import com.streamsets.pipeline.stage.lib.kinesis.Groups;
@@ -126,7 +127,7 @@ public class KinesisTarget extends BaseTarget {
 
       KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
           .fromProperties(additionalConfigs)
-          .setCredentialsProvider(KinesisUtil.getCredentialsProvider(conf))
+          .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig))
           .setRegion(conf.region.getName());
 
       // Mock injected during testing, we shouldn't clobber it.
