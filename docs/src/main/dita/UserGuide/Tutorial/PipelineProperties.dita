@@ -44,7 +44,7 @@
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
                 <info>An empty canvas displays:<p><image href="../Graphics/Tutorial-Canvas.png"
-                            id="image_jnr_wtk_5s" scale="55"/></p></info>
+                            id="image_jnr_wtk_5s" scale="45"/></p></info>
                 <info>Note a few helpful areas: <table frame="all" rowsep="1" colsep="1"
                         id="table_ezq_5ys_lt">
                         <tgroup cols="3">

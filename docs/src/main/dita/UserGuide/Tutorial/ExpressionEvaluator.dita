@@ -37,7 +37,7 @@
                 <cmd>Expand the first output record, scroll down, and notice the new field
                     highlighted in green: <uicontrol>/credit_card_type</uicontrol>.</cmd>
                 <info><image href="../Graphics/Tutorial-Exp-JythonPreview.png" id="image_h4c_d4h_4s"
-                        scale="55"/></info>
+                        scale="50"/></info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Close Preview</uicontrol>.</cmd>
