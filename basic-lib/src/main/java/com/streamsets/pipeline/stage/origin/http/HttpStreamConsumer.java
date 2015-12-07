@@ -19,8 +19,8 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
-import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.ChunkedInput;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.AsyncInvoker;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -47,91 +46,45 @@ import java.util.concurrent.TimeoutException;
  */
 class HttpStreamConsumer implements Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(HttpStreamConsumer.class);
+  private final HttpClientConfigBean conf;
   private WebTarget resource;
-  private String httpMethod;
-  private String requestData;
   private AccessToken authToken;
 
-  private final long responseTimeoutMillis;
-  private final String entityDelimiter;
   private final BlockingQueue<String> entityQueue;
-  private int lastResponseStatus;
+  private Response.StatusType lastResponseStatus;
 
   private volatile boolean stop = false;
 
   /**
    * Constructor for unauthenticated connections.
-   * @param resourceUrl URL of streaming JSON resource.
-   * @param responseTimeoutMillis How long to wait for a response from http endpoint.
-   * @param httpMethod HTTP method to send
-   * @param requestData Data to be sent as a part of the request
-   * @param entityDelimiter String delimiter that marks the end of a record.
+   *
+   * @param conf        The config bean containing all necessary configuration for consuming data.
    * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
    */
-  public HttpStreamConsumer(
-      final String resourceUrl,
-      final long responseTimeoutMillis,
-      final String httpMethod,
-      final String requestData,
-      final String entityDelimiter,
-      BlockingQueue<String> entityQueue
-  ) {
-    this.responseTimeoutMillis = responseTimeoutMillis;
-    this.httpMethod = httpMethod;
-    this.requestData = requestData;
-    this.entityDelimiter = entityDelimiter;
+  public HttpStreamConsumer(HttpClientConfigBean conf, BlockingQueue<String> entityQueue) {
+    this.conf = conf;
     this.entityQueue = entityQueue;
-    Client client = ClientBuilder.newClient();
-    resource = client.target(resourceUrl);
-  }
+    ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
-  /**
-   * Constructor for OAuth authenticated connections. Requires a stored auth token since we
-   * cannot display an authentication web page to confirm authorization at this time.
-   * @param resourceUrl URL of streaming JSON resource.
-   * @param responseTimeoutMillis How long to wait for a response from http endpoint.
-   * @param httpMethod HTTP method to send
-   * @param requestData Data to be sent as a part of the request
-   * @param entityDelimiter String delimiter that marks the end of a record.
-   * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
-   * @param consumerKey OAuth required parameter.
-   * @param consumerSecret OAuth required parameter.
-   * @param token OAuth required parameter.
-   * @param tokenSecret OAuth required parameter.
-   */
-  public HttpStreamConsumer(
-      final String resourceUrl,
-      final long responseTimeoutMillis,
-      final String httpMethod,
-      final String requestData,
-      final String entityDelimiter,
-      BlockingQueue<String> entityQueue,
-      final String consumerKey,
-      final String consumerSecret,
-      final String token,
-      final String tokenSecret
-  ) {
-    this.responseTimeoutMillis = responseTimeoutMillis;
-    this.httpMethod = httpMethod;
-    this.requestData = requestData;
-    this.entityDelimiter = entityDelimiter;
-    this.entityQueue = entityQueue;
+    if (conf.authType == AuthenticationType.OAUTH) {
+      ConsumerCredentials consumerCredentials = new ConsumerCredentials(
+          conf.oauth.consumerKey,
+          conf.oauth.consumerSecret
+      );
 
-    ConsumerCredentials consumerCredentials = new ConsumerCredentials(
-        consumerKey,
-        consumerSecret
-    );
+      authToken = new AccessToken(conf.oauth.token, conf.oauth.tokenSecret);
+      Feature feature = OAuth1ClientSupport.builder(consumerCredentials)
+          .feature()
+          .accessToken(authToken)
+          .build();
+      clientBuilder.register(feature);
+    }
 
-    authToken = new AccessToken(token, tokenSecret);
-    Feature feature = OAuth1ClientSupport.builder(consumerCredentials)
-        .feature()
-        .accessToken(authToken)
-        .build();
+    if (conf.authType == AuthenticationType.BASIC) {
+      clientBuilder.register(HttpAuthenticationFeature.universal(conf.basicAuth.username, conf.basicAuth.password));
+    }
 
-    Client client = ClientBuilder.newBuilder()
-        .register(feature)
-        .build();
-    resource = client.target(resourceUrl);
+    resource = clientBuilder.build().target(conf.resourceUrl);
   }
 
   @Override
@@ -140,22 +93,25 @@ class HttpStreamConsumer implements Runnable {
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
         .async();
     final Future<Response> responseFuture;
-    if (requestData != null && !requestData.isEmpty()) {
-      responseFuture = asyncInvoker.method(httpMethod, Entity.json(requestData));
-    } else{
-      responseFuture = asyncInvoker.method(httpMethod);
+    if (conf.requestData != null && !conf.requestData.isEmpty()) {
+      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(conf.requestData));
+    } else {
+      responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
     }
     Response response;
     try {
-      response = responseFuture.get(responseTimeoutMillis, TimeUnit.MILLISECONDS);
-      lastResponseStatus = response.getStatus();
+      response = responseFuture.get(conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
+      lastResponseStatus = response.getStatusInfo();
 
-      final ChunkedInput<String> chunkedInput = response.readEntity(new GenericType<ChunkedInput<String>>() {});
-      chunkedInput.setParser(ChunkedInput.createParser(entityDelimiter));
+      final ChunkedInput<String> chunkedInput = response.readEntity(
+          new GenericType<ChunkedInput<String>>() {
+          }
+      );
+      chunkedInput.setParser(ChunkedInput.createParser(conf.entityDelimiter));
       String chunk;
       try {
         while (!stop && (chunk = chunkedInput.read()) != null) {
-          boolean accepted = entityQueue.offer(chunk, responseTimeoutMillis, TimeUnit.MILLISECONDS);
+          boolean accepted = entityQueue.offer(chunk, conf.requestTimeoutMillis, TimeUnit.MILLISECONDS);
           if (!accepted) {
             LOG.warn("Response buffer full, dropped record.");
           }
@@ -176,7 +132,7 @@ class HttpStreamConsumer implements Runnable {
     stop = true;
   }
 
-  public int getLastResponseStatus() {
+  public Response.StatusType getLastResponseStatus() {
     return lastResponseStatus;
   }
 }

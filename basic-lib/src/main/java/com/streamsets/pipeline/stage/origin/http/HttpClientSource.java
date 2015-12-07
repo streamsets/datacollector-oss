@@ -26,18 +26,15 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
-import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,24 +49,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
   private final static Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
 
-  private final String resourceUrl;
-  private final String httpMethod;
-  private final String requestData;
-  private final long requestTimeoutMillis;
-
-  /** OAuth Parameters */
-  private final String consumerKey;
-  private final String consumerSecret;
-  private final String token;
-  private final String tokenSecret;
-
-  private final long maxBatchWaitTime;
-  private final int batchSize;
-
-  private final HttpClientMode httpMode;
-  private final long pollingInterval;
-  private final JsonMode jsonMode;
-  private String entityDelimiter;
+  private final HttpClientConfigBean conf;
 
   private ExecutorService executorService;
   private ScheduledExecutorService safeExecutor;
@@ -83,60 +63,27 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   /**
    * @param config Configuration object for the HTTP client
    */
-  public HttpClientSource(final HttpClientConfig config) {
-    this.httpMode = config.getHttpMode();
-    this.resourceUrl = config.getResourceUrl();
-    this.requestTimeoutMillis = config.getRequestTimeoutMillis();
-    this.entityDelimiter = config.getEntityDelimiter();
-    this.batchSize = config.getBatchSize();
-    this.maxBatchWaitTime = config.getMaxBatchWaitTime();
-    this.consumerKey = config.getConsumerKey();
-    this.consumerSecret = config.getConsumerSecret();
-    this.token = config.getToken();
-    this.tokenSecret = config.getTokenSecret();
-    this.jsonMode = JsonMode.MULTIPLE_OBJECTS;
-    this.pollingInterval = config.getPollingInterval();
-    this.httpMethod = config.getHttpMethod().name();
-    this.requestData = config.getRequestData();
+  public HttpClientSource(final HttpClientConfigBean conf) {
+    this.conf = conf;
   }
 
   @Override
   protected List<ConfigIssue> init() {
-    List<ConfigIssue> errors = super.init();
+    List<ConfigIssue> issues = super.init();
+
+    conf.basic.init(getContext(), issues, Groups.HTTP.name());
+    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), issues);
 
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case
     // that the pipeline is restarted we'll resume with any entities still enqueued.
-    entityQueue = new ArrayBlockingQueue<>(2 * batchSize);
+    entityQueue = new ArrayBlockingQueue<>(2 * conf.basic.maxBatchSize);
 
-    parserFactory = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON)
-        .setMode(jsonMode).setMaxDataLen(-1).build();
+    parserFactory = conf.dataFormatConfig.getParserFactory();
 
-    if (token != null) {
-      httpConsumer = new HttpStreamConsumer(
-          resourceUrl,
-          requestTimeoutMillis,
-          httpMethod,
-          requestData,
-          entityDelimiter,
-          entityQueue,
-          consumerKey,
-          consumerSecret,
-          token,
-          tokenSecret
-      );
-    } else {
-      httpConsumer = new HttpStreamConsumer(
-          resourceUrl,
-          requestTimeoutMillis,
-          httpMethod,
-          requestData,
-          entityDelimiter,
-          entityQueue
-      );
-    }
+    httpConsumer = new HttpStreamConsumer(conf, entityQueue);
 
-    switch (httpMode) {
+    switch (conf.httpMode) {
       case STREAMING:
         createStreamingConsumer();
         break;
@@ -144,15 +91,15 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
         createPollingConsumer();
         break;
       default:
-        throw new IllegalStateException("Unrecognized httpMode " + httpMode);
+        throw new IllegalStateException("Unrecognized httpMode " + conf.httpMode);
     }
-    return errors;
+    return issues;
   }
 
   private void createPollingConsumer() {
     safeExecutor = new SafeScheduledExecutorService(1, getClass().getName());
-    LOG.info("Scheduling consumer at polling period {}.", pollingInterval);
-    safeExecutor.scheduleAtFixedRate(httpConsumer, 0L, pollingInterval, TimeUnit.MILLISECONDS);
+    LOG.info("Scheduling consumer at polling period {}.", conf.pollingInterval);
+    safeExecutor.scheduleAtFixedRate(httpConsumer, 0L, conf.pollingInterval, TimeUnit.MILLISECONDS);
   }
 
   private void createStreamingConsumer() {
@@ -165,7 +112,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     if (httpConsumer != null) {
       httpConsumer.stop();
       httpConsumer = null;
-      switch (httpMode) {
+      switch (conf.httpMode) {
         case STREAMING:
           executorService.shutdownNow();
           break;
@@ -180,8 +127,8 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
-    int chunksToFetch = Math.min(batchSize, maxBatchSize);
-    while (((System.currentTimeMillis() - start) < maxBatchWaitTime) && (entityQueue.size() < chunksToFetch)) {
+    int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
+    while (((System.currentTimeMillis() - start) < conf.basic.maxWaitTime) && (entityQueue.size() < chunksToFetch)) {
       try {
         Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
       } catch (InterruptedException ex) {
@@ -192,7 +139,8 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     List<String> chunks = new ArrayList<>(chunksToFetch);
     entityQueue.drainTo(chunks, chunksToFetch);
 
-    if(httpConsumer.getLastResponseStatus() == 200) {
+    Response.StatusType lastResponseStatus = httpConsumer.getLastResponseStatus();
+    if (lastResponseStatus.getFamily() == Response.Status.Family.SUCCESSFUL) {
       for (String chunk : chunks) {
         String sourceId = getOffset();
         try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
@@ -219,22 +167,32 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
                 throw new StageException(Errors.HTTP_00, sourceId, ex.toString(), ex);
               }
             default:
-              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                getContext().getOnErrorRecord(), ex));
+              throw new IllegalStateException
+                  (Utils.format("Unknown OnError value '{}'",
+                  getContext().getOnErrorRecord(), ex)
+              );
           }
 
         }
       }
     } else {
-      //If http response status != 200
+      // If http response status != 2xx
       switch (getContext().getOnErrorRecord()) {
         case DISCARD:
           break;
         case TO_ERROR:
-          getContext().reportError(Errors.HTTP_01, chunks);
+          getContext().reportError(
+              Errors.HTTP_01,
+              lastResponseStatus.getStatusCode(),
+              lastResponseStatus.getReasonPhrase()
+          );
           break;
         case STOP_PIPELINE:
-          throw new StageException(Errors.HTTP_01, chunks);
+          throw new StageException(
+              Errors.HTTP_01,
+              lastResponseStatus.getStatusCode(),
+              lastResponseStatus.getReasonPhrase()
+          );
       }
     }
 
@@ -247,6 +205,6 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void commit(String offset) throws StageException {
-    // NOP
+    // NO-OP
   }
 }

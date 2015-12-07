@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   HTTP_00("Cannot parse record '{}': {}"),
-  HTTP_01("Error fetching resource. {}"),
+  HTTP_01("Error fetching resource. Status: {} Reason: {}"),
   HTTP_02("JSON parser found more than one record in chunk. Verify that the correct delimiter is configured."),
   ;
 

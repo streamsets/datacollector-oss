@@ -17,33 +17,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  CREDENTIALS("Credentials"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  XML("XML"),
-  LOG("Log"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
+public enum AuthenticationType implements Label {
+  NONE("None"),
+  BASIC("Basic"),
+  OAUTH("OAuth"),
   ;
 
   private final String label;
 
-  private Groups(String label) {
+  AuthenticationType(String label) {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
-    return this.label;
+    return label;
   }
 }

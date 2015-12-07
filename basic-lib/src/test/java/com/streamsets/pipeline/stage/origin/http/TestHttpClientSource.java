@@ -24,6 +24,8 @@ import com.google.common.collect.Sets;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -34,7 +36,6 @@ import org.glassfish.jersey.test.ServletDeploymentContext;
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainerException;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.GET;
@@ -46,7 +47,13 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+/**
+ * Currently tests do not include basic auth because of lack of support in JerseyTest
+ * so we trust that the Jersey client we use implements auth correctly.
+ */
 public class TestHttpClientSource extends JerseyTest {
 
   @Path("/stream")
@@ -115,16 +122,20 @@ public class TestHttpClientSource extends JerseyTest {
 
   @Test
   public void testStreamingHttp() throws Exception {
-    HttpClientConfig config = new HttpClientConfig();
-    config.setHttpMode(HttpClientMode.STREAMING);
-    config.setResourceUrl("http://localhost:9998/stream");
-    config.setRequestTimeoutMillis(1000);
-    config.setEntityDelimiter("\r\n");
-    config.setBatchSize(100);
-    config.setMaxBatchWaitTime(1000);
-    config.setPollingInterval(1000);
-    config.setHttpMethod(HttpMethod.GET);
-    HttpClientSource origin = new HttpClientSource(config);
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "http://localhost:9998/stream";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
 
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
         .addOutputLane("lane")
@@ -136,32 +147,35 @@ public class TestHttpClientSource extends JerseyTest {
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
 
-      Assert.assertEquals(3, parsedRecords.size());
+      assertEquals(3, parsedRecords.size());
 
       String[] names = { "adam", "joe", "sally" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        Assert.assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
       }
     } finally {
       runner.runDestroy();
     }
-
   }
 
   @Test
   public void testStreamingPost() throws Exception {
-    HttpClientConfig config = new HttpClientConfig();
-    config.setHttpMode(HttpClientMode.STREAMING);
-    config.setResourceUrl("http://localhost:9998/stream");
-    config.setRequestTimeoutMillis(1000);
-    config.setEntityDelimiter("\r\n");
-    config.setBatchSize(100);
-    config.setMaxBatchWaitTime(1000);
-    config.setPollingInterval(1000);
-    config.setHttpMethod(HttpMethod.POST);
-    config.setRequestData("adam");
-    HttpClientSource origin = new HttpClientSource(config);
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "http://localhost:9998/stream";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.POST;
+    conf.requestData = "adam";
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
 
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
         .addOutputLane("lane")
@@ -173,12 +187,12 @@ public class TestHttpClientSource extends JerseyTest {
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
 
-      Assert.assertEquals(1, parsedRecords.size());
+      assertEquals(1, parsedRecords.size());
 
       String[] names = { "adam" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        Assert.assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
       }
     } finally {
       runner.runDestroy();
@@ -188,16 +202,20 @@ public class TestHttpClientSource extends JerseyTest {
 
   @Test
   public void testStreamingHttpWithNewlineOnly() throws Exception {
-    HttpClientConfig config = new HttpClientConfig();
-    config.setHttpMode(HttpClientMode.STREAMING);
-    config.setResourceUrl("http://localhost:9998/nlstream");
-    config.setRequestTimeoutMillis(1000);
-    config.setEntityDelimiter("\n");
-    config.setBatchSize(100);
-    config.setMaxBatchWaitTime(1000);
-    config.setPollingInterval(1000);
-    config.setHttpMethod(HttpMethod.GET);
-    HttpClientSource origin = new HttpClientSource(config);
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "http://localhost:9998/nlstream";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+
+    HttpClientSource origin = new HttpClientSource(conf);
 
     SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
         .addOutputLane("lane")
@@ -209,12 +227,12 @@ public class TestHttpClientSource extends JerseyTest {
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
 
-      Assert.assertEquals(3, parsedRecords.size());
+      assertEquals(3, parsedRecords.size());
 
       String[] names = { "adam", "joe", "sally" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        Assert.assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
       }
     } finally {
       runner.runDestroy();
@@ -234,7 +252,7 @@ public class TestHttpClientSource extends JerseyTest {
     try {
       runner.runProduce(null, 1000);
       List<String> errors = runner.getErrors();
-      Assert.assertEquals(1, errors.size());
+      assertEquals(1, errors.size());
     } finally {
       runner.runDestroy();
     }
@@ -254,16 +272,16 @@ public class TestHttpClientSource extends JerseyTest {
     try {
       runner.runProduce(null, 1000);
       List<String> errors = runner.getErrors();
-      Assert.assertEquals(1, errors.size());
+      assertEquals(1, errors.size());
     } catch (StageException ex){
       exceptionThrown = true;
-      Assert.assertEquals(ex.getErrorCode(), Errors.HTTP_01);
+      assertEquals(ex.getErrorCode(), Errors.HTTP_01);
     }
     finally {
       runner.runDestroy();
     }
 
-    Assert.assertTrue(exceptionThrown);
+    assertTrue(exceptionThrown);
   }
 
   @Test
@@ -279,7 +297,7 @@ public class TestHttpClientSource extends JerseyTest {
     try {
       runner.runProduce(null, 1000);
       List<String> errors = runner.getErrors();
-      Assert.assertEquals(0, errors.size());
+      assertEquals(0, errors.size());
     } finally {
       runner.runDestroy();
     }
@@ -291,16 +309,19 @@ public class TestHttpClientSource extends JerseyTest {
   }
 
   private HttpClientSource getTwitterHttpClientSource() {
-    HttpClientConfig config = new HttpClientConfig();
-    config.setHttpMode(HttpClientMode.STREAMING);
-    config.setResourceUrl("https://stream.twitter.com/1.1/statuses/sample.json");
-    config.setRequestTimeoutMillis(1000);
-    config.setEntityDelimiter("\r\n");
-    config.setBatchSize(100);
-    config.setMaxBatchWaitTime(1000);
-    config.setPollingInterval(1000);
-    config.setHttpMethod(HttpMethod.GET);
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "https://stream.twitter.com/1.1/statuses/sample.json";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
 
-    return new HttpClientSource(config);
+    return new HttpClientSource(conf);
   }
 }

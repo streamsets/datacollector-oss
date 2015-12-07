@@ -66,7 +66,7 @@ public enum DefinitionError implements ErrorCode {
   DEF_155("{} Class='{}' Field='{}', field type is not NUMBER, cannot define min or max"),
   DEF_156("{} class '{}' does not have a public default constructor"),
   DEF_157("{} dependsOn name starting with '^' can have only one '^'"),
-  DEF_158("{} dependsOn name ending with multiple '^' cannot have other characters in betweeen"),
+  DEF_158("{} dependsOn name ending with multiple '^' cannot have other characters in between"),
   DEF_159("{} field has {} '^' but its bean depth is only '{}' ('{}')"),
   DEF_160("{} bean does not have any configuration properties"),
   DEF_161("{} Field='{}' there cannot be nested @ComplexField configs"),
