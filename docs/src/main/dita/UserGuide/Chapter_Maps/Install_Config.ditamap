@@ -67,9 +67,10 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Install_Config/ClouderaManager-Step1.dita"/>
+   <topicref href="../Install_Config/ClouderaManager_Step1.dita"/>
    <topicref href="../Install_Config/ClouderaManager-Step2.dita"/>
    <topicref href="../Install_Config/ClouderaManager-Step3.dita"/>
+   <topicref href="../Install_Config/ClouderaManager-Step4.dita"/>
    <topicref href="../Install_Config/ClouderaManager-SDCConfigs.dita"/>
    <topicref href="../Install_Config/AdditionalStageLibraries-Installing-CM.dita"/>
    <topicref href="../Install_Config/AdditionalDrivers-Installing-CM.dita"/>

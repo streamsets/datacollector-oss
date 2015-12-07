@@ -58,8 +58,10 @@
         <div class="p">To install the <span class="ph">Data
                   Collector</span>
             with the Cloudera Manager, perform the following steps:<ol class="ol" id="concept_nb5_c3m_25__ol_n14_bf4_25">
+                <li class="li">Download the installation files from the StreamSets website. </li>
+
                 <li class="li">Install the <span class="ph">Data
-                  Collector</span> using Cloudera Manager parcels.</li>
+                  Collector</span> parcel and associated checksum file.</li>
 
                 <li class="li">Install the StreamSets custom service descriptor (CSD). </li>
 
@@ -75,26 +77,53 @@
     </div>
 
 <div class="related-links"></div>
-<div class="topic task nested1" id="task_opg_yrm_25">
-    <h2 class="title topictitle2">Step 1. Installing the <span class="ph">Data
-                  Collector</span></h2>
+<div class="topic task nested1" id="task_kfb_ytk_g5">
+    <h2 class="title topictitle2">Step 1. Download Installation Files</h2>
 
     <div class="body taskbody">
         <div class="section context">
-            <p class="p">You can use Cloudera Manager to install the
-                    <span class="ph">Data
-                  Collector</span> on a cluster. When working with multiple clusters, perform the following steps
-                for each cluster.</p>
+            <div class="p">Use the following URL to download the installation
+                files from the StreamSets
+                website:<pre class="pre codeblock">http://streamsets.com/resources/installing-streamsets/#install-parcel</pre>
+</div>
+
+            <div class="p">For the installation, download the following files: <ol class="ol" id="task_kfb_ytk_g5__ol_x14_n5k_g5">
+                    <li class="li">Custom service descriptor file (CSD).</li>
+
+                    <li class="li"><span class="ph">Data
+                  Collector</span> parcel file for the appropriate operating system.</li>
+
+                    <li class="li">Related SHA1 checksum file.</li>
+
+                </ol>
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic task nested1" id="task_opg_yrm_25">
+    <h2 class="title topictitle2">Step 2. Install the Parcel and Checksum File</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Install the <span class="ph">Data
+                  Collector</span> parcel and SHA1 checksum file, and then distribute and activate the <span class="ph">Data
+                  Collector</span> parcel. </p>
+
+            <p class="p">When working with multiple clusters, perform the following steps for each
+                cluster.</p>
 
         </div>
 
         <ol class="ol steps" id="task_opg_yrm_25__steps_zj3_4sm_25"><li class="li step stepexpand">
-                <span class="ph cmd">Copy the StreamSets <span class="ph">Data
-                  Collector</span> parcel file to the <span class="ph uicontrol">Cloudera Manager Local Parcel Repository
-                        Path</span>. By default, the path is
+                <span class="ph cmd">Copy the <span class="ph">Data
+                  Collector</span> parcel and checksum file to the <span class="ph uicontrol">Cloudera Manager Local Parcel
+                        Repository Path</span>. By default, the path is
                         <samp class="ph codeph">/opt/cloudera/parcel-repo</samp>.</span>
-                <div class="itemgroup info">StreamSets provides different parcel files for different operating systems.
-                    Use the parcel file appropriate for the target operating system.</div>
+                <div class="itemgroup info">StreamSets provides parcels and checksum files for supported operating
+                    systems. Use the files appropriate for the target operating system.</div>
                 <div class="itemgroup info">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the
                         <span class="ph uicontrol">Parcels</span> category.  Place the <span class="ph">Data
                   Collector</span> parcel file in the path configured for <span class="ph uicontrol">Local Parcel Repository
@@ -127,23 +156,22 @@
 
 </div>
 <div class="topic task nested1" id="task_hzt_dgn_25">
-    <h2 class="title topictitle2">Step 2. Installing the StreamSets Custom Service Descriptor</h2>
+    <h2 class="title topictitle2">Step 3. Installing the StreamSets Custom Service Descriptor</h2>
 
     <div class="body taskbody">
         <div class="section context">
-            <p class="p">After installing the <span class="ph">Data
-                  Collector</span> parcel, install the StreamSets custom service descriptor (CSD).</p>
+            <p class="p">Install the StreamSets custom service descriptor file
+                (CSD), and then restart Cloudera Manager.</p>
 
         </div>
 
         <ol class="ol steps" id="task_hzt_dgn_25__steps_end_bln_25"><li class="li step stepexpand">
-                <span class="ph cmd">Copy the Custom Service Descriptor (CSD) file for the <span class="ph">Data
-                  Collector</span> in the<span class="ph uicontrol"> Local Descriptor Repository Path</span>. By default,
-                    the path is <samp class="ph codeph">/opt/cloudera/csd</samp>.</span>
+                <span class="ph cmd">Copy the <span class="ph">Data
+                  Collector</span> CSD file to the<span class="ph uicontrol"> Local Descriptor Repository Path</span>. By
+                    default, the path is <samp class="ph codeph">/opt/cloudera/csd</samp>.</span>
                 <div class="itemgroup info">To verify the path to use, in Cloudera Manager, click <span class="ph menucascade"><span class="ph uicontrol">Administration</span> &gt; <span class="ph uicontrol">Settings</span></span>. In the navigation panel, select the <span class="ph uicontrol">Custom Service
-                        Descriptors</span> category. Place the <span class="ph">Data
-                  Collector</span> parcel file in the path configured for <span class="ph uicontrol">Local Descriptor Repository
-                        Path</span>. </div>
+                        Descriptors</span> category. Place the CSD file in the path configured
+                    for <span class="ph uicontrol">Local Descriptor Repository Path</span>. </div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Set the file ownership to <samp class="ph codeph">cloudera-scm:cloudera-scm</samp> with
@@ -167,7 +195,7 @@
 
 </div>
 <div class="topic task nested1" id="task_u1v_nkt_25">
-    <h2 class="title topictitle2">Step 3. Create and Configure a StreamSets Service</h2>
+    <h2 class="title topictitle2">Step 4. Create and Configure a StreamSets Service</h2>
 
     <div class="body taskbody">
         <div class="section context">

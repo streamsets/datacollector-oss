@@ -20,7 +20,8 @@
         Cloudera Manager. </shortdesc>
  <conbody>
         <p><indexterm>Cloudera Manager<indexterm>installing and administering the Data
-                    Collector</indexterm></indexterm>When you install the <ph
+                    Collector</indexterm></indexterm><indexterm>installation<indexterm>through
+                    Cloudera Manager</indexterm></indexterm>When you install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             through Cloudera Manager, you can easily install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -39,9 +40,10 @@
         <p>To install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             with the Cloudera Manager, perform the following steps:<ol id="ol_n14_bf4_25">
+                <li>Download the installation files from the StreamSets website. </li>
                 <li>Install the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> using Cloudera Manager parcels.</li>
+                    /> parcel and associated checksum file.</li>
                 <li>Install the StreamSets custom service descriptor (CSD). </li>
                 <li>Create and configure a StreamSets service.</li>
             </ol></p>

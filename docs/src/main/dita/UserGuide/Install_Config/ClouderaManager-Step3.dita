@@ -13,58 +13,44 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
-<task id="task_u1v_nkt_25">
-    <title>Step 3. Create and Configure a StreamSets Service</title>
+<task id="task_hzt_dgn_25">
+    <title>Step 3. Installing the StreamSets Custom Service Descriptor</title>
     <taskbody>
         <context>
-            <p><indexterm>Cloudera Manager<indexterm>creating a StreamSets
-                    service</indexterm></indexterm>After you install the StreamSets CSD, create and
-                configure a StreamSets service. When you configure the service, you assign the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to the hosts where you want it to run.</p>
-            <note>To run the <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> in cluster mode, colocate the Data Collector role with a Spark Streaming
-                Gateway.</note>
-            <p> When working with multiple clusters, perform the following steps for each
-                cluster.</p>
+            <p><indexterm>Cloudera Manager<indexterm>installing the Streamsets
+                    CSD</indexterm></indexterm>Install the StreamSets custom service descriptor file
+                (CSD), and then restart Cloudera Manager.</p>
         </context>
-        <steps id="steps_vy1_wkt_25">
+        <steps id="steps_end_bln_25">
             <step>
-                <cmd>In Cloudera Manager, click the menu for the cluster you want to use, then click
-                        <uicontrol>Add a Service</uicontrol>.</cmd>
-            </step>
-            <step>
-                <cmd>In the <uicontrol>Service Types</uicontrol> list, select
-                        <uicontrol>StreamSets</uicontrol>, then click
-                        <uicontrol>Continue</uicontrol>.</cmd>
-            </step>
-            <step>
-                <cmd>To select the hosts where you want to install StreamSets, on the
-                        <wintitle>Customize Role Assignments for StreamSets</wintitle> page, click
-                        <uicontrol>Select Hosts</uicontrol> to open a list of available hosts.</cmd>
-            </step>
-            <step>
-                <cmd>Select one or more hosts, then click <uicontrol>OK</uicontrol>. Click
-                        <uicontrol>Continue</uicontrol>.</cmd>
-                <info>The <wintitle>Review Changes</wintitle> page displays the Data and Resource
-                    directories for the <ph
+                <cmd>Copy the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. </info>
+                    /> CSD file to the<uicontrol> Local Descriptor Repository Path</uicontrol>. By
+                    default, the path is <codeph>/opt/cloudera/csd</codeph>.</cmd>
+                <info>To verify the path to use, in Cloudera Manager, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. In the navigation panel, select the <uicontrol>Custom Service
+                        Descriptors</uicontrol> category. Place the CSD file in the path configured
+                    for <uicontrol>Local Descriptor Repository Path</uicontrol>. </info>
             </step>
             <step>
-                <cmd>Optionally change the directories, then click
-                    <uicontrol>Continue</uicontrol>.</cmd>
-                <info>The <wintitle>First Run Command</wintitle> page displays status updates as
-                    Cloudera Manager starts the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> on the selected hosts. If necessary, you can abort starting the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</info>
+                <cmd>Set the file ownership to <codeph>cloudera-scm:cloudera-scm</codeph> with
+                    permission <uicontrol>644</uicontrol>. </cmd>
             </step>
             <step>
-                <cmd>Click <uicontrol>Continue</uicontrol>, then click
-                    <uicontrol>Finish</uicontrol>.</cmd>
+                <cmd>Use the following command to restart the Cloudera Manager Server:</cmd>
+                <info>
+                    <codeblock>/etc/init.d/cloudera-scm-server restart</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>In the Cloudera Manager, to restart the Cloudera Management Service, click <menucascade>
+                        <uicontrol>Home</uicontrol>
+                        <uicontrol>Status</uicontrol>
+                    </menucascade>. To the right of Cloudera Management Service, click the
+                        <uicontrol>Menu</uicontrol> icon and select
+                    <uicontrol>Restart</uicontrol>.</cmd>
             </step>
         </steps>
     </taskbody>
