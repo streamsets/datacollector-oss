@@ -22,28 +22,23 @@ package com.streamsets.pipeline.stage.lib.aws;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
-import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.internal.StaticCredentialsProvider;
 import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class AWSUtil {
   public static final String AWS_CONFIG_BEAN = "awsConfig";
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider;
-    Properties sysEnvVars = System.getProperties();
     if (!config.awsAccessKeyId.isEmpty() && !config.awsSecretAccessKey.isEmpty()) {
       credentialsProvider = new StaticCredentialsProvider(
           new BasicAWSCredentials(config.awsAccessKeyId, config.awsSecretAccessKey)
       );
-    } else if (sysEnvVars.containsKey("AWS_ACCESS_KEY_ID") && sysEnvVars.containsKey("AWS_SECRET_ACCESS_KEY")) {
-      credentialsProvider = new DefaultAWSCredentialsProviderChain();
     } else {
-      credentialsProvider = new InstanceProfileCredentialsProvider();
+      credentialsProvider = new DefaultAWSCredentialsProviderChain();
     }
     return credentialsProvider;
   }
