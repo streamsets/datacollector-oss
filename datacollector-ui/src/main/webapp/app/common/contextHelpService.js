@@ -21,23 +21,36 @@
 /**
  * Service for launching Contextual Help.
  */
-angular.module('dataCollectorApp.common')
-  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant) {
 
-    var helpIds = {},
+angular.module('dataCollectorApp.common')
+  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService) {
+ 
+    // pre-populate with some static configurations
+    var helpIds = {
+        "pipeline-configuration": "index.html#Pipeline_Configuration/ConfiguringAPipeline.html",
+        "pipeline-preview": "index.html#Data_Preview/PreviewingaSingleStage.html#task_cxd_p25_qq",
+        "pipeline-snapshot": "index.html#Pipeline_Monitoring/ReviewingSnapshotData.html",
+        "pipeline-monitoring": "index.html#Pipeline_Monitoring/PipelineMonitoring.html#concept_hsp_tnt_lq",
+        "errors-tab": "index.html#Pipeline_Monitoring/MonitoringErrors.html#concept_pd3_crv_yr",
+        "data-rules-tab": "index.html#Alerts/DataAlerts.html#concept_tpm_rsk_zq",
+        "metric-rules-tab": "index.html#Alerts/MetricAlerts.html#concept_abj_nsk_zq"
+      },
       buildInfo = {},
       helpWindow;
 
-    this.configInitPromise = $q.all([api.admin.getHelpRef(), api.admin.getBuildInfo(),
+    this.configInitPromise = $q.all([api.admin.getBuildInfo(), pipelineService.init(),
       configuration.init()]).then(function(results) {
-      helpIds = results[0].data;
-      buildInfo = results[1].data;
+      var stageConfigDefinitions = pipelineService.getStageDefinitions();
+      angular.forEach(stageConfigDefinitions, function(stageConfigDefinition) {
+        helpIds[stageConfigDefinition.name] = stageConfigDefinition.onlineHelpRefUrl;
+      });
+      buildInfo = results[0].data;
     });
 
-    this.launchHelp = function(helpId) {
+    this.launchHelp = function(stagename) {
       this.configInitPromise.then(function() {
         var uiHelpBaseURL, helpURL,
-          relativeURL = helpIds[helpId];
+          relativeURL = helpIds[stagename];
 
         if ($rootScope.$storage.helpLocation === pipelineConstant.HOSTED_HELP) {
           uiHelpBaseURL = 'https://www.streamsets.com/documentation/datacollector/' + buildInfo.version + '/help';

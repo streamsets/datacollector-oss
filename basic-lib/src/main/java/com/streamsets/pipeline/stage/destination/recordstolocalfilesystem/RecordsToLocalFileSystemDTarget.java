@@ -36,13 +36,14 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     label = "Write to File",
     description = "Writes records to a local File System as SDC records",
     icon="",
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    onlineHelpRefUrl = "index.html#Destinations/SDCRecordFiles.html#task_e33_3v5_1r"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @ErrorStage
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class ToErrorLocalFSDTarget extends DTarget {
+public class RecordsToLocalFileSystemDTarget extends DTarget {
 
   @ConfigDef(
       required = true,

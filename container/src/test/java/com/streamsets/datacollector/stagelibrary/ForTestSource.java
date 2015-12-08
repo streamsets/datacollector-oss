@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.StageException;
 import java.io.IOException;
 import java.util.List;
 
-@StageDef(version = 1, label = "")
+@StageDef(version = 1, label = "", onlineHelpRefUrl = "")
 public class ForTestSource implements Source {
 
   @ConfigDef(type = ConfigDef.Type.STRING, label = "", required = true)

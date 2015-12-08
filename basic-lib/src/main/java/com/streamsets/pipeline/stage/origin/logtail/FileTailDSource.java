@@ -47,7 +47,8 @@ import java.util.List;
     execution = ExecutionMode.STANDALONE,
     outputStreams = FileTailOutputStreams.class,
     recordsByRef = true,
-    resetOffset = true
+    resetOffset = true,
+    onlineHelpRefUrl = "index.html#Origins/FileTail.html#task_unq_wdw_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

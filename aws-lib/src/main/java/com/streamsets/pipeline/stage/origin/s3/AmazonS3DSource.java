@@ -35,7 +35,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = true,
-    upgrader = AmazonS3SourceUpgrader.class
+    upgrader = AmazonS3SourceUpgrader.class,
+    onlineHelpRefUrl = "index.html#Origins/AmazonS3.html#task_gfj_ssv_yq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

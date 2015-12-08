@@ -44,7 +44,8 @@ import java.util.List;
     label = "JDBC Producer",
     description = "Writes data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,
-    icon = "rdbms.png"
+    icon = "rdbms.png",
+    onlineHelpRefUrl = "index.html#Destinations/JDBCProducer.html#task_cx3_lhh_ht"
 )
 @ConfigGroups(value = Groups.class)
 public class JdbcDTarget extends DTarget {

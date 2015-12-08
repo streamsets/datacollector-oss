@@ -78,7 +78,14 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L", description = "D", icon = "TargetIcon.svg", libJarsRegex = {ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX})
+  @StageDef(
+      version = 1,
+      label = "L",
+      description = "D",
+      icon = "TargetIcon.svg",
+      libJarsRegex = {ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX},
+      onlineHelpRefUrl = ""
+  )
   public static class Source1 extends BaseSource {
 
     @ConfigDef(
@@ -122,7 +129,9 @@ public class TestStageDefinitionExtractor {
 
   @StageDef(version = 2, label = "LL", description = "DD", icon = "TargetIcon.svg",
       execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH}, outputStreams = TwoOutputStreams.class, recordsByRef = true,
-      privateClassLoader = true, upgrader = Source2Upgrader.class)
+      privateClassLoader = true, upgrader = Source2Upgrader.class,
+      onlineHelpRefUrl = ""
+  )
   @ConfigGroups(Group1.class)
   @RawSource(rawSourcePreviewer = Previewer.class)
   @HideConfigs(value = "config2", preconditions = true, onErrorRecord = true)
@@ -151,7 +160,7 @@ public class TestStageDefinitionExtractor {
   }
 
   @StageDef(version = 1, label = "L", outputStreams = StageDef.VariableOutputStreams.class,
-      outputStreamsDrivenByConfig = "config1")
+      outputStreamsDrivenByConfig = "config1", onlineHelpRefUrl = "")
   public static class Source3 extends Source1 {
 
     @Override
@@ -160,7 +169,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @HideConfigs(preconditions = true)
   public static class Target1 extends BaseTarget {
     @Override
@@ -169,7 +178,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   public static class Target2 extends BaseTarget {
     @Override
     public void write(Batch batch) throws StageException {
@@ -177,7 +186,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
   public static class ToErrorTarget1 extends Target1 {
     @Override
@@ -186,7 +195,7 @@ public class TestStageDefinitionExtractor {
     }
   }
 
-  @StageDef(version = 1, label = "", icon="missing.svg")
+  @StageDef(version = 1, label = "", icon="missing.svg", onlineHelpRefUrl = "")
   @ErrorStage
   public static class MissingIcon extends BaseTarget {
     @Override

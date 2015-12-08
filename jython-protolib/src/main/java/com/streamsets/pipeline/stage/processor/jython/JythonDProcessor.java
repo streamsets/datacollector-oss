@@ -33,7 +33,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     version = 1,
     label = "Jython Evaluator",
     description = "Processes records using Jython",
-    icon="jython.png"
+    icon="jython.png",
+    onlineHelpRefUrl = "index.html#Processors/Jython.html#task_fty_jwx_nr"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

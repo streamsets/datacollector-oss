@@ -38,7 +38,8 @@ import java.util.Map;
     label = "HBase",
     description = "Writes data to HBase",
     icon = "hbase.png",
-    privateClassLoader = true
+    privateClassLoader = true,
+    onlineHelpRefUrl = "index.html#Destinations/HBase.html#task_pyq_qx5_vr"
 )
 @ConfigGroups(Groups.class)
 public class HBaseDTarget extends DTarget {

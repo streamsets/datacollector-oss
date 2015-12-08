@@ -38,7 +38,8 @@ import java.util.List;
     version=1,
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
-    icon="replacer.png"
+    icon="replacer.png",
+    onlineHelpRefUrl = "index.html#Processors/ValueReplacer.html#task_ihq_ymf_zq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

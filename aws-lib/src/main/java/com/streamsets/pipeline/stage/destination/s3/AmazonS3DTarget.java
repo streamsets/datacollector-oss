@@ -33,7 +33,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   description = "Writes to Amazon S3",
   icon = "s3.png",
   privateClassLoader = true,
-  upgrader = AmazonS3TargetUpgrader.class
+  upgrader = AmazonS3TargetUpgrader.class,
+  onlineHelpRefUrl = "index.html#Destinations/AmazonS3.html#task_pxb_j3r_rt"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

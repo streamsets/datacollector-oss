@@ -37,7 +37,8 @@ import java.util.Random;
   label = "Dev Random Error",
   description = "Generates error records and silently discards records as specified.",
   icon= "dev.png",
-  upgrader = RandomErrorProcessorUpgrader.class
+  upgrader = RandomErrorProcessorUpgrader.class,
+  onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 public class RandomErrorProcessor extends SingleLaneProcessor {
   private Random random;

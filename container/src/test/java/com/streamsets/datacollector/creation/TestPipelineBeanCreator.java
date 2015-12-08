@@ -211,7 +211,7 @@ public class TestPipelineBeanCreator {
     }
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   public static class MyTarget extends BaseTarget {
 
     @ConfigDef(
@@ -304,7 +304,7 @@ public class TestPipelineBeanCreator {
     }
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   @ErrorStage
   public static class ErrorMyTarget extends MyTarget {
   }

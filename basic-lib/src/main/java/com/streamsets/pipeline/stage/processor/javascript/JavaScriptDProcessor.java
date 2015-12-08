@@ -33,7 +33,8 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     version = 1,
     label = "JavaScript Evaluator",
     description = "Processes records using JavaScript",
-    icon="javascript.png"
+    icon="javascript.png",
+    onlineHelpRefUrl = "index.html#Processors/JavaScript.html#task_mzc_1by_nr"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

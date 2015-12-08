@@ -37,7 +37,8 @@ import java.util.List;
     version = 1,
     label = "Solr",
     description = "Upload data to an Apache Solr",
-    icon = "solr.png"
+    icon = "solr.png",
+    onlineHelpRefUrl = "index.html#Destinations/Solr.html#task_ld1_phr_wr"
 )
 @ConfigGroups(Groups.class)
 public class SolrDTarget extends DTarget {

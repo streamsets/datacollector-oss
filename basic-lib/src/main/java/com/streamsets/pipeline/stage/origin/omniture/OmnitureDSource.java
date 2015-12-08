@@ -34,7 +34,8 @@ import com.streamsets.pipeline.configurablestage.DSource;
     description = "Retrieves Omniture reports via the REST API.",
     icon="omniture_icon.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = "index.html#Origins/Omniture.html#task_of4_wpw_1s"
 )
 
 @ConfigGroups(Groups.class)

@@ -37,7 +37,9 @@ import java.util.List;
     version=1,
     label="Field Hasher",
     description = "Uses an algorithm to hash field values",
-    icon="hash.png")
+    icon="hash.png",
+    onlineHelpRefUrl = "index.html#Processors/FieldHasher.html#task_xjd_dlk_wq"
+)
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class FieldHasherDProcessor extends DProcessor {

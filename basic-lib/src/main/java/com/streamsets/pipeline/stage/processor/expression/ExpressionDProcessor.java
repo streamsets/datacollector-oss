@@ -34,7 +34,8 @@ import java.util.List;
     label="Expression Evaluator",
     description="Performs calculations on a field-by-field basis",
     icon="expression.png",
-    upgrader = ExpressionProcessorUpgrader.class
+    upgrader = ExpressionProcessorUpgrader.class,
+    onlineHelpRefUrl = "index.html#Processors/Expression.html#task_x2h_tv4_yq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

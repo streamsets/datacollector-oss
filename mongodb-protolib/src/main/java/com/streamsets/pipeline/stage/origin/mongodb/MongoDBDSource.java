@@ -35,7 +35,8 @@ import com.streamsets.pipeline.lib.el.TimeEL;
     description = "Reads records from a MongoDB collection",
     icon="mongodb.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = "index.html#Origins/MongoDB.html#task_mdf_2rs_ns"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

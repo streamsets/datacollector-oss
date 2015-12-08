@@ -52,7 +52,8 @@ import java.util.Map;
   libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
   icon = "hdfs.png",
   privateClassLoader = true,
-  upgrader = ClusterHdfsSourceUpgrader.class
+  upgrader = ClusterHdfsSourceUpgrader.class,
+  onlineHelpRefUrl = "index.html#Origins/HadoopFS-origin.html#task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

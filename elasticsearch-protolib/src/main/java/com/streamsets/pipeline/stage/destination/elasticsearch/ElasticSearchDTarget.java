@@ -40,7 +40,8 @@ import java.util.Map;
     version = 1,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
-    icon = "elasticsearch.png"
+    icon = "elasticsearch.png",
+    onlineHelpRefUrl = "index.html#Destinations/Elasticsearch.html#task_uns_gtv_4r"
 )
 @ConfigGroups(Groups.class)
 public class ElasticSearchDTarget extends DTarget {

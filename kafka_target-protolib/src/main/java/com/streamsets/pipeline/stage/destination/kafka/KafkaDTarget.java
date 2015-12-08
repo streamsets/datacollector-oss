@@ -31,7 +31,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
   label = "Kafka Producer",
   description = "Writes data to Kafka",
   icon = "kafka.png",
-  upgrader = KafkaTargetUpgrader.class
+  upgrader = KafkaTargetUpgrader.class,
+  onlineHelpRefUrl = "index.html#Destinations/KProducer.html#task_q4d_4yl_zq"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

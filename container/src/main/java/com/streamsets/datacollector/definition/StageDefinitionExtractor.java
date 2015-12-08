@@ -175,78 +175,86 @@ public abstract class StageDefinitionExtractor {
   public StageDefinition extract(StageLibraryDefinition libraryDef, Class<? extends Stage> klass, Object contextMsg) {
     List<ErrorMessage> errors = validate(libraryDef, klass, contextMsg);
     if (errors.isEmpty()) {
-      contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
-
-      StageDef sDef = klass.getAnnotation(StageDef.class);
-      String name = getStageName(klass);
-      int version = sDef.version();
-      String label = sDef.label();
-      String description = sDef.description();
-      String icon = sDef.icon();
-      StageType type = extractStageType(klass);
-      boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
-      HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
-      boolean preconditions = !errorStage && type != StageType.SOURCE &&
-                              ((hideConfigs == null) || !hideConfigs.preconditions());
-      boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
-      List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
-      RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
-      ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
-      String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
-      boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
-      int outputStreams = (variableOutputStreams || type == StageType.TARGET)
-                          ? 0 : sDef.outputStreams().getEnumConstants().length;
-      List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
-      List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
-      if (executionModesLibraryOverride != null) {
-        executionModes = executionModesLibraryOverride;
-      }
-      List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
-      boolean recordsByRef = sDef.recordsByRef();
-
-      List<ConfigDefinition> systemConfigs = ConfigDefinitionExtractor.get().extract(StageConfigBean.class,
-                                                                                     Collections.<String>emptyList(),
-                                                                                     "systemConfigs");
-
-      for (ConfigDefinition def : systemConfigs) {
-        switch (def.getName()) {
-          case StageConfigBean.STAGE_PRECONDITIONS_CONFIG:
-          case StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG:
-            if (preconditions) {
-              configDefinitions.add(def);
-            }
-            break;
-          case StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG:
-            if (onRecordError) {
-              configDefinitions.add(def);
-            }
-            break;
-          default:
-            configDefinitions.add(def);
-        }
-      }
-
-      for (ConfigDefinition cDef : configDefinitions) {
-        cDef.addAutoELDefinitions(libraryDef);
-      }
-
-      boolean privateClassLoader = sDef.privateClassLoader();
-
-      StageUpgrader upgrader;
       try {
-        upgrader = sDef.upgrader().newInstance();
-      } catch (Exception ex) {
-        throw new IllegalArgumentException(Utils.format(
-            "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString(), ex));
+        contextMsg = Utils.formatL("{} Stage='{}'", contextMsg, klass.getSimpleName());
+
+        StageDef sDef = klass.getAnnotation(StageDef.class);
+        String name = getStageName(klass);
+        int version = sDef.version();
+        String label = sDef.label();
+        String description = sDef.description();
+        String icon = sDef.icon();
+        StageType type = extractStageType(klass);
+        boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
+        HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
+        boolean preconditions = !errorStage && type != StageType.SOURCE &&
+            ((hideConfigs == null) || !hideConfigs.preconditions());
+        boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
+        List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, contextMsg);
+        RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
+        ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
+        String outputStreamLabelProviderClass = (type != StageType.TARGET) ? sDef.outputStreams().getName() : null;
+        boolean variableOutputStreams = StageDef.VariableOutputStreams.class.isAssignableFrom(sDef.outputStreams());
+        int outputStreams = (variableOutputStreams || type == StageType.TARGET)
+            ? 0 : sDef.outputStreams().getEnumConstants().length;
+        List<ExecutionMode> executionModes = ImmutableList.copyOf(sDef.execution());
+        List<ExecutionMode> executionModesLibraryOverride = libraryDef.getStageExecutionModesOverride(klass);
+        if (executionModesLibraryOverride != null) {
+          executionModes = executionModesLibraryOverride;
+        }
+        List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
+        boolean recordsByRef = sDef.recordsByRef();
+
+        List<ConfigDefinition> systemConfigs = ConfigDefinitionExtractor.get().extract(StageConfigBean.class,
+            Collections.<String>emptyList(),
+            "systemConfigs");
+
+        for (ConfigDefinition def : systemConfigs) {
+          switch (def.getName()) {
+            case StageConfigBean.STAGE_PRECONDITIONS_CONFIG:
+            case StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG:
+              if (preconditions) {
+                configDefinitions.add(def);
+              }
+              break;
+            case StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG:
+              if (onRecordError) {
+                configDefinitions.add(def);
+              }
+              break;
+            default:
+              configDefinitions.add(def);
+          }
+        }
+
+        for (ConfigDefinition cDef : configDefinitions) {
+          cDef.addAutoELDefinitions(libraryDef);
+        }
+
+        boolean privateClassLoader = sDef.privateClassLoader();
+
+        StageUpgrader upgrader;
+        try {
+          upgrader = sDef.upgrader().newInstance();
+        } catch (Exception ex) {
+          throw new IllegalArgumentException(Utils.format(
+              "Could not instantiate StageUpgrader for StageDefinition '{}': {}", name, ex.toString(), ex));
+        }
+
+        boolean resetOffset = sDef.resetOffset();
+
+
+        String onlineHelpRefUrl = sDef.onlineHelpRefUrl();
+
+        return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
+            errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
+            configGroupDefinition, variableOutputStreams, outputStreams,
+            outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex,
+            resetOffset, onlineHelpRefUrl);
+      } catch (Exception e) {
+        throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
       }
 
-      boolean resetOffset = sDef.resetOffset();
-
-      return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
-                                 errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
-                                 configGroupDefinition, variableOutputStreams, outputStreams,
-                                 outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex,
-                                 resetOffset);
     } else {
       throw new IllegalArgumentException(Utils.format("Invalid StageDefinition: {}", errors));
     }

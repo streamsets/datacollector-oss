@@ -36,7 +36,8 @@ import java.util.List;
     version=1,
     label="Field Remover",
     description="Removes fields from a record",
-    icon="filter.png"
+    icon="filter.png",
+    onlineHelpRefUrl = "index.html#Processors/FieldRemover.html#task_c1j_btr_wq"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(onErrorRecord = true)

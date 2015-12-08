@@ -37,7 +37,9 @@ import java.util.Map;
     description = "Passes records to streams based on conditions",
     icon="laneSelector.png",
     outputStreams = StageDef.VariableOutputStreams.class,
-    outputStreamsDrivenByConfig = "lanePredicates")
+    outputStreamsDrivenByConfig = "lanePredicates",
+    onlineHelpRefUrl = "index.html#Processors/StreamSelector.html#task_iss_2zx_wq"
+)
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class SelectorDProcessor extends DProcessor {

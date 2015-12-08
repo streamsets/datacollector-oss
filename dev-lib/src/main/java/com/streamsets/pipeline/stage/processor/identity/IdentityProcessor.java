@@ -26,9 +26,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 
 @GenerateResourceBundle
-@StageDef(version = 1, label = "Dev Identity",
-          description = "It echoes every record it receives without changing, other than stage header information",
-          icon="dev.png")
+@StageDef(
+    version = 1,
+    label = "Dev Identity",
+    description = "It echoes every record it receives without changing, other than stage header information",
+    icon="dev.png",
+    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
+)
 public class IdentityProcessor extends SingleLaneRecordProcessor {
 
   @Override

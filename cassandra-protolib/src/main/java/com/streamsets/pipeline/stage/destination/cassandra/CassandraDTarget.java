@@ -36,7 +36,8 @@ import java.util.List;
     label = "Cassandra",
     description = "Writes data to Cassandra",
     icon = "cassandra.png",
-    upgrader = CassandraTargetUpgrader.class
+    upgrader = CassandraTargetUpgrader.class,
+    onlineHelpRefUrl = "index.html#Destinations/Cassandra.html#task_t1d_z3l_sr"
 )
 @ConfigGroups(value = Groups.class)
 public class CassandraDTarget extends DTarget {

@@ -59,7 +59,8 @@ import java.util.Map;
   libJarsRegex = {"spark-streaming-kafka.*"},
   icon = "kafka.png",
   recordsByRef = true,
-  upgrader = KafkaSourceUpgrader.class
+  upgrader = KafkaSourceUpgrader.class,
+  onlineHelpRefUrl = "index.html#Origins/KConsumer.html#task_npx_xgf_vq"
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = Groups.class)

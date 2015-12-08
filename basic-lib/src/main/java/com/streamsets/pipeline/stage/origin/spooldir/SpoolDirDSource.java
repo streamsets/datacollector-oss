@@ -60,7 +60,8 @@ import java.util.List;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     upgrader = SpoolDirSourceUpgrader.class,
-    resetOffset = true
+    resetOffset = true,
+    onlineHelpRefUrl = "index.html#Origins/Directory.html#task_gfj_ssv_yq"
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)

@@ -38,7 +38,8 @@ import java.util.List;
     description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.png",
     outputStreams = OutputStreams.class,
-    execution = ExecutionMode.STANDALONE
+    execution = ExecutionMode.STANDALONE,
+    onlineHelpRefUrl = "index.html#Processors/RDeduplicator.html#task_ikr_c2f_zq"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(onErrorRecord = true)

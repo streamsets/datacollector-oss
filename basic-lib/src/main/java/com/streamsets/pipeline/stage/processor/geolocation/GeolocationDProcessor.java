@@ -33,7 +33,8 @@ import java.util.List;
     version=1,
     label="Geo IP",
     description = "IP address geolocation using a Maxmind GeoIP2 database file",
-    icon="globe.png"
+    icon="globe.png",
+    onlineHelpRefUrl = "index.html#Processors/GeoIP.html#task_wpz_nhs_ns"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

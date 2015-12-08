@@ -36,7 +36,8 @@ import com.streamsets.pipeline.stage.lib.kinesis.Groups;
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
     resetOffset = false,
-    upgrader = KinesisSourceUpgrader.class
+    upgrader = KinesisSourceUpgrader.class,
+    onlineHelpRefUrl = "index.html#Origins/KinConsumer.html#task_p4b_vv4_yr"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

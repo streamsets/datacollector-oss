@@ -124,4 +124,7 @@ public class StageDefinitionJson {
     return stageDefinition.getExecutionModes();
   }
 
+  public String getOnlineHelpRefUrl() {
+    return stageDefinition.getOnlineHelpRefUrl();
+  }
 }

@@ -39,7 +39,8 @@ import org.apache.commons.lang3.StringEscapeUtils;
   description = "Uses an HTTP client to read records from an URL.",
   icon="httpclient.png",
   execution = ExecutionMode.STANDALONE,
-  recordsByRef = true
+  recordsByRef = true,
+  onlineHelpRefUrl = "index.html#Origins/HTTPClient.html#task_akl_rkz_5r"
 )
 
 @ConfigGroups(Groups.class)

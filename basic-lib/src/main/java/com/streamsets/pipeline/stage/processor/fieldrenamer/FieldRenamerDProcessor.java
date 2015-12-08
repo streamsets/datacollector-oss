@@ -37,7 +37,8 @@ import java.util.List;
     version=1,
     label="Field Renamer",
     description = "Rename fields",
-    icon="edit.png"
+    icon="edit.png",
+    onlineHelpRefUrl = "index.html#Processors/FieldRenamer.html#task_y5g_4hh_ht"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

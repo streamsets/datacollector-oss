@@ -32,7 +32,8 @@ import com.streamsets.pipeline.stage.lib.kinesis.Groups;
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
-    upgrader = KinesisTargetUpgrader.class
+    upgrader = KinesisTargetUpgrader.class,
+    onlineHelpRefUrl = "index.html#Destinations/KinProducer.html#task_q2j_ml4_yr"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

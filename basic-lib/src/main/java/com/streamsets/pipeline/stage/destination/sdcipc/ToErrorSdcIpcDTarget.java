@@ -28,7 +28,9 @@ import com.streamsets.pipeline.api.StageDef;
     version = 1,
     label = "Write to Another Pipeline",
     description = "",
-    icon = "")
+    icon = "",
+    onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r"
+)
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle

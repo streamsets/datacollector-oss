@@ -79,7 +79,7 @@ public class TestStageDefinitionLocalization {
                                               rawSource, "", configGroup, false, 1,
                                               TOutput.class.getName(),
                                               Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
-                                              new StageUpgrader.Default(), Collections.<String>emptyList(), false);
+                                              new StageUpgrader.Default(), Collections.<String>emptyList(), false, "");
     return def;
   }
 

@@ -62,15 +62,16 @@ public class StageDefinition {
   private final StageUpgrader upgrader;
   private final List<String> libJarsRegex;
   private final boolean resetOffset;
+  private final String onlineHelpRefUrl;
 
   // localized version
   private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
-      Class klass, String name,
-      int version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
-      boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
-      String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
-      StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset) {
+                          Class klass, String name,
+                          int version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
+                          boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
+                          String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
+                          List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
+                          StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset, String onlineHelpRefUrl) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -85,6 +86,7 @@ public class StageDefinition {
     this.onRecordError = onRecordError;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
+    this.onlineHelpRefUrl = onlineHelpRefUrl;
     configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
@@ -142,18 +144,20 @@ public class StageDefinition {
     upgrader = def.upgrader;
     libJarsRegex = def.libJarsRegex;
     resetOffset = def.resetOffset;
+    onlineHelpRefUrl = def.onlineHelpRefUrl;
   }
 
     public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass,
-        String name, int version, String label, String description,
-      StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
-      List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
-      ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-      String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
-        StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset) {
+                           String name, int version, String label, String description,
+                           StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
+                           List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
+                           ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
+                           String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
+                           StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset, String onlineHelpRefUrl) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
-    this.classLoader = libraryDefinition.getClassLoader();
+      this.onlineHelpRefUrl = onlineHelpRefUrl;
+      this.classLoader = libraryDefinition.getClassLoader();
     this.klass = klass;
     this.name = name;
     this.version = version;
@@ -419,7 +423,7 @@ public class StageDefinition {
                                getVersion(), label, description, getType(), isErrorStage(),
                                hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
                                isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes,
-                               recordsByRef, upgrader, libJarsRegex, resetOffset);
+                               recordsByRef, upgrader, libJarsRegex, resetOffset, onlineHelpRefUrl);
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {
@@ -448,6 +452,9 @@ public class StageDefinition {
     return _getOutputStreamLabels(classLoader, true);
   }
 
+  public String getOnlineHelpRefUrl() {
+    return onlineHelpRefUrl;
+  }
 }
 
 

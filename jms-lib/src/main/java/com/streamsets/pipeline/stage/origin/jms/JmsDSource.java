@@ -42,7 +42,8 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
     icon = "jms.png",
     execution = ExecutionMode.STANDALONE,
     upgrader = JmsSourceUpgrader.class,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = "index.html#Origins/JMS.html#task_zp1_4ck_dt"
 )
 @ConfigGroups(value = JmsGroups.class)
 @GenerateResourceBundle

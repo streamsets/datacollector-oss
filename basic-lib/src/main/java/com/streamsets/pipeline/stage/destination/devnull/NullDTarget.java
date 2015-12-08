@@ -29,7 +29,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     version = 1,
     label = "Trash",
     icon="trash.png",
-    description = "Discards records"
+    description = "Discards records",
+    onlineHelpRefUrl = "index.html#Destinations/Trash.html#task_ad4_qyl_zq"
 )
 @HideConfigs(preconditions = true, onErrorRecord = true)
 @GenerateResourceBundle

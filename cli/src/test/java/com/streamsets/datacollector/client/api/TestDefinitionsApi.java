@@ -46,7 +46,6 @@ public class  TestDefinitionsApi {
         DefinitionsApi definitionsApi = new DefinitionsApi(apiClient);
 
         testGetDefinitions(definitionsApi);
-        testGetHelpRefs(definitionsApi);
 
         if(!authType.equals("none")) {
           testInvalidUserNamePassword(authType);
@@ -75,12 +74,6 @@ public class  TestDefinitionsApi {
   public void testGetDefinitions(DefinitionsApi definitionsApi) throws ApiException  {
     DefinitionsJson definitions = definitionsApi.getDefinitions();
     Assert.assertNotNull(definitions);
-  }
-
-  public void testGetHelpRefs(DefinitionsApi definitionsApi) throws ApiException  {
-    Map<String, Object> helpRefs = definitionsApi.getHelpRefs();
-    Assert.assertNotNull(helpRefs);
-    Assert.assertTrue(helpRefs.size() > 0);
   }
 
   public void testInvalidUserNamePassword(String authType) {

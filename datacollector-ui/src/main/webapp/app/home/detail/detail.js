@@ -325,7 +325,7 @@ angular
             }
             break;
           case pipelineConstant.STAGE_INSTANCE:
-            helpId = selectedObject.library + '@' + selectedObject.stageName + '@' + selectedObject.stageVersion;
+            helpId = selectedObject.stageName;
             break;
           case pipelineConstant.LINK:
             helpId = activeTab.helpId;

@@ -36,7 +36,8 @@ import java.util.List;
     version=1,
     label="Field Splitter",
     description = "Splits a string field based on a separator character",
-    icon="splitter.png"
+    icon="splitter.png",
+    onlineHelpRefUrl = "index.html#Processors/FieldSplitter.html#task_av1_5g3_yq"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

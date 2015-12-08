@@ -33,7 +33,8 @@ import com.streamsets.pipeline.configurablestage.DTarget;
     description = "Writes to a Hadoop file system",
     icon = "hdfs.png",
     privateClassLoader = true,
-    upgrader = HdfsTargetUpgrader.class
+    upgrader = HdfsTargetUpgrader.class,
+    onlineHelpRefUrl = "index.html#Destinations/HadoopFS-destination.html#task_m2m_skm_zq"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {"hdfsTargetConfigBean.dataGeneratorFormatConfig.includeSchema"})

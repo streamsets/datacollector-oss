@@ -33,7 +33,8 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
     description = "Reads data from a RabbitMQ source.",
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = "no document yet"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

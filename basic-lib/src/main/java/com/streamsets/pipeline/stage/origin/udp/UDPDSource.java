@@ -45,7 +45,8 @@ import static com.streamsets.pipeline.lib.parser.ParserConfigKey.TYPES_DB_PATH;
     description = "Listens for UDP messages on a single port",
     icon = "udp.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = "index.html#Origins/UDP.html#task_kgn_rcv_1s"
 )
 
 @ConfigGroups(Groups.class)

@@ -55,7 +55,7 @@ public class TestPipelineConfigurationUpgrader {
     UPGRADE_CALLED = 0;
   }
 
-  @StageDef(version = 1, label = "L")
+  @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   public static class Source1 extends BaseSource {
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -73,7 +73,7 @@ public class TestPipelineConfigurationUpgrader {
     }
   }
 
-  @StageDef(version = 1, label = "L", upgrader = Upgrader2.class)
+  @StageDef(version = 1, label = "L", upgrader = Upgrader2.class, onlineHelpRefUrl = "")
   public static class Source2 extends BaseSource {
     @Override
     public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {

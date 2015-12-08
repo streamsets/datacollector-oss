@@ -31,7 +31,8 @@ import com.streamsets.pipeline.config.DataFormat;
     version = 1,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
-    icon = "")
+    icon = "",
+    onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r")
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {"kafkaConfigBean.dataFormat"})
 @GenerateResourceBundle

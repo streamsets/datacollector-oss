@@ -48,7 +48,8 @@ import java.util.UUID;
   description = "Generates records with the specified field names based on the selected data type. For development only.",
   execution = ExecutionMode.STANDALONE,
   icon= "dev.png",
-  upgrader = RandomDataGeneratorSourceUpgrader.class
+  upgrader = RandomDataGeneratorSourceUpgrader.class,
+    onlineHelpRefUrl = "index.html#Pipeline_Design/DevStages.html"
 )
 public class RandomDataGeneratorSource extends BaseSource {
 
