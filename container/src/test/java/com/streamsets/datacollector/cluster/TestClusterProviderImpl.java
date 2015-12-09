@@ -39,7 +39,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -92,6 +91,9 @@ public class TestClusterProviderImpl {
     resourcesDir = new File(tempDir, "resources-src");
     Assert.assertTrue(resourcesDir.mkdir());
     Assert.assertTrue((new File(resourcesDir, "dir")).mkdir());
+    File resourcesSubDir = new File(resourcesDir, "dir");
+    File resourceFile = new File(resourcesSubDir, "core-site.xml");
+    resourceFile.createNewFile();
     Assert.assertTrue((new File(resourcesDir, "file")).createNewFile());
     webDir = new File(tempDir, "static-web-dir-src");
     Assert.assertTrue(webDir.mkdir());
@@ -208,6 +210,7 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" driver-20151105162031-0005 ");
     List<Config> list = new ArrayList<Config>();
     list.add(new Config("executionMode", ExecutionMode.CLUSTER_MESOS_STREAMING.name()));
+    list.add(new Config("hdfsS3ConfDir", "dir"));
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
       UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
       MockStages.getErrorStageConfig());

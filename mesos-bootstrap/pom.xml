@@ -24,9 +24,7 @@
     <version>1.2.0-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-mesos-bootstrap</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Mesos Bootstrap</description>
   <name>StreamSets Data Collector Mesos Bootstrap</name>
   <packaging>jar</packaging>
@@ -34,6 +32,7 @@
   <properties>
     <spark.version>1.3.0</spark.version>
     <kafka.version>0.8.2.1</kafka.version>
+    <hadoop.version>2.6.0</hadoop.version>
   </properties>
 
   <dependencies>
@@ -58,6 +57,11 @@
       <artifactId>kafka_2.11</artifactId>
       <version>${kafka.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-aws</artifactId>
+      <version>${hadoop.version}</version>
     </dependency>
   </dependencies>
 

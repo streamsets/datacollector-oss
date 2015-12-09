@@ -21,7 +21,9 @@ package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
+
 import kafka.serializer.DefaultDecoder;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -34,6 +36,7 @@ import org.apache.spark.streaming.kafka.KafkaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,18 +50,20 @@ public class SparkStreamingBinding implements ClusterBinding {
   private static final String TOPIC = "topic";
   private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
+  private final boolean isRunningInMesos;
 
   private JavaStreamingContext ssc;
   private final Properties properties;
 
   public SparkStreamingBinding(Properties properties) {
     this.properties = Utils.checkNotNull(properties, "Properties");
+    isRunningInMesos = System.getProperty("SDC_MESOS_BASE_DIR") != null ? true: false;
   }
 
   @Override
   public void init() throws Exception {
     for (Object key : properties.keySet()) {
-      LOG.info("Property => " + key + " => " + properties.getProperty(key.toString()));
+      logMessage("Property => " + key + " => " + properties.getProperty(key.toString()));
     }
     final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
@@ -70,11 +75,17 @@ public class SparkStreamingBinding implements ClusterBinding {
       String msg = "Invalid " + MAX_WAIT_TIME  + " '" + durationAsString + "' : " + ex;
       throw new IllegalArgumentException(msg, ex);
     }
-    Configuration hadoopConf = new Configuration();
+
+    Configuration hadoopConf =  new Configuration();;
+    if (isRunningInMesos) {
+      hadoopConf = getHadoopConf(hadoopConf);
+    } else {
+      hadoopConf = new Configuration();
+    }
     URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
-    LOG.info("Default FS URI: {}", hdfsURI);
+    logMessage("Default FS URI: " + hdfsURI);
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
-    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"  + getProperty("sdc.id"));
+    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/" + getProperty("sdc.id"));
     hdfs.mkdirs(sdcCheckpointPath);
     if (!hdfs.isDirectory(sdcCheckpointPath)) {
       throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);
@@ -96,9 +107,9 @@ public class SparkStreamingBinding implements ClusterBinding {
           props.put(AUTO_OFFSET_RESET, autoOffsetValue);
         }
         String[] topicList = topic.split(",");
-        LOG.info("Meta data broker list " + metaDataBrokerList);
-        LOG.info("topic list " + topic);
-        LOG.info("Auto offset is set to " + autoOffsetValue);
+        logMessage("Meta data broker list " + metaDataBrokerList);
+        logMessage("topic list " + topic);
+        logMessage("Auto offset is set to " + autoOffsetValue);
         JavaPairInputDStream<byte[], byte[]> dStream =
           KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
             new HashSet<String>(Arrays.asList(topicList)));
@@ -107,7 +118,7 @@ public class SparkStreamingBinding implements ClusterBinding {
       }
     });
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
-    if (System.getProperty("SDC_MESOS_BASE_DIR") == null) {
+    if (!isRunningInMesos) {
       final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
         @Override
         public void run() {
@@ -118,7 +129,7 @@ public class SparkStreamingBinding implements ClusterBinding {
       };
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     }
-    LOG.info("Making calls through spark context ");
+    logMessage("Making calls through spark context ");
     ssc.start();
   }
 
@@ -128,6 +139,32 @@ public class SparkStreamingBinding implements ClusterBinding {
     return properties.getProperty(name).trim();
   }
 
+  private Configuration getHadoopConf(Configuration conf) {
+    String hdfsS3ConfProp = properties.getProperty("hdfsS3ConfDir");
+    if (hdfsS3ConfProp != null && !hdfsS3ConfProp.isEmpty()) {
+      File hdfsS3ConfDir = new File(System.getProperty("sdc.resources.dir"), hdfsS3ConfProp).getAbsoluteFile();
+      if (!hdfsS3ConfDir.exists()) {
+        throw new IllegalArgumentException("The config dir for hdfs/S3 doesn't exist");
+      } else {
+        File coreSite = new File(hdfsS3ConfDir, "core-site.xml");
+        if (coreSite.exists()) {
+          conf.addResource(new Path(coreSite.getAbsolutePath()));
+        } else {
+          throw new IllegalStateException(
+            "Core-site xml for configuring Hadoop/S3 filesystem is required for checkpoint related metadata while running Spark Streaming");
+        }
+        File hdfsSite = new File(hdfsS3ConfDir, "hdfs-site.xml");
+        if (hdfsSite.exists()) {
+          conf.addResource(new Path(hdfsSite.getAbsolutePath()));
+        }
+      }
+    }
+    if ((hdfsS3ConfProp == null || hdfsS3ConfProp.isEmpty())) {
+      throw new IllegalArgumentException(
+        "Cannot find hdfs/S3 config; hdfsS3ConfDir cannot be null");
+    }
+    return conf;
+  }
 
   @Override
   public void awaitTermination() {
@@ -140,4 +177,13 @@ public class SparkStreamingBinding implements ClusterBinding {
       ssc.close();
     }
   }
+
+  private void logMessage(String message) {
+    if (isRunningInMesos) {
+      System.out.println(message);
+    } else {
+      LOG.info(message);
+    }
+  }
+
 }

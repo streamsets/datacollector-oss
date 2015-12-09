@@ -123,7 +123,6 @@ public class PipelineConfigBean implements Stage {
   @ValueChooserModel(MemoryLimitExceededChooserValues.class)
   public MemoryLimitExceeded memoryLimitExceeded;
 
-
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MODEL,
@@ -221,6 +220,18 @@ public class PipelineConfigBean implements Stage {
   )
   public String mesosDispatcherURL;
 
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Hadoop/S3 Configuration Directory",
+    description = "A directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
+      "to configure the Hadoop or S3 file sytem",
+    displayPosition = 150,
+    group = "CLUSTER",
+    dependsOn = "executionMode",
+    triggeredByValue = {"CLUSTER_MESOS_STREAMING"}
+  )
+  public String hdfsS3ConfDir;
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

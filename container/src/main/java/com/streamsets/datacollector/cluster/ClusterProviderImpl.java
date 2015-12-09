@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.cluster;
 
+import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
@@ -82,8 +83,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
 
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
@@ -644,6 +643,26 @@ public class ClusterProviderImpl implements ClusterProvider {
       File rulesFile = new File(pipelineDir, FilePipelineStoreTask.RULES_FILE);
       ObjectMapperFactory.getOneLine().writeValue(rulesFile, BeanHelper.wrapRuleDefinitions(ruleDefinitions));
       sdcPropertiesFile = new File(etcDir, "sdc.properties");
+      if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+        String hdfsS3ConfDirValue = PipelineBeanCreator.get().getHdfsS3ConfDirectory(pipelineConfiguration);
+        if (hdfsS3ConfDirValue != null && !hdfsS3ConfDirValue.isEmpty()) {
+          File hdfsS3ConfDir = new File(resourcesDir, hdfsS3ConfDirValue).getAbsoluteFile();
+          if (!hdfsS3ConfDir.exists()) {
+            throw new IllegalArgumentException(
+              "The config dir for HDFS/S3 required for configuring checkpoint dir in spark streaming doesn't exist");
+          } else {
+            File coreSite = new File(hdfsS3ConfDir, "core-site.xml");
+            if (!coreSite.exists()) {
+              throw new IllegalStateException(
+                "Core-site xml for configuring Hadoop/S3 filesystem is required for checkpoint related metadata while running Spark Streaming");
+            }
+            sourceConfigs.put("hdfsS3ConfDir", hdfsS3ConfDirValue);
+          }
+        } else {
+          throw new IllegalStateException(
+            "Configuration of hdfs/S3 is required for checkpoint related metadata while running Spark Streaming");
+        }
+      }
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (RuntimeException ex) {
