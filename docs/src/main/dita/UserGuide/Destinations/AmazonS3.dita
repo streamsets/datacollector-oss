@@ -23,6 +23,6 @@
             written to the Amazon S3. Output files use the following naming convention:
             <codeblock>&lt;prefix>-&lt;longtimestamp>-&lt;counter></codeblock></p>
         <p>You can configure the prefix. The destination uses "sdc" by default.</p>
-  <p>You can optionally use a proxy user and compress data when writing to Amazon S3.</p>
+  <p>You can optionally use a proxy user and compress data with gzip when writing to Amazon S3.</p>
  </conbody>
 </concept>

@@ -83,8 +83,46 @@
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
-                                <entry>HTTP authentication. Use none, basic, digest, or
-                                        form.<p>Default is form.</p></entry>
+                                <entry>HTTP authentication. Use none, basic, digest, or form.<p>When
+                                        using basic, digest, or form, use the associated
+                                        realm.properties file to define user accounts. The
+                                        realm.properties files are located in &lt;SDCinstall>/etc
+                                        directory.</p><p>Default is form. </p></entry>
+                            </row>
+                            <row>
+                                <entry>http.authentication.login.module</entry>
+                                <entry>Indicates where user account information resides:<ul
+                                        id="ul_vhv_qvr_g5">
+                                        <li>Set to <uicontrol>file</uicontrol> to use the
+                                            realm.properties files. </li>
+                                        <li>Set to <uicontrol>ldap</uicontrol> to use an LDAP
+                                            server.</li>
+                                    </ul></entry>
+                            </row>
+                            <row>
+                                <entry>http.realm.file.permission.check</entry>
+                                <entry>Checks the permissions for the realm.properties file in
+                                        use:<ul id="ul_aff_bwr_g5">
+                                        <li>Set to <uicontrol>true</uicontrol> to ensure that the
+                                            file allows access only to the owner.</li>
+                                        <li>Set to <uicontrol>false</uicontrol> to skip the
+                                            permission check.</li>
+                                    </ul><p>Relevant when http.authentication.login.module is set to
+                                        file. </p></entry>
+                            </row>
+                            <row>
+                                <entry>http.authentication.ldap.role.mapping <xref
+                                        href="LDAP-Configuring.dita">
+                                        <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            placement="inline"
+                                    /></xref></entry>
+                                <entry>Maps groups defined by the LDAP server to <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> roles. <p>Enter a semicolon-separated list as
+                                        follows:<codeblock>&lt;ldap group>:&lt;SDC role><i>,&lt;additional SDC role></i><i>,&lt;additional SDC role></i>);
+&lt;ldap group>:&lt;SDC role><i>,&lt;additional SDC role></i>... </codeblock></p><p>Relevant
+                                        when http.authentication.login.module is set to
+                                    ldap.</p></entry>
                             </row>
                             <row>
                                 <entry>kerberos.client.enabled</entry>

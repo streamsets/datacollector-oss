@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_x2j_5ts_g5">
+ <title>Configuring LDAP Authentication</title>
+ <shortdesc>You can configure the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+        LDAP authentication.</shortdesc>
+ <conbody>
+  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            provides file-based and LDAP authentication. If your organization has LDAP set up,
+            configure the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            use LDAP authentication. </p>
+        <p>To enable LDAP authentication, in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            properties file, configure the following properties: <ol id="ol_cmg_2bt_g5">
+                <li>To enable LDAP authentication, set
+                        <uicontrol>http.authentication.login.module</uicontrol> to
+                        <uicontrol>ldap</uicontrol>.</li>
+                <li>Configure <uicontrol>http.authentication.ldap.role.mapping</uicontrol> to map
+                    LDAP groups to <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> roles.<p>You can map multiple roles to the same group or vice versa. Use the
+                        following
+                        convention:<codeblock>&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>,&lt;additional SDC role>);
+&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>... </codeblock></p></li>
+            </ol></p>
+        <p>Use a semicolon to separate LDAP groups and commas to separate <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            roles. The following example maps the DEV LDAP group to the creator role, the OPS LDAP
+            group to the manager role, and maps the SUPER LDAP group to both creator and
+            manager:<codeblock>DEV:creator;OPS:manager,SUPER:creator,manager</codeblock></p>
+ </conbody>
+</concept>

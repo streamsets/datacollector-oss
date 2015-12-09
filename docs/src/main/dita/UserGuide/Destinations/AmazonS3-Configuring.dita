@@ -51,10 +51,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
-                                    <entry/>
-                                </row>
                                 <row>
                                     <entry>Bucket</entry>
                                     <entry>Bucket containing the folder to write to.</entry>
@@ -89,6 +85,7 @@
                                                   scale="10" id="image_wjh_ycl_br"
                                                   placement="inline"/></xref></li>
                                             <li>Binary</li>
+                                            <li>Protobuf</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -158,6 +155,36 @@
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>For protobuff data, click the <uicontrol>Protobuf</uicontrol> tab and configure
+                    the following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_gbz_hhm_g5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Protobuf Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Protobuf Descriptor File</entry>
+                                    <entry>A file that contains the description of the message.
+                                            <draft-comment author="Loretta">Add a comment about
+                                            generating this file? </draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Message Type</entry>
+                                    <entry>Name of the message type.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>
