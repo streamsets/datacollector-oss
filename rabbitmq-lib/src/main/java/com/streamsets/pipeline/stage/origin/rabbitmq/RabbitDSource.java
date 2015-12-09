@@ -34,7 +34,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "no document yet"
+    onlineHelpRefUrl = "index.html#Origins/RabbitMQ.html#task_hrz_mq1_h5"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
