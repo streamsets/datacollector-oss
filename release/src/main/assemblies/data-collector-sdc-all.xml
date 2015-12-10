@@ -15,7 +15,7 @@
   limitations under the License. See accompanying LICENSE file.
 -->
 <assembly>
-  <id>sdc</id>
+  <id>sdc-all</id>
   <formats>
     <format>tar.gz</format>
   </formats>

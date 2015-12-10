@@ -1,0 +1,527 @@
+#!/bin/bash
+#
+#
+# Licensed under the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+#
+
+############################################################
+#
+# Functions
+
+#
+# Detects the real location of the SDC binaries, set in ${SDC_DIST}
+#
+# parameters: NONE
+#
+# output: ${SDC_DIST}: full path of the SDC installation
+#
+detectSdcDist() {
+  # resolve links - $0 may be a softlink
+
+  while [ -h "${PRG}" ]; do
+    LS=`ls -ld "${PRG}"`
+    LINK=`expr "$LS" : '.*-> \(.*\)$'`
+    if expr "$LINK" : '/.*' > /dev/null; then
+      PRG="$LINK"
+    else
+      PRG=`dirname "${PRG}"`/"$LINK"
+    fi
+  done
+
+  BASEDIR=`dirname ${PRG}`
+  BASEDIR=`cd ${BASEDIR}/.. && pwd`
+
+  SDC_DIST=${BASEDIR}
+}
+
+
+#
+# Prints message if DEBUG is true.
+#
+# parameters: ${MESSAGE}
+#
+# output: NONE
+#
+debug() {
+  if [ "${DEBUG}" = "true" ]; then
+  echo "$*"
+  fi
+}
+
+#
+# Probe the exit code of the script commands, and stop in
+# the case of failure with an contextual error message.
+#
+# parameters: <COMMAND> <ARG> ... <ARG>
+#
+# output: NONE, fails if not OK
+#
+run() {
+  debug "\$ ${@}"
+  "${@}"
+  EXIT_CODE=$?
+  if [[ ${EXIT_CODE} != 0 ]]; then
+    echo
+    echo "Failed! running ${@} in `pwd`"
+    echo
+    cleanTempDir
+    exit ${EXIT_CODE}
+  fi
+}
+
+# Verify SHA1 of a file, the SHA1 file should be next to it with .sha1 extension
+#
+# parameters: <FILE>
+#
+# output: NONE, fails if not OK
+#
+verifySHA1() {
+  CURRENT_DIR=`pwd`
+  DIR_NAME=`dirname ${1}`
+  FILE_NAME=`basename ${1}`
+  run cd ${DIR_NAME}
+  run sha1sum -s -c ${FILE_NAME}.sha1
+  run cd ${CURRENT_DIR}
+}
+
+#
+# Checks if 'curl' is availabe
+#
+# parameters: NONE
+#
+# output: fails if not OK
+#
+verifyCurlIsAvailable() {
+  which curl &> /dev/null
+  if [[ $? != 0 ]]; then
+    echo
+    echo "The system does not have 'curl' in the PATH"
+    echo
+    exit 1
+  fi
+  CURL_VERSION=`curl --version | head -1| awk '{print $2}' | sed 's|\.| |g'`
+  CURL_MAJOR_VERSION=`echo ${CURL_VERSION} | awk '{print $1}'`
+  CURL_MINOR_VERSION=`echo ${CURL_VERSION} | awk '{print $2}'`
+  CURL_MICRO_VERSION=`echo ${CURL_VERSION} | awk '{print $3}'`
+  CURL_VERSION_OK="false"
+  if [ "${CURL_MAJOR_VERSION}" -gt "7" ]; then
+    CURL_VERSION_OK="true"
+  elif [[ "${CURL_MAJOR_VERSION}" -eq "7" && "${CURL_MINOR_VERSION}" -gt "18" ]]; then
+    CURL_VERSION_OK="true"
+  elif [[ "${CURL_MAJOR_VERSION}" -eq "7" && "${CURL_MINOR_VERSION}" -eq "18" && "${CURL_MICRO_VERSION}" -ge "1" ]]; then
+    CURL_VERSION_OK="true"
+  fi
+  if [ "${CURL_VERSION_OK}" = "false" ]; then
+    echo
+    echo "'curl' must be version 7.18.1 or greater, it is ${CURL_VERSION}"
+    echo
+    exit 1
+  fi
+}
+
+#
+# Downloads a file
+#
+# parameters: <CURL OPTION> <URL OF FILE TO DOWNLOAD> <LOCAL FILE>
+#
+# output: NONE, fail if not OK
+#
+downloadFile() {
+  echo
+  if [ "${1}" != "-s" ]; then
+    echo "Downloading: ${2}"
+  fi
+  run curl ${1} -f ${2} -SL -o ${3}
+}
+
+#
+# Downloads and SHA1 verifies the release manifest file
+#
+# parameters: NONE
+#
+# output: NONE, fail if not OK
+#
+downloadManifest() {
+  downloadFile -s ${REPO_URL}/stage-lib-manifest.properties.sha1 ${SDC_TMP}/stage-lib-manifest.properties.sha1
+  downloadFile -s ${REPO_URL}/stage-lib-manifest.properties ${SDC_TMP}/stage-lib-manifest.properties
+  verifySHA1 ${SDC_TMP}/stage-lib-manifest.properties
+}
+
+#
+# Downloads and SHA1 verifies a stage library
+#
+# expected variables: ${SDC_VERSION}
+#
+# parameters: <STAGE LIBRARY ID> <TEMPORARY DIRECTORY>
+#
+# output: NONE, fails if not OK
+#
+downloadStageLib() {
+  LIB_FILE="${1}-${SDC_VERSION}.tgz"
+
+  downloadFile -s ${REPO_URL}/${LIB_FILE}.sha1 ${2}/${LIB_FILE}.sha1
+  downloadFile --progress-bar ${REPO_URL}/${LIB_FILE} ${2}/${LIB_FILE}
+  verifySHA1 ${2}/${LIB_FILE}
+}
+
+#
+# Installs a downloaded stage library
+#
+# expected variables: ${SDC_DIST}
+#                     ${SDC_VERSION}
+#
+# parameters: <STAGE LIBRARY ID> <TEMPORARY DIRECTORY>
+#
+# output: NONE, fails if not OK
+#
+installStageLib() {
+  LIB_FILE="${1}-${SDC_VERSION}.tgz"
+  CURRENT_DIR=`pwd`
+  if [ -e "${SDC_DIST}/streamsets-libs/${1}" ]; then
+    echo
+    echo "Stage library ${1} already installed"
+    echo
+    cleanTempDir
+    exit 1
+  fi
+  run cd ${SDC_DIST}/..
+  run tar xf ${2}/${LIB_FILE}
+  echo
+  echo "Stage library ${1} installed"
+  run cd ${CURRENT_DIR}
+}
+
+#
+# Uninstalls a stage library
+#
+# expected variables: ${SDC_DIST}
+#
+# parameters: <STAGE LIBRARY ID>
+#
+# output: NONE, fails if not OK
+#
+uninstallStageLib() {
+  if [ ! -e "${SDC_DIST}/streamsets-libs/${1}" ]; then
+    echo
+    echo "Stage library ${1} not installed"
+    echo
+    cleanTempDir
+    exit 1
+  fi
+  run rm -r ${SDC_DIST}/streamsets-libs/${1}
+  echo
+  echo "Stage library ${1} uninstalled"
+}
+
+#
+# Creates a temp directory
+#
+# parameters: NONE
+#
+# output: ${SDC_TMP}, fail if not OK
+#
+createTempDir() {
+  SDC_TMP="${TMPDIR:-/tmp}/sdc-setup-$$"
+  run mkdir ${SDC_TMP}
+  debug "Temporary directory: ${SDC_TMP}"
+}
+
+#
+# Deletes the temp directory
+#
+# parameters: NONE
+#
+# output: NONE
+#
+cleanTempDir() {
+  if [[ ! -z "${SDC_TMP}" && -e "${SDC_TMP}" ]]; then
+    rm -rf ${SDC_TMP}
+  fi
+  echo
+}
+
+#
+# Finds the status of the stage libraries
+#
+# parameters: <STAGE LIBS MANIFEST FILE> <STAGE LIBS DIRECTORY>
+#
+# output: ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
+#         ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
+#         ${STAGE_LIB_NAME[#]}: Name of all te stage libraries in the repo
+#         ${STAGE_LIB_INSTALLED[#]}: If a stage library is locally installed or not
+#
+findStageLibsStatus() {
+  STAGE_LIB_ID=()
+  STAGE_LIB_NAME=()
+  STAGE_LIB_INSTALLED=()
+  while read LINE; do
+    if [[ ${LINE} == stage-lib.* ]]; then
+      LIB_ID=`echo ${LINE} | sed 's|=.*||;s|^stage-lib\.||'`
+      LIB_NAME=`echo ${LINE} | sed 's|.*=||'`
+      STAGE_LIB_ID+=("${LIB_ID}")
+      STAGE_LIB_NAME+=("${LIB_NAME}")
+      if [ -e ${2}/${LIB_ID} ]; then
+        STAGE_LIB_INSTALLED+=("YES")
+      else
+        STAGE_LIB_INSTALLED+=("NO")
+      fi
+    fi
+  done < ${1}
+  STAGE_LIB_COUNT=${#STAGE_LIB_ID[@]}
+}
+
+#
+# Lists the status of the stage libraries
+#
+# expected VARs: ${REPO_URL}: stage library repo URL
+#                ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
+#                ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
+#                ${STAGE_LIB_NAME[#]}: Name of all te stage libraries in the repo
+#                ${STAGE_LIB_INSTALLED[#]}: If a stage library is locally installed or not
+#
+# parameters: NONE
+#
+# output: NONE
+#
+printStageLibsStatus() {
+  printf "\nStreamSets Data Collector\n\n"
+  printf "Stage Library Repository: %s\n\n" ${REPO_URL}
+  printf "    %-60s %-40s %s\n" "ID" "Name" "Installed"
+  printf '=%.0s' {1..113}
+  printf "\n"
+  for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+  do
+    printf " %-60s %-40s    %3s\n" "${STAGE_LIB_ID[${i}]}" "${STAGE_LIB_NAME[${i}]}" "${STAGE_LIB_INSTALLED[${i}]}"
+  done
+  printf '=%.0s' {1..113}
+  printf "\n"
+}
+
+#
+# Lists the status of the stage libraries
+#
+# expected VARs: ${SDC_DIST}: SDC installation directory
+#                ${REPO_URL}: stage library repo URL
+#                ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
+#                ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
+#
+# parameters: NONE
+#
+# output: NONE
+#
+printUnknownStageLibs() {
+  printf "\n"
+  for stageLibDir in ${SDC_DIST}/streamsets-libs/*;
+  do
+    if [ -d "${stageLibDir}" ]; then
+      LIB_ID=`basename ${stageLibDir}`
+      FOUND=false
+      for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+      do
+        if [ "${STAGE_LIB_ID[${i}]}" == "${LIB_ID}" ]; then
+          FOUND=true
+        fi
+      done
+      if [ "${FOUND}" = "false" ]; then
+        printf "WARN: Directory '%s' is not a library for repo '%s'\n" "${LIB_ID}" "${REPO_URL}"
+      fi
+    fi
+  done
+  printf "\n"
+}
+
+#
+# Checks a stage library is not installed
+#
+# expected VARs: ${SDC_DIST}
+#
+# parameters: <STAGE LIBRARY ID>
+#
+# output: NONE, fails if not OK
+#
+verifyStageLibNotInstalled() {
+  if [ -e ${SDC_DIST}/streamsets-libs/${1} ]; then
+    echo "Stage library '${1}' already installed"
+    exit 1
+  fi
+}
+
+#
+# Checks a stage library is installed
+#
+# expected VARs: ${SDC_DIST}
+#
+# parameters: <STAGE LIBRARY ID>
+#
+# output: NONE, fails if not OK
+#
+verifyStageLibInstalled() {
+  if [ ! -e ${SDC_DIST}/streamsets-libs/${1} ]; then
+    echo "Stage library '${1}' not installed"
+    exit 1
+  fi
+}
+
+#
+# Lists the status of the stage libraries
+#
+# expected VARs:
+#                ${STAGE_LIB_COUNT}: number of stage libs in the stage library repo
+#                ${STAGE_LIB_ID[#]}: ID of all the stage libraries in the repo
+#                ${STAGE_LIB_INSTALLED[#]}: If a stage library is locally installed or not
+#
+# parameters: NONE
+#
+# output: NONE
+#
+printInstallScript() {
+  printf '=%.0s' {1..115}
+  printf "\n"
+  printf "streamsets stagelibs -install="
+  LIB_SEPARATOR=""
+  for (( i=0; i<${STAGE_LIB_COUNT}; i++ ));
+  do
+    if [ "${STAGE_LIB_INSTALLED[${i}]}" = "YES" ]; then
+      printf "%s%s" ${LIB_SEPARATOR} ${STAGE_LIB_ID[${i}]}
+      LIB_SEPARATOR=","
+    fi
+  done
+  printf "\n"
+  printf '=%.0s' {1..115}
+  printf "\n"
+}
+
+############################################################
+PRG="${0}"
+
+DEBUG=""
+SDC_VERSION="${project.version}"
+REPO_URL="https://archives.streamsets.com/datacollector"
+
+LIST=""
+INSTALL=""
+UNINSTALL=""
+
+if test $# -eq 0 ; then
+  ${PRG} -help
+  exit 1
+fi
+
+while test $# -gt 0; do
+  case "${1}" in
+    -repoUrl=*)
+      REPO_URL=`echo ${1} | sed 's|^-repoUrl=||'`
+      shift
+      ;;
+    -debug)
+      DEBUG="true"
+      shift
+      ;;
+    -list)
+      shift
+      LIST="true"
+      ;;
+    -install=*)
+      INSTALL=`echo ${1} | sed 's|^-install=||'`
+      shift
+      ;;
+    -uninstall=*)
+      UNINSTALL=`echo ${1} | sed 's|^-uninstall=||'`
+      shift
+      ;;
+    -installScript)
+      shift
+      INSTALL_SCRIPT="true"
+      ;;
+    -help)
+      echo ""
+      echo "streamsets stagelibs <OPTIONS>"
+      echo ""
+      echo "  Options:"
+      echo "    -repoUrl=<REPO URL>"
+      echo "    -list"
+      echo "    -install=<LIB>,<LIB>,..."
+      echo "    -uninstall=<LIB>,<LIB>,..."
+      echo "    -installScript"
+      echo ""
+      exit 0
+      ;;
+    *)
+      echo ""
+      echo "Invalid option(s)"
+      ${PRG} -help
+      exit 1
+      ;;
+  esac
+done
+
+
+# Script logic
+
+#
+# Postfix version to repo URL
+#
+REPO_URL="${REPO_URL}/${SDC_VERSION}/tarball"
+
+
+SDC_TMP=""
+
+createTempDir
+
+detectSdcDist
+
+verifyCurlIsAvailable
+
+downloadManifest
+
+findStageLibsStatus ${SDC_TMP}/stage-lib-manifest.properties ${SDC_DIST}/streamsets-libs
+
+if [ ! -z "${LIST}" ]; then
+  printStageLibsStatus
+  printUnknownStageLibs
+fi
+
+if [ ! -z "${INSTALL}" ]; then
+  IFS=',' read -ra LIBS <<< "$INSTALL"
+  for LIB in "${LIBS[@]}"; do
+      verifyStageLibNotInstalled ${LIB}
+  done
+  for LIB in "${LIBS[@]}"; do
+      downloadStageLib ${LIB} ${SDC_TMP}
+  done
+  for LIB in "${LIBS[@]}"; do
+      installStageLib ${LIB} ${SDC_TMP}
+  done
+fi
+
+if [ ! -z "${UNINSTALL}" ]; then
+  IFS=',' read -ra LIBS <<< "$UNINSTALL"
+  for LIB in "${LIBS[@]}"; do
+      verifyStageLibInstalled ${LIB} ${SDC_TMP}
+  done
+  for LIB in "${LIBS[@]}"; do
+      uninstallStageLib ${LIB}
+  done
+fi
+
+if [ ! -z "${INSTALL_SCRIPT}" ]; then
+  printInstallScript
+fi
+
+cleanTempDir

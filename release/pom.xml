@@ -53,7 +53,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
-            <id>sdc</id>
+            <id>sdc-all</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -61,9 +61,24 @@
             <configuration>
               <appendAssemblyId>false</appendAssemblyId>
               <attach>false</attach>
-              <finalName>streamsets-datacollector-${project.version}</finalName>
+              <finalName>streamsets-datacollector-all-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/main/assemblies/data-collector-sdc.xml</descriptor>
+                <descriptor>src/main/assemblies/data-collector-sdc-all.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+          <execution>
+            <id>sdc-core</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <finalName>streamsets-datacollector-core-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-sdc-core.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>
@@ -75,6 +90,20 @@
         <version>1.7</version>
         <executions>
           <execution>
+            <id>stage-lib-tars</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
+                  <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version} ${project.build.directory}"/>
+                </exec>
+              </target>
+            </configuration>
+          </execution>
+          <execution>
             <id>release-tar</id>
             <phase>package</phase>
             <goals>
@@ -82,7 +111,7 @@
             </goals>
             <configuration>
               <target>
-                <echo file="${project.build.directory}/renametarball.sh">#!/bin/bash
+                <echo file="${project.build.directory}/finalizetarballs.sh">#!/bin/bash
                   run() {
                     echo "\$ ${@}"
                     "${@}"
@@ -96,14 +125,17 @@
                   }
 
                   targetDir=`pwd`
-                  run cd ../../dist/target/streamsets-datacollector-${project.version}
-                  run mv ${targetDir}/streamsets-datacollector-${project.version}.tar.gz ${targetDir}/streamsets-datacollector-${project.version}.tgz
+                  run mv streamsets-datacollector-all-${project.version}.tar.gz streamsets-datacollector-all-${project.version}.tgz
+                  sha1sum streamsets-datacollector-all-${project.version}.tgz > streamsets-datacollector-all-${project.version}.tgz.sha1
+                  run gzip streamsets-datacollector-core-${project.version}.tar
+                  run mv streamsets-datacollector-core-${project.version}.tar.gz streamsets-datacollector-core-${project.version}.tgz
+                  sha1sum streamsets-datacollector-core-${project.version}.tgz > streamsets-datacollector-core-${project.version}.tgz.sha1
                   echo
-                  echo "StreamSets Data Collector tar available at:  ${targetDir}/streamsets-datacollector-${project.version}.tgz"
+                  echo "StreamSets Data Collector tars available at:  ${targetDir}/"
                   echo
                 </echo>
                 <exec executable="/bin/bash" dir="${project.build.directory}" failonerror="true">
-                  <arg line="./renametarball.sh"/>
+                  <arg line="./finalizetarballs.sh"/>
                 </exec>
               </target>
             </configuration>
