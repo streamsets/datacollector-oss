@@ -55,17 +55,11 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     for (Config config : configs) {
       switch (config.getName()) {
         case "dataFormat":
-          // fall through
         case "resourceUrl":
-          // fall through
         case "httpMethod":
-          // fall through
         case "requestData":
-          // fall through
         case "requestTimeoutMillis":
-          // fall through
         case "httpMode":
-          // fall through
         case "pollingInterval":
         case "entityDelimiter":
           configsToAdd.add(new Config(joiner.join(CONF, config.getName()), config.getValue()));
@@ -101,8 +95,8 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
         default:
           // no op
       }
-      configs.addAll(configsToAdd);
-      configs.removeAll(configsToRemove);
     }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 }

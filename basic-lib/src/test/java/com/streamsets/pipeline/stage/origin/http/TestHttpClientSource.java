@@ -91,12 +91,48 @@ public class TestHttpClientSource extends JerseyTest {
     }
   }
 
+  @Path("/xmlstream")
+  @Produces("application/xml")
+  public static class XmlStreamResource {
+    @GET
+    public Response getStream() {
+      return Response.ok(
+          "<root>" +
+          "<record>" +
+          "<name>adam</name>" +
+          "</record>" +
+          "<record>" +
+          "<name>joe</name>" +
+          "</record>" +
+          "<record>" +
+          "<name>sally</name>" +
+          "</record>" +
+          "</root>"
+      ).build();
+    }
+  }
+
+  @Path("/textstream")
+  @Produces("application/text")
+  public static class TextStreamResource {
+    @GET
+    public Response getStream() {
+      return Response.ok(
+          "adam\r\n" +
+          "joe\r\n" +
+          "sally"
+      ).build();
+    }
+  }
+
   @Override
   protected Application configure() {
     return new ResourceConfig(
         Sets.newHashSet(
             StreamResource.class,
-            NewlineStreamResource.class
+            NewlineStreamResource.class,
+            TextStreamResource.class,
+            XmlStreamResource.class
         )
     );
   }
@@ -113,7 +149,9 @@ public class TestHttpClientSource extends JerseyTest {
             new ResourceConfig(
                 Sets.newHashSet(
                     StreamResource.class,
-                    NewlineStreamResource.class
+                    NewlineStreamResource.class,
+                    TextStreamResource.class,
+                    XmlStreamResource.class
                 )
             )
         )
@@ -152,7 +190,8 @@ public class TestHttpClientSource extends JerseyTest {
       String[] names = { "adam", "joe", "sally" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
       runner.runDestroy();
@@ -192,7 +231,8 @@ public class TestHttpClientSource extends JerseyTest {
       String[] names = { "adam" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
       runner.runDestroy();
@@ -232,12 +272,89 @@ public class TestHttpClientSource extends JerseyTest {
       String[] names = { "adam", "joe", "sally" };
 
       for (int i = 0; i < parsedRecords.size(); i++) {
-        assertTrue(checkPersonRecord(parsedRecords.get(i), names[i]));
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.JSON));
       }
     } finally {
       runner.runDestroy();
     }
 
+  }
+
+  @Test
+  public void testStreamingHttpWithXml() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "http://localhost:9998/xmlstream";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.xmlRecordElement = "record";
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(3, parsedRecords.size());
+
+      String[] names = { "adam", "joe", "sally" };
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertTrue(parsedRecords.get(i).has("/name"));
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.XML));
+      }
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStreamingHttpWithText() throws Exception {
+    HttpClientConfigBean conf = new HttpClientConfigBean();
+    conf.authType = AuthenticationType.NONE;
+    conf.httpMode = HttpClientMode.STREAMING;
+    conf.resourceUrl = "http://localhost:9998/textstream";
+    conf.requestTimeoutMillis = 1000;
+    conf.entityDelimiter = "\r\n";
+    conf.basic.maxBatchSize = 100;
+    conf.basic.maxWaitTime = 1000;
+    conf.pollingInterval = 1000;
+    conf.httpMethod = HttpMethod.GET;
+    conf.dataFormat = DataFormat.TEXT;
+    HttpClientSource origin = new HttpClientSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(HttpClientSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProduce(null, 1000);
+      Map<String, List<Record>> recordMap = output.getRecords();
+      List<Record> parsedRecords = recordMap.get("lane");
+
+      assertEquals(3, parsedRecords.size());
+
+      String[] names = { "adam", "joe", "sally" };
+
+      for (int i = 0; i < parsedRecords.size(); i++) {
+        assertEquals(names[i], extractValueFromRecord(parsedRecords.get(i), DataFormat.TEXT));
+      }
+    } finally {
+      runner.runDestroy();
+    }
   }
 
   @Test
@@ -303,9 +420,16 @@ public class TestHttpClientSource extends JerseyTest {
     }
   }
 
-  private boolean checkPersonRecord(Record record, String name) {
-    return record.has("/name") &&
-        record.get("/name").getValueAsString().equals(name);
+  private String extractValueFromRecord(Record r, DataFormat f) {
+    String v = null;
+    if (f == DataFormat.JSON) {
+      v = r.get("/name").getValueAsString();
+    } else if (f == DataFormat.TEXT) {
+      v = r.get().getValueAsMap().get("text").getValueAsString();
+    } else if (f == DataFormat.XML) {
+      v = r.get().getValueAsMap().get("name").getValueAsList().get(0).getValueAsMap().get("value").getValueAsString();
+    }
+    return v;
   }
 
   private HttpClientSource getTwitterHttpClientSource() {

@@ -36,17 +36,6 @@ public class HttpClientConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "JSON",
-      label = "Data Format",
-      displayPosition = 50,
-      group = "#0"
-  )
-  @ValueChooserModel(DataFormatChooserValues.class)
-  public DataFormat dataFormat = DataFormat.JSON;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.STRING,
       label = "Resource URL",
       defaultValue = "https://stream.twitter.com/1.1/statuses/sample.json",
@@ -135,14 +124,23 @@ public class HttpClientConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "JSON",
+      label = "Data Format",
+      displayPosition = 40,
+      group = "HTTP"
+  )
+  @ValueChooserModel(DataFormatChooserValues.class)
+  public DataFormat dataFormat = DataFormat.JSON;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Entity Delimiter",
       defaultValue = "\\r\\n",
       description = "Records may be delimited by a user-defined string. Common values are \\r\\n and \\n",
-      displayPosition = 20,
-      group = "JSON",
-      dependsOn = "dataFormatConfig.jsonContent",
-      triggeredByValue = "MULTIPLE_OBJECTS"
+      displayPosition = 50,
+      group = "HTTP"
   )
   public String entityDelimiter;
 }

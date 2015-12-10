@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -61,7 +62,7 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private HttpStreamConsumer httpConsumer;
 
   /**
-   * @param config Configuration object for the HTTP client
+   * @param conf Configuration object for the HTTP client
    */
   public HttpClientSource(final HttpClientConfigBean conf) {
     this.conf = conf;
@@ -144,14 +145,24 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       for (String chunk : chunks) {
         String sourceId = getOffset();
         try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
-          Record record = parser.parse();
-          // A chunk only contains a single Record, so we only parse it once.
-          if (record != null) {
-            batchMaker.addRecord(record);
-            recordCount++;
-          }
-          if (null != parser.parse()) {
-            throw new DataParserException(Errors.HTTP_02);
+          if (conf.dataFormat == DataFormat.JSON) {
+            // For json, a chunk only contains a single record, so we only parse it once.
+            Record record = parser.parse();
+            if (record != null) {
+              batchMaker.addRecord(record);
+              recordCount++;
+            }
+            if (null != parser.parse()) {
+              throw new DataParserException(Errors.HTTP_02);
+            }
+          } else {
+            // For text and xml, a chunk may contain multiple records.
+            Record record = parser.parse();
+            while (record != null) {
+              batchMaker.addRecord(record);
+              recordCount++;
+              record = parser.parse();
+            }
           }
         } catch (IOException | DataParserException ex) {
           switch (getContext().getOnErrorRecord()) {

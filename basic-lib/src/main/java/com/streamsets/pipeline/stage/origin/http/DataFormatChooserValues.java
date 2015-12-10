@@ -25,7 +25,11 @@ import com.streamsets.pipeline.config.DataFormat;
 public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
   public DataFormatChooserValues() {
-    super(DataFormat.JSON);
+    super(
+        DataFormat.JSON,
+        DataFormat.TEXT,
+        DataFormat.XML
+    );
   }
 
 }
