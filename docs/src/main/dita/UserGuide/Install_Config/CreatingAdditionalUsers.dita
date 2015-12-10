@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_nsz_lp4_1r">
-    <title>Configuring Users</title>
+    <title>Configuring Users (File-Based Authentication)</title>
     <shortdesc>The <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         includes several default users - one for each role. For increased security, you can
@@ -22,11 +22,12 @@
         users.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>users<indexterm>creating</indexterm></indexterm><draft-comment
-                    author="Loretta">need to revisit  this to see how to slip LDAP in or just
-                    clarify this is for non-LDAP authentication.</draft-comment>Configure users in
-                the properties file for the type of authentication that you use. For example, if you
-                use basic authentication, use the basic-realm.properties file.</p>
+            <p><indexterm>users<indexterm>creating</indexterm></indexterm>If the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> uses LDAP authentication, use LDAP to configure additional users. </p>
+            <p>When using the default file-based authentication, you need to configure additional
+                users in the properties file for the type of authentication that you use. For
+                example, if you use basic authentication, use the basic-realm.properties file.</p>
             <p>To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
             <p>For basic and form authentication, hash the password alone. For example:

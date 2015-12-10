@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Users and Roles"></meta><meta name="abstract" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="description" content="The Data Collector provides several roles and a default user account based on each role. You can change or remove these accounts. You can also create new user accounts. For increased security, change the passwords for the default accounts. A production deployment of the Data Collector should integrate with intranet authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dt2_cpb_kr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Users and Roles</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication. When you use file ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Authentication"></meta><meta name="abstract" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication."></meta><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dns_dvg_h5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Authentication</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -31,21 +31,94 @@
 </script>
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration">Installation and Configuration</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Install_Config/Install_Config_title.html" title="Installation and Configuration"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Installation and Configuration</span></a></span>  </div></td></tr></tbody></table>
-<div class="nested0" id="concept_dt2_cpb_kr">
- <h1 class="title topictitle1">Users and Roles</h1>
+<div class="nested0" id="concept_dns_dvg_h5">
+ <h1 class="title topictitle1"><span class="ph">Data
+                  Collector</span>
+        Authentication</h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
+                  Collector</span> can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if
+        you have it. By default, the <span class="ph">Data
+                  Collector</span> uses
+        file authentication.</p>
+
+  <p class="p">When you use file
+            authentication, you can use Basic, Digest, or Form. Form is the default file
+            authentication type. </p>
+
+        <p class="p">To configure file authentication, edit the authentication realm.properties file for the
+            authentication type. For example, to use Form, edit the <samp class="ph codeph">form-realm.properties
+                file</samp>.</p>
+
+        <p class="p">The realm.properties files are in the following directory:
+                <samp class="ph codeph">&lt;SDCinstalldir&gt;/etc</samp>.</p>
+
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_x2j_5ts_g5">
+ <h2 class="title topictitle2">Configuring LDAP Authentication</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the <span class="ph">Data
+                  Collector</span> to use
+        LDAP authentication.</p>
+
+  <p class="p">The <span class="ph">Data
+                  Collector</span>
+            provides file-based and LDAP authentication. If your organization uses LDAP, configure
+            the <span class="ph">Data
+                  Collector</span> to use LDAP authentication. By default, the <span class="ph">Data
+                  Collector</span>
+            uses file-based authentication.</p>
+
+        <div class="p">To enable LDAP authentication, configure the following properties in the <span class="ph">Data
+                  Collector</span>
+            properties file: <ol class="ol" id="concept_x2j_5ts_g5__ol_cmg_2bt_g5">
+                <li class="li">To enable LDAP authentication, set
+                        <span class="ph uicontrol">http.authentication.login.module</span> to
+                        <span class="ph uicontrol">ldap</span>.</li>
+
+                <li class="li">Configure <span class="ph uicontrol">http.authentication.ldap.role.mapping</span> to map
+                    LDAP groups to <span class="ph">Data
+                  Collector</span> roles.<div class="p">You can map multiple roles to the same group or vice versa. Use the
+                        following
+                        convention:<pre class="pre codeblock">&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;,&lt;additional SDC role&gt;);
+&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;... </pre>
+</div>
+</li>
+
+            </ol>
+</div>
+
+        <div class="p">Use a semicolon to separate LDAP groups and commas to separate <span class="ph">Data
+                  Collector</span>
+            roles. The following example maps the DEV LDAP group to the creator role, the OPS LDAP
+            group to the manager role, and maps the SUPER LDAP group to both creator and
+            manager:<pre class="pre codeblock">DEV:creator;OPS:manager,SUPER:creator,manager</pre>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_dt2_cpb_kr">
+ <h2 class="title topictitle2">Users and Roles</h2>
 
  
  <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span> provides several roles and a default user account based on each role. You can change or
-    remove these accounts. You can also create new user accounts. For increased security, change the
-    passwords for the default accounts. A production deployment of the <span class="ph">Data
-                  Collector</span> should
-    integrate with intranet authentication.</p>
+    remove these accounts. You can also create new user accounts. </p>
 
-  <p class="p"><span class="ph">Data
+  <p class="p">For increased security, change the passwords for the default
+      accounts. A production deployment of the <span class="ph">Data
+                  Collector</span> should
+      integrate with LDAP authentication. </p>
+
+    <p class="p"><span class="ph">Data
                   Collector</span> roles
       define the tasks that a user can perform. When you configure a user, assign it one or more
-      roles.  Users can perform any task that their roles allow.</p>
+      roles. Users can perform any task that their roles allow.</p>
 
   <div class="p">The <span class="ph">Data
                   Collector</span>
@@ -100,9 +173,8 @@
 
  </div>
 
-<div class="related-links"></div>
-<div class="topic task nested1" id="task_nsz_lp4_1r">
-    <h2 class="title topictitle2">Configuring Users</h2>
+<div class="topic task nested2" id="task_nsz_lp4_1r">
+    <h3 class="title topictitle3">Configuring Users (File-Based Authentication)</h3>
 
     
     <div class="body taskbody"><p class="shortdesc">The <span class="ph">Data
@@ -112,9 +184,12 @@
         users.</p>
 
         <div class="section context">
-            <p class="p">Configure users in
-                the properties file for the type of authentication that you use. For example, if you
-                use basic authentication, use the basic-realm.properties file.</p>
+            <p class="p">If the <span class="ph">Data
+                  Collector</span> uses LDAP authentication, use LDAP to configure additional users. </p>
+
+            <p class="p">When using the default file-based authentication, you need to configure additional
+                users in the properties file for the type of authentication that you use. For
+                example, if you use basic authentication, use the basic-realm.properties file.</p>
 
             <p class="p">To hash login information, you can use an md5 program such as md5 on Mac OS X or
                 md5sum on Linux. </p>
@@ -168,6 +243,7 @@
 
     </div>
 
+</div>
 </div>
 </div>
 <div class="navfooter"><!---->

@@ -20,13 +20,14 @@
         LDAP authentication.</shortdesc>
  <conbody>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            provides file-based and LDAP authentication. If your organization has LDAP set up,
-            configure the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            use LDAP authentication. </p>
-        <p>To enable LDAP authentication, in the <ph
+            provides file-based and LDAP authentication. If your organization uses LDAP, configure
+            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> to use LDAP authentication. By default, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            properties file, configure the following properties: <ol id="ol_cmg_2bt_g5">
+            uses file-based authentication.</p>
+        <p>To enable LDAP authentication, configure the following properties in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            properties file: <ol id="ol_cmg_2bt_g5">
                 <li>To enable LDAP authentication, set
                         <uicontrol>http.authentication.login.module</uicontrol> to
                         <uicontrol>ldap</uicontrol>.</li>

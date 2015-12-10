@@ -36,6 +36,15 @@
    </topicmeta>
    <topicref href="../Install_Config/AdditionalDrivers-Installing.dita"/>
   </topicref>
+  <topicref href="../Install_Config/Authentication.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/LDAP-Configuring.dita"/>
+   <topicref href="../Install_Config/UsersandRoles.dita">
+    <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
+   </topicref>
+  </topicref>
   <topicref href="../Install_Config/DCConfig.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -43,7 +52,6 @@
    <topicref href="../Install_Config/Kerberos.dita"/>
    <topicref href="../Install_Config/StoringLoadingSensitiveInformation.dita"/>
    <topicref href="../Install_Config/HTTP_protocols.dita"/>
-   <topicref href="../Install_Config/LDAP-Configuring.dita"/>
    <topicref href="../Install_Config/ConfiguringDataCollector.dita"/>
   </topicref>
   <topicref href="../Install_Config/DCEnvironmentConfig.dita" chunk="to-content">
@@ -57,12 +65,6 @@
    </topicref>
    <topicref href="../Install_Config/JavaSecurityManager.dita"/>
    <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
-  </topicref>
-  <topicref href="../Install_Config/UsersandRoles.dita" chunk="to-content">
-   <topicmeta>
-    <shortdesc/>
-   </topicmeta>
-   <topicref href="../Install_Config/CreatingAdditionalUsers.dita"/>
   </topicref>
   <topicref href="../Install_Config/ClouderaManagerInstallation.dita" chunk="to-content">
    <topicmeta>
