@@ -46,7 +46,7 @@ angular.module('dataCollectorApp.common')
     this.initializeDefer = undefined;
 
     this.init = function(force) {
-      if(!self.initializeDefer || force) {
+      if(!self.initializeDefer || (force && self.initializeDefer.promise.$$state.status !== 0)) {
         self.initializeDefer = $q.defer();
 
         $q.all([
