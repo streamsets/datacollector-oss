@@ -578,6 +578,11 @@ public class PipelineConfigurationValidator {
         if (confDef.isRequired() && (config == null || isNullOrEmpty(confDef, config))) {
           preview &= validateRequiredField(confDef, stageConf, issueCreator);
         }
+
+        if(confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
+          preview &= validatedNumberConfig(config, confDef, issueCreator);
+        }
+
       }
       for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
@@ -625,6 +630,40 @@ public class PipelineConfigurationValidator {
         (stageConf.getConfig(dependsOn) != null &&
             triggeredByContains(triggeredBy, stageConf.getConfig(dependsOn).getValue()))) {
       issues.add(issueCreator.create(confDef.getGroup(), confDef.getName(), ValidationError.VALIDATION_0007));
+      preview = false;
+    }
+    return preview;
+  }
+
+
+  private boolean validatedNumberConfig(
+      Config conf,
+      ConfigDefinition confDef,
+      IssueCreator issueCreator) {
+
+    boolean preview = true;
+
+    if (conf.getValue() instanceof String && ((String)conf.getValue()).startsWith("${")
+        && ((String)conf.getValue()).endsWith("}")) {
+      // If value is EL, ignore max and min validation
+      return true;
+    }
+
+    if (!(conf.getValue() instanceof Long || conf.getValue() instanceof Integer)) {
+      issues.add(issueCreator.create(confDef.getGroup(),
+          confDef.getName(), ValidationError.VALIDATION_0009,
+          confDef.getType()));
+      return false;
+    }
+    Long value = ((Number) conf.getValue()).longValue();
+    if(value > confDef.getMax()) {
+      issues.add(issueCreator.create(confDef.getGroup(),
+          confDef.getName(), ValidationError.VALIDATION_0034, confDef.getName(), confDef.getMax()));
+      preview = false;
+    }
+    if(value < confDef.getMin()) {
+      issues.add(issueCreator.create(confDef.getGroup(),
+          confDef.getName(), ValidationError.VALIDATION_0035, confDef.getName(), confDef.getMin()));
       preview = false;
     }
     return preview;
