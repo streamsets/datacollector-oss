@@ -84,6 +84,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_65("Topic '{}' resolved from record '{}' is not among the allowed topics"),
   KAFKA_66("Kafka Producer configuration '{}' must be specified a valid {} value greater than or equal to 0"),
   KAFKA_67("Error connecting to Kafka Brokers '{}'"),
+  KAFKA_68("Error getting metadata for topic '{}' from broker '{}'"),
 
 
   ;

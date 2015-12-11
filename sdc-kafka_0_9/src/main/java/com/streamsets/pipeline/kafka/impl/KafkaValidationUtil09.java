@@ -21,30 +21,20 @@ package com.streamsets.pipeline.kafka.impl;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.KafkaBroker;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
-import kafka.common.ErrorMapping;
-import kafka.javaapi.TopicMetadata;
-import kafka.javaapi.TopicMetadataRequest;
-import kafka.javaapi.consumer.SimpleConsumer;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.errors.AuthorizationException;
+import org.apache.kafka.common.errors.WakeupException;
 import org.apache.zookeeper.common.PathUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
-
-  private static final Logger LOG = LoggerFactory.getLogger(KafkaValidationUtil09.class);
-  private static final String METADATA_READER_CLIENT = "metadataReaderClient";
-  private static final int METADATA_READER_TIME_OUT = 10000;
-  private static final int BUFFER_SIZE = 64 * 1024;
 
   @Override
   public String getVersion() {
@@ -57,26 +47,9 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
       int messageSendMaxRetries,
       long retryBackoffMs
   ) throws StageException {
-    List<KafkaBroker> kafkaBrokers = getKafkaBrokers(metadataBrokerList);
-    TopicMetadata topicMetadata;
-    try {
-      topicMetadata = KafkaValidationUtil09.getTopicMetadata(kafkaBrokers, topic, messageSendMaxRetries, retryBackoffMs);
-      if (topicMetadata == null) {
-        // Could not get topic metadata from any of the supplied brokers
-        throw new StageException(KafkaErrors.KAFKA_03, topic, metadataBrokerList);
-      }
-      if (topicMetadata.errorCode() == ErrorMapping.UnknownTopicOrPartitionCode()) {
-        // Topic does not exist
-        throw new StageException(KafkaErrors.KAFKA_04, topic);
-      }
-      if (topicMetadata.errorCode() != 0) {
-        // Topic metadata returned error code other than ErrorMapping.UnknownTopicOrPartitionCode()
-        throw new StageException(KafkaErrors.KAFKA_03, topic, metadataBrokerList);
-      }
-    } catch (IOException e) {
-      throw new StageException(KafkaErrors.KAFKA_11, topic, kafkaBrokers, e.toString());
-    }
-    return topicMetadata.partitionsMetadata().size();
+    KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList);
+    List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
+    return partitionInfoList.size();
   }
 
   public List<KafkaBroker> validateKafkaBrokerConnectionString(
@@ -172,113 +145,31 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
       issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_05));
       valid = false;
     } else {
-      TopicMetadata topicMetadata;
+      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList);
       try {
-        topicMetadata = KafkaValidationUtil09.getTopicMetadata(kafkaBrokers, topic, 1, 0);
-        if(topicMetadata == null) {
-          //Could not get topic metadata from any of the supplied brokers
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic,
-            metadataBrokerList));
-          valid = false;
-        } else if (topicMetadata.errorCode() == ErrorMapping.UnknownTopicOrPartitionCode()) {
-          //Topic does not exist
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_04, topic));
-          valid = false;
-        } else if (topicMetadata.errorCode() != 0) {
-          // Topic metadata returned error code other than ErrorMapping.UnknownTopicOrPartitionCode()
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic,
-            metadataBrokerList));
+        List<PartitionInfo> partitionInfos = kafkaConsumer.partitionsFor(topic);
+        if(null == partitionInfos || partitionInfos.size() == 0) {
+          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic, metadataBrokerList));
           valid = false;
         }
-      } catch (IOException e) {
-        //Could not connect to kafka with the given metadata broker list
-        issues.add(context.createConfigIssue(groupName, "metadataBrokerList", KafkaErrors.KAFKA_67,
-          metadataBrokerList));
+      } catch (WakeupException | AuthorizationException e) {
+        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList));
         valid = false;
       }
     }
     return valid;
   }
 
-  private static TopicMetadata getTopicMetadata(List<KafkaBroker> kafkaBrokers, String topic, int maxRetries,
-                                                long backOffms) throws IOException {
-    TopicMetadata topicMetadata = null;
-    boolean connectionError = true;
-    boolean retry = true;
-    int retryCount = 0;
-    while (retry && retryCount <= maxRetries) {
-      for (KafkaBroker broker : kafkaBrokers) {
-        SimpleConsumer simpleConsumer = null;
-        try {
-          simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
-            METADATA_READER_CLIENT);
-
-          List<String> topics = Collections.singletonList(topic);
-          TopicMetadataRequest req = new TopicMetadataRequest(topics);
-          kafka.javaapi.TopicMetadataResponse resp = simpleConsumer.send(req);
-
-          // No exception => no connection error
-          connectionError = false;
-
-          List<TopicMetadata> topicMetadataList = resp.topicsMetadata();
-          if (topicMetadataList == null || topicMetadataList.isEmpty()) {
-            //This broker did not have any metadata. May not be in sync?
-            continue;
-          }
-          topicMetadata = topicMetadataList.iterator().next();
-          if (topicMetadata != null && topicMetadata.errorCode() == 0) {
-            retry = false;
-          }
-        } catch (Exception e) {
-          //could not connect to this broker, try others
-        } finally {
-          if (simpleConsumer != null) {
-            simpleConsumer.close();
-          }
-        }
-      }
-      if(retry) {
-        LOG.warn("Unable to connect or cannot fetch topic metadata. Waiting for '{}' seconds before retrying",
-          backOffms/1000);
-        retryCount++;
-        if(!ThreadUtil.sleep(backOffms)) {
-          break;
-        }
-      }
-    }
-    if(connectionError) {
-      //could not connect any broker even after retries. Fail with exception
-      throw new IOException(Utils.format(KafkaErrors.KAFKA_67.getMessage(), getKafkaBrokers(kafkaBrokers)));
-    }
-    return topicMetadata;
-  }
-
-  private static String getKafkaBrokers(List<KafkaBroker> kafkaBrokers) {
-    StringBuilder sb = new StringBuilder();
-    for(KafkaBroker k : kafkaBrokers) {
-      sb.append(k.getHost() + ":" + k.getPort()).append(", ");
-    }
-    sb.setLength(sb.length()-2);
-    return sb.toString();
-  }
-
-  private static List<KafkaBroker> getKafkaBrokers(String brokerList) {
-    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    if(brokerList != null && !brokerList.isEmpty()) {
-      String[] brokers = brokerList.split(",");
-      for (String broker : brokers) {
-        String[] brokerHostAndPort = broker.split(":");
-        if (brokerHostAndPort.length == 2) {
-          try {
-            int port = Integer.parseInt(brokerHostAndPort[1].trim());
-            kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
-          } catch (NumberFormatException e) {
-            //ignore broker
-          }
-        }
-      }
-    }
-    return kafkaBrokers;
+  private KafkaConsumer<String, String> createTopicMetadataClient(String metadataBrokerList) {
+    Properties props = new Properties();
+    props.put("bootstrap.servers", metadataBrokerList);
+    props.put("group.id", "sdcTopicMetadataClient");
+    props.put("enable.auto.commit", "false");
+    props.put("auto.commit.interval.ms", "1000");
+    props.put("session.timeout.ms", "30000");
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    return new KafkaConsumer<>(props);
   }
 
 }

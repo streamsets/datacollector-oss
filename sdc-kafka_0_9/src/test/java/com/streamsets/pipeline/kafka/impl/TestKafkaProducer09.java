@@ -27,24 +27,17 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import kafka.admin.AdminUtils;
-import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.utils.SystemTime$;
-import kafka.utils.TestUtils;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.common.protocol.SecurityProtocol;
 import org.apache.kafka.common.security.JaasUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import scala.Option;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,7 +49,7 @@ public class TestKafkaProducer09 {
 
   @Test
   public void testKafkaProducer09Version() throws IOException {
-    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(getFreePort(), new HashMap<String, Object>());
+    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(TestUtil.getFreePort(), new HashMap<String, Object>());
     Assert.assertEquals(Kafka09Constants.KAFKA_VERSION, sdcKafkaProducer.getVersion());
   }
 
@@ -71,8 +64,8 @@ public class TestKafkaProducer09 {
       zkConnect, zkSessionTimeout, zkConnectionTimeout,
       JaasUtils.isZkSecurityEnabled());
 
-    int port = getFreePort();
-    KafkaServer kafkaServer = createKafkaServer(port, zkConnect);
+    int port = TestUtil.getFreePort();
+    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
 
     final String topic = "TestKafkaProducer09_1";
     final String message = "Hello StreamSets";
@@ -109,8 +102,8 @@ public class TestKafkaProducer09 {
       zkConnect, zkSessionTimeout, zkConnectionTimeout,
       JaasUtils.isZkSecurityEnabled());
 
-    int port = getFreePort();
-    KafkaServer kafkaServer = createKafkaServer(port, zkConnect);
+    int port = TestUtil.getFreePort();
+    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
 
     final String topic = "TestKafkaProducer09_1";
     final String message = "Hello StreamSets";
@@ -145,13 +138,6 @@ public class TestKafkaProducer09 {
     zookeeper.shutdown();
   }
 
-  public static int getFreePort() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(0);
-    int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    return port;
-  }
-
   private void verify(
       final String topic,
       final int numMessages,
@@ -179,21 +165,6 @@ public class TestKafkaProducer09 {
     Assert.assertEquals(numMessages, buffer.size());
     Assert.assertEquals(message, buffer.get(0).value());
   }
-
-  private KafkaServer createKafkaServer(int port, String zkConnect) {
-    final Option<File> noFile = scala.Option.apply(null);
-    final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
-    Properties props = TestUtils.createBrokerConfig(
-      0, zkConnect, false, false, port, noInterBrokerSecurityProtocol,
-      noFile, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
-      TestUtils.RandomPort());
-    props.setProperty("auto.create.topics.enable", "true");
-    props.setProperty("num.partitions", "1");
-    props.setProperty("zookeeper.connect", zkConnect);
-    KafkaConfig config = new KafkaConfig(props);
-    return TestUtils.createServer(config, SystemTime$.MODULE$);
-  }
-
 
   private SdcKafkaProducer createSdcKafkaProducer(int port, Map<String, Object> kafkaConfigs) {
     ProducerFactorySettings settings = new ProducerFactorySettings(
