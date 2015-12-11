@@ -19,11 +19,9 @@
  */
 package com.streamsets.datacollector.cluster;
 
-import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -48,13 +46,12 @@ import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.SystemProcessFactory;
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.impl.PipelineUtils;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.impl.PipelineUtils;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -62,7 +59,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -78,7 +74,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -87,6 +82,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
 
 public class ClusterProviderImpl implements ClusterProvider {
   static final Pattern YARN_APPLICATION_ID_REGEX = Pattern.compile("\\s(application_[0-9]+_[0-9]+)(\\s|$)");
@@ -114,7 +111,8 @@ public class ClusterProviderImpl implements ClusterProvider {
   /**
    * Only null in the case of tests
    */
-  private final @Nullable SecurityConfiguration securityConfiguration;
+  @Nullable
+  private final SecurityConfiguration securityConfiguration;
 
   private static final Logger LOG = LoggerFactory.getLogger(ClusterProviderImpl.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
@@ -124,7 +122,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     this(null, null);
   }
 
-  public ClusterProviderImpl(RuntimeInfo runtimeInfo, SecurityConfiguration securityConfiguration) {
+  public ClusterProviderImpl(RuntimeInfo runtimeInfo, @Nullable SecurityConfiguration securityConfiguration) {
     this.runtimeInfo = runtimeInfo;
     this.securityConfiguration = securityConfiguration;
     this.yarnStatusParser = new YARNStatusParser();
@@ -132,23 +130,27 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   @Override
-  public void killPipeline(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
-     Map<String, String> environment = new HashMap<>();
+  public void killPipeline(
+      SystemProcessFactory systemProcessFactory,
+      File sparkManager,
+      File tempDir,
+      String appId,
+      PipelineConfiguration pipelineConfiguration
+  ) throws TimeoutException, IOException {
+    Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
     addKerberosConfiguration(environment);
     ImmutableList.Builder<String> args = ImmutableList.builder();
     args.add(sparkManager.getAbsolutePath());
     args.add("kill");
     args.add(appId);
-    ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+    ExecutionMode executionMode = PipelineBeanCreator.get()
+        .getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-      String mesosDispatcherURL = Utils.checkNotNull(PipelineBeanCreator.get().getMesosDispatcherURL(pipelineConfiguration), "mesosDispatcherURL");
-      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
-      args.add("--master");
-      args.add(mesosDispatcherURL);
+      addMesosArgs(pipelineConfiguration, environment, args);
     }
-    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory
+        .create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -175,8 +177,13 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   @Override
-  public ClusterPipelineStatus getStatus(SystemProcessFactory systemProcessFactory, File sparkManager, File tempDir,
-                    String appId, PipelineConfiguration pipelineConfiguration) throws TimeoutException, IOException {
+  public ClusterPipelineStatus getStatus(
+      SystemProcessFactory systemProcessFactory,
+      File sparkManager,
+      File tempDir,
+      String appId,
+      PipelineConfiguration pipelineConfiguration
+  ) throws TimeoutException, IOException {
 
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
@@ -185,14 +192,13 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(sparkManager.getAbsolutePath());
     args.add("status");
     args.add(appId);
-    ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
+    ExecutionMode executionMode = PipelineBeanCreator.get()
+        .getExecutionMode(pipelineConfiguration, new ArrayList<Issue>());
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-      String mesosDispatcherURL = Utils.checkNotNull(PipelineBeanCreator.get().getMesosDispatcherURL(pipelineConfiguration), "mesosDispatcherURL");
-      environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
-      args.add("--master");
-      args.add(mesosDispatcherURL);
+      addMesosArgs(pipelineConfiguration, environment, args);
     }
-    SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
+    SystemProcess process = systemProcessFactory
+        .create(ClusterProviderImpl.class.getSimpleName(), tempDir, args.build());
     try {
       process.start(environment);
       if (!process.waitFor(30, TimeUnit.SECONDS)) {
@@ -202,10 +208,10 @@ public class ClusterProviderImpl implements ClusterProvider {
       if (process.exitValue() != 0) {
         logOutput(appId, process);
         throw new IllegalStateException(errorString("Status command for {} failed with exit code {}.", appId,
-          process.exitValue()));
+            process.exitValue()));
       }
       logOutput(appId, process);
-       String status;
+      String status;
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
         status = mesosStatusParser.parseStatus(process.getAllOutput());
       } else {
@@ -217,8 +223,25 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
-  private void rewriteProperties(File sdcPropertiesFile, Map<String, String> sourceConfigs,
-                                 Map<String, String> sourceInfo, String clusterToken) throws IOException{
+  private void addMesosArgs(
+      PipelineConfiguration pipelineConfiguration,
+      Map<String, String> environment,
+      ImmutableList.Builder<String> args
+  ) {
+    String mesosDispatcherURL = Utils.checkNotNull(
+        PipelineBeanCreator.get().getMesosDispatcherURL(pipelineConfiguration), "mesosDispatcherURL"
+    );
+    environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
+    args.add("--master");
+    args.add(mesosDispatcherURL);
+  }
+
+  private void rewriteProperties(
+      File sdcPropertiesFile,
+      Map<String, String> sourceConfigs,
+      Map<String, String> sourceInfo,
+      String clusterToken
+  ) throws IOException {
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
     Properties sdcProperties = new Properties();
@@ -227,34 +250,18 @@ public class ClusterProviderImpl implements ClusterProvider {
       sdcProperties.load(sdcInStream);
       sdcProperties.setProperty(WebServerTask.HTTP_PORT_KEY, "0");
       sdcProperties.setProperty(WebServerTask.HTTPS_PORT_KEY, "-1");
-      sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY,
-        ExecutionMode.SLAVE.name());
+      sdcProperties.setProperty(RuntimeModule.PIPELINE_EXECUTION_MODE_KEY, ExecutionMode.SLAVE.name());
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
-      if(runtimeInfo != null) {
+      sdcProperties.remove(RuntimeModule.DATA_COLLECTOR_BASE_HTTP_URL);
+      if (runtimeInfo != null) {
         String id = String.valueOf(runtimeInfo.getId());
         sdcProperties.setProperty(Constants.SDC_ID, id);
         sdcProperties.setProperty(Constants.PIPELINE_CLUSTER_TOKEN_KEY, clusterToken);
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
 
-      for (Map.Entry<String, String> entry : sourceConfigs.entrySet()) {
-        try {
-          sdcProperties.setProperty(entry.getKey(), entry.getValue());
-        } catch (NullPointerException ex) {
-          // we've had bugs where a key or value was null in the past
-          String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
-          throw new NullPointerException(msg);
-        }
-      }
-      for (Map.Entry<String, String> entry : sourceInfo.entrySet()) {
-        try {
-          sdcProperties.setProperty(entry.getKey(), entry.getValue());
-        } catch (NullPointerException ex) {
-          // we've had bugs where a key or value was null in the past
-          String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
-          throw new NullPointerException(msg);
-        }
-      }
+      checkForNullEntries(sourceConfigs, sdcProperties);
+      checkForNullEntries(sourceInfo, sdcProperties);
 
       sdcOutStream = new FileOutputStream(sdcPropertiesFile);
       sdcProperties.store(sdcOutStream, null);
@@ -273,18 +280,30 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
   }
 
+  private void checkForNullEntries(Map<String, String> configs, Properties properties) {
+    for (Map.Entry<String, String> entry : configs.entrySet()) {
+      try {
+        properties.setProperty(entry.getKey(), entry.getValue());
+      } catch (NullPointerException ex) {
+        // we've had bugs where a key or value was null in the past
+        String msg = Utils.format("Key '{}', value: '{}'", entry.getKey(), entry.getValue());
+        throw new NullPointerException(msg);
+      }
+    }
+  }
+
   private static File getBootstrapJar(File bootstrapDir, final String name) {
     Utils.checkState(bootstrapDir.isDirectory(), Utils.format("SDC bootstrap lib does not exist: {}", bootstrapDir));
     File[] candidates = bootstrapDir.listFiles(new FileFilter() {
       @Override
-      public boolean accept(File canidate) {
-        return canidate.getName().startsWith(name) &&
-          canidate.getName().endsWith(".jar");
+      public boolean accept(File candidate) {
+        final String filename = candidate.getName();
+        return filename.startsWith(name) && filename.endsWith(".jar");
       }
     });
     Utils.checkState(candidates != null, Utils.format("Did not find jar matching {} in {}", name, bootstrapDir));
     Utils.checkState(candidates.length == 1, Utils.format("Did not find exactly one bootstrap jar: {}",
-      Arrays.toString(candidates)));
+        Arrays.toString(candidates)));
     return candidates[0];
   }
 
@@ -305,8 +324,9 @@ public class ClusterProviderImpl implements ClusterProvider {
     doCopyDirectory(srcDir, tempSrcDir);
     return tempSrcDir;
   }
+
   private static void doCopyDirectory(File srcDir, File destDir)
-    throws IOException {
+      throws IOException {
     // code copied from commons-io FileUtils to work around files which cannot be read
     // recurse
     final File[] srcFiles = srcDir.listFiles();
@@ -314,7 +334,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       throw new IOException("Failed to list contents of " + srcDir);
     }
     if (destDir.exists()) {
-      if (destDir.isDirectory() == false) {
+      if (!destDir.isDirectory()) {
         throw new IOException("Destination '" + destDir + "' exists but is not a directory");
       }
     } else {
@@ -322,7 +342,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         throw new IOException("Destination '" + destDir + "' directory cannot be created");
       }
     }
-    if (destDir.canWrite() == false) {
+    if (!destDir.canWrite()) {
       throw new IOException("Destination '" + destDir + "' cannot be written to");
     }
     for (final File srcFile : srcFiles) {
@@ -373,7 +393,7 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   private static List<URL> findJars(String name, URLClassLoader cl, @Nullable String stageClazzName)
-    throws IOException {
+      throws IOException {
     Properties properties = readDataCollectorProperties(cl);
     List<String> blacklist = new ArrayList<>();
     for (Map.Entry entry : properties.entrySet()) {
@@ -405,20 +425,45 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   @Override
-  public ApplicationState startPipeline(SystemProcessFactory systemProcessFactory, File clusterManager, File outputDir,
-                       Map<String, String> environment, Map<String, String> sourceInfo,
-                       PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-                       File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-                       URLClassLoader containerCL, long timeToWaitForFailure, RuleDefinitions ruleDefinitions) throws IOException, TimeoutException {
+  public ApplicationState startPipeline(
+      SystemProcessFactory systemProcessFactory,
+      File clusterManager,
+      File outputDir,
+      Map<String, String> environment,
+      Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration,
+      StageLibraryTask stageLibrary,
+      File etcDir, File resourcesDir,
+      File staticWebDir, File bootstrapDir,
+      URLClassLoader apiCL,
+      URLClassLoader containerCL,
+      long timeToWaitForFailure,
+      RuleDefinitions ruleDefinitions
+  ) throws IOException, TimeoutException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
       String msg = Utils.format("Could not create staging directory: {}", stagingDir);
       throw new IllegalStateException(msg);
     }
     try {
-      return startPipelineInternal(systemProcessFactory, clusterManager, outputDir, environment, sourceInfo,
-        pipelineConfiguration, stageLibrary, etcDir, resourcesDir, staticWebDir, bootstrapDir, apiCL, containerCL,
-        timeToWaitForFailure, stagingDir, ruleDefinitions);
+      return startPipelineInternal(
+          systemProcessFactory,
+          clusterManager,
+          outputDir,
+          environment,
+          sourceInfo,
+          pipelineConfiguration,
+          stageLibrary,
+          etcDir,
+          resourcesDir,
+          staticWebDir,
+          bootstrapDir,
+          apiCL,
+          containerCL,
+          timeToWaitForFailure,
+          stagingDir,
+          ruleDefinitions
+      );
     } finally {
       // in testing mode the staging dir is used by yarn
       // tasks and thus cannot be deleted
@@ -429,15 +474,28 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
 
-  private ApplicationState  startPipelineInternal(SystemProcessFactory systemProcessFactory, File clusterManager,
-      File outputDir, Map<String, String> environment, Map<String, String> sourceInfo,
-      PipelineConfiguration pipelineConfiguration, StageLibraryTask stageLibrary,
-      File etcDir, File resourcesDir, File staticWebDir, File bootstrapDir, URLClassLoader apiCL,
-      URLClassLoader containerCL, long timeToWaitForFailure, File stagingDir, RuleDefinitions ruleDefinitions) throws IOException, TimeoutException {
+  private ApplicationState startPipelineInternal(
+      SystemProcessFactory systemProcessFactory,
+      File clusterManager,
+      File outputDir,
+      Map<String, String> environment,
+      Map<String, String> sourceInfo,
+      PipelineConfiguration pipelineConfiguration,
+      StageLibraryTask stageLibrary,
+      File etcDir,
+      File resourcesDir,
+      File staticWebDir,
+      File bootstrapDir,
+      URLClassLoader apiCL,
+      URLClassLoader containerCL,
+      long timeToWaitForFailure,
+      File stagingDir,
+      RuleDefinitions ruleDefinitions
+  ) throws IOException, TimeoutException {
     environment = Maps.newHashMap(environment);
     // create libs.tar.gz file for pipeline
-    Map<String, List<URL> > streamsetsLibsCl = new HashMap<>();
-    Map<String, List<URL> > userLibsCL = new HashMap<>();
+    Map<String, List<URL>> streamsetsLibsCl = new HashMap<>();
+    Map<String, List<URL>> userLibsCL = new HashMap<>();
     Map<String, String> sourceConfigs = new HashMap<>();
     ImmutableList.Builder<StageConfiguration> pipelineConfigurations = ImmutableList.builder();
     // order is important here as we don't want error stage
@@ -456,8 +514,7 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     ExecutionMode executionMode = ExecutionMode.STANDALONE;
     for (StageConfiguration stageConf : pipelineConfigurations.build()) {
-      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                     false);
+      StageDefinition stageDef = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(), false);
       if (stageConf.getInputLanes().isEmpty()) {
         for (Config conf : stageConf.getConfiguration()) {
           if (conf.getValue() != null) {
@@ -471,17 +528,19 @@ public class ClusterProviderImpl implements ClusterProvider {
                 if (canCastToString(first)) {
                   sourceConfigs.put(conf.getName(), Joiner.on(",").join(values));
                 } else if (first instanceof Map) {
-                  addToSourceConfigs(sourceConfigs, (List<Map<String,Object>>)values);
+                  addToSourceConfigs(sourceConfigs, (List<Map<String, Object>>) values);
                 } else {
-                  LOG.info("List is of type '{}' which cannot be converted to property value.", first.getClass()
-                    .getName());
+                  LOG.info(
+                      "List is of type '{}' which cannot be converted to property value.",
+                      first.getClass().getName()
+                  );
                 }
               }
             } else if (canCastToString(conf.getValue())) {
               LOG.debug("Adding to source configs " + conf.getName() + "=" + value);
               sourceConfigs.put(conf.getName(), String.valueOf(value));
             } else if (value instanceof Enum) {
-              value = ((Enum)value).name();
+              value = ((Enum) value).name();
               LOG.debug("Adding to source configs " + conf.getName() + "=" + value);
               sourceConfigs.put(conf.getName(), String.valueOf(value));
             } else {
@@ -508,8 +567,9 @@ public class ClusterProviderImpl implements ClusterProvider {
       String type = StageLibraryUtils.getLibraryType(stageDef.getStageClassLoader());
       String name = StageLibraryUtils.getLibraryName(stageDef.getStageClassLoader());
       if (ClusterModeConstants.STREAMSETS_LIBS.equals(type)) {
-        streamsetsLibsCl.put(name, findJars(name, (URLClassLoader)stageDef.getStageClassLoader(),
-          stageDef.getClassName()));
+        streamsetsLibsCl.put(
+            name, findJars(name, (URLClassLoader) stageDef.getStageClassLoader(), stageDef.getClassName())
+        );
       } else if (ClusterModeConstants.USER_LIBS.equals(type)) {
         userLibsCL.put(name, findJars(name, (URLClassLoader) stageDef.getStageClassLoader(), stageDef.getClassName()));
       } else {
@@ -525,8 +585,14 @@ public class ClusterProviderImpl implements ClusterProvider {
     Utils.checkState(staticWebDir.isDirectory(), Utils.format("Expected '{}' to be a directory", staticWebDir));
     File libsTarGz = new File(stagingDir, "libs.tar.gz");
     try {
-      TarFileCreator.createLibsTarGz(findJars("api", apiCL, null), findJars("container", containerCL, null),
-        streamsetsLibsCl, userLibsCL, staticWebDir, libsTarGz);
+      TarFileCreator.createLibsTarGz(
+          findJars("api", apiCL, null),
+          findJars("container", containerCL, null),
+          streamsetsLibsCl,
+          userLibsCL,
+          staticWebDir,
+          libsTarGz
+      );
     } catch (Exception ex) {
       String msg = errorString("Serializing classpath: '{}'", ex);
       throw new RuntimeException(msg, ex);
@@ -543,13 +609,17 @@ public class ClusterProviderImpl implements ClusterProvider {
     File sdcPropertiesFile;
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
-      InputStream clusterLog4jProperties = null;
+      InputStream clusterLog4jProperties;
       if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-        clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
-          "Cluster Log4J Properties");
+        clusterLog4jProperties = Utils.checkNotNull(
+            getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
+            "Cluster Log4J Properties"
+        );
         File log4jProperty = new File(etcDir, runtimeInfo.getLog4jPropertiesFileName());
         if (!log4jProperty.isFile()) {
-          throw new IllegalStateException(Utils.format("Log4j config file doesn't exist: '{}'", log4jProperty.getAbsolutePath()));
+          throw new IllegalStateException(
+              Utils.format("Log4j config file doesn't exist: '{}'", log4jProperty.getAbsolutePath())
+          );
         }
         LOG.info("Copying log4j properties for mesos cluster mode");
         FileUtils.copyInputStreamToFile(clusterLog4jProperties,
@@ -567,7 +637,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       }
       File pipelineFile = new File(pipelineDir, FilePipelineStoreTask.PIPELINE_FILE);
       ObjectMapperFactory.getOneLine().writeValue(pipelineFile,
-        BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
+          BeanHelper.wrapPipelineConfiguration(pipelineConfiguration));
       File infoFile = new File(pipelineDir, FilePipelineStoreTask.INFO_FILE);
       ObjectMapperFactory.getOneLine().writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineInfo));
       Utils.checkNotNull(ruleDefinitions, "ruleDefinitions");
@@ -581,7 +651,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       throw new RuntimeException(msg, ex);
     }
     File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
-    File clusterBootstrapJar = null;
+    File clusterBootstrapJar;
     if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "mesos"),
           "streamsets-datacollector-mesos-bootstrap");
@@ -593,15 +663,17 @@ public class ClusterProviderImpl implements ClusterProvider {
     InputStream clusterLog4jProperties = null;
     try {
       if (executionMode == ExecutionMode.CLUSTER_BATCH) {
-        clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-mr-log4j.properties"),
-          "Cluster Log4J Properties");
+        clusterLog4jProperties = Utils.checkNotNull(
+            getClass().getResourceAsStream("/cluster-mr-log4j.properties"), "Cluster Log4J Properties"
+        );
       } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
-        clusterLog4jProperties = Utils.checkNotNull(getClass().getResourceAsStream("/cluster-spark-log4j.properties"),
-          "Cluster Log4J Properties");
+        clusterLog4jProperties =
+            Utils.checkNotNull(
+                getClass().getResourceAsStream("/cluster-spark-log4j.properties"), "Cluster Log4J Properties"
+            );
       }
       if (clusterLog4jProperties != null) {
-        FileUtils.copyInputStreamToFile(clusterLog4jProperties,
-            log4jProperties);
+        FileUtils.copyInputStreamToFile(clusterLog4jProperties, log4jProperties);
       }
     } catch (IOException ex) {
       String msg = errorString("copying log4j configuration: {}", ex);
@@ -622,17 +694,35 @@ public class ClusterProviderImpl implements ClusterProvider {
     if (executionMode == ExecutionMode.CLUSTER_BATCH) {
       LOG.info("Submitting MapReduce Job");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MAPREDUCE);
-      args = generateMRArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
-        config.clusterSlaveJavaOpts, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
-        resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
-        sdcPropertiesFile.getAbsolutePath(), clusterBootstrapJar.getAbsolutePath(), jarsToShip);
+      args = generateMRArgs(
+          clusterManager.getAbsolutePath(),
+          String.valueOf(config.clusterSlaveMemory),
+          config.clusterSlaveJavaOpts,
+          libsTarGz.getAbsolutePath(),
+          etcTarGz.getAbsolutePath(),
+          resourcesTarGz.getAbsolutePath(),
+          log4jProperties.getAbsolutePath(),
+          bootstrapJar.getAbsolutePath(),
+          sdcPropertiesFile.getAbsolutePath(),
+          clusterBootstrapJar.getAbsolutePath(),
+          jarsToShip
+      );
     } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
       LOG.info("Submitting Spark Job on Yarn");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);
-      args = generateSparkArgs(clusterManager.getAbsolutePath(), String.valueOf(config.clusterSlaveMemory),
-        config.clusterSlaveJavaOpts, numExecutors, libsTarGz.getAbsolutePath(), etcTarGz.getAbsolutePath(),
-        resourcesTarGz.getAbsolutePath(), log4jProperties.getAbsolutePath(), bootstrapJar.getAbsolutePath(),
-        jarsToShip, clusterBootstrapJar.getAbsolutePath());
+      args = generateSparkArgs(
+          clusterManager.getAbsolutePath(),
+          String.valueOf(config.clusterSlaveMemory),
+          config.clusterSlaveJavaOpts,
+          numExecutors,
+          libsTarGz.getAbsolutePath(),
+          etcTarGz.getAbsolutePath(),
+          resourcesTarGz.getAbsolutePath(),
+          log4jProperties.getAbsolutePath(),
+          bootstrapJar.getAbsolutePath(),
+          jarsToShip,
+          clusterBootstrapJar.getAbsolutePath()
+      );
     } else if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
       LOG.info("Submitting Spark Job on Mesos");
       environment.put(CLUSTER_TYPE, CLUSTER_TYPE_MESOS);
@@ -651,7 +741,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       String mesosURL = runtimeInfo.getBaseHttpUrl() + "/mesos/" + dirUUID + "/" + clusterBootstrapJar.getName();
       args = generateMesosArgs(clusterManager.getAbsolutePath(), config.mesosDispatcherURL, mesosURL);
     } else {
-      throw new IllegalStateException(Utils.format("Incorrect execution mode: {}" , executionMode));
+      throw new IllegalStateException(Utils.format("Incorrect execution mode: {}", executionMode));
     }
     SystemProcess process = systemProcessFactory.create(ClusterProviderImpl.class.getSimpleName(), outputDir, args);
     LOG.info("Starting: " + process);
@@ -706,7 +796,7 @@ public class ClusterProviderImpl implements ClusterProvider {
         if (elapsedSeconds > timeToWaitForFailure) {
           logOutput("unknown", process);
           String msg = Utils.format("Timed out after waiting {} seconds for for cluster application to start. " +
-            "Submit command {} alive.", elapsedSeconds, (process.isAlive() ? "is" : "is not"));
+              "Submit command {} alive.", elapsedSeconds, (process.isAlive() ? "is" : "is not"));
           if (hostingDir != null) {
             FileUtils.deleteQuietly(hostingDir);
           }
@@ -751,20 +841,34 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add("mapreduce.job.log4j-properties-file=" + log4jProperties);
     args.add("-libjars");
     StringBuilder libJarString = new StringBuilder(bootstrapJar);
-    for (String jarToShip: jarsToShip) {
+    for (String jarToShip : jarsToShip) {
       libJarString.append(",").append(jarToShip);
     }
     args.add(libJarString.toString());
     args.add(sdcPropertiesFile);
-    args.add(Joiner.on(" ").join(String.format("-Xmx%sm", slaveMemory), javaOpts,
-      "-javaagent:./" + (new File(bootstrapJar)).getName()));
+    args.add(
+        Joiner.on(" ").join(
+            String.format("-Xmx%sm", slaveMemory),
+            javaOpts,
+            "-javaagent:./" + (new File(bootstrapJar)).getName()
+        )
+    );
     return args;
   }
 
-  private List<String> generateSparkArgs(String clusterManager, String slaveMemory, String javaOpts,
-                             String numExecutors, String libsTarGz, String etcTarGz, String resourcesTarGz,
-                             String log4jProperties, String bootstrapJar, List<String> jarsToShip,
-                             String clusterBootstrapJar) {
+  private List<String> generateSparkArgs(
+      String clusterManager,
+      String slaveMemory,
+      String javaOpts,
+      String numExecutors,
+      String libsTarGz,
+      String etcTarGz,
+      String resourcesTarGz,
+      String log4jProperties,
+      String bootstrapJar,
+      List<String> jarsToShip,
+      String clusterBootstrapJar
+  ) {
     List<String> args = new ArrayList<>();
     args.add(clusterManager);
     args.add("start");
@@ -790,14 +894,15 @@ public class ClusterProviderImpl implements ClusterProvider {
     args.add(log4jProperties);
     args.add("--jars");
     StringBuilder libJarString = new StringBuilder(bootstrapJar);
-    for (String jarToShip: jarsToShip) {
+    for (String jarToShip : jarsToShip) {
       libJarString.append(",").append(jarToShip);
     }
     args.add(libJarString.toString());
     // use our javaagent and java opt configs
     args.add("--conf");
-    args.add("spark.executor.extraJavaOptions=" + Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(),
-      javaOpts));
+    args.add("spark.executor.extraJavaOptions=" +
+        Joiner.on(" ").join("-javaagent:./" + (new File(bootstrapJar)).getName(), javaOpts)
+    );
     // main class
     args.add("--class");
     args.add("com.streamsets.pipeline.BootstrapClusterStreaming");
@@ -812,14 +917,18 @@ public class ClusterProviderImpl implements ClusterProvider {
       for (Map.Entry<String, Object> mapEntry : map.entrySet()) {
         String mapKey = mapEntry.getKey();
         Object mapValue = mapEntry.getValue();
-        if (mapKey.equals("key")) {
-          // Assuming the key is always string
-          confKey = String.valueOf(mapValue);
-        } else if (mapKey.equals("value")) {
-          confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
-        } else {
-          confKey = mapKey;
-          confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
+        switch (mapKey) {
+          case "key":
+            // Assuming the key is always string
+            confKey = String.valueOf(mapValue);
+            break;
+          case "value":
+            confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
+            break;
+          default:
+            confKey = mapKey;
+            confValue = canCastToString(mapValue) ? String.valueOf(mapValue) : null;
+            break;
         }
         if (confKey != null && confValue != null) {
           LOG.debug("Adding to source configs " + confKey + "=" + confValue);
@@ -830,15 +939,12 @@ public class ClusterProviderImpl implements ClusterProvider {
   }
 
   private boolean canCastToString(Object value) {
-    if (value instanceof String || value instanceof Number || value.getClass().isPrimitive()
-      || value instanceof Boolean) {
-      return true;
-    }
-    return false;
+    return value instanceof String || value instanceof Number || value.getClass().isPrimitive() ||
+        value instanceof Boolean;
   }
 
   private void checkNumExecutors(String numExecutorsString) {
-    Utils.checkNotNull(numExecutorsString,"Number of executors not found");
+    Utils.checkNotNull(numExecutorsString, "Number of executors not found");
     int numExecutors;
     try {
       numExecutors = Integer.parseInt(numExecutorsString);
