@@ -41,7 +41,7 @@
     <netty.version>4.0.27.Final</netty.version>
     <xerces.version>2.11.0</xerces.version>
     <bouncycastle.version>1.46</bouncycastle.version>
-    <jetty.version>9.2.3.v20140905</jetty.version>
+    <jetty.version>9.2.14.v20151106</jetty.version>
     <snappy.version>0.4</snappy.version>
   </properties>
 

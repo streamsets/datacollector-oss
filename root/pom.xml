@@ -60,7 +60,7 @@
     <hk2-api.version>2.3.0-b10</hk2-api.version>
     <jaxrpc.version>2.0.1</jaxrpc.version>
     <servlet.version>3.1.0</servlet.version>
-    <jetty.version>9.2.3.v20140905</jetty.version>
+    <jetty.version>9.2.14.v20151106</jetty.version>
     <javassist.version>3.19.0-GA</javassist.version>
     <commons-codec.version>1.9</commons-codec.version>
     <commons-io.version>2.4</commons-io.version>
