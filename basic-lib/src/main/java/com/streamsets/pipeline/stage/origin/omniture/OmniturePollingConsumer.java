@@ -118,13 +118,24 @@ class OmniturePollingConsumer implements Runnable {
         queueResource.getUri().toURL().toString(), reportDescription);
     final Future<Response> responseFuture = asyncInvoker.post(Entity.json(reportDescription));
     Response response = responseFuture.get(responseTimeoutMillis, TimeUnit.MILLISECONDS);
+    if (response == null) {
+      LOG.error("Failed to get response using URL {}", queueResource.getUri().toURL().toString());
+      throw new StageException(Errors.OMNITURE_01, "HTTP response was null");
+    }
+    LOG.debug("Received response: status {}", response.getStatus());
 
     ObjectMapper mapper = new ObjectMapper();
     String json = response.readEntity(String.class);
+    LOG.trace("Response JSON: {}", json);
     JsonNode root = mapper.readTree(json);
 
+    if (root == null) {
+      LOG.error("Invalid JSON in response: {}", json);
+      throw new StageException(Errors.OMNITURE_01, json);
+    }
+
     if (root.has("error")) {
-      throw new StageException(Errors.OMNITURE_02,
+      throw new StageException(Errors.OMNITURE_01,
           root.get("error").get("error_description").asText());
     }
 
