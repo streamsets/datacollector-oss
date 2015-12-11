@@ -38,10 +38,9 @@ public class Kafka09ConsumerFactory extends SdcKafkaConsumerFactory {
   @Override
   public SdcKafkaConsumer create() {
     return new KafkaConsumer09(
-        settings.getZookeeperConnect(),
+        settings.getBootstrapServers(),
         settings.getTopic(),
         settings.getConsumerGroup(),
-        settings.getMaxWaitTime(),
         settings.getKafkaConsumerConfigs(),
         settings.getContext()
     );

@@ -24,7 +24,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -36,6 +37,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,21 +51,22 @@ public class TestKafkaTargetUnavailability {
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC = "TestKafkaTargetUnavailability";
   private static KafkaServer kafkaServer;
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @Before
-  public void setUp() {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
-    kafkaServer = KafkaTestUtil.getKafkaServers().get(0);
+  public void setUp() throws IOException {
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
+    kafkaServer = sdcKafkaTestUtil.getKafkaServers().get(0);
     // create topic
-    KafkaTestUtil.createTopic(TOPIC, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC, PARTITIONS, REPLICATION_FACTOR);
 
-    kafkaStreams = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC, PARTITIONS);
+    kafkaStreams = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC, PARTITIONS);
   }
 
   @After
   public void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
   }
 
   //The following tests are commented out as they take a long time to complete ~ 10 seconds
@@ -88,7 +91,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC,
         "0",
         null,
@@ -108,7 +111,7 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
     kafkaServer.shutdown();
 
@@ -142,7 +145,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC,
         "0",
         null,
@@ -162,7 +165,7 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
     kafkaServer.shutdown();
 
@@ -196,7 +199,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC,
         "0",
         null,
@@ -216,7 +219,7 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
     kafkaServer.shutdown();
 
@@ -251,7 +254,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC,
         "0",
         null,
@@ -271,7 +274,7 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
     kafkaServer.shutdown();
 
@@ -306,7 +309,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         null,
@@ -326,7 +329,7 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
     kafkaServer.shutdown();
 
@@ -349,7 +352,7 @@ public class TestKafkaTargetUnavailability {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC,
         "0",
         null,
@@ -367,9 +370,9 @@ public class TestKafkaTargetUnavailability {
       .build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
 
-    KafkaTestUtil.getZkServer().shutdown();
+    sdcKafkaTestUtil.shutdown();
     Thread.sleep(500);
     try {
       targetRunner.runWrite(logRecords);

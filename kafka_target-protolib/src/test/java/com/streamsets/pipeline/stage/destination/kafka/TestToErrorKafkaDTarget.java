@@ -23,7 +23,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -34,6 +35,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,20 +47,21 @@ public class TestToErrorKafkaDTarget {
   private static final int PARTITIONS = 1;
   private static final int REPLICATION_FACTOR = 1;
   private static final String TOPIC1 = "TestToErrorKafkaDTarget1";
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @BeforeClass
-  public static void setUp() {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
+  public static void setUp() throws IOException {
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
     // create topic
-    KafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
 
-    kafkaStreams1 = KafkaTestUtil.createKafkaStream(KafkaTestUtil.getZkServer().connectString(), TOPIC1, PARTITIONS);
+    kafkaStreams1 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC1, PARTITIONS);
   }
 
   @AfterClass
   public static void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
   }
 
   @Test
@@ -67,7 +70,7 @@ public class TestToErrorKafkaDTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-      KafkaTestUtil.getMetadataBrokerURI(),
+      sdcKafkaTestUtil.getMetadataBrokerURI(),
       TOPIC1,
       "0",
       null,
@@ -84,7 +87,7 @@ public class TestToErrorKafkaDTarget {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createEmptyLogRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createEmptyLogRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 

@@ -26,6 +26,7 @@ import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
@@ -42,18 +43,12 @@ public class KafkaProducer09 implements SdcKafkaProducer {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaProducer09.class);
 
-  private static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  private static final String KEY_SERIALIZER_KEY = "key.serializer";
-  private static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringSerializer";
-  private static final String VALUE_SERIALIZER_KEY = "value.serializer";
-  private static final String VALUE_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArraySerializer";
-  private static final String REQUEST_REQUIRED_ACKS_KEY = "acks";
-  private static final String REQUEST_REQUIRED_ACKS_DEFAULT = "1";
-
-  private static final String PARTITIONER_CLASS_KEY = "partitioner.class";
-  private static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RandomPartitioner";
-  private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
-  private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
+  public static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringSerializer";
+  public static final String VALUE_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArraySerializer";
+  public static final String ACKS_DEFAULT = "1";
+  public static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RandomPartitioner";
+  public static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
+  public static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
 
   private final String metadataBrokerList;
   private final Map<String, Object> kafkaProducerConfigs;
@@ -77,19 +72,17 @@ public class KafkaProducer09 implements SdcKafkaProducer {
     Properties props = new Properties();
 
     // bootstrap servers
-    props.put(BOOTSTRAP_SERVERS_KEY, metadataBrokerList);
-
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, metadataBrokerList);
     // key and value serializers
-    props.put(KEY_SERIALIZER_KEY, KEY_SERIALIZER_DEFAULT);
-    props.put(VALUE_SERIALIZER_KEY, VALUE_SERIALIZER_DEFAULT);
-
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, KEY_SERIALIZER_DEFAULT);
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VALUE_SERIALIZER_DEFAULT);
     // request.required.acks
-    props.put(REQUEST_REQUIRED_ACKS_KEY, REQUEST_REQUIRED_ACKS_DEFAULT);
+    props.put(ProducerConfig.ACKS_CONFIG, ACKS_DEFAULT);
 
     // partitioner.class
     configurePartitionStrategy(props, partitionStrategy);
 
-    addUserConfiguredProperties(props);
+    addUserConfiguredProperties(kafkaProducerConfigs, props);
 
     producer = new KafkaProducer<>(props);
   }
@@ -137,25 +130,28 @@ public class KafkaProducer09 implements SdcKafkaProducer {
     return Kafka09Constants.KAFKA_VERSION;
   }
 
-  private void addUserConfiguredProperties(Properties props) {
-    //The following options, if specified, are ignored : "bootstrap.servers"
-    if (kafkaProducerConfigs != null && !kafkaProducerConfigs.isEmpty()) {
-      kafkaProducerConfigs.remove(BOOTSTRAP_SERVERS_KEY);
-      for (Map.Entry<String, Object> producerConfig : kafkaProducerConfigs.entrySet()) {
-        props.put(producerConfig.getKey(), producerConfig.getValue());
-      }
+  private void configurePartitionStrategy(Properties props, PartitionStrategy partitionStrategy) {
+    if (partitionStrategy == PartitionStrategy.RANDOM) {
+      props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, RANDOM_PARTITIONER_CLASS);
+    } else if (partitionStrategy == PartitionStrategy.ROUND_ROBIN) {
+      props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, ROUND_ROBIN_PARTITIONER_CLASS);
+    } else if (partitionStrategy == PartitionStrategy.EXPRESSION) {
+      props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, EXPRESSION_PARTITIONER_CLASS);
+    } else if (partitionStrategy == PartitionStrategy.DEFAULT) {
+      // org.apache.kafka.clients.producer.internals.DefaultPartitioner
     }
   }
 
-  private void configurePartitionStrategy(Properties props, PartitionStrategy partitionStrategy) {
-    if (partitionStrategy == PartitionStrategy.RANDOM) {
-      props.put(PARTITIONER_CLASS_KEY, RANDOM_PARTITIONER_CLASS);
-    } else if (partitionStrategy == PartitionStrategy.ROUND_ROBIN) {
-      props.put(PARTITIONER_CLASS_KEY, ROUND_ROBIN_PARTITIONER_CLASS);
-    } else if (partitionStrategy == PartitionStrategy.EXPRESSION) {
-      props.put(PARTITIONER_CLASS_KEY, EXPRESSION_PARTITIONER_CLASS);
-    } else if (partitionStrategy == PartitionStrategy.DEFAULT) {
-      // org.apache.kafka.clients.producer.internals.DefaultPartitioner
+  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+    //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
+    if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
+      kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
+      kafkaClientConfigs.remove(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG);
+      kafkaClientConfigs.remove(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG);
+
+      for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
+        props.put(producerConfig.getKey(), producerConfig.getValue());
+      }
     }
   }
 

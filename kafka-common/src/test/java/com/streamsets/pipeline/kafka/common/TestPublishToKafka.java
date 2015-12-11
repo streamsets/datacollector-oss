@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.kafka.impl;
+package com.streamsets.pipeline.kafka.common;
 
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import kafka.javaapi.producer.Producer;

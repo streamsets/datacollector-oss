@@ -21,7 +21,8 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
@@ -29,6 +30,7 @@ import kafka.server.KafkaServer;
 import org.junit.After;
 import org.junit.Before;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TestKafkaSourceUnavailability {
@@ -39,26 +41,27 @@ public class TestKafkaSourceUnavailability {
   private static final int REPLICATION_FACTOR = 1;
   private static final String CONSUMER_GROUP = "SDC";
   private static KafkaServer kafkaServer;
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @Before
-  public void setUp() {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
-    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
-    kafkaServer = KafkaTestUtil.getKafkaServers().get(0);
+  public void setUp() throws IOException {
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
+    producer = sdcKafkaTestUtil.createProducer(sdcKafkaTestUtil.getMetadataBrokerURI(), true);
+    kafkaServer = sdcKafkaTestUtil.getKafkaServers().get(0);
   }
 
   @After
   public void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
   }
 
   //The test is commented out as they take a long time to complete ~ 30 seconds
   //@Test(expected = StageException.class)
   public void testKafkaServerDown() throws StageException {
 
-    KafkaTestUtil.createTopic("testKafkaServerDown", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testKafkaServerDown",
+    sdcKafkaTestUtil.createTopic("testKafkaServerDown", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testKafkaServerDown",
       String.valueOf(0), 9);
     for (KeyedMessage<String, String> d : data) {
       producer.send(d);
@@ -68,7 +71,7 @@ public class TestKafkaSourceUnavailability {
       .addOutputLane("lane")
       .addConfiguration("topic", "testKafkaServerDown")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", KafkaTestUtil.getZkConnect())
+      .addConfiguration("zookeeperConnect", sdcKafkaTestUtil.getZkConnect())
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 300000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
@@ -84,8 +87,8 @@ public class TestKafkaSourceUnavailability {
   //@Test(expected = StageException.class)
   public void testZookeeperDown() throws StageException {
 
-    KafkaTestUtil.createTopic("testZookeeperDown", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testZookeeperDown",
+    sdcKafkaTestUtil.createTopic("testZookeeperDown", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testZookeeperDown",
       String.valueOf(0), 9);
     for (KeyedMessage<String, String> d : data) {
       producer.send(d);
@@ -95,7 +98,7 @@ public class TestKafkaSourceUnavailability {
       .addOutputLane("lane")
       .addConfiguration("topic", "testZookeeperDown")
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", KafkaTestUtil.getZkConnect())
+      .addConfiguration("zookeeperConnect", sdcKafkaTestUtil.getZkConnect())
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 1000)
       .addConfiguration("dataFormat", DataFormat.TEXT)
@@ -103,7 +106,7 @@ public class TestKafkaSourceUnavailability {
       .build();
 
     sourceRunner.runInit();
-    KafkaTestUtil.getZkServer().shutdown();
+    sdcKafkaTestUtil.shutdown();
     sourceRunner.runProduce(null, 5);
   }
 }

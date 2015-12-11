@@ -26,21 +26,24 @@ import java.util.Map;
 public class ConsumerFactorySettings {
 
   private final String zookeeperConnect;
+  private final String bootstrapServers;
   private final String topic;
   private final int maxWaitTime;
   private final Source.Context context;
-  private final Map<String, String> kafkaConsumerConfigs;
+  private final Map<String, Object> kafkaConsumerConfigs;
   private final String consumerGroup;
 
   public ConsumerFactorySettings(
     String zookeeperConnect,
+    String bootstrapServers,
     String topic,
     int maxWaitTime,
     Source.Context context,
-    Map<String, String> kafkaConsumerConfigs,
+    Map<String, Object> kafkaConsumerConfigs,
     String consumerGroup
   ) {
     this.zookeeperConnect = zookeeperConnect;
+    this.bootstrapServers = bootstrapServers;
     this.topic = topic;
     this.maxWaitTime = maxWaitTime;
     this.context = context;
@@ -48,8 +51,8 @@ public class ConsumerFactorySettings {
     this.consumerGroup = consumerGroup;
   }
 
-  public String getZookeeperConnect() {
-    return zookeeperConnect;
+  public String getBootstrapServers() {
+    return bootstrapServers;
   }
 
   public String getTopic() {
@@ -64,11 +67,15 @@ public class ConsumerFactorySettings {
     return context;
   }
 
-  public Map<String, String> getKafkaConsumerConfigs() {
+  public Map<String, Object> getKafkaConsumerConfigs() {
     return kafkaConsumerConfigs;
   }
 
   public String getConsumerGroup() {
     return consumerGroup;
+  }
+
+  public String getZookeeperConnect() {
+    return zookeeperConnect;
   }
 }

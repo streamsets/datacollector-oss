@@ -73,7 +73,7 @@ public class SourceArguments {
   protected final int maxStackTraceLines;
   protected final OnParseError onParseError;
   protected final int maxBatchSize;
-  protected final Map<String, String> kafkaConsumerConfigs;
+  protected final Map<String, Object> kafkaConsumerConfigs;
   protected final boolean schemaInMessage;
   protected final String avroSchema;
   protected final int binaryMaxObjectLen;
@@ -127,7 +127,7 @@ public class SourceArguments {
     this.onParseError = onParseError;
     this.maxBatchSize = maxBatchSize;
     this.kafkaConsumerConfigs = Maps.newHashMap(kafkaConsumerConfigs == null ?
-      Collections.<String, String>emptyMap() : kafkaConsumerConfigs);
+      Collections.<String, Object>emptyMap() : kafkaConsumerConfigs);
     this.schemaInMessage = schemaInMessage;
     this.avroSchema = avroSchema;
     this.binaryMaxObjectLen = binaryMaxObjectLen;
@@ -259,7 +259,7 @@ public class SourceArguments {
     return maxBatchSize;
   }
 
-  public Map<String, String> getKafkaConsumerConfigs() {
+  public Map<String, Object> getKafkaConsumerConfigs() {
     return kafkaConsumerConfigs;
   }
 

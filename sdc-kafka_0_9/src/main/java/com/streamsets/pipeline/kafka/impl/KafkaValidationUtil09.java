@@ -36,9 +36,11 @@ import java.util.Properties;
 
 public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
 
+  private static final String KAFKA_VERSION = "0.9";
+
   @Override
   public String getVersion() {
-    return Kafka09Constants.KAFKA_VERSION;
+    return KAFKA_VERSION;
   }
 
   public int getPartitionCount(

@@ -70,7 +70,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected final String zookeeperConnect;
   protected final String consumerGroup;
   protected final int maxBatchSize;
-  protected final Map<String, String> kafkaConsumerConfigs;
+  protected final Map<String, Object> kafkaConsumerConfigs;
   protected final String topic;
   protected final DataFormat dataFormat;
   protected final String charset;
@@ -278,6 +278,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
      if(kafkaBrokers != null && !kafkaBrokers.isEmpty() && topic !=null && !topic.isEmpty()) {
        ConsumerFactorySettings settings = new ConsumerFactorySettings(
           zookeeperConnect,
+          metadataBrokerList,
           topic,
           maxWaitTime,
           getContext(),

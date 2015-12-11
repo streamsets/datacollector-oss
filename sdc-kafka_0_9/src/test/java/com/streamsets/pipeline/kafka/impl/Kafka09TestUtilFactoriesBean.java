@@ -19,13 +19,13 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-public enum DataType {
-  TEXT,
-  JSON,
-  CSV,
-  XML,
-  LOG,
-  LOG_STACK_TRACE
-  ;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
+import com.streamsets.pipeline.kafka.common.TestUtilFactoriesBean;
 
+public class Kafka09TestUtilFactoriesBean extends TestUtilFactoriesBean {
+
+  @Override
+  public SdcKafkaTestUtilFactory createSdcKafkaTestUtilFactory() {
+    return new Kafka09TestUtilFactory();
+  }
 }

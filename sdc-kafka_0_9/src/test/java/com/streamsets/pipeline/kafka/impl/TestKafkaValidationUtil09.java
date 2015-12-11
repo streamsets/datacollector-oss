@@ -51,6 +51,7 @@ public class TestKafkaValidationUtil09 {
   private String zkConnect;
   private ZkUtils zkUtils;
   private KafkaServer kafkaServer;
+  private SdcKafkaValidationUtil sdcKafkaValidationUtil;
 
   @Before
   public void setUp() throws IOException {
@@ -65,6 +66,7 @@ public class TestKafkaValidationUtil09 {
 
     port = TestUtil.getFreePort();
     kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+    sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
   }
 
   @After
@@ -75,7 +77,6 @@ public class TestKafkaValidationUtil09 {
 
   @Test
   public void testKafkaProducer09Version() throws IOException {
-    SdcKafkaValidationUtil sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
     Assert.assertEquals(Kafka09Constants.KAFKA_VERSION, sdcKafkaValidationUtil.getVersion());
   }
 
@@ -90,7 +91,6 @@ public class TestKafkaValidationUtil09 {
     createTopic(zkUtils, topic2, 2, kafkaServer);
     createTopic(zkUtils, topic3, 3, kafkaServer);
 
-    SdcKafkaValidationUtil sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
     Assert.assertEquals(1, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic1, 1, 2000));
     Assert.assertEquals(2, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic2, 1, 2000));
     Assert.assertEquals(3, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic3, 1, 2000));
@@ -117,7 +117,6 @@ public class TestKafkaValidationUtil09 {
 
     createTopic(zkUtils, topic1, 1, kafkaServer);
 
-    SdcKafkaValidationUtil sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
     Source.Context sourceContext = ContextInfoCreator.createSourceContext(
         "s",
         false,

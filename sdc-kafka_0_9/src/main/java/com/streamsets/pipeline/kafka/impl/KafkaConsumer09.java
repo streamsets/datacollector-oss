@@ -22,130 +22,147 @@ package com.streamsets.pipeline.kafka.impl;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import kafka.consumer.Consumer;
-import kafka.consumer.ConsumerConfig;
-import kafka.consumer.ConsumerIterator;
-import kafka.consumer.ConsumerTimeoutException;
-import kafka.consumer.KafkaStream;
-import kafka.javaapi.consumer.ConsumerConnector;
-import kafka.message.MessageAndMetadata;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.errors.AuthorizationException;
+import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class KafkaConsumer09 implements SdcKafkaConsumer {
 
-  public static final String CONSUMER_TIMEOUT_KEY = "consumer.timeout.ms";
-  private static final String SOCKET_TIMEOUT_KEY = "socket.timeout.ms";
-  private static final String SOCKET_TIMEOUT_DEFAULT = "30000";
-  public static final String AUTO_COMMIT_ENABLED_KEY = "auto.commit.enable";
-  public static final String AUTO_COMMIT_ENABLED_DEFAULT = "false";
-  public static final String ZOOKEEPER_CONNECT_KEY = "zookeeper.connect";
-  public static final String GROUP_ID_KEY = "group.id";
-  private static final String FETCH_MAX_WAIT_KEY = "fetch.wait.max.ms";
-  private static final String FETCH_MAX_WAIT_DEFAULT = "1000";
-  private static final String FETCH_MIN_BYTES_KEY = "fetch.min.bytes";
-  private static final String FETCH_MIN_BYTES_DEFAULT = "1";
-  private static final String ZK_CONNECTION_TIMEOUT_MS_KEY = "zookeeper.connection.timeout.ms";
-  private static final String ZK_SESSION_TIMEOUT_MS_KEY = "zookeeper.session.timeout.ms";
-  private static final String ZK_CONNECTION_TIMEOUT_MS_DEFAULT = "6000";
-  private static final String ZK_SESSION_TIMEOUT_MS_DEFAULT = "6000";
-  private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
-  private static final String AUTO_OFFSET_RESET_PREVIEW = "smallest";
+  private static final boolean AUTO_COMMIT_ENABLED_DEFAULT = false;
+  private static final String AUTO_OFFSET_RESET_KEY = "auto.reset.offset";
+  private static final String AUTO_OFFSET_RESET_PREVIEW = "earliest";
+  private static final String KEY_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringDeserializer";
+  private static final String VALUE_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArrayDeserializer";
+  private static final int BLOCKING_QUEUE_SIZE = 10000;
+  private static final int CONSUMER_POLLING_WINDOW_MS = 100;
+
+  private KafkaConsumer<String, byte[]> kafkaConsumer;
+  private final Stage.Context context;
+  private final String topic;
+  private final String bootStrapServers;
+  private final String consumerGroup;
+  private final Map<String, Object> kafkaConsumerConfigs;
+  // blocking queue which is populated by the kafka consumer runnable that polls
+  private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> recordQueue;
+  private final ScheduledExecutorService executorService;
+  // runnable that polls the kafka topic for records and populates the blocking queue
+  private KafkaConsumerRunner kafkaConsumerRunner;
+  // map holding required information to commit offset
+  private Map<TopicPartition, OffsetAndMetadata> topicPartitionToOffsetMetadataMap;
+  // mutex to ensure poll and commit are never called concurrently
+  private Object pollCommitMutex;
+
+  private boolean isInited = false;
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer09.class);
 
-  private ConsumerConnector consumer;
-  private ConsumerIterator<byte[],byte[]> consumerIterator;
-  private KafkaStream<byte[], byte[]> stream;
-
-  private final String zookeeperConnect;
-  private final String topic;
-  private final int maxWaitTime;
-  private final Source.Context context;
-  private final Map<String, String> kafkaConsumerConfigs;
-  private final String consumerGroup;
-  private ConsumerConfig consumerConfig;
-
-  public KafkaConsumer09(String zookeeperConnect, String topic, String consumerGroup,
-                         int consumerTimeout, Map<String, String> kafkaConsumerConfigs,
-                         Source.Context context) {
+  public KafkaConsumer09(
+      String bootStrapServers,
+      String topic,
+      String consumerGroup,
+      Map<String, Object> kafkaConsumerConfigs,
+      Source.Context context
+  ) {
     this.topic = topic;
-    this.maxWaitTime = consumerTimeout;
-    this.kafkaConsumerConfigs = kafkaConsumerConfigs;
-    this.zookeeperConnect = zookeeperConnect;
+    this.bootStrapServers = bootStrapServers;
     this.consumerGroup = consumerGroup;
     this.context = context;
+    this.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    this.topicPartitionToOffsetMetadataMap = new HashMap<>();
+    this.recordQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_SIZE);
+    this.executorService = new ScheduledThreadPoolExecutor(1);
+    this.pollCommitMutex = new Object();
   }
 
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Properties props = new Properties();
-    configureKafkaProperties(props);
-    LOG.debug("Creating Kafka Consumer with properties {}" , props.toString());
-    consumerConfig = new ConsumerConfig(props);
+    createConsumer();
     try {
-      createConsumer(issues, context);
-    } catch (StageException ex) {
-      issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, ex.toString()));
+      kafkaConsumer.partitionsFor(topic);
+    } catch (WakeupException | AuthorizationException e) {
+      issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, e.toString()));
     }
   }
 
   public void init() throws StageException {
-    if(consumer == null) {
-      Properties props = new Properties();
-      configureKafkaProperties(props);
-      LOG.debug("Creating Kafka Consumer with properties {}", props.toString());
-      consumerConfig = new ConsumerConfig(props);
-      createConsumer();
+    // guard against developer error - init must not be called twice and it must be called after validate
+    if(isInited) {
+      throw new RuntimeException("SdcKafkaConsumer should not be initialized more than once");
     }
+    if(null == kafkaConsumer) {
+      throw new RuntimeException("validate method must be called before init which creates the Kafka Consumer");
+    }
+    kafkaConsumerRunner = new KafkaConsumerRunner(kafkaConsumer, recordQueue, pollCommitMutex);
+    executorService.scheduleWithFixedDelay(kafkaConsumerRunner, 0, 20, TimeUnit.MILLISECONDS);
+    isInited = true;
   }
 
   public void destroy() {
-    if(consumer != null) {
+    if(kafkaConsumerRunner != null) {
+      kafkaConsumerRunner.shutdown();
+    }
+    executorService.shutdownNow();
+
+    if(kafkaConsumer != null) {
       try {
-        consumer.shutdown();
+        synchronized (pollCommitMutex) {
+          kafkaConsumer.close();
+        }
+        kafkaConsumer = null;
       } catch (Exception e) {
         LOG.error("Error shutting down Kafka Consumer, reason: {}", e.toString(), e);
       }
     }
+    isInited = false;
   }
 
   public void commit() {
-    consumer.commitOffsets();
+    synchronized (pollCommitMutex) {
+      kafkaConsumer.commitSync(topicPartitionToOffsetMetadataMap);
+    }
   }
 
   public MessageAndOffset read() throws StageException {
+    ConsumerRecord<String, byte[]> next;
     try {
-      //has next blocks indefinitely if consumer.timeout.ms is set to -1
-      //But if consumer.timeout.ms is set to a value, like 6000, a ConsumerTimeoutException is thrown
-      //if no message is written to kafka topic in that time.
-      if(consumerIterator.hasNext()) {
-        MessageAndMetadata<byte[], byte[]> messageAndMetadata = consumerIterator.next();
-        byte[] message = messageAndMetadata.message();
-        long offset = messageAndMetadata.offset();
-        int partition = messageAndMetadata.partition();
-        MessageAndOffset partitionToPayloadMap = new MessageAndOffset(message, offset, partition);
-        return partitionToPayloadMap;
-      }
-      return null;
-    } catch (ConsumerTimeoutException e) {
-      /*For high level consumer the fetching logic is handled by a background
-        fetcher thread and is hidden from user, for either case of
-        1) broker down or
-        2) no message is available
-        the fetcher thread will keep retrying while the user thread will wait on the fetcher thread to put some
-        data into the buffer until timeout. So in a sentence the high-level consumer design is to
-        not let users worry about connect / reconnect issues.*/
-      return null;
+       // If no record is available within the given time return null
+       next = recordQueue.poll(500, TimeUnit.MILLISECONDS);
+    } catch (InterruptedException e) {
+      LOG.error(KafkaErrors.KAFKA_29.getMessage(), e.toString(), e);
+      throw new StageException(KafkaErrors.KAFKA_29, e.toString(), e);
     }
+    MessageAndOffset messageAndOffset = null;
+    if(next != null) {
+      updateEntry(next);
+      messageAndOffset = new MessageAndOffset(next.value(), next.offset(), next.partition());
+    }
+    return messageAndOffset;
+  }
+
+  private void updateEntry(ConsumerRecord<String, byte[]> next) {
+    TopicPartition topicPartition = new TopicPartition(topic, next.partition());
+    OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(next.offset());
+    topicPartitionToOffsetMetadataMap.put(topicPartition, offsetAndMetadata);
   }
 
   @Override
@@ -153,67 +170,22 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     return Kafka09Constants.KAFKA_VERSION;
   }
 
-  private void createConsumer() throws StageException {
-    createConsumer(null, null);
-  }
-
-  private void createConsumer(List<Stage.ConfigIssue> issues, Stage.Context context) throws StageException {
-    LOG.debug("Creating consumer with configuration {}", consumerConfig.props().props().toString());
-    try {
-      consumer = Consumer.createJavaConsumerConnector(consumerConfig);
-    } catch (Exception e) {
-      if(issues != null) {
-        issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(), "zookeeperConnect",
-          KafkaErrors.KAFKA_31, zookeeperConnect, e.toString()));
-        return;
-      } else {
-        LOG.error(KafkaErrors.KAFKA_31.getMessage(), zookeeperConnect, e.toString(), e);
-        throw new StageException(KafkaErrors.KAFKA_31, zookeeperConnect, e.toString(), e);
-      }
-    }
-
-    Map<String, Integer> topicCountMap = new HashMap<>();
-
-    //TODO: Create threads equal to the number of partitions for this topic
-    // A known way to find number of partitions is by connecting to a known kafka broker which means the user has to
-    // supply additional options - known broker host and port.
-    //Another option is have the user specify the number of threads. If there are more threads than there are
-    // partitions, some threads will never see a message
-    topicCountMap.put(topic, 1);
-
-    Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap =
-      consumer.createMessageStreams(topicCountMap);
-    List<KafkaStream<byte[], byte[]>> topicList = consumerMap.get(topic);
-    stream = topicList.get(0);
-    try {
-      consumerIterator = stream.iterator();
-    } catch (Exception e) {
-      LOG.error(KafkaErrors.KAFKA_32.getMessage(), e.toString(), e);
-      throw new StageException(KafkaErrors.KAFKA_32, e.toString(), e);
-    }
+  private void createConsumer() {
+    Properties  kafkaConsumerProperties = new Properties();
+    configureKafkaProperties(kafkaConsumerProperties);
+    LOG.debug("Creating Kafka Consumer with properties {}" , kafkaConsumerProperties.toString());
+    kafkaConsumer = new KafkaConsumer<>(kafkaConsumerProperties);
+    kafkaConsumer.subscribe(Arrays.asList(topic));
   }
 
   private void configureKafkaProperties(Properties props) {
 
-    props.put(ZOOKEEPER_CONNECT_KEY, zookeeperConnect);
-    props.put(GROUP_ID_KEY, consumerGroup);
-    /*The maximum amount of time the server will block before answering the fetch request if there isn't sufficient
-    data to immediately satisfy fetch.min.bytes*/
-    props.put(FETCH_MAX_WAIT_KEY, FETCH_MAX_WAIT_DEFAULT);
+    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
+    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, AUTO_COMMIT_ENABLED_DEFAULT);
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KEY_DESERIALIZER_DEFAULT);
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_DEFAULT);
 
-    /*Throw a timeout exception to the consumer if no message is available for consumption after the specified
-    interval*/
-    props.put(CONSUMER_TIMEOUT_KEY, String.valueOf(maxWaitTime));
-    /*The socket timeout for network requests.*/
-    props.put(SOCKET_TIMEOUT_KEY, SOCKET_TIMEOUT_DEFAULT);
-    /*The minimum amount of data the server should return for a fetch request. If insufficient data is available the
-    request will wait for that much data to accumulate before answering the request.*/
-    props.put(FETCH_MIN_BYTES_KEY, FETCH_MIN_BYTES_DEFAULT);
-    /*sdc will commit offset after writing the batch to target*/
-    props.put(AUTO_COMMIT_ENABLED_KEY, AUTO_COMMIT_ENABLED_DEFAULT);
-
-    props.put(ZK_CONNECTION_TIMEOUT_MS_KEY, ZK_CONNECTION_TIMEOUT_MS_DEFAULT);
-    props.put(ZK_SESSION_TIMEOUT_MS_KEY, ZK_SESSION_TIMEOUT_MS_DEFAULT);
     if (this.context.isPreview()) {
       // Set to smallest value only for preview mode
       // When running actual pipeline, the default configs from kafka client should be picked up.
@@ -226,14 +198,59 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
     if(kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
-      kafkaConsumerConfigs.remove(ZOOKEEPER_CONNECT_KEY);
-      kafkaConsumerConfigs.remove(GROUP_ID_KEY);
-      kafkaConsumerConfigs.remove(AUTO_COMMIT_ENABLED_KEY);
-      kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
+      kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG);
+    }
+    for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
+      props.put(producerConfig.getKey(), producerConfig.getValue());
+    }
+  }
 
-      for (Map.Entry<String, String> producerConfig : kafkaConsumerConfigs.entrySet()) {
-        props.put(producerConfig.getKey(), producerConfig.getValue());
+  static class KafkaConsumerRunner implements Runnable {
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final KafkaConsumer<String, byte[]> consumer;
+    private final Object mutex;
+    private final ArrayBlockingQueue<ConsumerRecord<String, byte[]>> blockingQueue;
+
+    public KafkaConsumerRunner(
+      KafkaConsumer<String, byte[]> consumer,
+      ArrayBlockingQueue<ConsumerRecord<String, byte[]>> blockingQueue,
+      Object mutex
+    ) {
+      this.consumer = consumer;
+      this.blockingQueue = blockingQueue;
+      this.mutex = mutex;
+    }
+
+    public void run() {
+      try {
+        ConsumerRecords<String, byte[]> poll;
+        synchronized (mutex) {
+           poll = consumer.poll(CONSUMER_POLLING_WINDOW_MS);
+        }
+        for(ConsumerRecord<String, byte[]> r : poll) {
+          try {
+            blockingQueue.put(r);
+          } catch (InterruptedException e) {
+            LOG.error("Failed to poll KafkaConsumer, reason : {}", e.toString(), e);
+            return;
+          }
+        }
+      } catch (WakeupException e) {
+        // Ignore exception if closing
+        if (!closed.get()) {
+          throw e;
+        }
       }
+    }
+
+    // Shutdown hook which can be called from a separate thread
+    public void shutdown() {
+      closed.set(true);
+      consumer.wakeup();
     }
   }
 

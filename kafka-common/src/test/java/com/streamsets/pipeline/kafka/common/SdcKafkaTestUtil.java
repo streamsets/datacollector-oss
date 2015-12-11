@@ -17,18 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.kafka.impl;
+package com.streamsets.pipeline.kafka.common;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
-import kafka.admin.AdminUtils;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
@@ -36,19 +34,10 @@ import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
-import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.utils.MockTime;
-import kafka.utils.TestUtils;
-import kafka.utils.TestZKUtils;
-import kafka.utils.ZKStringSerializer$;
-import kafka.zk.EmbeddedZookeeper;
-import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -64,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class KafkaTestUtil {
+public abstract class SdcKafkaTestUtil {
 
   private static final String MIME = "text/plain";
   private static final String TEST_STRING = "Hello World";
@@ -150,80 +139,27 @@ public class KafkaTestUtil {
     "leaders in the data integration space with a history of bringing successful products to market. We’re a " +
     "team that is laser-focused on solving hard problems so our customers don’t have to.";
 
-  private static final Logger LOG = LoggerFactory.getLogger(KafkaTestUtil.class);
-  private static final long TIME_OUT = 5000;
+  public abstract String getMetadataBrokerURI();
 
-  private static ZkClient zkClient;
-  private static List<KafkaServer> kafkaServers;
-  private static Map<String, String> kafkaProps;
-  private static String metadataBrokerURI;
-  private static String zkConnect;
-  private static EmbeddedZookeeper zkServer;
+  public abstract String getZkConnect();
 
-  public KafkaTestUtil() {
-  }
+  public abstract List<KafkaServer> getKafkaServers();
 
-  public static String getMetadataBrokerURI() {
-    return metadataBrokerURI;
-  }
+  public abstract void startZookeeper();
 
-  public static String getZkConnect() {
-    return zkConnect;
-  }
+  public abstract void startKafkaBrokers(int numberOfBrokers) throws IOException;
 
-  public static List<KafkaServer> getKafkaServers() {
-    return kafkaServers;
-  }
+  public abstract void createTopic(String topic, int partitions, int replicationFactor);
 
-  public static EmbeddedZookeeper getZkServer() {
-    return zkServer;
-  }
+  public abstract void shutdown();
 
-  public static void startZookeeper() {
-    zkConnect = TestZKUtils.zookeeperConnect();
-    try {
-      zkServer = new EmbeddedZookeeper(zkConnect);
-    } catch (Exception ex) {
-      String msg = Utils.format("Error starting zookeeper {}: {}", zkConnect, ex);
-      throw new RuntimeException(msg, ex);
-    }
-    zkClient = new ZkClient(zkServer.connectString(), 30000, 30000, ZKStringSerializer$.MODULE$);
-  }
+  public abstract void setAutoOffsetReset(Map<String, String> kafkaConsumerConfigs);
 
-  public static void startKafkaBrokers(int numberOfBrokers) {
-    kafkaServers = new ArrayList<>(numberOfBrokers);
-    kafkaProps = new HashMap<>();
-    // setup Broker
-    StringBuilder sb = new StringBuilder();
-    for(int i = 0; i < numberOfBrokers; i ++) {
-      int port = TestUtils.choosePort();
-      Properties props = TestUtils.createBrokerConfig(i, port);
-      props.put("auto.create.topics.enable", "false");
-      kafkaServers.add(TestUtils.createServer(new KafkaConfig(props), new MockTime()));
-      sb.append("localhost:" + port).append(",");
-    }
-    metadataBrokerURI = sb.deleteCharAt(sb.length()-1).toString();
-    LOG.info("Setting metadataBrokerList and auto.offset.reset for test case");
-    kafkaProps.put("auto.offset.reset", "smallest");
-  }
-
-  public static void createTopic(String topic, int partitions, int replicationFactor) {
-    AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, TIME_OUT);
-  }
-
-  public static void shutdown() {
-    for(KafkaServer kafkaServer : kafkaServers) {
-      kafkaServer.shutdown();
-    }
-    zkClient.close();
-    zkServer.shutdown();
-    metadataBrokerURI = null;
-    zkConnect = null;
-    kafkaProps = null;
-  }
-
-  public static List<KafkaStream<byte[], byte[]>> createKafkaStream(String zookeeperConnectString, String topic, int partitions) {
+  public List<KafkaStream<byte[], byte[]>> createKafkaStream(
+      String zookeeperConnectString,
+      String topic,
+      int partitions
+  ) {
     //create consumer
     Properties consumerProps = new Properties();
     consumerProps.put("zookeeper.connect", zookeeperConnectString);
@@ -238,10 +174,9 @@ public class KafkaTestUtil {
     topicCountMap.put(topic, partitions);
     Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
     return consumerMap.get(topic);
-
   }
 
-  public static Producer<String, String> createProducer(String metadataBrokerURI, boolean setPartitioner) {
+  public Producer<String, String> createProducer(String metadataBrokerURI, boolean setPartitioner) {
     Properties props = new Properties();
     props.put("metadata.broker.list", metadataBrokerURI);
     props.put("serializer.class", "kafka.serializer.StringEncoder");
@@ -250,16 +185,15 @@ public class KafkaTestUtil {
     }
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);
-
     Producer<String, String> producer = new Producer<>(config);
     return producer;
   }
 
-  public static List<Record> createEmptyLogRecords() {
+  public List<Record> createEmptyLogRecords() {
     return Collections.emptyList();
   }
 
-  public static List<Record> createStringRecords() {
+  public List<Record> createStringRecords() {
     List<Record> records = new ArrayList<>(9);
     for (int i = 0; i < 9; i++) {
       Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
@@ -269,7 +203,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<Record> createIdenticalStringRecords() {
+  public List<Record> createIdenticalStringRecords() {
     List<Record> records = new ArrayList<>(9);
     int id = 0;
     for (int i = 0; i < 9; i++) {
@@ -280,7 +214,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<Record> createBinaryRecords() {
+  public List<Record> createBinaryRecords() {
     List<Record> records = new ArrayList<>(9);
     for (int i = 0; i < 9; i++) {
       Record record = RecordCreator.create();
@@ -292,7 +226,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<Record> createIntegerRecords() {
+  public List<Record> createIntegerRecords() {
     List<Record> records = new ArrayList<>(9);
     for (int i = 0; i < 9; i++) {
       Record r = RecordCreator.create("s", "s:1", (TEST_STRING + i).getBytes(), MIME);
@@ -302,7 +236,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, String partition, int number) {
+  public List<KeyedMessage<String, String>> produceStringMessages(String topic, String partition, int number) {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for (int i = 0; i < number; i++) {
       messages.add(new KeyedMessage<>(topic, partition, (TEST_STRING + i)));
@@ -310,7 +244,7 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<KeyedMessage<String, String>> produceStringMessages(String topic, int partitions, int number) {
+  public List<KeyedMessage<String, String>> produceStringMessages(String topic, int partitions, int number) {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     int partition = 0;
     for (int i = 0; i < number; i++) {
@@ -320,7 +254,7 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<Record> produce20Records() throws IOException {
+  public List<Record> produce20Records() throws IOException {
     List<Record> list = new ArrayList<>();
     for (int i = 0; i < 20; i++) {
       Record record = RecordCreator.create();
@@ -333,7 +267,7 @@ public class KafkaTestUtil {
     return list;
   }
 
-  public static List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
+  public List<KeyedMessage<String, String>> produceJsonMessages(String topic, String partition) throws IOException {
     ContextExtensions ctx = (ContextExtensions) ContextInfoCreator.createTargetContext("", false, OnRecordError.TO_ERROR);
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     for (Record record : produce20Records()) {
@@ -346,7 +280,7 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<KeyedMessage<String, String>> produceXmlMessages(String topic, String partition) throws IOException {
+  public List<KeyedMessage<String, String>> produceXmlMessages(String topic, String partition) throws IOException {
 
     List<String> stringList = IOUtils.readLines(KafkaTestUtil.class.getClassLoader().getResourceAsStream("testKafkaTarget.xml"));
     StringBuilder sb = new StringBuilder();
@@ -362,7 +296,7 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<KeyedMessage<String, String>> produceCsvMessages(String topic, String partition,
+  public List<KeyedMessage<String, String>> produceCsvMessages(String topic, String partition,
                                                                       CSVFormat csvFormat, File csvFile) throws IOException {
     List<KeyedMessage<String, String>> messages = new ArrayList<>();
     String line;
@@ -380,11 +314,11 @@ public class KafkaTestUtil {
     return messages;
   }
 
-  public static List<Record> createJsonRecords() throws IOException {
+  public List<Record> createJsonRecords() throws IOException {
     return produce20Records();
   }
 
-  public static List<Record> createJsonRecordsWithTopicPartitionField(List<String> topics, int partitions) throws IOException {
+  public List<Record> createJsonRecordsWithTopicPartitionField(List<String> topics, int partitions) throws IOException {
     int size = topics.size();
     List<Record> list = new ArrayList<>();
     for(String topic : topics) {
@@ -403,7 +337,7 @@ public class KafkaTestUtil {
     return list;
   }
 
-  public static List<Record> createJsonRecordsWithTopicField(List<String> topics) throws IOException {
+  public List<Record> createJsonRecordsWithTopicField(List<String> topics) throws IOException {
     int size = topics.size();
     List<Record> list = new ArrayList<>();
     for (int i = 0; i < size*3; i++) {
@@ -420,7 +354,7 @@ public class KafkaTestUtil {
     return list;
   }
 
-  public static List<Record> createCsvRecords(File csvFile) throws Exception {
+  public List<Record> createCsvRecords(File csvFile) throws Exception {
     List<Record> records = new ArrayList<>();
     String line;
     BufferedReader bufferedReader = new BufferedReader(new FileReader(csvFile));
@@ -439,17 +373,7 @@ public class KafkaTestUtil {
     return records;
   }
 
-  public static void createTopic(ZkClient zkClient, List<KafkaServer> kafkaServers, String topic, int partitions,
-                                 int replicationFactor, int timeout) {
-    AdminUtils.createTopic(zkClient, topic, partitions, replicationFactor, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(kafkaServers), topic, 0, timeout);
-  }
-
-  /*public static String generateTestData(DataType dataType) {
-    return generateTestData(dataType, StreamingJsonParser.Mode.MULTIPLE_OBJECTS);
-  }*/
-
-  public static String generateTestData(DataType dataType, StreamingJsonParser.Mode jsonMode) {
+  public String generateTestData(DataType dataType, StreamingJsonParser.Mode jsonMode) {
     switch (dataType) {
       case TEXT:
         return "Hello Kafka";

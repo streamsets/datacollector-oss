@@ -30,7 +30,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -38,7 +39,6 @@ import com.streamsets.pipeline.stage.destination.kafka.util.KafkaTargetUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
-import kafka.zk.EmbeddedZookeeper;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.SeekableByteArrayInput;
@@ -66,7 +66,6 @@ import java.util.Map;
 @Ignore
 public class TestKafkaTargetSinglePartition {
 
-  private static EmbeddedZookeeper zkServer;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams1;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams2;
   private static List<KafkaStream<byte[], byte[]>> kafkaStreams3;
@@ -113,60 +112,61 @@ public class TestKafkaTargetSinglePartition {
   private static final String TOPIC20 = "TestKafkaTargetSinglePartition20";
   private static final String TOPIC21 = "TestKafkaTargetSinglePartition21";
 
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
+  
   @BeforeClass
-  public static void setUp() {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
-    zkServer = KafkaTestUtil.getZkServer();
+  public static void setUp() throws IOException {
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
     // create topic
-    KafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC2, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC3, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC4, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC5, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC6, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC7, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC8, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC9, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC10, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC12, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC13, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC14, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC15, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC16, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC17, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC18, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC19, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC20, PARTITIONS, REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC21, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC1, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC2, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC3, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC4, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC5, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC6, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC7, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC8, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC9, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC10, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC11, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC12, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC13, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC14, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC15, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC16, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC17, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC18, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC19, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC20, PARTITIONS, REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC21, PARTITIONS, REPLICATION_FACTOR);
 
-    kafkaStreams1 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC1, PARTITIONS);
-    kafkaStreams2 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC2, PARTITIONS);
-    kafkaStreams3 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC3, PARTITIONS);
-    kafkaStreams4 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC4, PARTITIONS);
-    kafkaStreams5 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC5, PARTITIONS);
-    kafkaStreams6 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC6, PARTITIONS);
-    kafkaStreams7 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC7, PARTITIONS);
-    kafkaStreams8 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC8, PARTITIONS);
-    kafkaStreams9 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC9, PARTITIONS);
-    kafkaStreams10 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC10, PARTITIONS);
-    kafkaStreams11 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC11, PARTITIONS);
-    kafkaStreams12 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC12, PARTITIONS);
-    kafkaStreams13 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC13, PARTITIONS);
-    kafkaStreams14 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC14, PARTITIONS);
-    kafkaStreams15 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC15, PARTITIONS);
-    kafkaStreams16 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC16, PARTITIONS);
-    kafkaStreams17 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC17, PARTITIONS);
-    kafkaStreams18 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC18, PARTITIONS);
-    kafkaStreams19 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC19, PARTITIONS);
-    kafkaStreams20 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC20, PARTITIONS);
-    kafkaStreams21 = KafkaTestUtil.createKafkaStream(zkServer.connectString(), TOPIC21, PARTITIONS);
+    kafkaStreams1 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC1, PARTITIONS);
+    kafkaStreams2 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC2, PARTITIONS);
+    kafkaStreams3 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC3, PARTITIONS);
+    kafkaStreams4 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC4, PARTITIONS);
+    kafkaStreams5 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC5, PARTITIONS);
+    kafkaStreams6 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC6, PARTITIONS);
+    kafkaStreams7 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC7, PARTITIONS);
+    kafkaStreams8 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC8, PARTITIONS);
+    kafkaStreams9 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC9, PARTITIONS);
+    kafkaStreams10 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC10, PARTITIONS);
+    kafkaStreams11 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC11, PARTITIONS);
+    kafkaStreams12 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC12, PARTITIONS);
+    kafkaStreams13 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC13, PARTITIONS);
+    kafkaStreams14 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC14, PARTITIONS);
+    kafkaStreams15 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC15, PARTITIONS);
+    kafkaStreams16 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC16, PARTITIONS);
+    kafkaStreams17 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC17, PARTITIONS);
+    kafkaStreams18 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC18, PARTITIONS);
+    kafkaStreams19 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC19, PARTITIONS);
+    kafkaStreams20 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC20, PARTITIONS);
+    kafkaStreams21 = sdcKafkaTestUtil.createKafkaStream(sdcKafkaTestUtil.getZkConnect(), TOPIC21, PARTITIONS);
   }
 
   @AfterClass
   public static void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
   }
 
   @Test
@@ -178,7 +178,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-      KafkaTestUtil.getMetadataBrokerURI(),
+      sdcKafkaTestUtil.getMetadataBrokerURI(),
       TOPIC1,
       "0",                               // partition
       null,                               // kafka producer configs
@@ -194,7 +194,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createEmptyLogRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createEmptyLogRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -224,7 +224,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC2,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -241,7 +241,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -274,7 +274,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC3,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -291,7 +291,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -325,7 +325,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC4,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -342,7 +342,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -377,7 +377,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textEmptyLineIfNull = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC5,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -395,7 +395,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecords();
     targetRunner.runWrite(logRecords);
     //All records must be sent to error
     Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
@@ -425,7 +425,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC6,
         "0",                               // partition
         null,                               // kafka producer configs
@@ -442,7 +442,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -479,7 +479,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.csvReplaceNewLines = false;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC7,
         "0",                               // partition
         null,                               // kafka producer configs
@@ -497,7 +497,7 @@ public class TestKafkaTargetSinglePartition {
 
     targetRunner.runInit();
     File f = new File(Resources.getResource("testKafkaTarget.csv").toURI());
-    List<Record> logRecords = KafkaTestUtil.createCsvRecords(f);
+    List<Record> logRecords = sdcKafkaTestUtil.createCsvRecords(f);
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -530,7 +530,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -547,7 +547,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -591,7 +591,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -608,7 +608,7 @@ public class TestKafkaTargetSinglePartition {
     targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
+    logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC8, TOPIC9, TOPIC10));
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -663,7 +663,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",                               // partition
         kafkaProducerConfig,                               // kafka producer configs
@@ -680,7 +680,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -724,7 +724,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",                               // partition
         kafkaProducerConfig,               // kafka producer configs
@@ -741,7 +741,7 @@ public class TestKafkaTargetSinglePartition {
     targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
+    logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC12, TOPIC13, TOPIC14));
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -797,7 +797,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         kafkaProducerConfig,
@@ -815,7 +815,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
     targetRunner.runWrite(logRecords);
 
     Assert.assertEquals(3, targetRunner.getErrorRecords().size());
@@ -837,7 +837,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         kafkaProducerConfig,
@@ -855,7 +855,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
+    logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC15, "BlackListTopic"));
     targetRunner.runWrite(logRecords);
 
     Assert.assertEquals(3, targetRunner.getErrorRecords().size());
@@ -890,7 +890,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         kafkaProducerConfig,
@@ -908,7 +908,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
     targetRunner.runWrite(logRecords);
 
     Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
@@ -918,7 +918,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         kafkaProducerConfig,
@@ -936,7 +936,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
+    logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of("InvalidTopic"));
     targetRunner.runWrite(logRecords);
 
     Assert.assertEquals(logRecords.size(), targetRunner.getErrorRecords().size());
@@ -957,7 +957,7 @@ public class TestKafkaTargetSinglePartition {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "${record:value('/partition')}",
         kafkaProducerConfig,
@@ -975,7 +975,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC16));
+    List<Record> logRecords = sdcKafkaTestUtil.createJsonRecordsWithTopicField(ImmutableList.of(TOPIC16));
     targetRunner.runWrite(logRecords);
 
     Assert.assertEquals(1, targetRunner.getErrorRecords().size());
@@ -1009,7 +1009,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textFieldPath = "/";
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         "${TOPIC11}",
         "0",
         kafkaProducerConfig,
@@ -1027,7 +1027,7 @@ public class TestKafkaTargetSinglePartition {
       .setOnRecordError(OnRecordError.TO_ERROR).addConstants(constants).build();
 
     targetRunner.runInit();
-    List<Record> logRecords = KafkaTestUtil.createStringRecords();
+    List<Record> logRecords = sdcKafkaTestUtil.createStringRecords();
     targetRunner.runWrite(logRecords);
     targetRunner.runDestroy();
 
@@ -1064,7 +1064,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.textFieldPath = "/";
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         null,
         "0",
         kafkaProducerConfig,
@@ -1098,7 +1098,7 @@ public class TestKafkaTargetSinglePartition {
 
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC17,
         "0",
         null,
@@ -1150,7 +1150,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.includeSchema = true;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC18,
         "0",
         null,
@@ -1205,7 +1205,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.includeSchema = false;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC19,
         "0",
         null,
@@ -1259,7 +1259,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.includeSchema = false;
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC20,
         "0",
         null,
@@ -1323,7 +1323,7 @@ public class TestKafkaTargetSinglePartition {
     dataGeneratorFormatConfig.binaryFieldPath = "/data";
 
     KafkaTarget kafkaTarget = KafkaTargetUtil.createKafkaTarget(
-        KafkaTestUtil.getMetadataBrokerURI(),
+        sdcKafkaTestUtil.getMetadataBrokerURI(),
         TOPIC21,
         "0",
         kafkaProducerConfig,
@@ -1340,7 +1340,7 @@ public class TestKafkaTargetSinglePartition {
     TargetRunner targetRunner = new TargetRunner.Builder(KafkaDTarget.class, kafkaTarget).build();
 
     targetRunner.runInit();
-    List<Record> binaryRecords = KafkaTestUtil.createBinaryRecords();
+    List<Record> binaryRecords = sdcKafkaTestUtil.createBinaryRecords();
     targetRunner.runWrite(binaryRecords);
     targetRunner.runDestroy();
 

@@ -36,6 +36,7 @@ import kafka.message.MessageAndMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,12 +72,12 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   private final String topic;
   private final int maxWaitTime;
   private final Source.Context context;
-  private final Map<String, String> kafkaConsumerConfigs;
+  private final Map<String, Object> kafkaConsumerConfigs;
   private final String consumerGroup;
   private ConsumerConfig consumerConfig;
 
   public KafkaConsumer08(String zookeeperConnect, String topic, String consumerGroup,
-                         int consumerTimeout, Map<String, String> kafkaConsumerConfigs,
+                         int consumerTimeout, Map<String, Object> kafkaConsumerConfigs,
                          Source.Context context) {
     this.topic = topic;
     this.maxWaitTime = consumerTimeout;
@@ -132,8 +133,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
         byte[] message = messageAndMetadata.message();
         long offset = messageAndMetadata.offset();
         int partition = messageAndMetadata.partition();
-        MessageAndOffset partitionToPayloadMap = new MessageAndOffset(message, offset, partition);
-        return partitionToPayloadMap;
+        return new MessageAndOffset(message, offset, partition);
       }
       return null;
     } catch (ConsumerTimeoutException e) {
@@ -231,7 +231,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
       kafkaConsumerConfigs.remove(AUTO_COMMIT_ENABLED_KEY);
       kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
 
-      for (Map.Entry<String, String> producerConfig : kafkaConsumerConfigs.entrySet()) {
+      for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
     }

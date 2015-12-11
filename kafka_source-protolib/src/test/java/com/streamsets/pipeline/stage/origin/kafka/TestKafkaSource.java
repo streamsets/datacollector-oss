@@ -32,9 +32,10 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.kafka.impl.DataType;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
-import com.streamsets.pipeline.kafka.impl.ProducerRunnable;
+import com.streamsets.pipeline.kafka.common.DataType;
+import com.streamsets.pipeline.kafka.common.ProducerRunnable;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
@@ -62,6 +63,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -111,32 +113,34 @@ public class TestKafkaSource {
 
   private static File tempDir;
   private static File protoDescFile;
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
+
 
   @BeforeClass
   public static void setUp() throws IOException {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(3);
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(3);
 
-    zkConnect = KafkaTestUtil.getZkConnect();
+    zkConnect = sdcKafkaTestUtil.getZkConnect();
 
-    KafkaTestUtil.createTopic(TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC2, MULTIPLE_PARTITIONS, MULTIPLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC3, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC4, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC5, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC6, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC7, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC8, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC9, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC10, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC12, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC13, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC15, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
-    KafkaTestUtil.createTopic(TOPIC16, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC1, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC2, MULTIPLE_PARTITIONS, MULTIPLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC3, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC4, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC5, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC6, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC7, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC8, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC9, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC10, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC11, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC12, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC13, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC14, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC15, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
+    sdcKafkaTestUtil.createTopic(TOPIC16, SINGLE_PARTITION, SINGLE_REPLICATION_FACTOR);
 
-    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
+    producer = sdcKafkaTestUtil.createProducer(sdcKafkaTestUtil.getMetadataBrokerURI(), true);
     tempDir = Files.createTempDir();
     protoDescFile = new File(tempDir, "Employee.desc");
     BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(protoDescFile));
@@ -147,13 +151,13 @@ public class TestKafkaSource {
 
   @AfterClass
   public static void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
     if (tempDir != null) {
       FileUtils.deleteQuietly(tempDir);
     }
   }
 
-  @Test
+  @Test(timeout = 5000)
   public void testProduceStringRecords() throws StageException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
@@ -164,7 +168,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC1)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -189,18 +193,20 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 5);
-    shutDownExecutorService(executorService);
+
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 5, "lane", records);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
+
+    shutDownExecutorService(executorService);
     Assert.assertEquals(5, records.size());
 
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/text"));
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.TEXT, null),
+      Assert.assertEquals(sdcKafkaTestUtil.generateTestData(DataType.TEXT, null),
         records.get(i).get("/text").getValueAsString());
     }
 
@@ -218,7 +224,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC2)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -244,18 +250,20 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startProducing.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/text").getValueAsString());
       Assert.assertTrue(!records.get(i).get("/text").getValueAsString().isEmpty());
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.TEXT, null), records.get(i).get("/text").getValueAsString());
+      Assert.assertEquals(sdcKafkaTestUtil.generateTestData(DataType.TEXT, null), records.get(i).get("/text").getValueAsString());
     }
 
     sourceRunner.runDestroy();
@@ -271,7 +279,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC3)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -298,13 +306,14 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
 
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     sourceRunner.runDestroy();
@@ -321,7 +330,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC4)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -347,13 +356,13 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 12);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 12, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(12, records.size());
 
     sourceRunner.runDestroy();
@@ -370,7 +379,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC5)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -396,13 +405,14 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
 
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     sourceRunner.runDestroy();
@@ -420,7 +430,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC6)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -447,13 +457,13 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     sourceRunner.runDestroy();
@@ -470,7 +480,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC7)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -497,13 +507,14 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
 
-    List<Record> records = output.getRecords().get("lane");
     // we stop at 10 because each message has an XML with 2 authors (one record each)
     Assert.assertEquals(10, records.size());
 
@@ -516,7 +527,7 @@ public class TestKafkaSource {
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC8)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
       .addConfiguration("maxWaitTime", 5000)
@@ -552,7 +563,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC9)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -580,12 +591,13 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     sourceRunner.runDestroy();
@@ -602,7 +614,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC10)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -632,17 +644,18 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
 
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     for(Record record : records) {
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG, null),
+      Assert.assertEquals(sdcKafkaTestUtil.generateTestData(DataType.LOG, null),
         record.get().getValueAsMap().get("originalLine").getValueAsString());
 
       Assert.assertFalse(record.has("/truncated"));
@@ -674,7 +687,7 @@ public class TestKafkaSource {
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC11)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 9)
@@ -704,17 +717,18 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 9);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 9, "lane", records);
+
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
 
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(9, records.size());
 
     for(Record record : records) {
-      Assert.assertEquals(KafkaTestUtil.generateTestData(DataType.LOG_STACK_TRACE, null),
+      Assert.assertEquals(sdcKafkaTestUtil.generateTestData(DataType.LOG_STACK_TRACE, null),
         record.get().getValueAsMap().get("originalLine").getValueAsString());
 
       Assert.assertFalse(record.has("/truncated"));
@@ -729,67 +743,65 @@ public class TestKafkaSource {
       Assert.assertEquals("ExceptionToHttpErrorProvider", record.get("/" + Constants.CATEGORY).getValueAsString());
 
       Assert.assertTrue(record.has("/" + Constants.MESSAGE));
-      Assert.assertEquals(KafkaTestUtil.ERROR_MSG_WITH_STACK_TRACE,
+      Assert.assertEquals(sdcKafkaTestUtil.ERROR_MSG_WITH_STACK_TRACE,
         record.get("/" + Constants.MESSAGE).getValueAsString());
     }
 
     sourceRunner.runDestroy();
   }
 
-  // Check whether auto.offset.reset config set to smallest works for preview or not
   @Test
   public void testAutoOffsetResetSmallestConfig() throws Exception {
-      CountDownLatch startLatch = new CountDownLatch(1);
-      ExecutorService executorService = Executors.newSingleThreadExecutor();
-      CountDownLatch countDownLatch = new CountDownLatch(1);
-      executorService.submit(new ProducerRunnable(TOPIC11, SINGLE_PARTITION, producer, startLatch,
-        DataType.LOG_STACK_TRACE, null, 10, countDownLatch));
-      // produce all 10 records first before starting the source(KafkaConsumer)
-      startLatch.countDown();
-      countDownLatch.await();
+    CountDownLatch startLatch = new CountDownLatch(1);
+    ExecutorService executorService = Executors.newSingleThreadExecutor();
+    CountDownLatch countDownLatch = new CountDownLatch(1);
+    executorService.submit(new ProducerRunnable(TOPIC11, SINGLE_PARTITION, producer, startLatch,
+      DataType.LOG_STACK_TRACE, null, 10, countDownLatch));
+    // produce all 10 records first before starting the source(KafkaConsumer)
+    startLatch.countDown();
+    countDownLatch.await();
 
-      SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
-        .addOutputLane("lane")
-        .addConfiguration("topic", TOPIC11)
-        .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
-        .addConfiguration("consumerGroup", CONSUMER_GROUP)
-        .addConfiguration("zookeeperConnect", zkConnect)
-        .addConfiguration("maxBatchSize", 100)
-        .addConfiguration("maxWaitTime", 10000)
-        .addConfiguration("dataFormat", DataFormat.LOG)
-        .addConfiguration("charset", "UTF-8")
-        .addConfiguration("removeCtrlChars", false)
-        .addConfiguration("jsonContent", null)
-        .addConfiguration("kafkaConsumerConfigs", null)
-        .addConfiguration("produceSingleRecordPerMessage", false)
-        .addConfiguration("xmlRecordElement", "")
-        .addConfiguration("xmlMaxObjectLen", null)
-        .addConfiguration("logMode", LogMode.LOG4J)
-        .addConfiguration("logMaxObjectLen", 10000)
-        .addConfiguration("regex", null)
-        .addConfiguration("grokPatternDefinition", null)
-        .addConfiguration("enableLog4jCustomLogFormat", false)
-        .addConfiguration("customLogFormat", null)
-        .addConfiguration("fieldPathsToGroupName", null)
-        .addConfiguration("log4jCustomLogFormat", null)
-        .addConfiguration("grokPattern", null)
-        .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-        .addConfiguration("maxStackTraceLines", 100)
-        .addConfiguration("retainOriginalLine", true)
+    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+      .addOutputLane("lane")
+      .addConfiguration("topic", TOPIC11)
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("consumerGroup", CONSUMER_GROUP)
+      .addConfiguration("zookeeperConnect", zkConnect)
+      .addConfiguration("maxBatchSize", 100)
+      .addConfiguration("maxWaitTime", 10000)
+      .addConfiguration("dataFormat", DataFormat.LOG)
+      .addConfiguration("charset", "UTF-8")
+      .addConfiguration("removeCtrlChars", false)
+      .addConfiguration("jsonContent", null)
+      .addConfiguration("kafkaConsumerConfigs", null)
+      .addConfiguration("produceSingleRecordPerMessage", false)
+      .addConfiguration("xmlRecordElement", "")
+      .addConfiguration("xmlMaxObjectLen", null)
+      .addConfiguration("logMode", LogMode.LOG4J)
+      .addConfiguration("logMaxObjectLen", 10000)
+      .addConfiguration("regex", null)
+      .addConfiguration("grokPatternDefinition", null)
+      .addConfiguration("enableLog4jCustomLogFormat", false)
+      .addConfiguration("customLogFormat", null)
+      .addConfiguration("fieldPathsToGroupName", null)
+      .addConfiguration("log4jCustomLogFormat", null)
+      .addConfiguration("grokPattern", null)
+      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
+      .addConfiguration("maxStackTraceLines", 100)
+      .addConfiguration("retainOriginalLine", true)
         // Set mode to preview
-        .setPreview(true)
-        .build();
+      .setPreview(true)
+      .build();
 
-      sourceRunner.runInit();
+    sourceRunner.runInit();
 
-      StageRunner.Output output = sourceRunner.runProduce(null, 10);
-      shutDownExecutorService(executorService);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 10, "lane", records);
 
-      String newOffset = output.getNewOffset();
-      Assert.assertNull(newOffset);
-
-      List<Record> records = output.getRecords().get("lane");
-      Assert.assertEquals(10, records.size());
+    shutDownExecutorService(executorService);
+    String newOffset = output.getNewOffset();
+    Assert.assertNull(newOffset);
+    Assert.assertEquals(10, records.size());
   }
 
   @Test
@@ -823,7 +835,7 @@ public class TestKafkaSource {
 
 
     Properties props = new Properties();
-    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
+    props.put("metadata.broker.list", sdcKafkaTestUtil.getMetadataBrokerURI());
     props.put("serializer.class", "kafka.serializer.DefaultEncoder");
     props.put("key.serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1");
@@ -853,14 +865,13 @@ public class TestKafkaSource {
     dataFileWriter.close();
     producer.send(new KeyedMessage<>(TOPIC12, "0", baos.toByteArray()));
 
-
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
-    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC12)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 100)
@@ -1023,12 +1034,12 @@ public class TestKafkaSource {
     producer.send(new KeyedMessage<>(TOPIC13, "0", baos.toByteArray()));
 
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
-    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
       .addConfiguration("topic", TOPIC13)
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 100)
@@ -1151,7 +1162,7 @@ public class TestKafkaSource {
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC14)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -1188,7 +1199,7 @@ public class TestKafkaSource {
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/"));
       Assert.assertNotNull(records.get(i).get().getValueAsByteArray());
-      Assert.assertTrue(Arrays.equals(KafkaTestUtil.generateTestData(DataType.TEXT, null).getBytes(),
+      Assert.assertTrue(Arrays.equals(sdcKafkaTestUtil.generateTestData(DataType.TEXT, null).getBytes(),
         records.get(i).get("/").getValueAsByteArray()));
     }
 
@@ -1209,11 +1220,11 @@ public class TestKafkaSource {
     bOut.close();
 
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
-    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC15)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
@@ -1240,11 +1251,11 @@ public class TestKafkaSource {
       .build();
     sourceRunner.runInit();
 
-    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 10, "lane", records);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(10, records.size());
 
     ProtobufTestUtil.compareProtoRecords(records, 0);
@@ -1260,16 +1271,16 @@ public class TestKafkaSource {
     producer.send(new KeyedMessage<>(TOPIC16, "0", ProtobufTestUtil.getProtoBufData()));
 
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
-    kafkaConsumerConfigs.put("auto.offset.reset", "smallest");
+    sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
     SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", KafkaTestUtil.getMetadataBrokerURI())
+      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
       .addConfiguration("topic", TOPIC16)
       .addConfiguration("consumerGroup", CONSUMER_GROUP)
       .addConfiguration("zookeeperConnect", zkConnect)
       .addConfiguration("maxBatchSize", 10)
-      .addConfiguration("maxWaitTime", 5000)
+      .addConfiguration("maxWaitTime", 10000)
       .addConfiguration("dataFormat", DataFormat.PROTOBUF)
       .addConfiguration("charset", "UTF-8")
       .addConfiguration("removeCtrlChars", false)
@@ -1291,11 +1302,12 @@ public class TestKafkaSource {
       .build();
     sourceRunner.runInit();
 
-    StageRunner.Output output = sourceRunner.runProduce(null, 10);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 10, "lane", records);
+
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
     Assert.assertEquals(10, records.size());
 
     ProtobufTestUtil.compareProtoRecords(records, 0);
@@ -1313,12 +1325,26 @@ public class TestKafkaSource {
 
   private Producer<String, byte[]> createDefaultProducer() {
     Properties props = new Properties();
-    props.put("metadata.broker.list", KafkaTestUtil.getMetadataBrokerURI());
+    props.put("metadata.broker.list", sdcKafkaTestUtil.getMetadataBrokerURI());
     props.put("serializer.class", "kafka.serializer.DefaultEncoder");
     props.put("key.serializer.class", "kafka.serializer.StringEncoder");
     props.put("request.required.acks", "1");
     ProducerConfig config = new ProducerConfig(props);
     return new Producer<>(config);
+  }
+
+  private StageRunner.Output getOutputAndRecords(
+    SourceRunner sourceRunner,
+    int recordsToProduce,
+    String lane,
+    List<Record> records
+  ) throws StageException {
+    StageRunner.Output output = null;
+    while(records.size() < recordsToProduce) {
+      output = sourceRunner.runProduce(null, recordsToProduce - records.size());
+      records.addAll(output.getRecords().get(lane));
+    }
+    return output;
   }
 
 }

@@ -25,7 +25,7 @@ import com.streamsets.datacollector.MiniSDC.ExecutionMode;
 import com.streamsets.datacollector.MiniSDCTestingUtility;
 import com.streamsets.datacollector.util.ClusterUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import org.apache.hadoop.conf.Configuration;

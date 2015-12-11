@@ -20,10 +20,12 @@
 package com.streamsets.pipeline.stage.origin.kafka;
 
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
+import com.streamsets.pipeline.kafka.api.LowLevelConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
-import com.streamsets.pipeline.kafka.impl.KafkaLowLevelConsumer08;
-import com.streamsets.pipeline.kafka.impl.KafkaTestUtil;
+import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumer;
+import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumerFactory;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtil;
+import com.streamsets.pipeline.kafka.common.SdcKafkaTestUtilFactory;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.KeyedMessage;
 import kafka.server.KafkaServer;
@@ -32,6 +34,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 public class TestLowLevelKafkaConsumer {
@@ -43,35 +46,35 @@ public class TestLowLevelKafkaConsumer {
   private static final int REPLICATION_FACTOR = 1;
   private static KafkaServer kafkaServer;
   private static int port;
+  private static final SdcKafkaTestUtil sdcKafkaTestUtil = SdcKafkaTestUtilFactory.getInstance().create();
 
   @Before
-  public void setUp() {
-    KafkaTestUtil.startZookeeper();
-    KafkaTestUtil.startKafkaBrokers(1);
-    producer = KafkaTestUtil.createProducer(KafkaTestUtil.getMetadataBrokerURI(), true);
-    kafkaServer = KafkaTestUtil.getKafkaServers().get(0);
-    String[] split = KafkaTestUtil.getMetadataBrokerURI().split(":");
+  public void setUp() throws IOException {
+    sdcKafkaTestUtil.startZookeeper();
+    sdcKafkaTestUtil.startKafkaBrokers(1);
+    producer = sdcKafkaTestUtil.createProducer(sdcKafkaTestUtil.getMetadataBrokerURI(), true);
+    kafkaServer = sdcKafkaTestUtil.getKafkaServers().get(0);
+    String[] split = sdcKafkaTestUtil.getMetadataBrokerURI().split(":");
     port = Integer.parseInt(split[1]);
   }
 
   @After
   public void tearDown() {
-    KafkaTestUtil.shutdown();
+    sdcKafkaTestUtil.shutdown();
   }
 
   @Test(expected = StageException.class)
   public void testReadAfterKafkaShutdown() throws Exception {
-    KafkaTestUtil.createTopic("testReadAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadAfterZookeeperShutdown",
+    sdcKafkaTestUtil.createTopic("testReadAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testReadAfterZookeeperShutdown",
       String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadAfterZookeeperShutdown", 0,
-      new KafkaBroker(HOST, port), 0, 8000,
-      2000, "testKafkaConsumer" + "_client");
+    SdcKafkaLowLevelConsumer kafkaConsumer = createLowLevelConsumer("testReadAfterZookeeperShutdown");
+
     kafkaConsumer.init();
     //shutdown zookeeper server
     kafkaServer.shutdown();
@@ -81,16 +84,15 @@ public class TestLowLevelKafkaConsumer {
 
   @Test(expected = StageException.class)
   public void testGetOffsetAfterKafkaShutdown() throws Exception {
-    KafkaTestUtil.createTopic("testGetOffsetAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testGetOffsetAfterZookeeperShutdown",
+    sdcKafkaTestUtil.createTopic("testGetOffsetAfterZookeeperShutdown", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testGetOffsetAfterZookeeperShutdown",
       String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testGetOffsetAfterZookeeperShutdown", 0, new KafkaBroker(HOST, port), 0, 8000,
-      2000, "testKafkaConsumer" + "_client");
+    SdcKafkaLowLevelConsumer kafkaConsumer = createLowLevelConsumer("testGetOffsetAfterZookeeperShutdown");
     kafkaConsumer.init();
     //shutdown zookeeper server
     kafkaServer.shutdown();
@@ -100,16 +102,15 @@ public class TestLowLevelKafkaConsumer {
 
   @Test
   public void testReadInvalidOffset() throws Exception {
-    KafkaTestUtil.createTopic("testReadInvalidOffset", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadInvalidOffset",
+    sdcKafkaTestUtil.createTopic("testReadInvalidOffset", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testReadInvalidOffset",
       String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadInvalidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
-      2000, "testKafkaConsumer" + "_client");
+    SdcKafkaLowLevelConsumer kafkaConsumer = createLowLevelConsumer("testReadInvalidOffset");
     kafkaConsumer.init();
     //attempt to read invalid offset
     List<MessageAndOffset> read = kafkaConsumer.read(12);
@@ -118,19 +119,35 @@ public class TestLowLevelKafkaConsumer {
 
   @Test
   public void testReadValidOffset() throws Exception {
-    KafkaTestUtil.createTopic("testReadValidOffset", PARTITIONS, REPLICATION_FACTOR);
-    List<KeyedMessage<String, String>> data = KafkaTestUtil.produceStringMessages("testReadValidOffset",
+    sdcKafkaTestUtil.createTopic("testReadValidOffset", PARTITIONS, REPLICATION_FACTOR);
+    List<KeyedMessage<String, String>> data = sdcKafkaTestUtil.produceStringMessages("testReadValidOffset",
       String.valueOf(0), 9);
     //writes 9 messages to kafka topic
     for(KeyedMessage<String, String> d : data) {
       producer.send(d);
     }
 
-    KafkaLowLevelConsumer08 kafkaConsumer = new KafkaLowLevelConsumer08("testReadValidOffset", 0, new KafkaBroker(HOST, port), 0, 8000,
-      2000, "testKafkaConsumer" + "_client");
+    SdcKafkaLowLevelConsumer kafkaConsumer = createLowLevelConsumer("testReadValidOffset");
     kafkaConsumer.init();
     //attempt to read invalid offset
     List<MessageAndOffset> read = kafkaConsumer.read(6);
     Assert.assertEquals(3, read.size());
   }
+
+  private SdcKafkaLowLevelConsumer createLowLevelConsumer(String topic) {
+    LowLevelConsumerFactorySettings lowLevelConsumerFactorySettings = new LowLevelConsumerFactorySettings(
+      topic,
+      0,
+      HOST,
+      port,
+      "testKafkaLowLevelConsumer",
+      0,
+      8000,
+      2000
+    );
+    SdcKafkaLowLevelConsumerFactory sdcKafkaLowLevelConsumerFactory =
+      SdcKafkaLowLevelConsumerFactory.create(lowLevelConsumerFactorySettings);
+    return sdcKafkaLowLevelConsumerFactory.create();
+  }
+
 }

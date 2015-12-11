@@ -22,9 +22,7 @@ package com.streamsets.pipeline.kafka.impl;
 
 import org.apache.kafka.clients.producer.Partitioner;
 import org.apache.kafka.common.Cluster;
-import org.apache.kafka.common.PartitionInfo;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,8 +40,7 @@ public class RoundRobinPartitioner implements Partitioner {
       byte[] valueBytes,
       Cluster cluster
   ) {
-    List<PartitionInfo> partitionInfos = cluster.availablePartitionsForTopic(topic);
-    int availablePartitions = partitionInfos.size();
+    int availablePartitions = cluster.partitionCountForTopic(topic);
     int partition = counter.getAndIncrement();
     return partition % availablePartitions;
   }
