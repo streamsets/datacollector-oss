@@ -87,10 +87,13 @@
                                         database.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Type</entry>
-                                    <entry>Type of record to generate. <draft-comment
-                                            author="Loretta">get more on when you'd use list, map,
-                                            or list-map.</draft-comment></entry>
+                                    <entry>Root Field Type</entry>
+                                    <entry>Root field type to use for generated records. Use the
+                                        default List-Map option unless using the origin in a
+                                        pipeline built with version 1.1.0 of the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> or earlier.<draft-comment author="Loretta">correct? check
+                                            wording.</draft-comment></entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>

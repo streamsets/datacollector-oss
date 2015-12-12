@@ -149,12 +149,12 @@
                                                 user-defined delimiter, escape, and quote
                                                 characters.</li>
                                     </ul></dd>
-                              <dd>You can use a list or list-map record type for delimited data,
+                              <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
                               <dd>When a record exceeds the maximum record length defined for the
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
-                              <dd>For more information about the record types, see <xref
+                              <dd>For more information about the root field types, see <xref
                                           href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
@@ -177,7 +177,7 @@
                                                 user-defined delimiter, escape, and quote
                                                 characters.</li>
                                     </ul></dd>
-                              <dd>You can use a list or list-map record type for delimited data,
+                              <dd>You can use a list or list-map root field type for delimited data,
                                     optionally including the header information when available. </dd>
                               <dd>When a record exceeds the user-defined maximum record length, the
                                     origin cannot continue processing data in the file. Records
@@ -194,7 +194,7 @@
                                                 Otherwise, it leaves the file in the directory.</li>
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
-                              <dd>For more information about the record types, see <xref
+                              <dd>For more information about the root field types, see <xref
                                           href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>

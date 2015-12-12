@@ -441,11 +441,11 @@
                                         are not read. </entry>
                                 </row>
                                 <row>
-                                    <entry>Record Type <xref
+                                    <entry>Root Field Type <xref
                                             href="../Pipeline_Design/DelimitedDataRecordTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_exx_41q_ft"/></xref></entry>
-                                    <entry>Record type to produce:<ul id="ul_izr_p1q_ft">
+                                    <entry>Root field type to use:<ul id="ul_izr_p1q_ft">
                                             <li>List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>

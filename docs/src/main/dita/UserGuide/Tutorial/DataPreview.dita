@@ -30,7 +30,7 @@
                 path depends on the complexity of the record: <codeph>/&lt;fieldname></codeph> for
                 simple records and <codeph>&lt;path to field>/&lt;fieldname></codeph> for more
                 complex records.  </p>
-            <p>Because we're using the List-Map record type, we can use
+            <p>Because we're using the List-Map root field type, we can use
                     <codeph>/&lt;fieldname></codeph>. </p>
             <p>To start data preview, all stages must be connected and all required properties
                 defined - though not necessarily correctly. Since the origin is configured and the

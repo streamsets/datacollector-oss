@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="When reading delimited data, the Data Collector can convert the data in a list or list-map record type. Use the default list-map record type to easily process delimited data. List-Map Record Type ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Delimited Data Record Types"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zcg_bm4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Delimited Data Record Types</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="When reading delimited data, the Data Collector can create records that use the list or list-map root field type. When the Data Collector creates records for delimited data, it creates a single root ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Delimited Data Root Field Type"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zcg_bm4_fs"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Delimited Data Root Field Type</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -32,21 +32,28 @@
 <table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design">Pipeline Concepts and Design</a></td><td><div class="navheader">
 <span class="navparent"><a class="link" href="../Pipeline_Design/PipelineDesign_title.html" title="Pipeline Concepts and Design"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Pipeline Concepts and Design</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_zcg_bm4_fs">
-  <h1 class="title topictitle1">Delimited Data Record Types</h1>
+  <h1 class="title topictitle1">Delimited Data Root Field Type</h1>
 
   <div class="body conbody">
-    <div class="p">When reading
-      delimited data, the <span class="ph">Data
-                  Collector</span> can
-      convert the data in a list or list-map record type. Use the default list-map record type to
-      easily process delimited data.<dl class="dl">
+    <p class="p">When reading delimited data, the <span class="ph">Data
+                  Collector</span> can create
+      records that use the list or list-map root field type. </p>
+
+    <p class="p">When the <span class="ph">Data
+                  Collector</span> creates records for delimited data, it creates a single root field of the specified type
+      and writes the delimited data within the root field. </p>
+
+    <p class="p">Use the default list-map root field type to easily process delimited data.</p>
+
+    <div class="p">
+      <dl class="dl">
         
-          <dt class="dt dlterm">List-Map Record Type</dt>
+          <dt class="dt dlterm">List-Map</dt>
 
           <dd class="dd">Provides easy use of field names or column position in expressions. Recommended for
             all new pipelines.</dd>
 
-          <dd class="dd">A list-map record type results in a structure that preserves the order of data, as
+          <dd class="dd">A list-map type results in a structure that preserves the order of data, as
             follows:<pre class="pre codeblock">/&lt;first header&gt;:&lt;value&gt;
 /&lt;second header&gt;:&lt;value&gt;
 /&lt;third header&gt;:&lt;value&gt;
@@ -96,13 +103,13 @@ For more information about standard
 
         
         
-          <dt class="dt dlterm">List Record Type</dt>
+          <dt class="dt dlterm">List </dt>
 
           <dd class="dd">Provides continued support for pipelines created before version 1.1.0. Not recommended
             for new pipelines.</dd>
 
-          <dd class="dd">A list record type results in list with an index for the header position and a map
-            with each header and associated value, as
+          <dd class="dd">A list type results in list with an index for the header position and a map with each
+            header and associated value, as
             follows:<pre class="pre codeblock">[0]/header = &lt;first header&gt;
    /value = &lt;value for first header&gt;
 [1]/header = &lt;second header&gt;
@@ -140,9 +147,9 @@ For more information about standard
 ...</pre>
 </dd>
 
-          <dd class="dd">For data in the list record type, you should either use the delimited data functions
-            or include the full field path in standard record functions. For example, you can use
-            the <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data function to return the
+          <dd class="dd">For data in the list type, you should either use the delimited data functions or
+            include the full field path in standard record functions. For example, you can use the
+              <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data function to return the
             value associated with the specified header. </dd>
 
           <dd class="dd">
@@ -152,13 +159,14 @@ For more information about standard
 
             </div>
 
-            <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process list record type delimited data. If you configured an origin to process the data using the list-map record type, you can use standard record functions.">Delimited Data Record Functions</a>.</p>
+            <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited Data Record Functions</a>.</p>
 
           </dd>
 
         
       </dl>
-</div>
+
+    </div>
 
   </div>
 

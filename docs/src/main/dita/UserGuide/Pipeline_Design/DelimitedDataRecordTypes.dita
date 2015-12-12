@@ -14,23 +14,28 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zcg_bm4_fs">
-  <title>Delimited Data Record Types</title>
+  <title>Delimited Data Root Field Type</title>
   <conbody>
-    <p><indexterm>delimited data<indexterm>record types</indexterm></indexterm><indexterm>pipeline
-          design<indexterm>delimited data record types</indexterm></indexterm><indexterm>list-map
-        record type<indexterm>delimited data</indexterm></indexterm><indexterm>list record
-          type<indexterm>delimited data</indexterm></indexterm><indexterm>list-map record
-          types<indexterm>in scripts for scripting processors</indexterm></indexterm>When reading
-      delimited data, the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
-      convert the data in a list or list-map record type. Use the default list-map record type to
-      easily process delimited data.<draft-comment author="Loretta">rewrite after SDC 2057 is
-        resolved.</draft-comment><dl>
+    <p><indexterm>delimited data<indexterm>root field
+        type</indexterm></indexterm><indexterm>pipeline design<indexterm>delimited data root field
+          type</indexterm></indexterm><indexterm>list-map root field type<indexterm>delimited
+          data</indexterm></indexterm><indexterm>list root-field type<indexterm>delimited
+          data</indexterm></indexterm><indexterm>JavaScript Evaluator<indexterm>scripts for
+          delimited data</indexterm></indexterm><indexterm>Jython Evaluator<indexterm>scripts for
+          delimited data</indexterm></indexterm>When reading delimited data, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can create
+      records that use the list or list-map root field type. </p>
+    <p>When the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> creates records for delimited data, it creates a single root field of the specified type
+      and writes the delimited data within the root field. </p>
+    <p>Use the default list-map root field type to easily process delimited data.</p>
+    <p>
+      <dl>
         <dlentry>
-          <dt>List-Map Record Type</dt>
+          <dt>List-Map</dt>
           <dd>Provides easy use of field names or column position in expressions. Recommended for
             all new pipelines.</dd>
-          <dd>A list-map record type results in a structure that preserves the order of data, as
+          <dd>A list-map type results in a structure that preserves the order of data, as
             follows:<codeblock>/&lt;first header>:&lt;value>
 /&lt;second header>:&lt;value>
 /&lt;third header>:&lt;value>
@@ -67,11 +72,11 @@ ${record:value('[0]'}</codeblock></dd>
               href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
         </dlentry>
         <dlentry>
-          <dt>List Record Type</dt>
+          <dt>List </dt>
           <dd>Provides continued support for pipelines created before version 1.1.0. Not recommended
             for new pipelines.</dd>
-          <dd>A list record type results in list with an index for the header position and a map
-            with each header and associated value, as
+          <dd>A list type results in list with an index for the header position and a map with each
+            header and associated value, as
             follows:<codeblock>[0]/header = &lt;first header>
    /value = &lt;value for first header>
 [1]/header = &lt;second header>
@@ -102,9 +107,9 @@ ${record:value('[0]'}</codeblock></dd>
 [1]/value = &lt;value>
 [2]/value = &lt;value>
 ...</codeblock></dd>
-          <dd>For data in the list record type, you should either use the delimited data functions
-            or include the full field path in standard record functions. For example, you can use
-            the <codeph>record:dValue('&lt;header>')</codeph> delimited data function to return the
+          <dd>For data in the list type, you should either use the delimited data functions or
+            include the full field path in standard record functions. For example, you can use the
+              <codeph>record:dValue('&lt;header>')</codeph> delimited data function to return the
             value associated with the specified header. </dd>
           <dd>
             <p>
@@ -115,6 +120,7 @@ ${record:value('[0]'}</codeblock></dd>
                 href="../Expression_Language/RecordFunc-Delimited.dita#concept_s2c_q14_fs"/>.</p>
           </dd>
         </dlentry>
-      </dl></p>
+      </dl>
+    </p>
   </conbody>
 </concept>

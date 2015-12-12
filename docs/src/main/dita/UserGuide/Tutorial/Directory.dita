@@ -121,13 +121,13 @@
                                             <uicontrol>With Header Line</uicontrol>.</entry>
                                 </row>
                                 <row>
-                                    <entry>Record Type</entry>
+                                    <entry>Root Field Type</entry>
                                     <entry>This property determines how the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> processes delimited data. Use the default
                                             <uicontrol>List-Map</uicontrol>. <p>This allows you to
                                             use standard functions to process delimited data. With
-                                            the List record type, you need to use delimited data
+                                            the List root field type, you need to use delimited data
                                             functions.</p></entry>
                                 </row>
                             </tbody>
