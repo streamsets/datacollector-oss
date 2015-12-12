@@ -41,6 +41,7 @@ public class LogUtils {
       "log4j.appender.streamsets.layout.ConversionPattern";
   public static final String LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN = "log4j.appender.stderr.layout.ConversionPattern";
   public static final String LOG4J_GROK_ATTR = "log4j.grok";
+  public static final String LOG4J_CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [thread:%t] %-5p %c{1} - %m%n";
 
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
     if(Boolean.getBoolean("sdc.transient-env")) {
@@ -98,34 +99,42 @@ public class LogUtils {
 
   public static Grok getLogGrok(RuntimeInfo runtimeInfo) throws IOException, DataParserException {
     Grok logFileGrok = runtimeInfo.getAttribute(LOG4J_GROK_ATTR);
+    String logPattern;
     if(logFileGrok == null) {
-      URL log4jConfig = runtimeInfo.getAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR);
-      if (log4jConfig != null) {
-        try (InputStream is = log4jConfig.openStream()) {
-          Properties props = new Properties();
-          props.load(is);
-          String logPattern = props.getProperty(LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN);
-          if (logPattern == null) {
-            logPattern = props.getProperty(LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN);
-          }
-          if (logPattern != null) {
-            String grokPattern = Log4jHelper.translateLog4jLayoutToGrok(logPattern);
-            GrokDictionary grokDictionary = new GrokDictionary();
-            grokDictionary.addDictionary(LogUtils.class.getClassLoader().
-                getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
-            grokDictionary.addDictionary(LogUtils.class.getClassLoader().getResourceAsStream(
-                Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
-            grokDictionary.bind();
-            logFileGrok = grokDictionary.compileExpression(grokPattern);
-            runtimeInfo.setAttribute(LOG4J_GROK_ATTR, logFileGrok);
-          } else {
-            throw new IllegalStateException("Cannot find log4j layout conversion pattern");
-          }
-        }
+      if(Boolean.getBoolean("sdc.transient-env")) {
+        // hack for Worker SDC until we use single log4j property for Standalone and Worker SDC
+        logPattern = LOG4J_CONVERSION_PATTERN;
       } else {
-        throw new IOException(Utils.format("RuntimeInfo does not has attribute '{}'",
-            RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR));
+        URL log4jConfig = runtimeInfo.getAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR);
+        if (log4jConfig != null) {
+          try (InputStream is = log4jConfig.openStream()) {
+            Properties props = new Properties();
+            props.load(is);
+            logPattern = props.getProperty(LOG4J_APPENDER_STREAMSETS_LAYOUT_CONVERSION_PATTERN);
+            if (logPattern == null) {
+              logPattern = props.getProperty(LOG4J_APPENDER_STDERR_LAYOUT_CONVERSION_PATTERN);
+            }
+          }
+        } else {
+          throw new IOException(Utils.format("RuntimeInfo does not has attribute '{}'",
+              RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR));
+        }
       }
+
+      if (logPattern != null) {
+        String grokPattern = Log4jHelper.translateLog4jLayoutToGrok(logPattern);
+        GrokDictionary grokDictionary = new GrokDictionary();
+        grokDictionary.addDictionary(LogUtils.class.getClassLoader().
+            getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
+        grokDictionary.addDictionary(LogUtils.class.getClassLoader().getResourceAsStream(
+            Constants.GROK_JAVA_LOG_PATTERNS_FILE_NAME));
+        grokDictionary.bind();
+        logFileGrok = grokDictionary.compileExpression(grokPattern);
+        runtimeInfo.setAttribute(LOG4J_GROK_ATTR, logFileGrok);
+      } else {
+        throw new IllegalStateException("Cannot find log4j layout conversion pattern");
+      }
+
     }
     return logFileGrok;
   }
