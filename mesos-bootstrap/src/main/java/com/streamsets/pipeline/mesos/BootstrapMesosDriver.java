@@ -18,58 +18,35 @@
  * limitations under the License.
  */
 package com.streamsets.pipeline.mesos;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Properties;
-
 import com.streamsets.pipeline.BootstrapCluster;
 
 public class BootstrapMesosDriver {
-
-  private static final String MESOS_BOOTSTRAP_JAR_REGEX = "streamsets-datacollector-mesos-bootstrap";
-  private static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
-
   /**
    * Bootstrapping the Driver which starts a Spark job on Mesos
    */
   public static void main(String[] args) throws Exception {
-
     BootstrapCluster.printSystemPropsEnvVariables();
-    String mesosHomeDir = System.getenv("MESOS_DIRECTORY");
-    String sparkHome = System.getenv("SPARK_HOME");
-    // Extract archives from the uber jar
-    String[] cmd = {"/bin/bash", "-c",
-          "cd " + mesosHomeDir + "; "
-        + "mkdir " + SDC_MESOS_BASE_DIR + "; cd " + SDC_MESOS_BASE_DIR + ";"
-        + "jar -xf ../" + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; "
-        + "if [ $? -eq 1 ]; then jar -xf " + sparkHome + "/" + MESOS_BOOTSTRAP_JAR_REGEX + "*.jar; fi;"
-        + "tar -xf etc.tar.gz; "
-        + "mkdir libs; "
-        + "tar -xf libs.tar.gz -C libs/; "
-        + "tar -xf resources.tar.gz" };
-    ProcessBuilder processBuilder = new ProcessBuilder(cmd);
-    processBuilder.redirectErrorStream(true);
-    Process process = processBuilder.start();
-    try (BufferedReader stdOutReader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
-      String line = null;
-      while ((line = stdOutReader.readLine()) != null) {
-        System.out.println(line);
-      }
-      process.waitFor();
+    String mesosDir = System.getenv("MESOS_DIRECTORY");
+    if (mesosDir == null) {
+      throw new IllegalStateException("Expected the env. variable MESOS_DIRECTORY to be defined");
     }
-    if (process.exitValue() != 0) {
+    File mesosHomeDir = new File(mesosDir);
+    String sparkDir = System.getenv("SPARK_HOME");
+    if (sparkDir == null) {
+      throw new IllegalStateException("Expected the env. variable SPARK_HOME to be defined");
+    }
+    File sparkHomeDir = new File(sparkDir);
+    int processExitValue = BootstrapCluster.findAndExtractJar(mesosHomeDir, sparkHomeDir);
+    if (processExitValue != 0) {
       throw new IllegalStateException(
         "Process extracting archives from uber jar exited abnormally; check Mesos driver stdout file");
     }
-    System.setProperty("SDC_MESOS_BASE_DIR", new File(mesosHomeDir, SDC_MESOS_BASE_DIR).getAbsolutePath());
+    System.setProperty("SDC_MESOS_BASE_DIR",
+      new File(mesosHomeDir, BootstrapCluster.SDC_MESOS_BASE_DIR).getAbsolutePath());
     final Class<?> clazz = Class.forName("com.streamsets.pipeline.BootstrapClusterStreaming");
     final Method method = clazz.getMethod("main", String[].class);
-    method.invoke(null, new Object[]{args});
+    method.invoke(null, new Object[] { args });
   }
 }
