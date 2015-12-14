@@ -37,7 +37,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,6 +70,7 @@ public class SparkStreamingBinding implements ClusterBinding {
     }
     final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+    final String topic = getProperty(TOPIC);
     final long duration;
     String durationAsString = getProperty(MAX_WAIT_TIME);
     try {
@@ -85,7 +89,8 @@ public class SparkStreamingBinding implements ClusterBinding {
     URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
     logMessage("Default FS URI: " + hdfsURI);
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
-    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/" + getProperty("sdc.id"));
+    Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"
+      + getProperty("sdc.id") + "/" + encode(topic));
     hdfs.mkdirs(sdcCheckpointPath);
     if (!hdfs.isDirectory(sdcCheckpointPath)) {
       throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);
@@ -100,7 +105,6 @@ public class SparkStreamingBinding implements ClusterBinding {
         // Check for null values
         // require only the broker list for direct stream API (low level consumer API)
         String metaDataBrokerList = getProperty(METADATA_BROKER_LIST);
-        String topic = getProperty(TOPIC);
         props.put("metadata.broker.list", metaDataBrokerList);
         String autoOffsetValue = properties.getProperty(AUTO_OFFSET_RESET, "").trim();
         if (!autoOffsetValue.isEmpty()) {
@@ -131,6 +135,14 @@ public class SparkStreamingBinding implements ClusterBinding {
     }
     logMessage("Making calls through spark context ");
     ssc.start();
+  }
+
+  static String encode(String s) {
+    try {
+      return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
+    } catch (UnsupportedEncodingException e) {
+      throw new IllegalStateException("Could not find UTF-8: " + e, e);
+    }
   }
 
   private String getProperty(String name) {
