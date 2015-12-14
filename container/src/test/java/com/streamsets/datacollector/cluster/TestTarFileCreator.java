@@ -119,7 +119,7 @@ public class TestTarFileCreator {
     streamsetsLibsCl.put("abc456", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc456"))
       .toURL()}).getURLs()));
     userLibsCL.put("yxz456", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(userLibsDir, "yxz456"))
-      .toURL()}).getURLs()));
+      .toURL(), createJar(new File(tempDir, "yxz789")).toURL()}).getURLs()));
     File staticWebDir = new File(tempDir, "static-web-dir");
     Assert.assertTrue(staticWebDir.mkdir());
     createJar(new File(staticWebDir, "subdir"));
@@ -141,6 +141,7 @@ public class TestTarFileCreator {
     readDir("user-libs/", tis);
     readDir("user-libs/yxz456/", tis);
     readDir("user-libs/yxz456/lib/", tis);
+    readJar(tis);
     readJar(tis);
     readJar(tis);
     readDir("libs-common-lib/", tis);

@@ -90,17 +90,10 @@ public class TarFileCreator {
   private static void addClasspath(String prefix, TarOutputStream out, List<URL> urls)
     throws IOException {
     if (urls != null) {
-      String dirname = null;
       for (URL url : urls) {
         File file = new File(url.getPath());
         String name = file.getName();
         if (name.endsWith(".jar")) {
-          if (dirname == null) {
-            dirname = file.getParent();
-          } else if (!dirname.equals(file.getParent())) {
-            String msg = Utils.format("Expected {} to be a sub-directory of {}", file.getPath(), dirname);
-            throw new IllegalStateException(msg);
-          }
           out.putNextEntry(new TarEntry(file, prefix + "/" + file.getName()));
           BufferedInputStream src = new BufferedInputStream(new FileInputStream(file), 65536);
           IOUtils.copy(src, out);
