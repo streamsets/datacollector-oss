@@ -42,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.jar.JarFile;
 import java.util.jar.JarEntry;
 
@@ -133,15 +132,27 @@ public class BootstrapCluster {
       apiUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/api-lib/*.jar");
       containerUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/container-lib/*.jar");
 
-      Set<String> systemWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.SYSTEM_LIBS_KEY);
-      Set<String> userWhiteList = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.USER_LIBS_KEY);
+      Set<String> systemStageLibs;
+      Set<String> userStageLibs;
+      if (BootstrapMain.isDeprecatedWhiteListConfiguration(etcRoot)) {
+        System.out.println(String.format(
+            BootstrapMain.WARN_MSG,
+            "Using deprecated stage library whitelist configuration file",
+            BootstrapMain.WHITE_LIST_FILE
+        ));
+        systemStageLibs = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY);
+        userStageLibs = BootstrapMain.getWhiteList(etcRoot, BootstrapMain.USER_LIBS_WHITE_LIST_KEY);
+      } else {
+        systemStageLibs = BootstrapMain.getSystemStageLibs(etcRoot);
+        userStageLibs = BootstrapMain.getUserStageLibs(etcRoot);
+      }
 
       String libsCommonLibDir = libraryRoot + "/libs-common-lib";
 
       // in cluster mode, the library extra dir files from the master are collapsed on the library dir
       streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null,
-                                                                     systemWhiteList, libsCommonLibDir);
-      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, userWhiteList,
+                                                                     systemStageLibs, libsCommonLibDir);
+      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, userStageLibs,
                                                                libsCommonLibDir);
     }
     Map<String, List<URL>> libsUrls = new LinkedHashMap<String, List<URL>> ();

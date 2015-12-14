@@ -67,17 +67,23 @@ public class BootstrapMain {
   private static final String CLASSPATH_DIR_DOES_NOT_EXIST_MSG = "Classpath directory '%s' does not exist";
   private static final String CLASSPATH_PATH_S_IS_NOT_A_DIR_MSG = "Specified Classpath path '%s' is not a directory";
 
+  static final String SDC_CONFIG_FILE = "sdc.properties";
+
   static final String WHITE_LIST_FILE = "stagelibswhitelist.properties";
-  static final String SYSTEM_LIBS_KEY = "system.stagelibs.whitelist";
-  static final String USER_LIBS_KEY = "user.stagelibs.whitelist";
+  static final String SYSTEM_LIBS_WHITE_LIST_KEY = "system.stagelibs.whitelist";
+  static final String USER_LIBS_WHITE_LIST_KEY = "user.stagelibs.whitelist";
+  static final String SYSTEM_LIBS_BLACK_LIST_KEY = "system.stagelibs.blackist";
+  static final String USER_LIBS_BLACK_LIST_KEY = "user.stagelibs.blacklist";
   static final String ALL_VALUES = "*";
 
   private static final String WHITE_LIST_PROPERTY_MISSING_MSG = "WhiteList property '%s' is missing in in file '%s'";
   private static final String WHITE_LIST_COULD_NOT_LOAD_FILE_MSG = "Could not load WhiteList file '%s': %s";
 
   private static final String DEBUG_MSG_PREFIX = "DEBUG: ";
+  private static final String WARN_MSG_PREFIX = "WARN : ";
 
   private static final String DEBUG_MSG = DEBUG_MSG_PREFIX + "'%s' %s";
+  public static final String WARN_MSG = WARN_MSG_PREFIX + "'%s' %s";
 
   private static Instrumentation instrumentation;
 
@@ -216,18 +222,31 @@ public class BootstrapMain {
     List<URL> apiUrls = getClasspathUrls(apiClasspath);
     List<URL> containerUrls = getClasspathUrls(containerClasspath);
 
-    Set<String> systemWhiteList = getWhiteList(configDir, SYSTEM_LIBS_KEY);
-    Set<String> userWhiteList = getWhiteList(configDir, USER_LIBS_KEY);
+    Set<String> systemStageLibs;
+    Set<String> userStageLibs;
+    if (isDeprecatedWhiteListConfiguration(configDir)) {
+      System.out.println(String.format(
+          WARN_MSG,
+          "Using deprecated stage library whitelist configuration file",
+          WHITE_LIST_FILE
+      ));
+      systemStageLibs = getWhiteList(configDir, SYSTEM_LIBS_WHITE_LIST_KEY);
+      userStageLibs = getWhiteList(configDir, USER_LIBS_WHITE_LIST_KEY);
+    } else {
+      systemStageLibs = getSystemStageLibs(configDir);
+      userStageLibs = getUserStageLibs(configDir);
+    }
+
     if (debug) {
-      String whiteListStr = (systemWhiteList == null) ? ALL_VALUES : systemWhiteList.toString();
-      System.out.println(String.format(DEBUG_MSG, "System libs white list", whiteListStr));
-      whiteListStr = (userWhiteList == null) ? ALL_VALUES : userWhiteList.toString();
-      System.out.println(String.format(DEBUG_MSG, "User libs white list", whiteListStr));
+      String whiteListStr = (systemStageLibs == null) ? ALL_VALUES : systemStageLibs.toString();
+      System.out.println(String.format(DEBUG_MSG, "System stage libs", whiteListStr));
+      whiteListStr = (userStageLibs == null) ? ALL_VALUES : userStageLibs.toString();
+      System.out.println(String.format(DEBUG_MSG, "User stage libs", whiteListStr));
     }
 
     Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir,
-        streamsetsLibrariesExtraDir, systemWhiteList, libsCommonLibDir);
-    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, null, userWhiteList,
+        streamsetsLibrariesExtraDir, systemStageLibs, libsCommonLibDir);
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, null, systemStageLibs,
         libsCommonLibDir);
 
     if (debug) {
@@ -287,7 +306,37 @@ public class BootstrapMain {
     method = klass.getMethod(MAIN_METHOD, String[].class);
     method.invoke(null, new Object[]{new String[]{}});
   }
+  public static Set<String> getSystemStageLibs(String configDir) {
+    return getStageLibs(configDir, SYSTEM_LIBS_WHITE_LIST_KEY, SYSTEM_LIBS_BLACK_LIST_KEY);
+  }
 
+  public static Set<String> getUserStageLibs(String configDir) {
+    return getStageLibs(configDir, USER_LIBS_WHITE_LIST_KEY, USER_LIBS_BLACK_LIST_KEY);
+  }
+
+  public static Set<String> getStageLibs(String configDir, String whiteListKey, String blackListKey) {
+    Set<String> stageLibs = null;
+    if (isDeprecatedWhiteListConfiguration(configDir)) {
+      System.out.println(String.format(
+          WARN_MSG,
+          "Using deprecated stage library whitelist configuration file",
+          WHITE_LIST_FILE
+      ));
+      stageLibs = getWhiteList(configDir, whiteListKey);
+    } else {
+      Properties config = readSdcConfiguration(configDir);
+      validateWhiteBlackList(config, whiteListKey, blackListKey);
+      if (config.containsKey(whiteListKey)) {
+        stageLibs = getList(config, whiteListKey, true);
+      } else if (config.containsKey(blackListKey)) {
+        stageLibs = getList(config, blackListKey, false);
+      }
+    }
+    return stageLibs;
+  }
+
+  // deprecated as of SDC 1.2
+  //
   // if whitelist is '*' set is NULL, else whitelist has the whitelisted values
   public static Set<String> getWhiteList(String configDir, String property) {
     Set<String> set = null;
@@ -306,7 +355,7 @@ public class BootstrapMain {
           for (String name : whiteList.split(",")) {
             name = name.trim();
             if (!name.isEmpty()) {
-              set.add(name.trim());
+              set.add("+" + name.trim());
             }
           }
         }
@@ -318,20 +367,83 @@ public class BootstrapMain {
     return set;
   }
 
+  private static final String CANNOT_READ_SDC_CONFIG_FILE = "File '%s' cannot be read: %s";
+  private static final String CANNOT_HAVE_WHITE_BLACK_LIST_MSG =
+      "Configuration file '%s' cannot define both '%s' and '%s' properties";
+
+  public static boolean isDeprecatedWhiteListConfiguration(String configDir) {
+    return new File(configDir, WHITE_LIST_FILE).getAbsoluteFile().exists();
+  }
+
+  public static Properties readSdcConfiguration(String configDir) {
+    File file = new File(configDir, SDC_CONFIG_FILE).getAbsoluteFile();
+    try (InputStream is = new FileInputStream(file)) {
+      Properties props = new Properties();
+      props.load(is);
+      return props;
+    } catch (IOException ex) {
+      throw new IllegalArgumentException(String.format(CANNOT_READ_SDC_CONFIG_FILE, file, ex.toString()));
+    }
+  }
+
+  public static void validateWhiteBlackList(Properties props, String whiteList, String blackList) {
+    if (props.containsKey(whiteList) && props.containsKey(blackList)) {
+      throw new IllegalArgumentException(String.format(
+          CANNOT_HAVE_WHITE_BLACK_LIST_MSG,
+          SDC_CONFIG_FILE,
+          whiteList,
+          blackList
+      ));
+    }
+  }
+
+  public static Set<String> getList(Properties props, String property, boolean whitelist) {
+    String prefix = (whitelist) ? "+" : "-";
+    Set<String> set = null;
+    String whiteList = props.getProperty(property, null);
+    if (whiteList != null) {
+      set = new HashSet<>();
+      for (String name : whiteList.split(",")) {
+        name = name.trim();
+        if (!name.isEmpty()) {
+          set.add(prefix + name.trim());
+        }
+      }
+    }
+    return set;
+  }
+
+  public static FileFilter createStageLibFilter(final Set<String> stageLibs) {
+   return new FileFilter() {
+      @Override
+      public boolean accept(File pathname) {
+        boolean accept = false;
+        if (pathname.isDirectory()) {
+          if (stageLibs == null) {
+            // stageLibs == NULL means ALL
+            accept = true;
+          } else {
+            boolean isWhiteList = stageLibs.iterator().next().startsWith("+");
+            if (isWhiteList && stageLibs.contains("+" + pathname.getName())) {
+              accept = true;
+            } else if (!isWhiteList && !stageLibs.contains("-" + pathname.getName())) {
+              accept = true;
+            }
+          }
+        }
+        return accept;
+      }
+    };
+  }
+
   // Visible for testing
   public static Map<String, List<URL>> getStageLibrariesClasspaths(String stageLibrariesDir, String librariesExtraDir,
-      final Set<String> whiteListDirs, String libsCommonLibDir) throws Exception {
+      final Set<String> stageLibs, String libsCommonLibDir) throws Exception {
     Map<String, List<URL>> map = new LinkedHashMap<String, List<URL>>();
 
     File baseDir = new File(stageLibrariesDir).getAbsoluteFile();
     if (baseDir.exists()) {
-      File[] libDirs = baseDir.listFiles(new FileFilter() {
-        @Override
-        public boolean accept(File pathname) {
-          // whiteListDirs == NULL means ALL
-          return pathname.isDirectory() && (whiteListDirs == null || whiteListDirs.contains(pathname.getName()));
-        }
-      });
+      File[] libDirs = baseDir.listFiles(createStageLibFilter(stageLibs));
       StringBuilder commonLibJars = new StringBuilder();
       if (libsCommonLibDir != null) {
         commonLibJars.append(new File(libsCommonLibDir).getAbsolutePath()).append(FILE_SEPARATOR).append(JARS_WILDCARD).

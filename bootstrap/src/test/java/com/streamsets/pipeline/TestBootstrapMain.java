@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.instrument.Instrumentation;
@@ -307,8 +308,8 @@ public class TestBootstrapMain {
     File dir = new File(confDir);
     dir.mkdirs();
     Properties props = new Properties();
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "*");
-    props.setProperty(BootstrapMain.USER_LIBS_KEY, "*");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "*");
+    props.setProperty(BootstrapMain.USER_LIBS_WHITE_LIST_KEY, "*");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
@@ -334,8 +335,8 @@ public class TestBootstrapMain {
 
     setClassLoaders = false;
     main = false;
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "stage1");
-    props.setProperty(BootstrapMain.USER_LIBS_KEY, "");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "stage1");
+    props.setProperty(BootstrapMain.USER_LIBS_WHITE_LIST_KEY, "");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
@@ -431,7 +432,7 @@ public class TestBootstrapMain {
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY);
+    BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY);
   }
 
   @Test
@@ -439,11 +440,11 @@ public class TestBootstrapMain {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     Properties props = new Properties();
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, BootstrapMain.ALL_VALUES);
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, BootstrapMain.ALL_VALUES);
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    Assert.assertNull(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY));
+    Assert.assertNull(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY));
   }
 
   @Test
@@ -451,23 +452,23 @@ public class TestBootstrapMain {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     Properties props = new Properties();
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY).isEmpty());
 
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, " ");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, " ");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY).isEmpty());
 
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, ",,");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, ",,");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_KEY).isEmpty());
+    Assert.assertTrue(BootstrapMain.getWhiteList(dir.getAbsolutePath(), BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY).isEmpty());
   }
 
   @Test
@@ -475,12 +476,95 @@ public class TestBootstrapMain {
     File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
     Assert.assertTrue(dir.mkdirs());
     Properties props = new Properties();
-    props.setProperty(BootstrapMain.SYSTEM_LIBS_KEY, "a, b ,");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "a, b ,");
     try (OutputStream os = new FileOutputStream(new File(dir, BootstrapMain.WHITE_LIST_FILE))) {
       props.store(os, "");
     }
-    Assert.assertEquals(ImmutableSet.of("a","b"), BootstrapMain.getWhiteList(dir.getAbsolutePath(),
-                                                                             BootstrapMain.SYSTEM_LIBS_KEY));
+    Assert.assertTrue(BootstrapMain.isDeprecatedWhiteListConfiguration(dir.toString()));
+    Assert.assertEquals(ImmutableSet.of("+a","+b"), BootstrapMain.getWhiteList(dir.getAbsolutePath(),
+                                                                             BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY
+    ));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidWhiteBlackList() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "a, b ,");
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, "a, b ,");
+    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+  }
+
+  @Test
+  public void testValidWhiteList() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, "a, b ,");
+    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+    Set<String> list = BootstrapMain.getList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY, true);
+    Assert.assertEquals(ImmutableSet.of("+a","+b"), list);
+
+  }
+
+  @Test
+  public void testValidBlackList() throws Exception {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    Properties props = new Properties();
+    props.setProperty(BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, "a, b ,");
+    BootstrapMain.validateWhiteBlackList(props, BootstrapMain.SYSTEM_LIBS_WHITE_LIST_KEY,
+        BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY);
+    Set<String> list = BootstrapMain.getList(props, BootstrapMain.SYSTEM_LIBS_BLACK_LIST_KEY, false);
+    Assert.assertEquals(ImmutableSet.of("-a","-b"), list);
+  }
+
+  @Test
+  public void testStageLibsFilterNoWhiteBlackList() {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    File aDir = new File(dir, "a");
+    Assert.assertTrue(aDir.mkdirs());
+    Set<String> stageLibsList = null;
+    FileFilter filter = BootstrapMain.createStageLibFilter(stageLibsList);
+    Assert.assertTrue(filter.accept(aDir));
+  }
+
+  @Test
+  public void testStageLibsFilterWhiteList() {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    File aDir = new File(dir, "a");
+    Assert.assertTrue(aDir.mkdirs());
+    File bDir = new File(dir, "b");
+    Assert.assertTrue(bDir.mkdirs());
+    File cDir = new File(dir, "c");
+    Assert.assertTrue(cDir.mkdirs());
+    Set<String> stageLibsList = ImmutableSet.of("+a","+b");
+    FileFilter filter = BootstrapMain.createStageLibFilter(stageLibsList);
+    Assert.assertTrue(filter.accept(aDir));
+    Assert.assertTrue(filter.accept(bDir));
+    Assert.assertFalse(filter.accept(cDir));
+  }
+
+  @Test
+  public void testStageLibsFilterBlackList() {
+    File dir = new File("target", UUID.randomUUID().toString()).getAbsoluteFile();
+    Assert.assertTrue(dir.mkdirs());
+    File aDir = new File(dir, "a");
+    Assert.assertTrue(aDir.mkdirs());
+    File bDir = new File(dir, "b");
+    Assert.assertTrue(bDir.mkdirs());
+    File cDir = new File(dir, "c");
+    Assert.assertTrue(cDir.mkdirs());
+    Set<String> stageLibsList = ImmutableSet.of("-a","-b");
+    FileFilter filter = BootstrapMain.createStageLibFilter(stageLibsList);
+    Assert.assertFalse(filter.accept(aDir));
+    Assert.assertFalse(filter.accept(bDir));
+    Assert.assertTrue(filter.accept(cDir));
   }
 
 }
