@@ -224,6 +224,7 @@
                   <pattern>org.apache</pattern>
                   <shadedPattern>_ss_org.apache</shadedPattern>
                 </relocation>
+                <!-- Guava -->
                 <relocation>
                   <pattern>com.google</pattern>
                   <shadedPattern>_ss_com.com.google</shadedPattern>
