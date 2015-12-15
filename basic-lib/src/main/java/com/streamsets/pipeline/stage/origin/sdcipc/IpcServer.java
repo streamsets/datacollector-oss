@@ -99,13 +99,13 @@ public class IpcServer {
     server.setHandler(context);
     server.start();
 
-    LOG.info("Running, port '{}', SSL '{}'", configs.port, configs.sslEnabled);
+    LOG.info("Running, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
 
     httpServer = server;
   }
 
   public void stop() {
-    LOG.info("Shutting down, port '{}', SSL '{}'", configs.port, configs.sslEnabled);
+    LOG.info("Shutting down, port '{}', TLS '{}'", configs.port, configs.sslEnabled);
     if (httpServer != null) {
       try {
         servlet.setShuttingDown();

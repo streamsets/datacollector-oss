@@ -73,7 +73,8 @@ public class Configs {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "SSL Enabled",
+      label = "TLS Enabled",
+      description = "Encrypt RPC communication using TLS.",
       displayPosition = 40,
       group = "RPC"
   )
