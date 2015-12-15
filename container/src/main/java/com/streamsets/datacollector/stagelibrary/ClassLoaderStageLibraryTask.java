@@ -21,6 +21,7 @@ package com.streamsets.datacollector.stagelibrary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Splitter;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -61,9 +62,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
@@ -221,6 +224,37 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     super.stopTask();
   }
 
+  public static final String IGNORE_STAGE_DEFINITIONS = "ignore.stage.definitions";
+
+  Set<String> loadIgnoreStagesList(StageLibraryDefinition libDef) throws IOException {
+    Set<String> ignoreStages = new HashSet<>();
+    try (InputStream is = libDef.getClassLoader()
+        .getResourceAsStream(StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES)) {
+      if (is != null) {
+        Properties props = new Properties();
+        props.load(is);
+        String ignore = props.getProperty(IGNORE_STAGE_DEFINITIONS, "");
+        ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
+      }
+    }
+    return ignoreStages;
+  }
+
+  List<String> removeIgnoreStagesFromList(StageLibraryDefinition libDef, List<String> stages) throws IOException {
+    List<String> list = new ArrayList<>();
+    Set<String> ignoreStages = loadIgnoreStagesList(libDef);
+    Iterator<String> iterator = stages.iterator();
+    while (iterator.hasNext()) {
+      String stage = iterator.next();
+      if (ignoreStages.contains(stage)) {
+        LOG.debug("Ignoring stage class '{}' from library '{}'", stage, libDef.getName());
+      } else {
+        list.add(stage);
+      }
+    }
+    return list;
+  }
+
   @VisibleForTesting
   void loadStages() {
     if (LOG.isDebugEnabled()) {
@@ -252,6 +286,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             URL url = resources.nextElement();
             try (InputStream is = url.openStream()) {
               List<String> stageList = json.readValue(is, List.class);
+              stageList = removeIgnoreStagesFromList(libDef, stageList);
               for (String className : stageList) {
                 stages++;
                 Class<? extends Stage> klass = (Class<? extends Stage>) cl.loadClass(className);

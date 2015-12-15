@@ -20,8 +20,10 @@
 package com.streamsets.datacollector.stagelibrary;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -35,8 +37,10 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class TestClassLoaderStageLibraryTask {
@@ -107,6 +111,24 @@ public class TestClassLoaderStageLibraryTask {
       }
     }
     Assert.assertTrue(foundAutoC);
+  }
+
+  @Test
+  public void testIgnoreStages() throws Exception {
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(null, new Configuration());
+
+    StageLibraryDefinition libDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+    Set<String> ignoreList = library.loadIgnoreStagesList(libDef);
+
+    Assert.assertEquals(ImmutableSet.of("foo", "bar"), ignoreList);
+
+    List<String> stageList = ImmutableList.of("a", "b", "c");
+    Assert.assertEquals(stageList, library.removeIgnoreStagesFromList(libDef, stageList));
+
+    List<String> stageListWithIgnores = ImmutableList.of("a", "bar", "b", "c", "foo");
+    Assert.assertEquals(stageList, library.removeIgnoreStagesFromList(libDef, stageListWithIgnores));
+
   }
 
 }
