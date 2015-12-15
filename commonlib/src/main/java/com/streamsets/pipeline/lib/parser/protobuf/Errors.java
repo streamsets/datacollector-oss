@@ -24,9 +24,17 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  PROTOBUF_PARSER_00("Could not find non-nested message type '{}' in Protobuf Descriptor File '{}'"),
-  PROTOBUF_PARSER_01("Error building FileDescriptor for '{}'. Could not satisfy the dependencies."),
-
+  PROTOBUF_00("Could not find non-nested message type '{}' in Protobuf Descriptor File '{}'"),
+  PROTOBUF_01("Error building FileDescriptor for '{}'. Could not satisfy dependencies."),
+  PROTOBUF_02("Descriptor is for a map, but the SDC Record field was a {}"),
+  PROTOBUF_03("Unknown Field Descriptor type '{}'"),
+  PROTOBUF_04("Record '{}' is missing required protobuf field '{}'"),
+  PROTOBUF_05("Error while serializing unknown fields: {}"),
+  PROTOBUF_06("Field descriptor file '{}' does not exist."),
+  PROTOBUF_07("Descriptor file is not valid: {}"),
+  PROTOBUF_08("Error reading FileDescriptorSet: {}"),
+  PROTOBUF_09("A MapEntry should only have key and value fields, but found {}"),
+  PROTOBUF_10("Error while writing serialized message: {}"),
   ;
 
   private final String msg;

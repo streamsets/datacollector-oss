@@ -44,7 +44,7 @@ public class ProtobufDataGenerator implements DataGenerator {
       Descriptors.Descriptor descriptor,
       Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap,
       Map<String, Object> defaultValueMap
-  ) throws IOException, Descriptors.DescriptorValidationException {
+  ) {
     this.outputStream = outputStream;
     this.descriptor = descriptor;
     this.messageTypeToExtensionMap = messageTypeToExtensionMap;

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.parser.protobuf;
 
 import com.google.common.io.Resources;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -33,15 +34,21 @@ import com.streamsets.pipeline.lib.util.PersonProto;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class TestProtobufDataParser {
 
@@ -51,14 +58,64 @@ public class TestProtobufDataParser {
     List<Record> records = new ArrayList<>();
     Record r = dataParser.parse();
     // Engineer object in the stream is 59 bytes long
-    Assert.assertEquals("125", dataParser.getOffset());
+    assertEquals("125", dataParser.getOffset());
     while(r != null) {
       records.add(r);
       r = dataParser.parse();
     }
-    Assert.assertTrue("-1".equals(dataParser.getOffset()));
-    Assert.assertEquals(10, records.size());
+    assertTrue("-1".equals(dataParser.getOffset()));
+    assertEquals(10, records.size());
     ProtobufTestUtil.compareProtoRecords(records, 0);
+  }
+
+  @Test
+  public void testProtobuf3Delimited() throws Exception {
+    DataParser dataParser = getDataParserFactory("TestRecordProtobuf3.desc", "TestRecord", true)
+        .getParser(
+            "TestRecord",
+            new ByteArrayInputStream(FileUtils.readFileToByteArray(
+                new File(Resources.getResource("TestProtobuf3.ser").getPath()))
+            ),
+            "0"
+        );
+
+    Record record = dataParser.parse();
+    verifyProtobuf3TestRecord(record);
+  }
+
+  @Test
+  public void testProtobuf3NonDelimited() throws Exception {
+    DataParser dataParser = getDataParserFactory("TestRecordProtobuf3.desc", "TestRecord", false)
+        .getParser(
+            "TestRecord",
+            new ByteArrayInputStream(FileUtils.readFileToByteArray(
+                new File(Resources.getResource("TestProtobuf3NoDelimiter.ser").getPath()))
+            ),
+            "0"
+        );
+
+    Record record = dataParser.parse();
+    verifyProtobuf3TestRecord(record);
+  }
+
+  private void verifyProtobuf3TestRecord(Record record) {
+    assertTrue(record.has("/first_name"));
+    assertTrue(record.has("/full_name"));
+    assertTrue(record.has("/test_map"));
+    assertTrue(record.has("/samples"));
+
+    assertEquals("Adam", record.get("/first_name").getValueAsString());
+    assertTrue(null == record.get("/full_name").getValue());
+    List<Field> samples = record.get("/samples").getValueAsList();
+    assertEquals(2, samples.size());
+    assertEquals(1, samples.get(0).getValueAsInteger());
+    assertEquals(2, samples.get(1).getValueAsInteger());
+    Map<String, Field> testMap = record.get("/test_map").getValueAsMap();
+    assertEquals(2, testMap.size());
+    assertTrue(testMap.containsKey("hello"));
+    assertTrue(testMap.containsKey("bye"));
+    assertEquals("world", testMap.get("hello").getValueAsString());
+    assertEquals("earth", testMap.get("bye").getValueAsString());
   }
 
   @Test
@@ -68,15 +125,15 @@ public class TestProtobufDataParser {
     // Skip first 5 objects => start from position 285 [59*3 54*2]
     DataParser dataParser = getDataParser("685", "Employee.desc", "Employee");
     List<Record> records = new ArrayList<>();
-    Assert.assertEquals("685", dataParser.getOffset());
+    assertEquals("685", dataParser.getOffset());
     Record r = dataParser.parse();
-    Assert.assertEquals("840", dataParser.getOffset());
+    assertEquals("840", dataParser.getOffset());
     while(r != null) {
       records.add(r);
       r = dataParser.parse();
     }
-    Assert.assertTrue("-1".equals(dataParser.getOffset()));
-    Assert.assertEquals(5, records.size());
+    assertTrue("-1".equals(dataParser.getOffset()));
+    assertEquals(5, records.size());
     ProtobufTestUtil.compareProtoRecords(records, 5);
   }
 
@@ -102,7 +159,7 @@ public class TestProtobufDataParser {
       parser.parse();
       Assert.fail("DataParserException expected as a required field is missing");
     } catch (DataParserException e) {
-      Assert.assertEquals(Errors.DATA_PARSER_02, e.getErrorCode());
+      assertEquals(Errors.DATA_PARSER_02, e.getErrorCode());
     }
   }
 
@@ -121,14 +178,19 @@ public class TestProtobufDataParser {
   }
 
   public DataParserFactory getDataParserFactory(String protoFile, String messageType) {
-    DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(),
-      DataParserFormat.PROTOBUF);
-    DataParserFactory factory = dataParserFactoryBuilder
-      .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, Resources.getResource(protoFile).getPath())
-      .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
-      .setOverRunLimit(1000)
-      .setMaxDataLen(Integer.MAX_VALUE)
-      .build();
-    return factory;
+    return getDataParserFactory(protoFile, messageType, true);
+  }
+
+  public DataParserFactory getDataParserFactory(String protoFile, String messageType, boolean isDelimited) {
+    DataParserFactoryBuilder dataParserFactoryBuilder =
+        new DataParserFactoryBuilder(getContext(), DataParserFormat.PROTOBUF);
+
+    return dataParserFactoryBuilder
+        .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, Resources.getResource(protoFile).getPath())
+        .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+        .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
+        .setOverRunLimit(1000)
+        .setMaxDataLen(Integer.MAX_VALUE)
+        .build();
   }
 }

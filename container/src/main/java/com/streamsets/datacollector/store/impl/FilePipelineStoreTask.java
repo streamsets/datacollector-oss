@@ -222,10 +222,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       public boolean accept(File dir, String name) {
         // If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
         // So filter it out
-        if (name.startsWith(".")) {
-          return false;
-        }
-        return true;
+        return !name.startsWith(".");
       }
 
     })) {

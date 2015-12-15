@@ -334,30 +334,30 @@ public class DataParserFormatConfig {
 
   //APACHE_CUSTOM_LOG_FORMAT
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = DEFAULT_APACHE_CUSTOM_LOG_FORMAT,
-    label = "Custom Log Format",
-    description = "",
-    displayPosition = 490,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DEFAULT_APACHE_CUSTOM_LOG_FORMAT,
+      label = "Custom Log Format",
+      description = "",
+      displayPosition = 490,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "APACHE_CUSTOM_LOG_FORMAT"
   )
   public String customLogFormat = DEFAULT_APACHE_CUSTOM_LOG_FORMAT;
 
   //REGEX
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = DEFAULT_REGEX,
-    label = "Regular Expression",
-    description = "The regular expression which is used to parse the log line.",
-    displayPosition = 500,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "REGEX"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DEFAULT_REGEX,
+      label = "Regular Expression",
+      description = "The regular expression which is used to parse the log line.",
+      displayPosition = 500,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "REGEX"
   )
   public String regex = DEFAULT_REGEX;
 
@@ -392,15 +392,15 @@ public class DataParserFormatConfig {
   public String grokPatternDefinition = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = DEFAULT_GROK_PATTERN,
-    label = "Grok Pattern",
-    description = "The grok pattern which is used to parse the log line",
-    displayPosition = 530,
-    group = "LOG",
-    dependsOn = "logMode",
-    triggeredByValue = "GROK"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DEFAULT_GROK_PATTERN,
+      label = "Grok Pattern",
+      description = "The grok pattern which is used to parse the log line",
+      displayPosition = 530,
+      group = "LOG",
+      dependsOn = "logMode",
+      triggeredByValue = "GROK"
   )
   public String grokPattern = DEFAULT_GROK_PATTERN;
 
@@ -451,15 +451,15 @@ public class DataParserFormatConfig {
 
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = DEFAULT_LOG4J_CUSTOM_FORMAT,
-    label = "Custom Log4J Format",
-    description = "Specify your own custom log4j format.",
-    displayPosition = 570,
-    group = "LOG",
-    dependsOn = "enableLog4jCustomLogFormat",
-    triggeredByValue = "true"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DEFAULT_LOG4J_CUSTOM_FORMAT,
+      label = "Custom Log4J Format",
+      description = "Specify your own custom log4j format.",
+      displayPosition = 570,
+      group = "LOG",
+      dependsOn = "enableLog4jCustomLogFormat",
+      triggeredByValue = "true"
   )
   public String log4jCustomLogFormat = DEFAULT_LOG4J_CUSTOM_FORMAT;
 
@@ -517,6 +517,20 @@ public class DataParserFormatConfig {
   )
   public String messageType = "";
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Delimited Messages",
+      description = "Should be checked when the input data is prepended with the message size. When unchecked " +
+          "only a single message can be present in the source file/Kafka message, etc.",
+      displayPosition = 620,
+      group = "PROTOBUF",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "PROTOBUF"
+  )
+  public boolean isDelimited = true;
+
   public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, List<Stage.ConfigIssue> issues) {
     return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, issues);
   }
@@ -528,38 +542,47 @@ public class DataParserFormatConfig {
         if (jsonMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.JSON.name(), "jsonMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01));
-          valid &= false;
+          valid = false;
         }
         break;
       case TEXT:
         if (textMaxLineLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(), "textMaxLineLen",
               DataFormatErrors.DATA_FORMAT_01));
-          valid &= false;
+          valid = false;
         }
         break;
       case DELIMITED:
         if (csvMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.DELIMITED.name(), "csvMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01));
-          valid &= false;
+          valid = false;
         }
         break;
       case XML:
         if (xmlMaxObjectLen < 1) {
           issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlMaxObjectLen",
               DataFormatErrors.DATA_FORMAT_01));
-          valid &= false;
+          valid = false;
         }
         if (xmlRecordElement == null || xmlRecordElement.isEmpty()) {
-          issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlRecordElement",
-              DataFormatErrors.DATA_FORMAT_02));
-          valid &= false;
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.XML.name(),
+                  "xmlRecordElement",
+                  DataFormatErrors.DATA_FORMAT_02
+              )
+          );
+          valid = false;
         } else if (!XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlRecordElement",
-              DataFormatErrors.DATA_FORMAT_03,
-              xmlRecordElement));
-          valid &= false;
+          issues.add(
+              context.createConfigIssue(DataFormatGroups.XML.name(),
+                  "xmlRecordElement",
+                  DataFormatErrors.DATA_FORMAT_03,
+                  xmlRecordElement
+              )
+          );
+          valid = false;
         }
         break;
       case SDC_JSON:
@@ -567,12 +590,21 @@ public class DataParserFormatConfig {
       case AVRO:
         break;
       case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
-            retainOriginalLine, customLogFormat, regex,
-            grokPatternDefinition, grokPattern,
-            enableLog4jCustomLogFormat, log4jCustomLogFormat,
-            onParseError, maxStackTraceLines, DataFormatGroups.LOG.name(),
-            getFieldPathToGroupMap(fieldPathsToGroupName));
+        logDataFormatValidator = new LogDataFormatValidator(
+            logMode,
+            logMaxObjectLen,
+            retainOriginalLine,
+            customLogFormat,
+            regex,
+            grokPatternDefinition,
+            grokPattern,
+            enableLog4jCustomLogFormat,
+            log4jCustomLogFormat,
+            onParseError,
+            maxStackTraceLines,
+            DataFormatGroups.LOG.name(),
+            getFieldPathToGroupMap(fieldPathsToGroupName)
+        );
         logDataFormatValidator.validateLogFormatConfig(issues, context);
         break;
       case PROTOBUF:
@@ -608,9 +640,8 @@ public class DataParserFormatConfig {
         }
         break;
       default:
-        issues.add(context.createConfigIssue(stageGroup, "dataFormat", DataFormatErrors.DATA_FORMAT_04,
-            dataFormat));
-        valid &= false;
+        issues.add(context.createConfigIssue(stageGroup, "dataFormat", DataFormatErrors.DATA_FORMAT_04, dataFormat));
+        valid = false;
         break;
     }
 
@@ -619,11 +650,16 @@ public class DataParserFormatConfig {
     return valid;
   }
 
-  private boolean validateDataParser(Stage.Context context, DataFormat dataFormat, String stageGroup,
-                                     int overrunLimit, List<Stage.ConfigIssue> issues) {
+  private boolean validateDataParser(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String stageGroup,
+      int overrunLimit,
+      List<Stage.ConfigIssue> issues
+  ) {
     boolean valid = true;
-    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context,
-        dataFormat.getParserFormat());
+    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormat.getParserFormat());
+    Charset fileCharset;
 
     try {
       fileCharset = Charset.forName(charset);
@@ -631,7 +667,7 @@ public class DataParserFormatConfig {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
       fileCharset = StandardCharsets.UTF_8;
       issues.add(context.createConfigIssue(stageGroup, "charset", DataFormatErrors.DATA_FORMAT_05, charset));
-      valid &= false;
+      valid = false;
     }
     builder.setCharset(fileCharset);
     builder.setOverRunLimit(overrunLimit);
@@ -647,7 +683,8 @@ public class DataParserFormatConfig {
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
         break;
       case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen)
+        builder
+            .setMaxDataLen(csvMaxObjectLen)
             .setMode(csvFileFormat).setMode(csvHeader)
             .setMode(csvRecordType)
             .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
@@ -655,8 +692,7 @@ public class DataParserFormatConfig {
             .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
         break;
       case XML:
-        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY,
-            xmlRecordElement);
+        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);
@@ -668,8 +704,10 @@ public class DataParserFormatConfig {
         builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
         break;
       case PROTOBUF:
-        builder.setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
+        builder
+            .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, protoDescriptorFile)
             .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, messageType)
+            .setConfig(ProtobufConstants.DELIMITED_KEY, isDelimited)
             .setMaxDataLen(-1);
         break;
       default:
@@ -679,7 +717,7 @@ public class DataParserFormatConfig {
       parserFactory = builder.build();
     } catch (Exception ex) {
       issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_06, ex.toString(), ex));
-      valid &= false;
+      valid = false;
     }
     return valid;
   }
@@ -689,7 +727,6 @@ public class DataParserFormatConfig {
   }
 
   private LogDataFormatValidator logDataFormatValidator;
-  private Charset fileCharset;
   private DataParserFactory parserFactory;
 
   private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {

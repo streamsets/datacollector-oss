@@ -22,6 +22,7 @@ package com.streamsets.pipeline.lib.parser.protobuf;
 import com.google.common.collect.ImmutableSet;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.ExtensionRegistry;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -45,11 +46,12 @@ public class ProtobufDataParserFactory extends DataParserFactory {
     Map<String, Object> configs = new HashMap<>();
     configs.put(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, ProtobufConstants.PROTO_FILE_LOCATION_DEFAULT);
     configs.put(ProtobufConstants.MESSAGE_TYPE_KEY, ProtobufConstants.MESSAGE_TYPE_DEFAULT);
+    configs.put(ProtobufConstants.DELIMITED_KEY, ProtobufConstants.DELIMITED_DEFAULT);
     CONFIGS = Collections.unmodifiableMap(configs);
   }
 
   @SuppressWarnings("unchecked")
-  public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of();
+  public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
 
   private final String protoDescriptorFile;
   private final String messageType;
@@ -59,11 +61,13 @@ public class ProtobufDataParserFactory extends DataParserFactory {
   private final Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap;
   private final ExtensionRegistry extensionRegistry;
   private final Map<String, Object> defaultValueMap;
+  private final boolean isDelimited;
 
-  public ProtobufDataParserFactory(Settings settings) throws IOException, Descriptors.DescriptorValidationException {
+  public ProtobufDataParserFactory(Settings settings) throws StageException {
     super(settings);
     this.protoDescriptorFile = settings.getConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY);
     this.messageType = settings.getConfig(ProtobufConstants.MESSAGE_TYPE_KEY);
+    this.isDelimited = settings.getConfig(ProtobufConstants.DELIMITED_KEY);
     messageTypeToExtensionMap = new HashMap<>();
     defaultValueMap = new HashMap<>();
     // Get the descriptor for the expected message type
@@ -96,7 +100,8 @@ public class ProtobufDataParserFactory extends DataParserFactory {
           extensionRegistry,
           is,
           offset,
-          getSettings().getOverRunLimit()
+          getSettings().getOverRunLimit(),
+          isDelimited
       );
     } catch (IOException | Descriptors.DescriptorValidationException e) {
       throw new DataParserException(Errors.DATA_PARSER_01, e.toString(), e);

@@ -225,7 +225,7 @@ public class PipelineConfigBean implements Stage {
     type = ConfigDef.Type.STRING,
     label = "Hadoop/S3 Configuration Directory",
     description = "A directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
-      "to configure the Hadoop or S3 file sytem",
+      "to configure the Hadoop or S3 file system",
     displayPosition = 150,
     group = "CLUSTER",
     dependsOn = "executionMode",

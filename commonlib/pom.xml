@@ -32,14 +32,13 @@
   <packaging>jar</packaging>
 
   <properties>
-    <commons-csv.version>1.1</commons-csv.version>
-    <commons-codec.version>1.9</commons-codec.version>
-    <jackson.version>2.4.3</jackson.version>
-    <commons-io.version>2.4</commons-io.version>
     <avro.version>1.7.7</avro.version>
     <commons-compress.version>1.10</commons-compress.version>
+    <commons-codec.version>1.9</commons-codec.version>
+    <commons-csv.version>1.1</commons-csv.version>
+    <commons-io.version>2.4</commons-io.version>
+    <jackson.version>2.4.3</jackson.version>
     <xz.version>1.5</xz.version>
-    <protobuf.java.version>2.5.0</protobuf.java.version>
   </properties>
 
   <dependencies>
@@ -84,23 +83,6 @@
       <version>${jackson.version}</version>
       <scope>compile</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdk</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
@@ -119,14 +101,12 @@
       <version>${commons-io.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
       <version>${avro.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro-mapred</artifactId>
@@ -134,13 +114,11 @@
       <scope>compile</scope>
       <classifier>hadoop2</classifier>
     </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-avro</artifactId>
       <version>${jackson.version}</version>
     </dependency>
-
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
@@ -153,14 +131,29 @@
       <version>${xz.version}</version>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>${protobuf.java.version}</version>
+      <version>${protobuf.version}</version>
       <scope>compile</scope>
     </dependency>
 
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdk</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -183,6 +176,37 @@
         <configuration>
           <skip>true</skip>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>com.google.protobuf:protobuf-java</include>
+                </includes>
+              </artifactSet>
+              <relocations>
+                <!-- Protobuf -->
+                <relocation>
+                  <pattern>com.google.protobuf</pattern>
+                  <shadedPattern>_ss_com.com.google</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>google.protobuf</pattern>
+                  <shadedPattern>_ss_com.google.protobuf</shadedPattern>
+                </relocation>
+              </relocations>
+              <dependencyReducedPomLocation>${project.build.directory}/shaded-pom.xml</dependencyReducedPomLocation>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -19,7 +19,10 @@
  */
 package com.streamsets.pipeline.lib.generator.protobuf;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -31,21 +34,52 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTestUtil;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class TestProtobufDataGenerator {
+
+  @Test
+  public void writeWithOneOfAndMap() throws Exception {
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    byte[] expected = FileUtils.readFileToByteArray(new File(Resources.getResource("TestProtobuf3.ser").getPath()));
+    DataGenerator dataGenerator = getDataGenerator(bOut, "TestRecordProtobuf3.desc", "TestRecord");
+
+    Record record = getContext().createRecord("");
+    Map<String, Field> rootField = new HashMap<>();
+    rootField.put("first_name", Field.create("Adam"));
+    rootField.put("full_name", Field.create(Field.Type.STRING, null));
+    rootField.put("samples", Field.create(ImmutableList.of(Field.create(1), Field.create(2))));
+    Map<String, Field> entries = ImmutableMap.of(
+        "hello", Field.create("world"),
+        "bye", Field.create("earth")
+    );
+    rootField.put("test_map", Field.create(entries));
+    record.set(Field.create(rootField));
+
+    dataGenerator.write(record);
+    dataGenerator.flush();
+    dataGenerator.close();
+
+    assertArrayEquals(expected, bOut.toByteArray());
+  }
 
   @Test
   public void testProtobufDataGenerator() throws Exception {
     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
 
-    // create mock sdc records that mimick records parsed from protobuf represented by Employee.desc file.
+    // create mock sdc records that mimic records parsed from protobuf represented by Employee.desc file.
     List<Record> records = ProtobufTestUtil.getProtobufRecords();
 
     // write these records using the protobuf generator

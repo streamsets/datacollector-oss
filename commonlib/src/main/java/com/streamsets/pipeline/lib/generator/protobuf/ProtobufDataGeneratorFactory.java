@@ -21,10 +21,9 @@ package com.streamsets.pipeline.lib.generator.protobuf;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.protobuf.Descriptors;
-import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.Errors;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
 import com.streamsets.pipeline.lib.util.ProtobufTypeUtil;
 
@@ -47,7 +46,7 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
   }
 
   @SuppressWarnings("unchecked")
-  public static final Set<Class<? extends Enum>> MODES = (Set) ImmutableSet.of();
+  public static final Set<Class<? extends Enum>> MODES = ImmutableSet.of();
 
   private final String protoDescriptorFile;
   private final String messageType;
@@ -57,7 +56,7 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
   private final Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap;
   private final Map<String, Object> defaultValueMap;
 
-  public ProtobufDataGeneratorFactory(Settings settings) throws IOException, Descriptors.DescriptorValidationException {
+  public ProtobufDataGeneratorFactory(Settings settings) throws StageException {
     super(settings);
     this.protoDescriptorFile = settings.getConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY);
     this.messageType = settings.getConfig(ProtobufConstants.MESSAGE_TYPE_KEY);
@@ -75,16 +74,12 @@ public class ProtobufDataGeneratorFactory extends DataGeneratorFactory {
 
   @Override
   public DataGenerator getGenerator(OutputStream os) throws IOException {
-    try {
-      return new ProtobufDataGenerator(
-          os,
-          descriptor,
-          messageTypeToExtensionMap,
-          defaultValueMap
-      );
-    } catch (IOException | Descriptors.DescriptorValidationException e) {
-        throw new IOException(Utils.format(Errors.DATA_GENERATOR_01.getMessage(), e.toString()), e);
-    }
+    return new ProtobufDataGenerator(
+        os,
+        descriptor,
+        messageTypeToExtensionMap,
+        defaultValueMap
+    );
   }
 
 }

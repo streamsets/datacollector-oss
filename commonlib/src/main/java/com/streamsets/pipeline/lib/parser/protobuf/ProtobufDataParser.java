@@ -48,6 +48,7 @@ public class ProtobufDataParser extends AbstractDataParser {
   // that is accessible via the configured Protobuf descriptor file
   private final Map<String, Set<Descriptors.FieldDescriptor>> messageTypeToExtensionMap;
   private final ExtensionRegistry extensionRegistry;
+  private final boolean isDelimited;
 
   public ProtobufDataParser(
       Stage.Context context,
@@ -57,7 +58,8 @@ public class ProtobufDataParser extends AbstractDataParser {
       ExtensionRegistry extensionRegistry,
       InputStream inputStream,
       String readerOffset,
-      int maxObjectLength
+      int maxObjectLength,
+      boolean isDelimited
   ) throws IOException, Descriptors.DescriptorValidationException, DataParserException {
     this.context = context;
     this.inputStream = new OverrunInputStream(inputStream, maxObjectLength, true);
@@ -66,9 +68,10 @@ public class ProtobufDataParser extends AbstractDataParser {
     this.extensionRegistry = extensionRegistry;
     this.descriptor = descriptor;
     this.builder = DynamicMessage.newBuilder(descriptor);
+    this.isDelimited = isDelimited;
 
     // skip to the required location
-    if(readerOffset != null && !readerOffset.isEmpty() && !readerOffset.equals("0")) {
+    if (readerOffset != null && !readerOffset.isEmpty() && !readerOffset.equals("0")) {
       int offset = Integer.parseInt(readerOffset);
       this.inputStream.skip(offset);
     }
@@ -79,18 +82,25 @@ public class ProtobufDataParser extends AbstractDataParser {
     DynamicMessage message;
     long pos = inputStream.getPos();
     inputStream.resetCount();
-    while(builder.mergeDelimitedFrom(inputStream, extensionRegistry)) {
-      message = builder.build();
-      // If the message does not contain required fields then the above call throws UninitializedMessageException
-      // with a message similar to the following:
-      // com.google.protobuf.UninitializedMessageException: Message missing required fields: phone[0].type
-      builder.clear();
-      Record record = context.createRecord(messageId + OFFSET_SEPARATOR + pos);
-      record.set(ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, messageTypeToExtensionMap, message));
-      return record;
+    if (!isDelimited) {
+      builder.mergeFrom(inputStream, extensionRegistry);
+      // Set EOF since non-delimited can only contain a single message.
+      eof = true;
+    } else {
+      if (!builder.mergeDelimitedFrom(inputStream, extensionRegistry)) {
+        // No more messages to process in this stream.
+        eof = true;
+        return null;
+      }
     }
-    eof = true;
-    return null;
+    message = builder.build();
+    // If the message does not contain required fields then the above call throws UninitializedMessageException
+    // with a message similar to the following:
+    // com.google.protobuf.UninitializedMessageException: Message missing required fields: phone[0].type
+    builder.clear();
+    Record record = context.createRecord(messageId + OFFSET_SEPARATOR + pos);
+    record.set(ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, messageTypeToExtensionMap, message));
+    return record;
   }
 
   @Override
@@ -100,6 +110,6 @@ public class ProtobufDataParser extends AbstractDataParser {
 
   @Override
   public void close() throws IOException {
-
+    // no-op
   }
 }

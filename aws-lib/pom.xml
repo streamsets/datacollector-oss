@@ -101,15 +101,6 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <!-- Kinesis Producer Library currently relies on 2.6
-               so we exclude version 2.5 from commonlib for now.
-          -->
-          <groupId>com.google.protobuf</groupId>
-          <artifactId>protobuf-java</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
