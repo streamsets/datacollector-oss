@@ -45,4 +45,3 @@ public enum Errors implements ErrorCode {
     return msg;
   }
 }
-

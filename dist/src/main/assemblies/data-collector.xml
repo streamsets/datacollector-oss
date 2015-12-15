@@ -158,6 +158,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- omniture-lib -->
+    <fileSet>
+      <directory>${basedir}/../omniture-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- jdbc-lib -->
     <fileSet>
       <directory>${basedir}/../jdbc-lib/target/streamsets-libs/</directory>
