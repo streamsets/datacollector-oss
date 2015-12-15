@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.sdcipc;
 
 import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
@@ -164,7 +165,14 @@ public class SdcIpcTarget extends BaseTarget {
       retryCount++;
     }
     if (!ok) {
-      switch (getContext().getOnErrorRecord()) {
+      OnRecordError onErrorRecord = getContext().getOnErrorRecord();
+      // this branch only happens when the pipeline error handling strategy is "send to RPC". if we can't forward to
+      // that pipeline, then it's a pipeline-stopping problem.
+      if (onErrorRecord == null) {
+        throw new StageException(Errors.IPC_DEST_20, errorReason);
+      }
+
+      switch (onErrorRecord) {
         case DISCARD:
           LOG.debug("Discarding batch '{}' after error", batch.getSourceOffset());
           break;
