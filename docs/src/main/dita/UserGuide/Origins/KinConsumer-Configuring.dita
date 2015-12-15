@@ -19,7 +19,8 @@
         <context>
             <p><indexterm>Kinesis Consumer
                 origin<indexterm>configuring</indexterm></indexterm>Configure a Kinesis Consumer
-                origin to read JSON or SDC Record data from an Amazon Kinesis cluster.</p>
+                origin to read data from an Amazon Kinesis cluster.<draft-comment author="Loretta"
+                    >Review Binary when it's working.</draft-comment></p>
         </context>
         <steps id="steps_hqj_pw4_yr">
             <step
@@ -44,27 +45,58 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Endpoint</entry>
-                                    <entry>Amazon Web Services region that hosts the
-                                        cluster.</entry>
+                                    <entry>Access Key ID</entry>
+                                    <entry>AWS access key ID with privileges for the Kinesis
+                                            stream.<p>Required unless using IAM roles with IAM
+                                            instance profile credentials. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Application Name</entry>
-                                    <entry>Kinesis application name. </entry>
+                                    <entry>Secret Access Key</entry>
+                                    <entry>AWS secret access key with privileges for the Kinesis
+                                            stream.<p>Required unless using IAM roles with IAM
+                                            instance profile credentials. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Region</entry>
+                                    <entry>AWS region that hosts the cluster.</entry>
                                 </row>
                                 <row>
                                     <entry>Stream Name</entry>
                                     <entry>Kinesis stream name.</entry>
                                 </row>
                                 <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Type of data to be read. Use one of the following
-                                            options:<ul id="ul_un2_cqd_br">
+                                    <entry>Application Name</entry>
+                                    <entry>Kinesis application name. The application name is the
+                                        equivalent to a Kafka consumer group.</entry>
+                                </row>
+                                <row>
+                                    <entry>Initial Position</entry>
+                                    <entry>Determines where the data <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> starts reading. Use one of the following options:<ul
+                                            id="ul_xdq_ktk_35">
+                                            <li>LATEST - Reads messages that arrive after the
+                                                pipeline starts.</li>
+                                            <li>TRIM_HORIZON - Reads all available messages.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format  <xref href="KinConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_bmy_h5q_ds"
+                                        /></xref></entry>
+                                    <entry>Type of data to be read. Use one of the following options:<ul>
+                                            <li>Text</li>
+                                            <li>JSON</li>
+                                            <li>Delimited</li>
+                                            <li>XML</li>
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_wjh_ycl_br"/></xref></li>
-                                            <li>JSON</li>
+                                                  scale="11" id="image_wjh_ycl_br"/></xref></li>
+                                            <li>Log</li>
+                                            <li>Avro</li>
+                                            <li>Binary</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -103,19 +135,40 @@
                                             60,000.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>AWS Access Key ID</entry>
-                                    <entry>AWS access key ID with privileges for the Kinesis
-                                        stream.</entry>
+                                    <entry>Charset</entry>
+                                    <entry>Character encoding of the messages to be
+                                        processed.</entry>
                                 </row>
-                                <row>
-                                    <entry>AWS Secret Access Key</entry>
-                                    <entry>AWS secret access key with privileges for the Kinesis
-                                        stream.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-Binary">
+                <cmd/>
             </step>
         </steps>
     </taskbody>

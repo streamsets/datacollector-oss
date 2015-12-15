@@ -22,7 +22,7 @@
   <p><indexterm>functions<indexterm>delimited data</indexterm></indexterm><indexterm>delimited data
      functions<indexterm>description</indexterm></indexterm>For more information about the delimited
    data root field types, see <xref
-    href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"/>.</p>
+    href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"/>.</p>
   <p>The expression language provides the following delimited data record functions:<dl>
     <dlentry>
      <dt>record:dExists('&lt;header name>')</dt>
@@ -47,8 +47,13 @@
     </dlentry>
     <dlentry>
      <dt>record:dToMap()</dt>
-     <dd>Converts the record to a JSON map using headers as keys.</dd>
-     <dd>Return type: Record in map format.</dd>
+     <dd>Converts a record with a List root field to a List-Map root field. Use to convert delimited
+      List records to List-Map to allow easier use with standard record functions. For more
+      information about root field types, see <xref
+       href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"/>.</dd>
+     <dd>Return type: Records with a List-Map root field.</dd>
+     <dd>To use record:dToMap(), use a slash as the root output field as follows:</dd>
+     <dd><image href="../Graphics/Delim-ConvertType.png" id="image_bg2_jhk_35" scale="50"/></dd>
     </dlentry>
     <dlentry>
      <dt>record:dValue('&lt;header name>')</dt>

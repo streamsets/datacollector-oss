@@ -19,7 +19,8 @@
  <conbody>
   <p>
    <draft-comment author="Loretta">The following IgnoreControlChar-row is used in Configuring a -
-    Directory, File Tail, Kafka Consumer, JSON Parser, Log Parser:</draft-comment>
+    Directory, File Tail, Kafka Consumer, Kinesis Consumer, JSON Parser, Log
+    Parser:]</draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_mxl_xrm_js">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -212,7 +213,7 @@
        <entry/>
       </row>
       <row id="Origin-FileCompression">
-       <entry>File Compression <xref href="../Origins/FileCompressionTypes.dita">
+       <entry>Compression Type <xref href="../Origins/FileCompressionTypes.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
           id="image_xqq_yv4_c5"/></xref></entry>
        <entry>The compression type of the files:<ul id="ul_vph_jp2_qs">

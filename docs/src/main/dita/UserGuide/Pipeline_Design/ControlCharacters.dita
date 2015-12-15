@@ -33,8 +33,10 @@
         <li>Amazon S3 origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
-        <li>Kafka Consumer origin</li>
+        <li>HTTP Client origin</li>
         <li>JMS Consumer origin</li>
+        <li>Kafka Consumer origin</li>
+        <li>Kinesis Consumer origin</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>
       </ul></p>

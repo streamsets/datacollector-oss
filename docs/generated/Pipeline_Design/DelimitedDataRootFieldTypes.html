@@ -50,10 +50,10 @@
         
           <dt class="dt dlterm">List-Map</dt>
 
-          <dd class="dd">Provides easy use of field names or column position in expressions. Recommended for
+          <dd class="dd">Provides easy use of field names or column positions in expressions. Recommended for
             all new pipelines.</dd>
 
-          <dd class="dd">A list-map type results in a structure that preserves the order of data, as
+          <dd class="dd">A list-map root field type results in a structure that preserves the order of data, as
             follows:<pre class="pre codeblock">/&lt;first header&gt;:&lt;value&gt;
 /&lt;second header&gt;:&lt;value&gt;
 /&lt;third header&gt;:&lt;value&gt;
@@ -61,7 +61,7 @@
 </dd>
 
           <dd class="dd">
-            <p class="p">For example, the following delimited rows:</p>
+            <p class="p">For example, with the list-map root field type, the following delimited rows:</p>
 
             <div class="p">
               <pre class="pre codeblock"><span class="ph uicontrol">TransactionID,Type,UserID
@@ -91,15 +91,15 @@
 
           <dd class="dd">In an expression, you can use the field name or the column position with a standard
             record function to call a field. For example, you can use either of the following
-            record:value expressions to return data in the TransactionID
+            record:value() expressions to return data in the TransactionID
             field:<pre class="pre codeblock">${record:value('/TransactionID')}
 ${record:value('[0]'}</pre>
 </dd>
 
-          <dd class="dd"><div class="note note"><span class="notetitle">Note:</span> In scripts for scripting processors, such as the Jython Evaluator or JavaScript
-              Evaluator, treat list-map records as maps.</div>
-For more information about standard
-            record functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
+          <dd class="dd"><div class="note note"><span class="notetitle">Note:</span> When writing scripts for scripting processors, such as the Jython Evaluator or
+              JavaScript Evaluator, you should treat list-map records as maps.</div>
+For more
+            information about standard record functions, see <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
 
         
         
@@ -108,8 +108,8 @@ For more information about standard
           <dd class="dd">Provides continued support for pipelines created before version 1.1.0. Not recommended
             for new pipelines.</dd>
 
-          <dd class="dd">A list type results in list with an index for the header position and a map with each
-            header and associated value, as
+          <dd class="dd">A list root field type results in list with an index for the header position and a map
+            with each header and associated value, as
             follows:<pre class="pre codeblock">[0]/header = &lt;first header&gt;
    /value = &lt;value for first header&gt;
 [1]/header = &lt;second header&gt;
@@ -147,19 +147,20 @@ For more information about standard
 ...</pre>
 </dd>
 
-          <dd class="dd">For data in the list type, you should either use the delimited data functions or
+          <dd class="dd">For data in the list records, you should either use the delimited data functions or
             include the full field path in standard record functions. For example, you can use the
-              <samp class="ph codeph">record:dValue('&lt;header&gt;')</samp> delimited data function to return the
-            value associated with the specified header. </dd>
+            record:dValue() delimited data function to return the value associated with the
+            specified header. </dd>
 
           <dd class="dd">
             <div class="p">
-              <div class="note tip"><span class="tiptitle">Tip:</span> You can use the <samp class="ph codeph">record:dToMap()</samp> function to convert
-                the record to a map, and then use standard functions for record processing.</div>
+              <div class="note tip"><span class="tiptitle">Tip:</span> You can use the record:dToMap() function to convert a list record to
+                a map, and then use standard functions for record processing.</div>
 
             </div>
 
-            <p class="p">For the full list of delimited data record functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited Data Record Functions</a>.</p>
+            <p class="p">For more information about record:dToMap and full list of delimited data record
+              functions and their syntax, see <a class="xref" href="../Expression_Language/Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited Data Record Functions</a>.</p>
 
           </dd>
 

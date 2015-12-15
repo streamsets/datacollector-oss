@@ -22,7 +22,7 @@
         </context>
         <steps id="steps_xmt_2lz_5r">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-ClusterOrigin">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
             <step>
@@ -39,10 +39,6 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Data Format</entry>
-                                    <entry>HTTP Client reads JSON data.</entry>
-                                </row>
                                 <row>
                                     <entry>Resource URL</entry>
                                     <entry>URL where the data resides. </entry>
@@ -72,9 +68,37 @@
                                         data. Used in the polling mode only. </entry>
                                 </row>
                                 <row>
-                                    <entry>Use OAuth</entry>
-                                    <entry>Determines whether OAuth credentials are used to connect
-                                        to the server. </entry>
+                                    <entry>Authentication Type</entry>
+                                    <entry>Determines the authentication type used to connect to the
+                                            server:<ul id="ul_icm_h1l_35">
+                                            <li>None - Performs no authentication.</li>
+                                            <li>Basic - Uses basic authentication with username and
+                                                password.</li>
+                                            <li>OAuth - Uses OAuth credentials.</li>
+                                        </ul></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">update this, add Data
+                                            Formats property.</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Entity Delimiter</entry>
+                                    <entry>
+                                        <draft-comment author="Loretta">logged bug against
+                                            cheolsoo</draft-comment>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Charset</entry>
+                                    <entry>Character encoding of the messages to be
+                                        processed.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Batch Size (recs)</entry>
@@ -96,8 +120,8 @@
                 </info>
             </step>
             <step>
-                <cmd>When using OAuth, on the <wintitle>OAuth</wintitle> tab, configure the
-                    following properties:</cmd>
+                <cmd>When using Authentication, on the <wintitle>Authentication</wintitle> tab,
+                    configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_c2b_f4z_5r">
                         <tgroup cols="2">
@@ -132,6 +156,14 @@
                 </info>
             </step>
             <step>
+                <cmd>On the <uicontrol>Text</uicontrol> tab, <draft-comment author="Loretta">finish
+                        this after 2165 fixed</draft-comment></cmd>
+            </step>
+            <step>
+                <cmd>On the <uicontrol>XML</uicontrol> tab, <draft-comment author="Loretta">finish
+                        this after 2165 fixed</draft-comment></cmd>
+            </step>
+            <step>
                 <cmd>On the <wintitle>JSON</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ymj_44z_5r">
@@ -158,8 +190,9 @@
                                 <row>
                                     <entry>Entity Delimiter</entry>
                                     <entry>Delimiter to indicate the end of a JSON record, such as
-                                        \n or \r.  Used when processing multiple JSON objects.
-                                    </entry>
+                                        \n or \r. Used when processing multiple JSON objects.
+                                            <draft-comment author="Loretta">remove this? Or reword
+                                            for main page. 2165 dependent.</draft-comment></entry>
                                 </row>
                             </tbody>
                         </tgroup>

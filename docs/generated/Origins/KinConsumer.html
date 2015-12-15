@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. You can read JSON or SDC Record data from Kinesis. When you configure Kinesis Consumer, you specify the Amazon Web Services ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Consumer"></meta><meta name="abstract" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. You can read JSON or SDC Record data from Kinesis."></meta><meta name="description" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. You can read JSON or SDC Record data from Kinesis."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_anh_4y3_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. When you configure Kinesis Consumer, you specify the Amazon Web Services connection information for your Kinesis cluster and the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Consumer"></meta><meta name="abstract" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster."></meta><meta name="description" content="The Kinesis Consumer origin reads data from an Amazon Kinesis cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_anh_4y3_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,8 +35,7 @@
  <h1 class="title topictitle1">Kinesis Consumer</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. You can read JSON
-    or SDC Record data from Kinesis.</p>
+ <div class="body conbody"><p class="shortdesc">The Kinesis Consumer origin reads data from an Amazon Kinesis cluster. </p>
 
   <p class="p">When you configure Kinesis Consumer, you specify the
       Amazon Web Services connection information for your Kinesis cluster and the data format of
@@ -64,13 +63,158 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_cwg_r2m_35">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">The Kinesis Consumer origin
+      processes data differently based on the data format. Kinesis Consumer can process the
+      following types of data:</p>
+
+  <dl class="dl">
+      
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">Generates a record for each line of text. </dd>
+
+                              <dd class="dd">When a line exceeds the maximum line length defined for the
+                                    origin, the origin truncates the line. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+
+                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
+
+                        
+      
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_cwg_r2m_35__d3992e204">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                                    optionally including the header information when available. </dd>
+
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
+
+                              <dd class="dd">For more information about the root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">Generates records based on the location of the XML element that
+                                    you define as the record delimiter. If you do not define a
+                                    delimiter element, the origin treats the XML file as a single
+                                    record.</dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
+
+                        
+      
+                              <dt class="dt dlterm">SDC Records</dt>
+
+                              <dd class="dd">Generates a record for every record. Use to process records
+                                    generated by a <span class="ph">Data
+                  Collector</span> pipeline using the SDC Record data format.</dd>
+
+                              <dd class="dd">For error records, the origin  provides the original record as
+                                    read from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+
+                              <dd class="dd">When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Log</dt>
+
+                              <dd class="dd">Generates a record for every log line. </dd>
+
+                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+
+                              <dd class="dd">You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+
+                              <dd class="dd">You can define the log format or type to be read.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">Generates a record for every message. </dd>
+
+                              <dd class="dd">To ensure proper data processing, indicate if the message includes
+                                    an Avro schema. </dd>
+
+                              <dd class="dd">You can use the schema associated with the message or provide an
+                                    alternate schema definition. Providing an alternate schema can
+                                    improve performance.</dd>
+
+                        
+      
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+
+                              <dd class="dd">When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
+
+                        
+    </dl>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_p4b_vv4_yr">
     <h2 class="title topictitle2">Configuring a Kinesis Consumer Origin</h2>
 
     <div class="body taskbody">
         <div class="section context">
             <p class="p">Configure a Kinesis Consumer
-                origin to read JSON or SDC Record data from an Amazon Kinesis cluster.</p>
+                origin to read data from an Amazon Kinesis cluster.</p>
 
         </div>
 
@@ -84,9 +228,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44790e107">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44904e289">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44790e110">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44904e292">Description</th>
 
                                 </tr>
 
@@ -94,23 +238,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44790e107 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e289 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44790e110 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44790e107 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44790e110 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e292 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44790e107 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e289 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44790e110 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d4016e380">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e292 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e289 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e292 ">Error record handling for the stage: <ul class="ul" id="task_p4b_vv4_yr__d4016e380">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -141,9 +285,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="31.746031746031743%" id="d44790e185">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="31.746031746031743%" id="d44904e367">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="68.25396825396825%" id="d44790e188"> </th>
+                                    <th class="entry" valign="top" width="68.25396825396825%" id="d44904e370"> </th>
 
                                 </tr>
 
@@ -151,36 +295,56 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Endpoint</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Access Key ID</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Amazon Web Services region that hosts the
-                                        cluster.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Application Name</td>
-
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Kinesis application name. </td>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">AWS access key ID with privileges for the Kinesis
+                                            stream.<p class="p">Required unless using IAM roles with IAM
+                                            instance profile credentials. </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Secret Access Key</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Kinesis stream name.</td>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">AWS secret access key with privileges for the Kinesis
+                                            stream.<p class="p">Required unless using IAM roles with IAM
+                                            instance profile credentials. </p>
+</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Data Format</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Region</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Type of data to be read. Use one of the following
-                                            options:<ul class="ul" id="task_p4b_vv4_yr__ul_un2_cqd_br">
-                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_p4b_vv4_yr__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">AWS region that hosts the cluster.</td>
 
-                                            <li class="li">JSON</li>
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Stream Name</td>
+
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Kinesis stream name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Application Name</td>
+
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Kinesis application name. The application name is the
+                                        equivalent to a Kafka consumer group.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Initial Position</td>
+
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Determines where the data <span class="ph">Data
+                  Collector</span> starts reading. Use one of the following options:<ul class="ul" id="task_p4b_vv4_yr__ul_xdq_ktk_35">
+                                            <li class="li">LATEST - Reads messages that arrive after the
+                                                pipeline starts.</li>
+
+                                            <li class="li">TRIM_HORIZON - Reads all available messages.</li>
 
                                         </ul>
 </td>
@@ -188,9 +352,36 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Max Batch Size (messages)</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Data Format  <a class="xref" href="KinConsumer.html#concept_cwg_r2m_35">
+                                            <img class="image" id="task_p4b_vv4_yr__image_bmy_h5q_ds" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Maximum amount of messages to include in a batch. Honors
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Type of data to be read. Use one of the following options:<ul class="ul">
+                                            <li class="li">Text</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">XML</li>
+
+                                            <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
+                                                  <img class="image" id="task_p4b_vv4_yr__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="14" width="14"></img></a></li>
+
+                                            <li class="li">Log</li>
+
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Binary</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Max Batch Size (messages)</td>
+
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Maximum amount of messages to include in a batch. Honors
                                         values up to the <span class="ph">Data
                   Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data
                   Collector</span> default is 1000.</p>
@@ -199,10 +390,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Read Interval (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure the read interval for the Kinesis Consumer. The read interval determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits one second between requests.">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Read Interval (ms) <a class="xref" href="KinConsumer.html#concept_y55_dz4_yr" title="You can configure the read interval for the Kinesis Consumer. The read interval determines how long Kinesis Consumer waits before requesting additional data from Kinesis shards. By default, the Kinesis Consumer waits one second between requests.">
                                                 <img class="image" id="task_p4b_vv4_yr__image_hbn_t1x_yr" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Milliseconds to wait before requesting additional data
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Milliseconds to wait before requesting additional data
                                         from a shard. <p class="p">Amazon recommends 250, minimum is
                                             200.</p>
 <p class="p">Default is 1,000. </p>
@@ -211,19 +402,19 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Batch Wait Time (ms) <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_p4b_vv4_yr__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Milliseconds to wait before sending a partial or empty
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Milliseconds to wait before sending a partial or empty
                                         batch. <p class="p">Default is 1,000.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">Preview Batch Wait Time (ms)</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Preview Batch Wait Time (ms)</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">Milliseconds to wait for data for a data preview.
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Milliseconds to wait for data for a data preview.
                                             <p class="p">Amazon Kinesis can take 10-30 seconds to enable
                                             initial access. Configure this property as needed to
                                             avoid data preview timeouts.</p>
@@ -234,18 +425,473 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">AWS Access Key ID</td>
+                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">AWS access key ID with privileges for the Kinesis
-                                        stream.</td>
+                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Character encoding of the messages to be
+                                        processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="31.746031746031743%" headers="d44790e185 ">AWS Secret Access Key</td>
+       <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+         <img class="image" id="task_p4b_vv4_yr__d4025e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="68.25396825396825%" headers="d44790e188 ">AWS secret access key with privileges for the Kinesis
-                                        stream.</td>
+       <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+        return characters.</td>
+
+      </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="31.746031746031743%" headers="d44904e367 ">Compression Type <a class="xref" href="Origins_overview.html#concept_uxr_g52_qs" title="The Amazon S3 and Directory origins can read uncompressed, compressed files, archives, and compressed archives.">
+         <img class="image" id="task_p4b_vv4_yr__d4025e390" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+       <td class="entry" valign="top" width="68.25396825396825%" headers="d44904e370 ">The compression type of the files:<ul class="ul" id="task_p4b_vv4_yr__d4025e394">
+         <li class="li">None - Processes only uncompressed files.</li>
+
+         <li class="li">Compressed File - Processes files compressed by the supported compression formats.</li>
+
+         <li class="li">Archive - Processes files archived by the supported archive formats.</li>
+
+         <li class="li">Compressed Archive - Processes files archived and compressed by the supported archive
+          and compression formats.</li>
+
+        </ul>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e1164" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44904e650">Text Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44904e653">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e650 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e653 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e867" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44904e698">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44904e701">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e698 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e701 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_p4b_vv4_yr__d4016e898">
+                                                <li class="li">Array of Objects </li>
+
+                                                <li class="li">Multiple Objects</li>
+
+                                            </ul>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr id="task_p4b_vv4_yr__d4016e909" class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e698 ">Maximum Object Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e701 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
+                                        </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="ph uicontrol">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e742" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44904e766">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44904e769">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Delimiter Format Type</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Delimiter format type. Use one of the following options:
+                                            <ul class="ul" id="task_p4b_vv4_yr__ul_s5z_b3z_3r">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Indicates whether a file contains a header line, and
+                                        whether to use the header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Max Record Length (chars)</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Maximum length of a record in characters. Longer records
+                                        are not read. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                            <img class="image" id="task_p4b_vv4_yr__d4016e801" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Root field type to use:<ul class="ul" id="task_p4b_vv4_yr__d4016e805">
+                                            <li class="li">List-Map - Generates an indexed list of data.
+                                                Enables you to use standard functions to process
+                                                data. Use for new pipelines.</li>
+
+                                            <li class="li">List - Generates a record with an indexed list with
+                                                a map for header and value. Requires the use of
+                                                delimited data functions to process data. Use only
+                                                to maintain pipelines created before 1.1.0.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Delimiter character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Escape Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Escape character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e766 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e769 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For log data, click the <span class="keyword wintitle">Log</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e956" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d44904e913">Log Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d44904e916">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e913 ">Log Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e916 ">Format of the log files. Use one of the following
+                                            options:<ul class="ul" id="task_p4b_vv4_yr__d4016e985">
+                                            <li class="li">Common Log Format</li>
+
+                                            <li class="li">Combined Log Format</li>
+
+                                            <li class="li">Apache Error Log Format</li>
+
+                                            <li class="li">Apache Access Log Custom Format</li>
+
+                                            <li class="li">Regular Expression</li>
+
+                                            <li class="li">Grok Pattern</li>
+
+                                            <li class="li">Log4j</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e913 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e916 ">Maximum length of a log line. The origin truncates longer
+                                        lines. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e913 ">Retain Original Line</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e916 ">Determines how to treat the original log line. Select to
+                                        include the original log line as a field in the resulting
+                                            record.<p class="p">By default, the original line is
+                                            discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                    <ul class="ul" id="task_p4b_vv4_yr__d4016e1034">
+                        <li class="li">When you select <span class="ph uicontrol">Apache Access Log Custom Format</span>,
+                            use Apache log format strings to define the <span class="ph uicontrol">Custom Log
+                                Format</span>.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Regular Expression</span>, enter the
+                            regular expression that describes the log format, and then map the
+                            fields that you want to include to each regular expression group.</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Grok Pattern</span>, you can use the
+                                <span class="ph uicontrol">Grok Pattern Definition</span> field to define
+                            custom grok patterns. You can define an alias on each line. <p class="p">In the
+                                    <span class="ph uicontrol">Grok Pattern</span> field, enter the pattern
+                                that you want to use. You can use an alias for an existing grok
+                                pattern or string together a series of aliases to that define the
+                                pattern.</p>
+<p class="p">For more information about defining grok patterns and
+                                supported grok patterns, see <a class="xref" href="../Apx-GrokPatterns/GrokPatterns.html#concept_vdk_xjb_wr" title="You can use the grok patterns in this appendix to define the structure of log data.">Defining Grok Patterns</a>.</p>
+</li>
+
+                        <li class="li">When you select <span class="ph uicontrol">Log4j</span>, define the following properties:<div class="p">
+                                
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e1076" class="table" frame="border" border="1" rules="all">
+                                        
+                                        
+                                        <thead class="thead" align="left">
+                                            <tr class="row">
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d44904e1038">Log4j Property</th>
+
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d44904e1041">Description</th>
+
+                                            </tr>
+
+                                        </thead>
+
+                                        <tbody class="tbody">
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e1038 ">On Parse Error</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e1041 ">Determines how to handle information that
+                                                  cannot be parsed:<ul class="ul" id="task_p4b_vv4_yr__d4016e1105">
+                                                  <li class="li">Skip and Log Error - Skips reading the line
+                                                  and logs a stage error.</li>
+
+                                                  <li class="li">Skip, No Error - Skips reading the line and
+                                                  does not log an error.</li>
+
+                                                  <li class="li">Include as Stack Trace - Includes information
+                                                  that cannot be parsed as a stack trace to the
+                                                  previously-read log line. The information is added
+                                                  to the message field for the last valid log
+                                                  line.</li>
+
+                                                  </ul>
+</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e1038 ">Use Custom Log Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e1041 ">Allows you to define a custom log
+                                                  format.</td>
+
+                                            </tr>
+
+                                            <tr class="row">
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d44904e1038 ">Custom Format</td>
+
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d44904e1041 ">Use log4j variables to define a custom log
+                                                  format. </td>
+
+                                            </tr>
+
+                                        </tbody>
+
+                                    </table>
+</div>
+
+                            </div>
+</li>
+
+                    </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e671" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d44904e1115">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d44904e1118">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d44904e1115 ">Message includes Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d44904e1118 ">Indicates that the message includes an Avro schema.
+                                    </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d44904e1115 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d44904e1118 ">Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p class="p">When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p>
+<p class="p">You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, click the <span class="keyword wintitle">Binary</span> tab and configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_p4b_vv4_yr__d4016e1296" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d44904e1174">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d44904e1177">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d44904e1174 ">Max Data Size <a class="xref" href="../Reusable_Content/KConsumer-DataFormats.html">
+                                            <img class="image" id="task_p4b_vv4_yr__d4016e1324" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d44904e1177 ">Maximum number of bytes in the message. Larger messages
+                                        cannot be processed or written to error. </td>
 
                                 </tr>
 

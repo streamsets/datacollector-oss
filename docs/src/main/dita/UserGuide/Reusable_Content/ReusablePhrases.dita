@@ -155,7 +155,7 @@
                                     origin, the origin processes the object based on the error
                                     handling configured for the stage.</dd>
                               <dd>For more information about the root field types, see <xref
-                                          href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
+                                          href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-DELIMFILE">
@@ -195,7 +195,7 @@
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
                               <dd>For more information about the root field types, see <xref
-                                          href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
+                                          href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
                         <dlentry id="OriginDF-XML">
@@ -256,8 +256,8 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer and Hadoop
-                        FS</draft-comment>
+                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer and Hadoop FS, and
+                        Kinesis Consumer</draft-comment>
                   <dl>
                         <dlentry id="OriginDF-AVRO">
                               <dt>Avro</dt>
@@ -279,6 +279,24 @@
                               <dd>Generates a record for every record. </dd>
                               <dd>The origin assumes each file includes an Avro schema definition.
                                     But you can optionally provide an alternate schema. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">BINARY - used by Kafka Consumer and Kinesis
+                        Consumer</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="OriginDF-Binary">
+                              <dt>Binary</dt>
+                              <dd>Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+                              <dd>When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
                         </dlentry>
                   </dl>
             </p>

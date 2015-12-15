@@ -13,13 +13,13 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_xgs_nlc_wr">
+<concept id="concept_cwg_r2m_35">
  <title>Data Formats</title>
  <conbody>
-  <p><indexterm>data formats<indexterm>Kafka Consumer</indexterm></indexterm><indexterm>Kafka
-        Consumer origin<indexterm>data formats</indexterm></indexterm>The Kafka Consumer origin
-      processes data differently based on the data format. Kafka Consumer can process the following
-      types of data:</p>
+  <p><indexterm>data formats<indexterm>Kinesis Consumer</indexterm></indexterm><indexterm>Kinesis
+        Consumer origin<indexterm>data formats</indexterm></indexterm>The Kinesis Consumer origin
+      processes data differently based on the data format. Kinesis Consumer can process the
+      following types of data:</p>
   <dl>
       <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
         <dt/>

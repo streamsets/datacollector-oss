@@ -360,9 +360,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-AVRO-Mess</uicontrol>  - The
-                        following step is used by JMS, Kafka - origins that read Avro data from
-                        messages.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>O-AVRO-Mess</uicontrol> - The
+                        following step is used by JMS, Kafka, Kinesis - origins that read Avro data
+                        from messages.</draft-comment>
                 </cmd>
             </step>
             <step id="O-AVRO-Mess">
@@ -403,7 +403,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DELIMITED data</uicontrol> -
-                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer.</draft-comment>
+                        Directory, Hadoop FS, JMS Consumer, Kafka Consumer, Kinesis
+                        Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="DelimFILE">
@@ -442,7 +443,7 @@
                                 </row>
                                 <row>
                                     <entry>Root Field Type <xref
-                                            href="../Pipeline_Design/DelimitedDataRecordTypes.dita">
+                                            href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_exx_41q_ft"/></xref></entry>
                                     <entry>Root field type to use:<ul id="ul_izr_p1q_ft">
@@ -475,7 +476,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta">JSON data - Kafka Consumer, JMS Consumer, Hadoop
-                        FS takes</draft-comment>
+                        FS, Kinesis all use them.</draft-comment>
                 </cmd>
             </step>
             <step id="JSON-2props">
@@ -635,7 +636,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
-                        Kafka Consumer, JMS Consumer, Hadoop FS</draft-comment>
+                        Kafka Consumer, JMS Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="Text">
@@ -668,7 +669,7 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
-                        JMS Consumer, Kafka Consumer, Hadoop FS</draft-comment>
+                        JMS Consumer, Kafka Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
                 </cmd>
             </step>
             <step id="XMLprops">
@@ -700,6 +701,40 @@
                                             records are diverted to the pipeline for error handling.
                                         </p>
                                     </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by Kafka
+                        and Kinesis Consumer</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-Binary">
+                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Binary Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Data Size <xref href="KConsumer-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_rpx_kdm_35"
+                                        /></xref></entry>
+                                    <entry>Maximum number of bytes in the message. Larger messages
+                                        cannot be processed or written to error. </entry>
                                 </row>
                             </tbody>
                         </tgroup>

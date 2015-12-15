@@ -37,7 +37,7 @@
         <p>You can reset the origin for File Tail. When you reset the origin, the File Tail treats
             all properties as if you are starting the pipeline for the first time - processing all
             requested files before continuing to the active file. </p>
-        <note>When using logrotate with the copytruncate option, use the Directory origin to process
+        <note>If you use logrotate with the copytruncate option, use the Directory origin to process
             the rolled or archived files. File Tail does not support copytruncate.</note>
     </conbody>
 </concept>

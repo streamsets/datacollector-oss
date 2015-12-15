@@ -33,15 +33,15 @@
       <dl>
         <dlentry>
           <dt>List-Map</dt>
-          <dd>Provides easy use of field names or column position in expressions. Recommended for
+          <dd>Provides easy use of field names or column positions in expressions. Recommended for
             all new pipelines.</dd>
-          <dd>A list-map type results in a structure that preserves the order of data, as
+          <dd>A list-map root field type results in a structure that preserves the order of data, as
             follows:<codeblock>/&lt;first header>:&lt;value>
 /&lt;second header>:&lt;value>
 /&lt;third header>:&lt;value>
 ...</codeblock></dd>
           <dd>
-            <p>For example, the following delimited rows:</p>
+            <p>For example, with the list-map root field type, the following delimited rows:</p>
             <p>
               <codeblock><uicontrol>TransactionID,Type,UserID
 </uicontrol>0003420303,04,362
@@ -63,20 +63,20 @@
 2: &lt;value></codeblock></dd>
           <dd>In an expression, you can use the field name or the column position with a standard
             record function to call a field. For example, you can use either of the following
-            record:value expressions to return data in the TransactionID
+            record:value() expressions to return data in the TransactionID
             field:<codeblock>${record:value('/TransactionID')}
 ${record:value('[0]'}</codeblock></dd>
-          <dd><note>In scripts for scripting processors, such as the Jython Evaluator or JavaScript
-              Evaluator, treat list-map records as maps.</note>For more information about standard
-            record functions, see <xref
+          <dd><note>When writing scripts for scripting processors, such as the Jython Evaluator or
+              JavaScript Evaluator, you should treat list-map records as maps.</note>For more
+            information about standard record functions, see <xref
               href="../Expression_Language/RecordFunctions.dita#concept_p1z_ggv_1r"/>.</dd>
         </dlentry>
         <dlentry>
           <dt>List </dt>
           <dd>Provides continued support for pipelines created before version 1.1.0. Not recommended
             for new pipelines.</dd>
-          <dd>A list type results in list with an index for the header position and a map with each
-            header and associated value, as
+          <dd>A list root field type results in list with an index for the header position and a map
+            with each header and associated value, as
             follows:<codeblock>[0]/header = &lt;first header>
    /value = &lt;value for first header>
 [1]/header = &lt;second header>
@@ -107,16 +107,17 @@ ${record:value('[0]'}</codeblock></dd>
 [1]/value = &lt;value>
 [2]/value = &lt;value>
 ...</codeblock></dd>
-          <dd>For data in the list type, you should either use the delimited data functions or
+          <dd>For data in the list records, you should either use the delimited data functions or
             include the full field path in standard record functions. For example, you can use the
-              <codeph>record:dValue('&lt;header>')</codeph> delimited data function to return the
-            value associated with the specified header. </dd>
+            record:dValue() delimited data function to return the value associated with the
+            specified header. </dd>
           <dd>
             <p>
-              <note type="tip">You can use the <codeph>record:dToMap()</codeph> function to convert
-                the record to a map, and then use standard functions for record processing.</note>
+              <note type="tip">You can use the record:dToMap() function to convert a list record to
+                a map, and then use standard functions for record processing.</note>
             </p>
-            <p>For the full list of delimited data record functions and their syntax, see <xref
+            <p>For more information about record:dToMap and full list of delimited data record
+              functions and their syntax, see <xref
                 href="../Expression_Language/RecordFunc-Delimited.dita#concept_s2c_q14_fs"/>.</p>
           </dd>
         </dlentry>

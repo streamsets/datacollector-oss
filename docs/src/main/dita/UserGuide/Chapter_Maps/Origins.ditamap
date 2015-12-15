@@ -49,7 +49,7 @@
     <topicref href="../Origins/LogFormats.dita"/>
    </topicref>
    <topicref href="../Origins/FileTail-MultipleLines.dita"/>
-   <topicref href="../Origins/FileTail-Nodes.dita"/>
+   <topicref href="../Origins/FileTail-Output.dita"/>
    <topicref href="../Origins/FileTail-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HadoopFS-origin.dita" chunk="to-content">   
@@ -97,6 +97,7 @@
   <topicref href="../Origins/KinConsumer.dita" chunk="to-content">  
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
+   <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
   <topicref href="../Origins/MongoDB.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

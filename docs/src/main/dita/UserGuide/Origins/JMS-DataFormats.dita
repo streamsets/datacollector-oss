@@ -48,12 +48,9 @@
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry>
-     <dt>Avro</dt>
-     <dd>Generates a record for every message. </dd>
-     <dd>To ensure proper data processing, indicate if the message includes an Avro schema. </dd>
-     <dd>You can use the schema associated with the message or provide an alternate schema
-            definition. Providing an alternate schema can improve performance.</dd>
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
+     <dt/>
+     <dd/>
     </dlentry>
    </dl>
   </p>

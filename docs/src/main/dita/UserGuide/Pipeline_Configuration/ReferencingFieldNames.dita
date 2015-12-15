@@ -68,7 +68,7 @@
                                                 this:<codeblock>${record:value('[2]/east/HR/employeeName')}</codeblock></dd>
                                         <dd>Delimited records can be structured as lists. For more
                                                 information, see <xref
-                                                  href="../Pipeline_Design/DelimitedDataRecordTypes.dita#concept_zcg_bm4_fs"
+                                                  href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                                 />.</dd>
                                 </dlentry>
                                 <dlentry>

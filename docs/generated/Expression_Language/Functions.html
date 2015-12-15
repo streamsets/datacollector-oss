@@ -373,7 +373,7 @@
   you can use standard record functions.</p>
 
   <p class="p">For more information about the delimited
-   data root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRecordTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</p>
+   data root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</p>
 
   <div class="p">The expression language provides the following delimited data record functions:<dl class="dl">
     
@@ -412,9 +412,15 @@
     
      <dt class="dt dlterm">record:dToMap()</dt>
 
-     <dd class="dd">Converts the record to a JSON map using headers as keys.</dd>
+     <dd class="dd">Converts a record with a List root field to a List-Map root field. Use to convert delimited
+      List records to List-Map to allow easier use with standard record functions. For more
+      information about root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
 
-     <dd class="dd">Return type: Record in map format.</dd>
+     <dd class="dd">Return type: Records with a List-Map root field.</dd>
+
+     <dd class="dd">To use record:dToMap(), use a slash as the root output field as follows:</dd>
+
+     <dd class="dd"><img class="image" id="concept_s2c_q14_fs__image_bg2_jhk_35" src="../Graphics/Delim-ConvertType.png" height="99" width="679"></img></dd>
 
     
     
