@@ -108,7 +108,7 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
           while (propertyNames.hasMoreElements()) {
             String name = String.valueOf(propertyNames.nextElement());
             String value = message.getStringProperty(name);
-            record.getHeader().setAttribute(name, value);
+            record.getHeader().setAttribute(name, value == null ? "" : value);
           }
           batchMaker.addRecord(record);
           count++;
