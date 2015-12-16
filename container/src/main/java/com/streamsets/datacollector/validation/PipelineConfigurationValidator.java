@@ -587,7 +587,8 @@ public class PipelineConfigurationValidator {
       for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
         preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
-        if (stageDef.hasPreconditions() && confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
+        if (confDef != null && stageDef.hasPreconditions() &&
+            confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
           preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
         }
       }
