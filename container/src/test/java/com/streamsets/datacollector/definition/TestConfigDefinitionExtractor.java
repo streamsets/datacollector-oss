@@ -223,21 +223,6 @@ public class TestConfigDefinitionExtractor {
     Assert.assertNotNull(config.getModel());
   }
 
-  public static class Fail1 {
-
-    @ConfigDef(
-        label = "L",
-        type = ConfigDef.Type.STRING,
-        required = false
-    )
-    private String config;
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testStringConfigFail1() {
-    ConfigDefinitionExtractor.get().extract(Fail1.class, Collections.<String>emptyList(), "x");
-  }
-
   public static class Fail2 {
 
     @ConfigDef(

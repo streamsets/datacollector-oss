@@ -62,14 +62,11 @@ public abstract class ConfigDefinitionExtractor {
       boolean validateDependencies, boolean isBean, boolean isComplexField, Object contextMsg) {
     List<ErrorMessage> errors = new ArrayList<>();
     boolean noConfigs = true;
-    for (Field field : klass.getDeclaredFields()) {
+    for (Field field : klass.getFields()) {
       if (field.getAnnotation(ConfigDef.class) != null && field.getAnnotation(ConfigDefBean.class) != null) {
         errors.add(new ErrorMessage(DefinitionError.DEF_152, contextMsg, field.getName()));
       } else {
         if (field.getAnnotation(ConfigDef.class) != null || field.getAnnotation(ConfigDefBean.class) != null) {
-          if (!Modifier.isPublic(field.getModifiers())) {
-            errors.add(new ErrorMessage(DefinitionError.DEF_150, contextMsg, klass.getSimpleName(), field.getName()));
-          }
           if (Modifier.isStatic(field.getModifiers())) {
             errors.add(new ErrorMessage(DefinitionError.DEF_151, contextMsg, klass.getSimpleName(), field.getName()));
           }
