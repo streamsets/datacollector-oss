@@ -85,7 +85,7 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     required = false,
     type = ConfigDef.Type.TEXT,
     defaultValue = "",
-    label = "Avro Reader Schema",
+    label = "Avro Schema",
     description = "",
     displayPosition = 20,
     group = "AVRO",
