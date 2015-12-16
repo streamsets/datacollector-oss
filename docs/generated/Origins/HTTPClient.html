@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL. When you configure HTTP Client, you specify the resource URL and other read properties. When required, you can provide OAuth ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HTTP Client"></meta><meta name="abstract" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="description" content="The HTTP Client origin reads JSON data from an HTTP resource URL."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wk4_bjz_5r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HTTP Client</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The HTTP Client origin reads data from an HTTP resource URL. When you configure HTTP Client, you specify the resource URL and other read properties. You can use basic or OAuth credentials to access ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="HTTP Client"></meta><meta name="abstract" content="The HTTP Client origin reads data from an HTTP resource URL."></meta><meta name="description" content="The HTTP Client origin reads data from an HTTP resource URL."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_wk4_bjz_5r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>HTTP Client</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,12 +35,12 @@
  <h1 class="title topictitle1">HTTP Client</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The HTTP Client origin reads JSON data from an HTTP resource URL.</p>
+ <div class="body conbody"><p class="shortdesc">The HTTP Client origin reads data from an HTTP resource URL.</p>
 
   <p class="p">When you configure HTTP Client, you specify the resource URL
-      and other read properties. When required, you can provide OAuth credentials. You can enter the
-      OAuth credentials in the origin or you can secure the credentials in runtime resource files
-      and reference the files in the origin.</p>
+      and other read properties. You can use basic or OAuth credentials to access data. You can
+      enter the OAuth credentials in the origin or you can secure the credentials in runtime
+      resource files and reference the files in the origin.</p>
 
  </div>
 
@@ -99,6 +99,57 @@
  </div>
 
 </div>
+<div class="topic concept nested1" id="concept_mnv_s5r_35">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The HTTP Client origin processes data differently based on the data format. The origin
+        processes the following types of data: </p>
+
+  <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Text</dt>
+
+                    <dd class="dd">Generates a record for each line of text. The origin uses the user-defined
+                        entity delimiter to determine the beginning and end of each line. </dd>
+
+                    <dd class="dd">When a line exceeds the maximum line length defined for the origin, the
+                        origin truncates the line. The origin adds a boolean field named Truncated
+                        to indicate if the line was truncated. </dd>
+
+                
+                
+                    <dt class="dt dlterm">JSON</dt>
+
+                    <dd class="dd">Generates a record for each JSON object. The origin uses the user-defined
+                        entity delimiter to determine the beginning and end of each JSON object. </dd>
+
+                    <dd class="dd">When an object exceeds the maximum object length defined for the origin, the
+                        origin processes the object based on the error handling configured for the
+                        stage. </dd>
+
+                
+                
+                    <dt class="dt dlterm">XML</dt>
+
+                    <dd class="dd">Generates a record for XML based on the user-defined delimiter element. When
+                        processing XML data, the origin uses the entity delimiter to define chunks
+                        of XML and then uses the delimiter element to separate the data into
+                        records. </dd>
+
+                    <dd class="dd">When a record exceeds the user-defined maximum record length, the origin
+                        skips the record and continues processing with the next record. It sends the
+                        skipped record to the pipeline for error handling.  </dd>
+
+                
+            </dl>
+
+        </div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_akl_rkz_5r">
     <h2 class="title topictitle2">Configuring an HTTP Client Origin</h2>
 
@@ -119,9 +170,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e175">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e232">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e178">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e235">Description</th>
 
                                 </tr>
 
@@ -129,23 +180,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e175 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e232 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e178 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e175 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e178 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e235 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e175 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e232 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e178 ">Error record handling for the stage: <ul class="ul" id="task_akl_rkz_5r__d4016e380">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e235 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e232 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e235 ">Error record handling for the stage: <ul class="ul" id="task_akl_rkz_5r__d4016e380">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -174,9 +225,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="33.33333333333333%" id="d37084e250">HTTP Property</th>
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d37084e307">HTTP Property</th>
 
-                                    <th class="entry" valign="top" width="66.66666666666666%" id="d37084e253">Description</th>
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d37084e310">Description</th>
 
                                 </tr>
 
@@ -184,32 +235,32 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Resource URL</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Resource URL</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">URL where the data resides. </td>
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">URL where the data resides. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">HTTP Method</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">HTTP Method</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">HTTP method to use to request data from the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">HTTP method to use to request data from the
                                         server.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Request Timeout</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Request Timeout</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Milliseconds to wait for the server to begin sending a
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Milliseconds to wait for the server to begin sending a
                                         response. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Mode</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Mode</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Processing mode:<ul class="ul" id="task_akl_rkz_5r__ul_nfn_slz_5r">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Processing mode:<ul class="ul" id="task_akl_rkz_5r__ul_nfn_slz_5r">
                                             <li class="li">Streaming - Maintains a connection and processes
                                                 data as it becomes available.</li>
 
@@ -222,17 +273,17 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Polling Interval (ms) </td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Polling Interval (ms) </td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Milliseconds the origin waits before checking for new
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Milliseconds the origin waits before checking for new
                                         data. Used in the polling mode only. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Authentication Type</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Authentication Type</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Determines the authentication type used to connect to the
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Determines the authentication type used to connect to the
                                             server:<ul class="ul" id="task_akl_rkz_5r__ul_icm_h1l_35">
                                             <li class="li">None - Performs no authentication.</li>
 
@@ -247,53 +298,53 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Data Format</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">
                                         
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Entity Delimiter</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Entity Delimiter</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">
                                         
                                     </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Charset</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Charset</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Character encoding of the messages to be
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Character encoding of the messages to be
                                         processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Ignore Ctrl Characters <a class="xref" href="../Pipeline_Design/ControlCharacters.html" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">
          <img class="image" id="task_akl_rkz_5r__d4025e36" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-       <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Removes all ASCII control characters except for the tab, line feed, and carriage
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Removes all ASCII control characters except for the tab, line feed, and carriage
         return characters.</td>
 
       </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Batch Size (recs)</td>
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Batch Size (recs)</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Maximum number of records to include in a batch and send
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Maximum number of records to include in a batch and send
                                         through the pipeline at one time.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e250 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d37084e307 ">Batch Wait Time (ms)  <a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q" title="For origin stages, the batch size determines the maximum number of records sent through the pipeline at one time. The batch wait time determines the time that the origin waits for data before sending a batch. At the end of the wait time, it sends the batch regardless of how many records the batch contains.">
                                             <img class="image" id="task_akl_rkz_5r__image_mgp_2q3_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e253 ">Maximum amount of time to wait before sending a partial
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d37084e310 ">Maximum amount of time to wait before sending a partial
                                         or empty batch. </td>
 
                                 </tr>
@@ -315,9 +366,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e436">OAuth Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e493">OAuth Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e439">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e496">Description</th>
 
                                 </tr>
 
@@ -325,30 +376,30 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e436 ">Consumer Key</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e493 ">Consumer Key</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e439 ">OAuth consumer key.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e436 ">Consumer Secret</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e439 ">OAuth consumer secret.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e496 ">OAuth consumer key.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e436 ">Token</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e493 ">Consumer Secret</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e439 ">OAuth consumer token.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e496 ">OAuth consumer secret.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e436 ">Token Secret</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e493 ">Token</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e439 ">OAuth token secret.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e496 ">OAuth consumer token.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e493 ">Token Secret</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e496 ">OAuth token secret.</td>
 
                                 </tr>
 
@@ -374,9 +425,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e532">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d37084e589">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e535">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d37084e592">Description</th>
 
                                 </tr>
 
@@ -384,9 +435,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e532 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e589 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e535 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e592 ">Type of JSON content to be processed:<ul class="ul" id="task_akl_rkz_5r__ul_r32_q4z_5r">
                                             <li class="li">JSON Array of Objects - Use to process data in
                                                 polling mode. </li>
 
@@ -399,9 +450,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e532 ">Entity Delimiter</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d37084e589 ">Entity Delimiter</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e535 ">Delimiter to indicate the end of a JSON record, such as
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d37084e592 ">Delimiter to indicate the end of a JSON record, such as
                                         \n or \r. Used when processing multiple JSON objects.
                                             </td>
 

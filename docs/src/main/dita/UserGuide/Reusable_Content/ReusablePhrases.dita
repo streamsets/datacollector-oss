@@ -88,7 +88,9 @@
             </p>
             <p>
                   <draft-comment author="Loretta">ORIGIN DATA FORMATS - from Directory. DLEntries
-                        are conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3. </draft-comment>
+                        are conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3.
+                        --- NOTE: Content copied to HTTP Client and altered. When making changes
+                        here, check there as well.</draft-comment>
             </p>
             <p>
                   <dl id="ORIGIN-DFormats">

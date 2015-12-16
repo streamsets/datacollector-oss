@@ -29,7 +29,7 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> automatically
    uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
     <draft-comment author="Loretta">do I need to add a note stating that we don't support Kerberos
-      for Mesos?</draft-comment>
+      for Mesos? Or does Mesos not support Kerberos?</draft-comment>
  </conbody>
   <related-links>
     <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>

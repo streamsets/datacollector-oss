@@ -23,5 +23,7 @@
   <p>For monitoring details for a <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> worker,
       click the worker link.</p>
+    <draft-comment author="Loretta">Should I also add a note that talks about metrics and alerts?
+      They're all per worker, right? </draft-comment>
  </conbody>
 </concept>

@@ -43,8 +43,7 @@
      <dd>When processing data from a Kafka cluster, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
       data continuously until you stop the pipeline. This is known as cluster streaming execution
-      mode. <draft-comment author="Loretta">add something about streaming mode here?
-      </draft-comment></dd>
+      mode. </dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application within Spark Streaming, an open source cluster-computing application.
       Spark Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
@@ -61,8 +60,8 @@
      <dt>HDFS</dt>
      <dd>When processing data from HDFS, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-      all available data and then stops the pipeline. <draft-comment author="Loretta">add something
-       about batch mode here? </draft-comment></dd>
+      all available data and then stops the pipeline. <draft-comment author="Loretta">I'll add
+       something about batch mode here if we need that terminology.</draft-comment></dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application on top of MapReduce, an open-source cluster-computing framework.
       MapReduce runs on the YARN cluster manager. </dd>

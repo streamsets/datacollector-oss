@@ -729,10 +729,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Max Data Size <xref href="KConsumer-DataFormats.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_rpx_kdm_35"
-                                        /></xref></entry>
+                                    <entry>Max Data Size</entry>
                                     <entry>Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </entry>
                                 </row>

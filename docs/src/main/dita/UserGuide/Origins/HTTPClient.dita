@@ -15,14 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wk4_bjz_5r">
  <title>HTTP Client</title>
- <shortdesc>The HTTP Client origin reads JSON data from an HTTP resource URL.</shortdesc>
+ <shortdesc>The HTTP Client origin reads data from an HTTP resource URL.</shortdesc>
  <conbody>
   <p><indexterm>HTTP Client
           origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>HTTP
           Client</indexterm></indexterm>When you configure HTTP Client, you specify the resource URL
-      and other read properties. When required, you can provide OAuth credentials. You can enter the
-      OAuth credentials in the origin or you can secure the credentials in runtime resource files
-      and reference the files in the origin.</p>
+      and other read properties. You can use basic or OAuth credentials to access data. You can
+      enter the OAuth credentials in the origin or you can secure the credentials in runtime
+      resource files and reference the files in the origin.</p>
  </conbody>
   <related-links>
     <link href="../Advanced_Config/RuntimeResources.dita#concept_bs4_5nm_2s"/>
