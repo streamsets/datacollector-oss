@@ -234,7 +234,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         Properties props = new Properties();
         props.load(is);
         String ignore = props.getProperty(IGNORE_STAGE_DEFINITIONS, "");
-        ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
+        if (!ignore.isEmpty()) {
+          ignoreStages.addAll(Splitter.on(",").trimResults().splitToList(ignore));
+        }
       }
     }
     return ignoreStages;

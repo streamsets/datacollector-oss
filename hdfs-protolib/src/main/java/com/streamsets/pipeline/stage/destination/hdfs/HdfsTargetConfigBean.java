@@ -323,9 +323,7 @@ public class HdfsTargetConfigBean {
     label = "Data Format",
     description = "Data Format",
     displayPosition = 100,
-    group = "OUTPUT_FILES",
-    dependsOn = "fileType",
-    triggeredByValue = { "TEXT", "SEQUENCE_FILE"}
+    group = "OUTPUT_FILES"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
