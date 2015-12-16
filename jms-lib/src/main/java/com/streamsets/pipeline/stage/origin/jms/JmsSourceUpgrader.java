@@ -44,8 +44,8 @@ public class JmsSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("dataFormatConfig.compressionInputFormat", Compression.NONE.name()));
-    configs.add(new Config("dataFormatConfig.compressedFilePattern", "*"));
+    configs.add(new Config("dataFormatConfig.compression", Compression.NONE));
+    configs.add(new Config("dataFormatConfig.filePatternInArchive", "*"));
   }
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("jmsConfig.destinationType", "UNKNOWN"));

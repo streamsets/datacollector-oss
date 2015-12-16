@@ -49,16 +49,33 @@ public class AWSUtil {
 
     for (Config config : configs) {
       switch (config.getName()) {
-        case "accessKeyId":
-        case "awsAccessKeyId":
+        case "s3ConfigBean.s3Config.accessKeyId":
           configsToRemove.add(config);
-          configsToAdd.add(new Config(AWS_CONFIG_BEAN + ".awsAccessKeyId", config.getValue()));
+          configsToAdd.add(new Config("s3ConfigBean.s3Config.awsConfig.awsAccessKeyId", config.getValue()));
           break;
-        case "secretAccessKey":
-        case "awsSecretAccessKey":
+        case "s3ConfigBean.s3Config.secretAccessKey":
           configsToRemove.add(config);
-          configsToAdd.add(new Config(AWS_CONFIG_BEAN + ".awsSecretAccessKey", config.getValue()));
+          configsToAdd.add(new Config("s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey", config.getValue()));
           break;
+
+        case "s3TargetConfigBean.s3Config.accessKeyId":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId", config.getValue()));
+          break;
+        case "s3TargetConfigBean.s3Config.secretAccessKey":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey", config.getValue()));
+          break;
+
+        case "kinesisConfig.awsAccessKeyId":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", config.getValue()));
+          break;
+        case "kinesisConfig.awsSecretAccessKey":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", config.getValue()));
+          break;
+
         default:
           break;
       }

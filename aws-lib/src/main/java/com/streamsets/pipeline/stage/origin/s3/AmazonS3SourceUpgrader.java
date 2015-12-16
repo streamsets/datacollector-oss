@@ -48,8 +48,8 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.add(new Config("s3ConfigBean.advancedConfig.proxyPort", 0));
     configs.add(new Config("s3ConfigBean.advancedConfig.proxyUser", ""));
     configs.add(new Config("s3ConfigBean.advancedConfig.proxyPassword", ""));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.compressionInputFormat", Compression.NONE.name()));
-    configs.add(new Config("s3ConfigBean.dataFormatConfig.compressedFilePattern", "*"));
+    configs.add(new Config("s3ConfigBean.dataFormatConfig.compression", Compression.NONE));
+    configs.add(new Config("s3ConfigBean.dataFormatConfig.filePatternInArchive", "*"));
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
