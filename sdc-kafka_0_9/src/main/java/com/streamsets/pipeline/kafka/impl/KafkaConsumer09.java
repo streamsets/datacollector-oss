@@ -187,8 +187,6 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_DEFAULT);
 
     if (this.context.isPreview()) {
-      // Set to smallest value only for preview mode
-      // When running actual pipeline, the default configs from kafka client should be picked up.
       props.put(AUTO_OFFSET_RESET_KEY, AUTO_OFFSET_RESET_PREVIEW);
     }
 

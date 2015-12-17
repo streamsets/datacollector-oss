@@ -32,6 +32,7 @@ import org.apache.zookeeper.common.PathUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
@@ -46,10 +47,11 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
   public int getPartitionCount(
       String metadataBrokerList,
       String topic,
+      Map<String, Object> kafkaClientConfigs,
       int messageSendMaxRetries,
       long retryBackoffMs
   ) throws StageException {
-    KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList);
+    KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
     List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
     return partitionInfoList.size();
   }
@@ -140,6 +142,7 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
     List<KafkaBroker> kafkaBrokers,
     String metadataBrokerList,
     String topic,
+    Map<String, Object> kafkaClientConfigs,
     List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
@@ -147,7 +150,7 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
       issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_05));
       valid = false;
     } else {
-      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList);
+      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
       try {
         List<PartitionInfo> partitionInfos = kafkaConsumer.partitionsFor(topic);
         if(null == partitionInfos || partitionInfos.size() == 0) {
@@ -162,7 +165,10 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
     return valid;
   }
 
-  private KafkaConsumer<String, String> createTopicMetadataClient(String metadataBrokerList) {
+  private KafkaConsumer<String, String> createTopicMetadataClient(
+      String metadataBrokerList,
+      Map<String, Object> kafkaClientConfigs
+  ) {
     Properties props = new Properties();
     props.put("bootstrap.servers", metadataBrokerList);
     props.put("group.id", "sdcTopicMetadataClient");
@@ -171,7 +177,26 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
     props.put("session.timeout.ms", "30000");
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+    addSecurityProperties(kafkaClientConfigs, props);
+
     return new KafkaConsumer<>(props);
   }
 
+  private void addSecurityProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+    //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
+    if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
+      kafkaClientConfigs.remove(Kafka09Constants.BOOTSTRAP_SERVERS_KEY);
+      kafkaClientConfigs.remove(Kafka09Constants.KEY_SERIALIZER_KEY);
+      kafkaClientConfigs.remove(Kafka09Constants.VALUE_SERIALIZER_KEY);
+
+      for (Map.Entry<String, Object> clientConfig : kafkaClientConfigs.entrySet()) {
+        if(clientConfig.getKey().startsWith("ssl.") ||
+          clientConfig.getKey().startsWith("sasl.") ||
+          clientConfig.getKey().equals("security.protocol")) {
+          props.put(clientConfig.getKey(), clientConfig.getValue());
+        }
+      }
+    }
+  }
 }

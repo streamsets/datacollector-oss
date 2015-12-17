@@ -41,18 +41,20 @@ public class TestUtil {
   }
 
   public static KafkaServer createKafkaServer(int port, String zkConnect) {
+    return createKafkaServer(port, zkConnect, true);
+  }
+
+  public static KafkaServer createKafkaServer(int port, String zkConnect, boolean autoCreateTopic) {
     final Option<File> noFile = scala.Option.apply(null);
     final Option<SecurityProtocol> noInterBrokerSecurityProtocol = scala.Option.apply(null);
     Properties props = TestUtils.createBrokerConfig(
       0, zkConnect, false, false, port, noInterBrokerSecurityProtocol,
       noFile, true, false, TestUtils.RandomPort(), false, TestUtils.RandomPort(), false,
       TestUtils.RandomPort());
-    props.setProperty("auto.create.topics.enable", "true");
+    props.setProperty("auto.create.topics.enable", String.valueOf(autoCreateTopic));
     props.setProperty("num.partitions", "1");
     props.setProperty("zookeeper.connect", zkConnect);
     KafkaConfig config = new KafkaConfig(props);
     return TestUtils.createServer(config, SystemTime$.MODULE$);
   }
-
-
 }

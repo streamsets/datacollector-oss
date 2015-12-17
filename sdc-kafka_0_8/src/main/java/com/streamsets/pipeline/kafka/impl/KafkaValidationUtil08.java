@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class KafkaValidationUtil08 implements SdcKafkaValidationUtil {
 
@@ -55,6 +56,7 @@ public class KafkaValidationUtil08 implements SdcKafkaValidationUtil {
   public int getPartitionCount(
       String metadataBrokerList,
       String topic,
+      Map<String, Object> kafkaClientConfigs,
       int messageSendMaxRetries,
       long retryBackoffMs
   ) throws StageException {
@@ -169,6 +171,7 @@ public class KafkaValidationUtil08 implements SdcKafkaValidationUtil {
     List<KafkaBroker> kafkaBrokers,
     String metadataBrokerList,
     String topic,
+    Map<String, Object> kafkaClientConfigs,
     List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;

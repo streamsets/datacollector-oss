@@ -317,6 +317,7 @@ public class KafkaTargetConfig {
       kafkaBrokers,
       metadataBrokerList,
       topic,
+      kafkaProducerConfigs,
       issues
     );
     if(valid) {
@@ -324,6 +325,7 @@ public class KafkaTargetConfig {
         int partitionCount = kafkaValidationUtil.getPartitionCount(
             metadataBrokerList,
             topic,
+            kafkaProducerConfigs,
             messageSendMaxRetries,
             retryBackoffMs
         );
@@ -482,6 +484,7 @@ public class KafkaTargetConfig {
             int partitionCount = kafkaValidationUtil.getPartitionCount(
                 metadataBrokerList,
                 result,
+                kafkaProducerConfigs,
                 messageSendMaxRetries,
                 retryBackoffMs
             );

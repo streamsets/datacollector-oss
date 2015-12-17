@@ -22,4 +22,18 @@ package com.streamsets.pipeline.kafka.impl;
 public class Kafka09Constants {
 
   public static final String KAFKA_VERSION = "0.9";
+
+  // Producer related Constants
+  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
+  public static final String KEY_SERIALIZER_KEY = "key.serializer";
+  public static final String KEY_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringSerializer";
+  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+  public static final String VALUE_SERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArraySerializer";
+  public static final String REQUEST_REQUIRED_ACKS_KEY = "acks";
+  public static final String REQUEST_REQUIRED_ACKS_DEFAULT = "1";
+
+  public static final String PARTITIONER_CLASS_KEY = "partitioner.class";
+  public static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RandomPartitioner";
+  public static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
+  public static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
 }

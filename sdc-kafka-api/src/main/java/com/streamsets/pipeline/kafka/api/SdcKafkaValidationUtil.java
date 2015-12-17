@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SdcKafkaValidationUtil {
 
@@ -49,12 +50,14 @@ public interface SdcKafkaValidationUtil {
     List<KafkaBroker> kafkaBrokers,
     String metadataBrokerList,
     String topic,
+    Map<String, Object> kafkaProducerConfigs,
     List<Stage.ConfigIssue> issues
   );
 
   public int getPartitionCount(
     String metadataBrokerList,
     String topic,
+    Map<String, Object> kafkaClientConfigs,
     int messageSendMaxRetries,
     long retryBackoffMs
   ) throws StageException;

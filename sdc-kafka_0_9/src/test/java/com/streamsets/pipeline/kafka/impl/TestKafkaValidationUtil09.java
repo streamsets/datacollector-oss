@@ -42,6 +42,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class TestKafkaValidationUtil09 {
@@ -65,7 +66,7 @@ public class TestKafkaValidationUtil09 {
       JaasUtils.isZkSecurityEnabled());
 
     port = TestUtil.getFreePort();
-    kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+    kafkaServer = TestUtil.createKafkaServer(port, zkConnect, false);
     sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
   }
 
@@ -91,9 +92,27 @@ public class TestKafkaValidationUtil09 {
     createTopic(zkUtils, topic2, 2, kafkaServer);
     createTopic(zkUtils, topic3, 3, kafkaServer);
 
-    Assert.assertEquals(1, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic1, 1, 2000));
-    Assert.assertEquals(2, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic2, 1, 2000));
-    Assert.assertEquals(3, sdcKafkaValidationUtil.getPartitionCount("localhost:" + port, topic3, 1, 2000));
+    Assert.assertEquals(1, sdcKafkaValidationUtil.getPartitionCount(
+        "localhost:" + port,
+        topic1,
+        new HashMap<String, Object>(),
+        1,
+        2000
+    ));
+    Assert.assertEquals(2, sdcKafkaValidationUtil.getPartitionCount(
+        "localhost:" + port,
+        topic2,
+        new HashMap<String, Object>(),
+        1,
+        2000
+    ));
+    Assert.assertEquals(3, sdcKafkaValidationUtil.getPartitionCount(
+        "localhost:" + port,
+        topic3,
+        new HashMap<String, Object>(),
+        1,
+        2000
+    ));
 
     AdminUtils.deleteTopic(
       zkUtils,
@@ -109,7 +128,7 @@ public class TestKafkaValidationUtil09 {
     );
   }
 
-  @Test
+  @Test(timeout = 10000)
   public void testTopicExists() throws IOException, StageException {
 
     final String topic1 = "TestKafkaValidationUtil09_1";
@@ -131,6 +150,7 @@ public class TestKafkaValidationUtil09 {
       new ArrayList<KafkaBroker>(),
       "localhost:" + port,
       topic1,
+      new HashMap<String, Object>(),
       configIssues
     );
 
@@ -144,6 +164,7 @@ public class TestKafkaValidationUtil09 {
       new ArrayList<KafkaBroker>(),
       "localhost:" + port,
       topicX,
+      new HashMap<String, Object>(),
       configIssues
     );
 
@@ -158,6 +179,7 @@ public class TestKafkaValidationUtil09 {
 
   private void createTopic(ZkUtils zkUtils, String topic, int partitionCount, KafkaServer kafkaServer) {
     AdminUtils.createTopic(zkUtils, topic, partitionCount, 1, new Properties());
-    TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(Arrays.asList(kafkaServer)), topic, 0, 3000);
+    TestUtils.waitUntilMetadataIsPropagated(
+      scala.collection.JavaConversions.asScalaBuffer(Arrays.asList(kafkaServer)), topic, 0, 3000);
   }
 }
