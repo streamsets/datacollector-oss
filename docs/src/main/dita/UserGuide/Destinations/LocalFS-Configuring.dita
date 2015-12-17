@@ -14,8 +14,8 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_e33_3v5_1r">
-    <title>Configuring a Local File System Destination</title>
-    <shortdesc>Configure the Local File System destination to write records to a local file system. </shortdesc>
+    <title>Configuring a Local FS Destination</title>
+    <shortdesc>Configure the Local FS destination to write records to a local file system. </shortdesc>
     <taskbody>
         <context>
             <p></p>

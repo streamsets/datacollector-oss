@@ -25,9 +25,9 @@
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> process runs
    the pipeline. A pipeline runs in standalone mode by default. </p>
   <p>In cluster mode, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> utilizes a
-   cluster manager and a cluster application to spawn additional workers as needed. Use cluster mode
-   to write data to a Kafka cluster or HDFS.</p>
+    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses a cluster
+   manager and a cluster application to spawn additional workers as needed. Use cluster mode to read
+   data from a Kafka cluster or HDFS.</p>
   <p>When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
    of standalone pipelines to stream log data from each application server to Kafka. And then use a
@@ -42,8 +42,9 @@
      <dt>Kafka cluster</dt>
      <dd>When processing data from a Kafka cluster, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-      data continuously until you stop the pipeline. This is known as cluster streaming execution
-      mode. </dd>
+      data continuously until you stop the pipeline. This is known as cluster streaming mode.
+       <draft-comment author="Loretta">Check back if this is execution mode in General tab or a
+       config on the Cluster tab.</draft-comment></dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application within Spark Streaming, an open source cluster-computing application.
       Spark Streaming runs on either the Mesos or YARN cluster manager to process data from a Kafka
@@ -60,8 +61,9 @@
      <dt>HDFS</dt>
      <dd>When processing data from HDFS, the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-      all available data and then stops the pipeline. <draft-comment author="Loretta">I'll add
-       something about batch mode here if we need that terminology.</draft-comment></dd>
+      all available data and then stops the pipeline. This is known as cluster batch
+       mode.<draft-comment author="Loretta">Check back if this is execution mode in General tab or a
+       config on the Cluster tab.</draft-comment></dd>
      <dd>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       runs as an application on top of MapReduce, an open-source cluster-computing framework.
       MapReduce runs on the YARN cluster manager. </dd>

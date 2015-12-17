@@ -43,9 +43,9 @@
    the pipeline. A pipeline runs in standalone mode by default. </p>
 
   <p class="p">In cluster mode, the <span class="ph">Data
-                  Collector</span> utilizes a
-   cluster manager and a cluster application to spawn additional workers as needed. Use cluster mode
-   to write data to a Kafka cluster or HDFS.</p>
+                  Collector</span> uses a cluster
+   manager and a cluster application to spawn additional workers as needed. Use cluster mode to read
+   data from a Kafka cluster or HDFS.</p>
 
   <p class="p">When would you choose standalone or cluster mode? Say you want to ingest logs from applications
    servers and perform a computationally expensive transformation. To do this, you might use a set
@@ -64,8 +64,8 @@
 
      <dd class="dd">When processing data from a Kafka cluster, the <span class="ph">Data
                   Collector</span> processes
-      data continuously until you stop the pipeline. This is known as cluster streaming execution
-      mode. </dd>
+      data continuously until you stop the pipeline. This is known as cluster streaming mode.
+       </dd>
 
      <dd class="dd">The <span class="ph">Data
                   Collector</span>
@@ -89,7 +89,8 @@
 
      <dd class="dd">When processing data from HDFS, the <span class="ph">Data
                   Collector</span> processes
-      all available data and then stops the pipeline. </dd>
+      all available data and then stops the pipeline. This is known as cluster batch
+       mode.</dd>
 
      <dd class="dd">The <span class="ph">Data
                   Collector</span>
@@ -111,29 +112,45 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_swq_1bg_xs">
- <h2 class="title topictitle2">Kerberos Authentication for the Cluster</h2>
+ <h2 class="title topictitle2">Kerberos Authentication for Yarn</h2>
 
  
- <div class="body conbody"><p class="shortdesc">If a YARN cluster uses Kerberos authentication, make sure to configure the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">If a cluster on YARN uses Kerberos authentication, make sure to configure the <span class="ph">Data
                   Collector</span> to use
     Kerberos authentication.</p>
 
   <p class="p">When you configure Kerberos authentication for the <span class="ph">Data
-                  Collector</span>, you enable
-   the <span class="ph">Data
-                  Collector</span> to use
-   Kerberos and define the principal and keytab. When Kerberos is enabled for the <span class="ph">Data
+                  Collector</span>, you
+      enable the <span class="ph">Data
+                  Collector</span> to use Kerberos and define the principal and keytab. When Kerberos is enabled for the <span class="ph">Data
                   Collector</span>, the <span class="ph">Data
-                  Collector</span> automatically
-   uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
+                  Collector</span>
+      automatically uses Kerberos principal and keytab to connect to any YARN cluster that uses
+      Kerberos.</p>
 
-    
  </div>
 
   <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
 <div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to origin and destination systems, as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
 </div>
 </div>
+</div>
+<div class="topic concept nested1" id="concept_cs4_lcg_j5">
+ <h2 class="title topictitle2">Checkpoint Storage for Mesos</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When running a cluster pipeline, the <span class="ph">Data
+                  Collector</span>
+        generates and stores checkpoint metadata. </p>
+
+  <p class="p">When you run a cluster pipeline using Spark Streaming on Mesos, you need to use a location on
+            HDFS or Amazon S3 to ensure high availability. </p>
+
+        <p class="p">Cluster pipelines that run on Yarn and Spark Streaming or MapReduce store the checkpoint
+            metadata on HDFS. </p>
+
+ </div>
+
 </div>
 <div class="topic concept nested1" id="concept_xxz_nft_ls">
  <h2 class="title topictitle2">Error Handling Limitations</h2>
@@ -155,21 +172,27 @@
 
 </div>
 <div class="topic concept nested1" id="concept_fk4_gd4_1s">
- <h2 class="title topictitle2">Monitoring a Cluster</h2>
+ <h2 class="title topictitle2">Cluster Monitoring</h2>
 
  <div class="body conbody">
-  <p class="p">After you start a pipeline,
-      the <span class="ph">Data
-                  Collector</span>
-      console displays basic monitoring information for the pipeline and links to each <span class="ph">Data
+    <p class="p">The <span class="ph">Data
+                  Collector</span> console
+      allows you to monitor each <span class="ph">Data
                   Collector</span> worker. </p>
 
-  <p class="p">For monitoring details for a <span class="ph">Data
+    <div class="p">After you start a pipeline, the <span class="ph">Data
+                  Collector</span> console
+      displays basic monitoring information for the pipeline and links to each <span class="ph">Data
+                  Collector</span> worker.
+      For monitoring details for a <span class="ph">Data
                   Collector</span> worker,
-      click the worker link.</p>
+      click the worker link. You can then view metrics and alerts for the worker. <div class="note note"><span class="notetitle">Note:</span> Metric and
+        data alerts are defined for the pipeline, but triggered by individual workers.  When you
+        define a metric or data alert, each worker inherits the alert and triggers the alert based
+        on the statistics for the worker.</div>
+</div>
 
-    
- </div>
+  </div>
 
 </div>
 </div>

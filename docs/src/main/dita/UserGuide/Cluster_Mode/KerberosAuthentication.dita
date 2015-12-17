@@ -14,22 +14,21 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_swq_1bg_xs">
- <title>Kerberos Authentication for the Cluster</title>
- <shortdesc>If a YARN cluster uses Kerberos authentication, make sure to configure the <ph
+ <title>Kerberos Authentication for Yarn</title>
+ <shortdesc>If a cluster on YARN uses Kerberos authentication, make sure to configure the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
     Kerberos authentication.</shortdesc>
  <conbody>
-  <p><indexterm>Kerberos authentication<indexterm>cluster
-    pipelines</indexterm></indexterm><indexterm>cluster mode<indexterm>Kerberos
-     authentication</indexterm></indexterm>When you configure Kerberos authentication for the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you enable
-   the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-   Kerberos and define the principal and keytab. When Kerberos is enabled for the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> automatically
-   uses Kerberos principal and keytab to connect to any YARN cluster that uses Kerberos.</p>
-    <draft-comment author="Loretta">do I need to add a note stating that we don't support Kerberos
-      for Mesos? Or does Mesos not support Kerberos?</draft-comment>
+  <p><indexterm>Kerberos authentication<indexterm>cluster pipelines running on
+        YARN</indexterm></indexterm><indexterm>cluster mode<indexterm>Kerberos authentication for
+          YARN</indexterm></indexterm>When you configure Kerberos authentication for the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
+      enable the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> to use Kerberos and define the principal and keytab. When Kerberos is enabled for the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      automatically uses Kerberos principal and keytab to connect to any YARN cluster that uses
+      Kerberos.</p>
  </conbody>
   <related-links>
     <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>

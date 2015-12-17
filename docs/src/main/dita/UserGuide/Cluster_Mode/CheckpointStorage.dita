@@ -13,8 +13,15 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_zvc_bv5_1r">
- <title>Local FS</title>
- <shortdesc>Use the Local File System destination to write records to files in a local file system. </shortdesc>
- <conbody/>
+<concept id="concept_cs4_lcg_j5">
+ <title>Checkpoint Storage for Mesos</title>
+ <shortdesc>When running a cluster pipeline, the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        generates and stores checkpoint metadata. </shortdesc>
+ <conbody>
+  <p>When you run a cluster pipeline using Spark Streaming on Mesos, you need to use a location on
+            HDFS or Amazon S3 to ensure high availability. </p>
+        <p>Cluster pipelines that run on Yarn and Spark Streaming or MapReduce store the checkpoint
+            metadata on HDFS. </p>
+ </conbody>
 </concept>

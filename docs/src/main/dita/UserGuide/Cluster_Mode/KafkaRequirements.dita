@@ -41,9 +41,10 @@
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>
                     <li>For Spark on Mesos, on the <uicontrol>Cluster</uicontrol> tab, enter the
-                            <uicontrol>Dispatcher URL</uicontrol>. <p>The Mesos dispatcher must be
-                            running to run a pipeline. <draft-comment author="Loretta">do we need to
-                                say this? it's the same for yarn, yes?</draft-comment></p></li>
+                            <uicontrol>Dispatcher URL</uicontrol>.<p>
+                            <draft-comment author="Loretta">Add hdfsS3ConfDir wherever it is.
+                            </draft-comment>
+                        </p></li>
                     <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>If you
                             have more than one Kafka stage library installed, select the cluster
                             mode stage library on the General tab of the origin.</p></li>

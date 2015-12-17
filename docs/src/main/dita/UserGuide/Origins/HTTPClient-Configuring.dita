@@ -101,7 +101,7 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Batch Size (recs)</entry>
+                                    <entry>Max Batch Size (records)</entry>
                                     <entry>Maximum number of records to include in a batch and send
                                         through the pipeline at one time.</entry>
                                 </row>
