@@ -412,7 +412,7 @@ public class SpoolDirDSource extends DSource {
   // XML Configuration
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Delimiter Element",
