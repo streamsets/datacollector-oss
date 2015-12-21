@@ -68,12 +68,36 @@ public class RabbitExchangeConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.MAP,
+      type = ConfigDef.Type.STRING,
+      label = "Routing Key",
+      description = "Leave this blank to default to the Queue Name.",
       defaultValue = "",
-      label = "Additional Configuration",
-      description = "Additional RabbitMQ properties used to configure the exchange",
+      dependsOn = "type",
+      triggeredByValue = {"DIRECT", "TOPIC"},
       displayPosition = 50,
       group = "#0"
   )
-  public Map<String, Object> properties = new HashMap<>();
+  public String routingKey = "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Declaration Properties",
+      description = "Additional exchange declaration configuration.",
+      displayPosition = 50,
+      group = "#0"
+  )
+  public Map<String, Object> declarationProperties = new HashMap<>();
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Binding Properties",
+      description = "Additional exchange binding configuration.",
+      displayPosition = 50,
+      group = "#0"
+  )
+  public Map<String, Object> bindingProperties = new HashMap<>();
 }

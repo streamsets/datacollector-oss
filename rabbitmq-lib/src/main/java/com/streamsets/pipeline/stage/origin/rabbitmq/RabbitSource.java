@@ -78,13 +78,13 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
       channel = connection.createChannel();
 
       // Channel is always bound to the default exchange. When specified, we must declare the exchange.
-      if (!conf.exchange.name.isEmpty()) {
+      for (RabbitExchangeConfigBean exchange : conf.exchanges) {
         channel.exchangeDeclare(
-            conf.exchange.name,
-            conf.exchange.type.getValue(),
-            conf.exchange.durable,
-            conf.exchange.autoDelete,
-            conf.exchange.properties
+            exchange.name,
+            exchange.type.getValue(),
+            exchange.durable,
+            exchange.autoDelete,
+            exchange.declarationProperties
         );
       }
 
@@ -92,7 +92,9 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
           conf.queue.name, conf.queue.durable, conf.queue.exclusive, conf.queue.autoDelete, conf.queue.properties
       );
 
-      bindQueue();
+      for (RabbitExchangeConfigBean exchange : conf.exchanges) {
+        bindQueue(exchange);
+      }
 
       conf.dataFormatConfig.init(
           getContext(),
@@ -214,16 +216,11 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
     return factory;
   }
 
-  private void bindQueue() throws IOException {
+  private void bindQueue(RabbitExchangeConfigBean exchange) throws IOException {
     // If an exchange is specified, we need the routing key and then we bind it to the channel.
-    if (!conf.exchange.name.isEmpty()) {
-      String routingKey = conf.queue.routingKey;
-      if (routingKey == null || routingKey.isEmpty()) {
-        routingKey = conf.queue.name;
-      }
-
-      channel.queueBind(conf.queue.name, conf.exchange.name, routingKey);
-    }
+    // Note that routing key is ignored for Fanout and Headers (unsupported) type exchanges.
+    String bindingKey = exchange.routingKey.isEmpty() ? conf.queue.name : exchange.routingKey;
+    channel.queueBind(conf.queue.name, exchange.name, bindingKey, exchange.bindingProperties);
   }
 
   private void startConsuming() throws IOException {

@@ -26,9 +26,9 @@ import com.streamsets.pipeline.config.DataFormat;
 @GenerateResourceBundle
 public enum Groups implements Label {
   RABBITMQ("RabbitMQ"),
+  CREDENTIALS("Credentials"),
   QUEUE("Queue"),
   EXCHANGE("Exchange"),
-  CREDENTIALS("Credentials"),
   ADVANCED("Advanced"),
   TEXT(DataFormat.TEXT.getLabel()),
   JSON(DataFormat.JSON.getLabel()),

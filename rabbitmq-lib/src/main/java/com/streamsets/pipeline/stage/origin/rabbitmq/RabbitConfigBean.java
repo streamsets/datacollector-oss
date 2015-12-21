@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.rabbitmq;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
@@ -28,7 +29,9 @@ import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RabbitConfigBean {
@@ -59,8 +62,17 @@ public class RabbitConfigBean {
   public RabbitQueueConfigBean queue = new RabbitQueueConfigBean();
 
   /** Exchange Configuration Properties */
-  @ConfigDefBean(groups = "EXCHANGE")
-  public RabbitExchangeConfigBean exchange = new RabbitExchangeConfigBean();
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "Bindings",
+      description = "Optional list of exchange bindings.",
+      displayPosition = 40,
+      group = "EXCHANGE"
+  )
+  @ListBeanModel
+  public List<RabbitExchangeConfigBean> exchanges = new ArrayList<>();
 
   @ConfigDefBean(groups = "RABBITMQ")
   public BasicConfig basicConfig = new BasicConfig();
@@ -85,8 +97,7 @@ public class RabbitConfigBean {
       required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
-      label = "RabbitMQ Configuration",
-      description = "Additional RabbitMQ properties to pass to the client",
+      label = "Additional Client Configuration",
       displayPosition = 40,
       group = "#0"
   )

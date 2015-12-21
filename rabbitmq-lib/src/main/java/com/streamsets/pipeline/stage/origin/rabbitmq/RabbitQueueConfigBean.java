@@ -66,21 +66,10 @@ public class RabbitQueueConfigBean {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Routing Key",
-      description = "Leave this blank to default to the Queue Name.",
-      defaultValue = "",
-      displayPosition = 50,
-      group = "#0"
-  )
-  public String routingKey = "";
-
-  @ConfigDef(
-      required = false,
       type = ConfigDef.Type.MAP,
       defaultValue = "",
-      label = "Additional Configuration",
-      description = "Additional RabbitMQ properties used to configure the exchange",
+      label = "Declaration Properties",
+      description = "Additional queue declaration configuration.",
       displayPosition = 60,
       group = "#0"
   )
