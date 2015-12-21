@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the Local File System destination to write records to files in a local file system. Configure the Local FS destination to write records to a local file system. Click the Files tab and configure ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Local FS"></meta><meta name="abstract" content="Use the Local File System destination to write records to files in a local file system."></meta><meta name="description" content="Use the Local File System destination to write records to files in a local file system."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Local FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the Local File System destination to write records to files in a local file system. Configure the Local FS destination to write records to a local file system. In the Properties panel, on the ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Local FS"></meta><meta name="abstract" content="Use the Local File System destination to write records to files in a local file system."></meta><meta name="description" content="Use the Local File System destination to write records to files in a local file system."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Local FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -50,7 +50,85 @@
 
         </div>
 
-        <div class="li step p">
+        <ol class="ol steps" id="task_e33_3v5_1r__steps_fvm_m1v_1r"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1174e1699" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20480e69">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20480e72">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20480e69 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20480e72 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20480e69 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20480e72 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20480e69 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_e33_3v5_1r__d1174e1745" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20480e72 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20480e69 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_e33_3v5_1r__d1174e1759" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20480e72 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20480e69 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20480e72 ">Error record handling for the stage: <ul class="ul" id="task_e33_3v5_1r__d1174e1775">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
                 <span class="ph cmd">Click the <span class="keyword wintitle">Files</span> tab and configure the following
                     properties:</span>
                 <div class="itemgroup info">
@@ -60,9 +138,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="37.453183520599254%" id="d20398e69">Local File System Property</th>
+                                    <th class="entry" valign="top" width="37.453183520599254%" id="d20480e181">Local File System Property</th>
 
-                                    <th class="entry" valign="top" width="62.546816479400746%" id="d20398e72">Description</th>
+                                    <th class="entry" valign="top" width="62.546816479400746%" id="d20480e184">Description</th>
 
                                 </tr>
 
@@ -70,16 +148,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20398e69 ">Directory</td>
+                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20480e181 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20398e72 ">Local directory for the output files.</td>
+                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20480e184 ">Local directory for the output files.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20398e69 ">File Wait Time</td>
+                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20480e181 ">File Wait Time</td>
 
-                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20398e72 ">Amount of time to wait for records. After the configured
+                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20480e184 ">Amount of time to wait for records. After the configured
                                         time, Local File System creates a new output file. </td>
 
                                 </tr>
@@ -90,7 +168,8 @@
 </div>
 
                 </div>
-            </div>
+            </li>
+</ol>
 
     </div>
 

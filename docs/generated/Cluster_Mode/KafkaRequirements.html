@@ -46,17 +46,16 @@
                   Collector</span> on a Spark and YARN or a Spark and Mesos gateway node.</li>
 
                     <li class="li">If necessary, specify the location of the spark-submit script. <div class="p">The <span class="ph">Data
-                  Collector</span> assumes that the spark-submit script, used to submit job requests to
-                            Spark, is located in the following directory:
+                  Collector</span> assumes that the spark-submit script used to submit job requests to
+                            Spark Streaming, is located in the following directory:
                             <pre class="pre codeblock">/usr/bin/spark-submit</pre>
 </div>
 If the script is not in
                         this directory, use the following environment variables to define the
                         location of the script:<ul class="ul" id="task_gmd_msw_yr__ul_xzc_bqj_f5">
-                            <li class="li">For Spark on YARN, use the SPARK_SUBMIT_COMMAND environment
-                                variable.</li>
+                            <li class="li">On YARN, use the SPARK_SUBMIT_COMMAND environment variable.</li>
 
-                            <li class="li">For Spark on Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
+                            <li class="li">On Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
                                 variable.</li>
 
                         </ul>
@@ -66,10 +65,12 @@ If the script is not in
                             <span class="ph uicontrol">Execution Mode</span> property to
                             <span class="ph uicontrol">Cluster</span>.</li>
 
-                    <li class="li">For Spark on Mesos, on the <span class="ph uicontrol">Cluster</span> tab, enter the
-                            <span class="ph uicontrol">Dispatcher URL</span>.<p class="p">
-                            
-                        </p>
+                    <li class="li">When running on Mesos, on the <span class="ph uicontrol">Cluster</span> tab, enter the
+                            <span class="ph uicontrol">Dispatcher URL</span> and the <span class="ph uicontrol">Hadoop/S3
+                            Configuration Directory</span>. <p class="p">The Hadoop/S3 Configuration
+                            Directory is the location of the configuration files that determine
+                            where the <span class="ph">Data
+                  Collector</span> stores checkpoint metadata.</p>
 </li>
 
                     <li class="li">In the pipeline, use a Kafka Consumer origin for cluster mode. <p class="p">If you

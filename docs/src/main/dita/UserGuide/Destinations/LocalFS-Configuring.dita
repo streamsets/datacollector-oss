@@ -21,10 +21,10 @@
             <p></p>
         </context>
         <steps id="steps_fvm_m1v_1r">
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_NameDesc"
-                conrefend="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Step_ReqFields">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
                 <cmd/>
             </step>
+         
             <step>
                 <cmd>Click the <wintitle>Files</wintitle> tab and configure the following
                     properties:</cmd>

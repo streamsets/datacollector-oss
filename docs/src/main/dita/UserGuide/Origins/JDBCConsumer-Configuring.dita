@@ -27,7 +27,7 @@
                 <cmd/>
             </step>
             <step>
-                <cmd>On the JDBC tab, configure the following properties:</cmd>
+                <cmd>On the <wintitle>JDBC</wintitle> tab, configure the following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_nkm_dlr_bs">
                         <tgroup cols="2">
@@ -92,8 +92,7 @@
                                         default List-Map option unless using the origin in a
                                         pipeline built with version 1.1.0 of the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> or earlier.<draft-comment author="Loretta">correct? check
-                                            wording.</draft-comment></entry>
+                                        /> or earlier.</entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>

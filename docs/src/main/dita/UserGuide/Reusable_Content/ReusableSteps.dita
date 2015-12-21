@@ -935,6 +935,69 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta"><uicontrol>1stStep-NoStageLib</uicontrol> - Use
+                        for destinations without stage libs, e.g. Local FS. </draft-comment>
+                </cmd>
+            </step>
+            <step id="1stStep-NoStageLib">
+                <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
+                    following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_fvw_4kg_j5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>General Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Stage name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Description</entry>
+                                    <entry>Optional description.</entry>
+                                </row>
+                                <row>
+                                    <entry>Required Fields <xref
+                                            href="../Pipeline_Design/RequiredFields.dita#concept_dnj_bkm_vq">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_lww_4kg_j5"/></xref></entry>
+                                    <entry>Fields that must include data to be passed into the
+                                        stage. <note outputclass="" type="tip">You might include
+                                            fields that the stage uses.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Preconditions <xref
+                                            href="../Pipeline_Design/Preconditions.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_sww_4kg_j5"/></xref></entry>
+                                    <entry>Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <uicontrol>Add</uicontrol> to create additional
+                                        preconditions. </entry>
+                                </row>
+                                <row>
+                                    <entry>On Record Error</entry>
+                                    <entry>Error record handling for the stage: <ul
+                                            id="ul_fxw_4kg_j5">
+                                            <li>Discard - Discards the record.</li>
+                                            <li>Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+                                            <li>Stop Pipeline - Stops the pipeline.</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta" id="1stStageLib-ReqField-ErrorH"
                             ><uicontrol>1stStep-StageLib-ReqField-EHandling</uicontrol> - Use this
                         step for destinations with stage library, req fields, and error

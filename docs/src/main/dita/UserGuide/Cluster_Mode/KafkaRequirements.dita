@@ -27,24 +27,25 @@
                         /> on a Spark and YARN or a Spark and Mesos gateway node.</li>
                     <li>If necessary, specify the location of the spark-submit script. <p>The <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> assumes that the spark-submit script, used to submit job requests to
-                            Spark, is located in the following directory:
+                            /> assumes that the spark-submit script used to submit job requests to
+                            Spark Streaming, is located in the following directory:
                             <codeblock>/usr/bin/spark-submit</codeblock></p>If the script is not in
                         this directory, use the following environment variables to define the
                         location of the script:<ul id="ul_xzc_bqj_f5">
-                            <li>For Spark on YARN, use the SPARK_SUBMIT_COMMAND environment
-                                variable.</li>
-                            <li>For Spark on Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
+                            <li>On YARN, use the SPARK_SUBMIT_COMMAND environment variable.</li>
+                            <li>On Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
                                 variable.</li>
                         </ul></li>
                     <li>In the pipeline properties, on the <wintitle>General</wintitle> tab, set the
                             <uicontrol>Execution Mode</uicontrol> property to
                             <uicontrol>Cluster</uicontrol>.</li>
-                    <li>For Spark on Mesos, on the <uicontrol>Cluster</uicontrol> tab, enter the
-                            <uicontrol>Dispatcher URL</uicontrol>.<p>
-                            <draft-comment author="Loretta">Add hdfsS3ConfDir wherever it is.
-                            </draft-comment>
-                        </p></li>
+                    <li>When running on Mesos, on the <uicontrol>Cluster</uicontrol> tab, enter the
+                            <uicontrol>Dispatcher URL</uicontrol> and the <uicontrol>Hadoop/S3
+                            Configuration Directory</uicontrol>. <p>The Hadoop/S3 Configuration
+                            Directory is the location of the configuration files that determine
+                            where the <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            /> stores checkpoint metadata.</p></li>
                     <li>In the pipeline, use a Kafka Consumer origin for cluster mode. <p>If you
                             have more than one Kafka stage library installed, select the cluster
                             mode stage library on the General tab of the origin.</p></li>

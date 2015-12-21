@@ -78,17 +78,22 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Data Format</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">update this, add Data
-                                            Formats property.</draft-comment>
-                                    </entry>
+                                    <entry>Data Format <xref
+                                            href="HTTPClient-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"/></xref></entry>
+                                    <entry>Format of data in the file. Use one of the following
+                                            options:<ul id="ul_zbw_szg_j5">
+                                            <li>JSON</li>
+                                            <li>Text</li>
+                                            <li>XML</li>
+                                        </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Entity Delimiter</entry>
                                     <entry>
-                                        <draft-comment author="Loretta">logged bug against
-                                            cheolsoo</draft-comment>
+                                        <draft-comment author="Loretta">Cheolsoo to revisit this
+                                            when he's back. </draft-comment>
                                     </entry>
                                 </row>
                                 <row>
@@ -156,12 +161,12 @@
                 </info>
             </step>
             <step>
-                <cmd>On the <uicontrol>Text</uicontrol> tab, <draft-comment author="Loretta">finish
-                        this after 2165 fixed</draft-comment></cmd>
+                <cmd>On the <uicontrol>Text</uicontrol> tab, <draft-comment author="Loretta"
+                        >Cheolsoo to revisit delimiter info</draft-comment></cmd>
             </step>
             <step>
-                <cmd>On the <uicontrol>XML</uicontrol> tab, <draft-comment author="Loretta">finish
-                        this after 2165 fixed</draft-comment></cmd>
+                <cmd>On the <uicontrol>XML</uicontrol> tab, <draft-comment author="Loretta">Cheolsoo
+                        to revisit delimiter info</draft-comment></cmd>
             </step>
             <step>
                 <cmd>On the <wintitle>JSON</wintitle> tab, configure the following properties:</cmd>
