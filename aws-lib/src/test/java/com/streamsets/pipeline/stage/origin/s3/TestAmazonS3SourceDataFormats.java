@@ -40,6 +40,7 @@ import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import org.junit.AfterClass;
@@ -336,6 +337,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
@@ -375,6 +377,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
@@ -410,6 +413,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
@@ -447,6 +451,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
@@ -484,6 +489,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
@@ -520,6 +526,7 @@ public class TestAmazonS3SourceDataFormats {
     s3ConfigBean.s3Config = new S3Config();
     s3ConfigBean.s3Config.setEndPointForTest("http://localhost:" + port);
     s3ConfigBean.s3Config.bucket = BUCKET_NAME;
+    s3ConfigBean.s3Config.awsConfig = new AWSConfig();
     s3ConfigBean.s3Config.awsConfig.awsAccessKeyId = "foo";
     s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3ConfigBean.s3Config.folder = "";
