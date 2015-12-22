@@ -14,40 +14,24 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cs4_lcg_j5">
- <title>Checkpoint Storage for Streaming Pipelines</title>
- <shortdesc>When running a cluster streaming pipeline, on Mesos or YARN, the <ph
+    <title>Checkpoint Storage for Streaming Pipelines</title>
+    <shortdesc>When the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs a
+        cluster streaming pipeline, on either Mesos or YARN, the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        generates and stores checkpoint metadata. </shortdesc>
- <conbody>
-  <p><indexterm>cluster pipelines<indexterm>checkpoint storage for streaming
-                pipelines</indexterm></indexterm>For cluster pipelines that run on YARN, the <ph
+        generates and stores checkpoint metadata. The checkpoint metadata provides the offset for
+        the origin.</shortdesc>
+    <conbody>
+        <p><indexterm>cluster pipelines<indexterm>checkpoint storage for streaming
+                    pipelines</indexterm></indexterm>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            stores the checkpoint metadata on HDFS in the following directory:
-            <codeblock>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID>/${Kafka topic}</codeblock></p>
-        <p>When you run a cluster pipeline on Mesos, you need to define where to store the
-            checkpoint data. The <ph
+            stores the checkpoint metadata in the following path on HDFS or Amazon
+            S3:<codeblock>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID>/${Kafka topic}</codeblock></p>
+        <p>When you run a cluster streaming pipeline on YARN, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            can write checkpoint information to either HDFS or Amazon S3.  </p>
-        <p>To define the location for checkpoint storage:<ol id="ol_h1d_hz3_k5">
-                <li>Configure the core-site.xml and hdfs-site.xml files to define where to write the
-                    checkpoint information. <p>By default, the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> stores the checkpoint metadata in the same directory:
-                        <codeblock>/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID>/${Kafka topic}</codeblock></p><p>For
-                        more information about configuring the files, see <xref
-                            href="https://wiki.apache.org/hadoop/AmazonS3" format="html"
-                            scope="external"/>.</p></li>
-                <li>Store the files within the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> resources directory. </li>
-                <li>Enter the location of the files in the <menucascade>
-                        <uicontrol>Cluster</uicontrol>
-                        <uicontrol>Hadoop/S3 Configuration Directory</uicontrol>
-                    </menucascade> pipeline property.<draft-comment author="Loretta">Brock: Can you
-                        take a look at the UI? It'd be nice if we could trim the property name and
-                        get a better tooltip? -- If the files are really just to define where the
-                        checkpoint info is stored, we should indicate that in the tooltip.
-                    </draft-comment></li>
-            </ol></p>
- </conbody>
+            stores the metadata on HDFS. </p>
+        <p>When you run a cluster pipeline on Mesos, the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            can store the metadata on HDFS or Amazon S3.</p>
+    </conbody>
 </concept>

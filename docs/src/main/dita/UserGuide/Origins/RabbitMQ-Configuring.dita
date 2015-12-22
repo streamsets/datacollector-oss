@@ -15,10 +15,15 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hrz_mq1_h5">
     <title>Configuring a RabbitMQ Consumer</title>
-    <shortdesc>&lt;information forthcoming></shortdesc>
+    <shortdesc>Configure a RabbitMQ Consumer to read messages from a RabbitMQ queue. </shortdesc>
     <taskbody>
         <context>
             <p></p>
         </context>
+        <steps id="steps_akg_1yk_k5">
+            <step>
+                <cmd/>
+            </step>
+        </steps>
     </taskbody>
 </task>

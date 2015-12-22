@@ -13,11 +13,10 @@
   limitations under the License.
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_dyg_lq1_h5">
- <title>RabbitMQ Consumer</title>
- <shortdesc>RabbitMQ Consumer reads messages from a single RabbitMQ queue.</shortdesc>
+<concept id="concept_dtt_q5q_k5">
+ <title>XML Parser</title>
+ <shortdesc></shortdesc>
  <conbody>
-  <p>When you configure the origin, you specify the information needed to connect to RabbitMQ
-            client. You also define a queue and the bindings and exchanges to use. </p>
+  <p></p>
  </conbody>
 </concept>

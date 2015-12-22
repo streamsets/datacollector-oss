@@ -19,22 +19,21 @@
         data.</shortdesc>
     <conbody>
         <p><indexterm>grok patterns<indexterm>defining</indexterm></indexterm>You can use a single
-            pattern or string together several patterns to define a larger pattern. You can also use
-            valid sections of patterns to define a custom pattern, and create aliases to represent
-            patterns.</p>
+            pattern or compose several patterns to define a larger  pattern, or create a custom
+            pattern.</p>
         <p>When you define grok patterns in a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             stage, you configure the following properties:<dl>
                 <dlentry>
                     <dt>Grok Pattern Definition</dt>
                     <dd>Use to define a complex or custom grok pattern. You can use this property to
-                        define an alias for a single grok pattern or to define multiple aliases for
-                        use within a larger pattern.</dd>
-                    <dd>When configuring the pattern definition, state the alias name, and then the
+                        define a pattern for a single grok pattern or to define multiple patterns
+                        for use within a larger pattern.</dd>
+                    <dd>When configuring the pattern definition, state the pattern name and then the
                         pattern description as
-                        follows:<codeblock>&lt;ALIASNAME> &lt;grok pattern>
-&lt;ALIASNAME2> &lt;grok pattern></codeblock></dd>
-                    <dd>The following example defines several aliases, MYHOSTTIMESTAMP,
+                        follows:<codeblock>&lt;PATTERN NAME> &lt;grok pattern>
+&lt;PATTERN NAME2> &lt;grok pattern></codeblock></dd>
+                    <dd>The following example defines several patterns, MYHOSTTIMESTAMP,
                         MYCUSTOMPATTERN which expands upon MYHOSTTIMESTAMP, and
                         DURATIONLOG:<codeblock>MYHOSTTIMESTAMP %{CISCOTIMESTAMP:timestamp} %{HOST:host}
 MYCUSTOMPATTERN %{MYHOSTTIMESTAMP} %{WORD:program}%{NOTSPACE} %{NOTSPACE}
@@ -42,12 +41,12 @@ DURATIONLOG %{NUMBER:duration}%{NOTSPACE} %{GREEDYDATA:kernel_logs}</codeblock><
                 </dlentry>
                 <dlentry>
                     <dt>Grok Pattern</dt>
-                    <dd>Use to define the actual grok pattern used to evaluate data. You can enter a
-                        simple grok pattern, such as %{COMMONAPACHELOG}. Or, to define a complex
+                    <dd>Defines the actual grok pattern used to evaluate data. You can enter a
+                        predefined grok pattern, such as %{COMMONAPACHELOG}. Or, to define a custom
                         grok pattern, you can use the patterns listed in this appendix or the
-                        aliases that you defined in Grok Pattern Description.</dd>
-                    <dd>For example, after defining the aliases above in the Grok Pattern
-                        Description field, you can use the aliases to configure Grok Pattern as
+                        patterns that you defined in Grok Pattern Description.</dd>
+                    <dd>For example, after defining the patterns above in the Grok Pattern
+                        Description field, you can use the patterns to configure Grok Pattern as
                         follows:<codeblock>%{MYCUSTOMPATTERN} %{DURATIONLOG}</codeblock></dd>
                 </dlentry>
             </dl></p>

@@ -112,6 +112,7 @@
   </topicref>
   <topicref href="../Origins/RabbitMQ.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/RabbitMQ-DataFormat.dita"/>
    <topicref href="../Origins/RabbitMQ-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/SDC_RPCorigin.dita" chunk="to-content">

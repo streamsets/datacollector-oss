@@ -32,7 +32,8 @@
                             <codeblock>/usr/bin/spark-submit</codeblock></p>If the script is not in
                         this directory, use the following environment variables to define the
                         location of the script:<ul id="ul_xzc_bqj_f5">
-                            <li>On YARN, use the SPARK_SUBMIT_COMMAND environment variable.</li>
+                            <li>On YARN, use the SPARK_SUBMIT_YARN_COMMAND environment
+                                variable.</li>
                             <li>On Mesos, use the SPARK_SUBMIT_MESOS_COMMAND environment
                                 variable.</li>
                         </ul></li>

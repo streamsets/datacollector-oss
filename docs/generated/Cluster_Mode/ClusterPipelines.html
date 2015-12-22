@@ -134,44 +134,63 @@
 </div>
 </div>
 <div class="topic concept nested1" id="concept_cs4_lcg_j5">
- <h2 class="title topictitle2">Checkpoint Storage for Streaming Pipelines</h2>
+    <h2 class="title topictitle2">Checkpoint Storage for Streaming Pipelines</h2>
 
- 
- <div class="body conbody"><p class="shortdesc">When running a cluster streaming pipeline, on Mesos or YARN, the <span class="ph">Data
+    
+    <div class="body conbody"><p class="shortdesc">When the <span class="ph">Data
+                  Collector</span> runs a
+        cluster streaming pipeline, on either Mesos or YARN, the <span class="ph">Data
                   Collector</span>
-        generates and stores checkpoint metadata. </p>
+        generates and stores checkpoint metadata. The checkpoint metadata provides the offset for
+        the origin.</p>
 
-  <div class="p">For cluster pipelines that run on YARN, the <span class="ph">Data
+        <div class="p">The <span class="ph">Data
                   Collector</span>
-            stores the checkpoint metadata on HDFS in the following directory:
-            <pre class="pre codeblock">/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID&gt;/${Kafka topic}</pre>
+            stores the checkpoint metadata in the following path on HDFS or Amazon
+            S3:<pre class="pre codeblock">/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID&gt;/${Kafka topic}</pre>
 </div>
 
-        <p class="p">When you run a cluster pipeline on Mesos, you need to define where to store the
-            checkpoint data. The <span class="ph">Data
+        <p class="p">When you run a cluster streaming pipeline on YARN, the <span class="ph">Data
                   Collector</span>
-            can write checkpoint information to either HDFS or Amazon S3.  </p>
+            stores the metadata on HDFS. </p>
 
-        <div class="p">To define the location for checkpoint storage:<ol class="ol" id="concept_cs4_lcg_j5__ol_h1d_hz3_k5">
-                <li class="li">Configure the core-site.xml and hdfs-site.xml files to define where to write the
-                    checkpoint information. <div class="p">By default, the <span class="ph">Data
-                  Collector</span> stores the checkpoint metadata in the same directory:
-                        <pre class="pre codeblock">/user/$USER/.streamsets-spark-streaming/&lt;DataCollector WorkerID&gt;/${Kafka topic}</pre>
+        <p class="p">When you run a cluster pipeline on Mesos, the <span class="ph">Data
+                  Collector</span>
+            can store the metadata on HDFS or Amazon S3.</p>
+
+    </div>
+
+<div class="topic task nested2" id="task_gxz_h1q_k5">
+    <h3 class="title topictitle3">Configuring the Location for Mesos</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">When you run a cluster pipeline on Mesos, the <span class="ph">Data
+                  Collector</span> can
+        write checkpoint information to either HDFS or Amazon S3. </p>
+
+        <div class="section context">
+            <p class="p">To define the location for checkpoint
+                storage:</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_gxz_h1q_k5__steps_mt1_l1q_k5"><li class="li step stepexpand">
+                <span class="ph cmd">Configure the core-site.xml and hdfs-site.xml files to define where to write
+                    the checkpoint information. </span>
+                <div class="itemgroup info">For more information about configuring the files, see <a class="xref" href="https://wiki.apache.org/hadoop/AmazonS3" target="_blank">https://wiki.apache.org/hadoop/AmazonS3</a>.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Store the files within the <span class="ph">Data
+                  Collector</span> resources directory.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the location of the files in the <span class="ph menucascade"><span class="ph uicontrol">Cluster</span> &gt; <span class="ph uicontrol">Hadoop/S3 Configuration Directory</span></span> pipeline property.</span>
+            </li>
+</ol>
+
+    </div>
+
 </div>
-<p class="p">For
-                        more information about configuring the files, see <a class="xref" href="https://wiki.apache.org/hadoop/AmazonS3" target="_blank">https://wiki.apache.org/hadoop/AmazonS3</a>.</p>
-</li>
-
-                <li class="li">Store the files within the <span class="ph">Data
-                  Collector</span> resources directory. </li>
-
-                <li class="li">Enter the location of the files in the <span class="ph menucascade"><span class="ph uicontrol">Cluster</span> &gt; <span class="ph uicontrol">Hadoop/S3 Configuration Directory</span></span> pipeline property.</li>
-
-            </ol>
-</div>
-
- </div>
-
 </div>
 <div class="topic concept nested1" id="concept_xxz_nft_ls">
  <h2 class="title topictitle2">Error Handling Limitations</h2>

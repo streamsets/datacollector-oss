@@ -581,12 +581,13 @@
                             fields that you want to include to each regular expression group.</li>
                         <li>When you select <uicontrol>Grok Pattern</uicontrol>, you can use the
                                 <uicontrol>Grok Pattern Definition</uicontrol> field to define
-                            custom grok patterns. You can define an alias on each line. <p>In the
-                                    <uicontrol>Grok Pattern</uicontrol> field, enter the pattern
-                                that you want to use. You can use an alias for an existing grok
-                                pattern or string together a series of aliases to that define the
-                                pattern.</p><p>For more information about defining grok patterns and
-                                supported grok patterns, see <xref
+                            custom grok patterns. You can define a pattern on each line. <p>In the
+                                    <uicontrol>Grok Pattern</uicontrol> field, enter the pattern to
+                                use to parse the log. You can use a predefined grok patterns or
+                                create a custom grok pattern using patterns defined in
+                                    <uicontrol>Grok Pattern Definition</uicontrol>.</p><p>For more
+                                information about defining grok patterns and supported grok
+                                patterns, see <xref
                                     href="../Apx-GrokPatterns/GrokPatterns.dita#concept_vdk_xjb_wr"
                                 />.</p></li>
                         <li>When you select <uicontrol>Log4j</uicontrol>, define the following properties:<p>

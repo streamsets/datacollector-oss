@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can use the grok patterns in this appendix to define the structure of log data. You can use a single pattern or string together several patterns to define a larger pattern. You can also use valid ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Defining Grok Patterns"></meta><meta name="abstract" content="You can use the grok patterns in this appendix to define the structure of log data."></meta><meta name="description" content="You can use the grok patterns in this appendix to define the structure of log data."></meta><meta name="DC.Relation" scheme="URI" content="../Apx-GrokPatterns/GrokPatterns_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vdk_xjb_wr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Defining Grok Patterns</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can use the grok patterns in this appendix to define the structure of log data. You can use a single pattern or compose several patterns to define a larger pattern, or create a custom pattern. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Defining Grok Patterns"></meta><meta name="abstract" content="You can use the grok patterns in this appendix to define the structure of log data."></meta><meta name="description" content="You can use the grok patterns in this appendix to define the structure of log data."></meta><meta name="DC.Relation" scheme="URI" content="../Apx-GrokPatterns/GrokPatterns_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vdk_xjb_wr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Defining Grok Patterns</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -39,9 +39,8 @@
         data.</p>
 
         <p class="p">You can use a single
-            pattern or string together several patterns to define a larger pattern. You can also use
-            valid sections of patterns to define a custom pattern, and create aliases to represent
-            patterns.</p>
+            pattern or compose several patterns to define a larger  pattern, or create a custom
+            pattern.</p>
 
         <div class="p">When you define grok patterns in a <span class="ph">Data
                   Collector</span>
@@ -50,16 +49,16 @@
                     <dt class="dt dlterm">Grok Pattern Definition</dt>
 
                     <dd class="dd">Use to define a complex or custom grok pattern. You can use this property to
-                        define an alias for a single grok pattern or to define multiple aliases for
-                        use within a larger pattern.</dd>
+                        define a pattern for a single grok pattern or to define multiple patterns
+                        for use within a larger pattern.</dd>
 
-                    <dd class="dd">When configuring the pattern definition, state the alias name, and then the
+                    <dd class="dd">When configuring the pattern definition, state the pattern name and then the
                         pattern description as
-                        follows:<pre class="pre codeblock">&lt;ALIASNAME&gt; &lt;grok pattern&gt;
-&lt;ALIASNAME2&gt; &lt;grok pattern&gt;</pre>
+                        follows:<pre class="pre codeblock">&lt;PATTERN NAME&gt; &lt;grok pattern&gt;
+&lt;PATTERN NAME2&gt; &lt;grok pattern&gt;</pre>
 </dd>
 
-                    <dd class="dd">The following example defines several aliases, MYHOSTTIMESTAMP,
+                    <dd class="dd">The following example defines several patterns, MYHOSTTIMESTAMP,
                         MYCUSTOMPATTERN which expands upon MYHOSTTIMESTAMP, and
                         DURATIONLOG:<pre class="pre codeblock">MYHOSTTIMESTAMP %{CISCOTIMESTAMP:timestamp} %{HOST:host}
 MYCUSTOMPATTERN %{MYHOSTTIMESTAMP} %{WORD:program}%{NOTSPACE} %{NOTSPACE}
@@ -70,13 +69,13 @@ DURATIONLOG %{NUMBER:duration}%{NOTSPACE} %{GREEDYDATA:kernel_logs}</pre>
                 
                     <dt class="dt dlterm">Grok Pattern</dt>
 
-                    <dd class="dd">Use to define the actual grok pattern used to evaluate data. You can enter a
-                        simple grok pattern, such as %{COMMONAPACHELOG}. Or, to define a complex
+                    <dd class="dd">Defines the actual grok pattern used to evaluate data. You can enter a
+                        predefined grok pattern, such as %{COMMONAPACHELOG}. Or, to define a custom
                         grok pattern, you can use the patterns listed in this appendix or the
-                        aliases that you defined in Grok Pattern Description.</dd>
+                        patterns that you defined in Grok Pattern Description.</dd>
 
-                    <dd class="dd">For example, after defining the aliases above in the Grok Pattern
-                        Description field, you can use the aliases to configure Grok Pattern as
+                    <dd class="dd">For example, after defining the patterns above in the Grok Pattern
+                        Description field, you can use the patterns to configure Grok Pattern as
                         follows:<pre class="pre codeblock">%{MYCUSTOMPATTERN} %{DURATIONLOG}</pre>
 </dd>
 

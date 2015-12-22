@@ -12,12 +12,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_dyg_lq1_h5">
- <title>RabbitMQ Consumer</title>
- <shortdesc>RabbitMQ Consumer reads messages from a single RabbitMQ queue.</shortdesc>
- <conbody>
-  <p>When you configure the origin, you specify the information needed to connect to RabbitMQ
-            client. You also define a queue and the bindings and exchanges to use. </p>
- </conbody>
-</concept>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_txd_55q_k5">
+    <title>Configuring an XML Parser</title>
+    <shortdesc/>
+    <taskbody>
+        <context>
+            <p></p>
+        </context>
+    </taskbody>
+</task>

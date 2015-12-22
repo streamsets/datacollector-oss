@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="&lt;information forthcoming&gt; &lt;information forthcoming&gt;"></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RabbitMQ Consumer"></meta><meta name="abstract" content="&lt;information forthcoming&gt;"></meta><meta name="description" content="&lt;information forthcoming&gt;"></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dyg_lq1_h5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RabbitMQ Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="RabbitMQ Consumer reads messages from a single RabbitMQ queue. When you configure the origin, you specify the information needed to connect to RabbitMQ client. You also define a queue and the bindings ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="RabbitMQ Consumer"></meta><meta name="abstract" content="RabbitMQ Consumer reads messages from a single RabbitMQ queue."></meta><meta name="description" content="RabbitMQ Consumer reads messages from a single RabbitMQ queue."></meta><meta name="DC.Relation" scheme="URI" content="../Origins/Origins_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dyg_lq1_h5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>RabbitMQ Consumer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,23 +35,176 @@
  <h1 class="title topictitle1">RabbitMQ Consumer</h1>
 
  
- <div class="body conbody"><p class="shortdesc">&lt;information forthcoming&gt;</p>
+ <div class="body conbody"><p class="shortdesc">RabbitMQ Consumer reads messages from a single RabbitMQ queue.</p>
 
-  <p class="p"></p>
+  <p class="p">When you configure the origin, you specify the information needed to connect to RabbitMQ
+            client. You also define a queue and the bindings and exchanges to use. </p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_nhr_5tk_k5">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">The Kafka Consumer
+            origin processes data differently based on the data format. Kafka Consumer can process
+            the following types of data:</p>
+
+        <dl class="dl">
+            
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">Generates a record for each line of text. </dd>
+
+                              <dd class="dd">When a line exceeds the maximum line length defined for the
+                                    origin, the origin truncates the line. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+
+                              <dd class="dd">When an object exceeds the maximum object length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">Generates a record for each delimited line. You can use the
+                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d4101e204">
+                                          <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
+                                                includes comma-separated values. Ignores empty lines
+                                                in the file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated
+                                                file that strictly follows RFC4180 guidelines.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel
+                                                comma-separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma
+                                                separated file.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File
+                                                that includes tab-separated values.</li>
+
+                                          <li class="li"><span class="ph uicontrol">Custom</span> - File that uses
+                                                user-defined delimiter, escape, and quote
+                                                characters.</li>
+
+                                    </ul>
+</dd>
+
+                              <dd class="dd">You can use a list or list-map root field type for delimited data,
+                                    optionally including the header information when available. </dd>
+
+                              <dd class="dd">When a record exceeds the maximum record length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage.</dd>
+
+                              <dd class="dd">For more information about the root field types, see <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">Delimited Data Root Field Type</a>.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">XML</dt>
+
+                              <dd class="dd">Generates records based on the location of the XML element that
+                                    you define as the record delimiter. If you do not define a
+                                    delimiter element, the origin treats the XML file as a single
+                                    record.</dd>
+
+                              <dd class="dd">When a record exceeds the user-defined maximum record length, the
+                                    origin skips the record and continues processing with the next
+                                    record. It sends the skipped record to the pipeline for error
+                                    handling. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">SDC Records</dt>
+
+                              <dd class="dd">Generates a record for every record. Use to process records
+                                    generated by a <span class="ph">Data
+                  Collector</span> pipeline using the SDC Record data format.</dd>
+
+                              <dd class="dd">For error records, the origin  provides the original record as
+                                    read from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+
+                              <dd class="dd">When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">Log</dt>
+
+                              <dd class="dd">Generates a record for every log line. </dd>
+
+                              <dd class="dd">When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+
+                              <dd class="dd">You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+
+                              <dd class="dd">You can define the log format or type to be read.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">Generates a record for every message. </dd>
+
+                              <dd class="dd">To ensure proper data processing, indicate if the message includes
+                                    an Avro schema. </dd>
+
+                              <dd class="dd">You can use the schema associated with the message or provide an
+                                    alternate schema definition. Providing an alternate schema can
+                                    improve performance.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">Binary</dt>
+
+                              <dd class="dd">Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+
+                              <dd class="dd">When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
+
+                        
+        </dl>
+
+        
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_hrz_mq1_h5">
     <h2 class="title topictitle2">Configuring a RabbitMQ Consumer</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">&lt;information forthcoming&gt;</p>
+    <div class="body taskbody"><p class="shortdesc">Configure a RabbitMQ Consumer to read messages from a RabbitMQ queue. </p>
 
         <div class="section context">
             <p class="p"></p>
 
         </div>
+
+        <div class="li step p">
+                <span class="ph cmd"></span><br></br>
+            </div>
 
     </div>
 

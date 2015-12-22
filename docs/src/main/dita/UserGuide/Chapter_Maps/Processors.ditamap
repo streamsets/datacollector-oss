@@ -105,5 +105,9 @@
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/ValueReplacer-Configuring.dita"/>
   </topicref>
+  <topicref href="../Processors/XMLParser.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/XMLParser-Configuring.dita"/>
+  </topicref>
  </topicref>
 </map>

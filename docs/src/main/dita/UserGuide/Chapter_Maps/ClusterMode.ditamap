@@ -19,7 +19,9 @@
   <topicref href="../Cluster_Mode/ClusterPipelines.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Cluster_Mode/KerberosAuthentication.dita"/>
-   <topicref href="../Cluster_Mode/CheckpointStorage.dita"/>
+   <topicref href="../Cluster_Mode/CheckpointStorage.dita">
+    <topicref href="../Cluster_Mode/Checkpoint-Mesos.dita"/>
+   </topicref>
    <topicref href="../Cluster_Mode/ErrorHandlingLimitations.dita">
     <topicmeta>
      <shortdesc/>

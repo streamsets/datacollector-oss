@@ -388,12 +388,13 @@
                                         mesos://dispatcher:7077.</entry>
                                 </row>
                                 <row>
-                                    <entry>Hadoop/S3 Configuration Directory <xref
+                                    <entry>Hadoop/S3 Checkpoint Configuration Directory <xref
                                             href="../Cluster_Mode/CheckpointStorage.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref></entry>
-                                    <entry>Location of the HDFS configuration files that define
-                                        where to write checkpoint metadata. <p>Use a directory or
-                                            symlink within the <ph
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                            /></xref></entry>
+                                    <entry>Location of the HDFS configuration files that specify
+                                        whether to write checkpoint metadata to HDFS or Amazon
+                                            S3.<p>Use a directory or symlink within the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory.</p><p>The directory should
                                             include the following files:<ul
