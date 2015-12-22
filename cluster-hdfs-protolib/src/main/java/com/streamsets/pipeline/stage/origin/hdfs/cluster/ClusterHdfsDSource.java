@@ -314,9 +314,9 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
     required = true,
     type = ConfigDef.Type.STRING,
     defaultValue = "",
-    label = "Hadoop Configuration Directory",
-    description = "A directory (or symlink) under SDC resources directory to load core-site.xml, hdfs-site.xml, " +
-      "yarn-site.xml, and mapred-site.xml files to configure Hadoop.",
+    label = "Hadoop FS Configuration Directory",
+    description = "An SDC resource directory or symbolic link with HDFS configuration files core-site.xml, " +
+      "hdfs-site.xml, yarn-site.xml, and mapred-site.xml",
     displayPosition = 180,
     group = "HADOOP_FS"
   )

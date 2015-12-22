@@ -648,19 +648,20 @@ public class ClusterProviderImpl implements ClusterProvider {
         if (hdfsS3ConfDirValue != null && !hdfsS3ConfDirValue.isEmpty()) {
           File hdfsS3ConfDir = new File(resourcesDir, hdfsS3ConfDirValue).getAbsoluteFile();
           if (!hdfsS3ConfDir.exists()) {
-            throw new IllegalArgumentException(
-              "The config dir for HDFS/S3 required for configuring checkpoint dir in spark streaming doesn't exist");
+            String msg = Utils.format("HDFS/S3 Checkpoint Configuration Directory '{}' doesn't exist",
+              hdfsS3ConfDir.getPath());
+            throw new IllegalArgumentException(msg);
           } else {
             File coreSite = new File(hdfsS3ConfDir, "core-site.xml");
             if (!coreSite.exists()) {
-              throw new IllegalStateException(
-                "Core-site xml for configuring Hadoop/S3 filesystem is required for checkpoint related metadata while running Spark Streaming");
+              String msg = Utils.format("HDFS/S3 Checkpoint Configuration file core-site.xml '{}' doesn't exist",
+                coreSite.getPath());
+              throw new IllegalStateException(msg);
             }
             sourceConfigs.put("hdfsS3ConfDir", hdfsS3ConfDirValue);
           }
         } else {
-          throw new IllegalStateException(
-            "Configuration of hdfs/S3 is required for checkpoint related metadata while running Spark Streaming");
+          throw new IllegalStateException("HDFS/S3 Checkpoint configuration directory is required");
         }
       }
       rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);

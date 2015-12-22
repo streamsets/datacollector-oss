@@ -110,8 +110,7 @@ public class HdfsTargetConfigBean {
     type = ConfigDef.Type.STRING,
     defaultValue = "",
     label = "Hadoop FS Configuration Directory",
-    description = "An absolute path or a directory under SDC resources directory to load core-site.xml and hdfs-site.xml files " +
-      "to configure the Hadoop FileSystem.",
+    description = "An SDC resource directory or symbolic link with HDFS configuration files core-site.xml and hdfs-site.xml",
     displayPosition = 50,
     group = "HADOOP_FS"
   )
