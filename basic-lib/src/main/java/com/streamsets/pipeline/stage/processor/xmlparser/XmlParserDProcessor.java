@@ -31,7 +31,7 @@ import com.streamsets.pipeline.configurablestage.DProcessor;
     label="XML Parser",
     description = "Parses a string field with XML data",
     icon="xmlparser.png",
-    onlineHelpRefUrl = "index.html#Processors/XMLParser.html#****TBD*****"
+    onlineHelpRefUrl = "index.html#Processors/XMLParser.html#task_txd_55q_k5"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
