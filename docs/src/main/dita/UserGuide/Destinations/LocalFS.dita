@@ -15,6 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zvc_bv5_1r">
  <title>Local FS</title>
- <shortdesc>Use the Local File System destination to write records to files in a local file system. </shortdesc>
- <conbody/>
+ <shortdesc>Use the Local FS destination to write records to files in a local file system. </shortdesc>
+ <conbody>
+        <p/>
+    </conbody>
 </concept>

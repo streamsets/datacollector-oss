@@ -38,11 +38,30 @@
  <div class="body conbody"><p class="shortdesc">RabbitMQ Consumer reads messages from a single RabbitMQ queue.</p>
 
   <p class="p">When you configure the origin, you specify the information needed to connect to RabbitMQ
-            client. You also define a queue and the bindings and exchanges to use. </p>
+            client. You also define a queue and the bindings to use. You can use multiple bindings
+            to read messages from one or more exchanges. </p>
+
+        <p class="p">You can add custom configuration options and define connection credentials as needed. </p>
 
  </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_z2d_mgr_k5">
+ <h2 class="title topictitle2">Queue</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">RabbitMQ Consumer reads messages from a specified queue. </p>
+
+  <p class="p">When you configure the origin, you define the queue name and other properties. If a queue of
+            the specified name does not exist, RabbitMQ creates the queue based on the properties
+            that you defined. </p>
+
+        <p class="p">If the queue does exist, but the properties are incorrect, error messages display when
+            trying to connect. </p>
+
+ </div>
+
+</div>
 <div class="topic concept nested1" id="concept_nhr_5tk_k5">
  <h2 class="title topictitle2">Data Formats</h2>
 
