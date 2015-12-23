@@ -86,7 +86,7 @@ public class FieldTypeConverterConfig {
       description="Select or enter any valid date or datetime format",
       displayPosition = 30,
       dependsOn = "targetType",
-      triggeredByValue = {"DATE", "DATETIME"}
+      triggeredByValue = {"DATE", "DATETIME", "STRING"}
   )
   @ValueChooserModel(DateFormatChooserValues.class)
   public DateFormat dateFormat;

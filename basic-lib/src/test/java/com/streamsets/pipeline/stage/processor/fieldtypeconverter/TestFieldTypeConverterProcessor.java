@@ -34,6 +34,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -1065,6 +1066,52 @@ public class TestFieldTypeConverterProcessor {
       Map<String, Field> result = field.getValueAsMap();
       Assert.assertEquals(String.valueOf(result), 0, result.get("date").getValueAsLong());
       Assert.assertEquals(String.valueOf(result), 0, result.get("dateTime").getValueAsLong());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testDateTimeToString() throws Exception {
+    FieldTypeConverterConfig dtConfig =
+        new FieldTypeConverterConfig();
+    dtConfig.fields = ImmutableList.of("/dateTime");
+    dtConfig.targetType = Field.Type.STRING;
+    dtConfig.dataLocale = "en";
+    dtConfig.dateFormat = DateFormat.DD_MM_YYYY;
+
+    FieldTypeConverterConfig dateConfig =
+        new FieldTypeConverterConfig();
+    dateConfig.fields = ImmutableList.of("/date");
+    dateConfig.targetType = Field.Type.STRING;
+    dateConfig.dataLocale = "en";
+    dateConfig.dateFormat = DateFormat.OTHER;
+    dateConfig.otherDateFormat = "yyyy-MM-dd";
+
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldTypeConverterDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", ImmutableList.of(dateConfig, dtConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Calendar cal = Calendar.getInstance();
+      cal.set(Calendar.DAY_OF_MONTH, 20);
+      cal.set(Calendar.MONTH, 1);
+      cal.set(Calendar.YEAR, 2015);
+
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("date", Field.createDate(cal.getTime()));
+      map.put("dateTime", Field.createDatetime(cal.getTime()));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertEquals("20-Feb-2015", result.get("dateTime").getValue());
+      Assert.assertEquals("2015-02-20", result.get("date").getValue());
     } finally {
       runner.runDestroy();
     }

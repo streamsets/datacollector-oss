@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -83,14 +82,22 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 }
               }
             } else if ((field.getType() == Field.Type.DATETIME || field.getType() == Field.Type.DATE) &&
-              fieldTypeConverterConfig.targetType == Field.Type.LONG) {
+                (fieldTypeConverterConfig.targetType == Field.Type.LONG ||
+                    fieldTypeConverterConfig.targetType == Field.Type.STRING)) {
               if (field.getValue() == null) {
                 LOG.warn("Field {} in record {} has null value. Converting the type of field to '{}' with null value.",
-                  matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
+                    matchingField, record.getHeader().getSourceId(), fieldTypeConverterConfig.targetType);
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, null));
-              } else {
+              } else if(fieldTypeConverterConfig.targetType == Field.Type.LONG) {
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType,
-                  field.getValueAsDatetime().getTime()));
+                    field.getValueAsDatetime().getTime()));
+              } else if(fieldTypeConverterConfig.targetType == Field.Type.STRING) {
+                String dateMask = (fieldTypeConverterConfig.dateFormat != DateFormat.OTHER)
+                    ? fieldTypeConverterConfig.dateFormat.getFormat()
+                    : fieldTypeConverterConfig.otherDateFormat;
+                java.text.DateFormat dateFormat = new SimpleDateFormat(dateMask, Locale.ENGLISH);
+                record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType,
+                    dateFormat.format(field.getValueAsDatetime())));
               }
             } else {
               //use the built in type conversion provided by TypeSupport
@@ -99,7 +106,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
                 record.set(matchingField, Field.create(fieldTypeConverterConfig.targetType, field.getValue()));
               } catch (IllegalArgumentException e) {
                 throw new OnRecordErrorException(Errors.CONVERTER_00, matchingField, field.getValueAsString(),
-                  fieldTypeConverterConfig.targetType.name(), e.toString(), e);
+                    fieldTypeConverterConfig.targetType.name(), e.toString(), e);
               }
             }
           }
