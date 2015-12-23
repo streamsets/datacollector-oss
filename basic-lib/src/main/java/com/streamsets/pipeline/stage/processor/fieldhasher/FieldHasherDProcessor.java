@@ -48,7 +48,7 @@ public class FieldHasherDProcessor extends DProcessor {
       required = true,
       type = Type.MODEL,
       defaultValue="",
-      label = "",
+      label = "Fields to Hash",
       description="",
       displayPosition = 10,
       group = "HASHING"

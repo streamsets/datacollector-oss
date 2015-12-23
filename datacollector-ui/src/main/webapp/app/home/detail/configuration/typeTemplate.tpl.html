@@ -394,6 +394,13 @@
          ng-required="customFieldConfigDefinition.required">
 </script>
 
+<script type="text/ng-template" id="booleanComplexConfigurationTemplate">
+  <div class="controls">
+    <input type="checkbox" name="{{customFieldConfigDefinition.name}}"
+           ng-disabled="isPipelineReadOnly || isPipelineRunning"
+           ng-model="customFieldValue[customFieldConfigDefinition.name]">
+  </div>
+</script>
 
 <script type="text/ng-template" id="elStringComplexConfigurationTemplate">
   <div ui-codemirror
@@ -415,6 +422,128 @@
   </div>
 </script>
 
+
+<script type="text/ng-template" id="listComplexConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8 container-fluid">
+    <div class="row map-list-type"
+         ng-repeat="val in listValue = customFieldValue[customFieldConfigDefinition.name] track by $index">
+
+      <div class="col-xs-1">
+        <label class="lane-label">{{$index + 1}}</label>
+      </div>
+
+      <div class="col-xs-7">
+        <div ui-codemirror
+             ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+             ng-model="listValue[$index]"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                extraKeys: {
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
+                }
+              }, configDefinition)"
+             codemirror-el
+             field-paths="fieldPaths"
+             d-field-paths="dFieldPaths"
+             data-type="'STRING'">
+        </div>
+      </div>
+
+      <div class="col-xs-4 btn-group" role="group" aria-label="Default button group"
+           ng-hide="isPipelineReadOnly || isPipelineRunning">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="removeFromList(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name], $index)">
+          <i class="fa fa-minus pointer"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-show="$last"
+                ng-click="addToList(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name])">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div ng-if="customFieldValue[customFieldConfigDefinition.name].length === 0" class="row"
+         ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <div class="col-md-2 btn-group" role="group">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="addToList(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name])">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+  </div>
+</script>
+
+
+<script type="text/ng-template" id="mapComplexConfigurationTemplate">
+  <div class="controls col-lg-7 col-md-8">
+    <div class="row map-list-type" ng-repeat="mapObject in customFieldValue[customFieldConfigDefinition.name] track by $index">
+
+      <div class="col-xs-4">
+        <input type="text" class="form-control input-sm"
+               name="{{configDefinition.name + 'key' + $index}}"
+               placeholder="{{'home.detailPane.configurationTab.enterKey' | translate}}"
+               ng-required="true"
+               ng-readonly="isPipelineReadOnly || isPipelineRunning"
+               ng-model="mapObject.key"/>
+      </div>
+
+      <div class="col-xs-1">:</div>
+
+      <div class="col-xs-5">
+        <div ui-codemirror
+             ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+             ng-model="mapObject.value"
+             ui-refresh="refreshCodemirror"
+             ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                extraKeys: {
+                  'Tab': false,
+                  'Ctrl-Space': 'autocomplete'
+                }
+              }, configDefinition)"
+             codemirror-el
+             field-paths="fieldPaths"
+             d-field-paths="dFieldPaths"
+             data-type="'STRING'">
+        </div>
+      </div>
+
+      <div class="btn-group" role="group" aria-label="Default button group"
+           ng-hide="isPipelineReadOnly || isPipelineRunning">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="removeFromMap(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name], mapObject, $index)">
+          <i class="fa fa-minus pointer"></i>
+        </button>
+        <button type="button" class="btn btn-default btn-sm"
+                ng-show="$last"
+                ng-click="addToMap(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name])">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div ng-if="customFieldValue[customFieldConfigDefinition.name].length === 0" class="row"
+         ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <div class="col-md-2 btn-group" role="group">
+        <button type="button" class="btn btn-default btn-sm"
+                ng-click="addToMap(detailPaneConfig, customFieldValue[customFieldConfigDefinition.name])">
+          <i class="fa fa-plus pointer"></i>
+        </button>
+      </div>
+    </div>
+
+    <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
+
+  </div>
+</script>
 
 <script type="text/ng-template" id="textConfigurationTemplate">
   <div class="controls col-lg-9 col-md-8">

@@ -549,7 +549,7 @@ angular.module('dataCollectorApp.common')
           var complexFieldObj = {};
           angular.forEach(configDefinition.model.configDefinitions, function (complexFiledConfigDefinition) {
             var complexFieldConfig = self.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
-            complexFieldObj[complexFieldConfig.name] = complexFieldConfig.value || '';
+            complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
           });
           config.value = [complexFieldObj];
         }

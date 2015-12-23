@@ -362,7 +362,7 @@ angular
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
           var complexFieldConfig = pipelineService.setDefaultValueForConfig(complexFiledConfigDefinition, stageInstance);
-          complexFieldObj[complexFieldConfig.name] = complexFieldConfig.value || '';
+          complexFieldObj[complexFieldConfig.name] = (complexFieldConfig.value !== undefined && complexFieldConfig.value !== null) ? complexFieldConfig.value : undefined;
         });
         configValue.push(complexFieldObj);
       },
