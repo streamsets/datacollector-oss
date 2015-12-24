@@ -35,6 +35,7 @@ public enum Errors implements ErrorCode {
   GEOIP_08("Input field name is empty"),
   GEOIP_09("Output field name is empty"),
   GEOIP_10("Database file '{}' must be relative to SDC resources directory in cluster mode"),
+  GEOIP_11("Record '{}' does not contain input field '{}'"),
   ;
 
 

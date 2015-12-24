@@ -158,6 +158,11 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
     try {
       for (GeolocationFieldConfig config : configs) {
         Field field = record.get(config.inputFieldName);
+
+        if(field == null) {
+          throw new OnRecordErrorException(Errors.GEOIP_11, record.getHeader().getSourceId(), config.inputFieldName);
+        }
+
         try {
           switch (config.targetType) {
             case COUNTRY_NAME:
@@ -216,19 +221,23 @@ public class GeolocationProcessor extends SingleLaneRecordProcessor {
       case INTEGER:
         return InetAddress.getByAddress(ipAsIntToBytes(field.getValueAsInteger()));
       case STRING:
-        String ip = field.getValueAsString().trim();
-        if (ip.contains(".")) {
-          return InetAddress.getByAddress(ipAsStringToBytes(ip));
-        } else {
-          try {
-            return InetAddress.getByAddress(ipAsIntToBytes(Integer.parseInt(ip)));
-          } catch (NumberFormatException nfe) {
-            throw new OnRecordErrorException(Errors.GEOIP_06, ip, nfe);
+        String ip = field.getValueAsString();
+        if(ip != null) {
+          ip = ip.trim();
+          if (ip.contains(".")) {
+            return InetAddress.getByAddress(ipAsStringToBytes(ip));
+          } else {
+            try {
+              return InetAddress.getByAddress(ipAsIntToBytes(Integer.parseInt(ip)));
+            } catch (NumberFormatException nfe) {
+              throw new OnRecordErrorException(Errors.GEOIP_06, ip, nfe);
+            }
           }
+        } else {
+          throw new OnRecordErrorException(Errors.GEOIP_06, ip);
         }
       default:
         throw new IllegalStateException(Utils.format("Unknown field type: ", field.getType()));
-
     }
   }
 

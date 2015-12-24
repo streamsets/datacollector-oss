@@ -166,6 +166,80 @@ public class TestGeolocationProcessor {
     }
   }
 
+
+  @Test
+  public void testInvalidInputField() throws Exception {
+    String ip = "128.101.101.101";
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/notAValidField";
+    config.outputFieldName = "/intIpCountry";
+    config.targetType = GeolocationField.COUNTRY_NAME;
+    configs.add(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    boolean exceptionTriggered = false;
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("ipAsInt", Field.create(GeolocationProcessor.ipAsStringToInt(ip)));
+      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsString", Field.create(ip));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    } catch(OnRecordErrorException ex) {
+      Assert.assertTrue(ex.getMessage().contains("GEOIP_11"));
+      exceptionTriggered = true;
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertTrue(exceptionTriggered);
+  }
+
+
+  @Test
+  public void testNullInputFieldValue() throws Exception {
+    String ip = "128.101.101.101";
+    List<GeolocationFieldConfig> configs = new ArrayList<>();
+    GeolocationFieldConfig config;
+    config = new GeolocationFieldConfig();
+    config.inputFieldName = "/ipAsInt";
+    config.outputFieldName = "/intIpCountry";
+    config.targetType = GeolocationField.COUNTRY_NAME;
+    configs.add(config);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(GeolocationDProcessor.class)
+        .addConfiguration("fieldTypeConverterConfigs", configs)
+        .addConfiguration("geoIP2DBFile", databaseFile.getAbsolutePath())
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    boolean exceptionTriggered = false;
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("ipAsInt", Field.create((String)null));
+      map.put("ipAsIntString", Field.create(String.valueOf(GeolocationProcessor.ipAsStringToInt(ip))));
+      map.put("ipAsString", Field.create(ip));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+    } catch(OnRecordErrorException ex) {
+      Assert.assertTrue(ex.getMessage().contains("GEOIP_06"));
+      exceptionTriggered = true;
+    } finally {
+      runner.runDestroy();
+    }
+
+    Assert.assertTrue(exceptionTriggered);
+  }
+
   @Test
   public void testClusterModeHadoopDbFileAbsPath() {
     List<GeolocationFieldConfig> configs = new ArrayList<>();
