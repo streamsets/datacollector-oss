@@ -136,9 +136,9 @@ public class HttpClientConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Entity Delimiter",
+      label = "Http Stream Delimiter",
       defaultValue = "\\r\\n",
-      description = "Records may be delimited by a user-defined string. Common values are \\r\\n and \\n",
+      description = "Http stream may be delimited by a user-defined string. Common values are \\r\\n and \\n",
       displayPosition = 50,
       group = "HTTP"
   )
