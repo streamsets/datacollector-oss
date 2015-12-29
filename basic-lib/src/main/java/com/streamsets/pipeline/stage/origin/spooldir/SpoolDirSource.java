@@ -238,9 +238,7 @@ public class SpoolDirSource extends BaseSource {
         if (xmlMaxObjectLen < 1) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlMaxObjectLen", Errors.SPOOLDIR_20));
         }
-        if (xmlRecordElement == null || xmlRecordElement.isEmpty()) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_26));
-        } else if (!XMLChar.isValidName(xmlRecordElement)) {
+        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
           issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23,
                                                     xmlRecordElement));
         }

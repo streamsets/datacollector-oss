@@ -48,7 +48,6 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_23("Invalid XML element name '{}'"),
   SPOOLDIR_24("Cannot create the parser factory: '{}'"),
   SPOOLDIR_25("Low level reader overrun limit '{} KB' must be at least '{} KB'"),
-  SPOOLDIR_26("XML delimiter element cannot be empty"),
   SPOOLDIR_27("Custom Log Format field cannot be empty"),
   SPOOLDIR_28("Error parsing custom log format string {}, reason {}"),
   SPOOLDIR_29("Error parsing regex {}, reason {}"),
