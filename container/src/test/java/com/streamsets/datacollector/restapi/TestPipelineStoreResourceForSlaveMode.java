@@ -21,7 +21,6 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.restapi.PipelineStoreResource;
 import com.streamsets.datacollector.restapi.bean.*;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -171,7 +170,7 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
           1000, true, false, true));
 
         RuleDefinitionsJson rules = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
-          Collections.<String>emptyList(), UUID.randomUUID());
+            Collections.<DriftRuleDefinitionJson>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());
         List<RuleIssue> ruleIssues = new ArrayList<>();
         ruleIssues.add(RuleIssue.createRuleIssue("a", ValidationError.VALIDATION_0000));
         ruleIssues.add(RuleIssue.createRuleIssue("b", ValidationError.VALIDATION_0000));

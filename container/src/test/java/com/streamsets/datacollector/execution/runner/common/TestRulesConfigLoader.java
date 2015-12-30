@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
@@ -100,10 +101,18 @@ public class TestRulesConfigLoader {
 
     dataRuleDefinitions.add(dataRuleDefinition);
     dataRuleDefinitions.add(dataRuleDefinition2);
+
+    DriftRuleDefinition driftRuleDefinition = new DriftRuleDefinition("myDriftID", "myDriftLabel", "p", 20, 10,
+        "${record:value(\"/\")==4}", true, "alertText", true, false, true);
+    List<DriftRuleDefinition> driftRuleDefinitions = new ArrayList<>();
+
+    driftRuleDefinitions.add(driftRuleDefinition);
+
     RuleDefinitions prevRuleDef = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-      dataRuleDefinitions, Collections.<String>emptyList(), UUID.randomUUID());
+      dataRuleDefinitions, driftRuleDefinitions, Collections.<String>emptyList(),
+        UUID.randomUUID());
     //The latest rule definition has just one data rule definition.
-    //The old one had 2
+    //The old one had 2 data and 1 drift rule
     //Also there is a change in the condition of the data rule definition
     rulesConfigLoader.setPreviousRuleDefinitions(prevRuleDef);
 
@@ -113,7 +122,7 @@ public class TestRulesConfigLoader {
     Assert.assertEquals(1, productionObserveRequests.size());
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest = (RulesConfigurationChangeRequest) productionObserveRequests.take();
     Assert.assertNotNull(rulesConfigurationChangeRequest);
-    Assert.assertEquals(2, rulesConfigurationChangeRequest.getRulesToRemove().size());
+    Assert.assertEquals(3, rulesConfigurationChangeRequest.getRulesToRemove().size());
   }
 
 }

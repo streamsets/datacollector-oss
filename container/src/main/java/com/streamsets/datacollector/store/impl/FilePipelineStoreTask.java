@@ -22,6 +22,7 @@ package com.streamsets.datacollector.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -358,7 +359,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         }
         if(ruleDefinitions == null) {
           ruleDefinitions = new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-            new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID());
+            new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(),
+              new ArrayList<String>(), UUID.randomUUID());
         }
         pipelineToRuleDefinitionMap.put(getPipelineKey(name, tagOrRev), ruleDefinitions);
       }

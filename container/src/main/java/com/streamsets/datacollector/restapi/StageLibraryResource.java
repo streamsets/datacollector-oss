@@ -103,12 +103,9 @@ public class StageLibraryResource {
     pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
     definitions.setPipeline(pipeline);
 
-    Map<String, Object> map = new HashMap<>();
-    map.put(EL_FUNCTION_DEFS,DataRuleEvaluator.getElFunctionIdx());
-    map.put(EL_CONSTANT_DEFS, DataRuleEvaluator.getElConstantIdx());
-    definitions.setRulesElMetadata(map);
+    definitions.setRulesElMetadata(DataRuleEvaluator.getELDefinitions());
 
-    map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put(EL_FUNCTION_DEFS,
             BeanHelper.wrapElFunctionDefinitionsIdx(ELDefinitionExtractor.get().getElFunctionsCatalog()));
     map.put(EL_CONSTANT_DEFS,

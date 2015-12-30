@@ -72,14 +72,14 @@ public class RulesConfigLoader {
     Map<String, Integer> rulesWithSampledRecordSizeChanges = new HashMap<>();
     if (previousRuleDefinitions != null) {
       //detect rules to remove and also the rules whose 'retain sampled record size' has changed
-      detectDataRuleChanges(previousRuleDefinitions.getDataRuleDefinitions(),
-        newRuleDefinitions.getDataRuleDefinitions(), rulesToRemove, rulesWithSampledRecordSizeChanges);
+      detectDataRuleChanges(previousRuleDefinitions.getAllDataRuleDefinitions(),
+        newRuleDefinitions.getAllDataRuleDefinitions(), rulesToRemove, rulesWithSampledRecordSizeChanges);
       //detect metric rules to be removed
       detectMetricRuleChanges(previousRuleDefinitions.getMetricsRuleDefinitions(),
         newRuleDefinitions.getMetricsRuleDefinitions(), pipelineAlertsToRemove);
     }
     Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
-    for (DataRuleDefinition dataRuleDefinition : newRuleDefinitions.getDataRuleDefinitions()) {
+    for (DataRuleDefinition dataRuleDefinition : newRuleDefinitions.getAllDataRuleDefinitions()) {
       String lane = LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane());
       List<DataRuleDefinition> dataRuleDefinitions = laneToDataRule.get(lane);
       if (dataRuleDefinitions == null) {

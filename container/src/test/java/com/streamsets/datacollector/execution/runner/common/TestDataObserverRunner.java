@@ -36,7 +36,6 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.Record;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -121,7 +120,7 @@ public class TestDataObserverRunner {
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition(ID, "myRule", LANE + "::s", 100, 5,
       "${record:value(\"/name\")==null}", alert, "alertText", ThresholdType.COUNT, "2", 5, meter, false, true));
-    RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, Collections.<String>emptyList(),
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(null, dataRuleDefinitions, null, Collections.<String>emptyList(),
       UUID.randomUUID());
     Map<String, List<DataRuleDefinition>> laneToRuleDefinition = new HashMap<>();
     Map<String, Integer> ruleIdToSampledRecordsSize = new HashMap<>();

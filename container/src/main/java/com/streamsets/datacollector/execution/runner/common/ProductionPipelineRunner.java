@@ -54,6 +54,7 @@ import com.streamsets.datacollector.runner.StageContext;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
+import com.streamsets.datacollector.rules.DriftRuleEL;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;

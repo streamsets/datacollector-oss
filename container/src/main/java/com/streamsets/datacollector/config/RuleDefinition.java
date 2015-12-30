@@ -19,11 +19,8 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class RuleDefinition {
-
+public abstract class RuleDefinition {
+  private final String family;
   private final String id;
   private final String alertText;
   private final String condition;
@@ -31,17 +28,23 @@ public class RuleDefinition {
   private final boolean enabled;
   private boolean valid = true;
 
-  @JsonCreator
-  public RuleDefinition(@JsonProperty("id") String id,
-                        @JsonProperty("condition") String condition,
-                        @JsonProperty("alertText") String alertText,
-                        @JsonProperty("sendEmail") boolean sendEmail,
-                        @JsonProperty("enabled") boolean enabled) {
+  public RuleDefinition(String family,
+                        String id,
+                        String condition,
+                        String alertText,
+                        boolean sendEmail,
+                        boolean enabled
+  ) {
+    this.family = family;
     this.id = id;
     this.alertText = alertText;
     this.condition = condition;
     this.sendEmail = sendEmail;
     this.enabled = enabled;
+  }
+
+  public String getFamily() {
+    return family;
   }
 
   public String getId() {

@@ -19,6 +19,9 @@
  */
 package com.streamsets.datacollector.el;
 
+import com.streamsets.datacollector.rules.AlertInfoEL;
+import com.streamsets.datacollector.rules.DriftRuleEL;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.DataUnitsEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
@@ -27,13 +30,47 @@ import com.streamsets.pipeline.lib.el.StringEL;
  * Registry which holds all EL functions which are useful for rules/conditions.
  */
 public class RuleELRegistry {
-  public static Class<?>[] getRuleELs() {
-    return new Class[] {
-      RecordEL.class,
-      StringEL.class,
-      DataUnitsEL.class,
-      RuntimeEL.class,
-      JvmEL.class
-    };
+
+  public static final String ALERT = "alert";
+  public static final String GENERAL = "general";
+  public static final String DRIFT = "drift";
+
+  private static final String[] FAMILIES = {ALERT, GENERAL, DRIFT};
+
+  public static String[] getFamilies() {
+    return FAMILIES;
   }
+
+  public static Class<?>[] getRuleELs(String family) {
+    Utils.checkNotNull(family, "family");
+    switch (family) {
+      case GENERAL:
+        return new Class[] {
+            RecordEL.class,
+            StringEL.class,
+            DataUnitsEL.class,
+            RuntimeEL.class,
+            JvmEL.class,
+        };
+      case DRIFT:
+        return new Class[] {
+            RecordEL.class,
+            StringEL.class,
+            DataUnitsEL.class,
+            RuntimeEL.class,
+            JvmEL.class,
+            DriftRuleEL.class
+        };
+      case ALERT:
+        return new Class[] {
+            StringEL.class,
+            RuntimeEL.class,
+            JvmEL.class,
+            AlertInfoEL.class
+        };
+      default:
+        throw new IllegalArgumentException(Utils.format("Invalid data rule family '{}'", family));
+    }
+  }
+
 }

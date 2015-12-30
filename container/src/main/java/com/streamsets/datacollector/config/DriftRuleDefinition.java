@@ -17,30 +17,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.el;
+package com.streamsets.datacollector.config;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
-import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.RuleELRegistry;
 
-public class TestJvmEL {
+public class DriftRuleDefinition extends DataRuleDefinition {
 
-  @Test
-  public void testMaxMemory() throws Exception {
-    ELEvaluator eval = new ELEvaluator("x", JvmEL.class);
-    ELVariables variables = new ELVariables();
-    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
+  public DriftRuleDefinition(
+      String id,
+      String label,
+      String lane,
+      double samplingPercentage,
+      int samplingRecordsToRetain,
+      String condition,
+      boolean alertEnabled,
+      String alertText,
+      boolean meterEnabled,
+      boolean sendEmail,
+      boolean enabled
+  ) {
+    super(
+        RuleELRegistry.DRIFT,
+        id,
+        label,
+        lane,
+        samplingPercentage,
+        samplingRecordsToRetain,
+        condition,
+        alertEnabled,
+        alertText,
+        ThresholdType.COUNT,
+        "0",
+        1,
+        meterEnabled,
+        sendEmail,
+        enabled
+    );
   }
-
-  @Test
-  public void testJvmELAvailViaRuleELRegistry() throws Exception {
-    ELEvaluator eval = new ELEvaluator("x", RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
-    ELVariables variables = new ELVariables();
-    Assert.assertTrue(eval.eval(variables, "${jvm:maxMemoryMB()}", Long.class) > 0);
-  }
-
 }

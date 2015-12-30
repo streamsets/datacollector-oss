@@ -61,7 +61,7 @@ public class RuleDefinitionValidator {
 
   public RuleDefinitionValidator() {
     variables = new ELVariables();
-    elEvaluator = new ELEvaluator("RuleDefinitionValidator", RuleELRegistry.getRuleELs());
+    elEvaluator = new ELEvaluator("RuleDefinitionValidator", RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL));
   }
 
   public boolean validateRuleDefinition(RuleDefinitions ruleDefinitions) {
@@ -317,7 +317,7 @@ public class RuleDefinitionValidator {
     try {
       elEvaluator.eval(variables, condition, Object.class);
     } catch (ELEvalException ex) {
-      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition);
+      return RuleIssue.createRuleIssue(ruleId, ValidationError.VALIDATION_0045, condition, ex.toString());
     }
     return null;
   }

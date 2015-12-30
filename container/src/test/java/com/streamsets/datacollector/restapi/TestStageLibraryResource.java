@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.StageLibraryResource;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -76,11 +77,14 @@ public class TestStageLibraryResource extends JerseyTest {
 
     //check the rules El metadata
     Assert.assertTrue(definitions.containsKey(StageLibraryResource.RULES_EL_METADATA));
-    Map<String, Object> rulesElMetadata = (Map<String, Object>)definitions.get(StageLibraryResource.RULES_EL_METADATA);
+    Map<String, Map> rulesElMetadata = (Map<String, Map>)definitions.get(StageLibraryResource.RULES_EL_METADATA);
     Assert.assertNotNull(rulesElMetadata);
-    Assert.assertTrue(rulesElMetadata.containsKey(StageLibraryResource.EL_FUNCTION_DEFS));
-    Assert.assertTrue(rulesElMetadata.containsKey(StageLibraryResource.EL_CONSTANT_DEFS));
-
+    Assert.assertTrue(rulesElMetadata.containsKey(RuleELRegistry.GENERAL));
+    Assert.assertTrue(rulesElMetadata.containsKey(RuleELRegistry.DRIFT));
+    Assert.assertTrue(rulesElMetadata.get(RuleELRegistry.GENERAL).containsKey(StageLibraryResource.EL_FUNCTION_DEFS));
+    Assert.assertTrue(rulesElMetadata.get(RuleELRegistry.GENERAL).containsKey(StageLibraryResource.EL_CONSTANT_DEFS));
+    Assert.assertTrue(rulesElMetadata.get(RuleELRegistry.DRIFT).containsKey(StageLibraryResource.EL_FUNCTION_DEFS));
+    Assert.assertTrue(rulesElMetadata.get(RuleELRegistry.DRIFT).containsKey(StageLibraryResource.EL_CONSTANT_DEFS));
   }
 
   @Test

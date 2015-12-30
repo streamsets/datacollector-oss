@@ -44,7 +44,10 @@ public class MetricRuleEvaluator {
   private static final Logger LOG = LoggerFactory.getLogger(MetricRuleEvaluator.class);
   private static final String VAL = "value()";
   private static final String TIME_NOW = "time:now()";
-  private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator("condition", RuleELRegistry.getRuleELs());
+  private static final ELEvaluator EL_EVALUATOR =  new ELEvaluator(
+      "condition",
+      RuleELRegistry.getRuleELs(RuleELRegistry.GENERAL)
+  );
 
   private final MetricsRuleDefinition metricsRuleDefinition;
   private final MetricRegistry metrics;

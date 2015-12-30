@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.store.impl;
 
 
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import static org.junit.Assert.assertEquals;
 
 import com.streamsets.datacollector.config.DataRuleDefinition;
@@ -37,8 +38,6 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.datacollector.store.impl.CachePipelineStoreTask;
-import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
@@ -54,6 +53,7 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -303,7 +303,8 @@ public class TestFilePipelineStoreTask {
       FilePipelineStoreTask.REV);
     //Mimick two different clients [browsers] retrieving from the store
     RuleDefinitions ruleDefinitions2 = new RuleDefinitions(tempRuleDef.getMetricsRuleDefinitions(),
-      tempRuleDef.getDataRuleDefinitions(), tempRuleDef.getEmailIds(), tempRuleDef.getUuid());
+      tempRuleDef.getDataRuleDefinitions(), new ArrayList<DriftRuleDefinition>(), tempRuleDef.getEmailIds(),
+        tempRuleDef.getUuid());
 
     List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions1.getMetricsRuleDefinitions();
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,

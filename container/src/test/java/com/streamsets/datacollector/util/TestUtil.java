@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -294,7 +295,8 @@ public class TestUtil {
 
           RuleDefinitions ruleDefinitions =
             new RuleDefinitions(Collections.<MetricsRuleDefinition> emptyList(), dataRuleDefinitions,
-              Collections.<String> emptyList(), UUID.randomUUID());
+                Collections.<DriftRuleDefinition>emptyList(),
+                Collections.<String> emptyList(), UUID.randomUUID());
           pipelineStoreTask.storeRules(MY_PIPELINE, ZERO_REV, ruleDefinitions);
         }
 

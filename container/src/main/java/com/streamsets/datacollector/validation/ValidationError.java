@@ -82,7 +82,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0042("Email alert is enabled, but no email is specified"),
   VALIDATION_0043("The value defined for Threshold Value is not a number"),
   VALIDATION_0044("The Threshold Value property must have a value between 0 and 100"),
-  VALIDATION_0045("The condition '{}' defined for the data rule is not valid"),
+  VALIDATION_0045("The condition '{}' defined for the data rule is not valid: {}"),
   VALIDATION_0046("The condition must use the following format: '${value()<operator><number>}'"),
   VALIDATION_0047("The condition '{}' defined for the metric alert is not valid"),
   VALIDATION_0050("The property '{}' must be defined for the metric alert"),

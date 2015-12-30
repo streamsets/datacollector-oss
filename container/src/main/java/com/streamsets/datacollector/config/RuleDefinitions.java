@@ -21,6 +21,8 @@ package com.streamsets.datacollector.config;
 
 import com.streamsets.datacollector.validation.RuleIssue;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,16 +30,27 @@ public class RuleDefinitions {
 
   private final List<MetricsRuleDefinition> metricsRuleDefinitions;
   private final List<DataRuleDefinition> dataRuleDefinitions;
+  private final List<DriftRuleDefinition> driftRuleDefinitions;
   private final List<String> emailIds;
   private List<RuleIssue> ruleIssues;
   private UUID uuid = null;
 
-  public RuleDefinitions(List<MetricsRuleDefinition> metricsRuleDefinitions,
-    List<DataRuleDefinition> dataRuleDefinitions, List<String> emailIds,UUID uuid) {
-    this.metricsRuleDefinitions = metricsRuleDefinitions;
-    this.dataRuleDefinitions = dataRuleDefinitions;
+  public RuleDefinitions(
+      List<MetricsRuleDefinition> metricsRuleDefinitions,
+      List<DataRuleDefinition> dataRuleDefinitions,
+      List<DriftRuleDefinition> driftRuleDefinitions,
+      List<String> emailIds,
+      UUID uuid
+  ) {
+    this.metricsRuleDefinitions = emptyListIfNull(metricsRuleDefinitions);
+    this.dataRuleDefinitions = emptyListIfNull(dataRuleDefinitions);
+    this.driftRuleDefinitions = emptyListIfNull(driftRuleDefinitions);
     this.emailIds = emailIds;
     this.uuid = uuid;
+  }
+
+  private static <T> List<T> emptyListIfNull(List<T> list) {
+    return (list != null) ? list :Collections.<T>emptyList();
   }
 
   public List<MetricsRuleDefinition> getMetricsRuleDefinitions() {
@@ -46,6 +59,17 @@ public class RuleDefinitions {
 
   public List<DataRuleDefinition> getDataRuleDefinitions() {
     return dataRuleDefinitions;
+  }
+
+  public List<DriftRuleDefinition> getDriftRuleDefinitions() {
+    return driftRuleDefinitions;
+  }
+
+  public List<DataRuleDefinition> getAllDataRuleDefinitions() {
+    List<DataRuleDefinition> rules = new ArrayList<>(getDataRuleDefinitions().size() + getDriftRuleDefinitions().size());
+    rules.addAll(getDataRuleDefinitions());
+    rules.addAll(getDriftRuleDefinitions());
+    return rules;
   }
 
   public List<String> getEmailIds() {

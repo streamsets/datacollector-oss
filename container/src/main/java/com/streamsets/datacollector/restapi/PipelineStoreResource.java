@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -204,8 +205,13 @@ public class PipelineStoreResource {
     metricsRuleDefinitions.add(new MetricsRuleDefinition(MEMORY_LIMIt_ID, MEMORY_LIMIt_TEXT, MEMORY_LIMIt_METRIC_ID,
       MetricType.COUNTER, MetricElement.COUNTER_COUNT, MEMORY_LIMIt_CONDITION, false, false));
 
-    RuleDefinitions ruleDefinitions = new RuleDefinitions(metricsRuleDefinitions,
-      Collections.<DataRuleDefinition>emptyList(), Collections.<String>emptyList(), null);
+    RuleDefinitions ruleDefinitions = new RuleDefinitions(
+        metricsRuleDefinitions,
+        Collections.<DataRuleDefinition>emptyList(),
+        Collections.<DriftRuleDefinition>emptyList(),
+        Collections.<String>emptyList(),
+        null
+    );
     store.storeRules(name, "0", ruleDefinitions);
 
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);

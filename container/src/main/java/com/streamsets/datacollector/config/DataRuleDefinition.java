@@ -19,6 +19,8 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.streamsets.datacollector.el.RuleELRegistry;
+
 public class DataRuleDefinition extends RuleDefinition {
 
   private final String label;
@@ -35,11 +37,11 @@ public class DataRuleDefinition extends RuleDefinition {
   /*create a meter to indicate rate of records matching the condition over time.*/
   private final boolean meterEnabled;
 
-  public DataRuleDefinition(String id, String label, String lane, double samplingPercentage,
+  public DataRuleDefinition(String family, String id, String label, String lane, double samplingPercentage,
                             int samplingRecordsToRetain, String condition, boolean alertEnabled, String alertText,
                             ThresholdType thresholdType, String thresholdValue, long minVolume, boolean meterEnabled,
                             boolean sendEmail, boolean enabled) {
-    super(id, condition, alertText, sendEmail, enabled);
+    super(family, id, condition, alertText, sendEmail, enabled);
     this.label = label;
     this.lane = lane;
     this.samplingPercentage = samplingPercentage;
@@ -49,6 +51,41 @@ public class DataRuleDefinition extends RuleDefinition {
     this.thresholdValue = thresholdValue;
     this.minVolume = minVolume;
     this.meterEnabled = meterEnabled;
+  }
+
+  public DataRuleDefinition(
+      String id,
+      String label,
+      String lane,
+      double samplingPercentage,
+      int samplingRecordsToRetain,
+      String condition,
+      boolean alertEnabled,
+      String alertText,
+      ThresholdType thresholdType,
+      String thresholdValue,
+      long minVolume,
+      boolean meterEnabled,
+      boolean sendEmail,
+      boolean enabled
+  ) {
+    this(
+        RuleELRegistry.GENERAL,
+        id ,
+        label,
+        lane,
+        samplingPercentage,
+        samplingRecordsToRetain,
+        condition,
+        alertEnabled,
+        alertText,
+        thresholdType,
+        thresholdValue,
+        minVolume,
+        meterEnabled,
+        sendEmail,
+        enabled
+    );
   }
 
   public String getLabel() {

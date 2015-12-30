@@ -25,6 +25,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -32,7 +33,6 @@ import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.TestDataRuleEvaluator;
-import com.streamsets.datacollector.execution.runner.common.MetricsObserverRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
@@ -82,7 +82,8 @@ public class TestMetricObserverRunner {
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
     metricsRuleDefinitions.add(metricsRuleDefinition);
     RuleDefinitions ruleDefinitions = new RuleDefinitions(metricsRuleDefinitions,
-      Collections.<DataRuleDefinition>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());
+      Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
+        Collections.<String>emptyList(), UUID.randomUUID());
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
         Collections.<String>emptySet(), null, null);
@@ -98,7 +99,8 @@ public class TestMetricObserverRunner {
 
     //modify metric alert and add it to the list of alerts to be removed
     ruleDefinitions = new RuleDefinitions(Collections.<MetricsRuleDefinition>emptyList(),
-      Collections.<DataRuleDefinition>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());
+      Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
+        Collections.<String>emptyList(), UUID.randomUUID());
     rulesConfigurationChangeRequest =
       new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
         ImmutableSet.of(metricsRuleDefinition.getId()), null, null);

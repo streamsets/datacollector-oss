@@ -17,33 +17,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
+package com.streamsets.datacollector.rules;
 
-public class MetricsRuleDefinition extends RuleDefinition {
+import com.streamsets.pipeline.api.ElFunction;
+import com.streamsets.pipeline.api.el.ELEval;
 
-  private final String metricId;
-  private final MetricType metricType;
-  private final MetricElement metricElement;
+public class AlertInfoEL {
 
-  public MetricsRuleDefinition(String id, String alertText,  String metricId, MetricType metricType,
-                               MetricElement metricElement, String condition,boolean sendEmail, boolean enabled) {
-    super("METRICS", id, condition, alertText, sendEmail, enabled);
-    this.metricId = metricId;
-    this.metricType = metricType;
-    this.metricElement = metricElement;
+  private static final String ALERT_INFO = "ALERT_INFO";
 
+  public static void setInfo(String msg) {
+    if (ELEval.getVariablesInScope() != null) {
+      ELEval.getVariablesInScope().addContextVariable(ALERT_INFO, msg);
+    }
   }
 
-  public String getMetricId() {
-    return metricId;
-  }
-
-  public MetricElement getMetricElement() {
-    return metricElement;
-  }
-
-  public MetricType getMetricType() {
-    return metricType;
+  @ElFunction(
+      prefix = "alert",
+      name = "info",
+      description = "Information about the Drift Data rule that triggered the alert"
+  )
+  @SuppressWarnings("unchecked")
+  public static String info() {
+    return (String) ELEval.getVariablesInScope().getContextVariable(ALERT_INFO);
   }
 
 }

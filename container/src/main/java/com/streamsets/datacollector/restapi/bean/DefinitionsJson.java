@@ -26,7 +26,7 @@ import java.util.Set;
 public class DefinitionsJson {
   List<PipelineDefinitionJson> pipeline;
   List<StageDefinitionJson> stages;
-  Map<String, Object> rulesElMetadata;
+  Map<String,Map<String, List<String>>> rulesDefinitions;
   Map<String, Object> elCatalog;
   Set<Object> runtimeConfigs;
 
@@ -46,12 +46,12 @@ public class DefinitionsJson {
     this.stages = stages;
   }
 
-  public Map<String, Object> getRulesElMetadata() {
-    return rulesElMetadata;
+  public Map<String,Map<String, List<String>>> getRulesElMetadata() {
+    return rulesDefinitions;
   }
 
-  public void setRulesElMetadata(Map<String, Object> rulesElMetadata) {
-    this.rulesElMetadata = rulesElMetadata;
+  public void setRulesElMetadata(Map<String,Map<String, List<String>>> rulesDefinitions) {
+    this.rulesDefinitions = rulesDefinitions;
   }
 
   public Map<String, Object> getElCatalog() {

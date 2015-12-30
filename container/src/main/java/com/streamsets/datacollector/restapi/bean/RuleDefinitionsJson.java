@@ -23,24 +23,31 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.datacollector.config.RuleDefinitions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RuleDefinitionsJson {
 
-  private final com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions;
+  private final RuleDefinitions ruleDefinitions;
 
   @JsonCreator
   public RuleDefinitionsJson(
     @JsonProperty("metricsRuleDefinitions") List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons,
     @JsonProperty("dataRuleDefinitions") List<DataRuleDefinitionJson> dataRuleDefinitionJsons,
+    @JsonProperty("driftRuleDefinitions") List<DriftRuleDefinitionJson> driftRuleDefinitionJsons,
     @JsonProperty("emailIds") List<String> emailIds,
     @JsonProperty("uuid") UUID uuid) {
     this.ruleDefinitions = new com.streamsets.datacollector.config.RuleDefinitions(
       BeanHelper.unwrapMetricRuleDefinitions(metricsRuleDefinitionJsons),
-      BeanHelper.unwrapDataRuleDefinitions(dataRuleDefinitionJsons), emailIds, uuid);
+      BeanHelper.unwrapDataRuleDefinitions(dataRuleDefinitionJsons),
+      BeanHelper.unwrapDriftRuleDefinitions(driftRuleDefinitionJsons),
+      emailIds,
+      uuid
+    );
   }
 
   public RuleDefinitionsJson(com.streamsets.datacollector.config.RuleDefinitions ruleDefinitions) {
@@ -53,6 +60,10 @@ public class RuleDefinitionsJson {
 
   public List<DataRuleDefinitionJson> getDataRuleDefinitions() {
     return BeanHelper.wrapDataRuleDefinitions(ruleDefinitions.getDataRuleDefinitions());
+  }
+
+  public List<DriftRuleDefinitionJson> getDriftRuleDefinitions() {
+    return BeanHelper.wrapDriftRuleDefinitions(ruleDefinitions.getDriftRuleDefinitions());
   }
 
   public List<String> getEmailIds() {

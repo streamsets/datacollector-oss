@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
@@ -221,6 +222,28 @@ public class BeanHelper {
       dataRuleDefinitionList.add(m.getDataRuleDefinition());
     }
     return dataRuleDefinitionList;
+  }
+
+  public static List<DriftRuleDefinitionJson> wrapDriftRuleDefinitions(List<DriftRuleDefinition> rules) {
+    if(rules == null) {
+      return null;
+    }
+    List<DriftRuleDefinitionJson> rulesJson = new ArrayList<>(rules.size());
+    for(DriftRuleDefinition d : rules) {
+      rulesJson.add(new DriftRuleDefinitionJson(d));
+    }
+    return rulesJson;
+  }
+
+  public static List<DriftRuleDefinition> unwrapDriftRuleDefinitions(List<DriftRuleDefinitionJson> rulesJson) {
+    if(rulesJson == null) {
+      return null;
+    }
+    List<DriftRuleDefinition> rules = new ArrayList<>(rulesJson.size());
+    for(DriftRuleDefinitionJson m : rulesJson) {
+      rules.add(m.getDriftRuleDefinition());
+    }
+    return rules;
   }
 
   public static PipelineConfigurationJson wrapPipelineConfiguration(

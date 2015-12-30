@@ -19,9 +19,8 @@
  */
 package com.streamsets.datacollector.cluster;
 
-import com.streamsets.datacollector.cluster.ClusterModeConstants;
-import com.streamsets.datacollector.cluster.ClusterProviderImpl;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -180,7 +179,8 @@ public class TestClusterProviderImpl {
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
+            UUID.randomUUID())).getId());
   }
 
   @Test
@@ -197,7 +197,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-        new ArrayList<String>(), UUID.randomUUID())).getId());
+          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_YARN,
       MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args
@@ -220,7 +220,7 @@ public class TestClusterProviderImpl {
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterStreamingStageLibrary(classLoader), etcDir, resourcesDir,
       webDir, bootstrapLibDir, classLoader, classLoader,  60,
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
-        new ArrayList<String>(), UUID.randomUUID()));
+          new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()));
     Assert.assertNotNull(appState.getId());
     Assert.assertNotNull(appState.getUUID());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
@@ -242,7 +242,8 @@ public class TestClusterProviderImpl {
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, MockStages.createClusterBatchStageLibrary(classLoader), etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
+            UUID.randomUUID())).getId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains("<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap.jar,"
       + "<masked>/avro-1.7.7.jar," + "<masked>/avro-mapred-1.7.7.jar"));
@@ -256,7 +257,8 @@ public class TestClusterProviderImpl {
       sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader,  60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId();
+        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
+              UUID.randomUUID())).getId();
       Assert.fail("Expected IO Exception");
     } catch (IOException ex) {
       Assert.assertTrue("Incorrect message: " + ex, ex.getMessage().contains("No valid credentials provided"));
@@ -271,7 +273,8 @@ public class TestClusterProviderImpl {
     Assert.assertEquals(id, sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
       providerTemp, env, sourceInfo, pipelineConf, stageLibrary, etcDir, resourcesDir, webDir,
       bootstrapLibDir, classLoader, classLoader, 60, new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(),
-        new ArrayList<DataRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID())).getId());
+        new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(),
+            UUID.randomUUID())).getId());
     Assert.assertArrayEquals(new String[]{"<masked>/_cluster-manager", "start", "--master", "yarn-cluster",
       "--executor-memory", "512m", "--executor-cores", "1", "--num-executors", "64", "--archives",
       "<masked>/provider-temp/staging/libs.tar.gz,<masked>/provider-temp/staging/etc.tar.gz,<masked>/provider-temp/staging/resources.tar.gz",
