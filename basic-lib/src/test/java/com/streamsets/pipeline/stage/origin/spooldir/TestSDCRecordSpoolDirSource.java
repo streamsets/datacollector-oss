@@ -28,7 +28,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordWriter;
 import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -70,11 +69,27 @@ public class TestSDCRecordSpoolDirSource {
   }
 
   private SpoolDirSource createSource(String dir) {
-    return new SpoolDirSource(DataFormat.SDC_JSON, "UTF-8", false, 100, createTestDir(), 10, 1, "*", 10, null,
-      Compression.NONE, "*",  null,
-                              PostProcessingOptions.ARCHIVE, dir, 10, null, null, -1, '^', '^', '^', null, 0, 10, null,
-                              0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR, -1,
-                              null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.SDC_JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.overrunLimit = 100;
+    conf.spoolDir = createTestDir();
+    conf.batchSize = 10;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = dir;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   @Test

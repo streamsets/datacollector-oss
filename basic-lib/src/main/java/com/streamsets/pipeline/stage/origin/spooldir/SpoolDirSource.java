@@ -24,16 +24,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.api.impl.XMLChar;
-import com.streamsets.pipeline.common.DataFormatConstants;
-import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.DirectorySpooler;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
@@ -41,12 +32,6 @@ import com.streamsets.pipeline.lib.io.OverrunException;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
-import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
-import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
-import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
-import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,13 +40,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.charset.UnsupportedCharsetException;
 import java.nio.file.PathMatcher;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SpoolDirSource extends BaseSource {
@@ -72,214 +52,82 @@ public class SpoolDirSource extends BaseSource {
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
 
-  private final DataFormat dataFormat;
-  private final String charset;
-  private final boolean removeCtrlChars;
-  private final int overrunLimit;
-  final String spoolDir;
-  private final int batchSize;
-  private long poolingTimeoutSecs;
-  private final String filePattern;
-  private int maxSpoolFiles;
-  private String initialFileToProcess;
-  private final Compression fileCompression;
-  private final String filePatternInArchive;
-  private final String errorArchiveDir;
-  private final PostProcessingOptions postProcessing;
-  private final String archiveDir;
-  private final long retentionTimeMins;
-  private final CsvMode csvFileFormat;
-  private final CsvHeader csvHeader;
-  private final int csvMaxObjectLen;
-  private final char csvCustomDelimiter;
-  private final char csvCustomEscape;
-  private final char csvCustomQuote;
-  private final JsonMode jsonContent;
-  private final int jsonMaxObjectLen;
-  private final int textMaxLineLen;
-  private final String xmlRecordElement;
-  private final int xmlMaxObjectLen;
-  private final LogMode logMode;
-  private final int logMaxObjectLen;
-  private final boolean logRetainOriginalLine;
-  private final String customLogFormat;
-  private final String regex;
-  private final String grokPatternDefinition;
-  private final String grokPattern;
-  private final List<RegExConfig> fieldPathsToGroupName;
-  private final boolean enableLog4jCustomLogFormat;
-  private final String log4jCustomLogFormat;
-  private final int maxStackTraceLines;
-  private final OnParseError onParseError;
-  private final String avroSchema;
-  private final CsvRecordType csvRecordType;
+  private final SpoolDirConfigBean conf;
 
-  public SpoolDirSource(DataFormat dataFormat, String charset, boolean removeCtrlChars, int overrunLimit,
-      String spoolDir, int batchSize, long poolingTimeoutSecs,
-      String filePattern, int maxSpoolFiles, String initialFileToProcess, Compression fileCompression,
-      String filePatternInArchive, String errorArchiveDir, PostProcessingOptions postProcessing, String archiveDir,
-      long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter,
-      char csvCustomEscape, char csvCustomQuote, JsonMode jsonContent, int jsonMaxObjectLen,
-      int textMaxLineLen, String xmlRecordElement, int xmlMaxObjectLen, LogMode logMode, int logMaxObjectLen,
-      boolean retainOriginalLine, String customLogFormat, String regex, List<RegExConfig> fieldPathsToGroupName,
-      String grokPatternDefinition, String grokPattern, boolean enableLog4jCustomLogFormat,
-      String log4jCustomLogFormat, OnParseError onParseError, int maxStackTraceLines, String avroSchema,
-      CsvRecordType csvRecordType) {
-    this.dataFormat = dataFormat;
-    this.charset = charset;
-    this.removeCtrlChars = removeCtrlChars;
-    this.overrunLimit = overrunLimit * 1024;
-    this.spoolDir = spoolDir;
-    this.batchSize = batchSize;
-    this.poolingTimeoutSecs = poolingTimeoutSecs;
-    this.filePattern = filePattern;
-    this.maxSpoolFiles = maxSpoolFiles;
-    this.initialFileToProcess = initialFileToProcess;
-    this.fileCompression = fileCompression;
-    this.filePatternInArchive = filePatternInArchive;
-    this.errorArchiveDir = errorArchiveDir;
-    this.postProcessing = postProcessing;
-    this.archiveDir = archiveDir;
-    this.retentionTimeMins = retentionTimeMins;
-    this.csvFileFormat = csvFileFormat;
-    this.csvHeader = csvHeader;
-    this.csvMaxObjectLen = csvMaxObjectLen;
-    this.csvCustomDelimiter = csvCustomDelimiter;
-    this.csvCustomEscape = csvCustomEscape;
-    this.csvCustomQuote = csvCustomQuote;
-    this.jsonContent = jsonContent;
-    this.jsonMaxObjectLen = jsonMaxObjectLen;
-    this.textMaxLineLen = textMaxLineLen;
-    this.xmlRecordElement = xmlRecordElement;
-    this.xmlMaxObjectLen = xmlMaxObjectLen;
-    this.logMode = logMode;
-    this.logMaxObjectLen = logMaxObjectLen;
-    this.logRetainOriginalLine = retainOriginalLine;
-    this.customLogFormat = customLogFormat;
-    this.regex = regex;
-    this.fieldPathsToGroupName = fieldPathsToGroupName;
-    this.grokPatternDefinition = grokPatternDefinition;
-    this.grokPattern = grokPattern;
-    this.enableLog4jCustomLogFormat = enableLog4jCustomLogFormat;
-    this.log4jCustomLogFormat = log4jCustomLogFormat;
-    this.onParseError = onParseError;
-    this.maxStackTraceLines = maxStackTraceLines;
-    this.avroSchema = avroSchema;
-    this.csvRecordType = csvRecordType;
+  public SpoolDirSource(SpoolDirConfigBean conf) {
+    this.conf = conf;
   }
 
-  private Charset fileCharset;
   private DirectorySpooler spooler;
   private File currentFile;
   private DataParserFactory parserFactory;
   private DataParser parser;
-  private LogDataFormatValidator logDataFormatValidator;
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    validateDir(spoolDir, Groups.FILES.name(), "spoolDir", issues);
+    validateDir(conf.spoolDir, Groups.FILES.name(), "spoolDir", issues);
 
-    if (overrunLimit < MIN_OVERRUN_LIMIT || overrunLimit > DataFormatConstants.MAX_OVERRUN_LIMIT) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06,
-        String.format("%.4f", (DataFormatConstants.MAX_OVERRUN_LIMIT * 1.0) / 1024)));
+    // Whether overrunLimit is less than max limit is validated by DataParserFormatConfig.
+    if (conf.overrunLimit * 1024 < MIN_OVERRUN_LIMIT) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06));
     }
 
-    if (batchSize < 1) {
+    if (conf.batchSize < 1) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "batchSize", Errors.SPOOLDIR_14));
     }
 
-    if (poolingTimeoutSecs < 1) {
+    if (conf.poolingTimeoutSecs < 1) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "poolingTimeoutSecs", Errors.SPOOLDIR_15));
     }
 
     validateFilePattern(issues);
 
-    if (maxSpoolFiles < 1) {
+    if (conf.maxSpoolFiles < 1) {
       issues.add(getContext().createConfigIssue(Groups.FILES.name(), "maxSpoolFiles", Errors.SPOOLDIR_17));
     }
 
     validateInitialFileToProcess(issues);
 
-    if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
-      validateDir(errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
+    if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
+      validateDir(conf.errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
     }
 
-    if (postProcessing == PostProcessingOptions.ARCHIVE) {
-      if (archiveDir != null && !archiveDir.isEmpty()) {
-        validateDir(archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
+    if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
+      if (conf.archiveDir != null && !conf.archiveDir.isEmpty()) {
+        validateDir(conf.archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
       } else {
         issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.SPOOLDIR_11));
       }
-      if (retentionTimeMins < 0) {
+      if (conf.retentionTimeMins < 0) {
         issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
       }
     }
 
+    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.FILES.name(), conf.overrunLimit * 1024, issues);
 
-    switch (dataFormat) {
-      case JSON:
-        if (jsonMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.JSON.name(), "jsonMaxObjectLen", Errors.SPOOLDIR_20));
-        }
-        break;
-      case TEXT:
-        if (textMaxLineLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.TEXT.name(), "textMaxLineLen", Errors.SPOOLDIR_20));
-        }
-        break;
-      case DELIMITED:
-        if (csvMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.DELIMITED.name(), "csvMaxObjectLen", Errors.SPOOLDIR_20));
-        }
-        break;
-      case XML:
-        if (xmlMaxObjectLen < 1) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlMaxObjectLen", Errors.SPOOLDIR_20));
-        }
-        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
-          issues.add(getContext().createConfigIssue(Groups.XML.name(), "xmlRecordElement", Errors.SPOOLDIR_23,
-                                                    xmlRecordElement));
-        }
-        break;
-      case SDC_JSON:
-        break;
-      case AVRO:
-        break;
-      case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(logMode, logMaxObjectLen,
-          logRetainOriginalLine, customLogFormat, regex, grokPatternDefinition, grokPattern,
-          enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines, Groups.LOG.name(),
-          getFieldPathToGroupMap(fieldPathsToGroupName));
-        logDataFormatValidator.validateLogFormatConfig(issues, getContext());
-        break;
-      default:
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "dataFormat", Errors.SPOOLDIR_10,
-                                                  dataFormat));
-        break;
-    }
     if (issues.isEmpty()) {
-      validateDataParser(issues);
+      parserFactory = conf.dataFormatConfig.getParserFactory();
 
       if (getContext().isPreview()) {
-        poolingTimeoutSecs = 1;
+        conf.poolingTimeoutSecs = 1;
       }
 
       DirectorySpooler.Builder builder =
-          DirectorySpooler.builder().setDir(spoolDir).setFilePattern(filePattern)
-                          .setMaxSpoolFiles(maxSpoolFiles)
-                          .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(postProcessing.name()));
-      if (postProcessing == PostProcessingOptions.ARCHIVE) {
-        builder.setArchiveDir(archiveDir);
-        builder.setArchiveRetention(retentionTimeMins);
+          DirectorySpooler.builder().setDir(conf.spoolDir).setFilePattern(conf.filePattern)
+                          .setMaxSpoolFiles(conf.maxSpoolFiles)
+                          .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()));
+      if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
+        builder.setArchiveDir(conf.archiveDir);
+        builder.setArchiveRetention(conf.retentionTimeMins);
       }
-      if (errorArchiveDir != null && !errorArchiveDir.isEmpty()) {
-        builder.setErrorArchiveDir(errorArchiveDir);
+      if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
+        builder.setErrorArchiveDir(conf.errorArchiveDir);
       }
       builder.setContext(getContext());
       spooler = builder.build();
-      spooler.init(initialFileToProcess);
+      spooler.init(conf.initialFileToProcess);
     }
 
     return issues;
@@ -300,93 +148,29 @@ public class SpoolDirSource extends BaseSource {
   }
 
   private void validateFilePattern(List<ConfigIssue> issues) {
-    if(filePattern == null || filePattern.trim().isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_32, filePattern));
+    if (conf.filePattern == null || conf.filePattern.trim().isEmpty()) {
+      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_32, conf.filePattern));
     } else {
       try {
-        DirectorySpooler.createPathMatcher(filePattern);
+        DirectorySpooler.createPathMatcher(conf.filePattern);
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, filePattern,
+        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, conf.filePattern,
           ex.toString(), ex));
       }
     }
   }
 
   private void validateInitialFileToProcess(List<ConfigIssue> issues) {
-    if (initialFileToProcess != null && !initialFileToProcess.isEmpty()) {
+    if (conf.initialFileToProcess != null && !conf.initialFileToProcess.isEmpty()) {
       try {
-        PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(filePattern);
-        if (!pathMatcher.matches(new File(initialFileToProcess).toPath())) {
+        PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(conf.filePattern);
+        if (!pathMatcher.matches(new File(conf.initialFileToProcess).toPath())) {
           issues.add(getContext().createConfigIssue(Groups.FILES.name(), "initialFileToProcess", Errors.SPOOLDIR_18,
-                                                    initialFileToProcess, filePattern));
+                                                    conf.initialFileToProcess, conf.filePattern));
         }
       } catch (Exception ex) {
       }
     }
-  }
-
-  private void validateDataParser(List<ConfigIssue> issues) {
-    DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), dataFormat.getParserFormat());
-
-    try {
-      fileCharset = Charset.forName(charset);
-    } catch (UnsupportedCharsetException ex) {
-      // setting it to a valid one so the parser factory can be configured and tested for more errors
-      fileCharset = StandardCharsets.UTF_8;
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "charset", Errors.SPOOLDIR_05, charset));
-    }
-    builder.setCharset(fileCharset);
-    builder.setOverRunLimit(overrunLimit);
-    builder.setRemoveCtrlChars(removeCtrlChars);
-    builder.setCompression(fileCompression);
-    builder.setFilePatternInArchive(filePatternInArchive);
-    switch (dataFormat) {
-      case TEXT:
-        builder.setMaxDataLen(textMaxLineLen);
-        break;
-      case JSON:
-        builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
-        break;
-      case DELIMITED:
-        builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
-               .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
-               .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
-               .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);
-        break;
-      case XML:
-        builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement);
-        break;
-      case SDC_JSON:
-        builder.setMaxDataLen(-1);
-        initialFileToProcess = "";
-        maxSpoolFiles = 10000;
-        break;
-      case LOG:
-        logDataFormatValidator.populateBuilder(builder);
-        break;
-      case AVRO:
-        builder.setMaxDataLen(-1).setConfig(AvroDataParserFactory.SCHEMA_KEY, avroSchema);
-        break;
-      default:
-        // no action needed
-        break;
-    }
-    try {
-      parserFactory = builder.build();
-    } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(null, null, Errors.SPOOLDIR_24, ex.toString(), ex));
-    }
-  }
-
-  private Map<String, Integer> getFieldPathToGroupMap(List<RegExConfig> fieldPathsToGroupName) {
-    if(fieldPathsToGroupName == null) {
-      return new HashMap<>();
-    }
-    Map<String, Integer> fieldPathToGroup = new HashMap<>();
-    for(RegExConfig r : fieldPathsToGroupName) {
-      fieldPathToGroup.put(r.fieldPath, r.group);
-    }
-    return fieldPathToGroup;
   }
 
   @Override
@@ -468,7 +252,7 @@ public class SpoolDirSource extends BaseSource {
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
-    int batchSize = Math.min(this.batchSize, maxBatchSize);
+    int batchSize = Math.min(conf.batchSize, maxBatchSize);
     // if lastSourceOffset is NULL (beginning of source) it returns NULL
     String file = getFileFromSourceOffset(lastSourceOffset);
     // if lastSourceOffset is NULL (beginning of source) it returns 0
@@ -482,13 +266,13 @@ public class SpoolDirSource extends BaseSource {
             LOG.warn("Ignoring file '{}' in spool directory as is lesser than offset file '{}'",
                      nextAvailFile.getName(), file);
           }
-          nextAvailFile = getSpooler().poolForFile(poolingTimeoutSecs, TimeUnit.SECONDS);
+          nextAvailFile = getSpooler().poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
         } while (!isFileFromSpoolerEligible(nextAvailFile, file, offset));
 
         if (nextAvailFile == null) {
           // no file to process
           LOG.debug("No new file available in spool directory after '{}' secs, producing empty batch",
-                    poolingTimeoutSecs);
+                    conf.poolingTimeoutSecs);
         } else {
           // file to process
           currentFile = nextAvailFile;
@@ -540,7 +324,7 @@ public class SpoolDirSource extends BaseSource {
     String sourceFile = file.getName();
     try {
       if (parser == null) {
-        if (dataFormat == DataFormat.AVRO) {
+        if (conf.dataFormat == DataFormat.AVRO) {
           parser = parserFactory.getParser(file, offset);
         } else {
           parser = parserFactory.getParser(file.getName(), new FileInputStream(file), offset);
@@ -576,7 +360,7 @@ public class SpoolDirSource extends BaseSource {
         }
       }
     } catch (IOException|DataParserException ex) {
-      if(ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
+      if (ex instanceof ClosedByInterruptException || ex.getCause() instanceof ClosedByInterruptException) {
         //If the pipeline was stopped, we may get a ClosedByInterruptException while reading avro data.
         //This is because the thread is interrupted when the pipeline is stopped.
         //Instead of sending the file to error, publish batch and move one.

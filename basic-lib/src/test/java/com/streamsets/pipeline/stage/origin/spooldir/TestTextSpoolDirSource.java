@@ -22,7 +22,6 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -66,11 +65,28 @@ public class TestTextSpoolDirSource {
   }
 
   private SpoolDirSource createSource(String charset) {
-    return new SpoolDirSource(DataFormat.TEXT, charset, false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null,
-      Compression.NONE, "*",  null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.charset = charset;
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.overrunLimit = 100;
+    conf.spoolDir = createTestDir();
+    conf.batchSize = 10;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = createTestDir();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   public void testProduceFullFile(String charset) throws Exception {

@@ -58,11 +58,33 @@ public class TestSpoolDirSourceOnErrorHandling {
     writer = new FileWriter(file2);
     IOUtils.write("x,y", writer);
     writer.close();
-    return new SpoolDirSource(DataFormat.DELIMITED, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].csv", 10, null,
-      Compression.NONE, "*",  null,
-                              PostProcessingOptions.ARCHIVE, dir, 10, CsvMode.RFC4180, CsvHeader.NO_HEADER,
-                              5, '^', '^', '^', null, 0, 10, null, 0, null, 0, false, null, null, null, null, null,
-                              false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.spoolDir = dir;
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].csv";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = dir;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.RFC4180;
+    conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 5;
+    conf.dataFormatConfig.csvCustomDelimiter = '^';
+    conf.dataFormatConfig.csvCustomEscape = '^';
+    conf.dataFormatConfig.csvCustomQuote = '^';
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = -1;
+
+    return new SpoolDirSource(conf);
   }
 
   @Test
@@ -141,11 +163,28 @@ public class TestSpoolDirSourceOnErrorHandling {
     writer = new FileWriter(file2);
     IOUtils.write("[2]", writer);
     writer.close();
-    return new SpoolDirSource(DataFormat.JSON, "UTF-8", false, 100, dir, 10, 1, "file-[0-9].json", 10, null,
-                              Compression.NONE, "*",  null,
-                              PostProcessingOptions.ARCHIVE, dir, 10, null, null, 5, '^', '^', '^',
-                              JsonMode.ARRAY_OBJECTS, 100, 10, null, 0, null, 0, false, null, null, null, null,
-                              null, false, null, OnParseError.ERROR, -1, null, CsvRecordType.LIST);
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.JSON;
+    conf.spoolDir = dir;
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].json";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = dir;
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 100;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   @Test

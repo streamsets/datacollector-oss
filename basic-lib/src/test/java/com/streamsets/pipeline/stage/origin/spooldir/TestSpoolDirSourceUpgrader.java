@@ -33,19 +33,19 @@ public class TestSpoolDirSourceUpgrader {
   public void testSpoolDirSourceUpgrader() throws StageException {
     SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
 
-    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 4, new ArrayList<Config>());
+    List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 5, new ArrayList<Config>());
     Assert.assertEquals(6, upgrade.size());
-    Assert.assertEquals("fileCompression", upgrade.get(0).getName());
+    Assert.assertEquals("conf.dataFormatConfig.compression", upgrade.get(0).getName());
     Assert.assertEquals("NONE", upgrade.get(0).getValue());
-    Assert.assertEquals("csvCustomDelimiter", upgrade.get(1).getName());
+    Assert.assertEquals("conf.dataFormatConfig.csvCustomDelimiter", upgrade.get(1).getName());
     Assert.assertEquals('|', upgrade.get(1).getValue());
-    Assert.assertEquals("csvCustomEscape", upgrade.get(2).getName());
+    Assert.assertEquals("conf.dataFormatConfig.csvCustomEscape", upgrade.get(2).getName());
     Assert.assertEquals('\\', upgrade.get(2).getValue());
-    Assert.assertEquals("csvCustomQuote", upgrade.get(3).getName());
+    Assert.assertEquals("conf.dataFormatConfig.csvCustomQuote", upgrade.get(3).getName());
     Assert.assertEquals('\"', upgrade.get(3).getValue());
-    Assert.assertEquals("csvRecordType", upgrade.get(4).getName());
+    Assert.assertEquals("conf.dataFormatConfig.csvRecordType", upgrade.get(4).getName());
     Assert.assertEquals("LIST", upgrade.get(4).getValue());
-    Assert.assertEquals("filePatternInArchive", upgrade.get(5).getName());
+    Assert.assertEquals("conf.dataFormatConfig.filePatternInArchive", upgrade.get(5).getName());
     Assert.assertEquals("*", upgrade.get(5).getValue());
 
   }

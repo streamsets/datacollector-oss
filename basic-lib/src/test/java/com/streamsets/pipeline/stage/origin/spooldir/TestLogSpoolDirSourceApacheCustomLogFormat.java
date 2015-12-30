@@ -23,12 +23,10 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
@@ -38,7 +36,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,11 +63,31 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
   }
 
   private SpoolDirSource createSource() {
-    return new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1, "file-[0-9].log", 10, null,
-      Compression.NONE, "*",  null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
-      null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.LOG;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.overrunLimit = 100;
+    conf.spoolDir = createTestDir();
+    conf.batchSize = 10;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = createTestDir();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.logMode = LogMode.APACHE_CUSTOM_LOG_FORMAT;
+    conf.dataFormatConfig.logMaxObjectLen = 1000;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.customLogFormat = CUSTOM_LOG_FORMAT;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   @Test
@@ -259,11 +276,31 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
 
   @Test(expected = StageException.class)
   public void testInvalidFormat() throws StageException {
-    SpoolDirSource spoolDirSource = new SpoolDirSource(DataFormat.LOG, "UTF-8", false, 100, createTestDir(), 10, 1,
-      "file-[0-9].log", 10, null, Compression.NONE, "*",  null,
-      PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, -1, '^', '^', '^', null, 0, 0,
-      null, 0, LogMode.APACHE_CUSTOM_LOG_FORMAT, 1000, true, INVALID_CUSTOM_LOG_FORMAT, null,
-      Collections.<RegExConfig>emptyList(), null, null, false, null, OnParseError.ERROR, 0, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.LOG;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.overrunLimit = 100;
+    conf.spoolDir = createTestDir();
+    conf.batchSize = 10;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = createTestDir();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.logMode = LogMode.APACHE_CUSTOM_LOG_FORMAT;
+    conf.dataFormatConfig.logMaxObjectLen = 1000;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.customLogFormat = INVALID_CUSTOM_LOG_FORMAT;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    SpoolDirSource spoolDirSource = new SpoolDirSource(conf);
     SourceRunner runner = new SourceRunner.Builder(SpoolDirDSource.class, spoolDirSource).addOutputLane("lane").build();
     runner.runInit();
   }

@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum DataFormatErrors implements ErrorCode {
   // Configuration errors
   DATA_FORMAT_01("Max data object length cannot be less than 1"),
-  DATA_FORMAT_02("XML delimiter element cannot be empty"),
   DATA_FORMAT_03("Invalid XML element name '{}'"),
   DATA_FORMAT_04("Unsupported data format '{}'"),
   DATA_FORMAT_05("Unsupported charset '{}'"),

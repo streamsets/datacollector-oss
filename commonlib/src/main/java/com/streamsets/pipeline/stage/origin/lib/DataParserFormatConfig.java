@@ -565,16 +565,7 @@ public class DataParserFormatConfig {
               DataFormatErrors.DATA_FORMAT_01));
           valid = false;
         }
-        if (xmlRecordElement == null || xmlRecordElement.isEmpty()) {
-          issues.add(
-              context.createConfigIssue(
-                  DataFormatGroups.XML.name(),
-                  "xmlRecordElement",
-                  DataFormatErrors.DATA_FORMAT_02
-              )
-          );
-          valid = false;
-        } else if (!XMLChar.isValidName(xmlRecordElement)) {
+        if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
           issues.add(
               context.createConfigIssue(DataFormatGroups.XML.name(),
                   "xmlRecordElement",

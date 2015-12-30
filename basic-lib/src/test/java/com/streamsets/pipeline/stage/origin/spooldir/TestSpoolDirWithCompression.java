@@ -23,7 +23,6 @@ import com.google.common.io.Resources;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
@@ -182,35 +181,94 @@ public class TestSpoolDirWithCompression {
   }
 
   private SpoolDirSource createZipSource() {
-    return new SpoolDirSource(DataFormat.TEXT, "UTF-8", false, 65, testDir.getAbsolutePath(), 1000, 1,
-      "logArchive*.zip", 10, null, Compression.ARCHIVE, "*/*.log",  null,
-      PostProcessingOptions.NONE, testDir.getAbsolutePath(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = testDir.getAbsolutePath();
+    conf.batchSize = 1000;
+    conf.overrunLimit = 65;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "logArchive*.zip";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.ARCHIVE;
+    conf.dataFormatConfig.filePatternInArchive = "*/*.log";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.archiveDir = testDir.getAbsolutePath();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   private SpoolDirSource createTarGzipSource() {
-    return new SpoolDirSource(DataFormat.TEXT, "UTF-8", false, 65, testDir.getAbsolutePath(), 1000, 1,
-      "logArchive*.tar.gz", 10, null, Compression.COMPRESSED_ARCHIVE, "*/[!.]*.log",  null,
-      PostProcessingOptions.NONE, testDir.getAbsolutePath(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = testDir.getAbsolutePath();
+    conf.batchSize = 1000;
+    conf.overrunLimit = 65;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "logArchive*.tar.gz";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
+    conf.dataFormatConfig.filePatternInArchive = "*/[!.]*.log";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.archiveDir = testDir.getAbsolutePath();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   private SpoolDirSource createTarGzipAvroSource() {
-    return new SpoolDirSource(DataFormat.AVRO, "UTF-8", false, 65, testDir.getAbsolutePath(), 1000, 1,
-      "testAvro*.tar.gz", 10, null, Compression.COMPRESSED_ARCHIVE, "[!.]*.avro",  null,
-      PostProcessingOptions.NONE, testDir.getAbsolutePath(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.AVRO;
+    conf.spoolDir = testDir.getAbsolutePath();
+    conf.batchSize = 1000;
+    conf.overrunLimit = 65;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "testAvro*.tar.gz";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.COMPRESSED_ARCHIVE;
+    conf.dataFormatConfig.filePatternInArchive = "[!.]*.avro";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.archiveDir = testDir.getAbsolutePath();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
   private SpoolDirSource createBz2Source() {
-    return new SpoolDirSource(DataFormat.TEXT, "UTF-8", false, 65, testDir.getAbsolutePath(), 1000, 1,
-      "testFile*.bz2", 10, null, Compression.COMPRESSED_FILE, "*",  null,
-      PostProcessingOptions.NONE, testDir.getAbsolutePath(), 10, null, null, -1, '^', '^', '^', null, 0, 10,
-      null, 0, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR,
-      -1, null, CsvRecordType.LIST);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = testDir.getAbsolutePath();
+    conf.batchSize = 1000;
+    conf.overrunLimit = 65;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "testFile*.bz2";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = null;
+    conf.dataFormatConfig.compression = Compression.COMPRESSED_FILE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.archiveDir = testDir.getAbsolutePath();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new SpoolDirSource(conf);
   }
 
 }

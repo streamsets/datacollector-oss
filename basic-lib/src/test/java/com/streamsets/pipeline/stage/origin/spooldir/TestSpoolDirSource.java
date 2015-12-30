@@ -22,11 +22,7 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.sdk.SourceRunner;
@@ -58,19 +54,9 @@ public class TestSpoolDirSource {
     boolean produceCalled;
     String spoolDir;
 
-    public TSpoolDirSource(DataFormat dataFormat, String spoolDir, int batchSize, long poolingTimeoutSecs,
-        String filePattern,
-        int maxSpoolFiles, String initialFileToProcess, String errorArchiveDir, PostProcessingOptions postProcessing,
-        String archiveDir, long retentionTimeMins, CsvMode csvFileFormat, CsvHeader csvHeaders,
-        JsonMode jsonContent, int maxJsonObjectLen, int maxLogLineLength, String xmlRecordElement,
-        int maxXmlObjectLen) {
-      super(dataFormat, "UTF-8", false, 100, spoolDir, batchSize, poolingTimeoutSecs, filePattern, maxSpoolFiles,
-        initialFileToProcess, Compression.NONE, "*",  errorArchiveDir, postProcessing, archiveDir, retentionTimeMins,
-        csvFileFormat,
-        csvHeaders, -1, 'A', 'A', 'A', jsonContent, maxJsonObjectLen, maxLogLineLength, xmlRecordElement,
-        maxXmlObjectLen, null, 0, false, null, null, null, null, null, false, null, OnParseError.ERROR, -1, null,
-        CsvRecordType.LIST);
-      this.spoolDir = spoolDir;
+    public TSpoolDirSource(SpoolDirConfigBean conf) {
+      super(conf);
+      this.spoolDir = conf.spoolDir;
     }
 
     @Override
@@ -86,9 +72,26 @@ public class TestSpoolDirSource {
   }
 
   private TSpoolDirSource createSource(String initialFile) {
-    return new TSpoolDirSource(DataFormat.TEXT, createTestDir(), 10, 1, "file-[0-9].log", 10, initialFile, null,
-                               PostProcessingOptions.ARCHIVE, createTestDir(), 10, null, null, null,
-                               0, 1024, null, 0);
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = createTestDir();
+    conf.batchSize = 10;
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 1;
+    conf.filePattern = "file-[0-9].log";
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = initialFile;
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.errorArchiveDir = null;
+    conf.postProcessing = PostProcessingOptions.ARCHIVE;
+    conf.archiveDir = createTestDir();
+    conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.textMaxLineLen = 10;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+    conf.dataFormatConfig.maxStackTraceLines = 0;
+
+    return new TSpoolDirSource(conf);
   }
 
   @Test

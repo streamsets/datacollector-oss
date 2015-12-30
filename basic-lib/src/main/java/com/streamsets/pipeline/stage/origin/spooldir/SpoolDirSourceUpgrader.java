@@ -19,17 +19,25 @@
  */
 package com.streamsets.pipeline.stage.origin.spooldir;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SpoolDirSourceUpgrader implements StageUpgrader {
 
-  public static final String FILE_COMPRESSION = "fileCompression";
+  private static final String CONF = "conf";
+  private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
+  private static final String FILE_COMPRESSION = "fileCompression";
+  private static final Joiner joiner = Joiner.on(".");
+
+  private final List<Config> configsToRemove = new ArrayList<>();
+  private final List<Config> configsToAdd = new ArrayList<>();
 
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
@@ -41,11 +49,77 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         upgradeV2ToV3(configs);
       case 3:
         upgradeV3ToV4(configs);
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "dataFormat":
+        case "spoolDir":
+        case "overrunLimit":
+        case "batchSize":
+        case "poolingTimeoutSecs":
+        case "filePattern":
+        case "maxSpoolFiles":
+        case "initialFileToProcess":
+        case "errorArchiveDir":
+        case "postProcessing":
+        case "archiveDir":
+        case "retentionTimeMins":
+          configsToAdd.add(new Config(joiner.join(CONF, config.getName()), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "charset":
+        case "removeCtrlChars":
+        case "filePatternInArchive":
+        case "csvFileFormat":
+        case "csvHeader":
+        case "csvMaxObjectLen":
+        case "csvCustomDelimiter":
+        case "csvCustomEscape":
+        case "csvCustomQuote":
+        case "csvRecordType":
+        case "jsonContent":
+        case "jsonMaxObjectLen":
+        case "xmlRecordElement":
+        case "xmlMaxObjectLen":
+        case "logMode":
+        case "logMaxObjectLen":
+        case "retainOriginalLine":
+        case "customLogFormat":
+        case "regex":
+        case "fieldPathsToGroupName":
+        case "grokPatternDefinition":
+        case "grokPattern":
+        case "onParseError":
+        case "maxStackTraceLines":
+        case "enableLog4jCustomLogFormat":
+        case "log4jCustomLogFormat":
+        case "avroSchema":
+          configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, config.getName()), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "fileCompression":
+          configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, "compression"), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "textMaxObjectLen":
+          configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, "textMaxLineLen"), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no op
+      }
+    }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 
   private void upgradeV3ToV4(List<Config> configs) {
