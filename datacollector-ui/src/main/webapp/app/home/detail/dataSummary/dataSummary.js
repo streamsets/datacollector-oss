@@ -27,6 +27,7 @@ angular
 
   .controller('DataSummaryController', function ($scope) {
     angular.extend($scope, {
+      allDataRuleDefinitions: $scope.pipelineRules.dataRuleDefinitions.concat($scope.pipelineRules.driftRuleDefinitions),
       getTooltipContent: function() {
         return function(key, x, y, e, graph) {
           return '<p>' + x + '</p><p>' + e.value.toFixed(2) + '</p>';

@@ -1464,6 +1464,16 @@ angular
             }
           });
 
+          angular.forEach(rules.driftRuleDefinitions, function(rule, index) {
+            var savedRule = _.find(res.driftRuleDefinitions, function(savedRule) {
+              return savedRule.id === rule.id;
+            });
+
+            if(savedRule) {
+              rule.valid = savedRule.valid;
+            }
+          });
+
           if (rulesDirty) {
             saveRulesUpdate(rules);
           }

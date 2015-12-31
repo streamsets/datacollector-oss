@@ -243,6 +243,7 @@
         "stageVersion": "Stage Version"
       },
       "custom": "Custom",
+      "dataDriftRules": "Data Drift Rules",
       "dataRules": "Data Rules",
       "dataSummaryTab": {
         "allSampledRecords": "All",
@@ -299,6 +300,8 @@
         "condition": "Condition",
         "conditionPlaceholder": "Rule Condition in Expression Language",
         "counter": "Counter",
+        "dataDriftRule": "Data Drift Rule",
+        "dataDriftRules": "Data Drift Rules",
         "dataRule":"Data Rule",
         "dataRules": "Data Rules",
         "deleteRuleTooltip": "Delete Rule",
@@ -323,6 +326,7 @@
         "metricType": "Metric Type",
         "minVolumePlaceholder": "Min Volume",
         "newDataRule": "New Data Rule",
+        "noDataDriftRules": "No Data Drift Rules to view.",
         "noDataRules": "No Data Rules to view.",
         "noMetricAlertRules": "No Metric Alert Rules to view.",
         "samplingPercentage": "Sampling Percentage",

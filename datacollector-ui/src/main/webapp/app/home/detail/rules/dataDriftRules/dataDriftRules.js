@@ -19,13 +19,13 @@
  */
 
 /**
- * Controller for Data Rules tab.
+ * Controller for Drift Data Rules tab.
  */
 
 angular
   .module('dataCollectorApp.home')
 
-  .controller('DataRulesController', function ($scope, $rootScope, $modal, pipelineConstant,
+  .controller('DataDriftRulesController', function ($scope, $rootScope, $modal, pipelineConstant,
                                                pipelineService, previewService) {
     var stageInstances = $scope.pipelineConfig.stages;
 
@@ -52,8 +52,8 @@ angular
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Add Data Rule', 1);
 
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/detail/rules/dataRules/editDataRule.tpl.html',
-          controller: 'CreateDataRuleModalInstanceController',
+          templateUrl: 'app/home/detail/rules/dataDriftRules/editDataDriftRule.tpl.html',
+          controller: 'CreateDataDriftRuleModalInstanceController',
           size: 'lg',
           backdrop: 'static',
           resolve: {
@@ -67,7 +67,7 @@ angular
               }
             },
             rulesElMetadata: function() {
-              return pipelineService.getGeneralRulesElMetadata();
+              return pipelineService.getDriftRulesElMetadata();
             },
             alertTextElMetadata: function() {
               return pipelineService.getAlertTextElMetadata();
@@ -83,7 +83,7 @@ angular
 
         modalInstance.result.then(function (newDataRuleDefn) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Save Data Rule', 1);
-          $scope.pipelineRules.dataRuleDefinitions.push(newDataRuleDefn);
+          $scope.pipelineRules.driftRuleDefinitions.push(newDataRuleDefn);
         }, function () {
 
         });
@@ -93,7 +93,7 @@ angular
       /**
        * Callback function for Edit Data Rule button.
        */
-      editDataRule: function(dataRuleDefn, index, $event) {
+      editDataRule: function(dataDriftRuleDefn, index, $event) {
 
         if($event) {
           $event.stopPropagation();
@@ -105,16 +105,16 @@ angular
         }
 
         var modalInstance = $modal.open({
-          templateUrl: 'app/home/detail/rules/dataRules/editDataRule.tpl.html',
-          controller: 'EditDataRuleModalInstanceController',
+          templateUrl: 'app/home/detail/rules/dataDriftRules/editDataDriftRule.tpl.html',
+          controller: 'EditDataDriftRuleModalInstanceController',
           size: 'lg',
           backdrop: 'static',
           resolve: {
-            dataRuleDefn: function () {
-              return angular.copy(dataRuleDefn);
+            dataDriftRuleDefn: function () {
+              return angular.copy(dataDriftRuleDefn);
             },
             rulesElMetadata: function() {
-              return pipelineService.getGeneralRulesElMetadata();
+              return pipelineService.getDriftRulesElMetadata();
             },
             alertTextElMetadata: function() {
               return pipelineService.getAlertTextElMetadata();
@@ -129,7 +129,7 @@ angular
         });
 
         modalInstance.result.then(function (newDataRuleDefn) {
-          angular.copy(newDataRuleDefn, dataRuleDefn);
+          angular.copy(newDataRuleDefn, dataDriftRuleDefn);
         }, function () {
 
         });
@@ -164,13 +164,13 @@ angular
        *
        * @returns {*}
        */
-      getFilteredDataRules: function() {
+      getFilteredDataDriftRules: function() {
         if($scope.selectedType === pipelineConstant.LINK) {
-          return _.filter($scope.pipelineRules.dataRuleDefinitions, function(rule) {
+          return _.filter($scope.pipelineRules.driftRuleDefinitions, function(rule) {
             return rule.lane === $scope.selectedObject.outputLane;
           });
         } else {
-          return $scope.pipelineRules.dataRuleDefinitions;
+          return $scope.pipelineRules.driftRuleDefinitions;
         }
       }
     });
@@ -205,7 +205,7 @@ angular
 
   })
 
-  .controller('CreateDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, $timeout,
+  .controller('CreateDataDriftRuleModalInstanceController', function ($scope, $modalInstance, $translate, $timeout,
                                                                  pipelineService, laneName, rulesElMetadata, fieldPaths,
                                                                  streamLabelMap, alertTextElMetadata) {
 
@@ -214,8 +214,8 @@ angular
       common: {
         errors: []
       },
-      dataRuleDefn: {
-        id: 'dataRule' + (new Date()).getTime(),
+      dataDriftRuleDefn: {
+        id: 'dataDriftRule' + (new Date()).getTime(),
         label: '',
         lane: laneName,
         condition: '',
@@ -223,9 +223,6 @@ angular
         samplingRecordsToRetain: 10,
         alertEnabled: true,
         alertText: '',
-        thresholdType: 'COUNT',
-        thresholdValue: '100',
-        minVolume: 1000,
         sendEmail: false,
         meterEnabled: true,
         enabled: false
@@ -253,7 +250,7 @@ angular
       },
 
       save : function () {
-        $modalInstance.close($scope.dataRuleDefn);
+        $modalInstance.close($scope.dataDriftRuleDefn);
       },
       cancel : function () {
         $modalInstance.dismiss('cancel');
@@ -263,8 +260,8 @@ angular
     $scope.$broadcast('show-errors-check-validity');
   })
 
-  .controller('EditDataRuleModalInstanceController', function ($scope, $modalInstance, $translate, pipelineService,
-                                                               $timeout, dataRuleDefn, rulesElMetadata, fieldPaths,
+  .controller('EditDataDriftRuleModalInstanceController', function ($scope, $modalInstance, $translate, pipelineService,
+                                                               $timeout, dataDriftRuleDefn, rulesElMetadata, fieldPaths,
                                                                streamLabelMap, alertTextElMetadata) {
 
     angular.extend($scope, {
@@ -272,7 +269,7 @@ angular
       common: {
         errors: []
       },
-      dataRuleDefn: dataRuleDefn,
+      dataDriftRuleDefn: dataDriftRuleDefn,
       fieldPaths: fieldPaths,
       refreshCodemirror: false,
       streamLabelMap: streamLabelMap,
@@ -296,7 +293,7 @@ angular
       },
 
       save : function () {
-        $modalInstance.close($scope.dataRuleDefn);
+        $modalInstance.close($scope.dataDriftRuleDefn);
       },
       cancel : function () {
         $modalInstance.dismiss('cancel');

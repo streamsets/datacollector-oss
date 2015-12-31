@@ -335,6 +335,7 @@ angular.module('dataCollectorApp.common')
             duplicatePipelineRulesObject = res.data;
             duplicatePipelineRulesObject.metricsRuleDefinitions = pipelineRulesObject.metricsRuleDefinitions;
             duplicatePipelineRulesObject.dataRuleDefinitions = pipelineRulesObject.dataRuleDefinitions;
+            duplicatePipelineRulesObject.driftRuleDefinitions = pipelineRulesObject.driftRuleDefinitions;
             duplicatePipelineRulesObject.emailIds = pipelineRulesObject.emailIds;
 
             //Save the pipeline Rules

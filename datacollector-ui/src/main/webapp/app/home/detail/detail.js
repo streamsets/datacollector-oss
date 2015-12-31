@@ -72,6 +72,12 @@ angular
         iconClass: 'fa fa-list',
         helpId: 'data-rules-tab'
       },
+      dataDriftRulesTab = {
+        name:'dataDriftRules',
+        template:'app/home/detail/rules/dataDriftRules/dataDriftRules.tpl.html',
+        iconClass: 'fa fa-list',
+        helpId: 'data-drift-rules-tab'
+      },
       rulesTab = {
         name:'rules',
         template:'app/home/detail/rules/rules.tpl.html',
@@ -124,12 +130,12 @@ angular
           if(isPipelineRunning) {
             if(executionMode === pipelineConstant.CLUSTER || executionMode === pipelineConstant.CLUSTER_BATCH ||
               executionMode === pipelineConstant.CLUSTER_YARN_STREAMING || executionMode === pipelineConstant.CLUSTER_MESOS_STREAMING) {
-              return [dataRulesTab, infoTab];
+              return [dataRulesTab, dataDriftRulesTab, infoTab];
             } else {
-              return [dataSummaryTab, dataRulesTab, infoTab];
+              return [dataSummaryTab, dataRulesTab, dataDriftRulesTab, infoTab];
             }
           } else {
-            return [infoTab, dataRulesTab];
+            return [infoTab, dataRulesTab, dataDriftRulesTab];
           }
           break;
       }
@@ -299,8 +305,9 @@ angular
        * @param triggeredAlert
        */
       selectRulesTab: function(triggeredAlert) {
+        var rulesTabName = (triggeredAlert && triggeredAlert.type === 'DATA_DRIFT_ALERT' ? 'dataDriftRules' : 'dataRules');
         angular.forEach($scope.detailPaneTabs, function(tab) {
-          if(tab.name === 'rules' || tab.name === 'dataRules') {
+          if(tab.name === 'rules' || tab.name === rulesTabName) {
             tab.active = true;
           }
         });

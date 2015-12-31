@@ -65,21 +65,59 @@ angular.module('dataCollectorApp.common')
             self.stageDefinitions = definitions.stages;
             self.elCatalog = definitions.elCatalog;
 
-            angular.forEach(rulesElMetadata.elFunctionDefinitions, function(idx) {
+            //General Rules
+            angular.forEach(rulesElMetadata.general.elFunctionDefinitions, function(idx) {
               elFunctionDefinitions.push(self.elCatalog.elFunctionDefinitions[parseInt(idx)]);
             });
 
-            angular.forEach(rulesElMetadata.elConstantDefinitions, function(idx) {
+            angular.forEach(rulesElMetadata.general.elConstantDefinitions, function(idx) {
               elConstantDefinitions.push(self.elCatalog.elConstantDefinitions[parseInt(idx)]);
             });
 
-            self.rulesElMetadata = {
+            self.generalRulesElMetadata = {
               elFunctionDefinitions: elFunctionDefinitions,
               elConstantDefinitions: elConstantDefinitions,
               regex: 'wordColonSlash'
             };
 
-            self.metricRulesELMetadata = angular.copy(self.rulesElMetadata);
+            //Drift Rules
+            elFunctionDefinitions = [];
+            elConstantDefinitions = [];
+
+            angular.forEach(rulesElMetadata.drift.elFunctionDefinitions, function(idx) {
+              elFunctionDefinitions.push(self.elCatalog.elFunctionDefinitions[parseInt(idx)]);
+            });
+
+            angular.forEach(rulesElMetadata.drift.elConstantDefinitions, function(idx) {
+              elConstantDefinitions.push(self.elCatalog.elConstantDefinitions[parseInt(idx)]);
+            });
+
+            self.driftRulesElMetadata = {
+              elFunctionDefinitions: elFunctionDefinitions,
+              elConstantDefinitions: elConstantDefinitions,
+              regex: 'wordColonSlash'
+            };
+
+            //Alert Text Rules
+            elFunctionDefinitions = [];
+            elConstantDefinitions = [];
+
+            angular.forEach(rulesElMetadata.alert.elFunctionDefinitions, function(idx) {
+              elFunctionDefinitions.push(self.elCatalog.elFunctionDefinitions[parseInt(idx)]);
+            });
+
+            angular.forEach(rulesElMetadata.alert.elConstantDefinitions, function(idx) {
+              elConstantDefinitions.push(self.elCatalog.elConstantDefinitions[parseInt(idx)]);
+            });
+
+            self.alertTextElMetadata = {
+              elFunctionDefinitions: elFunctionDefinitions,
+              elConstantDefinitions: elConstantDefinitions,
+              regex: 'wordColonSlash'
+            };
+
+            //Metric Rules
+            self.metricRulesELMetadata = angular.copy(self.generalRulesElMetadata);
             self.metricRulesELMetadata.elFunctionDefinitions.push({
               name: "value",
               description: "Returns the value of the metric in context",
@@ -140,12 +178,30 @@ angular.module('dataCollectorApp.common')
     };
 
     /**
-     * Returns Rules EL Metadata
+     * Returns General Rules EL Metadata
      *
      * @returns {*}
      */
-    this.getRulesElMetadata = function() {
-      return self.rulesElMetadata;
+    this.getGeneralRulesElMetadata = function() {
+      return self.generalRulesElMetadata;
+    };
+
+    /**
+     * Returns Drift Rules EL Metadata
+     *
+     * @returns {*}
+     */
+    this.getDriftRulesElMetadata = function() {
+      return self.driftRulesElMetadata;
+    };
+
+    /**
+     * Returns Alert Text EL Metadata
+     *
+     * @returns {*}
+     */
+    this.getAlertTextElMetadata = function() {
+      return self.alertTextElMetadata;
     };
 
     /**
@@ -1351,6 +1407,18 @@ angular.module('dataCollectorApp.common')
             ruleDefinition: rule,
             gauge: gauges[gaugeName],
             type: 'DATA_ALERT'
+          });
+        }
+      });
+
+      angular.forEach(pipelineRules.driftRuleDefinitions, function(rule) {
+        var gaugeName = 'alert.' + rule.id + '.gauge';
+        if(gauges[gaugeName]) {
+          alerts.push({
+            pipelineName: pipelineName,
+            ruleDefinition: rule,
+            gauge: gauges[gaugeName],
+            type: 'DATA_DRIFT_ALERT'
           });
         }
       });

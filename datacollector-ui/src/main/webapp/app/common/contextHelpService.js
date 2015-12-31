@@ -33,7 +33,8 @@ angular.module('dataCollectorApp.common')
         "pipeline-monitoring": "index.html#Pipeline_Monitoring/PipelineMonitoring.html#concept_hsp_tnt_lq",
         "errors-tab": "index.html#Pipeline_Monitoring/MonitoringErrors.html#concept_pd3_crv_yr",
         "data-rules-tab": "index.html#Alerts/DataAlerts.html#concept_tpm_rsk_zq",
-        "metric-rules-tab": "index.html#Alerts/MetricAlerts.html#concept_abj_nsk_zq"
+        "metric-rules-tab": "index.html#Alerts/MetricAlerts.html#concept_abj_nsk_zq",
+        "data-drift-rules-tab": "index.html#Alerts/DataAlerts.html#concept_tpm_rsk_zq"  //TODO: Update the link
       },
       buildInfo = {},
       helpWindow;

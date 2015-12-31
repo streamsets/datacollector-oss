@@ -1,7 +1,7 @@
 <div class="container-fluid data-summary-tab" ng-controller="DataSummaryController">
 
   <div class="row"
-       ng-repeat="dataRuleDefn in dataRuleDefinitions = (pipelineRules.dataRuleDefinitions | filter: {lane: selectedObject.outputLane, enabled: true})">
+       ng-repeat="dataRuleDefn in dataRuleDefinitions = (allDataRuleDefinitions | filter: {lane: selectedObject.outputLane, enabled: true})">
 
     <div class="col-sm-12 col-md-12 col-lg-12">
       <div class="panel panel-default">
@@ -127,7 +127,7 @@
 
   </div>
 
-  <div class="row" ng-if="dataRuleDefinitions.length ===0">
+  <div class="row" ng-if="dataRuleDefinitions.length === 0">
     <div class="col-md-12" >
       <div class="alert alert-info" role="alert">
         <i class="fa fa-info-circle"></i>
