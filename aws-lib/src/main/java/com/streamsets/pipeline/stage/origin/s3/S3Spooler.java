@@ -25,6 +25,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,12 +173,17 @@ public class S3Spooler {
   }
 
   public void handleCurrentObjectAsError() {
-    //Move to error directory only if the error bucket and folder is specified and is different from
-    //source bucket and folder
-    postProcessOrErrorHandle(currentObject.getKey(), s3ConfigBean.errorConfig.errorHandlingOption,
-      s3ConfigBean.errorConfig.errorBucket, s3ConfigBean.errorConfig.errorFolder,
-      s3ConfigBean.errorConfig.archivingOption);
-    currentObject = null;
+    if (currentObject != null) {
+      //Move to error directory only if the error bucket and folder is specified and is different from
+      //source bucket and folder
+      Utils.checkNotNull(s3ConfigBean.errorConfig, "s3ConfigBean.errorConfig");
+      postProcessOrErrorHandle(currentObject.getKey(), s3ConfigBean.errorConfig.errorHandlingOption,
+          s3ConfigBean.errorConfig.errorBucket, s3ConfigBean.errorConfig.errorFolder,
+          s3ConfigBean.errorConfig.archivingOption);
+      currentObject = null;
+    } else {
+      LOG.debug("Current object is null");
+    }
   }
 
   public void postProcessOlderObjectIfNeeded(AmazonS3Source.S3Offset s3Offset) {
