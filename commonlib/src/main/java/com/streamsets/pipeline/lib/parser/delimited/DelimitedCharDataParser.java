@@ -47,8 +47,16 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private boolean eof;
   private CsvRecordType recordType;
 
-  public DelimitedCharDataParser(Stage.Context context, String readerId, OverrunReader reader, long readerOffset,
-                                 CSVFormat format, CsvHeader header, int maxObjectLen, CsvRecordType recordType)
+  public DelimitedCharDataParser(
+      Stage.Context context,
+      String readerId,
+      OverrunReader reader,
+      long readerOffset,
+      int skipStartLines,
+      CSVFormat format,
+      CsvHeader header,
+      int maxObjectLen,
+      CsvRecordType recordType)
     throws IOException {
     this.context = context;
     this.readerId = readerId;
@@ -66,7 +74,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       default:
         throw new RuntimeException(Utils.format("Unknown header error: {}", header));
     }
-    parser = new OverrunCsvParser(reader, format, readerOffset, maxObjectLen);
+    parser = new OverrunCsvParser(reader, format, readerOffset, skipStartLines, maxObjectLen);
     String[] hs = parser.getHeaders();
     if (header != CsvHeader.IGNORE_HEADER && hs != null) {
       headers = new ArrayList<>();

@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
+import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import org.apache.commons.csv.CSVFormat;
@@ -80,7 +81,7 @@ public class TestCsvParser {
   @Test
   public void testParserRecordsFromOffset() throws Exception {
     CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 12);
+                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 12, 0);
     try {
       Assert.assertEquals(12, parser.getReaderPosition());
 
@@ -100,7 +101,7 @@ public class TestCsvParser {
       parser.close();
     }
     parser = new CsvParser(getReader("TestCsvParser-default.csv"),
-                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20);
+                                     CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0);
     try {
       Assert.assertEquals(20, parser.getReaderPosition());
 
@@ -143,4 +144,35 @@ public class TestCsvParser {
     }
   }
 
+  @Test
+  public void testSkipLines() throws Exception {
+    CsvParser parser = new CsvParser(
+        new CountingReader(new StringReader("foo\nbar\r\na,b,c\naa,bb,cc\ne,f,g\n")),
+        CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(false),
+        -1,
+        0,
+        2
+    );
+    try {
+      Assert.assertEquals(9, parser.getReaderPosition());
+
+      String[] record = parser.read();
+      Assert.assertEquals(15, parser.getReaderPosition());
+      Assert.assertNotNull(record);
+      Assert.assertArrayEquals(new String[]{"a", "b", "c"}, record);
+      record = parser.read();
+      Assert.assertNotNull(record);
+      Assert.assertArrayEquals(new String[]{"aa", "bb", "cc"}, record);
+      Assert.assertEquals(24, parser.getReaderPosition());
+      record = parser.read();
+      Assert.assertNotNull(record);
+      Assert.assertArrayEquals(new String[]{"e", "f", "g"}, record);
+      Assert.assertEquals(30, parser.getReaderPosition());
+      record = parser.read();
+      Assert.assertNull(record);
+      Assert.assertEquals(30, parser.getReaderPosition());
+    } finally {
+      parser.close();
+    }
+  }
 }

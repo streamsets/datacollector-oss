@@ -105,6 +105,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   private final char csvCustomEscape;
   private final char csvCustomQuote;
   private final CsvRecordType csvRecordType;
+  private final int csvSkipStartLines;
 
   private final String protoDescriptorFile;
   private final String messageType;
@@ -155,6 +156,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     this.csvCustomEscape = args.getCsvCustomEscape();
     this.csvCustomQuote = args.getCsvCustomQuote();
     this.csvRecordType = args.getCsvRecordType();
+    this.csvSkipStartLines = args.getCsvSkipStartLines();
     this.protoDescriptorFile = args.getProtoDescriptorFile();
     this.messageType = args.getMessageType();
     kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
@@ -346,6 +348,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       case DELIMITED:
         builder.setMaxDataLen(csvMaxObjectLen)
           .setMode(csvFileFormat).setMode(csvHeader).setMode(csvRecordType)
+          .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
           .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)

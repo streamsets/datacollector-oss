@@ -49,5 +49,6 @@ public class JmsSourceUpgrader implements StageUpgrader {
   }
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("jmsConfig.destinationType", "UNKNOWN"));
+    configs.add(new Config("dataFormatConfig.csvSkipStartLines", 0));
   }
 }

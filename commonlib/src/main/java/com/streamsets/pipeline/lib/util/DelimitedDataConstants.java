@@ -24,5 +24,6 @@ public class DelimitedDataConstants {
   public static final String DELIMITER_CONFIG = "delimiterChar";
   public static final String ESCAPE_CONFIG = "escapeChar";
   public static final String QUOTE_CONFIG = "quoteChar";
+  public static final String SKIP_START_LINES = "skipStartLines";
 
 }

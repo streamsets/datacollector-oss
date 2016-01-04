@@ -316,6 +316,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("csvRecordType", CsvRecordType.LIST)
+      .addConfiguration("csvSkipStartLines", 0)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -386,6 +387,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvHeader", CsvHeader.IGNORE_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("csvRecordType", CsvRecordType.LIST)
+      .addConfiguration("csvSkipStartLines", 0)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -446,6 +448,7 @@ public class TestClusterHDFSSource {
       .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("csvRecordType", CsvRecordType.LIST)
+      .addConfiguration("csvSkipStartLines", 0)
       .addConfiguration("textMaxLineLen", 1024)
       .addConfiguration("produceSingleRecordPerMessage", false)
       .addConfiguration("regex", null)
@@ -628,7 +631,7 @@ public class TestClusterHDFSSource {
         jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
         grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
         produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen,
-        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, avroSchema);
+        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, 0, avroSchema);
     }
   }
 

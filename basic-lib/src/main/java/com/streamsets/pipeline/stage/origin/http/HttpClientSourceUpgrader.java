@@ -96,6 +96,8 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
           // no op
       }
     }
+    configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, "csvSkipStartLines"), 0));
+
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
   }

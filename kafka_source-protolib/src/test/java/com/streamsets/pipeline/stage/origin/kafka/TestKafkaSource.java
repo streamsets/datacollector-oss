@@ -586,6 +586,7 @@ public class TestKafkaSource {
       .addConfiguration("grokPattern", null)
       .addConfiguration("onParseError", null)
       .addConfiguration("maxStackTraceLines", -1)
+      .addConfiguration("csvSkipStartLines", 0)
       .build();
 
     sourceRunner.runInit();

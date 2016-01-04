@@ -55,7 +55,7 @@ public class TestHttpClientSourceUpgrader {
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(16, configs.size());
+    Assert.assertEquals(17, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -109,5 +109,9 @@ public class TestHttpClientSourceUpgrader {
 
     Assert.assertTrue(configValues.containsKey("conf.basic.maxWaitTime"));
     Assert.assertEquals(5000L, configValues.get("conf.basic.maxWaitTime"));
+
+    Assert.assertTrue(configValues.containsKey("conf.dataFormatConfig.csvSkipStartLines"));
+    Assert.assertEquals(0, configValues.get("conf.dataFormatConfig.csvSkipStartLines"));
+
   }
 }

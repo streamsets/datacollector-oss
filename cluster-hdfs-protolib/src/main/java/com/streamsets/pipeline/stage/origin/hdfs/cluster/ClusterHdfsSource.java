@@ -146,6 +146,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private final char csvCustomEscape;
   private final char csvCustomQuote;
   private final CsvRecordType csvRecordType;
+  private final int csvSkipStartLines;
   private final String avroSchema;
 
   public ClusterHdfsSource(String hdfsUri, List<String> hdfsDirLocations, boolean recursive, Map<String,
@@ -155,7 +156,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat, int logMaxObjectLen,
     boolean produceSingleRecordPerMessage, boolean hdfsKerberos, String hdfsUser, String hadoopConfDir,
     CsvMode csvFileFormat, CsvHeader csvHeader, int csvMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
-    char csvCustomQuote, CsvRecordType csvRecordType, String avroSchema) {
+    char csvCustomQuote, CsvRecordType csvRecordType, int csvSkipStartLines, String avroSchema) {
     controlChannel = new ControlChannel();
     dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
@@ -191,6 +192,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     this.csvCustomEscape = csvCustomEscape;
     this.csvCustomQuote = csvCustomQuote;
     this.csvRecordType = csvRecordType;
+    this.csvSkipStartLines = csvSkipStartLines;
     this.avroSchema = avroSchema;
   }
 
@@ -527,6 +529,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
         builder.setMaxDataLen(csvMaxObjectLen).setMode(csvFileFormat)
           .setMode((csvHeader == CsvHeader.IGNORE_HEADER) ? CsvHeader.NO_HEADER: csvHeader)
           .setMode(csvRecordType)
+          .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
           .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
           .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);

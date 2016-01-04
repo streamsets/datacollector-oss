@@ -54,6 +54,7 @@ public class SourceArguments {
   protected final char csvCustomEscape;
   protected final char csvCustomQuote;
   protected final CsvRecordType csvRecordType;
+  protected final int csvSkipStartLines;
 
   protected final String xmlRecordElement;
   protected final int xmlMaxObjectLen;
@@ -93,8 +94,8 @@ public class SourceArguments {
                          String log4jCustomLogFormat, int maxStackTraceLines, OnParseError onParseError,
                          Map<String, String> kafkaConsumerConfigs, boolean schemaInMessage, String avroSchema,
                          int binaryMaxObjectLen, char csvCustomDelimiter, char csvCustomEscape,
-                         char csvCustomQuote, CsvRecordType csvRecordType, String protoDescriptorFile,
-                         String messageType) {
+                         char csvCustomQuote, CsvRecordType csvRecordType, int csvSkipStartLines,
+                         String protoDescriptorFile, String messageType) {
     this.metadataBrokerList = metadataBrokerList;
     this.zookeeperConnect = zookeeperConnect;
     this.consumerGroup = consumerGroup;
@@ -135,6 +136,7 @@ public class SourceArguments {
     this.csvCustomEscape = csvCustomEscape;
     this.csvCustomQuote = csvCustomQuote;
     this.csvRecordType = csvRecordType;
+    this.csvSkipStartLines = csvSkipStartLines;
     this.protoDescriptorFile = protoDescriptorFile;
     this.messageType = messageType;
   }
@@ -289,6 +291,10 @@ public class SourceArguments {
 
   public CsvRecordType getCsvRecordType() {
     return csvRecordType;
+  }
+
+  public int getCsvSkipStartLines() {
+    return csvSkipStartLines;
   }
 
   public boolean isRemoveCtrlChars() {

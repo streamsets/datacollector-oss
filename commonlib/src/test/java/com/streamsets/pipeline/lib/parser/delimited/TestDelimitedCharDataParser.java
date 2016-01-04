@@ -44,7 +44,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseNoHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.NO_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
@@ -72,7 +72,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseNoHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.NO_HEADER, -1, CsvRecordType.LIST_MAP);
     Assert.assertEquals("0", parser.getOffset());
     Record record = parser.parse();
@@ -96,7 +96,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseIgnoreHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -116,7 +116,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseIgnoreHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST_MAP);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -134,7 +134,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseWithHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -154,7 +154,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseWithHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST_MAP);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -172,7 +172,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseNoHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, 0, CSVFormat.DEFAULT,
       CsvHeader.NO_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -192,7 +192,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseIgnoreHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 4, 0, CSVFormat.DEFAULT,
       CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("4", parser.getOffset());
     Record record = parser.parse();
@@ -212,7 +212,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseIgnoreHeaderWithOffset2() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, 0, CSVFormat.DEFAULT,
       CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
@@ -232,7 +232,7 @@ public class TestDelimitedCharDataParser {
   @Test
   public void testParseWithHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 8, 0, CSVFormat.DEFAULT,
       CsvHeader.WITH_HEADER, -1, CsvRecordType.LIST);
     Assert.assertEquals("8", parser.getOffset());
     Record record = parser.parse();
@@ -253,7 +253,7 @@ public class TestDelimitedCharDataParser {
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
-    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, CSVFormat.DEFAULT,
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, 0, CSVFormat.DEFAULT,
       CsvHeader.IGNORE_HEADER, -1, CsvRecordType.LIST);
     parser.close();
     parser.parse();

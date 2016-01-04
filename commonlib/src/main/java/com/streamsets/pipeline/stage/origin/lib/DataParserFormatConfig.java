@@ -262,6 +262,19 @@ public class DataParserFormatConfig {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Start Lines to Skip",
+      displayPosition = 435,
+      group = "DELIMITED",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED",
+      min = 0
+  )
+  public int csvSkipStartLines;
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
       label = "Delimiter Element",
       defaultValue = "",
@@ -678,6 +691,7 @@ public class DataParserFormatConfig {
             .setMaxDataLen(csvMaxObjectLen)
             .setMode(csvFileFormat).setMode(csvHeader)
             .setMode(csvRecordType)
+            .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
             .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
             .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
             .setConfig(DelimitedDataConstants.QUOTE_CONFIG, csvCustomQuote);

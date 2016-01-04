@@ -45,7 +45,7 @@ import java.util.Map;
 
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "Hadoop FS",
   description = "Reads data from Hadoop file system",
   execution = ExecutionMode.CLUSTER_BATCH,
@@ -432,13 +432,27 @@ public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements
   @ValueChooserModel(CsvRecordTypeChooserValues.class)
   public CsvRecordType csvRecordType;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Start Lines to Skip",
+      displayPosition = 310,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED",
+      min = 0
+  )
+  public int csvSkipStartLines;
+
+
   @Override
   protected Source createSource() {
      clusterHDFSSource = new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat,
       textMaxLineLen, jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
        produceSingleRecordPerMessage, hdfsKerberos, hdfsUser, hdfsConfDir, csvFileFormat, csvHeader, csvMaxObjectLen,
-       csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, avroSchema);
+       csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, csvSkipStartLines, avroSchema);
      return clusterHDFSSource;
   }
 

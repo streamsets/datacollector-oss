@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "Kafka Consumer",
   description = "Reads data from Kafka",
   execution = {ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.STANDALONE},
@@ -334,6 +334,19 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
   )
   @ValueChooserModel(CsvRecordTypeChooserValues.class)
   public CsvRecordType csvRecordType;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "Start Lines to Skip",
+      displayPosition = 320,
+      group = "DELIMITED",
+      dependsOn = "dataFormat",
+      triggeredByValue = "DELIMITED",
+      min = 0
+  )
+  public int csvSkipStartLines;
 
   @ConfigDef(
       required = false,
@@ -619,7 +632,7 @@ public class KafkaDSource extends DClusterSourceOffsetCommitter implements Error
       customLogFormat, regex, grokPatternDefinition, grokPattern, fieldPathsToGroupName,
       enableLog4jCustomLogFormat, log4jCustomLogFormat, maxStackTraceLines, onParseError, kafkaConsumerConfigs,
       schemaInMessage, avroSchema, binaryMaxObjectLen, csvCustomDelimiter, csvCustomEscape, csvCustomQuote,
-      csvRecordType, protoDescriptorFile, messageType);
+      csvRecordType, csvSkipStartLines, protoDescriptorFile, messageType);
     delegatingKafkaSource = new DelegatingKafkaSource(new StandaloneKafkaSourceFactory(args),
       new ClusterKafkaSourceFactory(args));
     return delegatingKafkaSource;

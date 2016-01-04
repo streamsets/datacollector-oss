@@ -36,12 +36,23 @@ public class OverrunCsvParser extends CsvParser {
   }
 
   public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
-    this(new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false), format, initialPosition, maxObjectLen);
+    this(
+        new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false),
+        format,
+        initialPosition,
+        0,
+        maxObjectLen
+    );
   }
 
-  public OverrunCsvParser(OverrunReader reader, CSVFormat format, long initialPosition, int maxObjectLen)
-      throws IOException {
-    super(reader, format, maxObjectLen, initialPosition);
+  public OverrunCsvParser(
+      OverrunReader reader,
+      CSVFormat format,
+      long initialPosition,
+      int skipStartLines,
+      int maxObjectLen
+  ) throws IOException {
+    super(reader, format, maxObjectLen, initialPosition, skipStartLines);
     OverrunReader countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
   }

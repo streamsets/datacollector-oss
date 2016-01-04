@@ -495,6 +495,7 @@ public class TestClusterModeDataFormats {
       .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
       .addConfiguration("csvMaxObjectLen", 4096)
       .addConfiguration("csvRecordType", CsvRecordType.LIST)
+      .addConfiguration("csvSkipStartLines", 0)
       .addConfiguration("regex", null)
       .addConfiguration("grokPatternDefinition", null)
       .addConfiguration("enableLog4jCustomLogFormat", false)

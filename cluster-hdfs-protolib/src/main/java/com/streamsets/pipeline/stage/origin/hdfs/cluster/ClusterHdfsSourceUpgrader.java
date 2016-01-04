@@ -28,11 +28,14 @@ import java.util.List;
 
 public class ClusterHdfsSourceUpgrader implements StageUpgrader {
   @Override
-  public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
-                              List<Config> configs) throws StageException {
-    switch(fromVersion) {
+  public List<Config> upgrade(
+      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
+  ) throws StageException {
+    switch (fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -50,4 +53,10 @@ public class ClusterHdfsSourceUpgrader implements StageUpgrader {
     configs.add(new Config("csvCustomEscape", "\\"));
     configs.add(new Config("csvCustomQuote", "\""));
   }
+
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("csvSkipStartLines", 0));
+  }
+
 }

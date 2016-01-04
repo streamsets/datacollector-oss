@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class AmazonS3SourceUpgrader implements StageUpgrader {
     configs.add(new Config("s3ConfigBean.advancedConfig.proxyPassword", ""));
     configs.add(new Config("s3ConfigBean.dataFormatConfig.compression", Compression.NONE));
     configs.add(new Config("s3ConfigBean.dataFormatConfig.filePatternInArchive", "*"));
+    configs.add(new Config("s3ConfigBean.dataFormatConfig.csvSkipStartLines", 0));
   }
 
   private void upgradeV2ToV3(List<Config> configs) {
