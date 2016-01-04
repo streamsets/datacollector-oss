@@ -21,6 +21,8 @@ package com.streamsets.datacollector.util;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TestUtil {
 
@@ -29,5 +31,10 @@ public class TestUtil {
     int port = serverSocket.getLocalPort();
     serverSocket.close();
     return port;
+  }
+
+  public static String getCurrentYear() {
+    SimpleDateFormat yyyy = new SimpleDateFormat("yyyy");
+    return yyyy.format(new Date());
   }
 }

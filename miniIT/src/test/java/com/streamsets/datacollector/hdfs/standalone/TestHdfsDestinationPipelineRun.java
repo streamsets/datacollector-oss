@@ -22,6 +22,7 @@ package com.streamsets.datacollector.hdfs.standalone;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.base.TestPipelineRunStandalone;
 
+import com.streamsets.datacollector.util.TestUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.Path;
@@ -94,8 +95,7 @@ public class TestHdfsDestinationPipelineRun extends TestPipelineRunStandalone {
   protected int getRecordsInTarget() throws IOException {
     int recordsRead = 0;
     DistributedFileSystem fileSystem = miniDFS.getFileSystem();
-    //resolve ${YYYY()} instead of hardcoding 2015
-    FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/tmp/out/2015"));
+    FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/tmp/out/" + TestUtil.getCurrentYear()));
     for(FileStatus f : fileStatuses) {
       BufferedReader br=new BufferedReader(new InputStreamReader(fileSystem.open(f.getPath())));
       String line = br.readLine();

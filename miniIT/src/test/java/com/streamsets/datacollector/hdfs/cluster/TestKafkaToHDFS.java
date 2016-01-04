@@ -22,6 +22,7 @@ package com.streamsets.datacollector.hdfs.cluster;
 import com.google.common.io.Resources;
 import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.datacollector.util.ClusterUtil;
+import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.util.VerifyUtils;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
@@ -164,8 +165,7 @@ public class TestKafkaToHDFS {
     //HDFS configuration is set to roll file after 15 records.
     int recordsRead = 0;
     DistributedFileSystem fileSystem = miniDFS.getFileSystem();
-    //resolve ${YYYY()} instead of hardcoding 2015
-    FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/tmp/out/2015"));
+    FileStatus[] fileStatuses = fileSystem.listStatus(new Path("/tmp/out/" + TestUtil.getCurrentYear()));
     for(FileStatus f : fileStatuses) {
       BufferedReader br=new BufferedReader(new InputStreamReader(fileSystem.open(f.getPath())));
       String line = br.readLine();
