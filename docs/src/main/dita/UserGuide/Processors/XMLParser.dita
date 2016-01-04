@@ -15,14 +15,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dtt_q5q_k5">
  <title>XML Parser</title>
- <shortdesc/>
  <conbody>
   <p><indexterm>XML Parser
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>XML
-                    Parser</indexterm></indexterm>The XML Parser parses a XML embedded in String
-            field and passes the resulting data into the pipeline. Based on the contents of the XML
-            data, the resulting field is either a string, a map, or an array. <draft-comment
-                author="Loretta">checking with Tucu about resulting field. -- mention that based on
-                the delimiter element reads/outputs differently? </draft-comment></p>
+                    Parser</indexterm></indexterm>The XML Parser parses a XML embedded in string
+            field and passes the resulting data into the pipeline. </p>
+        <p>The XML Parser creates records based on a user-defined delimiter element. When no
+            delimiter element is defined, it reads the entire field as a single record, </p>
  </conbody>
 </concept>
