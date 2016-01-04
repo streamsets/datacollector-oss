@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class JsonUtil {
 
@@ -81,6 +82,8 @@ public class JsonUtil {
       field = Field.createDate((Date) json);
     } else if (json instanceof BigDecimal) {
       field = Field.create((BigDecimal) json);
+    } else if (json instanceof UUID) {
+      field = Field.create(json.toString());
     } else {
       throw new IOException(Utils.format("Not recognized type '{}', value '{}'", json.getClass(), json));
     }

@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
@@ -54,10 +55,12 @@ public class TestMongoDBSource {
   private static final String DATABASE_NAME = "test";
   private static final String CAPPED_COLLECTION = "capped";
   private static final String COLLECTION = "uncapped";
+  private static final String UUID_COLLECTION = "uuid";
   private static final int TEST_COLLECTION_SIZE = 4;
   private static final int ONE_MB = 1000 * 1000;
 
   private static final List<Document> documents = new ArrayList<>(TEST_COLLECTION_SIZE);
+  private static final UUID uuidValue = UUID.randomUUID();
   private static MongodExecutable mongodExecutable = null;
   private static int port = 0;
 
@@ -86,11 +89,15 @@ public class TestMongoDBSource {
     MongoDatabase db = mongo.getDatabase(DATABASE_NAME);
     db.createCollection(CAPPED_COLLECTION, new CreateCollectionOptions().capped(true).sizeInBytes(ONE_MB));
     db.createCollection(COLLECTION);
+    db.createCollection(UUID_COLLECTION);
 
     MongoCollection<Document> capped = db.getCollection(CAPPED_COLLECTION);
     MongoCollection<Document> uncapped = db.getCollection(COLLECTION);
     capped.insertMany(documents);
     uncapped.insertMany(documents);
+
+    MongoCollection<Document> uuid = db.getCollection(UUID_COLLECTION);
+    uuid.insertOne(new Document("value", uuidValue));
 
     mongo.close();
   }
@@ -318,6 +325,39 @@ public class TestMongoDBSource {
     parsedRecords = output.getRecords().get("lane");
     assertEquals(1, parsedRecords.size());
     assertEquals("document 12345", parsedRecords.get(0).get("/value").getValueAsString());
+  }
+
+  @Test
+  public void testReadUUIDType() throws Exception {
+    MongoDBSource origin = new MongoDBSource(
+        "mongodb://localhost:" + port,
+        DATABASE_NAME,
+        UUID_COLLECTION,
+        false,
+        "_id",
+        "2015-06-01 00:00:00",
+        100,
+        1,
+        AuthenticationType.NONE,
+        null,
+        null,
+        ReadPreference.nearest()
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(MongoDBSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(0, issues.size());
+
+    runner.runInit();
+
+    StageRunner.Output output = runner.runProduce(null, 1);
+    List<Record> parsedRecords = output.getRecords().get("lane");
+    assertEquals(1, parsedRecords.size());
+    // UUID is converted to a string.
+    assertEquals(uuidValue.toString(), parsedRecords.get(0).get("/value").getValueAsString());
   }
 
   private void insertNewDocs(String collectionName) {
