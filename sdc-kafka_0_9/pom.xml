@@ -35,6 +35,9 @@
     <kafka.version>0.9.0.0</kafka.version>
     <tec.version>0.7</tec.version>
     <scala.version>2.11.7</scala.version>
+    <minikdc-hadoop.version>2.6.0</minikdc-hadoop.version>
+    <minikdc-jdbm1.version>2.0.0-M3</minikdc-jdbm1.version>
+    <bcpkix-jdk15on.version>1.54</bcpkix-jdk15on.version>
   </properties>
 
   <dependencies>
@@ -118,6 +121,37 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+      <classifier>test</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bcpkix-jdk15on.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minikdc</artifactId>
+      <version>${minikdc-hadoop.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.directory.jdbm</groupId>
+          <artifactId>apacheds-jdbm1</artifactId>
+        </exclusion>
+      </exclusions>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.directory.jdbm</groupId>
+      <artifactId>apacheds-jdbm1</artifactId>
+      <version>${minikdc-jdbm1.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.zookeeper</groupId>
       <artifactId>zookeeper</artifactId>
       <version>3.4.5</version>
@@ -153,6 +187,17 @@
         <version>2.8.2</version>
         <configuration>
           <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Execute each Test in a separate JVM. Kafka Sasl and Sasl with ssl tests fail without this option
+          as some kerberos settings are read only on startup and cached -->
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
         </configuration>
       </plugin>
     </plugins>

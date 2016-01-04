@@ -118,64 +118,6 @@ public class TestKafkaConsumer09 {
     zookeeper.shutdown();
   }
 
-  /*@Test
-  public void testKafkaConsumer09ReadException() throws IOException, StageException {
-    int zkConnectionTimeout = 6000;
-    int zkSessionTimeout = 6000;
-
-    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
-    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
-    ZkUtils zkUtils = ZkUtils.apply(
-      zkConnect, zkSessionTimeout, zkConnectionTimeout,
-      JaasUtils.isZkSecurityEnabled());
-
-    int port = TestUtil.getFreePort();
-    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
-
-    final String topic = "TestKafkaConsumer09_1";
-    final String message = "Hello StreamSets";
-
-    Source.Context sourceContext = ContextInfoCreator.createSourceContext(
-      "s",
-      false,
-      OnRecordError.TO_ERROR,
-      ImmutableList.of("a")
-    );
-
-    Map<String, Object> props = new HashMap<>();
-    props.put("auto.commit.interval.ms", "1000");
-    props.put("auto.offset.reset", "earliest");
-    props.put("session.timeout.ms", "1000");
-    SdcKafkaConsumer sdcKafkaConsumer = createSdcKafkaConsumer(
-      "localhost:" + port,
-      topic,
-      1000,
-      sourceContext,
-      props,
-      "test"
-    );
-    sdcKafkaConsumer.init();
-
-    // produce some messages to topic
-    produce(topic, "localhost:" + port, message);
-
-    //take down server before attempting read
-    kafkaServer.shutdown();
-
-    // read
-    List<MessageAndOffset> read = new ArrayList<>();
-    read.addAll(sdcKafkaConsumer.read());
-
-
-    // delete topic and shutdown
-    AdminUtils.deleteTopic(
-      zkUtils,
-      topic
-    );
-
-    zookeeper.shutdown();
-  }*/
-
   private void verify(List<MessageAndOffset> read, String message) {
     for(int i = 0; i < read.size(); i++) {
       Assert.assertEquals(message+i, new String(read.get(i).getPayload()));
@@ -199,53 +141,6 @@ public class TestKafkaConsumer09 {
     producer.close();
 
   }
-
-  /*@Test
-  public void testKafkaProducer09WriteException() throws IOException, StageException {
-    int zkConnectionTimeout = 6000;
-    int zkSessionTimeout = 6000;
-
-    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
-    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
-    ZkUtils zkUtils = ZkUtils.apply(
-      zkConnect, zkSessionTimeout, zkConnectionTimeout,
-      JaasUtils.isZkSecurityEnabled());
-
-    int port = TestUtil.getFreePort();
-    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
-
-    final String topic = "TestKafkaProducer09_1";
-    final String message = "Hello StreamSets";
-
-    HashMap<String, Object> kafkaProducerConfigs = new HashMap<>();
-    kafkaProducerConfigs.put("retries", 0);
-    kafkaProducerConfigs.put("batch.size", 100);
-    kafkaProducerConfigs.put("linger.ms", 0);
-
-    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
-    sdcKafkaProducer.init();
-    sdcKafkaProducer.enqueueMessage(topic, message.getBytes(), "0");
-    sdcKafkaProducer.write();
-
-    AdminUtils.deleteTopic(
-      zkUtils,
-      topic
-    );
-
-    kafkaServer.shutdown();
-
-    // attempt writing when kafka server is down
-    sdcKafkaProducer.enqueueMessage(topic, "Hello".getBytes(), "0");
-
-    try {
-      sdcKafkaProducer.write();
-      Assert.fail("Expected KafkaConnectionException");
-    } catch (StageException e) {
-      Assert.assertEquals(KafkaErrors.KAFKA_50, e.getErrorCode());
-    }
-
-    zookeeper.shutdown();
-  }*/
 
   private SdcKafkaConsumer createSdcKafkaConsumer(
       String bootstrapServers,
