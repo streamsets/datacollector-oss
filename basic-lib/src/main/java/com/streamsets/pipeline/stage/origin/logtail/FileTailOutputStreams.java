@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum FileTailOutputStreams  implements Label {
-  OUTPUT("Output"),
+  DATA("Data"),
   METADATA("Metadata");
 
   private final String label;
