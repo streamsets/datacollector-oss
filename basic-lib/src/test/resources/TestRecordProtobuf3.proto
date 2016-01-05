@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option java_package = "com.streamsets.pipeline.lib.util";
+option java_outer_classname = "ProtobufTestRecord";
+
+message TestRecord {
+  oneof one_name {
+    string first_name = 1;
+    string full_name = 2;
+  }
+  map<string, string> test_map = 3;
+  repeated int32 samples = 4 [packed=true];
+}
