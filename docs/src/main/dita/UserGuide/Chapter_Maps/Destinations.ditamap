@@ -58,7 +58,13 @@
     <topicref href="../Destinations/Compression-Enabling.dita"/>
    </topicref>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
-   <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
+   <topicref href="../Reusable_Content/Dest-DirectoryTemplates.dita">
+    <keydef keys="stage">
+     <topicmeta>
+      <keywords><keyword>Hadoop FS</keyword></keywords>
+     </topicmeta>
+    </keydef>
+   </topicref>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
@@ -108,6 +114,13 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Reusable_Content/Dest-DirectoryTemplates.dita">
+    <keydef keys="stage">
+     <topicmeta>
+      <keywords><keyword>Local FS</keyword></keywords>
+     </topicmeta>
+    </keydef>
+   </topicref>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 

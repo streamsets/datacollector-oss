@@ -12,60 +12,40 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
-<concept id="concept_a15_fcm_xs">
- <title>Enabling LZO and Snappy Compression</title>
-  <shortdesc>To use LZO or Snappy compression with Hadoop FS, you need to enable the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use the
-    compression type. </shortdesc>
- <conbody>
-  <p><indexterm>LZO compression<indexterm>enabling for Hadoop
-        FS</indexterm></indexterm><indexterm>Snappy compression<indexterm>enabling for Hadoop
-          FS</indexterm></indexterm><indexterm>Hadoop FS destination<indexterm>enabling LZO or
-          Snappy compression</indexterm></indexterm>The steps to enable compression differ based on
-      the compression type that you want to use them with:<dl>
-        <dlentry>
-          <dt>Using Snappy with the Hadoop FS destination</dt>
-          <dd>To enable Snappy for Hadoop FS, perform the following steps:</dd>
-          <dd>
-            <ol id="ol_ufy_42m_xs">
-              <li>Verify the location of the libsnappy.so file.<p>With the Hadoop installation, the
-                  libsnappy.so file is generally installed in the following directory: <filepath>
-                    /usr/lib/hadoop/lib/native/</filepath>. </p><p>If the file is not installed at
-                  this location, see the documentation for your Hadoop distribution for the location
-                  of the file or instructions on how to install the file. </p>If you have multiple
-                versions of Hadoop FS installed, make sure to locate the file for the version you
-                want to use. </li>
-              <li>In the <ph
-                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                environment file, set the Java system property <codeph>java.library.path</codeph> to
-                the location of the Snappy native library. Add the property to the SDC_JAVA_OPTS
-                environment variable as
-                  follows:<codeblock>-Djava.library.path=&lt;path to Snappy native library></codeblock><p>For
-                  information about configuring the SDC_JAVA_OPTS environment variable, see <xref
-                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
-              <li>In the destination, select the Snappy compression codec.</li>
-            </ol>
-          </dd>
-        </dlentry>
-        <dlentry>
-          <dt>Using LZO with the Hadoop FS destination</dt>
-          <dd>To enable LZO for Hadoop FS, perform the following steps:<ol id="ol_l3s_fjm_xs">
-              <li>If necessary, install the Hadoop LZO native library. <p>If you have multiple
-                  versions of Hadoop FS installed, make sure you install the version that you want
-                  to use. See the documentation for your Hadoop distribution for details. </p></li>
-              <li>In the <ph
-                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-                environment file, set the Java system property java.library.path to the location of
-                the LZO native library. Add the property to the SDC_JAVA_OPTS environment variable
-                as
-                  follows:<p><codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock>For
-                  information about configuring the SDC_JAVA_OPTS environment variable, see <xref
-                    href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</p></li>
-              <li>In the destination, select the Other compression codec and enter the full LZO
-                class name.</li>
-            </ol></dd>
-        </dlentry>
-      </dl></p>
- </conbody>
-</concept>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_wcm_n13_45">
+    <title>Enabling LZO Compression</title>
+    <taskbody>
+        <context>
+            <p><indexterm>LZO compression<indexterm>enabling for Hadoop
+                    FS</indexterm></indexterm><indexterm>Hadoop FS destination<indexterm>enabling
+                        LZO compression</indexterm></indexterm>To use LZO compression with Hadoop
+                FS, you need to configure the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> to use LZO. </p>
+        </context>
+        <steps id="steps_n21_q13_45">
+            <step>
+                <cmd>If necessary, install the Hadoop LZO native library.</cmd>
+                <info>If you have multiple versions of Hadoop FS installed, make sure you install
+                    the version that you want to use. See the documentation for your Hadoop
+                    distribution for details. </info>
+            </step>
+            <step>
+                <cmd>In the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> environment file, set the Java system property java.library.path to the
+                    location of the LZO native library. </cmd>
+                <info>Add the property to the SDC_JAVA_OPTS environment variable as
+                    follows:<codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock></info>
+                <info><codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock>For
+                    information about configuring the SDC_JAVA_OPTS environment variable, see <xref
+                        href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</info>
+            </step>
+            <step>
+                <cmd>In the destination, select the <uicontrol>Other</uicontrol> compression codec
+                    and enter the full LZO class name.</cmd>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -17,6 +17,18 @@
  <title>Local FS</title>
  <shortdesc>Use the Local FS destination to write records to files in a local file system. </shortdesc>
  <conbody>
-        <p/>
+        <p><indexterm>Local FS
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Local
+                    FS</indexterm></indexterm>When you configure a Local FS destination, you define
+            the output directory template. Local FS creates output directories based the template
+            and the time basis. Local FS writes records to the directories based on the time basis
+            as well. </p>
+        <p>You can specify the amount of time that a record can be written to its associated
+            directory and what happens to late records. </p>
+        <p>You can use compression to write output files. To use LZO compression, enable the Data
+            Collector for LZO compression.</p>
     </conbody>
+    <related-links>
+        <link href="Compression-Enabling.dita#task_wcm_n13_45"/>
+    </related-links>
 </concept>

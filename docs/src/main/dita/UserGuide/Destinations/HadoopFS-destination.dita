@@ -26,10 +26,11 @@
   <p>You can specify the amount of time that a record can be written to its associated directory and
       what happens to late records. </p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
-    <p>If you want to use Snappy or LZO compression to write to HDFS, make sure the configuration
-      requirements are complete. </p>
+    <p>You can use compression to write output files. To use LZO compression, enable the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> for LZO
+      compression.</p>
  </conbody>
   <related-links>
-    <link href="Compression-Overview.dita#concept_h4y_ycm_xs"/>
+    <link href="Compression-Enabling.dita#task_wcm_n13_45"/>
   </related-links>
 </concept>

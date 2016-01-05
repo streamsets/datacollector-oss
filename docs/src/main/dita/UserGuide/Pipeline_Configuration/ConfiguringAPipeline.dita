@@ -59,13 +59,21 @@
                                             <li>Standalone - A single <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> process runs the pipeline.</li>
-                                            <li>Cluster - Additional <ph
+                                            <li>Cluster Batch - The <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> workers are spawned as needed to process data.
-                                                Limits the origins that you can use in the
-                                                  pipeline.<draft-comment author="Loretta">Update to
-                                                  match latest cluster configs - not sure where
-                                                  we're landing on this yet. </draft-comment></li>
+                                                /> spawns additional workers as needed to process
+                                                data in HDFS. Processes all available data and then
+                                                stops the pipeline.</li>
+                                            <li>Cluster Yarn Streaming - The <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> spawns additional workers as needed to process
+                                                data. Use to stream data from a Kafka cluster that
+                                                uses Spark Streaming on YARN.</li>
+                                            <li>Cluster Mesos Streaming - The <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> spawns additional workers as needed to process
+                                                data. Use to stream data from a Kafka cluster that
+                                                uses Spark Streaming on Mesos.</li>
                                         </ul></entry>
                                 </row>
                                 <row>

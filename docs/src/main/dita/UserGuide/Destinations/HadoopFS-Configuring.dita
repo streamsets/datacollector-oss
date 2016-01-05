@@ -196,8 +196,8 @@
                                             <li>Snappy</li>
                                             <li>Other - use for LZO or other compression types.
                                             </li>
-                                        </ul><p>LZO and Snappy compression require additional
-                                            configuration. For more information, see <xref
+                                        </ul><p>LZO compression require additional configuration.
+                                            For more information, see <xref
                                                 href="Compression-Overview.dita#concept_h4y_ycm_xs"
                                             />.</p></entry>
                                 </row>

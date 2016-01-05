@@ -39,6 +39,7 @@
         <li>Kinesis Consumer origin</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>
+        <li>XML Parser processor</li>
       </ul></p>
  </conbody>
 </concept>

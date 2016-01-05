@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Use the Local FS destination to write records to files in a local file system. Configure the Local FS destination to write records to a local file system. In the Properties panel, on the General tab, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Local FS"></meta><meta name="abstract" content="Use the Local FS destination to write records to files in a local file system."></meta><meta name="description" content="Use the Local FS destination to write records to files in a local file system."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Local FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Use the Local FS destination to write records to files in a local file system. When you configure a Local FS destination, you define the output directory template. Local FS creates output directories ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Local FS"></meta><meta name="abstract" content="Use the Local FS destination to write records to files in a local file system."></meta><meta name="description" content="Use the Local FS destination to write records to files in a local file system."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Relation" scheme="URI" content="HadoopFS-destination.html#task_wcm_n13_45"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_zvc_bv5_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Local FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -37,11 +37,132 @@
  
  <div class="body conbody"><p class="shortdesc">Use the Local FS destination to write records to files in a local file system. </p>
 
-        <p class="p"></p>
+        <p class="p">When you configure a Local FS destination, you define
+            the output directory template. Local FS creates output directories based the template
+            and the time basis. Local FS writes records to the directories based on the time basis
+            as well. </p>
+
+        <p class="p">You can specify the amount of time that a record can be written to its associated
+            directory and what happens to late records. </p>
+
+        <p class="p">You can use compression to write output files. To use LZO compression, enable the Data
+            Collector for LZO compression.</p>
 
     </div>
 
-<div class="related-links"></div>
+    <div class="related-links"><div class="relinfo reltasks"><strong>Related tasks</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="HadoopFS-destination.html#task_wcm_n13_45" title="Enabling LZO Compression">Enabling LZO Compression</a></div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_cvc_skd_br">
+ <h2 class="title topictitle2">Directory Templates</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The <span class="ph">Local FS</span> destination uses directory templates to create output and late record
+  directories. The destination writes records to the directories based on the configured time
+  basis.</p>
+
+  <p class="p">You can use a mix of constants, field values, and datetime variables
+   in a directory template. You can use the <samp class="ph codeph">every</samp> function to create new
+   directories at regular intervals based on seconds or minutes. You can also use the
+    <samp class="ph codeph">record:valueOrDefault</samp> function to use field values or a default in the
+   directory template. </p>
+
+  <div class="p">For example, the following directory template creates output directories for event data based
+   on the state and timestamp of a record with hours as the smallest unit of measure, creating a new
+   directory every twelve
+   hours:<pre class="pre codeblock"> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</pre>
+</div>
+
+  <div class="p">You can use the following elements in a directory template:<dl class="dl">
+    
+     <dt class="dt dlterm">Constants</dt>
+
+     <dd class="dd">You can use any constant, such as "output" or "lateRecords."</dd>
+
+    
+    
+     <dt class="dt dlterm">Datetime Variables</dt>
+
+     <dd class="dd"><span class="ph">Local FS</span> creates directories as needed, based on the smallest datetime variable
+      that you use. For example, if the smallest variable is hours, then the directories are created
+      for every hour of the day that receives output records.</dd>
+
+     <dd class="dd">You can use the following datetime variables in a directory template:<ul class="ul" id="concept_cvc_skd_br__ul_s2x_5qq_1r">
+       <li class="li">${YYYY()} - four digit year</li>
+
+       <li class="li">${YY()} - two digit year</li>
+
+       <li class="li">${MM()} - two digit month</li>
+
+       <li class="li">${DD()} - two digit date</li>
+
+       <li class="li">${hh()} - two digit hour</li>
+
+       <li class="li">${mm()} - two digit minute</li>
+
+       <li class="li">${ss()} - two digit second</li>
+
+      </ul>
+</dd>
+
+     <dd class="dd">When you define a directory template, use all of the datetime variables between one of the
+      year variables and the smallest variable that you want to use. For example, to create
+      directories on a daily basis, you might use one of the following datetime variable
+      progressions:</dd>
+
+     <dd class="dd">
+      <pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}
+${YY()}_${MM()}_${DD()}</pre>
+
+     </dd>
+
+    
+    
+     <dt class="dt dlterm">every() function</dt>
+
+     <dd class="dd">You can use the <samp class="ph codeph">every()</samp> function in a directory template to create
+      directories at regular intervals based on minutes or seconds. The intervals should be a
+      submultiple or integer factor of 60. For example, you can create directories every 15 minutes
+      or 30 seconds. </dd>
+
+     <dd class="dd">Use the <samp class="ph codeph">every()</samp> function to replace the smallest datetime variable used in
+      the template.</dd>
+
+     <dd class="dd">For example, the following directory template creates directories every 5
+      minutes:<pre class="pre codeblock">/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</pre>
+</dd>
+
+     <dd class="dd">For details about the <samp class="ph codeph">every()</samp> function, see <a class="xref" href="../Expression_Language/Functions.html#concept_ddw_ld1_1s">Miscellaneous Functions</a>.</dd>
+
+    
+    
+     <dt class="dt dlterm">record:valueOrDefault function</dt>
+
+     <dd class="dd">You can use the following expression to use the value of a field and the specified default
+      value if the field does not exist:
+      <pre class="pre codeblock">${record:valueOrDefault("/&lt;field name&gt;", &lt;default value&gt;)}</pre>
+</dd>
+
+     <dd class="dd">For example, the following directory template creates a directory based on the product
+      field every day, and if the product field is empty, uses Misc in the directory path:
+      <pre class="pre codeblock">/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</pre>
+</dd>
+
+     <dd class="dd">This template might create the following
+      paths:<pre class="pre codeblock">/Shirts/2015-07-31 
+/Misc/2015-07-31</pre>
+</dd>
+
+     <dd class="dd">For a tip on how to replace null values, see <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
+
+    
+   </dl>
+</div>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_e33_3v5_1r">
     <h2 class="title topictitle2">Configuring a Local FS Destination</h2>
 
@@ -63,9 +184,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20531e72">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20725e257">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20531e75">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20725e260">Description</th>
 
                                 </tr>
 
@@ -73,24 +194,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20531e72 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20725e257 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20531e75 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20531e72 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20531e75 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20725e260 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20531e72 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20725e257 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20725e260 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20725e257 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_e33_3v5_1r__d1197e1748" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20531e75 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20725e260 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -98,10 +219,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20531e72 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20725e257 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_e33_3v5_1r__d1197e1762" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20531e75 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20725e260 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -109,9 +230,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20531e72 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20725e257 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20531e75 ">Error record handling for the stage: <ul class="ul" id="task_e33_3v5_1r__d1197e1778">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20725e260 ">Error record handling for the stage: <ul class="ul" id="task_e33_3v5_1r__d1197e1778">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -141,9 +262,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="37.453183520599254%" id="d20531e184">Local File System Property</th>
+                                    <th class="entry" valign="top" width="37.453183520599254%" id="d20725e369">Local File System Property</th>
 
-                                    <th class="entry" valign="top" width="62.546816479400746%" id="d20531e187">Description</th>
+                                    <th class="entry" valign="top" width="62.546816479400746%" id="d20725e372">Description</th>
 
                                 </tr>
 
@@ -151,16 +272,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20531e184 ">Directory</td>
+                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20725e369 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20531e187 ">Local directory for the output files.</td>
+                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20725e372 ">Local directory for the output files.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20531e184 ">File Wait Time</td>
+                                    <td class="entry" valign="top" width="37.453183520599254%" headers="d20725e369 ">File Wait Time</td>
 
-                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20531e187 ">Amount of time to wait for records. After the configured
+                                    <td class="entry" valign="top" width="62.546816479400746%" headers="d20725e372 ">Amount of time to wait for records. After the configured
                                         time, Local File System creates a new output file. </td>
 
                                 </tr>

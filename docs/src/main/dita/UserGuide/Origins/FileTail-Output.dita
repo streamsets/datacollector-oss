@@ -19,10 +19,10 @@
     don't need to use the related metadata, you can connect the output stream to a Trash
     destination.</shortdesc>
  <conbody>
-  <p><indexterm>File Tail origin<indexterm>output locations</indexterm></indexterm>The origin passes
+  <p><indexterm>File Tail origin<indexterm>output</indexterm></indexterm>The origin passes
       information thorugh the following output locations:<dl>
         <dlentry>
-          <dt>Output</dt>
+          <dt>Data</dt>
           <dd>Passes data read from the origin.</dd>
         </dlentry>
         <dlentry>
