@@ -148,12 +148,26 @@ public class SyncPreviewer implements Previewer {
     changeState(PreviewStatus.RUNNING, null);
     int bytesToRead = configuration.get(MAX_SOURCE_PREVIEW_SIZE_KEY, MAX_SOURCE_PREVIEW_SIZE_DEFAULT);
     bytesToRead = Math.min(bytesToRead, maxLength);
-    RawSourcePreviewer rawSourcePreviewer = createRawSourcePreviewer(previewParams);
+
+    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
+    if(pipelineConf.getStages().isEmpty()) {
+      throw new PipelineRuntimeException(ContainerError.CONTAINER_0159, name);
+    }
+
+    //find the source stage in the pipeline configuration
+    StageDefinition sourceStageDef = getSourceStageDef(pipelineConf);
+
+    RawSourcePreviewer rawSourcePreviewer = createRawSourcePreviewer(sourceStageDef, previewParams);
     RawPreview rawPreview;
+    ClassLoader classLoader = sourceStageDef.getStageClassLoader();
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
     try(BoundedInputStream bIn = new BoundedInputStream(rawSourcePreviewer.preview(bytesToRead), bytesToRead)) {
       rawPreview = new RawPreviewImpl(IOUtils.toString(bIn), rawSourcePreviewer.getMimeType());
     } catch (IOException ex) {
       throw new PipelineRuntimeException(PreviewError.PREVIEW_0003, ex.toString(), ex);
+    } finally {
+      Thread.currentThread().setContextClassLoader(contextClassLoader);
     }
     changeState(PreviewStatus.FINISHED, null);
     return rawPreview;
@@ -260,23 +274,11 @@ public class SyncPreviewer implements Previewer {
       .build(runner);
   }
 
-  private RawSourcePreviewer createRawSourcePreviewer(MultivaluedMap<String, String> previewParams)
-    throws PipelineRuntimeException, PipelineStoreException {
+  private RawSourcePreviewer createRawSourcePreviewer(
+      StageDefinition sourceStageDef,
+      MultivaluedMap<String, String> previewParams
+      ) throws PipelineRuntimeException, PipelineStoreException {
 
-    PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
-    if(pipelineConf.getStages().isEmpty()) {
-      throw new PipelineRuntimeException(ContainerError.CONTAINER_0159, name);
-    }
-
-    //find the source stage in the pipeline configuration
-    StageDefinition sourceStageDef = null;
-    for(StageConfiguration stageConf : pipelineConf.getStages()) {
-      StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
-                                                              false);
-      if(stageDefinition.getType() == StageType.SOURCE) {
-        sourceStageDef = stageDefinition;
-      }
-    }
     RawSourceDefinition rawSourceDefinition = sourceStageDef.getRawSourceDefinition();
     List<ConfigDefinition> configDefinitions = rawSourceDefinition.getConfigDefinitions();
 
@@ -350,5 +352,17 @@ public class SyncPreviewer implements Previewer {
     this.previewStatus = previewStatus;
     this.previewOutput = previewOutput;
     this.previewerListener.statusChange(id, previewStatus);
+  }
+
+  public StageDefinition getSourceStageDef(PipelineConfiguration pipelineConf) {
+    StageDefinition sourceStageDef = null;
+    for(StageConfiguration stageConf : pipelineConf.getStages()) {
+      StageDefinition stageDefinition = stageLibrary.getStage(stageConf.getLibrary(), stageConf.getStageName(),
+        false);
+      if(stageDefinition.getType() == StageType.SOURCE) {
+        sourceStageDef = stageDefinition;
+      }
+    }
+    return sourceStageDef;
   }
 }
