@@ -148,6 +148,9 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
+                <cmd/>
+            </step>
         </steps>
     </taskbody>
     <related-links>

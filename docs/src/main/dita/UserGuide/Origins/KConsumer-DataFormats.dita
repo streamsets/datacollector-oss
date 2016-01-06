@@ -53,7 +53,11 @@
         <dt/>
         <dd/>
       </dlentry>
+      <dlentry
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
+        <dt/>
+        <dd/>
+      </dlentry>
     </dl>
-    <draft-comment author="Loretta">add protobuf</draft-comment>
  </conbody>
 </concept>

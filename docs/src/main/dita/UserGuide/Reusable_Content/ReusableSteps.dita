@@ -475,8 +475,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">JSON data - Kafka Consumer, JMS Consumer, Hadoop
-                        FS, Kinesis all use them.</draft-comment>
+                    <draft-comment author="Loretta"><b>JSON-2props </b> - Kafka Consumer, JMS
+                        Consumer, Hadoop FS, Kinesis all use them.</draft-comment>
                 </cmd>
             </step>
             <step id="JSON-2props">
@@ -524,9 +524,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">For any changes to the bullets below this first
-                        table, update Log Parser as well. Everything except the Log4j table/bullet
-                        point is copied from here. </draft-comment>
+                    <draft-comment author="Loretta">Also - For any changes to the bullets below this
+                        first table, update Log Parser as well. Everything except the Log4j
+                        table/bullet point is copied from here. </draft-comment>
                 </cmd>
             </step>
             <step id="LogData_Log4j">
@@ -733,6 +733,101 @@
                                     <entry>Max Data Size</entry>
                                     <entry>Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-PROTO-Mess</uicontrol>. Step used
+                        by message-reading stages except for Kafka. Kafka conrefs the first two rows
+                        of table:</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-PROTO-Mess">
+                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_s3c_mz4_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Protobuf Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="row-DescFile">
+                                    <entry>Protobuf Descriptor File </entry>
+                                    <entry>Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <ph
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
+                                            information about generating the descriptor file, see
+                                                <xref
+                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                            />.</p></entry>
+                                </row>
+                                <row id="row-MessageType">
+                                    <entry>Message Type</entry>
+                                    <entry>Message type to use to read data. Enter the message type
+                                        defined in the descriptor file.</entry>
+                                </row>
+                                <row>
+                                    <entry>Delimited Messages</entry>
+                                    <entry>Indicates if a message includes more than one protobuf
+                                        message.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-Proto-File</uicontrol>. Step used
+                        by file-based proto</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-PROTO-File">
+                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_f4r_4cp_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Protobuf Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Protobuf Descriptor File </entry>
+                                    <entry>Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <ph
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
+                                            information about generating the descriptor file, see
+                                                <xref
+                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Message Type</entry>
+                                    <entry>Message type to use to read data. Enter the message type
+                                        defined in the descriptor file.</entry>
+                                </row>
+                                <row>
+                                    <entry>Delimited Messages</entry>
+                                    <entry>Indicates if a file includes more than one protobuf
+                                        message.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1338,6 +1433,48 @@
                                         text field specified above. <p>When not selected, records
                                             without the specified text field are
                                         discarded.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><b>D-PROTO-props</b> - used by all protobuf
+                        destinations</draft-comment>
+                </cmd>
+            </step>
+            <step id="D-PROTO-props">
+                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
+                    the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_vmt_tdp_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Protobuf Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Protobuf Descriptor File </entry>
+                                    <entry>Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <ph
+                                            conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
+                                            information about generating the descriptor file, see
+                                                <xref
+                                                href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                            />.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Message Type</entry>
+                                    <entry>Message type to use to write data. Enter the message type
+                                        defined in the descriptor file.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

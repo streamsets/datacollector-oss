@@ -21,8 +21,65 @@
             <p></p>
         </context>
         <steps id="steps_akg_1yk_k5">
-            <step>
+            <step
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
+            </step>
+            <step>
+                <cmd>On the <wintitle>RabbitMQ</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>RabbitMQ Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>URI</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Consumer Tag</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>RabbitMQ Configuration</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Ignore Control Characters</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Compression Format</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Max Batch Size</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Batch Wait Time</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
         </steps>
     </taskbody>

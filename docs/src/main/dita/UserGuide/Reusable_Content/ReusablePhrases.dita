@@ -285,8 +285,8 @@
                   </dl>
             </p>
             <p>
-                  <draft-comment author="Loretta">BINARY - used by Kafka Consumer and Kinesis
-                        Consumer</draft-comment>
+                  <draft-comment author="Loretta">OriginDF-Binary - used by Kafka Consumer and
+                        Kinesis Consumer</draft-comment>
             </p>
             <p>
                   <dl>
@@ -302,6 +302,41 @@
                         </dlentry>
                   </dl>
             </p>
+            <p>
+                  <draft-comment author="Loretta">OriginDF-ProtoMessage -  JMS Consumer, Kinesis
+                        Consumer, Kafka Consumer, RabbitMQ</draft-comment>
+                  <dl>
+                        <dlentry id="OriginDF-ProtoMessage">
+                              <dt>Protobuf</dt>
+                              <dd>Generates a record for every message. By default, the origin
+                                    assumes messages contain data for multiple records.</dd>
+                              <dd>Messages are defined based on the user-defined message type and
+                                    the definition of the message type in the descriptor file. </dd>
+                              <dd>When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message.  </dd>
+                              <dd>For information about generating the descriptor file, see <xref
+                                          href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                    />.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <draft-comment author="Loretta">OriginDF-ProtoFile - Amazon S3, Directory? Hadoop
+                  FS?</draft-comment>
+            <dl>
+                  <dlentry id="OriginDF-ProtoFile">
+                        <dt>Protobuf</dt>
+                        <dd>Generates a record for every message. </dd>
+                        <dd>Messages are defined based on the user-defined message type and the
+                              definition of the message type in the descriptor file. </dd>
+                        <dd>When the data for a record exceeds 1 MB, the origin cannot continue
+                              processing data in the file. The origin handles the file based on file
+                              error handling properties and continues reading the next file. </dd>
+                        <dd>For information about generating the descriptor file, see <xref
+                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                  </dlentry>
+            </dl>
             <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
                         They also have additional data formats specific to each destination. Copying
@@ -343,13 +378,37 @@
                         </dlentry>
                   </dl>
             </p>
-            <draft-comment author="Loretta">the following is just for Kafka Producer and Amazon
-                  S3.</draft-comment>
+            <draft-comment author="Loretta"><b>DESTDataFormat-Binary</b> - the following is just for
+                  Kafka Producer and Amazon S3.</draft-comment>
             <dl>
                   <dlentry id="DESTDataFormat-Binary">
                         <dt>Binary</dt>
                         <dd>The destination writes binary data from a single field in the record.
                         </dd>
+                  </dlentry>
+            </dl>
+            <draft-comment author="Loretta"><b>DestDF-ProtoMess</b> - Amazon S3, Directory? Hadoop
+                  FS?</draft-comment>
+            <dl>
+                  <dlentry id="DestDF-ProtoMess">
+                        <dt>Protobuf</dt>
+                        <dd>Writes one record in a message. Uses the user-defined message type and
+                              the definition of the message type in the descriptor file to generate
+                              the message. </dd>
+                        <dd>For information about generating the descriptor file, see <xref
+                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                  </dlentry>
+            </dl>
+            <draft-comment author="Loretta"><b>DestDF-ProtoFile</b> - Amazon S3, Directory? Hadoop
+                  FS?</draft-comment>
+            <dl>
+                  <dlentry id="DestDF-ProtoFile">
+                        <dt>Protobuf</dt>
+                        <dd>Writes a batch of messages in each file. </dd>
+                        <dd>Uses the user-defined message type and the definition of the message
+                              type in the descriptor file to generate the messages in the file. </dd>
+                        <dd>For information about generating the descriptor file, see <xref
+                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
                   </dlentry>
             </dl>
             <p>

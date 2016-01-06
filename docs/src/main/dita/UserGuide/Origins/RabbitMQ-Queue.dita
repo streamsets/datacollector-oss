@@ -17,10 +17,10 @@
  <title>Queue</title>
  <shortdesc>RabbitMQ Consumer reads messages from a specified queue. </shortdesc>
  <conbody>
-  <p>When you configure the origin, you define the queue name and other properties. If a queue of
-            the specified name does not exist, RabbitMQ creates the queue based on the properties
-            that you defined. </p>
-        <p>If the queue does exist, but the properties are incorrect, error messages display when
+  <p><indexterm>RabbitMQ Consumer<indexterm>queue</indexterm></indexterm>When you configure the
+            origin, you define the queue name and other properties. If a queue of the specified name
+            does not exist, RabbitMQ creates the queue based on the properties that you defined. </p>
+        <p>If the queue does exist but the properties are incorrect, error messages display when
             trying to connect. </p>
  </conbody>
 </concept>

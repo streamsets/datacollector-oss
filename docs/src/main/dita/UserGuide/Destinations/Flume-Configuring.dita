@@ -150,6 +150,9 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Event">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
         </steps>
     </taskbody>
 </task>

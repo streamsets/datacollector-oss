@@ -37,9 +37,10 @@
  
  <div class="body conbody"><p class="shortdesc">RabbitMQ Consumer reads messages from a single RabbitMQ queue.</p>
 
-  <p class="p">When you configure the origin, you specify the information needed to connect to RabbitMQ
-            client. You also define a queue and the bindings to use. You can use multiple bindings
-            to read messages from one or more exchanges. </p>
+  <p class="p">When you configure the origin, you specify the
+            information needed to connect to RabbitMQ client. You also define a queue and the
+            bindings to use. You can use multiple bindings to read messages from one or more
+            exchanges. </p>
 
         <p class="p">You can add custom configuration options and define connection credentials as needed. </p>
 
@@ -52,11 +53,11 @@
  
  <div class="body conbody"><p class="shortdesc">RabbitMQ Consumer reads messages from a specified queue. </p>
 
-  <p class="p">When you configure the origin, you define the queue name and other properties. If a queue of
-            the specified name does not exist, RabbitMQ creates the queue based on the properties
-            that you defined. </p>
+  <p class="p">When you configure the
+            origin, you define the queue name and other properties. If a queue of the specified name
+            does not exist, RabbitMQ creates the queue based on the properties that you defined. </p>
 
-        <p class="p">If the queue does exist, but the properties are incorrect, error messages display when
+        <p class="p">If the queue does exist but the properties are incorrect, error messages display when
             trying to connect. </p>
 
  </div>
@@ -65,12 +66,10 @@
 <div class="topic concept nested1" id="concept_nhr_5tk_k5">
  <h2 class="title topictitle2">Data Formats</h2>
 
- 
- <div class="body conbody"><p class="shortdesc"></p>
-
-        <p class="p">The Kafka Consumer
-            origin processes data differently based on the data format. Kafka Consumer can process
-            the following types of data:</p>
+ <div class="body conbody">
+        <p class="p">The RabbitMQ Consumer origin processes data
+            differently based on the data format. The origin can process the following types of
+            data:</p>
 
         <dl class="dl">
             
@@ -100,7 +99,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d4101e204">
+                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d4149e204">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -204,9 +203,25 @@
                                     stage error. </dd>
 
                         
+            
+                              <dt class="dt dlterm">Protobuf</dt>
+
+                              <dd class="dd">Generates a record for every message. By default, the origin
+                                    assumes messages contain data for multiple records.</dd>
+
+                              <dd class="dd">Messages are defined based on the user-defined message type and
+                                    the definition of the message type in the descriptor file. </dd>
+
+                              <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message.  </dd>
+
+                              <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                        
         </dl>
 
-        
  </div>
 
 </div>
@@ -221,9 +236,152 @@
 
         </div>
 
-        <div class="li step p">
-                <span class="ph cmd"></span><br></br>
-            </div>
+        <ol class="ol steps" id="task_hrz_mq1_h5__steps_akg_1yk_k5"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d4173e333" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d50186e313">General Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d50186e316">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d50186e313 ">Name</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d50186e316 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d50186e313 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d50186e316 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d50186e313 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d50186e316 ">Error record handling for the stage: <ul class="ul" id="task_hrz_mq1_h5__d4173e380">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">RabbitMQ</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__table_pmz_mcj_45" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d50186e388">RabbitMQ Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d50186e391">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">URI</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Consumer Tag</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">RabbitMQ Configuration</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Ignore Control Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Compression Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Max Batch Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Batch Wait Time</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d50186e388 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d50186e391 "> </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
 
     </div>
 
