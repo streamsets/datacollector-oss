@@ -26,7 +26,15 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   FILES("Files"),
   POST_PROCESSING("Post Processing"),
-  LOG("Log");
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  XML("XML"),
+  LOG("Log"),
+  AVRO("Avro"),
+  BINARY("Binary"),
+  PROTOBUF("Protobuf"),
+  ;
 
   private final String label;
 

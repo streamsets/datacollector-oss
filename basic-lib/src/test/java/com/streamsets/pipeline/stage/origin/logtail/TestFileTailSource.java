@@ -58,9 +58,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -83,9 +91,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -129,9 +145,17 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
-                                               Arrays.asList(fileInfo1, fileInfo2), PostProcessingOptions.NONE, null,
-                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo1, fileInfo2);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -160,9 +184,17 @@ public class TestFileTailSource {
     fileInfo2.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo2.firstFile = "";
     fileInfo2.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
-                                               Arrays.asList(fileInfo1, fileInfo2), PostProcessingOptions.NONE, null,
-                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo1, fileInfo2);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -215,9 +247,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 7, 1, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 1;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 7;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -257,10 +297,18 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 1;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
     //Set max line length of 2 characters
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 3, 1, 1, Arrays.asList(fileInfo),
-      PostProcessingOptions.NONE, null, null,
-      false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+    conf.dataFormatConfig.textMaxLineLen = 3;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
@@ -310,9 +358,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.JSON, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.JSON;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.jsonMaxObjectLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -425,9 +481,21 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.LOG, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null,
-                                               LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.LOG;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.logMaxObjectLen = 1024;
+    conf.dataFormatConfig.logMode = LogMode.LOG4J;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
+    conf.dataFormatConfig.log4jCustomLogFormat = null;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
@@ -496,9 +564,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "^[0-9].*", "UTF-8", false, 2048, 2, 1000,
-                                               Arrays.asList(fileInfo), PostProcessingOptions.NONE, null,
-                                               LogMode.LOG4J, true, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "^[0-9].*";
+    conf.batchSize = 2;
+    conf.maxWaitTimeSecs = 1000;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 2048;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
       .addOutputLane("lane").addOutputLane("metadata")
       .build();
@@ -532,9 +608,17 @@ public class TestFileTailSource {
     fileInfo1.fileRollMode = FileRollMode.REVERSE_COUNTER;
     fileInfo1.firstFile = "";
     fileInfo1.patternForToken = "";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1,
-                                               Arrays.asList(fileInfo1), PostProcessingOptions.NONE, null,
-                                               null, false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo1);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -572,9 +656,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.PATTERN;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = "[0-9]";
-    FileTailSource source = new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
         .addOutputLane("lane").addOutputLane("metadata")
         .build();
@@ -601,9 +693,17 @@ public class TestFileTailSource {
     fileInfo.fileRollMode = FileRollMode.PATTERN;
     fileInfo.firstFile = "";
     fileInfo.patternForToken = pattern;
-    return new FileTailSource(DataFormat.TEXT, "", "UTF-8", false, 1024, 25, 1, Arrays.asList(fileInfo),
-                                               PostProcessingOptions.NONE, null, null,
-                                               false, null, null, null, null, null, false, null, SCAN_INTERVAL);
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    return new FileTailSource(conf, SCAN_INTERVAL);
   }
 
   private SourceRunner createRunner(Source source) {

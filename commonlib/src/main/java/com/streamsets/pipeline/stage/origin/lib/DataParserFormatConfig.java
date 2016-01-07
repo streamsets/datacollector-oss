@@ -45,7 +45,9 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.avro.AvroDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
+import com.streamsets.pipeline.lib.parser.log.LogDataParserFactory;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
+import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
@@ -544,11 +546,43 @@ public class DataParserFormatConfig {
   )
   public boolean isDelimited = true;
 
-  public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, List<Stage.ConfigIssue> issues) {
-    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, issues);
+  public boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String stageGroup,
+      List<Stage.ConfigIssue> issues
+  ) {
+    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, false, issues);
   }
 
-  public boolean init(Stage.Context context, DataFormat dataFormat, String stageGroup, int overrunLimit, List<Stage.ConfigIssue> issues) {
+  public boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String stageGroup,
+      boolean multiLines,
+      List<Stage.ConfigIssue> issues
+  ) {
+    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, multiLines, issues);
+  }
+
+  public boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String stageGroup,
+      int overrunLimit,
+      List<Stage.ConfigIssue> issues
+  ) {
+    return init(context, dataFormat, stageGroup, overrunLimit, false, issues);
+  }
+
+  public boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String stageGroup,
+      int overrunLimit,
+      boolean multiLines,
+      List<Stage.ConfigIssue> issues
+  ) {
     boolean valid = true;
     switch (dataFormat) {
       case JSON:
@@ -649,7 +683,7 @@ public class DataParserFormatConfig {
         break;
     }
 
-    valid &= validateDataParser(context, dataFormat, stageGroup, overrunLimit, issues);
+    valid &= validateDataParser(context, dataFormat, stageGroup, overrunLimit, multiLines, issues);
 
     return valid;
   }
@@ -659,6 +693,7 @@ public class DataParserFormatConfig {
       DataFormat dataFormat,
       String stageGroup,
       int overrunLimit,
+      boolean multiLines,
       List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
@@ -681,7 +716,9 @@ public class DataParserFormatConfig {
 
     switch (dataFormat) {
       case TEXT:
-        builder.setMaxDataLen(textMaxLineLen);
+        builder
+            .setMaxDataLen(textMaxLineLen)
+            .setConfig(TextDataParserFactory.MULTI_LINE_KEY, multiLines);
         break;
       case JSON:
         builder.setMaxDataLen(jsonMaxObjectLen).setMode(jsonContent);
@@ -703,6 +740,7 @@ public class DataParserFormatConfig {
         builder.setMaxDataLen(-1);
         break;
       case LOG:
+        builder.setConfig(LogDataParserFactory.MULTI_LINES_KEY, multiLines);
         logDataFormatValidator.populateBuilder(builder);
         break;
       case AVRO:
