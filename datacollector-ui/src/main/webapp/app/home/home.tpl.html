@@ -135,7 +135,7 @@
                ng-repeat="pipeline in pipelines | orderBy:sortColumn:sortReverse"
                ng-click="openPipeline(pipeline)">
         <header>
-          <h2>{{pipeline.name | limitTo: 50}}</h2>
+          <h2>{{pipeline.name | limitTo: 45}}</h2>
         </header>
 
         <section class="project-additional-info"

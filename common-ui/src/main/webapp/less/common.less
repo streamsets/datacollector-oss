@@ -67,7 +67,12 @@ body {
     }
 
     .navbar-nav {
-      padding-right: 2.4 * @defaultPadding;
+      padding-right: @defaultPadding;
+
+      .menu-label {
+        display: none;
+      }
+
       >li {
         min-width: 50px;
         >a {
@@ -87,6 +92,36 @@ body {
         }
       }
     }
+
+    @media (max-width: 768px) {
+      .container-fluid {
+        .navbar-nav{
+          background-color: #f8f8f8;
+
+          .menu-label {
+            display: inline;
+            padding-left: @smallPadding;
+            position: absolute;
+          }
+
+          .tooltip {
+            visibility: hidden;
+          }
+        }
+      }
+    }
+
+
+    @media (min-width: 768px) {
+      .container-fluid {
+        .navbar-nav{
+          >li {
+            height: 50px;
+          }
+        }
+      }
+    }
+
   }
 
 
@@ -95,7 +130,6 @@ body {
   }
 
   .notifications-dropdown {
-    padding-left: @smallPadding;
     height: 50px;
 
     .dropdown-toggle {
@@ -123,6 +157,10 @@ body {
         color: #fff;
         background-color: #d9534f;
         font-size: .7em;
+      }
+
+      .menu-label {
+        margin-left: 20px;
       }
     }
 
