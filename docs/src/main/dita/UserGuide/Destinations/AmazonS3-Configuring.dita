@@ -94,7 +94,8 @@
                                 </row>
                                 <row>
                                     <entry>Compress with Gzip</entry>
-                                    <entry>Compresses files before writing to Amazon S3.</entry>
+                                    <entry>Compresses files with gzip before writing to Amazon
+                                        S3.</entry>
                                 </row>
                             </tbody>
                         </tgroup>

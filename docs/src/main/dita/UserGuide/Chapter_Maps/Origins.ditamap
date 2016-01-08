@@ -19,7 +19,7 @@
   <topicref href="../Origins/Origins_overview.dita" chunk="to-content">
     <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/BatchSizeWaitTime.dita"/>
-   <topicref href="../Origins/FileCompressionTypes.dita"/>
+   <topicref href="../Origins/FileCompressionFormats.dita"/>
   <topicref href="../Origins/PreviewingRawSourceData.dita"/></topicref>
   <topicref href="../Origins/AmazonS3.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>

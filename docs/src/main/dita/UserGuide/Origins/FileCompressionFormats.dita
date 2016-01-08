@@ -14,16 +14,15 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_uxr_g52_qs">
- <title>File Compression Types</title>
+ <title>File Compression Formats</title>
  <shortdesc>The Amazon S3 and Directory origins can read uncompressed, compressed files, archives,
     and compressed archives. </shortdesc>
  <conbody>
-  <p><indexterm>Directory origin<indexterm>file compression
-        types</indexterm></indexterm><indexterm>compression types<indexterm>for Amazon S3 and
-          Directory</indexterm></indexterm><indexterm>Amazon S3 origin<indexterm>file compression
-          types</indexterm></indexterm>When you configure the origin, you indicate the types of
-      files you want to read. <draft-comment author="Loretta">rename this topic if necessary after
-        the property rename.</draft-comment></p>
+  <p><indexterm>Directory origin<indexterm>compression
+        formats</indexterm></indexterm><indexterm>compression formats<indexterm>for Amazon S3 and
+          Directory</indexterm></indexterm><indexterm>Amazon S3 origin<indexterm>compression
+          formats</indexterm></indexterm>When you configure the origin, you indicate the types of
+      files you want to read. </p>
     <p>The following table lists the supported file types by extension:<table frame="all" rowsep="1"
         colsep="1" id="table_fwr_k3s_b5">
         <tgroup cols="2">
@@ -31,7 +30,7 @@
           <colspec colname="c2" colnum="2" colwidth="3.5*"/>
           <thead>
             <row>
-              <entry>File Type</entry>
+              <entry>Compression Format</entry>
               <entry>Description</entry>
             </row>
           </thead>

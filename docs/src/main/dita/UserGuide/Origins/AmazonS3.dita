@@ -22,8 +22,6 @@
                     origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you
             define the region, bucket, optional folder, file name pattern, and compression type.
             These properties determine the files that the origin processes. </p>
-        <draft-comment author="Loretta">Might need to rename "compression type" after they pick a
-            single label for Dir &amp; S3.</draft-comment>
   <p>After processing a file or upon encountering errors, the origin can keep, archive, or delete
             the file. </p>
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline
