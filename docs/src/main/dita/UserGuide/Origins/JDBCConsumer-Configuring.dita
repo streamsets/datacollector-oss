@@ -99,6 +99,11 @@
                                     <entry>Maximum number of records to include in a batch.</entry>
                                 </row>
                                 <row>
+                                    <entry>Max Clob Size (characters)</entry>
+                                    <entry>Maximum number of characters to be read in a Clob field.
+                                        Larger data is truncated.</entry>
+                                </row>
+                                <row>
                                     <entry>Additional JDBC Configuration</entry>
                                     <entry>
                                         <p>Additional JDBC configuration properties to use. To add
@@ -153,6 +158,9 @@
                 </info>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Legacy">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Advanced">
                 <cmd/>
             </step>
         </steps>

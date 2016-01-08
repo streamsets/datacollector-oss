@@ -774,13 +774,13 @@
                                 </row>
                                 <row id="row-MessageType">
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to read data. Enter the message type
+                                    <entry>Message type to use to read data. Enter a message type
                                         defined in the descriptor file.</entry>
                                 </row>
                                 <row>
                                     <entry>Delimited Messages</entry>
-                                    <entry>Indicates if a message includes more than one protobuf
-                                        message.</entry>
+                                    <entry>Indicates if a message might include more than one
+                                        protobuf message.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -821,12 +821,12 @@
                                 </row>
                                 <row>
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to read data. Enter the message type
+                                    <entry>Message type to use to read data. Enter a message type
                                         defined in the descriptor file.</entry>
                                 </row>
                                 <row>
                                     <entry>Delimited Messages</entry>
-                                    <entry>Indicates if a file includes more than one protobuf
+                                    <entry>Indicates if a file might include more than one protobuf
                                         message.</entry>
                                 </row>
                             </tbody>
@@ -959,8 +959,8 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta">Both of the following steps are used in JDBC
-                        Consumer &amp; Producer config topics.</draft-comment>
+                    <draft-comment author="Loretta">The following steps are used in JDBC Consumer
+                        &amp; Producer config topics.</draft-comment>
                 </cmd>
             </step>
             <step id="JDBC-Credentials">
@@ -1022,6 +1022,69 @@
                         </tgroup>
                     </table>
                 </info>
+            </step>
+            <step id="JDBC-Advanced">
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
+                    properties.</cmd>
+                <info>The defaults for these properties should work in most cases:<table frame="all"
+                        rowsep="1" colsep="1" id="table_wnj_hf3_p5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Maximum Pool Size </entry>
+                                    <entry>The maximum number of connections to create to the origin
+                                        system. <p>Default is 1. The recommended value is
+                                                1.<draft-comment author="Loretta">Adam - do we want
+                                                to say why? or when it would be an ok idea to fiddle
+                                                with this?</draft-comment></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Minimum Idle Connections</entry>
+                                    <entry>The minimum number of connections to create and maintain.
+                                        To define a fixed connection pool, set to the same value as
+                                        Maximum Pool Size. <p>Default is 1. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Timeout</entry>
+                                    <entry>Maximum time to wait for a connection. Use a time
+                                        constant in an expression to define the time increment.
+                                            <p>Default is 30 seconds, defined as follows:
+                                            <codeblock>${30 * SECONDS}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Idle Timeout</entry>
+                                    <entry>Maximum time to allow a connection to idle. Use a time
+                                        constant in an expression to define the time increment.
+                                            <p>Use 0 to avoid removing any idle
+                                            connections.</p><p>Default is 30 minutes, defined as
+                                            follows:
+                                        <codeblock>${30 * MINUTES}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Max Connection Lifetime</entry>
+                                    <entry>Maximum lifetime for a connection. Use a time constant in
+                                        an expression to define the time increment. <p>Use 0 to
+                                            avoid removing any idle connections.</p><p>Default is 30
+                                            seconds, defined as follows:
+                                            <codeblock>${30 * SECONDS}</codeblock></p></entry>
+                                </row>
+                                <row>
+                                    <entry>Enforce Read-only Connection</entry>
+                                    <entry>Creates read-only connections to avoid any type of write.
+                                            <p>Selected by default. Clearing this property is not
+                                            recommended. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
             </step>
             <step id="DEST_INFO">
                 <cmd>
@@ -1473,7 +1536,7 @@
                                 </row>
                                 <row>
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to write data. Enter the message type
+                                    <entry>Message type to use to write data. Enter a message type
                                         defined in the descriptor file.</entry>
                                 </row>
                             </tbody>

@@ -99,7 +99,7 @@
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">Generates a record for each delimited line. You can use the
-                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d4465e204">
+                                    following delimited format types:<ul class="ul" id="concept_nhr_5tk_k5__d4473e204">
                                           <li class="li"><span class="ph uicontrol">Default CSV</span> - File that
                                                 includes comma-separated values. Ignores empty lines
                                                 in the file.</li>
@@ -206,11 +206,11 @@
             
                               <dt class="dt dlterm">Protobuf</dt>
 
-                              <dd class="dd">Generates a record for every message. By default, the origin
-                                    assumes messages contain data for multiple records.</dd>
+                              <dd class="dd">Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
 
-                              <dd class="dd">Messages are defined based on the user-defined message type and
-                                    the definition of the message type in the descriptor file. </dd>
+                              <dd class="dd">Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
 
                               <dd class="dd">When the data for a record exceeds 1 MB, the origin cannot
                                     continue processing data in the message. The origin handles the
@@ -241,14 +241,14 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d4489e333" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hrz_mq1_h5__d4497e333" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d51547e313">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d52021e313">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d51547e316">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d52021e316">Description</th>
 
                                 </tr>
 
@@ -256,23 +256,23 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51547e313 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d52021e313 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51547e316 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51547e313 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51547e316 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d52021e316 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d51547e313 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d52021e313 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d51547e316 ">Error record handling for the stage: <ul class="ul" id="task_hrz_mq1_h5__d4489e380">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d52021e316 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d52021e313 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d52021e316 ">Error record handling for the stage: <ul class="ul" id="task_hrz_mq1_h5__d4497e380">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -302,9 +302,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d51547e388">RabbitMQ Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d52021e388">RabbitMQ Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d51547e391">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d52021e391">Description</th>
 
                                 </tr>
 
@@ -312,65 +312,65 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">URI</td>
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">URI</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Consumer Tag</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">RabbitMQ Configuration</td>
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Consumer Tag</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Ignore Control Characters</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Compression Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">RabbitMQ Configuration</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Max Batch Size</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Batch Wait Time</td>
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Ignore Control Characters</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Use Credentials</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d51547e388 ">Data Format</td>
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Compression Format</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d51547e391 "> </td>
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Max Batch Size</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Batch Wait Time</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Use Credentials</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d52021e388 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d52021e391 "> </td>
 
                                 </tr>
 

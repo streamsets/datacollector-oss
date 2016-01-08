@@ -21,11 +21,14 @@
                 prerequisites</indexterm></indexterm>The <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             processes data based on a protobuf descriptor file. The descriptor file (.desc)
-            describes the message type to use when processing protobuf data. </p>
+            describes one or more message types. When you configure a stage to process data, you
+            specify the message type to use. </p>
         <p>Before processing protobuf data, perform the following tasks: </p>
         <dl>
             <dlentry>
                 <dt>Generate the protobuf descriptor file</dt>
+                <dd>When you generate the descriptor file, you need the .proto files that define the
+                    message type and any related dependencies.</dd>
                 <dd>To generate the descriptor file, use the protobuf <codeph>protoc</codeph>
                     command with the <codeph>descriptor_set_out</codeph> flag and the .proto files
                     to use, as follows:

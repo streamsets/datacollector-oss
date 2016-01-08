@@ -308,10 +308,10 @@
                   <dl>
                         <dlentry id="OriginDF-ProtoMessage">
                               <dt>Protobuf</dt>
-                              <dd>Generates a record for every message. By default, the origin
-                                    assumes messages contain data for multiple records.</dd>
-                              <dd>Messages are defined based on the user-defined message type and
-                                    the definition of the message type in the descriptor file. </dd>
+                              <dd>Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
+                              <dd>Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
                               <dd>When the data for a record exceeds 1 MB, the origin cannot
                                     continue processing data in the message. The origin handles the
                                     message based on the stage error handling property and continues
@@ -327,9 +327,9 @@
             <dl>
                   <dlentry id="OriginDF-ProtoFile">
                         <dt>Protobuf</dt>
-                        <dd>Generates a record for every message. </dd>
-                        <dd>Messages are defined based on the user-defined message type and the
-                              definition of the message type in the descriptor file. </dd>
+                        <dd>Generates a record for every protobuf message. </dd>
+                        <dd>Protobuf messages must match the specified message type and be described
+                              in the descriptor file. </dd>
                         <dd>When the data for a record exceeds 1 MB, the origin cannot continue
                               processing data in the file. The origin handles the file based on file
                               error handling properties and continues reading the next file. </dd>

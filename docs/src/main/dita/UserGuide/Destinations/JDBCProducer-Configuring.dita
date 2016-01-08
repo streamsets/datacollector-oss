@@ -47,10 +47,6 @@
                                             string format required by the database. </p></entry>
                                 </row>
                                 <row>
-                                    <entry>Use Credentials</entry>
-                                    <entry>Select to use JDBC credentials.</entry>
-                                </row>
-                                <row>
                                     <entry>Table Name</entry>
                                     <entry>Database table to write to. <p>Some databases require a
                                             fully-qualified table name, such as &lt;schema |
@@ -73,6 +69,27 @@
                                         the batch. </entry>
                                 </row>
                                 <row>
+                                    <entry>Use Multi-Row Insert</entry>
+                                    <entry>Determines how the destination inserts records. Select to
+                                        allow inserts of multiple rows at a time. Clear to insert a
+                                        single-row at a time. <draft-comment author="Loretta">Adam,
+                                            should we be discussing this more, or is this all we
+                                            need? Should I mention a performance
+                                            hit?</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Prepared Statement Parameter Limit for Multi-Row
+                                        Insert</entry>
+                                    <entry>Defines the number of parameters allowed in the prepared
+                                        statement for multi-row inserts.<draft-comment
+                                            author="Loretta">Adam: I need
+                                            clarification.</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Credentials</entry>
+                                    <entry>Select to use JDBC credentials.</entry>
+                                </row>
+                                <row>
                                     <entry>Additional JDBC Configuration Properties</entry>
                                     <entry>
                                         <p>Additional JDBC configuration properties to use. To add
@@ -91,6 +108,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Legacy">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JDBC-Advanced">
                 <cmd/>
             </step>
         </steps>
