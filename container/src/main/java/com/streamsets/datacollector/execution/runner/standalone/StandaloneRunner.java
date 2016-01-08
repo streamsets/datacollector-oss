@@ -441,7 +441,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         }
       }
 
-      for(RuleDefinition ruleDefinition: ruleDefinitions.getDataRuleDefinitions()) {
+      for(RuleDefinition ruleDefinition: ruleDefinitions.getAllDataRuleDefinitions()) {
         Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
           AlertsUtil.getAlertGaugeName(ruleDefinition.getId()));
 
