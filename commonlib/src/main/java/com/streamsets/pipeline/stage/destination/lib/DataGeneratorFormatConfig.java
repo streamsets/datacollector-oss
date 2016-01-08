@@ -217,7 +217,7 @@ public class DataGeneratorFormatConfig {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "true",
     label = "Include Schema",
-    description = "Includes the Avro schema in the Flume event",
+    description = "Includes the Avro schema in the event",
     displayPosition = 410,
     group = "AVRO",
     dependsOn = "dataFormat^",
