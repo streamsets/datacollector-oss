@@ -184,7 +184,7 @@
         <tab-heading tooltip-placement="right" tooltip="{{ 'home.previewPane.stageConfigTitle' | translate }}">
           <i class="fa fa-gear fa-12x"></i>
         </tab-heading>
-        <ng-include ng-if="configurationTabActive" src="'app/home/detail/configuration/configuration.tpl.html'"></ng-include>
+        <ng-include ng-show="configurationTabActive" src="'app/home/detail/configuration/configuration.tpl.html'"></ng-include>
       </tab>
 
       <tab active="previewConfigTabActive">
