@@ -212,4 +212,19 @@ public class TestPipelineConfigurationValidator {
     Assert.assertTrue(stageConfigs < conf.getStages().get(2).getConfiguration().size());
   }
 
+  @Test
+  public void testValidatePipelineConfigs() {
+    StageLibraryTask lib = MockStages.createStageLibrary();
+    PipelineConfiguration conf =  MockStages.createPipelineConfigurationWithClusterOnlyStage(ExecutionMode.CLUSTER_MESOS_STREAMING);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(lib, "name", conf);
+    conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(2, issues.size());
+    //mesosDispatcherURL is required but not set
+    Assert.assertEquals(ValidationError.VALIDATION_0007.name(), issues.get(0).getErrorCode());
+    //hdfsS3ConfDir is required but not set
+    Assert.assertEquals(ValidationError.VALIDATION_0007.name(), issues.get(1).getErrorCode());
+  }
+
 }

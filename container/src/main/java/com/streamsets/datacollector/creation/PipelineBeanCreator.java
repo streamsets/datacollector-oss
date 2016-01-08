@@ -59,6 +59,7 @@ import java.util.Properties;
 
 public abstract class PipelineBeanCreator {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
+  public static final String PIPELINE_LIB_DEFINITION = "Pipeline";
 
   private static final PipelineBeanCreator CREATOR = new PipelineBeanCreator() {
   };
@@ -71,7 +72,7 @@ public abstract class PipelineBeanCreator {
 
   static private StageDefinition getPipelineDefinition() {
     StageLibraryDefinition libraryDef = new StageLibraryDefinition(Thread.currentThread().getContextClassLoader(),
-                                                                   "system", "System", new Properties(), null, null,
+                                                                   PIPELINE_LIB_DEFINITION, PIPELINE_LIB_DEFINITION, new Properties(), null, null,
                                                                    null);
     return StageDefinitionExtractor.get().extract(libraryDef, PipelineConfigBean.class, "Pipeline Config Definitions");
   }

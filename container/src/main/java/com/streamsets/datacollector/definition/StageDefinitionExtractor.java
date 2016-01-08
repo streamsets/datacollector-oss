@@ -27,6 +27,7 @@ import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -41,6 +42,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
@@ -205,25 +207,28 @@ public abstract class StageDefinitionExtractor {
         List<String> libJarsRegex = ImmutableList.copyOf(sDef.libJarsRegex());
         boolean recordsByRef = sDef.recordsByRef();
 
-        List<ConfigDefinition> systemConfigs = ConfigDefinitionExtractor.get().extract(StageConfigBean.class,
-            Collections.<String>emptyList(),
-            "systemConfigs");
+        // If not a stage library, then dont add stage system configs
+        if (!PipelineBeanCreator.PIPELINE_LIB_DEFINITION.equals(libraryDef.getName())) {
+          List<ConfigDefinition> systemConfigs =
+            ConfigDefinitionExtractor.get().extract(StageConfigBean.class, Collections.<String> emptyList(),
+              "systemConfigs");
 
-        for (ConfigDefinition def : systemConfigs) {
-          switch (def.getName()) {
-            case StageConfigBean.STAGE_PRECONDITIONS_CONFIG:
-            case StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG:
-              if (preconditions) {
+          for (ConfigDefinition def : systemConfigs) {
+            switch (def.getName()) {
+              case StageConfigBean.STAGE_PRECONDITIONS_CONFIG:
+              case StageConfigBean.STAGE_REQUIRED_FIELDS_CONFIG:
+                if (preconditions) {
+                  configDefinitions.add(def);
+                }
+                break;
+              case StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG:
+                if (onRecordError) {
+                  configDefinitions.add(def);
+                }
+                break;
+              default:
                 configDefinitions.add(def);
-              }
-              break;
-            case StageConfigBean.STAGE_ON_RECORD_ERROR_CONFIG:
-              if (onRecordError) {
-                configDefinitions.add(def);
-              }
-              break;
-            default:
-              configDefinitions.add(def);
+            }
           }
         }
 

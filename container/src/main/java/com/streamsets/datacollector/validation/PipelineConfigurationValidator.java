@@ -135,9 +135,9 @@ public class PipelineConfigurationValidator {
       canPreview &= addMissingConfigs();
       canPreview &= sortStages();
       canPreview &= checkIfPipelineIsEmpty();
-      canPreview &= loadPipelineConfig();
+      canPreview &= loadAndValidatePipelineConfig();
       canPreview &= validatePipelineMemoryConfiguration();
-      canPreview &= validatePipelineConfiguration();
+      canPreview &= validateStageConfiguration();
       canPreview &= validatePipelineLanes();
       canPreview &= validateErrorStage();
       canPreview &= validateStagesExecutionMode(pipelineConfiguration);
@@ -336,9 +336,22 @@ public class PipelineConfigurationValidator {
     return canPreview;
   }
 
-  private boolean loadPipelineConfig() {
+  private boolean loadAndValidatePipelineConfig() {
     List<Issue> errors = new ArrayList<>();
     pipelineBean = PipelineBeanCreator.get().create(false, stageLibrary, pipelineConfiguration, errors);
+    StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineConfiguration);
+    IssueCreator issueCreator = IssueCreator.getPipeline();
+    for (ConfigDefinition confDef : PipelineBeanCreator.PIPELINE_DEFINITION.getConfigDefinitions()) {
+      Config config = pipelineConfs.getConfig(confDef.getName());
+      // No need to validate bad records, its validated before in PipelineBeanCreator.create()
+      if (!confDef.getGroup().equals(PipelineGroups.BAD_RECORDS.name()) && confDef.isRequired()
+        && (config == null || isNullOrEmpty(confDef, config))) {
+        validateRequiredField(confDef, pipelineConfs, issueCreator);
+      }
+      if (confDef.getType() == ConfigDef.Type.NUMBER && !isNullOrEmpty(confDef, config)) {
+        validatedNumberConfig(config, confDef, issueCreator);
+      }
+    }
     issues.addAll(errors);
     return errors.isEmpty();
   }
@@ -780,7 +793,7 @@ public class PipelineConfigurationValidator {
   }
 
   @VisibleForTesting
-  boolean validatePipelineConfiguration() {
+  boolean validateStageConfiguration() {
     boolean preview = true;
     Set<String> stageNames = new HashSet<>();
     boolean shouldBeSource = true;
