@@ -339,17 +339,22 @@
             </dl>
             <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
-                        They also have additional data formats specific to each destination. Copying
-                        all but SDC Record to Hadoop FS destination.</draft-comment>
+                        They also have additional data formats specific to each destination. Hadoop
+                        FS and Local FS conref individual data formats</draft-comment>
+            </p>
+            <p>
+                  <draft-comment author="Loretta"><b>DESTDataF-Text</b> and others in this list are
+                        - used by Kafka, Flume, Hadoop FS, Local FS. Avro might not be used by
+                        anyone.</draft-comment>
                   <dl id="DESTDataFormats">
-                        <dlentry>
+                        <dlentry id="DESTDataF-Text">
                               <dt>Text</dt>
                               <dd>The destination writes a single text field of a record. When you
                                     configure the stage, you select the field to use. When
                                     necessary, merge record data into the field earlier in the
                                     pipeline. </dd>
                         </dlentry>
-                        <dlentry>
+                        <dlentry id="DEST-DataF-JSON">
                               <dt>JSON</dt>
                               <dd>The destination writes records as JSON data. You can use one of
                                     the following formats:<ul id="ul_dd1_5y1_wr">
@@ -361,7 +366,7 @@
                                                 record. </li>
                                     </ul></dd>
                         </dlentry>
-                        <dlentry>
+                        <dlentry id="DEST-DataF-Delim">
                               <dt>Delimited</dt>
                               <dd>The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
@@ -371,7 +376,12 @@
                                                 optional <term>header</term> element.</li>
                                     </ul></dd>
                         </dlentry>
-                        <dlentry>
+                        <dlentry id="DEST-DF-AvroFILE">
+                              <dt>Avro</dt>
+                              <dd>The destination writes records based on the Avro schema that you
+                                    provide. The schema definition is included in each file.</dd>
+                        </dlentry>
+                        <dlentry id="DEST-DataF-SDC">
                               <dt>SDC Record</dt>
                               <dd>The destination writes records in the SDC Record data format.
                               </dd>

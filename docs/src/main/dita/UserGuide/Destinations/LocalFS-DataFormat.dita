@@ -16,9 +16,9 @@
 <concept id="concept_lww_3b3_kr">
  <title>Data Formats</title>
  <conbody>
-  <p><indexterm>Hadoop FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
-          formats<indexterm>Hadoop FS destination</indexterm></indexterm>Hadoop FS writes data to
-      HDFS based on the data format that you select. You can use the following data formats: <dl>
+  <p><indexterm>Local FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
+          formats<indexterm>Local FS destination</indexterm></indexterm>Local FS writes data based
+      on the data format that you select. You can use the following data formats: <dl>
         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
           <dt/>
           <dd/>

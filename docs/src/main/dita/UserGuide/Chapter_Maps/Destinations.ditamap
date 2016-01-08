@@ -41,10 +41,10 @@
    </topicmeta>
    <topicref href="../Destinations/Elasticsearch-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/Flume.dita" chunk="to-content">
+  <topicref href="../Destinations/Flume.dita" chunk="to-content"> 
    <topicmeta>
-    <shortdesc/>
-   </topicmeta>
+   <shortdesc/>
+  </topicmeta>
    <topicref href="../Destinations/Flume-DataFormats.dita"/>
    <topicref href="../Destinations/Flume-Configuring.dita"/>
   </topicref>
@@ -54,20 +54,14 @@
    </topicmeta>
    <topicref href="../Destinations/HadoopFS-Kerberos.dita"/>
    <topicref href="../Destinations/HadoopFS-HDFSUser-dest.dita"/>
-   <topicref href="../Destinations/Compression-Overview.dita">
-    <topicref href="../Destinations/Compression-Enabling.dita"/>
-   </topicref>
    <topicref href="../Destinations/HadoopFS-DataFormat.dita"/>
-   <topicref href="../Reusable_Content/Dest-DirectoryTemplates.dita">
-    <keydef keys="stage">
-     <topicmeta>
-      <keywords><keyword>Hadoop FS</keyword></keywords>
-     </topicmeta>
-    </keydef>
-   </topicref>
+   <topicref href="../Destinations/HadoopFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
+   <topicref href="../Destinations/HadoopFS-Compression.dita">
+    <topicref href="../Destinations/HadoopFS-Comp-LZO.dita"/>
+   </topicref>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/HBase.dita" chunk='to-content'>
@@ -114,12 +108,12 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Reusable_Content/Dest-DirectoryTemplates.dita">
-    <keydef keys="stage">
-     <topicmeta>
-      <keywords><keyword>Local FS</keyword></keywords>
-     </topicmeta>
-    </keydef>
+   <topicref href="../Destinations/LocalFS-DataFormat.dita"/>
+   <topicref href="../Destinations/LocalFS-DirectoryTemplates.dita"/>
+   <topicref href="../Destinations/LocalFS-TimeBasis.dita"/>
+   <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
+   <topicref href="../Destinations/LocalFS-Compression.dita">
+    <topicref href="../Destinations/LocalFS-Comp-LZO.dita"/>
    </topicref>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>

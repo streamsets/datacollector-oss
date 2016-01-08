@@ -29,6 +29,6 @@
             Collector for LZO compression.</p>
     </conbody>
     <related-links>
-        <link href="Compression-Enabling.dita#task_wcm_n13_45"/>
+        <link href="HadoopFS-Comp-LZO.dita#task_wcm_n13_45"/>
     </related-links>
 </concept>

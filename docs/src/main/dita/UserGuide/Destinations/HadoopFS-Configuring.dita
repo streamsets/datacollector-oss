@@ -98,7 +98,7 @@
                     </table>
                 </info>
             </step>
-            <step>
+            <step id="FS-OutputFiles">
                 <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
                     options:</cmd>
                 <info>
@@ -128,6 +128,7 @@
                                             <li>JSON</li>
                                             <li>Delimited</li>
                                             <li>Avro</li>
+                                            <li>Protobuf</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -147,9 +148,9 @@
                                 </row>
                                 <row>
                                     <entry>Directory Template <xref
-                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br">
+                                            href="../Destinations/HadoopFS-DirectoryTemplates.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_c4p_p5v_yq"/></xref></entry>
+                                                id="image_mb4_fsw_45"/></xref></entry>
                                     <entry>Template for creating output directories. You can use
                                         constants, field values, and datetime variables. <p>Output
                                             directories are created based on the smallest datetime
@@ -162,9 +163,9 @@
                                 </row>
                                 <row>
                                     <entry>Time Basis <xref
-                                            href="HadoopFS-TimeBasis.dita#concept_gkz_smd_br">
+                                            href="../Destinations/HadoopFS-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            /></xref></entry>
+                                                id="image_a4r_rkw_45"/></xref></entry>
                                     <entry>Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
                                             expressions:<ul id="ul_ggs_43g_br">
@@ -198,8 +199,8 @@
                                             </li>
                                         </ul><p>LZO compression require additional configuration.
                                             For more information, see <xref
-                                                href="Compression-Overview.dita#concept_h4y_ycm_xs"
-                                            />.</p></entry>
+                                                href="../Destinations/HadoopFS-Comp-LZO.dita"
+                                        />.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Compression Codec Class</entry>
@@ -227,59 +228,8 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <wintitle>Late Records</wintitle> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <note>These properties are only relevant for a time basis based on the time of a
-                        record.</note>
-                    <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
-                            <thead>
-                                <row>
-                                    <entry>Late Records Property <xref
-                                            href="HadoopFS-LateRecordHandling.dita#concept_xgm_g4d_br">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/>
-                                        </xref>
-                                    </entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Late Record Time Limit (secs)</entry>
-                                    <entry>Time limit for output directories to accept data. <p>You
-                                            can enter a time in seconds, or use the expression to
-                                            enter a time in hours. You can also use MINUTES in the
-                                            default expression to define the time in minutes.
-                                        </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Late Record Handling</entry>
-                                    <entry>Determines how to handle late records:<ul
-                                            id="ul_gx4_c12_br">
-                                            <li>Send to error - Sends the record to the stage for
-                                                error handling. </li>
-                                            <li>Send to late records file - Sends the record to a
-                                                late records file.</li>
-                                        </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Late Record Directory Template <xref
-                                            href="HadoopFS-DirectoryTemplates.dita#concept_cvc_skd_br">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            /></xref></entry>
-                                    <entry>Template for creating late record directories. You can
-                                        use constants, field values, and datetime variables.
-                                            <p>Output directories are created based on the smallest
-                                            datetime variable in the template.</p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/FS-LateRecords">
+                <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
@@ -291,6 +241,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
                 <cmd/>
             </step>
         </steps>

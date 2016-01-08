@@ -61,10 +61,11 @@
  <h2 class="title topictitle2">Data Formats</h2>
 
  <div class="body conbody">
-  <div class="p">The Flume destination writes data to a
-      Flume source based on the data format that you select. You can use the following data formats:
-        <dl class="dl">
-                        
+  <p class="p">The Flume destination writes data to a
+      Flume source based on the data format that you select. You can use the following data formats: </p>
+
+    <dl class="dl">
+      
                               <dt class="dt dlterm">Text</dt>
 
                               <dd class="dd">The destination writes a single text field of a record. When you
@@ -73,11 +74,11 @@
                                     pipeline. </dd>
 
                         
-                        
+      
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_dbh_2xp_yr__d1263e536">
+                                    the following formats:<ul class="ul" id="concept_dbh_2xp_yr__d1263e544">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -90,12 +91,12 @@
 </dd>
 
                         
-                        
+      
                               <dt class="dt dlterm">Delimited</dt>
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_dbh_2xp_yr__d1263e553">
+                                    following data structure:<ul class="ul" id="concept_dbh_2xp_yr__d1263e561">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -105,17 +106,6 @@
 </dd>
 
                         
-                        
-                              <dt class="dt dlterm">SDC Record</dt>
-
-                              <dd class="dd">The destination writes records in the SDC Record data format.
-                              </dd>
-
-                        
-                  </dl>
-</div>
-
-    <dl class="dl">
       
         <dt class="dt dlterm">Avro</dt>
 
@@ -126,6 +116,20 @@
           management to avoid losing track of the schema associated with the data.</dd>
 
       
+      
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">The destination writes records in the SDC Record data format.
+                              </dd>
+
+                        
+      
+                        <dt class="dt dlterm">Binary</dt>
+
+                        <dd class="dd">The destination writes binary data from a single field in the record.
+                        </dd>
+
+                  
       
                         <dt class="dt dlterm">Protobuf</dt>
 
@@ -161,9 +165,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e209">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e217">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e212">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e220">Description</th>
 
                                 </tr>
 
@@ -171,31 +175,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_vft_g5p_yr__d1197e2037" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -203,10 +207,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_vft_g5p_yr__d1197e2051" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -214,9 +218,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e209 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e217 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e212 ">Error record handling for the stage: <ul class="ul" id="task_vft_g5p_yr__d1197e2068">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e220 ">Error record handling for the stage: <ul class="ul" id="task_vft_g5p_yr__d1197e2068">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -246,9 +250,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e331">Flume Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e339">Flume Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e334">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e342">Description</th>
 
                                 </tr>
 
@@ -256,9 +260,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Hosts Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Hosts Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Flume host information:<ul class="ul" id="task_vft_g5p_yr__ul_al4_s1q_yr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Flume host information:<ul class="ul" id="task_vft_g5p_yr__ul_al4_s1q_yr">
                                             <li class="li">Name - Local alias for the Flume host. </li>
 
                                             <li class="li">Flume host and port - Host name and port number for
@@ -272,9 +276,9 @@ Click the <span class="ph uicontrol">Add</span> icon to add
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Client Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Client Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Flume source client type:<ul class="ul" id="task_vft_g5p_yr__ul_qcr_fbq_yr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Flume source client type:<ul class="ul" id="task_vft_g5p_yr__ul_qcr_fbq_yr">
                                             <li class="li">Avro Failover - Apache Avro Failover RPC
                                                 Client.</li>
 
@@ -289,17 +293,17 @@ Click the <span class="ph uicontrol">Add</span> icon to add
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Backoff</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Backoff</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">The Avro load balancing client temporarily avoids writing
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">The Avro load balancing client temporarily avoids writing
                                         to a failed host.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Max Backoff (ms)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Max Backoff (ms)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">The maximum amount of time that the Avro load balancing
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">The maximum amount of time that the Avro load balancing
                                         client avoids writing to a failed host. <p class="p">Enter the number
                                             of milliseconds between 1 and 65536. </p>
 Use 0 to use
@@ -308,9 +312,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Host Selection Strategy</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Host Selection Strategy</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">
                                         <p class="p">Strategy the Avro load balancing client uses to select a
                                             Flume host.</p>
 
@@ -319,9 +323,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Flume Batch Size (events)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Flume Batch Size (events)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Maximum number of events that the Flume client writes to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Maximum number of events that the Flume client writes to
                                         a host at one time. <p class="p">The client can split a <span class="ph">Data
                   Collector</span> batch into multiple Flume batches before passing the
                                             batches to the host.</p>
@@ -330,17 +334,17 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Flume Client Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Flume Client Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Milliseconds that the client can wait for a connection to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Milliseconds that the client can wait for a connection to
                                         the host.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Flume Client Request Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Flume Client Request Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Milliseconds the client can wait for a response after
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Milliseconds the client can wait for a response after
                                         sending data to the host. <p class="p">When the client does not
                                             receive a response in time, the Flume destination
                                             resends the batch. It resends up to the number
@@ -350,24 +354,24 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Max Retry Attempts</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Max Retry Attempts</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Maximum number of times the Flume destination resends
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Maximum number of times the Flume destination resends
                                         data and waits for a response before stopping the pipeline. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Retry Wait Time (ms)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Retry Wait Time (ms)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Milliseconds to wait before resending data.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Milliseconds to wait before resending data.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Data Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Data format for output events:<ul class="ul" id="task_vft_g5p_yr__ul_ssq_sks_zr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Data format for output events:<ul class="ul" id="task_vft_g5p_yr__ul_ssq_sks_zr">
                                             <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
                                                   <img class="image" id="task_vft_g5p_yr__image_ucp_chr_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
@@ -385,16 +389,16 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">Event Charset</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">Event Charset</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">Character encoding of the events to be processed.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">Character encoding of the events to be processed.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e331 ">One Event per Batch</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e339 ">One Event per Batch</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e334 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e342 ">
                                         <p class="p">Generates a single event for all records in the batch.
                                         </p>
 
@@ -419,9 +423,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e556">Text Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e564">Text Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e559">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e567">Description</th>
 
                                 </tr>
 
@@ -429,17 +433,17 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e556 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e564 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e559 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e567 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e556 ">Empty Line If No Text</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e564 ">Empty Line If No Text</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e559 ">Creates an empty line when a record does not include the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e567 ">Creates an empty line when a record does not include the
                                         text field specified above. <p class="p">When not selected, records
                                             without the specified text field are
                                         discarded.</p>
@@ -464,9 +468,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e613">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e621">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e616">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e624">Description</th>
 
                                 </tr>
 
@@ -474,9 +478,9 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e613 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e621 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e616 ">Determines how JSON data is written:<ul class="ul" id="task_vft_g5p_yr__d1197e2503">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e624 ">Determines how JSON data is written:<ul class="ul" id="task_vft_g5p_yr__d1197e2503">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -507,9 +511,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e667">Delimited Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e675">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e670">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e678">Description</th>
 
                                 </tr>
 
@@ -517,9 +521,9 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Format for delimited data:<ul class="ul" id="task_vft_g5p_yr__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Format for delimited data:<ul class="ul" id="task_vft_g5p_yr__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -543,16 +547,16 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Header Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Remove New Line Characters</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Remove New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Removes new line characters from within a record.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Removes new line characters from within a record.
                                             <p class="p">Recommended when writing data as a single line of
                                             text.</p>
 </td>
@@ -560,9 +564,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the pipe character ( |
                                         ).</p>
@@ -571,9 +575,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -582,9 +586,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e667 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e675 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e670 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e678 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -609,9 +613,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12687e801">Avro Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d12691e809">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12687e804">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d12691e812">Description</th>
 
                                 </tr>
 
@@ -619,16 +623,16 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e801 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e809 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e804 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e812 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12687e801 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d12691e809 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12687e804 ">Includes the schema in each event. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d12691e812 ">Includes the schema in each event. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -653,9 +657,9 @@ Use 0 to use
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d12687e858">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d12691e866">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d12687e861">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d12691e869">Description</th>
 
                                 </tr>
 
@@ -663,9 +667,9 @@ Use 0 to use
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d12687e858 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d12691e866 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d12687e861 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d12691e869 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
                                             information about generating the descriptor file, see
@@ -675,9 +679,9 @@ Use 0 to use
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d12687e858 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d12691e866 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d12687e861 ">Message type to use to write data. Enter the message type
+                                    <td class="entry" valign="top" width="70%" headers="d12691e869 ">Message type to use to write data. Enter the message type
                                         defined in the descriptor file.</td>
 
                                 </tr>

@@ -19,21 +19,21 @@
   <p><indexterm>Kafka Producer destination<indexterm>data
         formats</indexterm></indexterm><indexterm>data formats<indexterm>Kafka Producer
           destinations</indexterm></indexterm>Kafka Producer writes data to Kafka based on the data
-      format that you select. You can use the following data formats:<dl
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormats">
-        <dlentry>
+      format that you select. You can use the following data formats:<dl>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-Delim">
           <dt/>
           <dd/>
         </dlentry>
-      </dl><dl>
         <dlentry>
           <dt>Avro</dt>
           <dd>The destination writes records based on the Avro schema that you provide. </dd>
@@ -41,8 +41,17 @@
             Omitting the schema definition can improve performance, but requires the appropriate
             schema management to avoid losing track of the schema associated with the data.</dd>
         </dlentry>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-SDC">
+          <dt/>
+          <dd/>
+        </dlentry>
         <dlentry
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataFormat-Binary">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DestDF-ProtoMess">
           <dt/>
           <dd/>
         </dlentry>
