@@ -307,7 +307,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private List<Map.Entry> previewTextBatch(FileStatus fileStatus, int batchSize)
     throws IOException, InterruptedException {
     TextInputFormat textInputFormat = new TextInputFormat();
-    InputSplit fileSplit = new FileSplit(fileStatus.getPath(), 0, fileStatus.getLen(), null);
+    long fileLength = fileStatus.getLen();
+    // Hadoop does unsafe casting from long to int, so split length should not be greater than int
+    // max value
+    long splitLength = (fileLength < Integer.MAX_VALUE) ? fileLength: Integer.MAX_VALUE;
+    InputSplit fileSplit = new FileSplit(fileStatus.getPath(), 0, splitLength, null);
     TaskAttemptContext taskAttemptContext = new TaskAttemptContextImpl(hadoopConf,
       TaskAttemptID.forName("attempt_1439420318532_0011_m_000000_0"));
     RecordReader<LongWritable, Text> recordReader = textInputFormat.createRecordReader(fileSplit, taskAttemptContext);
