@@ -127,8 +127,11 @@
 </script>
 
 <script type="text/ng-template" id="listConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8 container-fluid">
+  <div class="controls col-lg-7 col-md-8 container-fluid"
+       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 9)">
+
     <div class="row map-list-type"
+         ng-if="!bulkEdit"
          ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-xs-1">
@@ -169,7 +172,25 @@
 
     </div>
 
-    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
+    <div ui-codemirror
+         ng-if="bulkEdit"
+         class="codemirror-editor"
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+         focus-me="{{autoFocusConfigName === configDefinition.name}}"
+         ng-model="detailPaneConfig.configuration[configIndex].value"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                autofocus: autoFocusConfigName === configDefinition.name,
+                lineNumbers: true
+              }, configDefinition)"
+         codemirror-el
+         field-paths="fieldPaths"
+         d-field-paths="dFieldPaths"
+         data-type="'LIST'">
+    </div>
+
+    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0 || bulkEdit" class="row"
          ng-hide="isPipelineReadOnly || isPipelineRunning">
       <div class="col-md-2 btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm"
@@ -179,13 +200,23 @@
       </div>
     </div>
 
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              ng-click="bulkEdit = !bulkEdit">
+        {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
+      </button>
+    </div>
+
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>
   </div>
 </script>
 
 <script type="text/ng-template" id="mapConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8">
-    <div class="row map-list-type" ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
+  <div class="controls col-lg-7 col-md-8"
+       ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 9)">
+    <div class="row map-list-type"
+         ng-if="!bulkEdit"
+         ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
 
       <div class="col-xs-4">
         <input type="text" class="form-control input-sm"
@@ -232,7 +263,25 @@
 
     </div>
 
-    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0" class="row"
+    <div ui-codemirror
+         ng-if="bulkEdit"
+         class="codemirror-editor"
+         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+         focus-me="{{autoFocusConfigName === configDefinition.name}}"
+         ng-model="detailPaneConfig.configuration[configIndex].value"
+         ui-refresh="refreshCodemirror"
+         ui-codemirror-opts="getCodeMirrorOptions({
+                readOnly: (isPipelineReadOnly || isPipelineRunning),
+                autofocus: autoFocusConfigName === configDefinition.name,
+                lineNumbers: true
+              }, configDefinition)"
+         codemirror-el
+         field-paths="fieldPaths"
+         d-field-paths="dFieldPaths"
+         data-type="'LIST'">
+    </div>
+
+    <div ng-if="detailPaneConfig.configuration[configIndex].value.length === 0 || bulkEdit" class="row"
          ng-hide="isPipelineReadOnly || isPipelineRunning">
       <div class="col-md-2 btn-group" role="group">
         <button type="button" class="btn btn-default btn-sm"
@@ -240,6 +289,13 @@
           <i class="fa fa-plus pointer"></i>
         </button>
       </div>
+    </div>
+
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              ng-click="bulkEdit = !bulkEdit">
+        {{bulkEdit ? ('home.detailPane.configurationTab.switchToSimpleMode' | translate) : ('home.detailPane.configurationTab.switchToBulkMode' | translate)}}
+      </button>
     </div>
 
     <p class="help-block">{{getConfigurationIssueMessage(detailPaneConfig, configDefinition)}}</p>

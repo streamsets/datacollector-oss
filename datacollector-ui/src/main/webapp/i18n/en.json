@@ -240,7 +240,9 @@
         "stageInstanceName": "Stage Instance Name",
         "stageLibrary": "Stage Library",
         "stageType": "Stage Type",
-        "stageVersion": "Stage Version"
+        "stageVersion": "Stage Version",
+        "switchToBulkMode": "Switch to bulk edit mode",
+        "switchToSimpleMode": "Switch to simple edit mode"
       },
       "custom": "Custom",
       "dataDriftRules": "Data Drift Rules",

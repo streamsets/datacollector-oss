@@ -116,7 +116,9 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
       if (angular.isUndefined(value) || value === null) {
         return '';
       } else if (angular.isObject(value) || angular.isArray(value)) {
-        throw new Error('ui-codemirror cannot use an object or an array as a model');
+        //throw new Error('ui-codemirror cannot use an object or an array as a model');
+
+        return JSON.stringify(value, null, "\t");
       }
       return value;
     });
@@ -157,7 +159,16 @@ function uiCodemirrorDirective($timeout, uiCodemirrorConfig) {
         }
       }
 
-      if (newValue !== ngModel.$viewValue) {
+      if(dataType === 'LIST') {
+        try {
+          newValue = JSON.parse(newValue);
+        } catch (e) {
+          //In case of parse exception return with out updating model value
+          return;
+        }
+      }
+
+      if (newValue !== ngModel.$viewValue || dataType === 'LIST') {
         scope.$evalAsync(function() {
           ngModel.$setViewValue(newValue);
         });
