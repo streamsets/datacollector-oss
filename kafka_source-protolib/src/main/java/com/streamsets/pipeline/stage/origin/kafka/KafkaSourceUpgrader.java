@@ -19,14 +19,24 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KafkaSourceUpgrader implements StageUpgrader {
+
+  private static final String CONF = "kafkaConfigBean";
+  private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
+  private static final Joiner joiner = Joiner.on(".");
+
+  private final List<Config> configsToRemove = new ArrayList<>();
+  private final List<Config> configsToAdd = new ArrayList<>();
+
   @Override
   public List<Config> upgrade(String library, String stageName, String stageInstance, int fromVersion, int toVersion,
                               List<Config> configs) throws StageException {
@@ -35,6 +45,8 @@ public class KafkaSourceUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -53,4 +65,61 @@ public class KafkaSourceUpgrader implements StageUpgrader {
     configs.add(new Config("csvSkipStartLines", 0));
   }
 
+  private void upgradeV3ToV4(List<Config> configs) {
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "dataFormat":
+        case "metadataBrokerList":
+        case "zookeeperConnect":
+        case "consumerGroup":
+        case "topic":
+        case "produceSingleRecordPerMessage":
+        case "maxBatchSize":
+        case "maxWaitTime":
+        case "kafkaConsumerConfigs":
+          configsToAdd.add(new Config(joiner.join(CONF, config.getName()), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "charset":
+        case "removeCtrlChars":
+        case "textMaxLineLen":
+        case "jsonContent":
+        case "jsonMaxObjectLen":
+        case "csvFileFormat":
+        case "csvHeader":
+        case "csvMaxObjectLen":
+        case "csvCustomDelimiter":
+        case "csvCustomEscape":
+        case "csvCustomQuote":
+        case "csvRecordType":
+        case "csvSkipStartLines":
+        case "xmlRecordElement":
+        case "xmlMaxObjectLen":
+        case "logMode":
+        case "logMaxObjectLen":
+        case "retainOriginalLine":
+        case "customLogFormat":
+        case "regex":
+        case "fieldPathsToGroupName":
+        case "grokPatternDefinition":
+        case "grokPattern":
+        case "onParseError":
+        case "maxStackTraceLines":
+        case "enableLog4jCustomLogFormat":
+        case "log4jCustomLogFormat":
+        case "schemaInMessage":
+        case "avroSchema":
+        case "binaryMaxObjectLen":
+        case "protoDescriptorFile":
+        case "messageType":
+          configsToAdd.add(new Config(joiner.join(CONF, DATA_FORMAT_CONFIG, config.getName()), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no-op
+      }
+    }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
+  }
 }

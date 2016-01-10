@@ -48,9 +48,9 @@ import java.util.Map;
 import java.util.Properties;
 
 public class SparkStreamingBinding implements ClusterBinding {
-  private static final String MAX_WAIT_TIME = "maxWaitTime";
-  private static final String METADATA_BROKER_LIST = "metadataBrokerList";
-  private static final String TOPIC = "topic";
+  private static final String MAX_WAIT_TIME = "kafkaConfigBean.maxWaitTime";
+  private static final String METADATA_BROKER_LIST = "kafkaConfigBean.metadataBrokerList";
+  private static final String TOPIC = "kafkaConfigBean.topic";
   private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
   private final boolean isRunningInMesos;

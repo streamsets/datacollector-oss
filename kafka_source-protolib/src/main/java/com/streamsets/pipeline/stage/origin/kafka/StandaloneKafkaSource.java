@@ -31,8 +31,8 @@ import java.util.List;
 public class StandaloneKafkaSource extends BaseKafkaSource {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneKafkaSource.class);
 
-  public StandaloneKafkaSource(SourceArguments args) {
-    super(args);
+  public StandaloneKafkaSource(KafkaConfigBean conf) {
+    super(conf);
   }
 
   @Override
@@ -41,7 +41,7 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
     if (issues.isEmpty()) {
       if(getContext().isPreview()) {
         //set fixed batch duration time of 1 second for preview.
-        maxWaitTime = 1000;
+        conf.maxWaitTime = 1000;
       }
       try {
         kafkaConsumer.init();
@@ -54,15 +54,15 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   }
 
   private String getMessageID(MessageAndOffset message) {
-    return topic + "::" + message.getPartition() + "::" + message.getOffset();
+    return conf.topic + "::" + message.getPartition() + "::" + message.getOffset();
   }
 
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
-    int batchSize = this.maxBatchSize > maxBatchSize ? maxBatchSize : this.maxBatchSize;
+    int batchSize = conf.maxBatchSize > maxBatchSize ? maxBatchSize : conf.maxBatchSize;
     long startTime = System.currentTimeMillis();
-    while(recordCounter < batchSize && (startTime + maxWaitTime) > System.currentTimeMillis()) {
+    while (recordCounter < batchSize && (startTime + conf.maxWaitTime) > System.currentTimeMillis()) {
       MessageAndOffset message = kafkaConsumer.read();
       if (message != null) {
         String messageId = getMessageID(message);

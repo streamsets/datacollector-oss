@@ -25,22 +25,16 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum KafkaErrors implements ErrorCode {
 
-  KAFKA_00("Cannot parse CSV: {}"),
-  KAFKA_01("Cannot parse JSON: {}"),
-  KAFKA_02("Unsupported data format '{}'"),
   KAFKA_03("Cannot find metadata for topic '{}' from the broker list '{}'"),
   KAFKA_04("Topic '{}' does not exist"),
   KAFKA_05("Topic cannot be empty"),
   KAFKA_06("Zookeeper URI cannot be empty"),
   KAFKA_07("Invalid broker URI '{}'"),
-  KAFKA_08("Unsupported charset '{}'"),
   KAFKA_09("Invalid Zookeeper connect string '{}' : {}"),
   KAFKA_10("Cannot validate configuration: {}"),
   KAFKA_11("Cannot retrieve metadata for topic '{}' from broker '{}': {}"),
 
   //Kafka source messages
-    /* LC Hari says the first one is not being used right now  */
-  KAFKA_20("A message with offset '{}' which is greater than the latest offset '{}' is requested from Kafka topic '{}' partition '{}'"),
   KAFKA_21("Cannot find a new leader after a Kafka broker failure"),
   KAFKA_22("Error fetching offset data from the broker '{}': {}"),
   KAFKA_23("Cannot find metadata for topic '{}', partition '{}'"),
@@ -54,18 +48,11 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_31("Error connecting to ZooKeeper with connection string '{}': {}"),
   KAFKA_32("Error getting iterator from KafkaStream: {}"),
   KAFKA_33("Define the consumer group"),
-  KAFKA_34("Max batch size cannot be less than 1"),
   KAFKA_35("Batch wait time cannot be less than 1"),
-  KAFKA_36("Invalid XML element name '{}'"),
   KAFKA_37("Cannot parse record from message '{}': {}"),
-  KAFKA_38("Max data object length cannot be less than 1"),
-  KAFKA_39("Unsupported data format '{}'"),
   KAFKA_40("Messages with XML data cannot have multiple XML documents in a single message"),
   KAFKA_41("Could not get partition count for topic '{}' : {}"),
   KAFKA_42("Could not get partition count for topic '{}'"),
-  KAFKA_43("Avro Schema must be specified"),
-  KAFKA_44(".proto file location must be specified"),
-  KAFKA_45("Message type must be specified"),
 
   //Kafka target messages
   KAFKA_50("Error writing data to the Kafka broker: {}"),
@@ -85,9 +72,8 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_66("Kafka Producer configuration '{}' must be specified a valid {} value greater than or equal to 0"),
   KAFKA_67("Error connecting to Kafka Brokers '{}'"),
   KAFKA_68("Error getting metadata for topic '{}' from broker '{}'"),
-
-
   ;
+
   private final String msg;
 
   KafkaErrors(String msg) {

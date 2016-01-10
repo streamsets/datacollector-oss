@@ -32,7 +32,7 @@ public enum KafkaOriginGroups implements Label {
   LOG("Log"),
   AVRO("Avro"),
   BINARY("Binary"),
-  PROTOBUF("Protobuf")
+  PROTOBUF("Protobuf"),
   ;
 
   private final String label;

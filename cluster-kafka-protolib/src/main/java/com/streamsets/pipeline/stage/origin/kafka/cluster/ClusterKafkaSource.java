@@ -31,7 +31,7 @@ import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
-import com.streamsets.pipeline.stage.origin.kafka.SourceArguments;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +51,8 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   private final Consumer consumer;
   private long recordsProduced;
 
-  public ClusterKafkaSource(SourceArguments args) {
-    super(args);
+  public ClusterKafkaSource(KafkaConfigBean conf) {
+    super(conf);
     controlChannel = new ControlChannel();
     dataChannel = new DataChannel();
     producer = new Producer(controlChannel, dataChannel);
@@ -67,7 +67,7 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
     long offset = (Long)offsetAndResult.getOffset();
     String messageId = String.format("kafka::%s::unknown", offset); // don't inc as we have not progressed
     for (Map.Entry  messageAndPartition : offsetAndResult.getResult()) {
-      messageId = String.format("kafka::%s::%d", topic, offset++);
+      messageId = String.format("kafka::%s::%d", conf.topic, offset++);
       List<Record> records = processKafkaMessage(messageId, (byte[]) messageAndPartition.getValue());
       for (Record record : records) {
         batchMaker.addRecord(record);

@@ -195,15 +195,16 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
 
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
-    if(kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
+    if (kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
       kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG);
-    }
-    for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
-      props.put(producerConfig.getKey(), producerConfig.getValue());
+
+      for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
+        props.put(producerConfig.getKey(), producerConfig.getValue());
+      }
     }
   }
 

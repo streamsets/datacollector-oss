@@ -157,38 +157,36 @@ public class TestKafkaSource {
     }
   }
 
+  private BaseKafkaSource createSource(KafkaConfigBean conf) {
+    KafkaSourceFactory factory = new StandaloneKafkaSourceFactory(conf);
+    return factory.create();
+  }
+
   @Test(timeout = 5000)
   public void testProduceStringRecords() throws StageException, InterruptedException {
 
     CountDownLatch startLatch = new CountDownLatch(1);
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( TOPIC1, SINGLE_PARTITION, producer, startLatch, DataType.TEXT, null, -1,
+    executorService.submit(new ProducerRunnable(TOPIC1, SINGLE_PARTITION, producer, startLatch, DataType.TEXT, null, -1,
       null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC1;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.textMaxLineLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     sourceRunner.runInit();
 
@@ -219,32 +217,25 @@ public class TestKafkaSource {
     CountDownLatch startProducing = new CountDownLatch(1);
 
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( TOPIC2, MULTIPLE_PARTITIONS, producer, startProducing, DataType.TEXT,
+    executorService.submit(new ProducerRunnable(TOPIC2, MULTIPLE_PARTITIONS, producer, startProducing, DataType.TEXT,
       null, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC2;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.textMaxLineLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC2)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -274,33 +265,26 @@ public class TestKafkaSource {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( TOPIC3, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
+    executorService.submit(new ProducerRunnable(TOPIC3, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
       StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC3;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = true;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC3)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -327,30 +311,23 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC4, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
       StreamingJsonParser.Mode.MULTIPLE_OBJECTS, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC4;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC4)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -373,33 +350,26 @@ public class TestKafkaSource {
 
     CountDownLatch startLatch = new CountDownLatch(1);
     ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.submit(new ProducerRunnable( TOPIC5, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
+    executorService.submit(new ProducerRunnable(TOPIC5, SINGLE_PARTITION, producer, startLatch, DataType.JSON,
       StreamingJsonParser.Mode.ARRAY_OBJECTS, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC5;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = true;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC5)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -427,31 +397,23 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC6, SINGLE_PARTITION, producer, startLatch, DataType.XML, null, -1,
       null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC6;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.xmlRecordElement = "";
+    conf.dataFormatConfig.xmlMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC6)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.XML)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", 4096)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -477,31 +439,23 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC7, SINGLE_PARTITION, producer, startLatch, DataType.XML, null, -1,
       null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC7;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.xmlRecordElement = "author";
+    conf.dataFormatConfig.xmlMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC7)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.XML)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "author")
-      .addConfiguration("xmlMaxObjectLen", 4096)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -523,31 +477,23 @@ public class TestKafkaSource {
 
   @Test(expected = StageException.class)
   public void testProduceXmlRecordsRecordElementSingleRecordPerMessage() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC8;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = true;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.xmlRecordElement = "author";
+    conf.dataFormatConfig.xmlMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC8)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.XML)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("xmlRecordElement", "author")
-      .addConfiguration("xmlMaxObjectLen", 4096)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
 
     sourceRunner.runInit();
@@ -560,33 +506,26 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC9, SINGLE_PARTITION,
       producer, startLatch, DataType.CSV, null, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC9;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC9)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("csvRecordType", CsvRecordType.LIST)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
-      .addConfiguration("csvSkipStartLines", 0)
       .build();
 
     sourceRunner.runInit();
@@ -612,34 +551,33 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC10, SINGLE_PARTITION, producer, startLatch, DataType.LOG, null,
       -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC10;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.LOG;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.logMode = LogMode.LOG4J;
+    conf.dataFormatConfig.logMaxObjectLen = 1024;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.customLogFormat = null;
+    conf.dataFormatConfig.regex = null;
+    conf.dataFormatConfig.fieldPathsToGroupName = null;
+    conf.dataFormatConfig.grokPatternDefinition = null;
+    conf.dataFormatConfig.grokPattern = null;
+    conf.dataFormatConfig.onParseError = OnParseError.INCLUDE_AS_STACK_TRACE;
+    conf.dataFormatConfig.maxStackTraceLines = 10;
+    conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
+    conf.dataFormatConfig.log4jCustomLogFormat = null;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC10)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.LOG)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", null)
-      .addConfiguration("logMode", LogMode.LOG4J)
-      .addConfiguration("logMaxObjectLen", 1024)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-      .addConfiguration("maxStackTraceLines", 10)
-      .addConfiguration("retainOriginalLine", true)
       .build();
 
     sourceRunner.runInit();
@@ -685,34 +623,33 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable(TOPIC11, SINGLE_PARTITION, producer, startLatch,
       DataType.LOG_STACK_TRACE, null, -1, null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC11;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.LOG;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.logMode = LogMode.LOG4J;
+    conf.dataFormatConfig.logMaxObjectLen = 10000;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.customLogFormat = null;
+    conf.dataFormatConfig.regex = null;
+    conf.dataFormatConfig.fieldPathsToGroupName = null;
+    conf.dataFormatConfig.grokPatternDefinition = null;
+    conf.dataFormatConfig.grokPattern = null;
+    conf.dataFormatConfig.onParseError = OnParseError.INCLUDE_AS_STACK_TRACE;
+    conf.dataFormatConfig.maxStackTraceLines = 100;
+    conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
+    conf.dataFormatConfig.log4jCustomLogFormat = null;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC11)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.LOG)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", null)
-      .addConfiguration("logMode", LogMode.LOG4J)
-      .addConfiguration("logMaxObjectLen", 10000)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-      .addConfiguration("maxStackTraceLines", 100)
-      .addConfiguration("retainOriginalLine", true)
       .build();
 
     sourceRunner.runInit();
@@ -762,34 +699,33 @@ public class TestKafkaSource {
     startLatch.countDown();
     countDownLatch.await();
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC11;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 100;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.LOG;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.logMode = LogMode.LOG4J;
+    conf.dataFormatConfig.logMaxObjectLen = 10000;
+    conf.dataFormatConfig.retainOriginalLine = true;
+    conf.dataFormatConfig.customLogFormat = null;
+    conf.dataFormatConfig.regex = null;
+    conf.dataFormatConfig.fieldPathsToGroupName = null;
+    conf.dataFormatConfig.grokPatternDefinition = null;
+    conf.dataFormatConfig.grokPattern = null;
+    conf.dataFormatConfig.onParseError = OnParseError.INCLUDE_AS_STACK_TRACE;
+    conf.dataFormatConfig.maxStackTraceLines = 100;
+    conf.dataFormatConfig.enableLog4jCustomLogFormat = false;
+    conf.dataFormatConfig.log4jCustomLogFormat = null;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC11)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 100)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.LOG)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", null)
-      .addConfiguration("logMode", LogMode.LOG4J)
-      .addConfiguration("logMaxObjectLen", 10000)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-      .addConfiguration("maxStackTraceLines", 100)
-      .addConfiguration("retainOriginalLine", true)
         // Set mode to preview
       .setPreview(true)
       .build();
@@ -869,36 +805,23 @@ public class TestKafkaSource {
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
     sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC12;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 100;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.AVRO;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.schemaInMessage = true;
+    conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC12)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 100)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", null)
-      .addConfiguration("logMode", LogMode.LOG4J)
-      .addConfiguration("logMaxObjectLen", 10000)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-      .addConfiguration("maxStackTraceLines", 100)
-      .addConfiguration("retainOriginalLine", true)
-      .addConfiguration("avroSchema", AVRO_SCHEMA)
-      .addConfiguration("schemaInMessage", true)
-      .addConfiguration("removeCtrlChars", false)
       .build();
 
     sourceRunner.runInit();
@@ -1037,36 +960,23 @@ public class TestKafkaSource {
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
     sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC13;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 100;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.AVRO;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.schemaInMessage = false;
+    conf.dataFormatConfig.avroSchema = AVRO_SCHEMA;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("topic", TOPIC13)
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 100)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("jsonContent", null)
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", null)
-      .addConfiguration("logMode", LogMode.LOG4J)
-      .addConfiguration("logMaxObjectLen", 10000)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", OnParseError.INCLUDE_AS_STACK_TRACE)
-      .addConfiguration("maxStackTraceLines", 100)
-      .addConfiguration("retainOriginalLine", true)
-      .addConfiguration("avroSchema", AVRO_SCHEMA)
-      .addConfiguration("schemaInMessage", false)
       .build();
 
     sourceRunner.runInit();
@@ -1161,30 +1071,22 @@ public class TestKafkaSource {
     executorService.submit(new ProducerRunnable( TOPIC14, SINGLE_PARTITION, producer, startLatch, DataType.TEXT, null, -1,
       null));
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC14;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 9;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.BINARY;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.binaryMaxObjectLen = 1000;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC14)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 9)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.BINARY)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
-      .addConfiguration("binaryMaxObjectLen", 1000)
       .build();
     sourceRunner.runInit();
 
@@ -1223,32 +1125,24 @@ public class TestKafkaSource {
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
     sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC15;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 10;
+    conf.maxWaitTime = 5000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.PROTOBUF;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.protoDescriptorFile = protoDescFile.getPath();
+    conf.dataFormatConfig.messageType = "Employee";
+    conf.dataFormatConfig.isDelimited = true;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC15)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 10)
-      .addConfiguration("maxWaitTime", 5000)
-      .addConfiguration("dataFormat", DataFormat.PROTOBUF)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
-      .addConfiguration("binaryMaxObjectLen", 1000)
-      .addConfiguration("protoDescriptorFile", protoDescFile.getPath())
-      .addConfiguration("messageType", "Employee")
       .build();
     sourceRunner.runInit();
 
@@ -1274,32 +1168,24 @@ public class TestKafkaSource {
     Map<String, String> kafkaConsumerConfigs = new HashMap<>();
     sdcKafkaTestUtil.setAutoOffsetReset(kafkaConsumerConfigs);
 
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = sdcKafkaTestUtil.getMetadataBrokerURI();
+    conf.topic = TOPIC16;
+    conf.consumerGroup = CONSUMER_GROUP;
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 10;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = kafkaConsumerConfigs;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.PROTOBUF;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.protoDescriptorFile = protoDescFile.getPath();
+    conf.dataFormatConfig.messageType = "Employee";
+    conf.dataFormatConfig.isDelimited = true;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
-      .addConfiguration("metadataBrokerList", sdcKafkaTestUtil.getMetadataBrokerURI())
-      .addConfiguration("topic", TOPIC16)
-      .addConfiguration("consumerGroup", CONSUMER_GROUP)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("maxBatchSize", 10)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.PROTOBUF)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("kafkaConsumerConfigs", kafkaConsumerConfigs)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
-      .addConfiguration("binaryMaxObjectLen", 1000)
-      .addConfiguration("protoDescriptorFile", protoDescFile.getPath())
-      .addConfiguration("messageType", "Employee")
       .build();
     sourceRunner.runInit();
 

@@ -34,6 +34,7 @@ public enum Groups implements Label {
   XML("XML"),
   LOG("Log"),
   AVRO("Avro"),
+  BINARY("Binary"),
   PROTOBUF("Protobuf")
 
   ;

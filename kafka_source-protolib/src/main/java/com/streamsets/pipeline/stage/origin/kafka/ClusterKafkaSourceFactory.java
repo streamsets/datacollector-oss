@@ -21,15 +21,15 @@ package com.streamsets.pipeline.stage.origin.kafka;
 
 public class ClusterKafkaSourceFactory extends KafkaSourceFactory {
   private static final String CLUSTER_MODE_CLASS = "com.streamsets.pipeline.stage.origin.kafka.cluster.ClusterKafkaSource";
-  public ClusterKafkaSourceFactory(SourceArguments args) {
-    super(args);
+  public ClusterKafkaSourceFactory(KafkaConfigBean conf) {
+    super(conf);
   }
 
   public BaseKafkaSource create() {
     try {
       Class clusterModeClazz = Class.forName(CLUSTER_MODE_CLASS);
-      return (BaseKafkaSource) clusterModeClazz.getConstructor(SourceArguments.class)
-        .newInstance(new Object[]{args});
+      return (BaseKafkaSource) clusterModeClazz.getConstructor(KafkaConfigBean.class)
+        .newInstance(new Object[]{conf});
     } catch (Exception e) {
       throw new IllegalStateException("Exception while invoking kafka instance in cluster mode: " + e, e);
     }

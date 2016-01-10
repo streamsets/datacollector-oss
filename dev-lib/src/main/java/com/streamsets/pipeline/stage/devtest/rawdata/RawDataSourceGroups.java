@@ -32,6 +32,7 @@ public enum RawDataSourceGroups implements Label {
   XML(DataFormat.XML.getLabel()),
   LOG(DataFormat.LOG.getLabel()),
   AVRO(DataFormat.AVRO.getLabel()),
+  BINARY(DataFormat.BINARY.getLabel()),
   PROTOBUF(DataFormat.PROTOBUF.getLabel())
   ;
 

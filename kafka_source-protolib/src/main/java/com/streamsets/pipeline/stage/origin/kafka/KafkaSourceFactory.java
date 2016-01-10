@@ -19,23 +19,11 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.config.CsvHeader;
-import com.streamsets.pipeline.config.CsvMode;
-import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.config.LogMode;
-import com.streamsets.pipeline.config.OnParseError;
-import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
-import com.streamsets.pipeline.lib.parser.log.RegExConfig;
-
-import java.util.List;
-import java.util.Map;
-
 public abstract class KafkaSourceFactory {
-  protected final SourceArguments args;
+  protected final KafkaConfigBean conf;
 
-  public KafkaSourceFactory(SourceArguments args) {
-    this.args = args;
+  public KafkaSourceFactory(KafkaConfigBean conf) {
+    this.conf = conf;
   }
 
   public abstract BaseKafkaSource create();

@@ -27,14 +27,16 @@ import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
-import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.impl.Pair;
 import com.streamsets.pipeline.kafka.common.DataType;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import com.streamsets.pipeline.lib.json.StreamingJsonParser;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.origin.kafka.KafkaDSource;
+import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
+import com.streamsets.pipeline.stage.origin.kafka.ClusterKafkaSourceFactory;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaSourceFactory;
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
@@ -117,33 +119,30 @@ public class TestClusterModeDataFormats {
     System.setProperty("java.io.tmpdir", originalTmpDir);
   }
 
+  private BaseKafkaSource createSource(KafkaConfigBean conf) {
+    KafkaSourceFactory factory = new ClusterKafkaSourceFactory(conf);
+    return factory.create();
+  }
 
   @Test
   public void testProduceStringRecords() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.textMaxLineLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     try {
@@ -180,32 +179,24 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceJsonRecordsMultipleObjectsMultipleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("jsonContent", JsonMode.MULTIPLE_OBJECTS)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     try {
@@ -233,32 +224,24 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceJsonRecordsArrayObjectsMultipleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     boolean error = true;
@@ -294,32 +277,24 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceJsonRecordsArrayObjectsSingleRecord() throws StageException, IOException {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = true;
+    conf.dataFormat = DataFormat.JSON;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.ARRAY_OBJECTS;
+    conf.dataFormatConfig.jsonMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-       .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.JSON)
-      .addConfiguration("jsonContent", JsonMode.ARRAY_OBJECTS)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     boolean error = true;
@@ -354,33 +329,24 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceXmlRecordsNoRecordElement() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.xmlRecordElement = "";
+    conf.dataFormatConfig.xmlMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.XML)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "")
-      .addConfiguration("xmlMaxObjectLen", 4096)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     boolean error = true;
@@ -415,33 +381,24 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceXmlRecordsWithRecordElement() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.XML;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.xmlRecordElement = "author";
+    conf.dataFormatConfig.xmlMaxObjectLen = 4096;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.XML)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("xmlRecordElement", "author")
-      .addConfiguration("xmlMaxObjectLen", 4096)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     boolean error = true;
@@ -475,36 +432,27 @@ public class TestClusterModeDataFormats {
 
   @Test
   public void testProduceCsvRecords() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(KafkaDSource.class)
+    KafkaConfigBean conf = new KafkaConfigBean();
+    conf.metadataBrokerList = metadataBrokerList;
+    conf.topic = TOPIC1;
+    conf.consumerGroup = "dummyGroup";
+    conf.zookeeperConnect = zkConnect;
+    conf.maxBatchSize = 1000;
+    conf.maxWaitTime = 10000;
+    conf.kafkaConsumerConfigs = null;
+    conf.produceSingleRecordPerMessage = true;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.charset = "UTF-8";
+    conf.dataFormatConfig.removeCtrlChars = false;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterKafkaSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_YARN_STREAMING)
-      .addConfiguration("metadataBrokerList", metadataBrokerList)
-      .addConfiguration("zookeeperConnect", zkConnect)
-      .addConfiguration("consumerGroup", "dummyGroup")
-      .addConfiguration("maxBatchSize",1000)
-      .addConfiguration("kafkaConsumerConfigs", null)
-      .addConfiguration("topic", TOPIC1)
-      .addConfiguration("maxWaitTime", 10000)
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("charset", "UTF-8")
-      .addConfiguration("removeCtrlChars", false)
-      .addConfiguration("textMaxLineLen", 4096)
-      .addConfiguration("jsonMaxObjectLen", 4096)
-      .addConfiguration("produceSingleRecordPerMessage", true)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("csvRecordType", CsvRecordType.LIST)
-      .addConfiguration("csvSkipStartLines", 0)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("onParseError", null)
-      .addConfiguration("maxStackTraceLines", -1)
       .build();
     Thread th = null;
     boolean error = true;
@@ -541,8 +489,7 @@ public class TestClusterModeDataFormats {
       @Override
       public void run() {
         try {
-          ClusterKafkaSource source =
-            ((ClusterKafkaSource) ((DSource) sourceRunner.getStage()).getSource());
+          ClusterKafkaSource source = (ClusterKafkaSource) sourceRunner.getStage();
           source.put(list);
         } catch (Exception ex) {
           LOG.error("Error in waiter thread: " + ex, ex);
