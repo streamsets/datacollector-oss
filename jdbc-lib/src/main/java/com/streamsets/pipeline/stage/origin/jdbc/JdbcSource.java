@@ -192,10 +192,10 @@ public class JdbcSource extends BaseSource {
                   resultSet.findColumn(offsetColumn);
                 }
               } catch (SQLException e) {
-                LOG.error(JdbcUtil.formatSqlException(e));
-                issues.add(
-                    context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, Errors.JDBC_02, offsetColumn, query)
-                );
+                // Log a warning instead of an error because some implementations such as Oracle have implicit
+                // "columns" such as ROWNUM that won't appear as part of the resultset.
+                LOG.warn(Errors.JDBC_02.getMessage(), offsetColumn, query);
+                LOG.warn(JdbcUtil.formatSqlException(e));
               }
             } catch (SQLException e) {
               String formattedError = JdbcUtil.formatSqlException(e);
