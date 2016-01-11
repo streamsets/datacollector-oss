@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
@@ -52,26 +54,43 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ElasticSearchTarget extends BaseTarget {
 
   private final String clusterName;
   private final List<String> uris;
   private final Map<String, String> configs;
+  private final String timeDriver;
+  private final TimeZone timeZone;
   private final String indexTemplate;
   private final String typeTemplate;
   private final String docIdTemplate;
   private final String charset;
 
-  public ElasticSearchTarget(String clusterName, List<String> uris,
-      Map<String, String> configs, String indexTemplate, String typeTemplate, String docIdTemplate, String charset) {
+  private ELEval timeDriverEval;
+
+  public ElasticSearchTarget(
+      String clusterName,
+      List<String> uris,
+      Map<String, String> configs,
+      String timeDriver,
+      TimeZone timeZone,
+      String indexTemplate,
+      String typeTemplate,
+      String docIdTemplate,
+      String charset
+  ) {
     this.clusterName = clusterName;
     this.uris = uris;
     this.configs = configs;
+    this.timeDriver = timeDriver;
+    this.timeZone = timeZone;
     this.indexTemplate = indexTemplate;
     this.typeTemplate = typeTemplate;
     this.docIdTemplate = docIdTemplate;
@@ -89,6 +108,7 @@ public class ElasticSearchTarget extends BaseTarget {
       List<ConfigIssue> issues) {
     ELVars vars = getContext().createELVars();
     RecordEL.setRecordInContext(vars, getContext().createRecord("validateConfigs"));
+    TimeEL.setCalendarInContext(vars, Calendar.getInstance());
     boolean parsed = false;
     try {
       getContext().parseEL(elStr);
@@ -112,6 +132,21 @@ public class ElasticSearchTarget extends BaseTarget {
     indexEval = getContext().createELEval("indexTemplate");
     typeEval = getContext().createELEval("typeTemplate");
     docIdEval = getContext().createELEval("docIdTemplate");
+
+    timeDriverEval = getContext().createELEval("timeDriver");
+
+    //validate timeDriver
+    try {
+      getRecordTime(getContext().createRecord("validateTimeDriver"));
+    } catch (ELEvalException ex) {
+      issues.add(getContext().createConfigIssue(
+          Groups.ELASTIC_SEARCH.name(),
+          "timeDriverEval",
+          Errors.ELASTICSEARCH_13,
+          ex.toString(),
+          ex
+      ));
+    }
 
     validateEL(indexEval, indexTemplate, "indexTemplate", Errors.ELASTICSEARCH_00, Errors.ELASTICSEARCH_01, issues);
     validateEL(typeEval, typeTemplate, "typeTemplate", Errors.ELASTICSEARCH_02, Errors.ELASTICSEARCH_03, issues);
@@ -176,6 +211,25 @@ public class ElasticSearchTarget extends BaseTarget {
     super.destroy();
   }
 
+  @VisibleForTesting
+  Date getRecordTime(Record record) throws ELEvalException {
+    ELVars variables = getContext().createELVars();
+    TimeNowEL.setTimeNowInContext(variables, getBatchTime());
+    RecordEL.setRecordInContext(variables, record);
+    return timeDriverEval.eval(variables, timeDriver, Date.class);
+  }
+
+  @VisibleForTesting
+  String getRecordIndex(ELVars elVars, Record record) throws ELEvalException {
+    Date date = getRecordTime(record);
+    if (date != null) {
+      Calendar calendar = Calendar.getInstance(timeZone);
+      calendar.setTime(date);
+      TimeEL.setCalendarInContext(elVars, calendar);
+    }
+    return indexEval.eval(elVars, indexTemplate, String.class);
+  }
+
   @Override
   public void write(final Batch batch) throws StageException {
     setBatchTime();
@@ -198,7 +252,7 @@ public class ElasticSearchTarget extends BaseTarget {
 
       try {
         RecordEL.setRecordInContext(elVars, record);
-        String index = indexEval.eval(elVars, indexTemplate, String.class);
+        String index = getRecordIndex(elVars, record);
         String type = typeEval.eval(elVars, typeTemplate, String.class);
         String id = null;
         if (docIdTemplate != null && !docIdTemplate.isEmpty()) {

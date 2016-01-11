@@ -39,6 +39,8 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_11("Could not index record '{}': {}"),
   ELASTICSEARCH_12("Could not index '{}' records: {}"),
 
+  ELASTICSEARCH_13("Could not evaluate the time driver expression: {}"),
+
   ;
   private final String msg;
 

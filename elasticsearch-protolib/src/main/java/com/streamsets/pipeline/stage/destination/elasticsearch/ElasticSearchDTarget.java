@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -34,14 +35,16 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png",
-    onlineHelpRefUrl = "index.html#Destinations/Elasticsearch.html#task_uns_gtv_4r"
+    onlineHelpRefUrl = "index.html#Destinations/Elasticsearch.html#task_uns_gtv_4r",
+    upgrader = ElasticSearchDTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 public class ElasticSearchDTarget extends DTarget {
@@ -82,6 +85,32 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
+      defaultValue = "${time:now()}",
+      label = "Time Basis",
+      description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
+          "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<field path>\")}'.",
+      displayPosition = 35,
+      group = "ELASTIC_SEARCH",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public String timeDriver;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Data Time Zone",
+      description = "Time zone to use to resolve the datetime of a time based index",
+      displayPosition = 37,
+      group = "ELASTIC_SEARCH"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
       defaultValue = "${record:value('/es-index')}",
       label = "Index",
       description = "",
@@ -100,7 +129,7 @@ public class ElasticSearchDTarget extends DTarget {
       description = "",
       displayPosition = 50,
       group = "ELASTIC_SEARCH",
-      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
+      elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String typeTemplate;
@@ -130,7 +159,17 @@ public class ElasticSearchDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new ElasticSearchTarget(clusterName, uris, configs, indexTemplate, typeTemplate, docIdTemplate, charset);
+    return new ElasticSearchTarget(
+        clusterName,
+        uris,
+        configs,
+        timeDriver,
+        TimeZone.getTimeZone(timeZoneID),
+        indexTemplate,
+        typeTemplate,
+        docIdTemplate,
+        charset
+    );
   }
 
 }
