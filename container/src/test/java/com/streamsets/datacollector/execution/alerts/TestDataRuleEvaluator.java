@@ -235,12 +235,14 @@ public class TestDataRuleEvaluator {
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 3, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
+    Assert.assertEquals(1, ((List)((Map<String, Object>) gauge.getValue()).get("alertTexts")).size());
 
     evaluateRule(dataRuleEvaluator, lane);
 
     gauge = MetricsConfigurator.getGauge(metrics, AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
     Assert.assertNotNull(gauge);
     Assert.assertEquals((long) 6, ((Map<String, Object>) gauge.getValue()).get("currentValue"));
+    Assert.assertEquals(2, ((List)((Map<String, Object>) gauge.getValue()).get("alertTexts")).size());
 
   }
 

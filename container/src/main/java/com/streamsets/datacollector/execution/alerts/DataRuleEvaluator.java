@@ -26,6 +26,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.EvictingQueue;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.definition.ELDefinitionExtractor;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
@@ -174,11 +175,13 @@ public class DataRuleEvaluator {
       //evaluate sample set of records for condition
       int matchingRecordCount = 0;
       int evaluatedRecordCount = 0;
+      List<String> alertTextForMatchRecords = new ArrayList<>();
       for (Record r : sampleRecords) {
         evaluatedRecordCount++;
         //evaluate
         boolean success = evaluate(elVars, r, dataRuleDefinition.getCondition(), dataRuleDefinition.getId());
         if (success) {
+          alertTextForMatchRecords.add(resolveAlertText(elVars, dataRuleDefinition));
           sampledRecords.add(new SampledRecord(r, true));
           matchingRecordCount++;
         } else {
@@ -230,11 +233,22 @@ public class DataRuleEvaluator {
         switch (dataRuleDefinition.getThresholdType()) {
           case COUNT:
             if (matchingRecordCounter.getCount() > threshold) {
-              alertManager.alert(
-                  matchingRecordCounter.getCount(),
-                  emailIds,
-                  cloneRuleWithResolvedAlertText(dataRuleDefinition, resolveAlertText(elVars, dataRuleDefinition))
-              );
+              if (dataRuleDefinition instanceof DriftRuleDefinition) {
+                for (String alertText : alertTextForMatchRecords) {
+                  alertManager.alert(matchingRecordCounter.getCount(), emailIds,
+                      cloneRuleWithResolvedAlertText(dataRuleDefinition, alertText)
+                  );
+                }
+              } else if (dataRuleDefinition instanceof DataRuleDefinition) {
+                alertManager.alert(matchingRecordCounter.getCount(), emailIds,
+                    cloneRuleWithResolvedAlertText(dataRuleDefinition, resolveAlertText(elVars, dataRuleDefinition))
+                );
+              } else {
+                throw new RuntimeException(Utils.format(
+                    "Unexpected RuleDefinition class '{}'",
+                    dataRuleDefinition.getClass().getName()
+                ));
+              }
             }
             break;
           case PERCENTAGE:
@@ -284,8 +298,12 @@ public class DataRuleEvaluator {
   @VisibleForTesting
   String resolveAlertText(ELVars elVars, DataRuleDefinition ruleDef) {
     try {
+      String alertText = ruleDef.getAlertText();
+      if (alertText == null) {
+        alertText = "";
+      }
       ELEvaluator elEval = new ELEvaluator("alertInfo", RuleELRegistry.getRuleELs(RuleELRegistry.ALERT));
-      return elEval.eval(elVars, ruleDef.getAlertText(), String.class);
+      return elEval.eval(elVars, alertText, String.class);
     } catch (ELEvalException e) {
       //A faulty el alerttext should not take down rest of the alerts with it.
       //Log and it and continue for now

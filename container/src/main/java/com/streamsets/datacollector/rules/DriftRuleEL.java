@@ -133,7 +133,12 @@ public class DriftRuleEL {
 
     @Override
     protected String composeAlert(String fieldPath, Integer stored, Integer inRecord) {
-      return Utils.format("Field-Path '{}', count changed from '{}' to '{}'", fieldPath, stored, inRecord);
+      return Utils.format(
+          "The number of fields in field path '{}' changed from '{}' to '{}'.",
+          fieldPath,
+          stored,
+          inRecord
+      );
     }
 
   };
@@ -173,7 +178,12 @@ public class DriftRuleEL {
 
     @Override
     protected String composeAlert(String fieldPath, Set<String> stored, Set<String> inRecord) {
-      return Utils.format("Field-Path '{}', names changed from '{}' to '{}'", fieldPath, stored, inRecord);
+      return Utils.format(
+          "The field names for field path '{}' changed from '{}' to '{}'.",
+          fieldPath,
+          stored,
+          inRecord
+      );
     }
 
   };
@@ -213,7 +223,12 @@ public class DriftRuleEL {
 
     @Override
     protected String composeAlert(String fieldPath, List<String> stored, List<String> inRecord) {
-      return Utils.format("Field-Path '{}', order changed from '{}' to '{}'", fieldPath, stored, inRecord);
+      return Utils.format(
+          "The order of fields in field path '{}' changed from '{}' to '{}'.",
+          fieldPath,
+          stored,
+          inRecord
+      );
     }
 
   };
@@ -244,7 +259,7 @@ public class DriftRuleEL {
 
     @Override
     protected String composeAlert(String fieldPath, Field.Type stored, Field.Type inRecord) {
-      return Utils.format("Field-Path '{}', type changed from '{}' to '{}'", fieldPath, stored, inRecord);
+      return Utils.format("The data type for the '{}' field changed from '{}' to '{}'.", fieldPath, stored, inRecord);
     }
 
   };

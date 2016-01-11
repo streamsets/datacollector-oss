@@ -42,4 +42,6 @@ public class EmailConstants {
   public static final String SDC_STATE_CHANGE__EMAIL_TEMPLATE = "email-template-sdc-state-change.txt";
   public static final String MESSAGE_KEY = "${MESSAGE}";
 
+  public static final String ALERT_TEXTS = "alertTexts";
+
 }
