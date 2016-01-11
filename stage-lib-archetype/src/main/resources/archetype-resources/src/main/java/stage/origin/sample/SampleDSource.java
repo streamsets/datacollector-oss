@@ -23,9 +23,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
     version = 1,
@@ -33,11 +31,12 @@ import com.streamsets.pipeline.configurablestage.DSource;
     description = "",
     icon = "default.png",
     execution = ExecutionMode.STANDALONE,
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = ""
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class SampleDSource extends DSource {
+public class SampleDSource extends SampleSource {
 
   @ConfigDef(
       required = true,
@@ -47,11 +46,12 @@ public class SampleDSource extends DSource {
       displayPosition = 10,
       group = "SAMPLE"
   )
-  public String sampleConfig;
+  public String config;
 
   /** {@inheritDoc} */
   @Override
-  protected Source createSource() {
-    return new SampleSource(sampleConfig);
+  public String getConfig() {
+    return config;
   }
+
 }

@@ -27,28 +27,19 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.List;
 
-public class SampleTarget extends BaseTarget {
-  private static final Logger LOG = LoggerFactory.getLogger(SampleTarget.class);
-
-  private final String sampleConfig;
+/**
+ * This target is an example and does not actually write to any destination.
+ */
+public abstract class SampleTarget extends BaseTarget {
 
   /**
-   * Creates a new instance of this target. This target is an example and does not
-   * actually write to any destination.
-   *
-   * @param sampleConfig is a dummy configuration parameter for this example.
+   * Gives access to the UI configuration of the stage provided by the {@link SampleDTarget} class.
    */
-  public SampleTarget(String sampleConfig) {
-    // Persist configuration values to member variables only.
-    this.sampleConfig = sampleConfig;
-  }
-
+  public abstract String getConfig();
 
   /** {@inheritDoc} */
   @Override
@@ -56,10 +47,10 @@ public class SampleTarget extends BaseTarget {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
 
-    if (sampleConfig.equals("invalidValue")) {
+    if (getConfig().equals("invalidValue")) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.SAMPLE.name(), "sampleConfig", Errors.SAMPLE_00, "Here's what's wrong..."
+              Groups.SAMPLE.name(), "config", Errors.SAMPLE_00, "Here's what's wrong..."
           )
       );
     }
@@ -118,4 +109,5 @@ public class SampleTarget extends BaseTarget {
 
     // TODO: write the records to your final destination
   }
+
 }

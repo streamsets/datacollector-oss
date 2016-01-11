@@ -19,45 +19,37 @@
  */
 package ${groupId}.stage.origin.sample;
 
-import com.adamkunicki.streamsets.stage.lib.sample.Errors;
+import ${groupId}.stage.lib.sample.Errors;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SampleSource extends BaseSource {
-  private static final Logger LOG = LoggerFactory.getLogger(SampleSource.class);
-
-  private final String sampleConfig;
+/**
+ * This source is an example and does not actually read from anywhere.
+ * It does however, generate generate a simple record with one field.
+ */
+public abstract class SampleSource extends BaseSource {
 
   /**
-   * Creates a new instance of this source. This source is an example and does not
-   * actually read from anywhere. It does however, generate generate a simple
-   * record with one field.
-   *
-   * @param sampleConfig is a dummy configuration parameter for this example.
+   * Gives access to the UI configuration of the stage provided by the {@link SampleDSource} class.
    */
-  public SampleSource(String sampleConfig) {
-    // Persist configuration values to member variables only.
-    this.sampleConfig = sampleConfig;
-  }
+  public abstract String getConfig();
 
   @Override
   protected List<ConfigIssue> init() {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
 
-    if (sampleConfig.equals("invalidValue")) {
+    if (getConfig().equals("invalidValue")) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.SAMPLE.name(), "sampleConfig", Errors.SAMPLE_00, "Here's what's wrong..."
+              Groups.SAMPLE.name(), "config", Errors.SAMPLE_00, "Here's what's wrong..."
           )
       );
     }
@@ -100,4 +92,5 @@ public class SampleSource extends BaseSource {
 
     return String.valueOf(nextSourceOffset);
   }
+
 }

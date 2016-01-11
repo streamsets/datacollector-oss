@@ -22,19 +22,18 @@ package ${groupId}.stage.processor.sample;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DProcessor;
 
 @StageDef(
     version = 1,
     label = "Sample Processor",
     description = "",
-    icon = "default.png"
+    icon = "default.png",
+    onlineHelpRefUrl = ""
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class SampleDProcessor extends DProcessor {
+public class SampleDProcessor extends SampleProcessor {
 
   @ConfigDef(
       required = true,
@@ -44,11 +43,12 @@ public class SampleDProcessor extends DProcessor {
       displayPosition = 10,
       group = "SAMPLE"
   )
-  public String sampleConfig;
+  public String config;
 
   /** {@inheritDoc} */
   @Override
-  protected Processor createProcessor() {
-    return new SampleProcessor(sampleConfig);
+  public String getConfig() {
+    return config;
   }
+
 }

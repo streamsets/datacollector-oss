@@ -23,19 +23,18 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
 
 @StageDef(
     version = 1,
     label = "Sample Destination",
     description = "",
     icon = "default.png",
-    recordsByRef = true
+    recordsByRef = true,
+    onlineHelpRefUrl = ""
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
-public class SampleDTarget extends DTarget {
+public class SampleDTarget extends SampleTarget {
 
   @ConfigDef(
       required = true,
@@ -45,11 +44,12 @@ public class SampleDTarget extends DTarget {
       displayPosition = 10,
       group = "SAMPLE"
   )
-  public String sampleConfig;
+  public String config;
 
   /** {@inheritDoc} */
   @Override
-  protected Target createTarget() {
-    return new SampleTarget(sampleConfig);
+  public String getConfig() {
+    return config;
   }
+
 }

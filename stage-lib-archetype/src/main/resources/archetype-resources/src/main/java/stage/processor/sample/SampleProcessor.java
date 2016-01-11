@@ -24,25 +24,15 @@ import ${groupId}.stage.lib.sample.Errors;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class SampleProcessor extends SingleLaneRecordProcessor {
-  private static final Logger LOG = LoggerFactory.getLogger(SampleProcessor.class);
-
-  private final String sampleConfig;
+public abstract class SampleProcessor extends SingleLaneRecordProcessor {
 
   /**
-   * Creates a new instance of this processor. This processor is an example and is
-   * effectively a no-op.
-   *
-   * @param sampleConfig is a dummy configuration parameter for this example.
+   * Gives access to the UI configuration of the stage provided by the {@link SampleDProcessor} class.
    */
-  public SampleProcessor(String sampleConfig) {
-    this.sampleConfig = sampleConfig;
-  }
+  public abstract String getConfig();
 
   /** {@inheritDoc} */
   @Override
@@ -50,10 +40,10 @@ public class SampleProcessor extends SingleLaneRecordProcessor {
     // Validate configuration values and open any required resources.
     List<ConfigIssue> issues = super.init();
 
-    if (sampleConfig.equals("invalidValue")) {
+    if (getConfig().equals("invalidValue")) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.SAMPLE.name(), "sampleConfig", Errors.SAMPLE_00, "Here's what's wrong..."
+              Groups.SAMPLE.name(), "config", Errors.SAMPLE_00, "Here's what's wrong..."
           )
       );
     }

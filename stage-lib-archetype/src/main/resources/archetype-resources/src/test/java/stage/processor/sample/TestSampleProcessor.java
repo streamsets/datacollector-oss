@@ -34,9 +34,8 @@ public class TestSampleProcessor {
   @Test
   @SuppressWarnings("unchecked")
   public void testProcessor() throws StageException {
-    final String sampleConfig = "configValue";
-    SampleProcessor processor = new SampleProcessor(sampleConfig);
-    ProcessorRunner runner = new ProcessorRunner.Builder(SampleProcessor.class, processor)
+    ProcessorRunner runner = new ProcessorRunner.Builder(SampleDProcessor.class)
+        .addConfiguration("config", "value")
         .addOutputLane("output")
         .build();
 

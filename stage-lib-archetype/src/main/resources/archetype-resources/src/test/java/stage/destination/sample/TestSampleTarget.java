@@ -19,24 +19,22 @@
  */
 package ${groupId}.stage.destination.sample;
 
-import _ss_com.com.google.common.collect.ImmutableList;
-import com.adamkunicki.streamsets.stage.destination.sample.SampleTarget;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import org.joda.time.Instant;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestSampleTarget {
   @Test
   public void testWriteSingleRecord() throws Exception {
-    final String sampleConfig = "mySampleConfig";
-    SampleTarget target = new SampleTarget(sampleConfig);
-    TargetRunner runner = new TargetRunner.Builder(SampleTarget.class, target).build();
+    TargetRunner runner = new TargetRunner.Builder(SampleDTarget.class)
+        .addConfiguration("config", "value")
+        .build();
 
     runner.runInit();
 
@@ -47,7 +45,8 @@ public class TestSampleTarget {
     fields.put("someField", Field.create("some value"));
     record.set(Field.create(fields));
 
-    runner.runWrite(ImmutableList.of(record));
+
+    runner.runWrite(Arrays.asList(record));
 
     // Here check the data destination. E.g. a mock.
 

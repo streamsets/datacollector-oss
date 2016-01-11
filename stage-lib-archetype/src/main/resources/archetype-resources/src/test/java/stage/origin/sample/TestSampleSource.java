@@ -19,7 +19,6 @@
  */
 package ${groupId}.stage.origin.sample;
 
-import com.adamkunicki.streamsets.stage.origin.sample.SampleSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -33,20 +32,25 @@ public class TestSampleSource {
 
   @Test
   public void testOrigin() throws Exception {
-    final String sampleConfig = "mySampleConfig";
-    SampleSource source = new SampleSource(sampleConfig);
-    SourceRunner runner = new SourceRunner.Builder(SampleSource.class, source).addOutputLane("lane").build();
+    SourceRunner runner = new SourceRunner.Builder(SampleDSource.class)
+        .addConfiguration("config", "value")
+        .addOutputLane("lane")
+        .build();
 
-    runner.runInit();
+    try {
+      runner.runInit();
 
-    final String lastSourceOffset = null;
-    StageRunner.Output output = runner.runProduce(lastSourceOffset, MAX_BATCH_SIZE);
-    Assert.assertEquals("5", output.getNewOffset());
-    List<Record> records = output.getRecords().get("lane");
-    Assert.assertEquals(5, records.size());
-    Assert.assertTrue(records.get(0).has("/fieldName"));
-    Assert.assertEquals("Some Value", records.get(0).get("/fieldName").getValueAsString());
+      final String lastSourceOffset = null;
+      StageRunner.Output output = runner.runProduce(lastSourceOffset, MAX_BATCH_SIZE);
+      Assert.assertEquals("5", output.getNewOffset());
+      List<Record> records = output.getRecords().get("lane");
+      Assert.assertEquals(5, records.size());
+      Assert.assertTrue(records.get(0).has("/fieldName"));
+      Assert.assertEquals("Some Value", records.get(0).get("/fieldName").getValueAsString());
 
-    runner.runDestroy();
+    } finally {
+      runner.runDestroy();
+    }
   }
+
 }
