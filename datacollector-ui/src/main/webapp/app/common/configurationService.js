@@ -208,6 +208,6 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_HEADER_TITLE];
       }
       return '';
-    }
+    };
 
   });
