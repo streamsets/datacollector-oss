@@ -21,6 +21,11 @@
           functions<indexterm>description</indexterm></indexterm>The expression language provides
       the following miscellaneous functions:</p>
   <dl>
+      <dlentry>
+        <dt>alert:info()</dt>
+        <dd>Returns information about the trigger for a data drift alert. Use only in alert text for
+          data drift alerts. </dd>
+      </dlentry>
    <dlentry>
     <dt>emptyList</dt>
     <dd>Creates an empty list.</dd>

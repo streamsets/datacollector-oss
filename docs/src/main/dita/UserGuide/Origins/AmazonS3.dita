@@ -19,9 +19,9 @@
         file name pattern and should be fully written.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>Amazon S3</indexterm></indexterm><indexterm>Amazon S3
-                    origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you
-            define the region, bucket, optional folder, file name pattern, and compression type.
-            These properties determine the files that the origin processes. </p>
+          origin<indexterm>overview</indexterm></indexterm>With the Amazon S3 origin, you define the
+      region, bucket, optional folder, file name pattern, and compression format. These properties
+      determine the files that the origin processes. </p>
   <p>After processing a file or upon encountering errors, the origin can keep, archive, or delete
             the file. </p>
   <p>When the pipeline stops, the Amazon S3 origin notes where it stops reading. When the pipeline

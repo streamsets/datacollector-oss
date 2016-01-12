@@ -14,20 +14,29 @@
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map>
- <title>Alerts</title>
- <topicref href="../Alerts/Alerts_title.dita">
+ <title>Rules and Alerts</title>
+ <topicref href="../Alerts/RulesAlerts_title.dita">
+  <topicref href="../Alerts/RulesAlerts-Overview.dita"/>
   <topicref href="../Alerts/MetricAlerts.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
    <topicref href="../Alerts/MetricTypes.dita"/>
-   <topicref href="../Alerts/ConfiguringMetricAlerts.dita"/>
+   <topicref href="../Alerts/MetricAlerts-Configuring.dita"/>
   </topicref>
   <topicref href="../Alerts/DataAlerts.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
-   <topicref href="../Alerts/ConfiguringDataAlerts.dita"/>
+   <topicref href="../Alerts/DataAlerts-Configuring.dita"/>
+   <topicref href="../Alerts/DataAlerts-ViewingMetrics%26Summary.dita"/>
+  </topicref>
+  <topicref href="../Alerts/DataDriftAlerts.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Alerts/DataDriftTriggers.dita"/>
+   <topicref href="../Alerts/DataDriftAlerts-Configuring.dita"/>
   </topicref>
   <topicref href="../Alerts/EmailforAlerts-Configuring.dita">
    <topicmeta>

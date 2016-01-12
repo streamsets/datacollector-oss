@@ -14,20 +14,22 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_abj_nsk_zq">
- <title>Metric Alerts</title>
- <shortdesc>Metric alerts are alerts based on pipeline and stage statistics, such as a high rate of
-    error records or a batch of records taking too long to process. </shortdesc>
+ <title>Metric Rules and Alerts</title>
+ <shortdesc>Metric rules define the statistics that you want to gather about pipeline and stage
+    performance,  such as a high rate of error records or batches taking too long to process. You
+    can also create alerts based on the metric rules.</shortdesc>
  <conbody>
   <p><indexterm>metric
           alerts<indexterm>overview</indexterm></indexterm><indexterm>monitoring<indexterm>metric
           alerts</indexterm></indexterm>Metric alerts display in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
-      Monitor mode. You can also configure a metric alert to send email to all email addresses
+      monitor mode. You can also configure a metric alert to send email to all email addresses
       associated with the pipeline. </p>
-    <p>You can configure metric alerts when you configure the pipeline or after you start the
-      pipeline. The metric alert takes effect after you enable the alert.</p>
+    <p>You can configure metric rules and alerts when you configure or monitor the pipeline. Metric
+      rules and alerts take effect after you enable them.</p>
     <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      provides default metric alerts for a pipeline. The metric alerts are not active. You can edit,
-      delete, or activate the alerts. </p>
+      provides a set of metric rules and alerts for a pipeline. By default, they are not active. You
+      can edit, delete, or activate the rules and alerts. You can also create custom metric rules
+      and alerts.</p>
  </conbody>
 </concept>
