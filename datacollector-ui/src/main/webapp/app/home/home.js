@@ -192,7 +192,14 @@ angular
         var alertMsg ='<span class="stage-errors-tooltip">';
         if(pipelineAlerts) {
           angular.forEach(pipelineAlerts, function(alert) {
-            alertMsg += alert.ruleDefinition.alertText + '<br>';
+            if(alert.ruleDefinition.family === 'drift' && alert.gauge.value.alertTexts &&
+              alert.gauge.value.alertTexts.length) {
+              //Data Drift Alert
+              alertMsg += alert.gauge.value.alertTexts.join('<br>') + '<br>';
+            } else {
+              //General Data Alert
+              alertMsg += alert.ruleDefinition.alertText + '<br>';
+            }
           });
         }
         alertMsg += '</span>';

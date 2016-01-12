@@ -169,6 +169,14 @@ body {
       a {
         white-space: normal;
         width: 400px;
+
+        .alert-text {
+          padding-right: @defaultPadding;
+
+          &:nth-child(even) {
+            opacity: .5;
+          }
+        }
       }
 
       &.dropdown-header {

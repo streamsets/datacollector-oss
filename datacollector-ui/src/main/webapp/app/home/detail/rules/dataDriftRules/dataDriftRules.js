@@ -222,7 +222,7 @@ angular
         samplingPercentage: 5,
         samplingRecordsToRetain: 10,
         alertEnabled: true,
-        alertText: '',
+        alertText: '${alert:info()}',
         sendEmail: false,
         meterEnabled: true,
         enabled: false

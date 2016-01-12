@@ -1141,7 +1141,7 @@ angular
           showEdgePreviewIcon: true,
           isReadOnly: $scope.isPipelineReadOnly || $scope.isPipelineRunning || $scope.previewMode,
           pipelineRules: $scope.pipelineRules,
-          triggeredAlerts: $scope.triggeredAlerts,
+          triggeredAlerts: $scope.isPipelineRunning ? $scope.triggeredAlerts : [],
           errorStage: $scope.pipelineConfig.errorStage,
           fitToBounds: fitToBounds
         });

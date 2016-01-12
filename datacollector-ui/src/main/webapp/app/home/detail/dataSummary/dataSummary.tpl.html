@@ -21,13 +21,14 @@
               <span ng-if="triggeredAlert.gauge.value.exceptionMessage"
                      ng-bind="triggeredAlert.gauge.value.exceptionMessage"></span>
 
-              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage"
+              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage && triggeredAlert.ruleDefinition.thresholdType"
                     ng-bind="triggeredAlert.ruleDefinition.alertText"></span>
 
+              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage && !triggeredAlert.ruleDefinition.thresholdType && triggeredAlert.gauge.value.alertTexts"
+                    class="alert-text" ng-repeat="alertText in triggeredAlert.gauge.value.alertTexts track by $index">{{alertText}}</span>
 
-              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage"
+              <span ng-if="!triggeredAlert.gauge.value.exceptionMessage && !alert.gauge.value.alertTexts"
                 class="alert-details"> ( {{'home.detailPane.summaryTab.currentValue' | translate}}: {{triggeredAlert.gauge.value.currentValue}}, {{'home.detailPane.summaryTab.triggered' | translate}}: {{triggeredAlert.gauge.value.timestamp | amTimeAgo}} )</span>
-
 
               <div class="pull-right">
                 <a href="#"

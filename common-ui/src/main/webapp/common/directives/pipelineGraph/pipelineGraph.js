@@ -1565,6 +1565,15 @@ angular.module('pipelineGraphDirectives', [])
         }
       });
 
+      _.each(pipelineRules.driftRuleDefinitions, function(ruleDefn) {
+        if(ruleDefn.lane === d.outputLane) {
+          if(ruleDefn.enabled) {
+            atLeastOneRuleActive = true;
+          }
+          atLeastOneRuleDefined = true;
+        }
+      });
+
       if(triggeredAlert && triggeredAlert.length) {
         return 'fa fa-tachometer fa-16x pointer edge-preview alert-triggered';
       } else if(atLeastOneRuleActive){

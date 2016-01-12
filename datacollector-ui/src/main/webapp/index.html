@@ -123,7 +123,11 @@
                   <strong>{{alert.ruleDefinition.label}}: </strong> {{alert.gauge.value.exceptionMessage}}
                 </span>
 
-                <span ng-if="!alert.gauge.value.exceptionMessage" ng-bind="alert.ruleDefinition.alertText"></span>
+                <span ng-if="!alert.gauge.value.exceptionMessage && alert.ruleDefinition.family === 'general'" ng-bind="alert.ruleDefinition.alertText"></span>
+
+                <span ng-if="!alert.gauge.value.exceptionMessage && alert.ruleDefinition.family === 'drift' && alert.gauge.value.alertTexts">
+                  <span class="alert-text" ng-repeat="alertText in alert.gauge.value.alertTexts track by $index">{{alertText}}</span>
+                </span>
 
                 <button type="button" class="close" aria-label="Close"
                         ng-click="common.deleteTriggeredAlert(alert, $event)">
