@@ -52,8 +52,12 @@ public class FlumeConfigBean {
     boolean valid = true;
 
     valid &= flumeConfig.init(context, issues);
-    valid &= dataGeneratorFormatConfig.init(context, dataFormat, Groups.FLUME.name(), "dataGeneratorFormatConfig",
-      issues);
+    valid &= dataGeneratorFormatConfig.init(
+        context,
+        dataFormat,
+        Groups.FLUME.name(),
+        "flumeConfigBean.dataGeneratorFormatConfig",
+        issues);
 
     return valid;
   }

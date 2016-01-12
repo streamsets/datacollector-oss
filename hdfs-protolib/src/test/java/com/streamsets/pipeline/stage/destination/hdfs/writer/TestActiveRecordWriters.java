@@ -107,7 +107,7 @@ public class TestActiveRecordWriters {
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory,
       ContextInfoCreator.createTargetContext(HdfsDTarget.class, "testWritersLifecycle", false, OnRecordError.TO_ERROR,
                                              null), "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     ActiveRecordWriters writers = new ActiveRecordWriters(mgr);
 
     Date now = new Date();

@@ -290,6 +290,7 @@ public class DataGeneratorFormatConfig {
       Stage.Context context,
       DataFormat dataFormat,
       String groupName,
+      String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
@@ -306,7 +307,13 @@ public class DataGeneratorFormatConfig {
     } catch (UnsupportedCharsetException ex) {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
       cSet = StandardCharsets.UTF_8;
-      issues.add(context.createConfigIssue(groupName, "charset", DataFormatErrors.DATA_FORMAT_05, charset));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + ".charset",
+              DataFormatErrors.DATA_FORMAT_05, charset
+          )
+      );
       valid &= false;
     }
 
@@ -342,7 +349,7 @@ public class DataGeneratorFormatConfig {
           issues.add(
               context.createConfigIssue(
                   DataFormatGroups.AVRO.name(),
-                  "avroSchema",
+                  configPrefix + ".avroSchema",
                   DataFormatErrors.DATA_FORMAT_300,
                   e.toString(),
                   e
@@ -357,7 +364,7 @@ public class DataGeneratorFormatConfig {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.AVRO.name(),
-                    "avroSchema",
+                    configPrefix + ".avroSchema",
                     DataFormatErrors.DATA_FORMAT_301,
                     e.toString(),
                     e
@@ -397,7 +404,7 @@ public class DataGeneratorFormatConfig {
       Stage.Context context,
       DataFormat dataFormat,
       String groupName,
-      String configName,
+      String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
     boolean valid = true;
@@ -405,14 +412,26 @@ public class DataGeneratorFormatConfig {
       case TEXT:
         //required field configuration to be set and it is "/" by default
         if (textFieldPath == null || textFieldPath.isEmpty()) {
-          issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(), "fieldPath", DataFormatErrors.DATA_FORMAT_200));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.TEXT.name(),
+                  configPrefix + ".textFieldPath",
+                  DataFormatErrors.DATA_FORMAT_200
+              )
+          );
           valid = false;
         }
         break;
       case BINARY:
         //required field configuration to be set and it is "/" by default
         if (binaryFieldPath == null || binaryFieldPath.isEmpty()) {
-          issues.add(context.createConfigIssue(DataFormatGroups.BINARY.name(), "fieldPath", DataFormatErrors.DATA_FORMAT_200));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.BINARY.name(),
+                  configPrefix + ".binaryFieldPath",
+                  DataFormatErrors.DATA_FORMAT_200
+              )
+          );
           valid = false;
         }
         break;
@@ -427,7 +446,7 @@ public class DataGeneratorFormatConfig {
           issues.add(
             context.createConfigIssue(
               DataFormatGroups.PROTOBUF.name(),
-              "protoDescriptorFile",
+              configPrefix + ".protoDescriptorFile",
               DataFormatErrors.DATA_FORMAT_07
             )
           );
@@ -438,7 +457,7 @@ public class DataGeneratorFormatConfig {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
-                    "protoDescriptorFile",
+                    configPrefix + ".protoDescriptorFile",
                     DataFormatErrors.DATA_FORMAT_09,
                     file.getAbsolutePath()
                 )
@@ -449,7 +468,7 @@ public class DataGeneratorFormatConfig {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
-                    "messageType",
+                    configPrefix + ".messageType",
                     DataFormatErrors.DATA_FORMAT_08
                 )
             );
@@ -458,11 +477,11 @@ public class DataGeneratorFormatConfig {
         }
         break;
       default:
-        issues.add(context.createConfigIssue(groupName, configName, DataFormatErrors.DATA_FORMAT_04, dataFormat));
+        issues.add(context.createConfigIssue(groupName, configPrefix, DataFormatErrors.DATA_FORMAT_04, dataFormat));
         valid = false;
     }
 
-    valid &= validateDataGenerator(context, dataFormat, groupName, issues);
+    valid &= validateDataGenerator(context, dataFormat, groupName, configPrefix, issues);
 
     return valid;
   }

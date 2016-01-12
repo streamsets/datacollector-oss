@@ -109,8 +109,13 @@ public class RecordWriterManager {
         });
   }
 
-  public boolean validateDirTemplate(String group, String config, List<Stage.ConfigIssue> issues) {
-    return pathResolver.validate(group, config, issues);
+  public boolean validateDirTemplate(
+      String group,
+      String config,
+      String qualifiedConfigName,
+      List<Stage.ConfigIssue> issues
+  ) {
+    return pathResolver.validate(group, config, qualifiedConfigName, issues);
   }
 
   public long getCutOffMillis() {

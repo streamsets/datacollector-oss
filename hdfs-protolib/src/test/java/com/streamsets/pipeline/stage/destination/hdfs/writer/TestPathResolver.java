@@ -42,14 +42,14 @@ public class TestPathResolver {
 
   private PathResolver getPathTemplateEL(String pathTemplate) {
    PathResolver t = new PathResolver(getContext(), "dirPathTemplate", pathTemplate, TimeZone.getTimeZone("UTC"));
-    Assert.assertTrue(t.validate("g", "c", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(t.validate("g", "c", "c", new ArrayList<Stage.ConfigIssue>()));
     return t;
   }
 
   private boolean validate(String pathTemplate) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     PathResolver t = new PathResolver(getContext(), "dirPathTemplate", pathTemplate, TimeZone.getTimeZone("UTC"));
-    t.validate("g", "c", issues);
+    t.validate("g", "c", "c", issues);
     return issues.isEmpty();
   }
 

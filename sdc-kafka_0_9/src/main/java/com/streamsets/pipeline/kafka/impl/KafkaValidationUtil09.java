@@ -38,6 +38,7 @@ import java.util.Properties;
 public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
 
   private static final String KAFKA_VERSION = "0.9";
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
 
   @Override
   public String getVersion() {
@@ -154,7 +155,15 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
       try {
         List<PartitionInfo> partitionInfos = kafkaConsumer.partitionsFor(topic);
         if(null == partitionInfos || partitionInfos.size() == 0) {
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic, metadataBrokerList));
+          issues.add(
+              context.createConfigIssue(
+                  groupName,
+                  KAFKA_CONFIG_BEAN_PREFIX + "topic",
+                  KafkaErrors.KAFKA_03,
+                  topic,
+                  metadataBrokerList
+              )
+          );
           valid = false;
         }
       } catch (WakeupException | AuthorizationException e) {

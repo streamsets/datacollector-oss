@@ -26,9 +26,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
@@ -43,7 +43,6 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.DefaultCodec;
-import org.apache.hadoop.io.compress.SnappyCodec;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -152,7 +151,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
     Date date = getFixedDate();
 
@@ -194,7 +193,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType,keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
     if (compressionCodec == null) {
       Assert.assertEquals("", mgr.getExtension());
@@ -224,7 +223,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     FileSystem fs = FileSystem.get(uri, conf);
     Path file = new Path(getTestDir(), UUID.randomUUID().toString());
     long expires = System.currentTimeMillis() + 50000;
@@ -273,7 +272,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec, compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     FileSystem fs = FileSystem.get(uri, conf);
     Path file = new Path(getTestDir(), UUID.randomUUID().toString());
     long expires = System.currentTimeMillis() + 50000;
@@ -327,7 +326,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
     FileSystem fs = FileSystem.get(uri, conf);
     Date now = getFixedDate();
@@ -415,7 +414,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
 
     Date now = getFixedDate();
 
@@ -451,7 +450,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     Date now = getFixedDate();
 
     Date recordDate = now;
@@ -486,7 +485,7 @@ public class TestRecordWriterManager {
     DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
       cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     Date now = getFixedDate();
 
     Date recordDate = now;
@@ -520,7 +519,7 @@ public class TestRecordWriterManager {
     RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, dirTemplate, timeZone, cutOffSecs, cutOffSize,
                                    cutOffRecords, fileType, compressionCodec, compressionType, keyEL,
                                    generatorFactory, targetContext, "dirPathTemplate");
-    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
     return mgr;
   }
 

@@ -231,7 +231,7 @@ public class PathResolver {
 
   private String[] FUNCTION_NAMES = { "YYYY() or YY()", "MM()", "DD()", "hh()", "mm()", "ss()"};
 
-  public boolean validate(String group, String config, List<Stage.ConfigIssue> issues) {
+  public boolean validate(String group, String config, String qualifiedConfigName, List<Stage.ConfigIssue> issues) {
     int previousIssuesCount = issues.size();
     int[] validationInfo = new int[12];
     // 0: YYYY() & YY() count
@@ -257,43 +257,43 @@ public class PathResolver {
         if (validationInfo[i] == 0) {
           consecutive = false;
         } else if (!consecutive) {
-          issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_29, FUNCTION_NAMES[i],
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_29, FUNCTION_NAMES[i],
                                                FUNCTION_NAMES[i - 1]));
           break;
         }
       }
       if (validationInfo[6] > 1) {
         // the every() function is more than once in the path
-        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_30));
+        issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_30));
       }
       if (validationInfo[7] > 0) {
         // the unit specified in the every() function is invalid or it does not work with every()
-        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_31));
+        issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_31));
       }
       if (validationInfo[8] > 0) {
         // the value specified in the every() function is outside of the unit domain
-        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_32, validationInfo[8]));
+        issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_32, validationInfo[8]));
       }
       if (validationInfo[9] > 0) {
         if (validationInfo[9] < validationInfo[11]) {
           // the unit specified in the every() function is not the smallest unit in the path
-          issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_33, validationInfo[8]));
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_33, validationInfo[8]));
         } else {
           if (validationInfo[9] == Calendar.SECOND || validationInfo[9] == Calendar.MINUTE) {
             if (60 % validationInfo[10] != 0) {
-              issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_34));
+              issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_34));
             }
           }
         }
         if (validationInfo[9] == Calendar.SECOND && validationInfo[5] > 1) {
-          issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_36));
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_36));
         }
         if (validationInfo[9] == Calendar.MINUTE && validationInfo[4] > 1) {
-          issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_37));
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_37));
         }
       }
     } catch (ELEvalException ex) {
-      issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_20, ex.toString()));
+      issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_20, ex.toString()));
     }
     validated = (issues.size() - previousIssuesCount) == 0;
     if (validated) {
@@ -301,7 +301,7 @@ public class PathResolver {
         incrementUnit = evaluateTimeIncrementUnit(config);
         incrementValue = evaluateTimeIncrementValue(config);
       } catch (ELEvalException ex) {
-        issues.add(context.createConfigIssue(group, config, Errors.HADOOPFS_35, ex.toString()));
+        issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_35, ex.toString()));
         validated = false;
       }
     }

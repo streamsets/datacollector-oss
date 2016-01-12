@@ -43,6 +43,7 @@ import java.util.Map;
 public class KafkaValidationUtil08 implements SdcKafkaValidationUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaValidationUtil08.class);
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
   private static final String METADATA_READER_CLIENT = "metadataReaderClient";
   private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
@@ -184,23 +185,50 @@ public class KafkaValidationUtil08 implements SdcKafkaValidationUtil {
         topicMetadata = KafkaValidationUtil08.getTopicMetadata(kafkaBrokers, topic, 1, 0);
         if(topicMetadata == null) {
           //Could not get topic metadata from any of the supplied brokers
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic,
-            metadataBrokerList));
+          issues.add(
+              context.createConfigIssue(
+                  groupName,
+                  KAFKA_CONFIG_BEAN_PREFIX + "topic",
+                  KafkaErrors.KAFKA_03,
+                  topic,
+                  metadataBrokerList
+              )
+          );
           valid = false;
         } else if (topicMetadata.errorCode() == ErrorMapping.UnknownTopicOrPartitionCode()) {
           //Topic does not exist
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_04, topic));
+          issues.add(
+              context.createConfigIssue(
+                  groupName,
+                  KAFKA_CONFIG_BEAN_PREFIX + "topic",
+                  KafkaErrors.KAFKA_04,
+                  topic
+              )
+          );
           valid = false;
         } else if (topicMetadata.errorCode() != 0) {
           // Topic metadata returned error code other than ErrorMapping.UnknownTopicOrPartitionCode()
-          issues.add(context.createConfigIssue(groupName, "topic", KafkaErrors.KAFKA_03, topic,
-            metadataBrokerList));
+          issues.add(
+              context.createConfigIssue(
+                  groupName,
+                  KAFKA_CONFIG_BEAN_PREFIX + "topic",
+                  KafkaErrors.KAFKA_03,
+                  topic,
+                  metadataBrokerList
+              )
+          );
           valid = false;
         }
       } catch (IOException e) {
         //Could not connect to kafka with the given metadata broker list
-        issues.add(context.createConfigIssue(groupName, "metadataBrokerList", KafkaErrors.KAFKA_67,
-          metadataBrokerList));
+        issues.add(
+            context.createConfigIssue(
+                groupName,
+                KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+                KafkaErrors.KAFKA_67,
+                metadataBrokerList
+            )
+        );
         valid = false;
       }
     }

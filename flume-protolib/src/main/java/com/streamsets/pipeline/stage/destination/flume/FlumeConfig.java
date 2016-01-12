@@ -46,6 +46,7 @@ public class FlumeConfig {
   private static final String HOST_SELECTOR_KEY = "host-selector";
   private static final String HOST_SELECTOR_RANDOM = "random";
   private static final String HOST_SELECTOR_ROUND_ROBIN = "round_robin";
+  private static final String FLUME_CONFIG_PREFIX = "flumeConfigBean.flumeConfig.";
 
   @ConfigDef(
     required = false,
@@ -188,39 +189,86 @@ public class FlumeConfig {
 
   public boolean init (
       Stage.Context context,
-      List<Stage.ConfigIssue> issues
-  ) {
+      List<Stage.ConfigIssue> issues) {
     boolean valid = true;
-    valid &= FlumeUtil.validateHostConfig(issues, flumeHostsConfig, Groups.FLUME.name(),
-      "flumeHostsConfig", context);
+    
+    valid &= FlumeUtil.validateHostConfig(
+        issues,
+        flumeHostsConfig,
+        Groups.FLUME.name(),
+        FLUME_CONFIG_PREFIX + "flumeHostsConfig",
+        context
+    );
     if(batchSize < 1) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "batchSize",
-        FlumeErrors.FLUME_104, "batchSize", 1));
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "batchSize",
+              FlumeErrors.FLUME_104,
+              "batchSize",
+              1
+          )
+      );
       valid = false;
     }
-    if(clientType == ClientType.AVRO_LOAD_BALANCING && backOff
-      && maxBackOff < 0) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "maxBackOff", FlumeErrors.FLUME_104, "maxBackOff", 0));
+    if(clientType == ClientType.AVRO_LOAD_BALANCING && backOff && maxBackOff < 0) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "maxBackOff",
+              FlumeErrors.FLUME_104,
+              "maxBackOff",
+              0
+          )
+      );
       valid = false;
     }
     if(connectionTimeout < 1000) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "connectionTimeout", FlumeErrors.FLUME_104,
-        "connectionTimeout", 1000));
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "connectionTimeout",
+              FlumeErrors.FLUME_104,
+              "connectionTimeout",
+              1000
+          )
+      );
       valid = false;
     }
     if(requestTimeout < 1000) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "requestTimeout", FlumeErrors.FLUME_104,
-        "requestTimeout", 1000));
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "requestTimeout",
+              FlumeErrors.FLUME_104,
+              "requestTimeout",
+              1000
+          )
+      );
       valid = false;
     }
     if(maxRetryAttempts < 0) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "maxRetryAttempts", FlumeErrors.FLUME_104,
-        "maxRetryAttempts", 0));
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "maxRetryAttempts",
+              FlumeErrors.FLUME_104,
+              "maxRetryAttempts",
+              0
+          )
+      );
       valid = false;
     }
     if(waitBetweenRetries < 0) {
-      issues.add(context.createConfigIssue(Groups.FLUME.name(), "waitBetweenRetries",FlumeErrors.FLUME_104,
-        "waitBetweenRetries", 0));
+      issues.add(
+          context.createConfigIssue(
+              Groups.FLUME.name(),
+              FLUME_CONFIG_PREFIX + "waitBetweenRetries",
+              FlumeErrors.FLUME_104,
+              "waitBetweenRetries",
+              0
+          )
+      );
       valid = false;
     }
 

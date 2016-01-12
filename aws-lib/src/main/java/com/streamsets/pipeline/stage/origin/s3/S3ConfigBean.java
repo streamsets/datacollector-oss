@@ -37,6 +37,8 @@ import java.util.List;
 @InterfaceStability.Unstable
 public class S3ConfigBean {
 
+  private static final String S3_CONFIG_PREFIX = "s3ConfigBean.s3Config.";
+
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
 
@@ -75,7 +77,7 @@ public class S3ConfigBean {
     basicConfig.init(context, issues, Groups.S3.name());
 
     //S3 source specific validation
-    s3Config.init(context, issues, advancedConfig);
+    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
 
     if(errorConfig.errorFolder != null && !errorConfig.errorFolder.isEmpty() &&
       !errorConfig.errorFolder.endsWith(s3Config.delimiter)) {

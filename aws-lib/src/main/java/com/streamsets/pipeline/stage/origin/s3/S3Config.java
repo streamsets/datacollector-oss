@@ -43,6 +43,8 @@ import java.util.List;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 public class S3Config {
+
+  private static final String AWS_CONFIG_PREFIX = "awsConfig.";
   private final static Logger LOG = LoggerFactory.getLogger(S3Config.class);
 
   @ConfigDefBean(groups = "S3")
@@ -97,8 +99,13 @@ public class S3Config {
     this.endPoint = endPoint;
   }
 
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues, S3AdvancedConfig advancedConfig) {
-    validateConnection(context, issues, advancedConfig);
+  public void init(
+      Stage.Context context,
+      String configPrefix,
+      S3AdvancedConfig advancedConfig,
+      List<Stage.ConfigIssue> issues
+  ) {
+    validateConnection(context, configPrefix, advancedConfig, issues);
     //if the folder does not end with delimiter, add one
     if(folder != null && !folder.isEmpty() && !folder.endsWith(delimiter)) {
       folder = folder + delimiter;
@@ -117,7 +124,12 @@ public class S3Config {
 
   private AmazonS3Client s3Client;
 
-  private void validateConnection(Stage.Context context, List<Stage.ConfigIssue> issues, S3AdvancedConfig advancedConfig) {
+  private void validateConnection(
+      Stage.Context context,
+      String configPrefix,
+      S3AdvancedConfig advancedConfig,
+      List<Stage.ConfigIssue> issues
+  ) {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
     ClientConfiguration clientConfig = new ClientConfiguration();
 
@@ -149,7 +161,14 @@ public class S3Config {
       s3Client.listBuckets();
     } catch (AmazonS3Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
-      issues.add(context.createConfigIssue(Groups.S3.name(), "awsAccessKeyId", Errors.S3_SPOOLDIR_20, e.toString()));
+      issues.add(
+          context.createConfigIssue(
+              Groups.S3.name(),
+              configPrefix + AWS_CONFIG_PREFIX + "awsAccessKeyId",
+              Errors.S3_SPOOLDIR_20,
+              e.toString()
+          )
+      );
     }
   }
 }

@@ -72,6 +72,7 @@ public class HdfsTargetConfigBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(HdfsTargetConfigBean.class);
   private final static int MEGA_BYTE = 1024 * 1024;
+  public static final String HDFS_TARGET_CONFIG_BEAN_PREFIX = "hdfsTargetConfigBean.";
 
   @ConfigDef(
     required = true,
@@ -351,10 +352,20 @@ public class HdfsTargetConfigBean {
 
     boolean validHadoopDir = false;
     if (validateHadoopFS(context, issues)) {
-      validHadoopDir = validateHadoopDir(context, "dirPathTemplate", dirPathTemplate, issues);
+      validHadoopDir = validateHadoopDir(
+          context,
+          HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+          dirPathTemplate,
+          issues
+      );
       if (lateRecordsAction == LateRecordsAction.SEND_TO_LATE_RECORDS_FILE &&
           lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-        validHadoopDir &= validateHadoopDir(context, "lateRecordsDirPathTemplate", lateRecordsDirPathTemplate, issues);
+        validHadoopDir &= validateHadoopDir(
+            context,
+            HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
+            lateRecordsDirPathTemplate,
+            issues
+        );
       }
     }
     try {
@@ -363,18 +374,44 @@ public class HdfsTargetConfigBean {
       lateRecordsLimitSecs = lateRecordsLimitEvaluator.eval(context.createELVars(),
         lateRecordsLimit, Long.class);
       if (lateRecordsLimitSecs <= 0) {
-        issues.add(context.createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_10));
+        issues.add(
+            context.createConfigIssue(
+                Groups.LATE_RECORDS.name(),
+                HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsLimit",
+                Errors.HADOOPFS_10
+            )
+        );
       }
     } catch (Exception ex) {
-      issues.add(context.createConfigIssue(Groups.LATE_RECORDS.name(), "lateRecordsLimit", Errors.HADOOPFS_06,
-        lateRecordsLimit, ex.toString(), ex));
+      issues.add(
+          context.createConfigIssue(
+              Groups.LATE_RECORDS.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsLimit",
+              Errors.HADOOPFS_06,
+              lateRecordsLimit,
+              ex.toString(),
+              ex
+          )
+      );
     }
     if (maxFileSize < 0) {
-      issues.add(context.createConfigIssue(Groups.LATE_RECORDS.name(), "maxFileSize", Errors.HADOOPFS_08));
+      issues.add(
+          context.createConfigIssue(
+              Groups.LATE_RECORDS.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "maxFileSize",
+              Errors.HADOOPFS_08
+          )
+      );
     }
 
     if (maxRecordsPerFile < 0) {
-      issues.add(context.createConfigIssue(Groups.LATE_RECORDS.name(), "maxRecordsPerFile", Errors.HADOOPFS_09));
+      issues.add(
+          context.createConfigIssue(
+              Groups.LATE_RECORDS.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "maxRecordsPerFile",
+              Errors.HADOOPFS_09
+          )
+      );
     }
 
     if (uniquePrefix == null) {
@@ -385,7 +422,7 @@ public class HdfsTargetConfigBean {
         context,
         dataFormat,
         Groups.OUTPUT_FILES.name(),
-        "dataGeneratorFormatConfig",
+        HDFS_TARGET_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig",
         issues
     );
 
@@ -422,7 +459,12 @@ public class HdfsTargetConfigBean {
           maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
           dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
 
-        if (mgr.validateDirTemplate(Groups.OUTPUT_FILES.name(), "dirPathTemplate", issues)) {
+        if (mgr.validateDirTemplate(
+            Groups.OUTPUT_FILES.name(),
+            "dirPathTemplate",
+            HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+            issues
+        )) {
           currentWriters = new ActiveRecordWriters(mgr);
         }
       }
@@ -452,7 +494,12 @@ public class HdfsTargetConfigBean {
               (Target.Context)context, "lateRecordsDirPathTemplate"
           );
 
-          if (mgr.validateDirTemplate(Groups.OUTPUT_FILES.name(), "lateRecordsDirPathTemplate", issues)) {
+          if (mgr.validateDirTemplate(
+              Groups.OUTPUT_FILES.name(),
+              "lateRecordsDirPathTemplate",
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
+              issues
+          )) {
             lateWriters = new ActiveRecordWriters(mgr);
           }
         } catch (Exception ex) {
@@ -470,8 +517,15 @@ public class HdfsTargetConfigBean {
       context.parseEL(timeDriver);
       timeDriverElEval.eval(variables, timeDriver, Date.class);
     } catch (ELEvalException ex) {
-      issues.add(context.createConfigIssue(Groups.OUTPUT_FILES.name(), "timeDriver", Errors.HADOOPFS_19,
-        ex.toString(), ex));
+      issues.add(
+          context.createConfigIssue(
+              Groups.OUTPUT_FILES.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "timeDriver",
+              Errors.HADOOPFS_19,
+              ex.toString(),
+              ex
+          )
+      );
     }
 
     if (issues.isEmpty()) {
@@ -584,32 +638,62 @@ public class HdfsTargetConfigBean {
         hadoopConfigDir.isAbsolute()
         ) {
         //Do not allow absolute hadoop config directory in cluster mode
-        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_45,
-          hdfsConfDir));
+        issues.add(
+            context.createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                Errors.HADOOPFS_45,
+                hdfsConfDir
+            )
+        );
       } else {
         if (!hadoopConfigDir.isAbsolute()) {
           hadoopConfigDir = new File(context.getResourcesDirectory(), hdfsConfDir).getAbsoluteFile();
         }
         if (!hadoopConfigDir.exists()) {
-          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_25,
-            hadoopConfigDir.getPath()));
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HADOOP_FS.name(),
+                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                  Errors.HADOOPFS_25,
+                  hadoopConfigDir.getPath()
+              )
+          );
         } else if (!hadoopConfigDir.isDirectory()) {
-          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_26,
-            hadoopConfigDir.getPath()));
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HADOOP_FS.name(),
+                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                  Errors.HADOOPFS_26,
+                  hadoopConfigDir.getPath()
+              )
+          );
         } else {
           File coreSite = new File(hadoopConfigDir, "core-site.xml");
           if (coreSite.exists()) {
             if (!coreSite.isFile()) {
-              issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
-                coreSite.getPath()));
+              issues.add(
+                  context.createConfigIssue(
+                      Groups.HADOOP_FS.name(),
+                      HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                      Errors.HADOOPFS_27,
+                      coreSite.getPath()
+                  )
+              );
             }
             conf.addResource(new Path(coreSite.getAbsolutePath()));
           }
           File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
           if (hdfsSite.exists()) {
             if (!hdfsSite.isFile()) {
-              issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsConfDir", Errors.HADOOPFS_27,
-                hdfsSite.getPath()));
+              issues.add(
+                  context.createConfigIssue(
+                      Groups.HADOOP_FS.name(),
+                      HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                      Errors.HADOOPFS_27,
+                      hdfsSite.getPath()
+                  )
+              );
             }
             conf.addResource(new Path(hdfsSite.getAbsolutePath()));
           }
@@ -633,7 +717,14 @@ public class HdfsTargetConfigBean {
         validHapoopFsUri = false;
       }
     } else {
-      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsUri", Errors.HADOOPFS_18, hdfsUri));
+      issues.add(
+          context.createConfigIssue(
+              Groups.HADOOP_FS.name(),
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsUri",
+              Errors.HADOOPFS_18,
+              hdfsUri
+          )
+      );
       validHapoopFsUri = false;
     }
 
@@ -657,9 +748,15 @@ public class HdfsTargetConfigBean {
       if (hdfsKerberos) {
         logMessage.append("Using Kerberos");
         if (loginUgi.getAuthenticationMethod() != UserGroupInformation.AuthenticationMethod.KERBEROS) {
-          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), "hdfsKerberos", Errors.HADOOPFS_00,
-            loginUgi.getAuthenticationMethod(),
-            UserGroupInformation.AuthenticationMethod.KERBEROS));
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HADOOP_FS.name(),
+                  HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsKerberos",
+                  Errors.HADOOPFS_00,
+                  loginUgi.getAuthenticationMethod(),
+                  UserGroupInformation.AuthenticationMethod.KERBEROS
+              )
+          );
         }
       } else {
         logMessage.append("Using Simple");

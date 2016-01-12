@@ -63,6 +63,7 @@ public class KafkaTargetConfig {
       " \"message.send.max.retries\" : \"10\", " +
       " \"retry.backoff.ms\" : \"1000\" " +
       "}";
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
 
   @ConfigDef(
     required = true,
@@ -148,7 +149,8 @@ public class KafkaTargetConfig {
     type = ConfigDef.Type.STRING,
     defaultValue = "${0}",
     label = "Partition Expression",
-    description = "Determines the partition key to use with default kafka partitioner class in case of 'Default Partition Strategy'. In case of 'Expression Partition Strategy' it determines the partition number",
+    description = "Determines the partition key to use with default kafka partitioner class in case of 'Default " +
+      "Partition Strategy'. In case of 'Expression Partition Strategy' it determines the partition number",
     displayPosition = 40,
     group = "#0",
     dependsOn = "partitionStrategy",
@@ -212,8 +214,13 @@ public class KafkaTargetConfig {
     allowAllTopics = false;
     kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
     //metadata broker list should be one or more <host>:<port> separated by a comma
-    kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(issues, metadataBrokerList, KafkaDestinationGroups.KAFKA.name(),
-      "metadataBrokerList", context);
+    kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(
+        issues,
+        metadataBrokerList,
+        KafkaDestinationGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+        context
+    );
 
     //check if the topic contains EL expression with record: functions
     //If yes, then validate the EL expression. Do not validate for existence of topic
@@ -222,7 +229,13 @@ public class KafkaTargetConfig {
     if(runtimeTopicResolution) {
       //EL containing record: functions - make sure the expression is valid and parses correctly
       if(topicExpression == null || topicExpression.trim().isEmpty()) {
-        issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "topicExpression", KafkaErrors.KAFKA_05));
+        issues.add(
+            context.createConfigIssue(
+                KafkaDestinationGroups.KAFKA.name(),
+                KAFKA_CONFIG_BEAN_PREFIX + "topicExpression",
+                KafkaErrors.KAFKA_05
+            )
+        );
       }
       validateTopicExpression(context, issues);
       //Also a topic white list is expected in this case, validate the list
@@ -240,12 +253,20 @@ public class KafkaTargetConfig {
           topic = topicEval.eval(topicVars, topic, String.class);
         } catch (Exception ex) {
           validateTopicExists = false;
-          issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "topic", KafkaErrors.KAFKA_61, topic,
-            ex.toString(), ex));
+          issues.add(
+              context.createConfigIssue(
+                  KafkaDestinationGroups.KAFKA.name(),
+                  KAFKA_CONFIG_BEAN_PREFIX + "topic",
+                  KafkaErrors.KAFKA_61,
+                  topic,
+                  ex.toString(),
+                  ex
+              )
+          );
         }
       }
 
-      if(validateTopicExists) {
+      if(issues.isEmpty() && validateTopicExists) {
         validateTopicExistence(context, issues, topic);
       }
     }
@@ -283,8 +304,17 @@ public class KafkaTargetConfig {
       partitionEval = context.createELEval("partition");
       partitionVars = context.createELVars();
       //There is no scope to provide partitionVars for kafka target as of today, create empty partitionVars
-      ELUtils.validateExpression(partitionEval, context.createELVars(), partition, context,
-        KafkaDestinationGroups.KAFKA.name(), "partition", KafkaErrors.KAFKA_57, Object.class, issues);
+      ELUtils.validateExpression(
+          partitionEval,
+          context.createELVars(),
+          partition,
+          context,
+          KafkaDestinationGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + "partition",
+          KafkaErrors.KAFKA_57,
+          Object.class,
+          issues
+      );
     }
   }
 
@@ -297,7 +327,7 @@ public class KafkaTargetConfig {
         topicExpression,
         context,
         KafkaDestinationGroups.KAFKA.name(),
-        "topicExpression",
+        KAFKA_CONFIG_BEAN_PREFIX + "topicExpression",
         KafkaErrors.KAFKA_61,
         Object.class,
         issues
@@ -313,7 +343,7 @@ public class KafkaTargetConfig {
     boolean valid = kafkaValidationUtil.validateTopicExistence(
       context,
       KafkaDestinationGroups.KAFKA.name(),
-      "topic",
+      KAFKA_CONFIG_BEAN_PREFIX + "topic",
       kafkaBrokers,
       metadataBrokerList,
       topic,
@@ -359,7 +389,7 @@ public class KafkaTargetConfig {
       issues.add(
           context.createConfigIssue(
               KafkaDestinationGroups.KAFKA.name(),
-              "topicWhiteList",
+              KAFKA_CONFIG_BEAN_PREFIX + "topicWhiteList",
               KafkaErrors.KAFKA_64
           )
       );
@@ -382,14 +412,32 @@ public class KafkaTargetConfig {
     if(kafkaProducerConfigs != null) {
       if(kafkaProducerConfigs.containsKey(MESSAGE_SEND_MAX_RETRIES_KEY)) {
         try {
-          messageSendMaxRetries = Integer.parseInt(kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).toString().trim());
+          messageSendMaxRetries = Integer.parseInt(
+              kafkaProducerConfigs.get(MESSAGE_SEND_MAX_RETRIES_KEY).toString().trim()
+          );
         } catch (NullPointerException | NumberFormatException e) {
-          issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
-            MESSAGE_SEND_MAX_RETRIES_KEY, "integer", e.toString(), e));
+          issues.add(
+              context.createConfigIssue(
+                  KafkaDestinationGroups.KAFKA.name(),
+                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                  KafkaErrors.KAFKA_66,
+                  MESSAGE_SEND_MAX_RETRIES_KEY,
+                  "integer",
+                  e.toString(),
+                  e
+              )
+          );
         }
         if(messageSendMaxRetries < 0) {
-          issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
-            MESSAGE_SEND_MAX_RETRIES_KEY, "integer"));
+          issues.add(
+              context.createConfigIssue(
+                  KafkaDestinationGroups.KAFKA.name(),
+                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                  KafkaErrors.KAFKA_66,
+                  MESSAGE_SEND_MAX_RETRIES_KEY,
+                  "integer"
+              )
+          );
         }
       } else {
         messageSendMaxRetries = MESSAGE_SEND_MAX_RETRIES_DEFAULT;
@@ -399,12 +447,28 @@ public class KafkaTargetConfig {
         try {
           retryBackoffMs = Long.parseLong(kafkaProducerConfigs.get(RETRY_BACKOFF_MS_KEY).toString().trim());
         } catch (NullPointerException | NumberFormatException e) {
-          issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
-            RETRY_BACKOFF_MS_KEY, "long", e.toString(), e));
+          issues.add(
+              context.createConfigIssue(
+                  KafkaDestinationGroups.KAFKA.name(),
+                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                  KafkaErrors.KAFKA_66,
+                  RETRY_BACKOFF_MS_KEY,
+                  "long",
+                  e.toString(),
+                  e
+              )
+          );
         }
         if(retryBackoffMs < 0) {
-          issues.add(context.createConfigIssue(KafkaDestinationGroups.KAFKA.name(), "kafkaProducerConfigs", KafkaErrors.KAFKA_66,
-            RETRY_BACKOFF_MS_KEY, "long"));
+          issues.add(
+              context.createConfigIssue(
+                  KafkaDestinationGroups.KAFKA.name(),
+                  KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+                  KafkaErrors.KAFKA_66,
+                  RETRY_BACKOFF_MS_KEY,
+                  "long"
+              )
+          );
         }
       } else {
         retryBackoffMs = RETRY_BACKOFF_MS_DEFAULT;

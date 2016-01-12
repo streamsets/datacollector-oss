@@ -31,6 +31,7 @@ import java.util.List;
 
 public class KafkaConfigBean {
 
+  public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
   @ConfigDefBean(groups = {"KAFKA"})
   public KafkaTargetConfig kafkaConfig;
 
@@ -50,7 +51,13 @@ public class KafkaConfigBean {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    dataGeneratorFormatConfig.init(context, dataFormat, KafkaDestinationGroups.KAFKA.name(), "dataGeneratorFormatConfig", issues);
+    dataGeneratorFormatConfig.init(
+        context,
+        dataFormat,
+        KafkaDestinationGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + "dataGeneratorFormatConfig",
+        issues
+    );
     kafkaConfig.init(context, dataFormat, issues);
   }
 
