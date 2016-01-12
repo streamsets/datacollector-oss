@@ -24,6 +24,7 @@
 angular.module('dataCollectorApp.common')
   .service('configuration', function($rootScope, api, $q) {
     var self = this,
+      UI_HEADER_TITLE = 'ui.header.title',
       REFRESH_INTERVAL = 'ui.refresh.interval.ms',
       JVM_METRICS_REFRESH_INTERVAL = 'ui.jvmMetrics.refresh.interval.ms',
       UI_LOCAL_HELP_BASE_URL = 'ui.local.help.base.url',
@@ -197,5 +198,16 @@ angular.module('dataCollectorApp.common')
       }
       return false;
     };
+
+    /**
+     * Returns customizable header title for SDC UI
+     * @returns {*}
+     */
+    this.getUIHeaderTitle = function() {
+      if(self.config) {
+        return self.config[UI_HEADER_TITLE];
+      }
+      return '';
+    }
 
   });

@@ -336,6 +336,7 @@ angular.module('dataCollectorApp')
         $rootScope.common.isSlaveNode = configuration.isSlaveNode();
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
+        $rootScope.common.headerTitle = configuration.getUIHeaderTitle();
         if(configuration.isAnalyticsEnabled()) {
           Analytics.createAnalyticsScriptTag();
         }
