@@ -394,7 +394,8 @@
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
         <cdh_kafka_1_2-lib>cdh_kafka_1_2-lib</cdh_kafka_1_2-lib>
-        <cdh_5_5-cluster-cdh_kafka_1_2-lib>cdh_5_5-cluster-cdh_kafka_1_2-lib</cdh_5_5-cluster-cdh_kafka_1_2-lib>
+        <cdh_5_4-cluster-cdh_kafka_1_3-lib>cdh_5_4-cluster-cdh_kafka_1_3-lib</cdh_5_4-cluster-cdh_kafka_1_3-lib>
+        <cdh_5_4-cluster-cdh_kafka_1_2-lib>cdh_5_4-cluster-cdh_kafka_1_2-lib</cdh_5_4-cluster-cdh_kafka_1_2-lib>
         <elasticsearch_1_4-lib>elasticsearch_1_4-lib</elasticsearch_1_4-lib>
         <elasticsearch_1_5-lib>elasticsearch_1_5-lib</elasticsearch_1_5-lib>
         <elasticsearch_1_6-lib>elasticsearch_1_6-lib</elasticsearch_1_6-lib>
