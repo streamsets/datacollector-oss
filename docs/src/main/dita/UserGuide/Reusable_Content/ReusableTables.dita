@@ -69,6 +69,10 @@
        <entry>Character encoding of the messages to be processed.<p>Not used for the SDC Record or
          Avro data format.</p></entry>
       </row>
+      <row>
+       <entry>Compression Type</entry>
+       <entry/>
+      </row>
      </tbody>
     </tgroup>
    </table>

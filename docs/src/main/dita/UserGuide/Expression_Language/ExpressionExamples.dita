@@ -15,17 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_r1w_tkp_tt">
  <title>Expression Examples</title>
- <shortdesc>Here are some examples of how you might use expressions in the <ph
+ <shortdesc>The following tables include some examples of how you might use expressions in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        />:</shortdesc>
+        />.</shortdesc>
  <conbody>
+        <p>Here are some conditions:</p>
         <table frame="all" rowsep="1" colsep="1" id="table_zhy_jmp_tt">
             <tgroup cols="2">
                 <colspec colname="c1" colnum="1" colwidth="2.5*"/>
                 <colspec colname="c2" colnum="2" colwidth="2*"/>
                 <thead>
                     <row>
-                        <entry>Example</entry>
+                        <entry>Sample Conditions</entry>
                         <entry>Description</entry>
                     </row>
                 </thead>
@@ -40,24 +41,10 @@
                         <entry>The same as above, but for a record in list format.</entry>
                     </row>
                     <row>
-                        <entry>${record:valueOrDefault('/Payment', 'unknown')} </entry>
-                        <entry>Replaces missing values in the Payment field with "unknown".</entry>
-                    </row>
-                    <row>
                         <entry>${record:errorCode()=="FIELD_MERGER_02"}</entry>
                         <entry>Used in a Stream Selector in an error pipeline, this condition routes
                             records with the FIELD_MERGER_02 error to a stream that corrects the
                             error.</entry>
-                    </row>
-                    <row>
-                        <entry>${str:toUpper(record:value('/STATE')}</entry>
-                        <entry>Capitalizes all strings in the STATE field.</entry>
-                    </row>
-                    <row>
-                        <entry>${record:value('/total_amount') -  (record:value('/tip_amount') +
-                            record:value('/tolls') + record:value('/mta_tax'))}</entry>
-                        <entry>An expression that calculates trip revenue by subtracting the tip,
-                            taxes, and tolls from the total fare amount</entry>
                     </row>
                     <row>
                         <entry>${record:value("[20]/value") == ""}</entry>
@@ -65,7 +52,7 @@
                             contains no data.</entry>
                     </row>
                     <row>
-                        <entry>${record:type(/ID)=STRING}</entry>
+                        <entry>${record:type('/ID')=STRING}</entry>
                         <entry>In the Stream Selector, routes records where the ID is a String to a
                             branch that includes a Field Converter to convert the field to a numeric
                             data type.</entry>
@@ -73,5 +60,62 @@
                 </tbody>
             </tgroup>
         </table>
+        <p>The following table includes some string manipulation:<table frame="all" rowsep="1"
+                colsep="1" id="table_wnx_v5s_q5">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Sample String Manipulation</entry>
+                            <entry>Description</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>${record:valueOrDefault('/Payment', 'unknown')} </entry>
+                            <entry>Replaces missing values in the Payment field with
+                                "unknown".</entry>
+                        </row>
+                        <row>
+                            <entry>${str:toUpper(record:value('/STATE')}</entry>
+                            <entry>Capitalizes all strings in the STATE field.</entry>
+                        </row>
+                        <row>
+                            <entry/>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry/>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry/>
+                            <entry/>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
+        <p>The following table includes some numeric operations:<table frame="all" rowsep="1"
+                colsep="1" id="table_txw_dvs_q5">
+                <tgroup cols="2">
+                    <colspec colname="c1" colnum="1" colwidth="2.5*"/>
+                    <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                    <thead>
+                        <row>
+                            <entry>Sample Numeric Operations</entry>
+                            <entry/>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>${record:value('/total_amount') - (record:value('/tip_amount') +
+                                record:value('/tolls') + record:value('/mta_tax'))}</entry>
+                            <entry>An expression that calculates trip revenue by subtracting the
+                                tip, taxes, and tolls from the total fare amount</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table></p>
  </conbody>
 </concept>

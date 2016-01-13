@@ -468,6 +468,10 @@
                                     <entry>Quote Character</entry>
                                     <entry>Quote character for a custom file type.</entry>
                                 </row>
+                                <row>
+                                    <entry>Lines to Skip</entry>
+                                    <entry>Lines to skip before reading data. </entry>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>

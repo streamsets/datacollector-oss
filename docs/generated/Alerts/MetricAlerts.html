@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="Metric alerts are alerts based on pipeline and stage statistics, such as a high rate of error records or a batch of records taking too long to process. Metric alerts display in the Data Collector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Metric Alerts"></meta><meta name="abstract" content="Metric alerts are alerts based on pipeline and stage statistics, such as a high rate of error records or a batch of records taking too long to process."></meta><meta name="description" content="Metric alerts are alerts based on pipeline and stage statistics, such as a high rate of error records or a batch of records taking too long to process."></meta><meta name="DC.Relation" scheme="URI" content="../Alerts/Alerts_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_abj_nsk_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Metric Alerts</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Metric rules define the statistics that you want to gather about pipeline and stage performance, such as a high rate of error records or batches taking too long to process. You can also create alerts ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Metric Rules and Alerts"></meta><meta name="abstract" content="Metric rules define the statistics that you want to gather about pipeline and stage performance, such as a high rate of error records or batches taking too long to process. You can also create alerts based on the metric rules."></meta><meta name="description" content="Metric rules define the statistics that you want to gather about pipeline and stage performance, such as a high rate of error records or batches taking too long to process. You can also create alerts based on the metric rules."></meta><meta name="DC.Relation" scheme="URI" content="../Alerts/RulesAlerts_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_abj_nsk_zq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Metric Rules and Alerts</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -29,27 +29,29 @@
   ga('send', 'pageview');
 ​
 </script>
-<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Alerts/Alerts_title.html" title="Alerts">Alerts</a></td><td><div class="navheader">
-<span class="navparent"><a class="link" href="../Alerts/Alerts_title.html" title="Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Alerts</span></a></span>  </div></td></tr></tbody></table>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Alerts/RulesAlerts_title.html" title="Rules and Alerts">Rules and Alerts</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Alerts/RulesAlerts_title.html" title="Rules and Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Rules and Alerts</span></a></span>  </div></td></tr></tbody></table>
 <div class="nested0" id="concept_abj_nsk_zq">
- <h1 class="title topictitle1">Metric Alerts</h1>
+ <h1 class="title topictitle1">Metric Rules and Alerts</h1>
 
  
- <div class="body conbody"><p class="shortdesc">Metric alerts are alerts based on pipeline and stage statistics, such as a high rate of
-    error records or a batch of records taking too long to process. </p>
+ <div class="body conbody"><p class="shortdesc">Metric rules define the statistics that you want to gather about pipeline and stage
+    performance,  such as a high rate of error records or batches taking too long to process. You
+    can also create alerts based on the metric rules.</p>
 
   <p class="p">Metric alerts display in the <span class="ph">Data
                   Collector</span> console in
-      Monitor mode. You can also configure a metric alert to send email to all email addresses
+      monitor mode. You can also configure a metric alert to send email to all email addresses
       associated with the pipeline. </p>
 
-    <p class="p">You can configure metric alerts when you configure the pipeline or after you start the
-      pipeline. The metric alert takes effect after you enable the alert.</p>
+    <p class="p">You can configure metric rules and alerts when you configure or monitor the pipeline. Metric
+      rules and alerts take effect after you enable them.</p>
 
     <p class="p">The <span class="ph">Data
                   Collector</span>
-      provides default metric alerts for a pipeline. The metric alerts are not active. You can edit,
-      delete, or activate the alerts. </p>
+      provides a set of metric rules and alerts for a pipeline. By default, they are not active. You
+      can edit, delete, or activate the rules and alerts. You can also create custom metric rules
+      and alerts.</p>
 
  </div>
 
@@ -58,20 +60,20 @@
  <h2 class="title topictitle2">Metric Types</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Metric alerts provide different types of alerts based on the metric type that you
-    select. For example, when you select a counter type, you can create alerts based on the number
-    of error records generated by a specific stage. </p>
+ <div class="body conbody"><p class="shortdesc">You can use different metric types when you create a metric rule. The metric type
+    determines the type of alert that you can create. For example, when you select a counter type,
+    you can create alerts based on the number of error records generated by a specific stage. </p>
 
-  <p class="p">Metric alerts include
-      the following metric types:</p>
+  <p class="p">You can use the
+      following metric types in metric rules:</p>
 
   <div class="p">
       <dl class="dl">
         
           <dt class="dt dlterm">Gauge</dt>
 
-          <dd class="dd">Provides metric alerts based on the age of the current batch, the amount of time a
-            stage takes to process a batch, or the time the <span class="ph">Data
+          <dd class="dd">Provides alerts based on the age of the current batch, the amount of time a stage
+            takes to process a batch, or the time the <span class="ph">Data
                   Collector</span> last
             received a record from the origin.</dd>
 
@@ -79,29 +81,29 @@
         
           <dt class="dt dlterm">Counter</dt>
 
-          <dd class="dd">Provides metric alerts based on a count of different record types and of stage errors
-            for any stage in the pipeline.</dd>
+          <dd class="dd">Provides alerts based on a count of different record types and of stage errors for any
+            stage in the pipeline.</dd>
 
         
         
           <dt class="dt dlterm">Histogram</dt>
 
-          <dd class="dd">Provides metric alerts based on a histogram of different record types and stage errors
-            for any stage. You can also use batch-based histograms. </dd>
+          <dd class="dd">Provides alerts based on a histogram of different record types and stage errors for
+            any stage. You can also use batch-based histograms. </dd>
 
         
         
           <dt class="dt dlterm">Meter</dt>
 
-          <dd class="dd">Provides metric alerts based on a rates of different record types and stage errors for
-            any stage. You can also use batch-based meters.</dd>
+          <dd class="dd">Provides alerts based on a rates of different record types and stage errors for any
+            stage. You can also use batch-based meters.</dd>
 
         
         
           <dt class="dt dlterm">Timer</dt>
 
-          <dd class="dd">Provides metric alerts based on batch processing timers for the pipeline or any stage
-            in the pipeline.</dd>
+          <dd class="dd">Provides alerts based on batch processing timers for the pipeline or any stage in the
+            pipeline.</dd>
 
         
       </dl>
@@ -112,24 +114,24 @@
 
 </div>
 <div class="topic task nested1" id="task_hcf_11k_br">
-    <h2 class="title topictitle2">Configuring a Metric Alert</h2>
+    <h2 class="title topictitle2">Configuring a Metric Rule and Alert</h2>
 
     
-    <div class="body taskbody"><p class="shortdesc">Create a metric alert to receive monitoring or email alerts based on metric rules.
-        You can configure metric alerts when you configure or monitor a pipeline. You can edit or
-        delete alerts when they are not active. </p>
+    <div class="body taskbody"><p class="shortdesc">Create a metric rule and alert to receive alerts when the specified conditions occur.
+        You can configure metric rules and alerts when you configure or monitor a pipeline. You can
+        edit or delete metric rules when they are not active. </p>
 
-        <div class="section context"> You
-            configure metric alerts based on the metric type, the metric, an element associated with
-            the metric, and a condition. </div>
+        <div class="section context"> Configure
+            metric alerts based on the metric type, the metric, an element associated with the
+            metric, and a condition. </div>
 
         <ol class="ol steps" id="task_hcf_11k_br__steps_jzm_f1k_br"><li class="li step stepexpand">
                 <span class="ph cmd">In the Properties panel or Monitor panel, click the <span class="ph uicontrol">Metric
                         Rules</span> tab, and click the <span class="ph uicontrol">Add</span> icon.</span>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">In the <span class="keyword wintitle">Metric Alert Rule</span> dialog box, configure the
-                    following properties:</span>
+                <span class="ph cmd">In the <span class="keyword wintitle">Metric Rule</span> dialog box, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hcf_11k_br__table_lcs_4bk_br" class="table" frame="border" border="1" rules="all">
@@ -137,9 +139,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d3953e182">Metric Alert Rule Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d4540e182">Metric Rule Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d3953e185">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d4540e185">Description</th>
 
                                 </tr>
 
@@ -147,9 +149,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Alert Text</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Alert Text</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Text to display when the alert is triggered. <p class="p">Enter
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Text to display when the alert is triggered. <p class="p">Enter
                                             text that explains the reason for the alert. For
                                             example, "Over 1000 pipeline error records."</p>
 </td>
@@ -157,11 +159,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Metric Type <a class="xref" href="MetricAlerts.html#concept_y4d_tcw_1r" title="Metric alerts provide different types of alerts based on the metric type that you select. For example, when you select a counter type, you can create alerts based on the number of error records generated by a specific stage.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Metric Type <a class="xref" href="MetricAlerts.html#concept_y4d_tcw_1r" title="You can use different metric types when you create a metric rule. The metric type determines the type of alert that you can create. For example, when you select a counter type, you can create alerts based on the number of error records generated by a specific stage.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Type of metric information the alert is based on:<ul class="ul" id="task_hcf_11k_br__ul_fwn_zbk_br">
                                             <li class="li">Gauge</li>
 
                                             <li class="li">Counter</li>
@@ -178,33 +180,33 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Metric ID</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Metric ID</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Metric to use. Provides a list of available metrics based
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Metric to use. Provides a list of available metrics based
                                         on the metric type. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Metric Element</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Metric Element</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Metric element to use. Provides a list of available
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Metric element to use. Provides a list of available
                                         elements based on the metric ID.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Condition</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Condition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Condition to trigger the alert. Use the expression
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Condition to trigger the alert. Use the expression
                                         language to configure the condition. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d3953e182 ">Send Email</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d4540e182 ">Send Email</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d3953e185 ">Sends an email when the alert is triggered. <p class="p">To send an
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d4540e185 ">Sends an email when the alert is triggered. <p class="p">To send an
                                             email, add email addresses for alerts and configure the
                                                 <span class="ph">Data
                   Collector</span> email properties.</p>
@@ -221,23 +223,24 @@
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Click <span class="ph uicontrol">Save</span>.</span>
-                <div class="itemgroup info">The new alert displays in the list. </div>
+                <div class="itemgroup info">The new metric rule displays in the list. </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">To activate the alert, select <span class="ph uicontrol">Active</span> for the
-                    alert.</span>
+                <span class="ph cmd">To activate the rule, select <span class="ph uicontrol">Active</span>.</span>
+                <div class="itemgroup info">You can enable and disable email alerts from the list of rules. You can edit
+                    and delete inactive rules. </div>
             </li>
 </ol>
 
     </div>
 
     <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
-<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="Here are some examples of how you might use expressions in the Data Collector:">Expression Language</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq" title="The following tables include some examples of how you might use expressions in the Data Collector.">Expression Language</a></div>
 </div>
 </div>
 </div>
 </div>
 <div class="navfooter"><!---->
-<span class="navparent"><a class="link" href="../Alerts/Alerts_title.html" title="Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Alerts</span></a></span>  </div><div class="footer"></div>
+<span class="navparent"><a class="link" href="../Alerts/RulesAlerts_title.html" title="Rules and Alerts"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Rules and Alerts</span></a></span>  </div><div class="footer"></div>
 </body>
 </html>
