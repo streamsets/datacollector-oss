@@ -82,8 +82,8 @@ public class RabbitAdvancedConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      label = "Heartbeat Interval (s)",
-      description = "Heartbeat interval, in seconds; zero to disable heartbeats",
+      label = "Heartbeat Timeout (secs)",
+      description = "Heartbeat timeout in seconds. Zero disables heartbeats",
       defaultValue = "0",
       displayPosition = 60,
       min = 0,
