@@ -23,8 +23,11 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.util.AvroJavaSnappyCodec;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
+import org.apache.avro.file.CodecFactory;
+import org.apache.avro.file.DataFileConstants;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
@@ -36,6 +39,11 @@ import java.util.Map;
 
 public class AvroDataOutputStreamGenerator implements DataGenerator {
 
+  static {
+    // replace Avro Snappy codec with SDC's which is 100% Java
+    AvroJavaSnappyCodec.initialize();
+  }
+
   private final Schema schema;
   private boolean closed;
   private final DataFileWriter<GenericRecord> dataFileWriter;
@@ -43,12 +51,14 @@ public class AvroDataOutputStreamGenerator implements DataGenerator {
 
   public AvroDataOutputStreamGenerator(
       OutputStream outputStream,
+      String compressionCodec,
       Schema schema,
       Map<String, Object> defaultValueMap
   ) throws IOException {
     this.schema = schema;
     DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<>(schema);
     dataFileWriter = new DataFileWriter<>(datumWriter);
+    dataFileWriter.setCodec(CodecFactory.fromString(compressionCodec));
     dataFileWriter.create(schema, outputStream);
     this.defaultValueMap = defaultValueMap;
   }

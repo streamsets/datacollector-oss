@@ -81,5 +81,7 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
 
   private void upgradeV2toV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
+
+    configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.avroCompression", "NULL"));
   }
 }

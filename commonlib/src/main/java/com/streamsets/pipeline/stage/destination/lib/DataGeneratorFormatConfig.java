@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.AvroCompression;
+import com.streamsets.pipeline.config.AvroCompressionChooserValues;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
@@ -225,6 +227,20 @@ public class DataGeneratorFormatConfig {
   )
   public boolean includeSchema = true;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NULL",
+      label = "Avro Compression Codec",
+      description = "",
+      displayPosition = 415,
+      group = "AVRO",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "AVRO"
+  )
+  @ValueChooserModel(AvroCompressionChooserValues.class)
+  public AvroCompression avroCompression;
+
   /********  For Binary Content  ***********/
 
   @ConfigDef(
@@ -353,6 +369,7 @@ public class DataGeneratorFormatConfig {
         builder.setConfig(AvroDataGeneratorFactory.SCHEMA_KEY, avroSchema);
         builder.setConfig(AvroDataGeneratorFactory.INCLUDE_SCHEMA_KEY, includeSchema);
         builder.setConfig(AvroDataGeneratorFactory.DEFAULT_VALUES_KEY, defaultValues);
+        builder.setConfig(AvroDataGeneratorFactory.COMPRESSION_CODEC_KEY, avroCompression.getCodecName());
         break;
       case BINARY:
         builder.setConfig(BinaryDataGeneratorFactory.FIELD_PATH_KEY, binaryFieldPath);

@@ -95,5 +95,6 @@ public class KafkaTargetUpgrader implements StageUpgrader {
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter", '|'));
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
     configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
+    configs.add(new Config("kafkaConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 }

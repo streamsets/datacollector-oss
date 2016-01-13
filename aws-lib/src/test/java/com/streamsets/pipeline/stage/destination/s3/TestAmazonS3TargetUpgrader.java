@@ -50,7 +50,7 @@ public class TestAmazonS3TargetUpgrader {
     AmazonS3TargetUpgrader amazonS3TargetUpgrader = new AmazonS3TargetUpgrader();
     amazonS3TargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(12, configs.size());
+    Assert.assertEquals(13, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -94,6 +94,8 @@ public class TestAmazonS3TargetUpgrader {
 
     Assert.assertTrue(configValues.containsKey("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
     Assert.assertEquals('\"', configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
+
+    Assert.assertEquals("NULL", configValues.get("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
     //renamed configs
 

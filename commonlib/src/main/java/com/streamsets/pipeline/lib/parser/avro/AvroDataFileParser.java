@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.util.AvroJavaSnappyCodec;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
@@ -37,6 +38,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class AvroDataFileParser extends AbstractDataParser {
+
+  static {
+    // replace Avro Snappy codec with SDC's which is 100% Java
+    AvroJavaSnappyCodec.initialize();
+  }
 
   private static final String OFFSET_SEPARATOR = "::";
 

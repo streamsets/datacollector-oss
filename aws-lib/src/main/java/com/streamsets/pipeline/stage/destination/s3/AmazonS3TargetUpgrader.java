@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +92,6 @@ public class AmazonS3TargetUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     AWSUtil.renameAWSCredentialsConfigs(configs);
+    configs.add(new Config("s3TargetConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 }

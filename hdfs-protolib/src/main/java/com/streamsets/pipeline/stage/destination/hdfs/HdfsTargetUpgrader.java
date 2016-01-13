@@ -105,5 +105,6 @@ public class HdfsTargetUpgrader implements StageUpgrader {
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomDelimiter", '|'));
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
     configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
+    configs.add(new Config("hdfsTargetConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 }

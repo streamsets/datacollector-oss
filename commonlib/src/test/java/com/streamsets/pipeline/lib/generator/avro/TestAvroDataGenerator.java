@@ -119,6 +119,7 @@ public class TestAvroDataGenerator {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -138,11 +139,53 @@ public class TestAvroDataGenerator {
     Assert.assertFalse(dataFileReader.hasNext());
   }
 
+  private void testGenerateCompressed(String codecName) throws Exception {
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+        baos,
+        codecName,
+        SCHEMA,
+        AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
+    );
+    Record record = createRecord();
+    gen.write(record);
+    gen.close();
+
+    //reader schema must be extracted from the data file
+    GenericDatumReader<GenericRecord> reader = new GenericDatumReader<>(null);
+    DataFileReader<GenericRecord> dataFileReader = new DataFileReader<>(
+        new SeekableByteArrayInput(baos.toByteArray()), reader);
+    Assert.assertEquals(codecName, dataFileReader.getMetaString("avro.codec"));
+    Assert.assertTrue(dataFileReader.hasNext());
+    GenericRecord readRecord = dataFileReader.next();
+
+    Assert.assertEquals("hari", readRecord.get("name").toString());
+    Assert.assertEquals(3100, readRecord.get("age"));
+    Assert.assertFalse(dataFileReader.hasNext());
+  }
+
+  @Test
+  public void testGenerateSnappy() throws Exception {
+    testGenerateCompressed("snappy");
+  }
+
+  @Test
+  public void testGenerateDeflate() throws Exception {
+    testGenerateCompressed("deflate");
+  }
+
+  @Test
+  public void testGenerateBzip2() throws Exception {
+    testGenerateCompressed("bzip2");
+  }
+
   @Test
   public void testClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     DataGenerator gen = new AvroDataOutputStreamGenerator(
       baos,
+      AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
       SCHEMA,
       AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -155,7 +198,12 @@ public class TestAvroDataGenerator {
   @Test(expected = IOException.class)
   public void testWriteAfterClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataGenerator gen = new AvroDataOutputStreamGenerator(baos, SCHEMA, new HashMap<String, Object>());
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+        baos,
+        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        SCHEMA,
+        new HashMap<String, Object>()
+    );
     Record record = createRecord();
     gen.close();
     gen.write(record);
@@ -164,7 +212,12 @@ public class TestAvroDataGenerator {
   @Test(expected = IOException.class)
   public void testFlushAfterClose() throws Exception {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataGenerator gen = new AvroDataOutputStreamGenerator(baos, SCHEMA, new HashMap<String, Object>());
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+        baos,
+        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        SCHEMA,
+        new HashMap<String, Object>()
+    );
     gen.close();
     gen.flush();
   }
@@ -178,6 +231,7 @@ public class TestAvroDataGenerator {
 
     DataGenerator dataGenerator = new AvroDataOutputStreamGenerator(
         baos,
+        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
         SCHEMA,
         AvroTypeUtil.getDefaultValuesFromSchema(SCHEMA, new HashSet<String>())
     );
@@ -200,7 +254,12 @@ public class TestAvroDataGenerator {
     record.set(listMapField);
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataGenerator gen = new AvroDataOutputStreamGenerator(baos, SCHEMA, new HashMap<String, Object>());
+    DataGenerator gen = new AvroDataOutputStreamGenerator(
+        baos,
+        AvroDataGeneratorFactory.COMPRESSION_CODEC_DEFAULT,
+        SCHEMA,
+        new HashMap<String, Object>()
+    );
     gen.write(record);
     gen.close();
 

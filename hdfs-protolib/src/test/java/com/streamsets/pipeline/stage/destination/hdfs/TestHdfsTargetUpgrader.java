@@ -36,7 +36,7 @@ import java.util.Map;
 public class TestHdfsTargetUpgrader {
 
   @Test
-  public void testKafkaTargetUpgrader() throws StageException {
+  public void testHdfsTargetUpgrader() throws StageException {
 
     Map<String, String> hdfsConfigs = new HashMap();
     hdfsConfigs.put("x", "X");
@@ -76,7 +76,7 @@ public class TestHdfsTargetUpgrader {
     HdfsTargetUpgrader hdfsTargetUpgrader = new HdfsTargetUpgrader();
     hdfsTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(31, configs.size());
+    Assert.assertEquals(32, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for(Config c : configs) {
@@ -180,6 +180,8 @@ public class TestHdfsTargetUpgrader {
 
     Assert.assertTrue(configValues.containsKey("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
     Assert.assertEquals('\"', configValues.get("hdfsTargetConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
+
+    Assert.assertEquals("NULL", configValues.get("hdfsTargetConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
   }
 

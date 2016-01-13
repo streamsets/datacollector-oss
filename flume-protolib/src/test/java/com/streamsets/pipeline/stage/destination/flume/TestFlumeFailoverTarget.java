@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.api.ext.RecordReader;
+import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -371,6 +372,7 @@ public class TestFlumeFailoverTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.includeSchema = true;
+    dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
 
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
       FlumeTestUtil.createDefaultFlumeConfig(false),
@@ -411,6 +413,7 @@ public class TestFlumeFailoverTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.includeSchema = true;
+    dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
       FlumeTestUtil.createDefaultFlumeConfig(true),
       DataFormat.AVRO,
@@ -453,6 +456,7 @@ public class TestFlumeFailoverTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.includeSchema = false;
+    dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
       FlumeTestUtil.createDefaultFlumeConfig(false),
       DataFormat.AVRO,
@@ -491,6 +495,7 @@ public class TestFlumeFailoverTarget {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
     dataGeneratorFormatConfig.includeSchema = false;
+    dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
     FlumeTarget flumeTarget = FlumeTestUtil.createFlumeTarget(
       FlumeTestUtil.createDefaultFlumeConfig(true),
       DataFormat.AVRO,

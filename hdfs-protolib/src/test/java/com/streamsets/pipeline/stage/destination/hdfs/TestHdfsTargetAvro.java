@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.destination.hdfs;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.config.AvroCompression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -63,6 +64,7 @@ public class TestHdfsTargetAvro {
 
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
     dataGeneratorFormatConfig.avroSchema = SdcAvroTestUtil.AVRO_SCHEMA1;
+    dataGeneratorFormatConfig.avroCompression = AvroCompression.NULL;
 
     HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
       "file:///",

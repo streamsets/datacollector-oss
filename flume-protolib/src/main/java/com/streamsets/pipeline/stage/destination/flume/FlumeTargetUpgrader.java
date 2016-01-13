@@ -91,5 +91,6 @@ public class FlumeTargetUpgrader implements StageUpgrader {
     configs.add(new Config("flumeConfigBean.dataGeneratorFormatConfig.csvCustomEscape", '\\'));
     configs.add(new Config("flumeConfigBean.dataGeneratorFormatConfig.csvCustomQuote", '\"'));
     configs.add(new Config("flumeConfigBean.dataGeneratorFormatConfig.binaryFieldPath", "/"));
+    configs.add(new Config("flumeConfigBean.dataGeneratorFormatConfig.avroCompression", "NULL"));
   }
 }

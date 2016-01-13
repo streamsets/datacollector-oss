@@ -63,7 +63,7 @@ public class TestFlumeTargetUpgrader {
     FlumeTargetUpgrader flumeTargetUpgrader = new FlumeTargetUpgrader();
     flumeTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(25, configs.size());
+    Assert.assertEquals(26, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for(Config c : configs) {
@@ -145,5 +145,7 @@ public class TestFlumeTargetUpgrader {
 
     Assert.assertTrue(configValues.containsKey("flumeConfigBean.dataGeneratorFormatConfig.binaryFieldPath"));
     Assert.assertEquals("/", configValues.get("flumeConfigBean.dataGeneratorFormatConfig.binaryFieldPath"));
+
+    Assert.assertEquals("NULL", configValues.get("flumeConfigBean.dataGeneratorFormatConfig.avroCompression"));
   }
 }

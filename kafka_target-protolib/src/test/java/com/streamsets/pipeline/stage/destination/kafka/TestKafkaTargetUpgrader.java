@@ -68,7 +68,7 @@ public class TestKafkaTargetUpgrader {
     KafkaTargetUpgrader kafkaTargetUpgrader = new KafkaTargetUpgrader();
     kafkaTargetUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(23, configs.size());
+    Assert.assertEquals(24, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for(Config c : configs) {
@@ -145,6 +145,8 @@ public class TestKafkaTargetUpgrader {
 
     Assert.assertTrue(configValues.containsKey("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
     Assert.assertEquals('\"', configValues.get("kafkaConfigBean.dataGeneratorFormatConfig.csvCustomQuote"));
+
+    Assert.assertEquals("NULL", configValues.get("kafkaConfigBean.dataGeneratorFormatConfig.avroCompression"));
 
   }
 }
