@@ -52,16 +52,16 @@ public class BasicConfig {
   )
   public int maxWaitTime = 2000;
 
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues, String group) {
-    validate(context, issues, group);
+  public void init(Stage.Context context, String group, String configPrefix, List<Stage.ConfigIssue> issues) {
+    validate(context, group, configPrefix, issues);
   }
 
-  private void validate(Stage.Context context, List<Stage.ConfigIssue> issues, String group) {
+  private void validate(Stage.Context context, String group, String configPrefix, List<Stage.ConfigIssue> issues) {
     if (maxBatchSize < 1) {
-      issues.add(context.createConfigIssue(group, "maxBatchSize", BasicErrors.BASIC_01, maxBatchSize));
+      issues.add(context.createConfigIssue(group, configPrefix + "maxBatchSize", BasicErrors.BASIC_01, maxBatchSize));
     }
     if (maxWaitTime < 1) {
-      issues.add(context.createConfigIssue(group, "maxWaitTime", BasicErrors.BASIC_02, maxWaitTime));
+      issues.add(context.createConfigIssue(group, configPrefix + "maxWaitTime", BasicErrors.BASIC_02, maxWaitTime));
     }
   }
 }

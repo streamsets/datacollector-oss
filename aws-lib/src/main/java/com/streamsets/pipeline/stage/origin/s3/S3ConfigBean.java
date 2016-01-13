@@ -37,7 +37,12 @@ import java.util.List;
 @InterfaceStability.Unstable
 public class S3ConfigBean {
 
-  private static final String S3_CONFIG_PREFIX = "s3ConfigBean.s3Config.";
+  public static final String S3_CONFIG_BEAN_PREFIX = "s3ConfigBean.";
+  private static final String S3_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "s3Config.";
+  private static final String S3_DATA_FROMAT_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+  private static final String BASIC_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "basicConfig.";
+  private static final String POST_PROCESSING_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "postProcessingConfig.";
+  private static final String ERROR_CONFIG_PREFIX = S3_CONFIG_BEAN_PREFIX + "errorConfig.";
 
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
@@ -73,8 +78,15 @@ public class S3ConfigBean {
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
 
     s3FileConfig.init(context, issues);
-    dataFormatConfig.init(context, dataFormat, Groups.S3.name(), s3FileConfig.overrunLimit, issues);
-    basicConfig.init(context, issues, Groups.S3.name());
+    dataFormatConfig.init(
+        context,
+        dataFormat,
+        Groups.S3.name(),
+        S3_DATA_FROMAT_CONFIG_PREFIX,
+        s3FileConfig.overrunLimit,
+        issues
+    );
+    basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
     s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
@@ -90,19 +102,41 @@ public class S3ConfigBean {
     }
 
     if(s3Config.getS3Client() != null) {
-      validateBucket(context, issues, s3Config.getS3Client(), s3Config.bucket, Groups.S3.name(), "bucket");
+      validateBucket(
+          context,
+          issues,
+          s3Config.getS3Client(),
+          s3Config.bucket,
+          Groups.S3.name(),
+          S3_CONFIG_PREFIX + "bucket"
+      );
     }
 
     //post process config options
-    postProcessingConfig.postProcessBucket = validatePostProcessing(context, postProcessingConfig.postProcessing,
-      postProcessingConfig.archivingOption, postProcessingConfig.postProcessBucket,
-      postProcessingConfig.postProcessFolder, Groups.POST_PROCESSING.name(), "postProcessBucket", "postProcessFolder",
-      issues);
+    postProcessingConfig.postProcessBucket = validatePostProcessing(
+        context,
+        postProcessingConfig.postProcessing,
+        postProcessingConfig.archivingOption,
+        postProcessingConfig.postProcessBucket,
+        postProcessingConfig.postProcessFolder,
+        Groups.POST_PROCESSING.name(),
+        POST_PROCESSING_CONFIG_PREFIX + "postProcessBucket",
+        POST_PROCESSING_CONFIG_PREFIX + "postProcessFolder",
+        issues
+    );
 
     //error handling config options
-    errorConfig.errorBucket = validatePostProcessing(context, errorConfig.errorHandlingOption,
-      errorConfig.archivingOption, errorConfig.errorBucket, errorConfig.errorFolder, Groups.ERROR_HANDLING.name(),
-      "errorBucket", "errorFolder",issues);
+    errorConfig.errorBucket = validatePostProcessing(
+        context,
+        errorConfig.errorHandlingOption,
+        errorConfig.archivingOption,
+        errorConfig.errorBucket,
+        errorConfig.errorFolder,
+        Groups.ERROR_HANDLING.name(),
+        ERROR_CONFIG_PREFIX + "errorBucket",
+        ERROR_CONFIG_PREFIX + "errorFolder",
+        issues
+    );
 
   }
 

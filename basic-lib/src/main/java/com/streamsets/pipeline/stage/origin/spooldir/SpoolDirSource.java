@@ -51,6 +51,9 @@ public class SpoolDirSource extends BaseSource {
   private static final String ZERO = "0";
   private static final String NULL_FILE = "NULL_FILE_ID-48496481-5dc5-46ce-9c31-3ab3e034730c";
   private static final int MIN_OVERRUN_LIMIT = 64 * 1024;
+  public static final String SPOOLDIR_CONFIG_BEAN_PREFIX = "conf.";
+  public static final String SPOOLDIR_DATAFORMAT_CONFIG_PREFIX = SPOOLDIR_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
+
 
   private final SpoolDirConfigBean conf;
 
@@ -67,45 +70,98 @@ public class SpoolDirSource extends BaseSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    validateDir(conf.spoolDir, Groups.FILES.name(), "spoolDir", issues);
+    validateDir(conf.spoolDir, Groups.FILES.name(), SPOOLDIR_CONFIG_BEAN_PREFIX + "spoolDir", issues);
 
     // Whether overrunLimit is less than max limit is validated by DataParserFormatConfig.
     if (conf.overrunLimit * 1024 < MIN_OVERRUN_LIMIT) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "overrunLimit", Errors.SPOOLDIR_06));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              SPOOLDIR_CONFIG_BEAN_PREFIX + "overrunLimit",
+              Errors.SPOOLDIR_06
+          )
+      );
     }
 
     if (conf.batchSize < 1) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "batchSize", Errors.SPOOLDIR_14));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              SPOOLDIR_CONFIG_BEAN_PREFIX + "batchSize",
+              Errors.SPOOLDIR_14
+          )
+      );
     }
 
     if (conf.poolingTimeoutSecs < 1) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "poolingTimeoutSecs", Errors.SPOOLDIR_15));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              SPOOLDIR_CONFIG_BEAN_PREFIX + "poolingTimeoutSecs",
+              Errors.SPOOLDIR_15
+          )
+      );
     }
 
     validateFilePattern(issues);
 
     if (conf.maxSpoolFiles < 1) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "maxSpoolFiles", Errors.SPOOLDIR_17));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              SPOOLDIR_CONFIG_BEAN_PREFIX + "maxSpoolFiles",
+              Errors.SPOOLDIR_17
+          )
+      );
     }
 
     validateInitialFileToProcess(issues);
 
     if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
-      validateDir(conf.errorArchiveDir, Groups.POST_PROCESSING.name(), "errorArchiveDir", issues);
+      validateDir(
+          conf.errorArchiveDir,
+          Groups.POST_PROCESSING.name(),
+          SPOOLDIR_CONFIG_BEAN_PREFIX + "errorArchiveDir",
+          issues
+      );
     }
 
     if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
       if (conf.archiveDir != null && !conf.archiveDir.isEmpty()) {
-        validateDir(conf.archiveDir, Groups.POST_PROCESSING.name(), "archiveDir", issues);
+        validateDir(
+            conf.archiveDir,
+            Groups.POST_PROCESSING.name(),
+            SPOOLDIR_CONFIG_BEAN_PREFIX + "archiveDir",
+            issues
+        );
       } else {
-        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.SPOOLDIR_11));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.POST_PROCESSING.name(),
+                SPOOLDIR_CONFIG_BEAN_PREFIX + "archiveDir",
+                Errors.SPOOLDIR_11
+            )
+        );
       }
       if (conf.retentionTimeMins < 0) {
-        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "retentionTimeMins", Errors.SPOOLDIR_19));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.POST_PROCESSING.name(),
+                SPOOLDIR_CONFIG_BEAN_PREFIX + "retentionTimeMins",
+                Errors.SPOOLDIR_19
+            )
+        );
       }
     }
 
-    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.FILES.name(), conf.overrunLimit * 1024, issues);
+    conf.dataFormatConfig.init(
+        getContext(),
+        conf.dataFormat,
+        Groups.FILES.name(),
+        SPOOLDIR_DATAFORMAT_CONFIG_PREFIX,
+        conf.overrunLimit * 1024,
+        issues
+    );
 
     if (issues.isEmpty()) {
       parserFactory = conf.dataFormatConfig.getParserFactory();
@@ -149,13 +205,28 @@ public class SpoolDirSource extends BaseSource {
 
   private void validateFilePattern(List<ConfigIssue> issues) {
     if (conf.filePattern == null || conf.filePattern.trim().isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_32, conf.filePattern));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              SPOOLDIR_CONFIG_BEAN_PREFIX + "filePattern",
+              Errors.SPOOLDIR_32,
+              conf.filePattern
+          )
+      );
     } else {
       try {
         DirectorySpooler.createPathMatcher(conf.filePattern);
       } catch (Exception ex) {
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "filePattern", Errors.SPOOLDIR_16, conf.filePattern,
-          ex.toString(), ex));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.FILES.name(),
+                SPOOLDIR_CONFIG_BEAN_PREFIX + "filePattern",
+                Errors.SPOOLDIR_16,
+                conf.filePattern,
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
   }
@@ -165,8 +236,15 @@ public class SpoolDirSource extends BaseSource {
       try {
         PathMatcher pathMatcher = DirectorySpooler.createPathMatcher(conf.filePattern);
         if (!pathMatcher.matches(new File(conf.initialFileToProcess).toPath())) {
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "initialFileToProcess", Errors.SPOOLDIR_18,
-                                                    conf.initialFileToProcess, conf.filePattern));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.FILES.name(),
+                  SPOOLDIR_CONFIG_BEAN_PREFIX + "initialFileToProcess",
+                  Errors.SPOOLDIR_18,
+                  conf.initialFileToProcess,
+                  conf.filePattern
+              )
+          );
         }
       } catch (Exception ex) {
       }

@@ -49,6 +49,8 @@ import java.util.concurrent.TimeUnit;
 public class HttpClientSource extends BaseSource implements OffsetCommitter {
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
   private final static Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
+  private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
+  public static final String BASIC_CONFIG_PREFIX = "conf.basic.";
 
   private final HttpClientConfigBean conf;
 
@@ -72,8 +74,14 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    conf.basic.init(getContext(), issues, Groups.HTTP.name());
-    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HTTP.name(), issues);
+    conf.basic.init(getContext(), Groups.HTTP.name(), BASIC_CONFIG_PREFIX, issues);
+    conf.dataFormatConfig.init(
+        getContext(),
+        conf.dataFormat,
+        Groups.HTTP.name(),
+        DATA_FORMAT_CONFIG_PREFIX,
+        issues
+    );
 
     // Queue may not be empty at shutdown, but because we can't rewind,
     // the dropped entities are not recoverable anyway. In the case

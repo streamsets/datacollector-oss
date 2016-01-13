@@ -36,6 +36,7 @@ public enum Errors implements ErrorCode {
   LOG_PARSER_08("RegEx {} contains {} groups but the field Path to group mapping specifies group {}."),
   LOG_PARSER_09("Error parsing grok pattern {}, reason {}"),
   LOG_PARSER_10("Max stack trace lines field cannot be less than 0"),
+  LOG_PARSER_11("Error compiling grok pattern definition {}, reason {}"),
   ;
 
   private final String msg;

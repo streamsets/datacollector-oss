@@ -63,6 +63,9 @@ import java.util.regex.PatternSyntaxException;
 
 public class FileTailSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(FileTailSource.class);
+  public static final String FILE_TAIL_CONF_PREFIX = "conf.";
+  public static final String FILE_TAIL_DATA_FORMAT_CONFIG_PREFIX = FILE_TAIL_CONF_PREFIX + "dataFormatConfig.";
+
 
   private final FileTailConfigBean conf;
   private final int scanIntervalSecs;
@@ -90,26 +93,55 @@ public class FileTailSource extends BaseSource {
     String token = fileInfo.fileRollMode.getTokenForPattern();
     if (!token.isEmpty() && !fileName.contains(token)) {
       ok = false;
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_08, fileInfo.fileFullPath,
-                                                fileInfo.fileRollMode.getTokenForPattern(), fileName));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_08,
+              fileInfo.fileFullPath,
+              fileInfo.fileRollMode.getTokenForPattern(),
+              fileName
+          )
+      );
     }
     String fileParentDir = Paths.get(fileInfo.fileFullPath).getParent().toString();
     if (!token.isEmpty() && fileParentDir.contains(token)) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_16, fileInfo.fileFullPath,
-                                                fileInfo.fileRollMode.getTokenForPattern()));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_16,
+              fileInfo.fileFullPath,
+              fileInfo.fileRollMode.getTokenForPattern()
+          )
+      );
     }
     if (fileInfo.fileRollMode == FileRollMode.PATTERN) {
       if (fileInfo.patternForToken == null || fileInfo.patternForToken.isEmpty()) {
         ok = false;
-        issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_08, fileInfo.fileFullPath));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.FILES.name(),
+                FILE_TAIL_CONF_PREFIX + "fileInfos",
+                Errors.TAIL_08,
+                fileInfo.fileFullPath
+            )
+        );
       } else {
         try {
           Pattern.compile(fileInfo.patternForToken);
         } catch (PatternSyntaxException ex) {
           ok = false;
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_09,
-                                                    fileInfo.fileFullPath, fileInfo.patternForToken,
-                                                    ex.toString()));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.FILES.name(),
+                  FILE_TAIL_CONF_PREFIX + "fileInfos",
+                  Errors.TAIL_09,
+                  fileInfo.fileFullPath,
+                  fileInfo.patternForToken,
+                  ex.toString()
+              )
+          );
         }
         ELVars elVars = getContext().createELVars();
         elVars.addVariable("PATTERN", "");
@@ -118,21 +150,40 @@ public class FileTailSource extends BaseSource {
           String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
           if (FileFinder.hasGlobWildcard(pathWithoutPattern)) {
             ok = false;
-            issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_17,
-                                                      fileInfo.fileFullPath));
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.FILES.name(),
+                    FILE_TAIL_CONF_PREFIX + "fileInfos",
+                    Errors.TAIL_17,
+                    fileInfo.fileFullPath
+                )
+            );
           }
         } catch (ELEvalException ex) {
           ok = false;
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_18,
-                                                    fileInfo.fileFullPath, ex.toString()));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.FILES.name(),
+                  FILE_TAIL_CONF_PREFIX + "fileInfos",
+                  Errors.TAIL_18,
+                  fileInfo.fileFullPath,
+                  ex.toString()
+              )
+          );
         }
       }
       if (ok && fileInfo.firstFile != null && !fileInfo.firstFile.isEmpty()) {
         RollMode rollMode = fileInfo.fileRollMode.createRollMode(fileInfo.fileFullPath, fileInfo.patternForToken);
         if (!rollMode.isFirstAcceptable(fileInfo.firstFile)) {
           ok = false;
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfo", Errors.TAIL_19,
-                                                    fileInfo.fileFullPath));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.FILES.name(),
+                  FILE_TAIL_CONF_PREFIX + "fileInfos",
+                  Errors.TAIL_19,
+                  fileInfo.fileFullPath
+              )
+          );
         }
       }
     }
@@ -144,19 +195,43 @@ public class FileTailSource extends BaseSource {
     List<ConfigIssue> issues = super.init();
     if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
       if (conf.archiveDir == null || conf.archiveDir.isEmpty()) {
-        issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_05));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.POST_PROCESSING.name(),
+                FILE_TAIL_CONF_PREFIX + "archiveDir",
+                Errors.TAIL_05
+            )
+        );
       } else {
         File dir = new File(conf.archiveDir);
         if (!dir.exists()) {
-          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_06));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.POST_PROCESSING.name(),
+                  FILE_TAIL_CONF_PREFIX + "archiveDir",
+                  Errors.TAIL_06
+              )
+          );
         }
         if (!dir.isDirectory()) {
-          issues.add(getContext().createConfigIssue(Groups.POST_PROCESSING.name(), "archiveDir", Errors.TAIL_07));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.POST_PROCESSING.name(),
+                  FILE_TAIL_CONF_PREFIX + "archiveDir",
+                  Errors.TAIL_07
+              )
+          );
         }
       }
     }
     if (conf.fileInfos.isEmpty()) {
-      issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_01));
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_01
+          )
+      );
     } else {
       Set<String> fileKeys = new LinkedHashSet<>();
       List<MultiFileInfo> dirInfos = new ArrayList<>();
@@ -174,7 +249,7 @@ public class FileTailSource extends BaseSource {
           if (fileKeys.contains(directoryInfo.getFileKey())) {
             issues.add(getContext().createConfigIssue(
                 Groups.FILES.name(),
-                "fileInfos",
+                FILE_TAIL_CONF_PREFIX + "fileInfos",
                 Errors.TAIL_04,
                 fileInfo.fileFullPath
             ));
@@ -203,7 +278,15 @@ public class FileTailSource extends BaseSource {
               scanIntervalSecs
           );
         } catch (IOException ex) {
-          issues.add(getContext().createConfigIssue(Groups.FILES.name(), "fileInfos", Errors.TAIL_02, ex.toString(), ex));
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.FILES.name(),
+                  FILE_TAIL_CONF_PREFIX + "fileInfos",
+                  Errors.TAIL_02,
+                  ex.toString(),
+                  ex
+              )
+          );
         }
       }
     }
@@ -212,6 +295,7 @@ public class FileTailSource extends BaseSource {
         getContext(),
         conf.dataFormat,
         Groups.FILES.name(),
+        FILE_TAIL_DATA_FORMAT_CONFIG_PREFIX,
         !conf.multiLineMainPattern.isEmpty(),
         issues
     );

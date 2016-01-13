@@ -25,6 +25,7 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.dictionary.GrokDictionary;
+import com.streamsets.pipeline.lib.parser.shaded.org.aicer.grok.exception.GrokCompilationException;
 
 import java.io.StringReader;
 import java.util.List;
@@ -49,11 +50,21 @@ public class LogDataFormatValidator {
   private final OnParseError onParseError;
   private final String groupName;
 
-  public LogDataFormatValidator(LogMode logMode, int logMaxObjectLen, boolean logRetainOriginalLine,
-                                String customLogFormat, String regex, String grokPatternDefinition,
-                                String grokPattern, boolean enableLog4jCustomLogFormat, String log4jCustomLogFormat,
-                                OnParseError onParseError, int maxStackTraceLines, String groupName,
-                                Map<String, Integer> fieldPathsToGroupName) {
+  public LogDataFormatValidator(
+      LogMode logMode,
+      int logMaxObjectLen,
+      boolean logRetainOriginalLine,
+      String customLogFormat,
+      String regex,
+      String grokPatternDefinition,
+      String grokPattern,
+      boolean enableLog4jCustomLogFormat,
+      String log4jCustomLogFormat,
+      OnParseError onParseError,
+      int maxStackTraceLines,
+      String groupName,
+      Map<String, Integer> fieldPathsToGroupName
+  ) {
     this.logMode = logMode;
     this.logMaxObjectLen = logMaxObjectLen;
     this.logRetainOriginalLine = logRetainOriginalLine;
@@ -83,54 +94,109 @@ public class LogDataFormatValidator {
       .setMode(logMode);
   }
 
-  public void validateLogFormatConfig(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  public void validateLogFormatConfig(Stage.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     if (logMaxObjectLen == 0 || logMaxObjectLen < -1) {
-      issues.add(context.createConfigIssue(groupName, "logMaxObjectLen", Errors.LOG_PARSER_04, logMaxObjectLen));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "logMaxObjectLen",
+              Errors.LOG_PARSER_04,
+              logMaxObjectLen
+          )
+      );
     }
     if(maxStackTraceLines < 0) {
-      issues.add(context.createConfigIssue(groupName, "maxStackTraceLines", Errors.LOG_PARSER_10, maxStackTraceLines));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "maxStackTraceLines",
+              Errors.LOG_PARSER_10,
+              maxStackTraceLines
+          )
+      );
     }
     if(logMode == LogMode.APACHE_CUSTOM_LOG_FORMAT) {
-      validateApacheCustomLogFormat(issues, context);
+      validateApacheCustomLogFormat(context, configPrefix, issues);
     } else if(logMode == LogMode.REGEX) {
-      validateRegExFormat(issues, context);
+      validateRegExFormat(context, configPrefix, issues);
     } else if(logMode == LogMode.GROK) {
-      validateGrokPattern(issues, context);
+      validateGrokPattern(context, configPrefix, issues);
     } else if (logMode == LogMode.LOG4J) {
-      validateLog4jCustomLogFormat(issues, context);
+      validateLog4jCustomLogFormat(context, configPrefix, issues);
     }
   }
 
-  private void validateApacheCustomLogFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  private void validateApacheCustomLogFormat(
+      Stage.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     if(customLogFormat == null || customLogFormat.isEmpty()) {
-      issues.add(context.createConfigIssue(groupName, "customLogFormat", Errors.LOG_PARSER_05, customLogFormat));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "customLogFormat",
+              Errors.LOG_PARSER_05,
+              customLogFormat
+          )
+      );
       return;
     }
     try {
       ApacheCustomLogHelper.translateApacheLayoutToGrok(customLogFormat);
     } catch (DataParserException e) {
-      issues.add(context.createConfigIssue(groupName, "customLogFormat", Errors.LOG_PARSER_06, customLogFormat,
-        e.toString(), e));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "customLogFormat",
+              Errors.LOG_PARSER_06,
+              customLogFormat,
+              e.toString(),
+              e
+          )
+      );
     }
   }
 
-  private void validateLog4jCustomLogFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  private void validateLog4jCustomLogFormat(
+      Stage.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     if(enableLog4jCustomLogFormat) {
       if (log4jCustomLogFormat == null || log4jCustomLogFormat.isEmpty()) {
-        issues.add(context.createConfigIssue(groupName, "log4jCustomLogFormat", Errors.LOG_PARSER_05,
-          log4jCustomLogFormat));
+        issues.add(
+            context.createConfigIssue(
+                groupName,
+                configPrefix + "log4jCustomLogFormat",
+                Errors.LOG_PARSER_05,
+                log4jCustomLogFormat
+            )
+        );
         return;
       }
       try {
         Log4jHelper.translateLog4jLayoutToGrok(log4jCustomLogFormat);
       } catch (DataParserException e) {
-        issues.add(context.createConfigIssue(groupName, "log4jCustomLogFormat", Errors.LOG_PARSER_06,
-          log4jCustomLogFormat, e.toString(), e));
+        issues.add(
+            context.createConfigIssue(
+                groupName,
+                configPrefix + "log4jCustomLogFormat",
+                Errors.LOG_PARSER_06,
+                log4jCustomLogFormat,
+                e.toString(),
+                e
+            )
+        );
       }
     }
   }
 
-  private void validateRegExFormat(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  private void validateRegExFormat(
+      Stage.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     try {
       Pattern compile = Pattern.compile(regex);
       Matcher matcher = compile.matcher(" ");
@@ -138,17 +204,37 @@ public class LogDataFormatValidator {
 
       for(int group : fieldPathsToGroupName.values()) {
         if(group > groupCount) {
-          issues.add(context.createConfigIssue(groupName, "fieldPathsToGroupName", Errors.LOG_PARSER_08,
-            regex, groupCount, group));
+          issues.add(
+              context.createConfigIssue(
+                  groupName,
+                  configPrefix + "fieldPathsToGroupName",
+                  Errors.LOG_PARSER_08,
+                  regex,
+                  groupCount,
+                  group
+              )
+          );
         }
       }
     } catch (PatternSyntaxException e) {
-      issues.add(context.createConfigIssue(groupName, "regex", Errors.LOG_PARSER_07,
-        regex, e.toString(), e));
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "regex",
+              Errors.LOG_PARSER_07,
+              regex,
+              e.toString(),
+              e
+          )
+      );
     }
   }
 
-  private void validateGrokPattern(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  private void validateGrokPattern(
+      Stage.Context context,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  ) {
     try {
       GrokDictionary grokDictionary = new GrokDictionary();
       grokDictionary.addDictionary(getClass().getClassLoader().getResourceAsStream(Constants.GROK_PATTERNS_FILE_NAME));
@@ -159,9 +245,29 @@ public class LogDataFormatValidator {
       }
       grokDictionary.bind();
       grokDictionary.compileExpression(grokPattern);
-    } catch (PatternSyntaxException e) {
-      issues.add(context.createConfigIssue(groupName, "regex", Errors.LOG_PARSER_09,
-        regex, e.toString(), e));
+    } catch (GrokCompilationException e){
+      issues.add(
+        context.createConfigIssue(
+          groupName,
+          configPrefix + "grokPatternDefinition",
+          Errors.LOG_PARSER_11,
+          grokPatternDefinition,
+          e.toString(),
+          e
+        )
+      );
+    }
+    catch (PatternSyntaxException e) {
+      issues.add(
+          context.createConfigIssue(
+              groupName,
+              configPrefix + "regex",
+              Errors.LOG_PARSER_09,
+              regex,
+              e.toString(),
+              e
+          )
+      );
     }
   }
 

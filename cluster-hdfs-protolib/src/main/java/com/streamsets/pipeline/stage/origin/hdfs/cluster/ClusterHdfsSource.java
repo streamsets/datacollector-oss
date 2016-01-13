@@ -90,6 +90,9 @@ import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import javax.security.auth.Subject;
 
 public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, ErrorListener, ClusterSource {
+
+  public static final String DATA_FROMAT_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.dataFormatConfig.";
+
   private static final Logger LOG = LoggerFactory.getLogger(ClusterHdfsSource.class);
   private static final int PREVIEW_SIZE = 100;
   private Configuration hadoopConf;
@@ -237,8 +240,15 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     CsvHeader originalCsvHeader = conf.dataFormatConfig.csvHeader;
     if (originalCsvHeader != null && originalCsvHeader == CsvHeader.IGNORE_HEADER) {
       conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+
     }
-    conf.dataFormatConfig.init(getContext(), conf.dataFormat, Groups.HADOOP_FS.name(), issues);
+    conf.dataFormatConfig.init(
+        getContext(),
+        conf.dataFormat,
+        Groups.HADOOP_FS.name(),
+        DATA_FROMAT_CONFIG_BEAN_PREFIX,
+        issues
+    );
     conf.dataFormatConfig.csvHeader = originalCsvHeader;
 
     parserFactory = conf.dataFormatConfig.getParserFactory();

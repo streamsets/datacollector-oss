@@ -36,7 +36,11 @@ import com.streamsets.pipeline.lib.parser.log.LogDataFormatValidator;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
+import com.streamsets.pipeline.lib.util.ProtobufConstants;
+import com.streamsets.pipeline.stage.common.DataFormatErrors;
+import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -47,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 public class DataFormatParser {
+  public static final String DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
   private final String parentName;
   private final DataParserFormatConfig dataFormatConfig;
   private final MessageConfig messageConfig;
@@ -55,7 +60,12 @@ public class DataFormatParser {
   private Charset messageCharset;
   private DataParserFactory parserFactory;
 
-  public DataFormatParser(String parentName, DataFormat dataFormat, DataParserFormatConfig dataFormatConfig, MessageConfig messageConfig) {
+  public DataFormatParser(
+      String parentName,
+      DataFormat dataFormat,
+      DataParserFormatConfig dataFormatConfig,
+      MessageConfig messageConfig
+  ) {
     this.parentName = parentName;
     this.dataFormatConfig = dataFormatConfig;
     this.messageConfig = messageConfig;
@@ -67,52 +77,142 @@ public class DataFormatParser {
     switch (dataFormat) {
       case JSON:
         if (dataFormatConfig.jsonMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.JSON.name(), "dataFormatConfig.maxJsonObjectLen", ParserErrors.PARSER_04));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.JSON.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "maxJsonObjectLen",
+                  ParserErrors.PARSER_04
+              )
+          );
         }
         break;
       case TEXT:
         if (dataFormatConfig.textMaxLineLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.TEXT.name(), "dataFormatConfig.maxLogLineLength", ParserErrors.PARSER_04));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.TEXT.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "maxLogLineLength",
+                  ParserErrors.PARSER_04
+              )
+          );
         }
         break;
       case DELIMITED:
         if (dataFormatConfig.csvMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.DELIMITED.name(), "dataFormatConfig.csvMaxObjectLen", ParserErrors.PARSER_04));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.DELIMITED.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "csvMaxObjectLen",
+                  ParserErrors.PARSER_04
+              )
+          );
         }
         break;
       case XML:
         if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
-          issues.add(context.createConfigIssue(parentName, "messageConfig.produceSingleRecordPerMessage",
-            ParserErrors.PARSER_06));
+          issues.add(
+              context.createConfigIssue(
+                  parentName,
+                  "messageConfig.produceSingleRecordPerMessage",
+                  ParserErrors.PARSER_06
+              )
+          );
         }
         if (dataFormatConfig.xmlMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormat.XML.name(), "dataFormatConfig.maxXmlObjectLen", ParserErrors.PARSER_04));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.XML.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "maxXmlObjectLen",
+                  ParserErrors.PARSER_04
+              )
+          );
         }
         if (dataFormatConfig.xmlRecordElement != null && !dataFormatConfig.xmlRecordElement.isEmpty() &&
           !XMLChar.isValidName(dataFormatConfig.xmlRecordElement)) {
-          issues.add(context.createConfigIssue(DataFormat.XML.name(), "dataFormatConfig.xmlRecordElement", ParserErrors.PARSER_02,
-            dataFormatConfig.xmlRecordElement));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.XML.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "xmlRecordElement",
+                  ParserErrors.PARSER_02,
+                  dataFormatConfig.xmlRecordElement
+              )
+          );
         }
         break;
       case SDC_JSON:
         break;
       case LOG:
-        logDataFormatValidator = new LogDataFormatValidator(dataFormatConfig.logMode, dataFormatConfig.logMaxObjectLen,
-          dataFormatConfig.retainOriginalLine, dataFormatConfig.customLogFormat, dataFormatConfig.regex,
-          dataFormatConfig.grokPatternDefinition, dataFormatConfig.grokPattern,
-          dataFormatConfig.enableLog4jCustomLogFormat, dataFormatConfig.log4jCustomLogFormat, dataFormatConfig.onParseError,
-          dataFormatConfig.maxStackTraceLines, DataFormat.LOG.name(),
-          getFieldPathToGroupMap(dataFormatConfig.fieldPathsToGroupName));
-        logDataFormatValidator.validateLogFormatConfig(issues, context);
+        logDataFormatValidator = new LogDataFormatValidator(
+            dataFormatConfig.logMode,
+            dataFormatConfig.logMaxObjectLen,
+            dataFormatConfig.retainOriginalLine,
+            dataFormatConfig.customLogFormat,
+            dataFormatConfig.regex,
+            dataFormatConfig.grokPatternDefinition,
+            dataFormatConfig.grokPattern,
+            dataFormatConfig.enableLog4jCustomLogFormat,
+            dataFormatConfig.log4jCustomLogFormat,
+            dataFormatConfig.onParseError,
+            dataFormatConfig.maxStackTraceLines,
+            DataFormat.LOG.name(),
+            getFieldPathToGroupMap(dataFormatConfig.fieldPathsToGroupName)
+        );
+        logDataFormatValidator.validateLogFormatConfig(context, DATA_FORMAT_CONFIG_PREFIX, issues);
         break;
       case AVRO:
-        if(!dataFormatConfig.schemaInMessage && (dataFormatConfig.avroSchema == null || dataFormatConfig.avroSchema.isEmpty())) {
-          issues.add(context.createConfigIssue(DataFormat.AVRO.name(), "dataFormatConfig.avroSchema", ParserErrors.PARSER_07,
-            dataFormatConfig.avroSchema));
+        if(!dataFormatConfig.schemaInMessage
+            && (dataFormatConfig.avroSchema == null || dataFormatConfig.avroSchema.isEmpty())) {
+          issues.add(
+              context.createConfigIssue(
+                  DataFormat.AVRO.name(),
+                  DATA_FORMAT_CONFIG_PREFIX + "avroSchema",
+                  ParserErrors.PARSER_07,
+                  dataFormatConfig.avroSchema
+              )
+          );
+        }
+        break;
+      case PROTOBUF:
+        if (dataFormatConfig.protoDescriptorFile == null || dataFormatConfig.protoDescriptorFile.isEmpty()) {
+          issues.add(
+            context.createConfigIssue(
+              DataFormatGroups.PROTOBUF.name(),
+              DATA_FORMAT_CONFIG_PREFIX + "protoDescriptorFile",
+              DataFormatErrors.DATA_FORMAT_07
+            )
+          );
+        } else {
+          File file = new File(context.getResourcesDirectory(), dataFormatConfig.protoDescriptorFile);
+          if (!file.exists()) {
+            issues.add(
+              context.createConfigIssue(
+                DataFormatGroups.PROTOBUF.name(),
+                DATA_FORMAT_CONFIG_PREFIX + "protoDescriptorFile",
+                DataFormatErrors.DATA_FORMAT_09,
+                file.getAbsolutePath()
+              )
+            );
+          }
+          if (dataFormatConfig.messageType == null || dataFormatConfig.messageType.isEmpty()) {
+            issues.add(
+              context.createConfigIssue(
+                DataFormatGroups.PROTOBUF.name(),
+                DATA_FORMAT_CONFIG_PREFIX + "messageType",
+                DataFormatErrors.DATA_FORMAT_08
+              )
+            );
+          }
         }
         break;
       default:
-        issues.add(context.createConfigIssue(parentName, "dataFormat", ParserErrors.PARSER_05, dataFormat));
+        issues.add(
+            context.createConfigIssue(
+                parentName,
+                "dataFormat",
+                ParserErrors.PARSER_05,
+                dataFormat
+            )
+        );
     }
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, dataFormat.getParserFormat())
@@ -125,7 +225,14 @@ public class DataFormatParser {
       } catch (UnsupportedCharsetException ex) {
         // setting it to a valid one so the parser factory can be configured and tested for more errors
         messageCharset = StandardCharsets.UTF_8;
-        issues.add(context.createConfigIssue(parentName, "charset", ParserErrors.PARSER_01, dataFormatConfig.charset));
+        issues.add(
+            context.createConfigIssue(
+                parentName,
+                "charset",
+                ParserErrors.PARSER_01,
+                dataFormatConfig.charset
+            )
+        );
       }
     }
     builder.setCharset(messageCharset).setRemoveCtrlChars(dataFormatConfig.removeCtrlChars);
@@ -157,13 +264,25 @@ public class DataFormatParser {
         logDataFormatValidator.populateBuilder(builder);
         break;
       case AVRO:
-        builder.setMaxDataLen(Integer.MAX_VALUE).setConfig(AvroDataParserFactory.SCHEMA_KEY, dataFormatConfig.avroSchema)
+        builder.setMaxDataLen(Integer.MAX_VALUE)
+          .setConfig(AvroDataParserFactory.SCHEMA_KEY, dataFormatConfig.avroSchema)
           .setConfig(AvroDataParserFactory.SCHEMA_IN_MESSAGE_KEY, dataFormatConfig.schemaInMessage);
+        break;
+      case PROTOBUF:
+        builder
+          .setConfig(ProtobufConstants.PROTO_DESCRIPTOR_FILE_KEY, dataFormatConfig.protoDescriptorFile)
+          .setConfig(ProtobufConstants.MESSAGE_TYPE_KEY, dataFormatConfig.messageType)
+          .setConfig(ProtobufConstants.DELIMITED_KEY, dataFormatConfig.isDelimited)
+          .setMaxDataLen(-1);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unknown data format: {}", dataFormat));
     }
-    parserFactory = builder.build();
+    try {
+      parserFactory = builder.build();
+    } catch (Exception ex) {
+      issues.add(context.createConfigIssue(null, null, DataFormatErrors.DATA_FORMAT_06, ex.toString(), ex));
+    }
     return issues;
   }
 

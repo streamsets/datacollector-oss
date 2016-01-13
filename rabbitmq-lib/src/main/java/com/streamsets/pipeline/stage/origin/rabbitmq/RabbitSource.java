@@ -48,6 +48,7 @@ import java.util.concurrent.TransferQueue;
 
 public class RabbitSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(RabbitSource.class);
+  public static final String RABBIT_DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
 
   private final RabbitConfigBean conf;
   private final TransferQueue<RabbitMessage> messages = new LinkedTransferQueue<>();
@@ -100,6 +101,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
           getContext(),
           conf.dataFormat,
           Groups.RABBITMQ.name(),
+          RABBIT_DATA_FORMAT_CONFIG_PREFIX,
           issues
       );
       parserFactory = conf.dataFormatConfig.getParserFactory();

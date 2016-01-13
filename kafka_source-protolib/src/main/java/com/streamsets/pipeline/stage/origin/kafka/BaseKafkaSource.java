@@ -72,11 +72,22 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     }
     //maxWaitTime
     if (conf.maxWaitTime < 1) {
-      issues.add(getContext().createConfigIssue(KafkaOriginGroups.KAFKA.name(), "maxWaitTime",
-        KafkaErrors.KAFKA_35));
+      issues.add(
+          getContext().createConfigIssue(
+              KafkaOriginGroups.KAFKA.name(),
+              KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "maxWaitTime",
+              KafkaErrors.KAFKA_35
+          )
+      );
     }
 
-    conf.dataFormatConfig.init(getContext(), conf.dataFormat, KafkaOriginGroups.KAFKA.name(), issues);
+    conf.dataFormatConfig.init(
+        getContext(),
+        conf.dataFormat,
+        KafkaOriginGroups.KAFKA.name(),
+        KafkaConfigBean.DATA_FROMAT_CONFIG_BEAN_PREFIX,
+        issues
+    );
     if (conf.dataFormat == DataFormat.XML && conf.produceSingleRecordPerMessage) {
       issues.add(
           getContext().createConfigIssue(
@@ -181,8 +192,6 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     }
     return originParallelism;
   }
-
-
 
   protected List<Record> processKafkaMessage(String messageId, byte[] payload) throws StageException {
     List<Record> records = new ArrayList<>();

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AWSUtil {
-  public static final String AWS_CONFIG_BEAN = "awsConfig";
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider;

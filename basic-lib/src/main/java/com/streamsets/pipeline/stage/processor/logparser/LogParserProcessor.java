@@ -89,7 +89,7 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
       enableLog4jCustomLogFormat, log4jCustomLogFormat, onParseError, maxStackTraceLines,
       com.streamsets.pipeline.stage.origin.spooldir.Groups.LOG.name(),
       getFieldPathToGroupMap(fieldPathsToGroupName));
-    logDataFormatValidator.validateLogFormatConfig(issues, getContext());
+    logDataFormatValidator.validateLogFormatConfig(getContext(), "", issues);
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     builder.setOverRunLimit(DataFormatConstants.MAX_OVERRUN_LIMIT);

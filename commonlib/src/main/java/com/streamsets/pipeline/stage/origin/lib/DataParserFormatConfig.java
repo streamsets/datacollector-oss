@@ -566,35 +566,63 @@ public class DataParserFormatConfig {
       Stage.Context context,
       DataFormat dataFormat,
       String stageGroup,
+      String configPrefix,
       List<Stage.ConfigIssue> issues
   ) {
-    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, false, issues);
+    return init(
+        context,
+        dataFormat,
+        stageGroup,
+        configPrefix,
+        DataFormatConstants.MAX_OVERRUN_LIMIT,
+        false,
+        issues
+    );
   }
 
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,
       String stageGroup,
+      String configPrefix,
       boolean multiLines,
       List<Stage.ConfigIssue> issues
   ) {
-    return init(context, dataFormat, stageGroup, DataFormatConstants.MAX_OVERRUN_LIMIT, multiLines, issues);
+    return init(
+        context,
+        dataFormat,
+        stageGroup,
+        configPrefix,
+        DataFormatConstants.MAX_OVERRUN_LIMIT,
+        multiLines,
+        issues
+    );
   }
 
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,
       String stageGroup,
+      String configPrefix,
       int overrunLimit,
       List<Stage.ConfigIssue> issues
   ) {
-    return init(context, dataFormat, stageGroup, overrunLimit, false, issues);
+    return init(
+        context,
+        dataFormat,
+        stageGroup,
+        configPrefix,
+        overrunLimit,
+        false,
+        issues
+    );
   }
 
   public boolean init(
       Stage.Context context,
       DataFormat dataFormat,
       String stageGroup,
+      String configPrefix,
       int overrunLimit,
       boolean multiLines,
       List<Stage.ConfigIssue> issues
@@ -603,35 +631,55 @@ public class DataParserFormatConfig {
     switch (dataFormat) {
       case JSON:
         if (jsonMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormatGroups.JSON.name(), "jsonMaxObjectLen",
-              DataFormatErrors.DATA_FORMAT_01));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.JSON.name(),
+                  configPrefix + "jsonMaxObjectLen",
+                  DataFormatErrors.DATA_FORMAT_01
+              )
+          );
           valid = false;
         }
         break;
       case TEXT:
         if (textMaxLineLen < 1) {
-          issues.add(context.createConfigIssue(DataFormatGroups.TEXT.name(), "textMaxLineLen",
-              DataFormatErrors.DATA_FORMAT_01));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.TEXT.name(),
+                  configPrefix + "textMaxLineLen",
+                  DataFormatErrors.DATA_FORMAT_01
+              )
+          );
           valid = false;
         }
         break;
       case DELIMITED:
         if (csvMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormatGroups.DELIMITED.name(), "csvMaxObjectLen",
-              DataFormatErrors.DATA_FORMAT_01));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.DELIMITED.name(),
+                  configPrefix + "csvMaxObjectLen",
+                  DataFormatErrors.DATA_FORMAT_01
+              )
+          );
           valid = false;
         }
         break;
       case XML:
         if (xmlMaxObjectLen < 1) {
-          issues.add(context.createConfigIssue(DataFormatGroups.XML.name(), "xmlMaxObjectLen",
-              DataFormatErrors.DATA_FORMAT_01));
+          issues.add(
+              context.createConfigIssue(
+                  DataFormatGroups.XML.name(),
+                  configPrefix + "xmlMaxObjectLen",
+                  DataFormatErrors.DATA_FORMAT_01
+              )
+          );
           valid = false;
         }
         if (xmlRecordElement != null && !xmlRecordElement.isEmpty() && !XMLChar.isValidName(xmlRecordElement)) {
           issues.add(
               context.createConfigIssue(DataFormatGroups.XML.name(),
-                  "xmlRecordElement",
+                  configPrefix + "xmlRecordElement",
                   DataFormatErrors.DATA_FORMAT_03,
                   xmlRecordElement
               )
@@ -660,14 +708,14 @@ public class DataParserFormatConfig {
             DataFormatGroups.LOG.name(),
             getFieldPathToGroupMap(fieldPathsToGroupName)
         );
-        logDataFormatValidator.validateLogFormatConfig(issues, context);
+        logDataFormatValidator.validateLogFormatConfig(context, configPrefix, issues);
         break;
       case PROTOBUF:
         if (protoDescriptorFile == null || protoDescriptorFile.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   DataFormatGroups.PROTOBUF.name(),
-                  "protoDescriptorFile",
+                  configPrefix + "protoDescriptorFile",
                   DataFormatErrors.DATA_FORMAT_07
               )
           );
@@ -677,7 +725,7 @@ public class DataParserFormatConfig {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
-                    "protoDescriptorFile",
+                    configPrefix + "protoDescriptorFile",
                     DataFormatErrors.DATA_FORMAT_09,
                     file.getAbsolutePath()
                 )
@@ -687,7 +735,7 @@ public class DataParserFormatConfig {
             issues.add(
                 context.createConfigIssue(
                     DataFormatGroups.PROTOBUF.name(),
-                    "messageType",
+                    configPrefix + "messageType",
                     DataFormatErrors.DATA_FORMAT_08
                 )
             );
@@ -695,12 +743,27 @@ public class DataParserFormatConfig {
         }
         break;
       default:
-        issues.add(context.createConfigIssue(stageGroup, "dataFormat", DataFormatErrors.DATA_FORMAT_04, dataFormat));
+        issues.add(
+            context.createConfigIssue(
+                stageGroup,
+                configPrefix + "dataFormat",
+                DataFormatErrors.DATA_FORMAT_04,
+                dataFormat
+            )
+        );
         valid = false;
         break;
     }
 
-    valid &= validateDataParser(context, dataFormat, stageGroup, overrunLimit, multiLines, issues);
+    valid &= validateDataParser(
+        context,
+        dataFormat,
+        stageGroup,
+        configPrefix,
+        overrunLimit,
+        multiLines,
+        issues
+    );
 
     return valid;
   }
@@ -709,6 +772,7 @@ public class DataParserFormatConfig {
       Stage.Context context,
       DataFormat dataFormat,
       String stageGroup,
+      String configPrefix,
       int overrunLimit,
       boolean multiLines,
       List<Stage.ConfigIssue> issues
@@ -722,7 +786,14 @@ public class DataParserFormatConfig {
     } catch (UnsupportedCharsetException ex) {
       // setting it to a valid one so the parser factory can be configured and tested for more errors
       fileCharset = StandardCharsets.UTF_8;
-      issues.add(context.createConfigIssue(stageGroup, "charset", DataFormatErrors.DATA_FORMAT_05, charset));
+      issues.add(
+          context.createConfigIssue(
+              stageGroup,
+              configPrefix + "charset",
+              DataFormatErrors.DATA_FORMAT_05,
+              charset
+          )
+      );
       valid = false;
     }
     builder.setCharset(fileCharset);
