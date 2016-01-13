@@ -44,7 +44,8 @@ public class KinesisUtil {
   private static final long BACKOFF_TIME_IN_MILLIS = 3000L;
   private static final int NUM_RETRIES = 10;
 
-  public static final int ONE_MB = 1000 * 1000;
+  public static final int KB = 1000;
+  public static final int ONE_MB = 1000 * KB;
   public static final String KINESIS_CONFIG_BEAN = "kinesisConfig";
 
   private KinesisUtil() {}

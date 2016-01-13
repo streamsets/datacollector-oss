@@ -27,11 +27,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -61,7 +59,7 @@ import java.util.concurrent.Future;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 
-public class KinesisTarget extends BaseTarget {
+public class KinesisTarget extends BaseKinesisTarget {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisTarget.class);
 
   private final KinesisProducerConfigBean conf;
@@ -216,6 +214,7 @@ public class KinesisTarget extends BaseTarget {
 
         ++i;
       } catch (IOException e) {
+        LOG.error(Errors.KINESIS_05.getMessage(), record, e.toString(), e);
         handleFailedRecord(record, e.toString());
       }
     }
@@ -247,21 +246,6 @@ public class KinesisTarget extends BaseTarget {
       LOG.error("Pipeline is shutting down.", e);
       // We should flush if we encounter an error.
       kinesisProducer.flushSync();
-    }
-  }
-
-  private void handleFailedRecord(Record record, final String cause) throws StageException {
-    switch (getContext().getOnErrorRecord()) {
-      case DISCARD:
-        break;
-      case TO_ERROR:
-        getContext().toError(record, Errors.KINESIS_05, record, cause);
-        break;
-      case STOP_PIPELINE:
-        throw new StageException(Errors.KINESIS_05, record, cause);
-      default:
-        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-            getContext().getOnErrorRecord()));
     }
   }
 }

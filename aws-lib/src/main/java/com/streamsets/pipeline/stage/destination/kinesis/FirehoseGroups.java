@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,14 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+@GenerateResourceBundle
+public enum FirehoseGroups implements Label {
+  KINESIS("Kinesis"),
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  AVRO("Avro"),
+  BINARY("Binary"),
+  PROTOBUF("Protobuf"),
+  ;
 
-  public DataFormatChooserValues() {
-    super(DataFormat.AVRO, DataFormat.DELIMITED, DataFormat.JSON);
+  private final String label;
+
+  private FirehoseGroups(String label) {
+    this.label = label;
   }
 
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,14 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.config;
+package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
-
-  public DataFormatChooserValues() {
-    super(DataFormat.AVRO, DataFormat.DELIMITED, DataFormat.JSON);
+public class FirehoseDestinationChooserValues extends BaseEnumChooserValues {
+  public FirehoseDestinationChooserValues() {
+    super(FirehoseDestinationType.class);
   }
-
 }
