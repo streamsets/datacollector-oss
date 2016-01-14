@@ -43,6 +43,8 @@ angular
       return filteredIssues && filteredIssues.length ? _.pluck(filteredIssues, 'message').join(' , ') : '';
     };
 
+    var previewBatchSizeForFetchingFieldPaths = 10;
+
     angular.extend($scope, {
       fieldPaths: [],
       dFieldPaths: [],
@@ -612,12 +614,33 @@ angular
         $scope.fieldPathsType = [];
         $scope.fieldSelectorPaths = [];
 
-        previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance, 1).
+        previewService.getInputRecordsFromPreview($scope.activeConfigInfo.name, stageInstance,
+          previewBatchSizeForFetchingFieldPaths).
           then(function (inputRecords) {
             $scope.fieldPathsFetchInProgress = false;
             if(_.isArray(inputRecords) && inputRecords.length) {
-              pipelineService.getFieldPaths(inputRecords[0].value, $scope.fieldPaths, false, $scope.fieldPathsType,
-                $scope.dFieldPaths);
+              var fieldPathsMap = {},
+                dFieldPathsList = [];
+
+              angular.forEach(inputRecords, function(record, index) {
+                var fieldPaths = [],
+                  fieldPathsType = [],
+                  dFieldPaths = [];
+
+                pipelineService.getFieldPaths(record.value, fieldPaths, false, fieldPathsType, dFieldPaths);
+
+
+                angular.forEach(fieldPaths, function(fp, index) {
+                  fieldPathsMap[fp] = fieldPathsType[index];
+                });
+
+                dFieldPathsList.push(dFieldPaths);
+              });
+
+              $scope.fieldPaths = _.keys(fieldPathsMap);
+              $scope.fieldPathsType = _.values(fieldPathsMap);
+              $scope.dFieldPaths = _.union.apply(_, dFieldPathsList);
+
               $scope.$broadcast('fieldPathsUpdated', $scope.fieldPaths, $scope.fieldPathsType, $scope.dFieldPaths);
 
               angular.forEach($scope.fieldPaths, function(fieldPath) {

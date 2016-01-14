@@ -208,13 +208,17 @@
             }
 
             .action-menu {
-              padding: @defaultPadding;
+              .dropdown-toggle {
+                display: inline-block;
+                width: 100%;
+                padding: @defaultPadding;
 
-              .fa {
-                color: #a2a1a1;
+                .fa {
+                  color: #a2a1a1;
 
-                &:hover {
-                  color: @streamsets-icon-btn-hover-color;
+                  &:hover {
+                    color: @streamsets-icon-btn-hover-color;
+                  }
                 }
               }
             }
