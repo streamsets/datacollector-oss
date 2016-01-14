@@ -70,7 +70,6 @@ import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.configurablestage.DSource;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -121,21 +120,22 @@ public class TestClusterHDFSSource {
     }
   }
 
-  private void configure(ClusterHdfsDSource hdfsClusterSource, String dirLocation) {
-    hdfsClusterSource.hdfsUri = miniDFS.getURI().toString();
-    hdfsClusterSource.hdfsDirLocations = Arrays.asList(dirLocation);
-    hdfsClusterSource.hdfsConfigs = new HashMap<String, String>();
-    hdfsClusterSource.hdfsConfigs.put("x", "X");
-    hdfsClusterSource.dataFormat = DataFormat.TEXT;
-    hdfsClusterSource.textMaxLineLen = 1024;
+  private ClusterHdfsSource createSource(ClusterHdfsConfigBean conf) {
+    return new ClusterHdfsSource(conf);
   }
 
   @Test
   public void testWrongHDFSDirLocation() throws Exception {
-    ClusterHdfsDSource dSource = new ForTestClusterHdfsDSource();
-    configure(dSource, dir.toUri().getPath());
-    dSource.hdfsUri = "/pathwithnoschemeorauthority";
-    ClusterHdfsSource clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsConfigs.put("x", "X");
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    conf.hdfsUri = "/pathwithnoschemeorauthority";
+    ClusterHdfsSource clusterHdfsSource = createSource(conf);
     try {
       List<ConfigIssue> issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
@@ -143,55 +143,55 @@ public class TestClusterHDFSSource {
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_02"));
 
-      dSource.hdfsUri = "file://localhost:8020/";
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = "file://localhost:8020/";
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_12"));
 
-      dSource.hdfsUri = "hdfs:///noauthority";
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = "hdfs:///noauthority";
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
 
-      dSource.hdfsUri = "hdfs://localhost:8020";
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = "hdfs://localhost:8020";
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_11"));
 
-      dSource.hdfsUri = miniDFS.getURI().toString();
-      dSource.hdfsDirLocations = Arrays.asList("/pathdoesnotexist");
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList("/pathdoesnotexist");
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_10"));
 
-      dSource.hdfsUri = miniDFS.getURI().toString();
-      dSource.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
       FileSystem fs = miniDFS.getFileSystem();
       Path someFile = new Path(new Path(dir.toUri()), "/someFile");
       fs.create(someFile).close();
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
       assertEquals(String.valueOf(issues), 0, issues.size());
 
-      dSource.hdfsUri = null;
-      dSource.hdfsConfigs.put(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, miniDFS.getURI().toString());
+      conf.hdfsUri = null;
+      conf.hdfsConfigs.put(CommonConfigurationKeys.FS_DEFAULT_NAME_KEY, miniDFS.getURI().toString());
       someFile = new Path(new Path(dir.toUri()), "/someFile2");
       fs.create(someFile).close();
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
@@ -199,9 +199,9 @@ public class TestClusterHDFSSource {
 
       Path dummyFile = new Path(new Path(dir.toUri()), "/dummyFile");
       fs.create(dummyFile).close();
-      dSource.hdfsUri = miniDFS.getURI().toString();
-      dSource.hdfsDirLocations = Arrays.asList(dummyFile.toUri().getPath());
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList(dummyFile.toUri().getPath());
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
         .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
           ImmutableList.of("lane")));
@@ -210,9 +210,9 @@ public class TestClusterHDFSSource {
 
       Path emptyDir = new Path(dir.toUri().getPath(), "emptyDir");
       fs.mkdirs(emptyDir);
-      dSource.hdfsUri = miniDFS.getURI().toString();
-      dSource.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
@@ -221,9 +221,9 @@ public class TestClusterHDFSSource {
 
       Path path1 = new Path(emptyDir, "path1");
       fs.create(path1).close();
-      dSource.hdfsUri = miniDFS.getURI().toString();
-      dSource.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
-      clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList(emptyDir.toUri().getPath());
+      clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                ImmutableList.of("lane")));
@@ -235,9 +235,15 @@ public class TestClusterHDFSSource {
 
   @Test
   public void testGetHdfsConfiguration() throws Exception {
-    ClusterHdfsDSource dSource = new ForTestClusterHdfsDSource();
-    configure(dSource, dir.toString());
-    ClusterHdfsSource clusterHdfsSource = (ClusterHdfsSource) dSource.createSource();
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toString());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsConfigs.put("x", "X");
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    ClusterHdfsSource clusterHdfsSource = createSource(conf);
     try {
       clusterHdfsSource.init(null, ContextInfoCreator.createSourceContext("myInstance", false, OnRecordError.TO_ERROR,
                                                                           ImmutableList.of("lane")));
@@ -250,28 +256,24 @@ public class TestClusterHDFSSource {
 
   @Test(timeout = 30000)
   public void testProduce() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.TEXT;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
-      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
-      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
-      .addConfiguration("recursive", false)
-      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
-      .addConfiguration("dataFormat", DataFormat.TEXT)
-      .addConfiguration("textMaxLineLen", 1024)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", hadoopConfDir)
       .setResourcesDir(resourcesDir)
       .build();
-      sourceRunner.runInit();
+
+    sourceRunner.runInit();
 
     List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair(new LongWritable(1), new Text("aaa")));
@@ -304,33 +306,28 @@ public class TestClusterHDFSSource {
 
   @Test(timeout = 30000)
   public void testProduceDelimitedNoHeader() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
-      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
-      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
-      .addConfiguration("recursive", false)
-      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.NO_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("csvRecordType", CsvRecordType.LIST)
-      .addConfiguration("csvSkipStartLines", 0)
-      .addConfiguration("textMaxLineLen", 1024)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", hadoopConfDir)
       .setResourcesDir(resourcesDir)
       .build();
-      sourceRunner.runInit();
+
+    sourceRunner.runInit();
 
     List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair("1", new String("A,B\na,b")));
@@ -375,33 +372,28 @@ public class TestClusterHDFSSource {
 
   @Test(timeout = 30000)
   public void testProduceDelimitedIgnoreHeader() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.IGNORE_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
-      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
-      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
-      .addConfiguration("recursive", false)
-      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.IGNORE_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("csvRecordType", CsvRecordType.LIST)
-      .addConfiguration("csvSkipStartLines", 0)
-      .addConfiguration("textMaxLineLen", 1024)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", hadoopConfDir)
       .setResourcesDir(resourcesDir)
       .build();
-      sourceRunner.runInit();
+
+    sourceRunner.runInit();
 
     List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair("path::0::0", new String("A,B\na,b")));
@@ -436,33 +428,28 @@ public class TestClusterHDFSSource {
 
   @Test(timeout = 30000)
   public void testProduceDelimitedWithHeader() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.DELIMITED;
+    conf.dataFormatConfig.csvFileFormat = CsvMode.CSV;
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.dataFormatConfig.csvMaxObjectLen = 4096;
+    conf.dataFormatConfig.csvRecordType = CsvRecordType.LIST;
+    conf.dataFormatConfig.csvSkipStartLines = 0;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
-      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
-      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
-      .addConfiguration("recursive", false)
-      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
-      .addConfiguration("dataFormat", DataFormat.DELIMITED)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("csvRecordType", CsvRecordType.LIST)
-      .addConfiguration("csvSkipStartLines", 0)
-      .addConfiguration("textMaxLineLen", 1024)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", hadoopConfDir)
       .setResourcesDir(resourcesDir)
       .build();
-      sourceRunner.runInit();
+
+    sourceRunner.runInit();
 
     List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair("HEADER_COL_1,HEADER_COL_2", null));
@@ -501,31 +488,23 @@ public class TestClusterHDFSSource {
 
   @Test(timeout = 30000)
   public void testProduceAvroData() throws Exception {
-    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class)
+    ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+    conf.hdfsUri = miniDFS.getURI().toString();
+    conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+    conf.hdfsConfigs = new HashMap<>();
+    conf.hdfsKerberos = false;
+    conf.hdfsConfDir = hadoopConfDir;
+    conf.recursive = false;
+    conf.produceSingleRecordPerMessage = false;
+    conf.dataFormat = DataFormat.AVRO;
+
+    SourceRunner sourceRunner = new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
       .addOutputLane("lane")
       .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
-      .addConfiguration("hdfsUri", miniDFS.getURI().toString())
-      .addConfiguration("hdfsDirLocations", Arrays.asList(dir.toUri().getPath()))
-      .addConfiguration("recursive", false)
-      .addConfiguration("hdfsConfigs", new HashMap<String, String>())
-      .addConfiguration("dataFormat", DataFormat.AVRO)
-      .addConfiguration("csvFileFormat", CsvMode.CSV)
-      .addConfiguration("csvHeader", CsvHeader.WITH_HEADER)
-      .addConfiguration("csvMaxObjectLen", 4096)
-      .addConfiguration("textMaxLineLen", 1024)
-      .addConfiguration("produceSingleRecordPerMessage", false)
-      .addConfiguration("regex", null)
-      .addConfiguration("grokPatternDefinition", null)
-      .addConfiguration("enableLog4jCustomLogFormat", false)
-      .addConfiguration("customLogFormat", null)
-      .addConfiguration("fieldPathsToGroupName", null)
-      .addConfiguration("log4jCustomLogFormat", null)
-      .addConfiguration("grokPattern", null)
-      .addConfiguration("hdfsKerberos", false)
-      .addConfiguration("hdfsConfDir", hadoopConfDir)
       .setResourcesDir(resourcesDir)
       .build();
-      sourceRunner.runInit();
+
+    sourceRunner.runInit();
 
     List<Map.Entry> list = new ArrayList<>();
     list.add(new Pair("path::" + "1" + "::1", createAvroData("a", 30, ImmutableList.of("a@company.com", "a2@company.com"))));
@@ -600,8 +579,7 @@ public class TestClusterHDFSSource {
       @Override
       public void run() {
         try {
-          ClusterHdfsSource source =
-            ((ClusterHdfsSource) ((DSource) sourceRunner.getStage()).getSource());
+          ClusterHdfsSource source = (ClusterHdfsSource) sourceRunner.getStage();
           source.put(list);
         } catch (Exception ex) {
           LOG.error("Error in waiter thread: " + ex, ex);
@@ -622,17 +600,6 @@ public class TestClusterHDFSSource {
     stm.hsync();
     stm.hsync();
     stm.close();
-  }
-
-  static class ForTestClusterHdfsDSource extends ClusterHdfsDSource {
-    @Override
-    protected ClusterHdfsSource createSource() {
-      return new ClusterHdfsSource(hdfsUri, hdfsDirLocations, recursive, hdfsConfigs, dataFormat, textMaxLineLen,
-        jsonMaxObjectLen, logMode, retainOriginalLine, customLogFormat, regex, fieldPathsToGroupName,
-        grokPatternDefinition, grokPattern, enableLog4jCustomLogFormat, log4jCustomLogFormat, logMaxObjectLen,
-        produceSingleRecordPerMessage, hdfsKerberos, null, null, csvFileFormat, csvHeader, csvMaxObjectLen,
-        csvCustomDelimiter, csvCustomEscape, csvCustomQuote, csvRecordType, 0, avroSchema);
-    }
   }
 
 }

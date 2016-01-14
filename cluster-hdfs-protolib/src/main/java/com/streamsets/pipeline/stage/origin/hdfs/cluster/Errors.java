@@ -28,9 +28,6 @@ public enum Errors implements ErrorCode {
   HADOOPFS_00("HDFS URI must be specified"),
   HADOOPFS_02("HDFS URI must start with <scheme>://<path>"),
   HADOOPFS_03("Invalid hdfs location '{}': {}"),
-  HADOOPFS_04("Max json object length cannot be less than 1"),
-  HADOOPFS_05("Max text object length cannot be less than 1 "),
-  HADOOPFS_06("Unsupported data format '{}'"),
   HADOOPFS_08("Cannot parse record '{}': {}"),
   HADOOPFS_09("Cannot obtain splits for '{}': {}"),
   HADOOPFS_10("HDFS location doesn't exist: '{}'"),
@@ -49,7 +46,6 @@ public enum Errors implements ErrorCode {
   HADOOPFS_28("Could not resolve the default Kerberos realm, you must set the 'dfs.namenode.kerberos.principal' " +
     "property to the HDFS principal name: {}"),
   HADOOPFS_29("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
-  HADOOPFS_30("Max data object length cannot be less than 1")
   ;
   private final String msg;
 
