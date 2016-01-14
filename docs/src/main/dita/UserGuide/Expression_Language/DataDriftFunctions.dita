@@ -16,7 +16,7 @@
 <concept id="concept_hpn_xfk_p5">
  <title>Data Drift Functions</title>
  <shortdesc>Use data drift functions to create alerts when data drift occurs. You can use these
-        functions in data drift alerts.</shortdesc>
+        functions in data drift rules.</shortdesc>
  <conbody>
   <p><indexterm>functions<indexterm>data drift functions</indexterm></indexterm><indexterm>data
                 drift functions<indexterm>description</indexterm></indexterm>The expression language

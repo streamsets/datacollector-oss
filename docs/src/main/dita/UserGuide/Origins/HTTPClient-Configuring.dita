@@ -90,11 +90,14 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Entity Delimiter</entry>
-                                    <entry>
-                                        <draft-comment author="Loretta">Cheolsoo to revisit this
-                                            when he's back. </draft-comment>
-                                    </entry>
+                                    <entry>HTTP Stream Delimiter</entry>
+                                    <entry>Delimiter characters that indicate the end of a stream.
+                                        Used to create records for JSON and text data. <p>For XML
+                                            data, you can also specify an XML delimiter element to
+                                            create records. For more information, see <xref
+                                                href="HTTPClient-DataFormats.dita"/>.</p><p>Default
+                                            is \r\n, representing a carriage return and line feed.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>Charset</entry>

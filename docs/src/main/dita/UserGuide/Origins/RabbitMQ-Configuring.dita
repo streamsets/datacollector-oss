@@ -239,7 +239,7 @@
                                     <entry>Milliseconds for the shutdown to complete. </entry>
                                 </row>
                                 <row>
-                                    <entry>Heartbeat Timeout (s)</entry>
+                                    <entry>Heartbeat Timeout (secs)</entry>
                                     <entry>Seconds to wait for a heartbeat from RabbitMQ to verify
                                         that the origin is up and the connection still
                                             available.<p>Use 0 to avoid requesting heartbeats.

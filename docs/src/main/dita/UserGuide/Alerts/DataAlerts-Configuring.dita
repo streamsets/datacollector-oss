@@ -20,7 +20,7 @@
             alerts<indexterm>configuring</indexterm></indexterm>Create a data rule to view metrics,
             sample data, and alerts based on the rule. You can configure data rules and alerts when
             you configure or monitor a pipeline. You can edit or delete data rules when they are not
-            active. </context>
+            enabled. </context>
         <steps id="steps_mvl_w2k_br">
             <step>
                 <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data
@@ -82,7 +82,7 @@
                                     <entry>Alert Text</entry>
                                     <entry>Text to display when the alert is triggered. <p>Enter
                                             text that explains the reason for the alert. For
-                                            example, "Over 100 missing phone numbers."</p></entry>
+                                            example, "Over 100 missing phone numbers." </p></entry>
                                 </row>
                                 <row>
                                     <entry>Threshold Type</entry>
@@ -94,8 +94,8 @@
                                 </row>
                                 <row>
                                     <entry>Threshold Value</entry>
-                                    <entry>Value that defines the threshold at which the alert
-                                        becomes active. </entry>
+                                    <entry>Value that defines the threshold at which the rule
+                                        triggers an alert. </entry>
                                 </row>
                                 <row>
                                     <entry>Min Volume</entry>
@@ -116,13 +116,13 @@
                 </info>
             </step>
             <step>
-                <cmd>Click <uicontrol>Save</uicontrol>.'</cmd>
+                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
                 <info>The new data rule displays in the list. </info>
             </step>
             <step>
-                <cmd>To activate the new rule, click <uicontrol>Active</uicontrol>. </cmd>
+                <cmd>To enable the new rule, click <uicontrol>Active</uicontrol>. </cmd>
                 <info>You can enable and disable the meter and alert from the list of rules. You can
-                    edit and delete inactive rules. </info>
+                    edit and delete disabled rules. </info>
             </step>
         </steps>
     </taskbody>

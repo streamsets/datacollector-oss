@@ -33,7 +33,7 @@
                         <row>
                             <entry>Data Drift Rule</entry>
                             <entry>Drift Function</entry>
-                            <entry>Valid Field Type</entry>
+                            <entry>Valid Field Data Types</entry>
                         </row>
                     </thead>
                     <tbody>
@@ -62,7 +62,7 @@
             </table></p>
         <p>You can view the metrics and sample records for data drift rules in the same way that you
             view data rule metrics and records. For more information, see <xref
-                href="DataAlerts-ViewingMetrics%26Summary.dita"/>.</p>
+                href="DataAlerts-ViewingMetricsSummary.dita"/>.</p>
         <p>For details about the data drift functions, see <xref
                 href="../Expression_Language/DataDriftFunctions.dita#concept_hpn_xfk_p5"/>.</p>
  </conbody>

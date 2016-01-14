@@ -15,9 +15,9 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hcf_11k_br">
     <title>Configuring a Metric Rule and Alert</title>
-    <shortdesc>Create a metric rule and alert to receive alerts when the specified conditions occur.
-        You can configure metric rules and alerts when you configure or monitor a pipeline. You can
-        edit or delete metric rules when they are not active. </shortdesc>
+    <shortdesc>Create a metric rule to receive alerts when the specified conditions occur. You can
+        configure metric rules and alerts when you configure or monitor a pipeline. You can edit or
+        delete metric rules when they are not enabled. </shortdesc>
     <taskbody>
         <context><indexterm>metric alerts<indexterm>configuring</indexterm></indexterm> Configure
             metric alerts based on the metric type, the metric, an element associated with the
@@ -96,7 +96,7 @@
                 <info>The new metric rule displays in the list. </info>
             </step>
             <step>
-                <cmd>To activate the rule, select <uicontrol>Active</uicontrol>.</cmd>
+                <cmd>To enable the rule, select <uicontrol>Active</uicontrol>.</cmd>
                 <info>You can enable and disable email alerts from the list of rules. You can edit
                     and delete inactive rules. </info>
             </step>

@@ -22,7 +22,7 @@
             <dl>
                 <dlentry>
                     <dt>Text</dt>
-                    <dd>Generates a record for each line of text. The origin uses the specified
+                    <dd>Generates a record for each line of text. The origin uses the specified HTTP
                         stream delimiter to determine the beginning and end of each line. </dd>
                     <dd>When a line exceeds the maximum line length defined for the origin, the
                         origin truncates the line. The origin adds a boolean field named Truncated
@@ -30,7 +30,7 @@
                 </dlentry>
                 <dlentry>
                     <dt>JSON</dt>
-                    <dd>Generates a record for each JSON object. The origin uses the specified
+                    <dd>Generates a record for each JSON object. The origin uses the specified HTTP
                         stream delimiter to determine the beginning and end of each JSON object. </dd>
                     <dd>When an object exceeds the maximum object length defined for the origin, the
                         origin processes the object based on the error handling configured for the
@@ -39,8 +39,8 @@
                 <dlentry>
                     <dt>XML</dt>
                     <dd>Generates a record for XML based on the specified delimiter element. When
-                        processing XML data, the origin uses the stream delimiter to define chunks
-                        of XML and then uses the delimiter element to separate the data into
+                        processing XML data, the origin uses the HTTP stream delimiter to define
+                        chunks of XML and then uses the delimiter element to separate the data into
                         records. </dd>
                     <dd>When a record exceeds the user-defined maximum record length, the origin
                         skips the record and continues processing with the next record. It sends the

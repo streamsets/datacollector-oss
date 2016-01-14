@@ -20,7 +20,7 @@
                 alerts<indexterm>configuring</indexterm></indexterm>Create a data drift rule to view
             metrics, sample data, and alerts based on the rule. You can configure data drift rules
             and alerts when you configure or monitor a pipeline. You can edit or delete data drift
-            rules when they are not active. </context>
+            rules when they are not enabled. </context>
         <steps id="steps_mvl_w2k_br">
             <step>
                 <cmd>In the Properties panel or Monitor panel, click the <uicontrol>Data Drift
@@ -86,11 +86,10 @@
                                 </row>
                                 <row>
                                     <entry>Alert Text</entry>
-                                    <entry>Text to display when the alert is triggered. <p>Enter
-                                            text that explains the reason for the alert. For
-                                            example, "Over 100 missing phone numbers."<draft-comment
-                                                author="Loretta">this should change to the new
-                                                function.</draft-comment></p></entry>
+                                    <entry>Text to display when the alert is triggered. <p>By
+                                            default, uses the following expression to  returns text
+                                            related to the drift alert:
+                                                <codeph>${alert:info()}</codeph>.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Send Email</entry>
@@ -110,9 +109,9 @@
                 <info>The new data drift rule displays in the list. </info>
             </step>
             <step>
-                <cmd>To activate the new rule, click <uicontrol>Active</uicontrol>. </cmd>
+                <cmd>To enable the new rule, click <uicontrol>Active</uicontrol>. </cmd>
                 <info>You can enable and disable the meter and alert from the list of rules. You can
-                    edit and delete inactive rules. </info>
+                    edit and delete disabled rules. </info>
             </step>
         </steps>
     </taskbody>

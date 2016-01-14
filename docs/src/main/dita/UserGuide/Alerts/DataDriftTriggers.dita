@@ -18,8 +18,8 @@
  <shortdesc>Data drift alerts trigger when a change of the specified type occurs from record to
         record. </shortdesc>
  <conbody>
-        <p><indexterm>data drift alerts<indexterm>triggers</indexterm></indexterm>For example, say
-            you create an alert that triggers when the number of columns in the record changes. When
+        <p><indexterm>data drift alerts<indexterm>triggers</indexterm></indexterm>For example, you
+            have an alert that triggers when the number of columns in the record changes. When
             processing the records with the following number of columns, an alert triggers for both
             the third and fourth records:<simpletable frame="all" relcolwidth="1.0* 1.0*"
                 id="simpletable_xwv_stg_q5">
