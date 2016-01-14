@@ -19,30 +19,20 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConfigGroups;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.configurablestage.DTarget;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-@StageDef(
-    version = 3,
-    label = "Kinesis Producer",
-    description = "Writes data to Amazon Kinesis",
-    icon = "kinesis.png",
-    upgrader = KinesisTargetUpgrader.class,
-    onlineHelpRefUrl = "index.html#Destinations/KinProducer.html#task_q2j_ml4_yr"
-)
-@ConfigGroups(value = Groups.class)
-@GenerateResourceBundle
-public class KinesisDTarget extends DTarget {
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
 
-  @ConfigDefBean(groups = "KINESIS")
-  public KinesisProducerConfigBean kinesisConfig;
-
-  @Override
-  protected Target createTarget() {
-    return new KinesisTarget(kinesisConfig);
+  public DataFormatChooserValues() {
+    super(
+        DataFormat.TEXT,
+        DataFormat.JSON,
+        DataFormat.AVRO,
+        DataFormat.DELIMITED,
+        DataFormat.SDC_JSON,
+        DataFormat.BINARY,
+        DataFormat.PROTOBUF
+    );
   }
 }

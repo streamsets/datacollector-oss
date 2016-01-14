@@ -17,13 +17,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kinesis;
+package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
-import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class InputRecordFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
-  public InputRecordFormatChooserValues() {
-    super(DataFormat.SDC_JSON, DataFormat.JSON);
+@GenerateResourceBundle
+public enum Groups implements Label {
+  KINESIS("Kinesis"),
+  TEXT("Text"),
+  JSON("JSON"),
+  DELIMITED("Delimited"),
+  AVRO("Avro"),
+  BINARY("Binary"),
+  PROTOBUF("Protobuf"),
+  ;
+
+  private final String label;
+
+  private Groups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 }

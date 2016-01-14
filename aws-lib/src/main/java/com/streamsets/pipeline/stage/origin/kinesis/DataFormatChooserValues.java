@@ -17,32 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.kinesis;
+package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.config.DataFormat;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  KINESIS("Kinesis"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  XML("XML"),
-  LOG("Log"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class DataFormatChooserValues extends BaseEnumChooserValues<DataFormat> {
+  public DataFormatChooserValues() {
+    super(
+        DataFormat.TEXT,
+        DataFormat.JSON,
+        DataFormat.LOG,
+        DataFormat.AVRO,
+        DataFormat.DELIMITED,
+        DataFormat.SDC_JSON,
+        DataFormat.XML,
+        DataFormat.PROTOBUF
+    );
   }
 }

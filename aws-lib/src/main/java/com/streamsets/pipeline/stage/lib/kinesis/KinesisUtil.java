@@ -31,6 +31,7 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorC
 import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.stage.origin.kinesis.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

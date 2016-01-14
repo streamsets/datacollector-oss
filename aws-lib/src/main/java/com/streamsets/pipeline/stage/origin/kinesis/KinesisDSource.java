@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 
 @StageDef(
     version = 3,

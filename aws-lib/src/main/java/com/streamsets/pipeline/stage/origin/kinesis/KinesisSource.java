@@ -38,7 +38,6 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
-import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.RecordsAndCheckpointer;
 import org.slf4j.Logger;

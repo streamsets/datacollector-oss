@@ -39,7 +39,6 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
-import com.streamsets.pipeline.stage.lib.kinesis.Groups;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Partitioner;
 import com.streamsets.pipeline.stage.lib.kinesis.RandomPartitioner;

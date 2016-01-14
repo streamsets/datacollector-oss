@@ -69,7 +69,7 @@ public class DataGeneratorFormatConfig {
     displayPosition = 300,
     group = "#0",
     dependsOn = "dataFormat^",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED", "XML", "LOG"}
+    triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
