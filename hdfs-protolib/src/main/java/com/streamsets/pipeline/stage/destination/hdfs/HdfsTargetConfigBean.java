@@ -75,7 +75,7 @@ public class HdfsTargetConfigBean {
   public static final String HDFS_TARGET_CONFIG_BEAN_PREFIX = "hdfsTargetConfigBean.";
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.STRING,
     label = "Hadoop FS URI",
     description = "",
@@ -708,24 +708,27 @@ public class HdfsTargetConfigBean {
 
   private boolean validateHadoopFS(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean validHapoopFsUri = true;
-    if (hdfsUri.contains("://")) {
-      try {
-        new URI(hdfsUri);
-      } catch (Exception ex) {
-        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
-          ex.toString(), ex));
+    // if hdfsUri is empty, we'll use the default fs uri from hdfs config. no validation required.
+    if (!hdfsUri.isEmpty()) {
+      if (hdfsUri.contains("://")) {
+        try {
+          new URI(hdfsUri);
+        } catch (Exception ex) {
+          issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), null, Errors.HADOOPFS_22, hdfsUri,
+              ex.toString(), ex));
+          validHapoopFsUri = false;
+        }
+      } else {
+        issues.add(
+            context.createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsUri",
+                Errors.HADOOPFS_18,
+                hdfsUri
+            )
+        );
         validHapoopFsUri = false;
       }
-    } else {
-      issues.add(
-          context.createConfigIssue(
-              Groups.HADOOP_FS.name(),
-              HDFS_TARGET_CONFIG_BEAN_PREFIX + "hdfsUri",
-              Errors.HADOOPFS_18,
-              hdfsUri
-          )
-      );
-      validHapoopFsUri = false;
     }
 
     StringBuilder logMessage = new StringBuilder();
