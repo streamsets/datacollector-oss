@@ -36,9 +36,11 @@ public class ResourceControlledScheduledExecutor {
   private static final Logger LOG = LoggerFactory.getLogger(ResourceControlledScheduledExecutor.class);
   private final SafeScheduledExecutorService scheduledExecutorService;
   private final List<Runnable> tasks = new CopyOnWriteArrayList<>();
+
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption) {
     this(maxCpuConsumption, DELAY_MINIMUM);
   }
+
   public ResourceControlledScheduledExecutor(final float maxCpuConsumption, final long minimumDelay) {
     Utils.checkArgument(maxCpuConsumption > 0, "Max CPU Consumption cannot be less than zero");
     scheduledExecutorService = new SafeScheduledExecutorService(2, "ResourceControlledScheduledExecutor");

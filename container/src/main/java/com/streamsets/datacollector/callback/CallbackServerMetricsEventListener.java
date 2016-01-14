@@ -82,7 +82,7 @@ public class CallbackServerMetricsEventListener implements MetricsEventListener 
         throw new RuntimeException("Failed : HTTP error code : "
           + response.getStatus());
       }
-    } catch (Throwable ex) { //TODO - check why jersey throws the following error org.glassfish.jersey.internal.ServiceConfigurationError ( java.util.zip.ZipException: error in opening zip file)
+    } catch (Exception ex) { //TODO - check why jersey throws the following error org.glassfish.jersey.internal.ServiceConfigurationError ( java.util.zip.ZipException: error in opening zip file)
       LOG.warn("Error while calling callback to Callback Server , {}", ex.toString(), ex);
     }
   }

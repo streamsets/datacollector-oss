@@ -84,7 +84,7 @@ public class WrapperDataParserFactory extends DataParserFactory {
     public Record parse() throws IOException, DataParserException {
       try {
         return dataParser.parse();
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         ExceptionUtils.throwUndeclared(normalizeException(ex));
       }
       return null; //unreacheable
@@ -94,7 +94,7 @@ public class WrapperDataParserFactory extends DataParserFactory {
     public String getOffset() throws DataParserException, IOException {
       try {
         return dataParser.getOffset();
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         ExceptionUtils.throwUndeclared(normalizeException(ex));
       }
       return null; //unreacheable
@@ -109,7 +109,7 @@ public class WrapperDataParserFactory extends DataParserFactory {
     public void close() throws IOException {
       try {
         dataParser.close();
-      } catch (Throwable ex) {
+      } catch (Exception ex) {
         ExceptionUtils.throwUndeclared(normalizeException(ex));
       }
     }

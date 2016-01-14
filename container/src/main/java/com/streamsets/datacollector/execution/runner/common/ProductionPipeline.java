@@ -94,12 +94,12 @@ public class ProductionPipeline {
         List<Issue> issues = null;
         try {
           issues = pipeline.init();
-        } catch (Throwable e) {
+        } catch (Throwable throwable) {
           if (!wasStopped()) {
-            LOG.warn("Error while starting: {}", e.toString(), e);
-            stateChanged(PipelineStatus.START_ERROR, e.toString(), null);
+            LOG.warn("Error while starting: {}", throwable.toString(), throwable);
+            stateChanged(PipelineStatus.START_ERROR, throwable.toString(), null);
           }
-          throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, e.toString(), e);
+          throw new PipelineRuntimeException(ContainerError.CONTAINER_0702, throwable.toString(), throwable);
         }
         if (issues.isEmpty()) {
           try {
@@ -111,14 +111,14 @@ public class ProductionPipeline {
               stateChanged(PipelineStatus.FINISHING, null, null);
               finishing = true;
             }
-          } catch (Throwable e) {
+          } catch (Throwable throwable) {
             if (!wasStopped()) {
-              runningErrorMsg = e.toString();
-              LOG.warn("Error while running: {}", runningErrorMsg, e);
+              runningErrorMsg = throwable.toString();
+              LOG.warn("Error while running: {}", runningErrorMsg, throwable);
               stateChanged(PipelineStatus.RUNNING_ERROR, runningErrorMsg, null);
               errorWhileRunning = true;
             }
-            throw e;
+            throw throwable;
           }
         } else {
           LOG.debug("Stopped due to validation error");
@@ -134,9 +134,9 @@ public class ProductionPipeline {
 
         try {
           pipeline.destroy();
-        } catch (Throwable e) {
-          LOG.warn("Error while calling destroy: " + e, e);
-          throw e;
+        } catch (Throwable throwable) {
+          LOG.warn("Error while calling destroy: " + throwable, throwable);
+          throw throwable;
         } finally {
           // if the destroy throws an Exception but pipeline.run() finishes well,
           // me move to finished state

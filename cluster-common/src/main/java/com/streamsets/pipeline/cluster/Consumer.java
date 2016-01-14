@@ -92,13 +92,13 @@ public class Consumer {
       }
       LOG.trace("Returning null");
       return null;
-    } catch (Throwable throwable) {
-      if (!(throwable instanceof ProducerRuntimeException)) {
-        String msg = "Error caught in consumer: " + throwable;
-        LOG.error(msg, throwable);
-        error(throwable);
-      }
-      throw Throwables.propagate(throwable);
+    } catch (ProducerRuntimeException e) {
+      throw Throwables.propagate(e);
+    } catch (Exception e) {
+      String msg = "Error caught in consumer: " + e;
+      LOG.error(msg, e);
+      error(e);
+      throw Throwables.propagate(e);
     }
   }
 

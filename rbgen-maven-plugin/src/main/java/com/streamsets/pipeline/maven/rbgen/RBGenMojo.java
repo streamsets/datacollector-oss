@@ -109,7 +109,7 @@ public class RBGenMojo extends AbstractMojo {
       } else {
         getLog().debug("Project does not use DataCollector API, no bundles jar will be generated");
       }
-    } catch (Throwable ex) {
+    } catch (Exception ex) {
       throw new MojoExecutionException(ex.toString(), ex);
     }
   }

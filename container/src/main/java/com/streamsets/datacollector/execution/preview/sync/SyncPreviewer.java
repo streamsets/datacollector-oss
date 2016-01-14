@@ -117,7 +117,7 @@ public class SyncPreviewer implements Previewer {
     try {
       previewPipeline = buildPreviewPipeline(0, 0, null, false);
       List<Issue> stageIssues = previewPipeline.validateConfigs();
-      PreviewStatus status = stageIssues.size() == 0 ? PreviewStatus.VALID : PreviewStatus.INVALID;
+      PreviewStatus status = stageIssues.isEmpty() ? PreviewStatus.VALID : PreviewStatus.INVALID;
       changeState(status, new PreviewOutputImpl(status, new Issues(stageIssues), null, null));
     } catch (PipelineRuntimeException e) {
       //Preview Pipeline Builder validates configurations and throws PipelineRuntimeException with code CONTAINER_0165
@@ -134,7 +134,7 @@ public class SyncPreviewer implements Previewer {
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
         e.toString()));
       throw e;
-    } catch (Throwable e) {
+    } catch (Exception e) {
       //Wrap stage exception in PipelineException
       changeState(PreviewStatus.VALIDATION_ERROR, new PreviewOutputImpl(PreviewStatus.VALIDATION_ERROR, null, null,
         e.toString()));
@@ -197,7 +197,7 @@ public class SyncPreviewer implements Previewer {
     } catch (PipelineStoreException e) {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw e;
-    } catch (Throwable e) {
+    } catch (Exception e) {
       changeState(PreviewStatus.RUN_ERROR, new PreviewOutputImpl(PreviewStatus.RUN_ERROR, null, null, e.toString()));
       throw new PipelineException(PreviewError.PREVIEW_0003, e.toString(), e);
     } finally {
