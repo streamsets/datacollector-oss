@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class Lz4Codec extends AbstractCodec {
 
   static {
-    LoggerFactory.getLogger(SnappyCodec.class).info("Using SDC Hadoop Lz4Codec");
+    LoggerFactory.getLogger(Lz4Codec.class).info("Using SDC Hadoop Lz4Codec");
   }
 
   private boolean unsafe;
