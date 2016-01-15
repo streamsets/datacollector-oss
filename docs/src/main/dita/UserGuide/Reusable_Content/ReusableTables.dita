@@ -276,5 +276,56 @@
     </tgroup>
    </table>
   </p>
+  <p>
+   <draft-comment author="Loretta"><b>table-JDBCAdvProps</b> - JDBC Consumer uses the whole table,
+    Producer uses all rows but last.</draft-comment>
+   <table frame="all" rowsep="1" colsep="1" id="table-JDBCAdvProps">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry>Advanced Property</entry>
+       <entry>Description</entry>
+      </row>
+     </thead>
+     <tbody>
+      <row id="row-MaxPoolSize">
+       <entry>Maximum Pool Size </entry>
+       <entry>The maximum number of connections to create. <p>Default is 1. The recommended value is
+         1.</p></entry>
+      </row>
+      <row id="row-MaxIdleConn">
+       <entry>Minimum Idle Connections</entry>
+       <entry>The minimum number of connections to create and maintain. To define a fixed connection
+        pool, set to the same value as Maximum Pool Size. <p>Default is 1. </p></entry>
+      </row>
+      <row id="row-ConTimeout">
+       <entry>Connection Timeout</entry>
+       <entry>Maximum time to wait for a connection. Use a time constant in an expression to define
+        the time increment. <p>Default is 30 seconds, defined as follows:
+         <codeblock>${30 * SECONDS}</codeblock></p></entry>
+      </row>
+      <row id="row-IdleTimeout">
+       <entry>Idle Timeout</entry>
+       <entry>Maximum time to allow a connection to idle. Use a time constant in an expression to
+        define the time increment. <p>Use 0 to avoid removing any idle connections.</p><p>Default is
+         30 minutes, defined as follows: <codeblock>${30 * MINUTES}</codeblock></p></entry>
+      </row>
+      <row id="row-MaxConLife">
+       <entry>Max Connection Lifetime</entry>
+       <entry>Maximum lifetime for a connection. Use a time constant in an expression to define the
+        time increment. <p>Use 0 to avoid removing any idle connections.</p><p>Default is 30
+         seconds, defined as follows: <codeblock>${30 * SECONDS}</codeblock></p></entry>
+      </row>
+      <row>
+       <entry>Enforce Read-only Connection</entry>
+       <entry>Creates read-only connections to avoid any type of write. <p>Selected by default.
+         Clearing this property is not recommended. </p></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
  </conbody>
 </concept>

@@ -232,7 +232,7 @@
 
                                     <td class="entry" valign="top" width="70%" headers="d19165e233 ">Determines how the destination inserts records. Select to
                                         allow inserts of multiple rows at a time. Clear to insert a
-                                        single-row at a time. </td>
+                                        single row at a time. </td>
 
                                 </tr>
 
@@ -369,9 +369,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d19165e486">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d19165e484">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d19165e489">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d19165e487">Description</th>
 
                                 </tr>
 
@@ -379,65 +379,57 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d19165e486 ">Maximum Pool Size </td>
+       <td class="entry" valign="top" width="30%" headers="d19165e484 ">Maximum Pool Size </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d19165e489 ">The maximum number of connections to create to the origin
-                                        system. <p class="p">Default is 1. The recommended value is
-                                                1.</p>
+       <td class="entry" valign="top" width="70%" headers="d19165e487 ">The maximum number of connections to create. <p class="p">Default is 1. The recommended value is
+         1.</p>
 </td>
 
-                                </tr>
+      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d19165e486 ">Minimum Idle Connections</td>
+       <td class="entry" valign="top" width="30%" headers="d19165e484 ">Minimum Idle Connections</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d19165e489 ">The minimum number of connections to create and maintain.
-                                        To define a fixed connection pool, set to the same value as
-                                        Maximum Pool Size. <p class="p">Default is 1. </p>
+       <td class="entry" valign="top" width="70%" headers="d19165e487 ">The minimum number of connections to create and maintain. To define a fixed connection
+        pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1. </p>
 </td>
 
-                                </tr>
+      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d19165e486 ">Connection Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d19165e484 ">Connection Timeout</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d19165e489 ">Maximum time to wait for a connection. Use a time
-                                        constant in an expression to define the time increment.
-                                            <div class="p">Default is 30 seconds, defined as follows:
-                                            <pre class="pre codeblock">${30 * SECONDS}</pre>
+       <td class="entry" valign="top" width="70%" headers="d19165e487 ">Maximum time to wait for a connection. Use a time constant in an expression to define
+        the time increment. <div class="p">Default is 30 seconds, defined as follows:
+         <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
 </td>
 
-                                </tr>
+      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d19165e486 ">Idle Timeout</td>
+       <td class="entry" valign="top" width="30%" headers="d19165e484 ">Idle Timeout</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d19165e489 ">Maximum time to allow a connection to idle. Use a time
-                                        constant in an expression to define the time increment.
-                                            <p class="p">Use 0 to avoid removing any idle
-                                            connections.</p>
-<div class="p">Default is 30 minutes, defined as
-                                            follows:
-                                        <pre class="pre codeblock">${30 * MINUTES}</pre>
+       <td class="entry" valign="top" width="70%" headers="d19165e487 ">Maximum time to allow a connection to idle. Use a time constant in an expression to
+        define the time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
+<div class="p">Default is
+         30 minutes, defined as follows: <pre class="pre codeblock">${30 * MINUTES}</pre>
 </div>
 </td>
 
-                                </tr>
+      </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d19165e486 ">Max Connection Lifetime</td>
+       <td class="entry" valign="top" width="30%" headers="d19165e484 ">Max Connection Lifetime</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d19165e489 ">Maximum lifetime for a connection. Use a time constant in
-                                        an expression to define the time increment. <p class="p">Use 0 to
-                                            avoid removing any idle connections.</p>
+       <td class="entry" valign="top" width="70%" headers="d19165e487 ">Maximum lifetime for a connection. Use a time constant in an expression to define the
+        time increment. <p class="p">Use 0 to avoid removing any idle connections.</p>
 <div class="p">Default is 30
-                                            seconds, defined as follows:
-                                            <pre class="pre codeblock">${30 * SECONDS}</pre>
+         seconds, defined as follows: <pre class="pre codeblock">${30 * SECONDS}</pre>
 </div>
 </td>
 
-                                </tr>
+      </tr>
 
                             </tbody>
 
