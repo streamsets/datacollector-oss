@@ -42,31 +42,13 @@
                                 </row>
                             </thead>
                             <tbody>
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="Directory-DataFormat.dita#concept_gz5_dqw_yq">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/>
-                                        </xref></entry>
-                                    <entry>Data format for source files. Use one of the following
-                                            formats:<ul id="ul_y1t_wql_5q">
-                                            <li>Text</li>
-                                            <li>JSON</li>
-                                            <li>Delimited</li>
-                                            <li>XML</li>
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_wjh_ycl_br"
-                                                  placement="inline" /></xref></li>
-                                            <li>Log</li>
-                                            <li>Avro</li>
-                                        </ul></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3DataFormat">
+                                    <entry/>
                                 </row>
-                                <row>
-                                    <entry>Files Charset</entry>
-                                    <entry>Character encoding of the data to be processed. <p>Not
-                                            used for the SDC Record or Avro data
-                                        formats.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
@@ -236,6 +218,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-File">
                 <cmd/>
             </step>
         </steps>

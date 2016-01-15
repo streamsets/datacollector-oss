@@ -89,8 +89,9 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Data Charset</entry>
-                                    <entry>Character set to use when writing data.</entry>
+                                    <entry>Charset</entry>
+                                    <entry>Character set to use when writing data. <p>Not used with
+                                            all data formats.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Compress with Gzip</entry>

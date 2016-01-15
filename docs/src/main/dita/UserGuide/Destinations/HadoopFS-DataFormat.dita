@@ -33,13 +33,10 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry>
-          <dt>Avro</dt>
-          <dd>The destination writes records based on the Avro schema that you provide. The schema
-            definition is included in each file.</dd>
-          <dd>You can also compress data with the supported Avro compression codecs, as long as the
-            Hadoop FS compression is not used.<draft-comment author="Loretta">see if we can/eed to
-              genericize this for all the stages.</draft-comment></dd>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
+          <dt/>
+          <dd/>
         </dlentry>
         <dlentry
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DestDF-ProtoFile">

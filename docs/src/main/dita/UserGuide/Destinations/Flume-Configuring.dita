@@ -122,9 +122,9 @@
                                             <li>Avro</li>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>Event Charset</entry>
-                                    <entry>Character encoding of the events to be processed.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>One Event per Batch</entry>

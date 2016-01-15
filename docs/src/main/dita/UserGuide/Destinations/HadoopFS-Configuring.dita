@@ -141,10 +141,9 @@
                                                 <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.
                                         </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Data Charset</entry>
-                                    <entry>Character encoding to use when writing data. <p>Not used
-                                            for the SDC Record data format.</p></entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-file">
+                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Directory Template <xref
@@ -189,8 +188,7 @@
                                 </row>
                                 <row>
                                     <entry>Compression Codec</entry>
-                                    <entry>Program to use to compress output files:<ul
-                                            id="ul_ltx_djg_br">
+                                    <entry>Compression type for output files:<ul id="ul_ltx_djg_br">
                                             <li>None </li>
                                             <li>gzip</li>
                                             <li>bzip2</li>
@@ -205,8 +203,7 @@
                                 <row>
                                     <entry>Compression Codec Class</entry>
                                     <entry>Full class name of the other compression codec that you
-                                        want to use. <p>When writing Avro data with compression, set
-                                            this property to None.</p></entry>
+                                        want to use. </entry>
                                 </row>
                                 <row>
                                     <entry>Sequence File Key</entry>

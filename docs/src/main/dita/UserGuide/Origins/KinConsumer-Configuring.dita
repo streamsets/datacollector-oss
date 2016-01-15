@@ -133,10 +133,9 @@
                                             avoid data preview timeouts.</p><p>Default is
                                             60,000.</p></entry>
                                 </row>
-                                <row>
-                                    <entry>Charset</entry>
-                                    <entry>Character encoding of the messages to be
-                                        processed.</entry>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
+                                    <entry/>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">

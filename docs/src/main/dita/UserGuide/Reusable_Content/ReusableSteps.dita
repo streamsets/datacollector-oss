@@ -1027,69 +1027,6 @@
                     </table>
                 </info>
             </step>
-            <step id="JDBC-Advanced">
-                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure advanced
-                    properties.</cmd>
-                <info>The defaults for these properties should work in most cases:<table frame="all"
-                        rowsep="1" colsep="1" id="table_wnj_hf3_p5">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Advanced Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Maximum Pool Size </entry>
-                                    <entry>The maximum number of connections to create to the origin
-                                        system. <p>Default is 1. The recommended value is
-                                                1.<draft-comment author="Loretta">Adam - do we want
-                                                to say why? or when it would be an ok idea to fiddle
-                                                with this?</draft-comment></p></entry>
-                                </row>
-                                <row>
-                                    <entry>Minimum Idle Connections</entry>
-                                    <entry>The minimum number of connections to create and maintain.
-                                        To define a fixed connection pool, set to the same value as
-                                        Maximum Pool Size. <p>Default is 1. </p></entry>
-                                </row>
-                                <row>
-                                    <entry>Connection Timeout</entry>
-                                    <entry>Maximum time to wait for a connection. Use a time
-                                        constant in an expression to define the time increment.
-                                            <p>Default is 30 seconds, defined as follows:
-                                            <codeblock>${30 * SECONDS}</codeblock></p></entry>
-                                </row>
-                                <row>
-                                    <entry>Idle Timeout</entry>
-                                    <entry>Maximum time to allow a connection to idle. Use a time
-                                        constant in an expression to define the time increment.
-                                            <p>Use 0 to avoid removing any idle
-                                            connections.</p><p>Default is 30 minutes, defined as
-                                            follows:
-                                        <codeblock>${30 * MINUTES}</codeblock></p></entry>
-                                </row>
-                                <row>
-                                    <entry>Max Connection Lifetime</entry>
-                                    <entry>Maximum lifetime for a connection. Use a time constant in
-                                        an expression to define the time increment. <p>Use 0 to
-                                            avoid removing any idle connections.</p><p>Default is 30
-                                            seconds, defined as follows:
-                                            <codeblock>${30 * SECONDS}</codeblock></p></entry>
-                                </row>
-                                <row>
-                                    <entry>Enforce Read-only Connection</entry>
-                                    <entry>Creates read-only connections to avoid any type of write.
-                                            <p>Selected by default. Clearing this property is not
-                                            recommended. </p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table></info>
-            </step>
             <step id="DEST_INFO">
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>DESTINATION -
@@ -1261,7 +1198,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-Event</uicontrol> - Used in
-                        Flume.</draft-comment>
+                        Flume. Flume doesn't have other compression types, so it's not getting that
+                        note. </draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-Event">
@@ -1289,6 +1227,14 @@
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</note></entry>
+                                </row>
+                                <row>
+                                    <entry>Avro Compression Codec</entry>
+                                    <entry>The Avro compression type to use. <p>When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. <draft-comment author="Loretta"
+                                                >should I remove this? Is there Flume
+                                                compression?</draft-comment></p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1324,7 +1270,9 @@
                                 </row>
                                 <row>
                                     <entry>Avro Compression Codec</entry>
-                                    <entry>The Avro compression codec to use. </entry>
+                                    <entry>The Avro compression type to use. <p>When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1365,7 +1313,9 @@
                                 </row>
                                 <row>
                                     <entry>Avro Compression Codec</entry>
-                                    <entry>The Avro compression codec to use. </entry>
+                                    <entry>The Avro compression type to use. <p>When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1663,8 +1613,7 @@
                                             <li>gzip</li>
                                             <li>bzip2</li>
                                             <li>Snappy</li>
-                                            <li>Other - use for LZO or other compression types.
-                                            </li>
+                                            <li>Other - Use for LZO or other compression types. </li>
                                         </ul><p>LZO compression require additional configuration.
                                             For more information, see <xref
                                                 href="../Destinations/HadoopFS-Comp-LZO.dita"
@@ -1855,10 +1804,9 @@
                                                 <li>Binary</li>
                                             </ul></entry>
                                     </row>
-                                    <row>
-                                        <entry>Messages Charset</entry>
-                                        <entry>Character encoding to use when writing data. <p>Not
-                                                used for the SDC Record data format.</p></entry>
+                                    <row
+                                        conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                        <entry/>
                                     </row>
                                     <row id="KPOneMessPBatch">
                                         <entry>One Message per Batch</entry>

@@ -38,6 +38,8 @@
         <dd>You can optionally include the schema definition as part of the Flume event. Omitting
           the schema definition can improve performance, but requires the appropriate schema
           management to avoid losing track of the schema associated with the data.</dd>
+        <dd>You can also compress data with an Avro compression codec. When using Avro compression,
+          do not use other compression available in the destination. </dd>
       </dlentry>
       <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-SDC">
         <dt/>

@@ -38,8 +38,11 @@
    </table>
   </p>
   <p>
-   <draft-comment author="Loretta">The following MaxBatchSize and BatchWaitTime rows are used in
-    Configuring Kafka Consumer, JMS Consumer. See if they should go anywhere else.</draft-comment>
+   <draft-comment author="Loretta">ORIGIN rows - The following MaxBatchSize and BatchWaitTime rows
+    are used in Configuring Kafka Consumer, JMS Consumer. See if they should go anywhere
+    else.</draft-comment>
+   <draft-comment author="Loretta">Charsets are used by message and file origins. But Directory
+    Charset is standalone. </draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_tft_4jk_dt">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
@@ -60,14 +63,14 @@
        <entry>Number of milliseconds to wait before sending a partial or empty batch. </entry>
       </row>
       <row id="MessagesCharset">
-       <entry>Messages Charset</entry>
-       <entry>Character encoding of the messages to be processed.<p>Not used for the Avro, Binary,
-         Protobuf or SDC Record data formats.</p></entry>
+       <entry>Charset<draft-comment author="Loretta">message origins</draft-comment></entry>
+       <entry>Character encoding of the messages to be processed.<p>Not used for all data
+         formats.</p></entry>
       </row>
       <row id="Charset">
-       <entry>Charset</entry>
-       <entry>Character encoding of the messages to be processed.<p>Not used for the Avro, Binary,
-         Protobuf or SDC Record data formats.</p></entry>
+       <entry>Charset<draft-comment author="Loretta">file origins</draft-comment></entry>
+       <entry>Character encoding of the files to be processed.<p>Not used for all data
+        formats.</p></entry>
       </row>
       <row>
        <entry>Compression Type</entry>
@@ -115,14 +118,14 @@
   </table>
   <p>
    <draft-comment author="Loretta">The following table is used in full for the Amazon S3 origin and
-    the Amazon S3 destination reuses individual rows. File Compression row is also used in Directory
-    configuring.</draft-comment>
+    the Amazon S3 destination reuses individual rows. Data Format and File Compression are also used
+    in Directory.</draft-comment>
   </p>
   <p>
    <table frame="all" rowsep="1" colsep="1" id="AmazonS3-oProps">
     <tgroup cols="2">
-     <colspec colname="c1" colnum="1" colwidth="1*"/>
-     <colspec colname="c2" colnum="2" colwidth="2.57*"/>
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <thead>
       <row>
        <entry>File Property</entry>
@@ -207,9 +210,10 @@
            <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wjh_ycl_br"
             placement="inline"/></xref></li>
          <li>XML</li>
+         <li>Protobuf</li>
         </ul></entry>
       </row>
-      <row conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+      <row conref="#concept_wfr_rnw_yq/Charset">
        <entry/>
       </row>
       <row
@@ -220,13 +224,53 @@
        <entry>Compression Format <xref href="../Origins/FileCompressionFormats.dita">
          <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
           id="image_xqq_yv4_c5"/></xref></entry>
-       <entry>The compression type of the files:<ul id="ul_vph_jp2_qs">
+       <entry>The compression format of the files:<ul id="ul_vph_jp2_qs">
          <li>None - Processes only uncompressed files.</li>
          <li>Compressed File - Processes files compressed by the supported compression formats.</li>
          <li>Archive - Processes files archived by the supported archive formats.</li>
          <li>Compressed Archive - Processes files archived and compressed by the supported archive
           and compression formats.</li>
         </ul></entry>
+      </row>
+     </tbody>
+    </tgroup>
+   </table>
+  </p>
+  <p>
+   <draft-comment author="Loretta">DESTINATION rows</draft-comment>
+  </p>
+  <p>
+   <table frame="all" rowsep="1" colsep="1" id="table_l3k_ksh_r5">
+    <tgroup cols="2">
+     <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+     <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+     <thead>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+     </thead>
+     <tbody>
+      <row id="D-CHARSET-file">
+       <entry>Charset</entry>
+       <entry>Character set to use when writing files. <p>Not used with all data
+        formats.</p></entry>
+      </row>
+      <row id="D-CHARSET-other">
+       <entry>Charset</entry>
+       <entry>Character set to use when writing data. <p>Not used with all data formats.</p></entry>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+      <row>
+       <entry/>
+       <entry/>
       </row>
      </tbody>
     </tgroup>

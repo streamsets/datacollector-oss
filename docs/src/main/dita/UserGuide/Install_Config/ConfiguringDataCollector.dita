@@ -187,6 +187,12 @@
                                 <entry>Maximum number of WebSocket calls allowed. </entry>
                             </row>
                             <row>
+                                <entry>ui.header.title</entry>
+                                <entry>Optional text to display in the <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> console next to the StreamSets logo.</entry>
+                            </row>
+                            <row>
                                 <entry>ui.help.base.url</entry>
                                 <entry>Base URL for the local <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

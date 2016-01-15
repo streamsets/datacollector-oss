@@ -41,7 +41,8 @@
                     <dt>Avro</dt>
                     <dd>The destination writes records based on the Avro schema that you provide.
                     </dd>
-                    <dd>You can also compress data with the supported Avro compression codecs.</dd>
+                    <dd>You can also compress data with an Avro compression codec. When using Avro
+                        compression, do not use other compression available in the destination. </dd>
                 </dlentry>
                 <dlentry
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-SDC">
