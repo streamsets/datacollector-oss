@@ -187,9 +187,9 @@ public class MiniITDataCollector implements DataCollector {
           } catch (IllegalStateException ignored) {
           }
           LOG.debug("Stopping, reason: programmatic stop()");
-        } catch(Exception e) {
-          String msg = "Error running pipeline: " + e;
-          LOG.error(msg, e);
+        } catch(Throwable throwable) {
+          String msg = "Error running pipeline: " + throwable;
+          LOG.error(msg, throwable);
         }
       }
     };

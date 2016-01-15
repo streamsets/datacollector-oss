@@ -284,14 +284,14 @@ public class HiveTarget extends BaseTarget {
             }
           }
       ));
+    } catch (Error | IOException | InterruptedException e) {
+      LOG.error("Received unknown error in validation: {}", e.toString(), e);
+      issues.add(getContext().createConfigIssue(Groups.HIVE.name(), "", Errors.HIVE_01, e.toString()));
     } catch (UndeclaredThrowableException e) {
       LOG.error("Received unknown error in validation: {}", e.toString(), e);
       issues.add(
           getContext().createConfigIssue(Groups.HIVE.name(), "", Errors.HIVE_01, e.getUndeclaredThrowable().toString())
       );
-    } catch (Exception e) {
-      LOG.error("Received unknown error in validation: {}", e.toString(), e);
-      issues.add(getContext().createConfigIssue(Groups.HIVE.name(), "", Errors.HIVE_01, e.toString()));
     }
 
     // Now apply any custom mappings

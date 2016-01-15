@@ -439,7 +439,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<SnapshotInfo> getSnapshotsInfo() {
-    return Collections.emptyList();
+    return Collections.EMPTY_LIST;
   }
 
   @Override
@@ -492,7 +492,7 @@ public class ClusterRunner extends AbstractRunner {
 
   @Override
   public List<AlertInfo> getAlerts() throws PipelineStoreException {
-    return Collections.emptyList();
+    return Collections.EMPTY_LIST;
   }
 
   @Override
@@ -573,7 +573,7 @@ public class ClusterRunner extends AbstractRunner {
     }
   }
 
-  private static void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
+  private void checkState(boolean expr, ContainerError error, Object... args) throws PipelineRunnerException {
     if (!expr) {
       throw new PipelineRunnerException(error, args);
     }
@@ -666,9 +666,9 @@ public class ClusterRunner extends AbstractRunner {
     public void run() {
       try {
         checkStatus();
-      } catch (Exception e) {
-        String msg = "Unexpected error: " + e;
-        LOG.error(msg, e);
+      } catch (Throwable throwable) {
+        String msg = "Unexpected error: " + throwable;
+        LOG.error(msg, throwable);
       }
     }
 

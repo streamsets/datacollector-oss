@@ -98,23 +98,22 @@ public class Producer {
               throw new ConsumerRuntimeException(Utils.format("Consumer encountered error: {}", throwable), throwable);
             default:
               throw new IllegalStateException(Utils.format("Illegal control message type: '{}'",
-                  controlMessage.getType()));
+                controlMessage.getType()));
           }
         }
         TimeUnit.MILLISECONDS.sleep(10);
       }
-    } catch (ConsumerRuntimeException e) {
+    } catch (Throwable throwable) {
       controlChannel.producerComplete();
-      throw Throwables.propagate(e);
-    } catch (Exception e) {
-      controlChannel.producerComplete();
-      String msg = "Error caught in producer: " + e;
-      LOG.error(msg, e);
-      controlChannel.producerError(e);
-      if (producerError == null) {
-        producerError = e;
+      if (!(throwable instanceof ConsumerRuntimeException)) {
+        String msg = "Error caught in producer: " + throwable;
+        LOG.error(msg, throwable);
+        controlChannel.producerError(throwable);
+        if (producerError == null) {
+          producerError = throwable;
+        }
       }
-      throw Throwables.propagate(e);
+      throw Throwables.propagate(throwable);
     }
   }
 

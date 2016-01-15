@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import javax.security.auth.Subject;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -182,12 +183,11 @@ public class EmbeddedDataCollector implements DataCollector {
               } catch (IllegalStateException ignored) {
                 // thrown when we try and remove the shutdown
                 // hook but it is already running
-                LOG.trace("Exception while removing shutdown hook", ignored);
               }
               LOG.debug("Stopping, reason: programmatic stop()");
-            } catch (Exception e) {
-              String msg = "Error running pipeline: " + e;
-              LOG.error(msg, e);
+            } catch (Throwable throwable) {
+              String msg = "Error running pipeline: " + throwable;
+              LOG.error(msg, throwable);
             }
           }
         };
