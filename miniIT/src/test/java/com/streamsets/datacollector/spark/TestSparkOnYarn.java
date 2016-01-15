@@ -33,6 +33,7 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.MiniYARNCluster;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
+@Ignore
 public class TestSparkOnYarn {
   private static final Logger LOG = LoggerFactory.getLogger(TestSparkOnYarn.class);
   private static MiniYARNCluster miniYarnCluster;
