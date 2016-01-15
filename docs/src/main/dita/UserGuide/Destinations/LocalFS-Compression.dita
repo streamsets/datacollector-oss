@@ -25,12 +25,10 @@
           the Local FS destination</indexterm></indexterm>Other compression formats do not require
       additional configuration.<draft-comment author="Loretta">Doc-Make sure updates in this topic
         get into the Hadoop FS version. </draft-comment></p>
-  <p>
-      <draft-comment author="Loretta">TUCU - This is from Hadoop FS -- is there some validity for
-        Local FS? Or just delete? "Due to JVM limitations, you can use LZO compression with only one
-        version of Hadoop FS. If you installed multiple library versions, make sure to configure the
-          <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-        use compression with the version that you want to use. "</draft-comment>
-    </p>
+    <p>Due to JVM limitations, you can use LZO compression with only one version of Local FS. If you
+      installed multiple libraries that include the Local FS destination, make sure to configure the
+        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
+      compression with the version that you want to use. <draft-comment author="Loretta">checking on
+        this - need to add Hadoop fs?</draft-comment></p>
  </conbody>
 </concept>

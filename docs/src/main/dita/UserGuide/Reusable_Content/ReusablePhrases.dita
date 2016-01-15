@@ -344,8 +344,8 @@
             </p>
             <p>
                   <draft-comment author="Loretta"><b>DESTDataF-Text</b> and others in this list are
-                        - used by Kafka, Flume, Hadoop FS, Local FS. Avro might not be used by
-                        anyone.</draft-comment>
+                        used by Kafka, Flume, Hadoop FS, Local FS. AvroFile by Local and Hadoop FS.
+                        AvroMess- used by Kafka and Kinesis Producer.</draft-comment>
                   <dl id="DESTDataFormats">
                         <dlentry id="DESTDataF-Text">
                               <dt>Text</dt>
@@ -380,6 +380,17 @@
                               <dt>Avro</dt>
                               <dd>The destination writes records based on the Avro schema that you
                                     provide. The schema definition is included in each file.</dd>
+                              <dd>You can also compress data with an Avro compression codec.</dd>
+                        </dlentry>
+                        <dlentry id="D-DF-AvroMess">
+                              <dt>Avro</dt>
+                              <dd>The destination writes records based on the Avro schema that you
+                                    provide. </dd>
+                              <dd>You can optionally include the schema definition as part of the
+                                    message. Omitting the schema definition can improve performance,
+                                    but requires the appropriate schema management to avoid losing
+                                    track of the schema associated with the data.</dd>
+                              <dd>You can also compress data with an Avro compression codec.</dd>
                         </dlentry>
                         <dlentry id="DEST-DataF-SDC">
                               <dt>SDC Record</dt>

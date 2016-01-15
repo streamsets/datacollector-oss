@@ -205,7 +205,8 @@
                                 <row>
                                     <entry>Compression Codec Class</entry>
                                     <entry>Full class name of the other compression codec that you
-                                        want to use. </entry>
+                                        want to use. <p>When writing Avro data with compression, set
+                                            this property to None.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Sequence File Key</entry>

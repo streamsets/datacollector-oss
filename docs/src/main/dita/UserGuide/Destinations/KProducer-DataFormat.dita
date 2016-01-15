@@ -34,12 +34,9 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry>
-          <dt>Avro</dt>
-          <dd>The destination writes records based on the Avro schema that you provide. </dd>
-          <dd>You can optionally include the schema definition as part of the Kafka message.
-            Omitting the schema definition can improve performance, but requires the appropriate
-            schema management to avoid losing track of the schema associated with the data.</dd>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/D-DF-AvroMess">
+          <dt/>
+          <dd/>
         </dlentry>
         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-SDC">
           <dt/>

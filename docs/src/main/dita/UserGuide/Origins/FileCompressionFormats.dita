@@ -49,7 +49,7 @@
                   <li>lzma</li>
                   <li>Pack200</li>
                   <li>DEFLATE</li>
-                  <li>Z</li>
+                  <li>Z<draft-comment author="Loretta">add framed-snappy?</draft-comment></li>
                 </ul></entry>
             </row>
             <row>
@@ -59,7 +59,7 @@
                   <li>7z</li>
                   <li>ar</li>
                   <li>arj</li>
-                  <li>cplo</li>
+                  <li>cpio</li>
                   <li>dump</li>
                   <li>tar</li>
                   <li>zip</li>

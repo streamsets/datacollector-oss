@@ -37,10 +37,10 @@
                     /> environment file, set the Java system property java.library.path to the
                     location of the LZO native library. </cmd>
                 <info>Add the property to the SDC_JAVA_OPTS environment variable as
-                    follows:<codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock></info>
-                <info><codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock>For
-                    information about configuring the SDC_JAVA_OPTS environment variable, see <xref
-                        href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</info>
+                        follows:<codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock><p>For
+                        information about configuring the SDC_JAVA_OPTS environment variable, see
+                            <xref href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"
+                        />.</p></info>
             </step>
             <step>
                 <cmd>In the destination, select the <uicontrol>Other</uicontrol> compression codec

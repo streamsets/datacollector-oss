@@ -102,6 +102,7 @@
    <topicmeta>
    <shortdesc/>
   </topicmeta>
+   <topicref href="../Destinations/KinProducer-DataFormat.dita"/>
    <topicref href="../Destinations/KinProducer-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/LocalFS.dita" chunk="to-content">

@@ -17,8 +17,6 @@
     <title>Enabling LZO Compression</title>
     <taskbody>
         <context>
-            <draft-comment author="Loretta">TUCU: Is this necessary? What doc updates here for
-                Local FS?</draft-comment>
             <p><indexterm>LZO compression<indexterm>enabling for Local
                     FS</indexterm></indexterm><indexterm>Local FS destination<indexterm>enabling LZO
                         compression</indexterm></indexterm>To use LZO compression with Local FS, you
@@ -28,20 +26,18 @@
         </context>
         <steps id="steps_n21_q13_45">
             <step>
-                <cmd>If necessary, install the LZO native library. <draft-comment author="Loretta"
-                        >TUCU: is this right? what library needs to be
-                    installed?</draft-comment></cmd>
+                <cmd>If necessary, install the Apache Hadoop 2.6.0 native libraries.</cmd>
             </step>
             <step>
                 <cmd>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> environment file, set the Java system property java.library.path to the
-                    location of the LZO native library. </cmd>
+                    location of the Apache Hadoop 2.6.0 native libraries. </cmd>
                 <info>Add the property to the SDC_JAVA_OPTS environment variable as
-                    follows:<codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock></info>
-                <info><codeblock>-Djava.library.path=&lt;path to LZO native library></codeblock>For
-                    information about configuring the SDC_JAVA_OPTS environment variable, see <xref
-                        href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"/>.</info>
+                        follows:<codeblock>-Djava.library.path=&lt;path to Apache Hadoop 2.6.0 native libraries></codeblock><p>For
+                        information about configuring the SDC_JAVA_OPTS environment variable, see
+                            <xref href="../Install_Config/JavaConfigOptions.dita#concept_vrx_4fg_qr"
+                        />.</p></info>
             </step>
             <step>
                 <cmd>In the destination, select the <uicontrol>Other</uicontrol> compression codec

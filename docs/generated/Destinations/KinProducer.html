@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. It does ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Producer"></meta><meta name="abstract" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. It does not write JSON arrays."></meta><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write JSON or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple objects. It does not write JSON arrays."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_swk_h1j_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster. When you configure Kinesis Producer, you specify the Amazon Web Services connection information for your Kinesis cluster and ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Kinesis Producer"></meta><meta name="abstract" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster."></meta><meta name="description" content="The Kinesis Producer destination writes data to an Amazon Kinesis cluster."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_swk_h1j_yr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Kinesis Producer</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,9 +35,7 @@
  <h1 class="title topictitle1">Kinesis Producer</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Kinesis Producer destination writes data to an Amazon Kinesis cluster. You can write
-    JSON or SDC Record data to Kinesis. Kinesis Producer writes JSON data to Kinesis as multiple
-    objects. It does not write JSON arrays.</p>
+ <div class="body conbody"><p class="shortdesc">The Kinesis Producer destination writes data to an Amazon Kinesis cluster. </p>
 
     <p class="p">When you configure Kinesis Producer, you specify the
       Amazon Web Services connection information for your Kinesis cluster and the data format to
@@ -52,12 +50,101 @@
       </ul>
 </div>
 
-    <p class="p">Kinesis Producer writes data to the Kinesis cluster using a round-robin partition strategy.
-    </p>
-
   </div>
 
 <div class="related-links"></div>
+<div class="topic concept nested1" id="concept_x33_b5c_r5">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+  <p class="p">Kinesis Producer writes data to Kinesis
+            based on the data format that you select. You can use the following data formats:</p>
+
+        <dl class="dl">
+            
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
+            
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_x33_b5c_r5__d1316e544">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+            
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, you must ensure that the data uses the
+                                    following data structure:<ul class="ul" id="concept_x33_b5c_r5__d1316e561">
+                                          <li class="li">A root field that contains an array of maps.</li>
+
+                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
+                                                optional <dfn class="term">header</dfn> element.</li>
+
+                                    </ul>
+</dd>
+
+                        
+            
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema that you
+                                    provide. </dd>
+
+                              <dd class="dd">You can optionally include the schema definition as part of the
+                                    message. Omitting the schema definition can improve performance,
+                                    but requires the appropriate schema management to avoid losing
+                                    track of the schema associated with the data.</dd>
+
+                              <dd class="dd">You can also compress data with an Avro compression codec.</dd>
+
+                        
+            
+                              <dt class="dt dlterm">SDC Record</dt>
+
+                              <dd class="dd">The destination writes records in the SDC Record data format.
+                              </dd>
+
+                        
+            
+                        <dt class="dt dlterm">Binary</dt>
+
+                        <dd class="dd">The destination writes binary data from a single field in the record.
+                        </dd>
+
+                  
+            
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes one record in a message. Uses the user-defined message type and
+                              the definition of the message type in the descriptor file to generate
+                              the message. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+        </dl>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_q2j_ml4_yr">
     <h2 class="title topictitle2">Configuring a Kinesis Producer Destination</h2>
 
@@ -79,9 +166,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21543e97">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e221">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21543e100">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e224">Description</th>
 
                                 </tr>
 
@@ -89,24 +176,24 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e97 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e221 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e100 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e97 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e100 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e224 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e97 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e221 ">Description</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e224 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e221 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_q2j_ml4_yr__d1250e1584" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e100 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e224 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -114,10 +201,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e97 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e221 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_q2j_ml4_yr__d1250e1598" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e100 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e224 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -125,9 +212,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e97 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e221 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e100 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d1250e1614">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e224 ">Error record handling for the stage: <ul class="ul" id="task_q2j_ml4_yr__d1250e1614">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -153,15 +240,14 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-                    
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__table_cgq_yn4_yr" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21543e212">Kinesis Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e333">Kinesis Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21543e215">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e336">Description</th>
 
                                 </tr>
 
@@ -169,29 +255,55 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">Endpoint</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Access Key ID</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">Amazon Web Services region that hosts the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">AWS access key ID with privileges for the Kinesis
+                                        stream.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Secret Access Key</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">AWS secret access key with privileges for the Kinesis
+                                        stream.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Region</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Amazon Web Services region that hosts the
                                         cluster.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">Stream Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Stream Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">Kinesis stream name.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Kinesis stream name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">Data Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Data Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">Format of data to be written. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Format of data to be written. Use one of the following
                                             options:<ul class="ul" id="task_q2j_ml4_yr__ul_un2_cqd_br">
+                                            <li class="li">Text</li>
+
                                             <li class="li">JSON</li>
+
+                                            <li class="li">Delimited</li>
 
                                             <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
                                                   <img class="image" id="task_q2j_ml4_yr__image_wjh_ycl_br" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Binary</li>
+
+                                            <li class="li">Protobuf</li>
 
                                         </ul>
 </td>
@@ -199,26 +311,366 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">Partition Strategy</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Partitioning Strategy</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">Strategy to write data to Kinesis shards. Kinesis
-                                        Producer uses a round-robin strategy at this tie. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">AWS Access Key ID</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">AWS access key ID with privileges for the Kinesis
-                                        stream.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Strategy to write data to Kinesis shards. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21543e212 ">AWS Secret Access Key</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Partition Expression</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21543e215 ">AWS secret access key with privileges for the Kinesis
-                                        stream.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Expression to use to pass data to different partitions.
+                                            <p class="p">Use for the expression partition strategy.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Kinesis Producer Configuration</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Additional Kinesis properties. <p class="p">When you add a
+                                            configuration property, enter the exact property name
+                                            and the value. The Kinesis Producer does not validate
+                                            the property names or values. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Preserve Record Order</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Select to preserve the order of records. </td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e333 ">Charset</td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e336 ">Character encoding of the messages to be processed.<p class="p">Not used for the Avro, Binary,
+         Protobuf or SDC Record data formats.</p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, click the <span class="ph uicontrol">Text</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2682" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e504">Text Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e507">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e504 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e507 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e504 ">Empty Line If No Text</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e507 ">Creates an empty line when a record does not include the
+                                        text field specified above. <p class="p">When not selected, records
+                                            without the specified text field are
+                                        discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, click the <span class="ph uicontrol">JSON</span> tab and configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2617" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e561">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e564">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e561 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e564 ">Determines how JSON data is written:<ul class="ul" id="task_q2j_ml4_yr__d1250e2646">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, click the <span class="keyword wintitle">Delimited</span> tab and configure
+                    the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2501" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e615">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e618">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Format for delimited data:<ul class="ul" id="task_q2j_ml4_yr__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Remove New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Removes new line characters from within a record.
+                                            <p class="p">Recommended when writing data as a single line of
+                                            text.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the pipe character ( |
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e615 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e618 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, click the <span class="keyword wintitle">Avro</span> tab and configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2424" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e749">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e752">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e749 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e752 ">Schema definition to use when writing data. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e749 ">Include Schema</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e752 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                            schema definition can improve performance, but requires
+                                            the appropriate schema management to avoid losing track
+                                            of the schema associated with the data.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e749 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e752 ">The Avro compression codec to use. </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For binary data, click the <span class="keyword wintitle">Binary</span> tab and configure the
+                    following property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2232" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d21607e815">Binary Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d21607e818">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d21607e815 ">Binary Field Path</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d21607e818 ">Field that contains the binary data.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, click the <span class="keyword wintitle">Protobuf</span> tab and configure
+                    the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q2j_ml4_yr__d1250e2750" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d21607e861">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d21607e864">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d21607e861 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d21607e864 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
+                                            information about generating the descriptor file, see
+                                                <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d21607e861 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d21607e864 ">Message type to use to write data. Enter a message type
+                                        defined in the descriptor file.</td>
 
                                 </tr>
 

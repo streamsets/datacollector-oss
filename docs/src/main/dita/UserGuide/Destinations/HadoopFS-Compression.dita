@@ -15,19 +15,20 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_h4y_ycm_xs">
  <title>Compression</title>
- <shortdesc>You can use Gzip, Bzip2, Snappy, and LZO compression with the Hadoop FS destination. To
-    use LZO compression with the destination, you need to configure the <ph
+ <shortdesc>You can use Gzip, Bzip2, Snappy, LZO and other compression formats with the Hadoop FS
+    destination. To use LZO compression with the destination, you need to configure the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to enable
     LZO compression. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
           destination<indexterm>compression</indexterm></indexterm><indexterm>compression<indexterm>for
           the Hadoop FS destination</indexterm></indexterm><draft-comment author="Loretta">Make sure
-        updates in this topic get into the Local FS version. </draft-comment>Other compression
+        updates in this topic get into the Local FS version. </draft-comment>All other compression
       formats do not require additional configuration.</p>
   <p>Due to JVM limitations, you can use LZO compression with only one version of Hadoop FS. If you
-      installed multiple library versions, make sure to configure the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
-      compression with the version that you want to use. </p>
+      installed multiple libraries that include the Hadoop FS destination, make sure to configure
+      the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+      use compression with the version that you want to use. <draft-comment author="Loretta">need to
+        add Local FS above? </draft-comment></p>
  </conbody>
 </concept>
