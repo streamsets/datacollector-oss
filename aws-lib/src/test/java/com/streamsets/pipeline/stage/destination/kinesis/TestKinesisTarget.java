@@ -104,7 +104,7 @@ public class TestKinesisTarget {
 
     when(
         KinesisUtil.checkStreamExists(
-            any(Regions.class), any(String.class), any(List.class), any(Stage.Context.class)
+            any(Regions.class), any(String.class), any(AWSConfig.class), any(List.class), any(Stage.Context.class)
         )
     ).thenReturn(1L);
 

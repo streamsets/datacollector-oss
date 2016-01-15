@@ -110,6 +110,7 @@ public class KinesisTarget extends BaseTarget {
     numShards = KinesisUtil.checkStreamExists(
         conf.region,
         conf.streamName,
+        conf.awsConfig,
         issues,
         getContext()
     );
@@ -233,7 +234,7 @@ public class KinesisTarget extends BaseTarget {
         if (shardMap.put(partitionKey, result.getShardId())) {
           LOG.warn("Expected a different shardId. The stream may have been resharded. Updating shard count.");
           long oldNumShards = numShards;
-          numShards = KinesisUtil.getShardCount(conf.region, conf.streamName);
+          numShards = KinesisUtil.getShardCount(conf.region, conf.awsConfig, conf.streamName);
           LOG.info("Updated shard count from {} to {}", oldNumShards, numShards);
         }
       } else {

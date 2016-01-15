@@ -31,6 +31,8 @@ import com.amazonaws.services.kinesis.clientlibrary.interfaces.IRecordProcessorC
 import com.amazonaws.services.kinesis.model.Shard;
 import com.amazonaws.services.kinesis.model.StreamDescription;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.kinesis.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +58,14 @@ public class KinesisUtil {
   public static long checkStreamExists(
       Regions region,
       String streamName,
+      AWSConfig awsConfig,
       List<Stage.ConfigIssue> issues,
       Stage.Context context
   ) {
     long numShards = 0;
 
     try {
-      numShards = getShardCount(region, streamName);
+      numShards = getShardCount(region, awsConfig, streamName);
     } catch (AmazonClientException e) {
       issues.add(context.createConfigIssue(
           Groups.KINESIS.name(),
@@ -72,9 +75,13 @@ public class KinesisUtil {
     return numShards;
   }
 
-  public static long getShardCount(Regions region, String streamName) throws AmazonClientException {
+  public static long getShardCount(Regions region, AWSConfig awsConfig, String streamName)
+    throws AmazonClientException {
     ClientConfiguration kinesisConfiguration = new ClientConfiguration();
-    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(kinesisConfiguration);
+    AmazonKinesisClient kinesisClient = new AmazonKinesisClient(
+        AWSUtil.getCredentialsProvider(awsConfig),
+        kinesisConfiguration
+    );
     kinesisClient.setRegion(Region.getRegion(region));
 
     try {

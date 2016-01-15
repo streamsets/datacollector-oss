@@ -60,7 +60,7 @@ import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 public class KinesisSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(KinesisSource.class);
   private static final Splitter.MapSplitter offsetSplitter = Splitter.on("::").limit(2).withKeyValueSeparator("=");
-  private static final String KINESIS_DATA_FROMAT_CONFIG_PREFIX = "kinesisConfig.dataFormatConfig.";
+  private static final String KINESIS_DATA_FORMAT_CONFIG_PREFIX = "kinesisConfig.dataFormatConfig.";
   private final KinesisConsumerConfigBean conf;
 
   private ExecutorService executorService;
@@ -78,7 +78,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    KinesisUtil.checkStreamExists(conf.region, conf.streamName, issues, getContext());
+    KinesisUtil.checkStreamExists(conf.region, conf.streamName, conf.awsConfig, issues, getContext());
 
     if (issues.isEmpty()) {
       batchQueue = new ArrayBlockingQueue<>(1);
@@ -86,8 +86,8 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
       conf.dataFormatConfig.init(
           getContext(),
           conf.dataFormat,
-          KINESIS_DATA_FROMAT_CONFIG_PREFIX,
           Groups.KINESIS.name(),
+          KINESIS_DATA_FORMAT_CONFIG_PREFIX,
           ONE_MB,
           issues
       );
