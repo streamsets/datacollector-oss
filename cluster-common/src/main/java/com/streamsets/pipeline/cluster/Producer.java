@@ -86,7 +86,7 @@ public class Producer {
         for (ControlChannel.Message controlMessage : controlChannel.getProducerMessages()) {
           switch (controlMessage.getType()) {
             case CONSUMER_COMMIT:
-              if (!expectedOffset.equals(controlMessage.getPayload())) {
+              if (!controlMessage.getPayload().equals(expectedOffset)) {
                 LOG.warn("Expected offset: '{}' and found: '{}'", expectedOffset, controlMessage.getPayload());
               } else if (LOG.isTraceEnabled()) {
                 LOG.trace("Commit of: '{}'", controlMessage.getPayload());

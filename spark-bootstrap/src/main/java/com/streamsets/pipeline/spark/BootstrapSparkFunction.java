@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -82,7 +83,7 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     while (tupleIterator.hasNext()) {
       Tuple2<T1, T2> tuple = tupleIterator.next();
       if (IS_TRACE_ENABLED) {
-        LOG.trace("Got message: 1: {}, 2: {}", toString((byte[]) tuple._1), toString((byte[]) tuple._2));
+        LOG.trace("Got message: 1: {}, 2: {}", toString(tuple._1), toString(tuple._2));
       }
       if (batch.size() == batchSize) {
         clusterFunction.invoke(batch);
@@ -93,14 +94,17 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     clusterFunction.invoke(batch);
   }
 
-  private static String toString(byte[] buf) {
+  private static String toString(Object buf) {
+    byte[] tuple;
     if (buf == null) {
       return "null";
+    } else {
+      tuple = (byte[]) buf;
     }
-    char[] chars = new char[2 * buf.length];
-    for (int i = 0; i < buf.length; ++i) {
-      chars[2 * i] = HEX_CHARS[(buf[i] & 0xF0) >>> 4];
-      chars[2 * i + 1] = HEX_CHARS[buf[i] & 0x0F];
+    char[] chars = new char[2 * tuple.length];
+    for (int i = 0; i < tuple.length; ++i) {
+      chars[2 * i] = HEX_CHARS[(tuple[i] & 0xF0) >>> 4];
+      chars[2 * i + 1] = HEX_CHARS[tuple[i] & 0x0F];
     }
     return new String(chars);
   }
@@ -116,4 +120,5 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
       return false;
     }
   }
+
 }

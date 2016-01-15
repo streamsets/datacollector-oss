@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.spark;
 
+import com.streamsets.pipeline.BootstrapCluster;
 import com.streamsets.pipeline.ClusterBinding;
 import com.streamsets.pipeline.Utils;
 
@@ -28,6 +29,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
+import org.apache.spark.deploy.SparkHadoopUtil;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -54,7 +56,6 @@ public class SparkStreamingBinding implements ClusterBinding {
   private static final String AUTO_OFFSET_RESET = "auto.offset.reset";
   private static final Logger LOG = LoggerFactory.getLogger(SparkStreamingBinding.class);
   private final boolean isRunningInMesos;
-
   private JavaStreamingContext ssc;
   private final Properties properties;
 
@@ -66,7 +67,7 @@ public class SparkStreamingBinding implements ClusterBinding {
   @Override
   public void init() throws Exception {
     for (Object key : properties.keySet()) {
-      logMessage("Property => " + key + " => " + properties.getProperty(key.toString()));
+      logMessage("Property => " + key + " => " + properties.getProperty(key.toString()), isRunningInMesos);
     }
     final SparkConf conf = new SparkConf().setAppName("StreamSets Data Collector - Streaming Mode");
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
@@ -80,47 +81,42 @@ public class SparkStreamingBinding implements ClusterBinding {
       throw new IllegalArgumentException(msg, ex);
     }
 
-    Configuration hadoopConf =  new Configuration();;
+    Configuration hadoopConf = new SparkHadoopUtil().newConfiguration(conf);
     if (isRunningInMesos) {
       hadoopConf = getHadoopConf(hadoopConf);
     } else {
       hadoopConf = new Configuration();
     }
     URI hdfsURI = FileSystem.getDefaultUri(hadoopConf);
-    logMessage("Default FS URI: " + hdfsURI);
+    logMessage("Default FS URI: " + hdfsURI, isRunningInMesos);
     FileSystem hdfs = (new Path(hdfsURI)).getFileSystem(hadoopConf);
     Path sdcCheckpointPath = new Path(hdfs.getHomeDirectory(), ".streamsets-spark-streaming/"
       + getProperty("sdc.id") + "/" + encode(topic));
-    hdfs.mkdirs(sdcCheckpointPath);
-    if (!hdfs.isDirectory(sdcCheckpointPath)) {
+    final Path checkPointPath = new Path(sdcCheckpointPath, getProperty("cluster.pipeline.name"));
+    hdfs.mkdirs(checkPointPath);
+    if (!hdfs.isDirectory(checkPointPath)) {
       throw new IllegalStateException("Could not create checkpoint path: " + sdcCheckpointPath);
     }
-    final String checkpointPathName = (new Path(sdcCheckpointPath, getProperty("cluster.pipeline.name"))).toString();
-    ssc = JavaStreamingContext.getOrCreate(checkpointPathName, new JavaStreamingContextFactory() {
-      @Override
-      public JavaStreamingContext create() {
-        JavaStreamingContext result = new JavaStreamingContext(conf, new Duration(duration));
-        result.checkpoint(checkpointPathName);
-        Map<String, String> props = new HashMap<String, String>();
-        // Check for null values
-        // require only the broker list for direct stream API (low level consumer API)
-        String metaDataBrokerList = getProperty(METADATA_BROKER_LIST);
-        props.put("metadata.broker.list", metaDataBrokerList);
-        String autoOffsetValue = properties.getProperty(AUTO_OFFSET_RESET, "").trim();
-        if (!autoOffsetValue.isEmpty()) {
-          props.put(AUTO_OFFSET_RESET, autoOffsetValue);
-        }
-        String[] topicList = topic.split(",");
-        logMessage("Meta data broker list " + metaDataBrokerList);
-        logMessage("topic list " + topic);
-        logMessage("Auto offset is set to " + autoOffsetValue);
-        JavaPairInputDStream<byte[], byte[]> dStream =
-          KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class, props,
-            new HashSet<String>(Arrays.asList(topicList)));
-        dStream.foreachRDD(new SparkDriverFunction());
-        return result;
+    if (isRunningInMesos) {
+      String scheme = hdfsURI.getScheme();
+      if (scheme.equals("hdfs")) {
+        File mesosBootstrapFile = BootstrapCluster.getMesosBootstrapFile();
+        Path mesosBootstrapPath = new Path(checkPointPath, mesosBootstrapFile.getName());
+        // in case of hdfs, copy the jar file from local path to hdfs
+        hdfs.copyFromLocalFile(false, true, new Path(mesosBootstrapFile.toURI()), mesosBootstrapPath);
+        conf.setJars(new String[] { mesosBootstrapPath.toString() });
+      } else if (scheme.equals("s3") || scheme.equals("s3n") || scheme.equals("s3a")) {
+        // we cant upload the jar to s3 as executors wont understand s3 scheme without the aws jar.
+        // So have the jar available on http
+        conf.setJars(new String[] { getProperty("mesos.jar.url") });
+      } else {
+        throw new IllegalStateException("Unsupported scheme: " + scheme);
       }
-    });
+    }
+    JavaStreamingContextFactory javaStreamingContextFactory = new JavaStreamingContextFactoryImpl(conf, duration, checkPointPath.toString(),
+      getProperty(METADATA_BROKER_LIST), topic, properties.getProperty(AUTO_OFFSET_RESET, "").trim(), isRunningInMesos);
+
+    ssc = JavaStreamingContext.getOrCreate(checkPointPath.toString(), hadoopConf, javaStreamingContextFactory, true);
     // mesos tries to stop the context internally, so don't do it here - deadlock bug in spark
     if (!isRunningInMesos) {
       final Thread shutdownHookThread = new Thread("Spark.shutdownHook") {
@@ -133,8 +129,49 @@ public class SparkStreamingBinding implements ClusterBinding {
       };
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
     }
-    logMessage("Making calls through spark context ");
+    logMessage("Making calls through spark context ", isRunningInMesos);
     ssc.start();
+  }
+
+  private static class JavaStreamingContextFactoryImpl implements JavaStreamingContextFactory {
+
+    private final SparkConf sparkConf;
+    private final long duration;
+    private final String checkPointPath;
+    private final String metaDataBrokerList;
+    private final String topic;
+    private final boolean isRunningInMesos;
+    private final String autoOffsetValue;
+
+    public JavaStreamingContextFactoryImpl(SparkConf sparkConf, long duration, String checkPointPath,
+      String metaDataBrokerList, String topic, String autoOffsetValue, boolean isRunningInMesos) {
+      this.sparkConf = sparkConf;
+      this.duration = duration;
+      this.checkPointPath = checkPointPath;
+      this.metaDataBrokerList = metaDataBrokerList;
+      this.topic = topic;
+      this.autoOffsetValue = autoOffsetValue;
+      this.isRunningInMesos = isRunningInMesos;
+    }
+
+    @Override
+    public JavaStreamingContext create() {
+      JavaStreamingContext result = new JavaStreamingContext(sparkConf, new Duration(duration));
+      result.checkpoint(checkPointPath);
+      Map<String, String> props = new HashMap<String, String>();
+      props.put("metadata.broker.list", metaDataBrokerList);
+      if (!autoOffsetValue.isEmpty()) {
+        props.put(AUTO_OFFSET_RESET, autoOffsetValue);
+      }
+      logMessage("Meta data broker list " + metaDataBrokerList, isRunningInMesos);
+      logMessage("topic list " + topic, isRunningInMesos);
+      logMessage("Auto offset is set to " + autoOffsetValue, isRunningInMesos);
+      JavaPairInputDStream<byte[], byte[]> dStream =
+        KafkaUtils.createDirectStream(result, byte[].class, byte[].class, DefaultDecoder.class, DefaultDecoder.class,
+          props, new HashSet<String>(Arrays.asList(topic.split(","))));
+      dStream.foreachRDD(new SparkDriverFunction());
+      return result;
+    }
   }
 
   static String encode(String s) {
@@ -190,7 +227,7 @@ public class SparkStreamingBinding implements ClusterBinding {
     }
   }
 
-  private void logMessage(String message) {
+  private static void logMessage(String message, boolean isRunningInMesos) {
     if (isRunningInMesos) {
       System.out.println(message);
     } else {

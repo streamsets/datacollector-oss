@@ -222,11 +222,11 @@ public class TestClusterProviderImpl {
       new RuleDefinitions(new ArrayList<MetricsRuleDefinition>(), new ArrayList<DataRuleDefinition>(),
           new ArrayList<DriftRuleDefinition>(), new ArrayList<String>(), UUID.randomUUID()));
     Assert.assertNotNull(appState.getId());
-    Assert.assertNotNull(appState.getUUID());
+    Assert.assertNotNull(appState.getDirId());
     Assert.assertEquals(ClusterProviderImpl.CLUSTER_TYPE_MESOS,
       MockSystemProcess.env.get(ClusterProviderImpl.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args
-      .contains(RuntimeInfo.UNDEF + "/mesos/" + appState.getUUID() + "/streamsets-datacollector-mesos-bootstrap.jar"));
+      .contains(RuntimeInfo.UNDEF + "/" + appState.getDirId().get() + "/streamsets-datacollector-mesos-bootstrap.jar"));
   }
 
   @Test

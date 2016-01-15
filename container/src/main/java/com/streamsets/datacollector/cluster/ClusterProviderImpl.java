@@ -20,8 +20,10 @@
 package com.streamsets.datacollector.cluster;
 
 import static com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor.DATA_COLLECTOR_LIBRARY_PROPERTIES;
+
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -53,6 +55,8 @@ import com.streamsets.pipeline.api.impl.PipelineUtils;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.util.SystemProcess;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -60,6 +64,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -67,8 +72,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -104,6 +112,8 @@ public class ClusterProviderImpl implements ClusterProvider {
   private static final String KERBEROS_PRINCIPAL = "KERBEROS_PRINCIPAL";
   private static final String CLUSTER_MODE_JAR_BLACKLIST = "cluster.jar.blacklist.regex_";
   private static final String ALL_STAGES = "*";
+  private static final String TOPIC = "topic";
+  private static final String MESOS_HOSTING_DIR_PARENT = "mesos";
   private final RuntimeInfo runtimeInfo;
   private final YARNStatusParser yarnStatusParser;
   private final MesosStatusParser mesosStatusParser;
@@ -239,7 +249,8 @@ public class ClusterProviderImpl implements ClusterProvider {
       File sdcPropertiesFile,
       Map<String, String> sourceConfigs,
       Map<String, String> sourceInfo,
-      String clusterToken
+      String clusterToken,
+      Optional<String> mesosURL
   ) throws IOException {
     InputStream sdcInStream = null;
     OutputStream sdcOutStream = null;
@@ -259,6 +270,9 @@ public class ClusterProviderImpl implements ClusterProvider {
         sdcProperties.setProperty(Constants.CALLBACK_SERVER_URL_KEY, runtimeInfo.getClusterCallbackURL());
       }
 
+      if (mesosURL.isPresent()) {
+        sdcProperties.setProperty(Constants.MESOS_JAR_URL, mesosURL.get());
+      }
       checkForNullEntries(sourceConfigs, sdcProperties);
       checkForNullEntries(sourceInfo, sdcProperties);
 
@@ -606,6 +620,22 @@ public class ClusterProviderImpl implements ClusterProvider {
     }
     File etcTarGz = new File(stagingDir, "etc.tar.gz");
     File sdcPropertiesFile;
+    File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
+    File clusterBootstrapJar;
+    String mesosHostingJarDir = null;
+    String mesosURL = null;
+    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
+      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "mesos"),
+          "streamsets-datacollector-mesos-bootstrap");
+      String topic = sourceConfigs.get(TOPIC);
+      String pipelineName = sourceInfo.get(ClusterModeConstants.CLUSTER_PIPELINE_NAME);
+      mesosHostingJarDir = MESOS_HOSTING_DIR_PARENT + File.separatorChar + getSha256(getMesosHostingDir(topic, pipelineName));
+      mesosURL = runtimeInfo.getBaseHttpUrl() + File.separatorChar + mesosHostingJarDir + File.separatorChar
+                 + clusterBootstrapJar.getName();
+    } else {
+      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
+          "streamsets-datacollector-spark-bootstrap");
+    }
     try {
       etcDir = createDirectoryClone(etcDir, "etc", stagingDir);
       InputStream clusterLog4jProperties;
@@ -664,20 +694,11 @@ public class ClusterProviderImpl implements ClusterProvider {
           throw new IllegalStateException("HDFS/S3 Checkpoint configuration directory is required");
         }
       }
-      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken);
+      rewriteProperties(sdcPropertiesFile, sourceConfigs, sourceInfo, clusterToken, Optional.fromNullable(mesosURL));
       TarFileCreator.createTarGz(etcDir, etcTarGz);
     } catch (RuntimeException ex) {
       String msg = errorString("serializing etc directory: {}", ex);
       throw new RuntimeException(msg, ex);
-    }
-    File bootstrapJar = getBootstrapJar(new File(bootstrapDir, "main"), "streamsets-datacollector-bootstrap");
-    File clusterBootstrapJar;
-    if (executionMode == ExecutionMode.CLUSTER_MESOS_STREAMING) {
-      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "mesos"),
-          "streamsets-datacollector-mesos-bootstrap");
-    } else {
-      clusterBootstrapJar = getBootstrapJar(new File(bootstrapDir, "spark"),
-          "streamsets-datacollector-spark-bootstrap");
     }
     File log4jProperties = new File(stagingDir, "log4j.properties");
     InputStream clusterLog4jProperties = null;
@@ -709,7 +730,6 @@ public class ClusterProviderImpl implements ClusterProvider {
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY);
     List<String> args;
-    String dirUUID = null;
     File hostingDir = null;
     if (executionMode == ExecutionMode.CLUSTER_BATCH) {
       LOG.info("Submitting MapReduce Job");
@@ -752,14 +772,14 @@ public class ClusterProviderImpl implements ClusterProvider {
       environment.put(ETC_TAR_ARCHIVE, "etc.tar.gz");
       environment.put(LIBS_TAR_ARCHIVE, "libs.tar.gz");
       environment.put(RESOURCES_TAR_ARCHIVE, "resources.tar.gz");
-      dirUUID = UUID.randomUUID().toString();
-      hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirUUID);
+      hostingDir = new File(runtimeInfo.getDataDir(), Utils.checkNotNull(mesosHostingJarDir, "mesos jar dir cannot be null"));
       if (!hostingDir.mkdirs()) {
         throw new RuntimeException("Couldn't create hosting dir: " + hostingDir.toString());
       }
       environment.put(MESOS_HOSTING_JAR_DIR, hostingDir.getAbsolutePath());
-      String mesosURL = runtimeInfo.getBaseHttpUrl() + "/mesos/" + dirUUID + "/" + clusterBootstrapJar.getName();
-      args = generateMesosArgs(clusterManager.getAbsolutePath(), config.mesosDispatcherURL, mesosURL);
+      args =
+        generateMesosArgs(clusterManager.getAbsolutePath(), config.mesosDispatcherURL,
+          Utils.checkNotNull(mesosURL, "mesos jar url cannot be null"));
     } else {
       throw new IllegalStateException(Utils.format("Incorrect execution mode: {}", executionMode));
     }
@@ -781,8 +801,8 @@ public class ClusterProviderImpl implements ClusterProvider {
           ApplicationState applicationState = new ApplicationState();
           applicationState.setId(appId);
           applicationState.setSdcToken(clusterToken);
-          if (dirUUID != null) {
-            applicationState.setUUID(dirUUID);
+          if (mesosHostingJarDir != null) {
+            applicationState.setDirId(mesosHostingJarDir);
           }
           return applicationState;
         }
@@ -976,5 +996,22 @@ public class ClusterProviderImpl implements ClusterProvider {
 
   private enum ClusterOrigin {
     HDFS, KAFKA;
+  }
+
+  private String getMesosHostingDir(String topic, String pipelineName) {
+    String sdcId = String.valueOf(runtimeInfo.getId());
+    String mesosHostingDir = sdcId + File.separatorChar + topic + File.separatorChar + pipelineName;
+    return mesosHostingDir;
+  }
+
+  private String getSha256(String mesosHostingDir) throws UnsupportedEncodingException {
+    MessageDigest md;
+    try {
+      md = MessageDigest.getInstance("SHA-256");
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e);
+    }
+    md.update(mesosHostingDir.getBytes("UTF-8"));
+    return Base64.encodeBase64URLSafeString(md.digest());
   }
 }

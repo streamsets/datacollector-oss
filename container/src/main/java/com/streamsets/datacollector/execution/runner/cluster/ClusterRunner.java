@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
@@ -730,17 +731,21 @@ public class ClusterRunner extends AbstractRunner {
   private void postTerminate(ApplicationState appState,
       PipelineStatus pipelineStatus, String msg)
           throws PipelineStoreException, PipelineRunnerException {
-    String dirID = appState.getUUID();
+    Optional<String> dirID = appState.getDirId();
     // For mesos, remove dir hosting jar once job terminates
-    if (dirID != null) {
-      File hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirID);
-      FileUtils.deleteQuietly(hostingDir);
+    if (dirID.isPresent()) {
+      deleteDir(dirID.get());
     }
     Map<String, Object> attributes = new HashMap<String, Object>();
     attributes.putAll(getAttributes());
     attributes.remove(APPLICATION_STATE);
     attributes.remove(APPLICATION_STATE_START_TIME);
     validateAndSetStateTransition(pipelineStatus, msg, attributes);
+  }
+
+  private void deleteDir(String dirId) {
+    File hostingDir = new File(runtimeInfo.getDataDir(), dirId);
+    FileUtils.deleteQuietly(hostingDir);
   }
 
   private synchronized void doStart(PipelineConfiguration pipelineConf, ClusterSourceInfo clusterSourceInfo) throws PipelineStoreException,
@@ -851,11 +856,10 @@ public class ClusterRunner extends AbstractRunner {
     }
     Map<String, Object> attributes = new HashMap<>();
     if (stopped) {
-      String dirID = applicationState.getUUID();
-      //For mesos, remove dir hosting jar once job terminates
-      if (dirID != null) {
-        File hostingDir = new File(runtimeInfo.getDataDir(), "mesos/" + dirID);
-        FileUtils.deleteQuietly(hostingDir);
+      Optional<String> dirID = applicationState.getDirId();
+      if (dirID.isPresent()) {
+        // For mesos, remove dir hosting jar once job terminates
+        deleteDir(dirID.get());
       }
       attributes.putAll(getAttributes());
       attributes.remove(APPLICATION_STATE);

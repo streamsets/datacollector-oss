@@ -66,6 +66,7 @@ public class BootstrapCluster {
   private static String dataDir;
   private static final String MESOS_BOOTSTRAP_JAR_REGEX = "streamsets-datacollector-mesos-bootstrap";
   public static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
+  private static File mesosBootstrapFile;
 
   public static synchronized Properties getProperties() throws Exception {
     initialize();
@@ -313,6 +314,13 @@ public class BootstrapCluster {
     }
   }
 
+  public static File getMesosBootstrapFile() {
+    if (mesosBootstrapFile == null) {
+      throw new IllegalStateException("Mesos bootstrap file cannot be found");
+    }
+    return mesosBootstrapFile;
+  }
+
   public static int findAndExtractJar(File mesosHomeDir, File sparkHomeDir) throws IOException, InterruptedException {
     FilenameFilter mesosBootstrapJarFilter = new MesosBootstrapJarFileFilter();
     File[] mesosBootstrapFile = mesosHomeDir.listFiles(mesosBootstrapJarFilter);
@@ -332,6 +340,7 @@ public class BootstrapCluster {
     if (!mesosBaseDir.mkdir()) {
       throw new IllegalStateException("Error while creating dir: " + mesosBaseDir.getAbsolutePath());
     }
+    BootstrapCluster.mesosBootstrapFile = mesosBootstrapFile[0];
     extractFromJar(mesosBootstrapFile[0], mesosBaseDir);
     return extractArchives(mesosBaseDir);
   }

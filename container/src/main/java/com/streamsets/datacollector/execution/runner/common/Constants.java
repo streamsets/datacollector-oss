@@ -46,6 +46,7 @@ public class Constants {
   public static final String SAMPLED_RECORDS_MAX_CACHE_SIZE_KEY = "observer.sampled.records.cache.size";
   public static final String MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY = "observer.queue.offer.max.wait.time.ms";
   public static final int MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT = 1000;
+  public static final String MESOS_JAR_URL = "mesos.jar.url";
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
 }
