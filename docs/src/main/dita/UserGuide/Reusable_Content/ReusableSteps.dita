@@ -1870,13 +1870,14 @@
                                         process data from the destination.</entry>
                                 </row>
                                 <row id="row-SSLenabled">
-                                    <entry>SSL Enabled <xref href="../RPC_Pipelines/EnableSSL.dita">
+                                    <entry>TLS Enabled <xref
+                                            href="../RPC_Pipelines/EnablingEncryption.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_a5x_jzn_vs"
                                         /></xref></entry>
-                                    <entry>Enables the secure transfer of data using SSL. <p>To use
-                                            SSL, both the SDC RPC origin and SDC RPC destination
-                                            must be enabled for SSL.</p></entry>
+                                    <entry>Enables the secure transfer of data using TLS. <p>To use
+                                            encryption, both the SDC RPC origin and SDC RPC
+                                            destination must be enabled for TLS.</p></entry>
                                 </row>
                                 <row id="row-TrustStore">
                                     <entry>Truststore File</entry>

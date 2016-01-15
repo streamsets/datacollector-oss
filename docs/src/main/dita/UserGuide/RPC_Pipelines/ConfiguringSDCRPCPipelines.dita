@@ -30,7 +30,7 @@
        <li>When you configure the SDC RPC destination, enter the RPC ID and RPC connection
                 information. <p>To use multiple destination pipelines, enter the RPC connection
                   information for each SDC RPC origin that you want to use. </p></li>
-              <li>To use SSL to transfer data between the pipelines, enable SSL and configure
+              <li>To use encryption to transfer data between the pipelines, enable TLS and configure
                 related properties.</li>
       </ol></dd>
     </dlentry>
@@ -48,8 +48,8 @@
                   <li>For the RPC Listening Port, enter the appropriate port number. <p>It should be
                       a port number specified in one of the RPC connections in the SDC RPC
                       destination.</p></li>
-                  <li>To use SSL to transfer data between the pipelines, enable SSL and configure
-                    related properties.</li>
+                  <li>To use encryption to transfer data between the pipelines, enable TLS and
+                    configure related properties.</li>
                 </ul></li>
             </ol></dd>
     </dlentry>

@@ -25,7 +25,7 @@
       instance on a single machine, or across a local network or the public internet to a remote
       Data Collector. </p>
     <p>When you configure the SDC RPC destination, you specify the RPC ID and RPC connections to
-      use. You can optionally enable SSL to pass data securely and define retry and timeout
+      use. You can optionally enable encryption to pass data securely and define retry and timeout
       properties.</p>
  </conbody>
  <related-links>
