@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -44,6 +45,7 @@ import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 )
 @RawSource(rawSourcePreviewer = KafkaRawSourcePreviewer.class, mimeType = "*/*")
 @ConfigGroups(value = KafkaOriginGroups.class)
+@HideConfigs(value = {"kafkaConfigBean.dataFormatConfig.compression"})
 @GenerateResourceBundle
 public class KafkaDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
 

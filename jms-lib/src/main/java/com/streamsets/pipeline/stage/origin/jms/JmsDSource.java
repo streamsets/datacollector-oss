@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -46,6 +47,7 @@ import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
     onlineHelpRefUrl = "index.html#Origins/JMS.html#task_zp1_4ck_dt"
 )
 @ConfigGroups(value = JmsGroups.class)
+@HideConfigs(value = {"dataFormatConfig.compression"})
 @GenerateResourceBundle
 public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener {
 

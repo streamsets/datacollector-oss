@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
@@ -37,6 +38,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
     onlineHelpRefUrl = "index.html#Origins/RabbitMQ.html#task_hrz_mq1_h5"
 )
 @ConfigGroups(value = Groups.class)
+@HideConfigs(value = {"conf.dataFormatConfig.compression"})
 @GenerateResourceBundle
 public class RabbitDSource extends DSourceOffsetCommitter {
 
