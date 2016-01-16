@@ -801,41 +801,45 @@ public class ProtobufTypeUtil {
       Map<String, Object> defaultValueMap
   ) throws DataGeneratorException {
     Object value = null;
-    if (field.getValue() != null) {
-      switch (f.getJavaType()) {
-        case BOOLEAN:
-          value = field.getValueAsBoolean();
-          break;
-        case BYTE_STRING:
-          value = ByteString.copyFrom(field.getValueAsByteArray());
-          break;
-        case DOUBLE:
-          value = field.getValueAsDouble();
-          break;
-        case ENUM:
-          value = f.getEnumType().findValueByName(field.getValueAsString());
-          break;
-        case FLOAT:
-          value = field.getValueAsFloat();
-          break;
-        case INT:
-          value = field.getValueAsInteger();
-          break;
-        case LONG:
-          value = field.getValueAsLong();
-          break;
-        case STRING:
-          value = field.getValueAsString();
-          break;
-        case MESSAGE:
-          Descriptors.Descriptor messageType = f.getMessageType();
-          value = sdcFieldToProtobufMsg(
-              record, field, protoFieldPath, messageType, messageTypeToExtensionMap, defaultValueMap
-          );
-          break;
-        default:
-          throw new DataGeneratorException(Errors.PROTOBUF_03, f.getJavaType().name());
+    try {
+      if (field.getValue() != null) {
+        switch (f.getJavaType()) {
+          case BOOLEAN:
+            value = field.getValueAsBoolean();
+            break;
+          case BYTE_STRING:
+            value = ByteString.copyFrom(field.getValueAsByteArray());
+            break;
+          case DOUBLE:
+            value = field.getValueAsDouble();
+            break;
+          case ENUM:
+            value = f.getEnumType().findValueByName(field.getValueAsString());
+            break;
+          case FLOAT:
+            value = field.getValueAsFloat();
+            break;
+          case INT:
+            value = field.getValueAsInteger();
+            break;
+          case LONG:
+            value = field.getValueAsLong();
+            break;
+          case STRING:
+            value = field.getValueAsString();
+            break;
+          case MESSAGE:
+            Descriptors.Descriptor messageType = f.getMessageType();
+            value = sdcFieldToProtobufMsg(
+                record, field, protoFieldPath, messageType, messageTypeToExtensionMap, defaultValueMap
+            );
+            break;
+          default:
+            throw new DataGeneratorException(Errors.PROTOBUF_03, f.getJavaType().name());
+        }
       }
+    } catch (IllegalArgumentException e) {
+      throw new DataGeneratorException(Errors.PROTOBUF_11, field.getValue(), f.getJavaType().name(), e);
     }
     return value;
   }

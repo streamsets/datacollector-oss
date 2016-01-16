@@ -35,6 +35,7 @@ public enum Errors implements ErrorCode {
   PROTOBUF_08("Error reading FileDescriptorSet: {}"),
   PROTOBUF_09("A MapEntry should only have key and value fields, but found {}"),
   PROTOBUF_10("Error while writing serialized message: {}"),
+  PROTOBUF_11("Error while converting value '{}' to type '{}'"),
   ;
 
   private final String msg;
