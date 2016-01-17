@@ -15,14 +15,14 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_a1r_5qj_b5">
  <title>Processing List-Map Data</title>
- <shortdesc>In scripts that process List-Map data, treat the data as Map. </shortdesc>
+ <shortdesc>In scripts that process list-map data, treat the data as maps. </shortdesc>
  <conbody>
-        <p><indexterm>Jython Evaluator processor<indexterm>processing List-Map
+        <p><indexterm>Jython Evaluator processor<indexterm>processing list-map
                 data</indexterm></indexterm>List-Map is a <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             data type that allows you to use standard record functions to work with delimited data.
             When an origin reads delimited data, it generates List-Map fields by default. </p>
-        <p>The Jython Evaluator reads and passes List-Map data. But to process data in a List-Map
+        <p>The Jython Evaluator reads and passes list-map data. But to process data in a List-Map
             field, treat the field as a Map in the script.</p>
  </conbody>
 </concept>

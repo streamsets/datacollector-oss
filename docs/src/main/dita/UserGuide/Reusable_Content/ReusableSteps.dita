@@ -1881,7 +1881,7 @@
                                 </row>
                                 <row id="row-TrustStore">
                                     <entry>Truststore File</entry>
-                                    <entry>Truststore file for SSL. Required if the keystore file is
+                                    <entry>Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p>Must be stored in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> resources directory:
@@ -1944,7 +1944,11 @@
                                             milliseconds.</p></entry>
                                 </row>
                                 <row id="row-UseCompression">
-                                    <entry>Use Compression</entry>
+                                    <entry>Use Compression  <xref
+                                            href="../Destinations/RPC-Compression.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline"
+                                        /></xref></entry>
                                     <entry>Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </entry>
                                 </row>

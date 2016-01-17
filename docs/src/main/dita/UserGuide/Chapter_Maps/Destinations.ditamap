@@ -39,6 +39,7 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/Elasticsearch-TimeBasis.dita"/>
    <topicref href="../Destinations/Elasticsearch-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Flume.dita" chunk="to-content"> 
@@ -123,6 +124,7 @@
    <shortdesc/>
   </topicmeta>
    <topicref href="../Destinations/RPCdest-Connections.dita"/>
+   <topicref href="../Destinations/RPC-Compression.dita"/>
    <topicref href="../Destinations/RPCdest-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/Solr.dita" chunk="to-content"><topicmeta>

@@ -15,8 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_zdq_rdj_r5">
  <title>Disabling Compression</title>
- <shortdesc></shortdesc>
+ <shortdesc>The SDC RPC destination compresses data by default when passing data to an SDC RPC
+        origin. When necessary, you can disable compression in the destination.</shortdesc>
  <conbody>
-  <p></p>
+  <p><indexterm>SDC RPC pipelines<indexterm>compression</indexterm></indexterm>The SDC RPC
+            destination compresses data to enhance performance. When the destination processes small
+            records, compression might not enhance pipeline performance. When tuning pipeline
+            performance, you might try disabling compression in the destination when working with
+            small records. </p>
  </conbody>
 </concept>

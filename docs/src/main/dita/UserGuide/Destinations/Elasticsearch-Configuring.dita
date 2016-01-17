@@ -60,10 +60,40 @@
                                             in the stage.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Time Basis <xref
+                                            href="Elasticsearch-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w4w_q3p_ht"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p>Time basis to use for writing to time-based indexes. Use
+                                            one of the following: <ul id="ul_wbn_qdt_r5">
+                                                <li>${time:now()} - Uses the processing time as the
+                                                  time basis. The processing time is the time
+                                                  associated with the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> running the pipeline. </li>
+                                                <li>${record:value('/&lt;date field>')} - Uses the
+                                                  time in the specified field as the time basis.
+                                                  <draft-comment author="Loretta">check this. pinged
+                                                  Tucu about data time zone. </draft-comment></li>
+                                            </ul></p>
+                                        <p>When not using time-based indexes, use the default. </p>
+                                        <p>Default is ${time:now()}.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Data Time Zone</entry>
+                                    <entry>Time zone for the destination system. Used to resolve
+                                        datetimes in time-based indexes. </entry>
+                                </row>
+                                <row>
                                     <entry>Index</entry>
                                     <entry>Index information for the generated documents. You can
-                                        use a constant or a field that includes the index
-                                        information. </entry>
+                                        use a constant, datetime variables, a field that includes
+                                        the index information, or any valid combination. <p>When
+                                            using datetime variables, make sure to configure the
+                                            time basis appropriately. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Mapping</entry>
