@@ -86,7 +86,7 @@
             </execution>
           </executions>
           <configuration>
-            <finalName>${artifactId}-${version}</finalName>
+            <finalName>${project.artifactId}-${project.version}</finalName>
             <dependencyReducedPomLocation>${project.build.directory}/shaded-pom.xml</dependencyReducedPomLocation>
           </configuration>
        </plugin>
