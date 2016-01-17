@@ -133,10 +133,6 @@
       </row>
      </thead>
      <tbody>
-      <row id="S3-Region">
-       <entry>Region</entry>
-       <entry>Amazon S3 region. </entry>
-      </row>
       <row id="S3AccessKeyId">
        <entry>Access Key ID</entry>
        <entry>Amazon S3 access key ID.</entry>
@@ -144,6 +140,10 @@
       <row id="S3SecretAccessKey">
        <entry>Secret Access Key</entry>
        <entry>Amazon S3 secret access ID.</entry>
+      </row>
+      <row id="S3-Region">
+       <entry>Region</entry>
+       <entry>Amazon S3 region. </entry>
       </row>
       <row id="S3Bucket">
        <entry>Bucket</entry>
@@ -167,7 +167,7 @@
         </xref></entry>
        <entry>
         <p>Regular expression that describes the pattern of the file names to process. You can use
-         UNIX-style wildcards, such as * or ?. For example, *.log. </p>
+         UNIX-style wildcards, such as an asterisk or question mark. For example, *.log. </p>
         <p>To process data in more than one folder, you can include the path to the files to be
          processed and use wildcards to define glob patterns. </p>
        </entry>
@@ -178,7 +178,25 @@
         processed. <p>Decrease when memory on the <ph
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> machine
          is limited. Increase to process larger records when memory is available. </p><p>Default is
-         64000.</p></entry>
+         128 KB.</p></entry>
+      </row>
+      <row conref="#concept_wfr_rnw_yq/Charset">
+       <entry/>
+      </row>
+      <row conref="#concept_wfr_rnw_yq/IgnoreControlChars-row">
+       <entry/>
+      </row>
+      <row id="Origin-FileCompression">
+       <entry>Compression Format <xref href="../Origins/FileCompressionFormats.dita">
+         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
+          id="image_xqq_yv4_c5"/></xref></entry>
+       <entry>The compression format of the files:<ul id="ul_vph_jp2_qs">
+         <li>None - Processes only uncompressed files.</li>
+         <li>Compressed File - Processes files compressed by the supported compression formats.</li>
+         <li>Archive - Processes files archived by the supported archive formats.</li>
+         <li>Compressed Archive - Processes files archived and compressed by the supported archive
+          and compression formats.</li>
+        </ul></entry>
       </row>
       <row>
        <entry>Max Batch Size (records)</entry>
@@ -211,25 +229,6 @@
             placement="inline"/></xref></li>
          <li>XML</li>
          <li>Protobuf</li>
-        </ul></entry>
-      </row>
-      <row conref="#concept_wfr_rnw_yq/Charset">
-       <entry/>
-      </row>
-      <row
-       conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-       <entry/>
-      </row>
-      <row id="Origin-FileCompression">
-       <entry>Compression Format <xref href="../Origins/FileCompressionFormats.dita">
-         <image href="../Graphics/icon_moreInfo.png" scale="10" placement="inline"
-          id="image_xqq_yv4_c5"/></xref></entry>
-       <entry>The compression format of the files:<ul id="ul_vph_jp2_qs">
-         <li>None - Processes only uncompressed files.</li>
-         <li>Compressed File - Processes files compressed by the supported compression formats.</li>
-         <li>Archive - Processes files archived by the supported archive formats.</li>
-         <li>Compressed Archive - Processes files archived and compressed by the supported archive
-          and compression formats.</li>
         </ul></entry>
       </row>
      </tbody>

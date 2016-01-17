@@ -21,14 +21,7 @@
    differently based on the data format. JMS Consumer can process the following types of data:</p>
   <p>
    <dl>
-    <dlentry>
-     <dt>Text</dt>
-     <dd>Generates a record for each line of text. Reads text data of the BytesMessage format. </dd>
-     <dd>When a line exceeds the maximum line length defined for the origin, the origin truncates
-            the line. The origin adds a boolean field named Truncated to indicate if the line was
-            truncated.</dd>
-    </dlentry>
-    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
      <dt/>
      <dd/>
     </dlentry>
@@ -36,11 +29,7 @@
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
-     <dt/>
-     <dd/>
-    </dlentry>
-    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
      <dt/>
      <dd/>
     </dlentry>
@@ -48,12 +37,23 @@
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
+    <dlentry
+     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
      <dt/>
      <dd/>
     </dlentry>
-    <dlentry
-     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+     <dt/>
+     <dd/>
+    </dlentry>
+    <dlentry>
+     <dt>Text</dt>
+     <dd>Generates a record for each line of text. Reads text data of the BytesMessage format. </dd>
+     <dd>When a line exceeds the maximum line length defined for the origin, the origin truncates
+      the line. The origin adds a boolean field named Truncated to indicate if the line was
+      truncated.</dd>
+    </dlentry>
+    <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
      <dt/>
      <dd/>
     </dlentry>

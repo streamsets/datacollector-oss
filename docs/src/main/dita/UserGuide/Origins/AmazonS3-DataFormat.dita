@@ -19,12 +19,8 @@
     <p><indexterm>data formats<indexterm>Amazon S3</indexterm></indexterm><indexterm>Amazon S3
           origin<indexterm>data formats</indexterm></indexterm>The Amazon S3 origin processes data
       differently based on the data format. The origin processes the following types of data:<dl>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
-          <dt/>
-          <dd/>
-        </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSONFILE">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
           <dt/>
           <dd/>
         </dlentry>
@@ -34,11 +30,7 @@
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XMLFILE">
-          <dt/>
-          <dd/>
-        </dlentry>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSONFILE">
           <dt/>
           <dd/>
         </dlentry>
@@ -47,12 +39,20 @@
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoFile">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
           <dt/>
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoFile">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XMLFILE">
           <dt/>
           <dd/>
         </dlentry>

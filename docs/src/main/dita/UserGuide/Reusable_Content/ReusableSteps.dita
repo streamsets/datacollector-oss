@@ -442,6 +442,18 @@
                                         are not read. </entry>
                                 </row>
                                 <row>
+                                    <entry>Delimiter Character</entry>
+                                    <entry>Delimiter character for a custom file type.</entry>
+                                </row>
+                                <row>
+                                    <entry>Escape Character</entry>
+                                    <entry>Escape character for a custom file type.</entry>
+                                </row>
+                                <row>
+                                    <entry>Quote Character</entry>
+                                    <entry>Quote character for a custom file type.</entry>
+                                </row>
+                                <row>
                                     <entry>Root Field Type <xref
                                             href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
@@ -457,18 +469,6 @@
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Delimiter Character</entry>
-                                    <entry>Delimiter character for a custom file type.</entry>
-                                </row>
-                                <row>
-                                    <entry>Escape Character</entry>
-                                    <entry>Escape character for a custom file type.</entry>
-                                </row>
-                                <row>
-                                    <entry>Quote Character</entry>
-                                    <entry>Quote character for a custom file type.</entry>
-                                </row>
-                                <row>
                                     <entry>Lines to Skip</entry>
                                     <entry>Lines to skip before reading data. </entry>
                                 </row>
@@ -480,7 +480,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><b>JSON-2props </b> - Kafka Consumer, JMS
-                        Consumer, Hadoop FS, Kinesis all use them.</draft-comment>
+                        Consumer, Hadoop FS, Kinesis all use them. HTTP Client, and probably others
+                        use the 2nd row.</draft-comment>
                 </cmd>
             </step>
             <step id="JSON-2props">
@@ -674,7 +675,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
-                        JMS Consumer, Kafka Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
+                        message and file based origins: JMS Consumer, Kafka Consumer, Hadoop FS,
+                        Kinesis Consumer, Directory, S3, HTTP Client, maybe more.</draft-comment>
                 </cmd>
             </step>
             <step id="XMLprops">
@@ -1511,6 +1513,53 @@
                     <draft-comment author="Loretta"><uicontrol>DESTINATION -
                         Specific</uicontrol></draft-comment>
                 </cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">This step is used by Amazon S3 origin and
+                        destination</draft-comment>
+                </cmd>
+            </step>
+            <step id="S3-AdvancedProps">
+                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure proxy
+                    information:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_xmc_smx_r5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Use Proxy</entry>
+                                    <entry>Specifies whether to use a proxy to connect to Amazon
+                                        S3.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Host</entry>
+                                    <entry>Proxy host.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Port</entry>
+                                    <entry>Proxy port.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy User</entry>
+                                    <entry>User name for proxy credentials.</entry>
+                                </row>
+                                <row>
+                                    <entry>Proxy Password</entry>
+                                    <entry>Password for proxy credentials. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>

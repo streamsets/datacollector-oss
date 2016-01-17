@@ -40,10 +40,6 @@
                             </thead>
                             <tbody>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">
-                                    <entry/>
-                                </row>
-                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3AccessKeyId">
                                     <entry/>
                                 </row>
@@ -51,13 +47,17 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3SecretAccessKey">
                                     <entry/>
                                 </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3-Region">
+                                    <entry/>
+                                </row>
                                 <row>
                                     <entry>Bucket</entry>
-                                    <entry>Bucket containing the folder to write to.</entry>
+                                    <entry>Bucket containing the folder to use.</entry>
                                 </row>
                                 <row>
                                     <entry>Folder</entry>
-                                    <entry>Folder or directory to write to.</entry>
+                                    <entry>Folder or directory to use.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/S3ObjectPathDelimiter">
@@ -103,45 +103,8 @@
                     </table>
                 </info>
             </step>
-            <step>
-                <cmd>On the <wintitle>Advanced</wintitle> tab, optionally configure information to
-                    use a proxy:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ayn_lb1_tt">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Advanced Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Use Proxy</entry>
-                                    <entry>Select to use a proxy server for Amazon S3.</entry>
-                                </row>
-                                <row>
-                                    <entry>Proxy Host</entry>
-                                    <entry>Proxy host.</entry>
-                                </row>
-                                <row>
-                                    <entry>Proxy Port</entry>
-                                    <entry>Proxy port. </entry>
-                                </row>
-                                <row>
-                                    <entry>Proxy User</entry>
-                                    <entry>User name for the proxy.</entry>
-                                </row>
-                                <row>
-                                    <entry>Proxy Password</entry>
-                                    <entry>Password for the user name.</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/S3-AdvancedProps">
+                <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>

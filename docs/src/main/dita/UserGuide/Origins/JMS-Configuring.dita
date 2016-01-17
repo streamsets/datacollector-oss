@@ -72,6 +72,18 @@
                                     <entry>Optional message selector to limit the messages read by
                                         the origin. By default, reads all messages. </entry>
                                 </row>
+                                <row>
+                                    <entry>JMS Destination Type</entry>
+                                    <entry>Optional destination type. </entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
                                     <entry/>
@@ -101,15 +113,8 @@
                                                   scale="11" id="image_wjh_ycl_br"/></xref></li>
                                             <li>Log</li>
                                             <li>Avro</li>
+                                            <li>Protobuf</li>
                                         </ul></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
-                                    <entry/>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
-                                    <entry/>
                                 </row>
                                 <row>
                                     <entry>Produce Single Record</entry>
@@ -192,6 +197,9 @@
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-PROTO-Mess">
                 <cmd/>
             </step>
         </steps>

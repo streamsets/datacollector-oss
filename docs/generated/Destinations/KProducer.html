@@ -69,7 +69,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1316e544">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1324e544">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -87,7 +87,7 @@
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1316e561">
+                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1324e561">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -348,7 +348,7 @@
                 <div class="itemgroup info">
                     <div class="p">
                         
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d1250e3090" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d1250e3182" class="table" frame="border" border="1" rules="all">
                                 
                                 
                                 <thead class="thead" align="left">
@@ -362,7 +362,7 @@
                                 </thead>
 
                                 <tbody class="tbody">
-                                    <tr id="task_q4d_4yl_zq__d1250e3112" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3204" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Broker URI</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Connection string for the Kafka broker. Use the
@@ -374,8 +374,8 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3126" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d1250e3131" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                    <tr id="task_q4d_4yl_zq__d1250e3218" class="row">
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d1250e3223" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Evaluates an expression at runtime to determine the
@@ -383,7 +383,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3138" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3230" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Topic</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Kafka topic to use. <p class="p">Not available when using
@@ -392,7 +392,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3149" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3241" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Topic Expression</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Expression used to determine where each record is
@@ -401,7 +401,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3158" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3250" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Topic White List</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">List of valid topic names to write to when using
@@ -414,10 +414,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3170" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3262" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d1250e3177">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d1250e3269">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -431,9 +431,9 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3190" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3282" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
-                                                <img class="image" id="task_q4d_4yl_zq__d1250e3196" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                                <img class="image" id="task_q4d_4yl_zq__d1250e3288" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Expression to use when using the expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
@@ -448,7 +448,7 @@
                                     <tr class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d1250e3212">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d1250e3304">
                                                 <li class="li">Text</li>
 
                                                 <li class="li">JSON</li>
@@ -456,7 +456,7 @@
                                                 <li class="li">Delimited</li>
 
                                                 <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
-                                                  <img class="image" id="task_q4d_4yl_zq__d1250e3227" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
+                                                  <img class="image" id="task_q4d_4yl_zq__d1250e3319" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
                                                 <li class="li">Avro</li>
 
@@ -475,7 +475,7 @@
 
       </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3243" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3335" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">One Message per Batch</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">For each batch, writes the records to each partition
@@ -483,7 +483,7 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d1250e3252" class="row">
+                                    <tr id="task_q4d_4yl_zq__d1250e3344" class="row">
                                         <td class="entry" valign="top" width="27.77777777777778%" headers="d20238e500 ">Kafka Configuration</td>
 
                                         <td class="entry" valign="top" width="72.22222222222221%" headers="d20238e503 ">Additional Kafka properties to use. Click the

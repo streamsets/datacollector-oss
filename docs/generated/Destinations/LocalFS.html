@@ -73,7 +73,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1316e544">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d1324e544">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -91,7 +91,7 @@
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1316e561">
+                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1324e561">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -680,13 +680,13 @@ ${YY()}_${MM()}_${DD()}</pre>
                         record.</div>
 
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1250e2993" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_e33_3v5_1r__d1250e3084" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
                                     <th class="entry" valign="top" width="33.33333333333333%" id="d23176e978">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br" title="You can define a time limit for records to be written to its associated output directory. Any record that arrives past this limit is considered late. This limit is appropriate when you use the time of the record as the time basis.">
-                                            <img class="image" id="task_e33_3v5_1r__d1250e3009" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                            <img class="image" id="task_e33_3v5_1r__d1250e3100" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a>
                                     </th>
 
@@ -712,7 +712,7 @@ ${YY()}_${MM()}_${DD()}</pre>
                                 <tr class="row">
                                     <td class="entry" valign="top" width="33.33333333333333%" headers="d23176e978 ">Late Record Handling</td>
 
-                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23176e990 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d1250e3038">
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d23176e990 ">Determines how to handle late records:<ul class="ul" id="task_e33_3v5_1r__d1250e3129">
                                             <li class="li">Send to error - Sends the record to the stage for
                                                 error handling. </li>
 
@@ -726,7 +726,7 @@ ${YY()}_${MM()}_${DD()}</pre>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="33.33333333333333%" headers="d23176e978 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and late record directories. Hadoop FS writes records to the directories based on the configured time basis.">
-                                            <img class="image" id="task_e33_3v5_1r__d1250e3054" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+                                            <img class="image" id="task_e33_3v5_1r__d1250e3145" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
                                     <td class="entry" valign="top" width="66.66666666666666%" headers="d23176e990 ">Template for creating late record directories. You can
                                         use constants, field values, and datetime variables.

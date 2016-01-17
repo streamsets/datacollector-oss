@@ -71,7 +71,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_k2z_ncx_rt__d1316e544">
+                                    the following formats:<ul class="ul" id="concept_k2z_ncx_rt__d1324e544">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -89,7 +89,7 @@
 
                               <dd class="dd">The destination writes records as delimited data. When you use
                                     this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_k2z_ncx_rt__d1316e561">
+                                    following data structure:<ul class="ul" id="concept_k2z_ncx_rt__d1324e561">
                                           <li class="li">A root field that contains an array of maps.</li>
 
                                           <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
@@ -252,13 +252,6 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-       <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e336 ">Region</td>
-
-       <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Amazon S3 region. </td>
-
-      </tr>
-
-                                <tr class="row">
        <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e336 ">Access Key ID</td>
 
        <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Amazon S3 access key ID.</td>
@@ -273,16 +266,23 @@
       </tr>
 
                                 <tr class="row">
+       <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e336 ">Region</td>
+
+       <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Amazon S3 region. </td>
+
+      </tr>
+
+                                <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e336 ">Bucket</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Bucket containing the folder to write to.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Bucket containing the folder to use.</td>
 
                                 </tr>
 
                                 <tr class="row">
                                     <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e336 ">Folder</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Folder or directory to write to.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e339 ">Folder or directory to use.</td>
 
                                 </tr>
 
@@ -354,18 +354,18 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure information to
-                    use a proxy:</span>
+                <span class="ph cmd">On the <span class="keyword wintitle">Advanced</span> tab, optionally configure proxy
+                    information:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__table_ayn_lb1_tt" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_pxb_j3r_rt__d1250e2733" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d10819e510">Advanced Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d10819e510">Advanced Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d10819e513">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d10819e513">Description</th>
 
                                 </tr>
 
@@ -373,37 +373,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e510 ">Use Proxy</td>
+                                    <td class="entry" valign="top" width="30%" headers="d10819e510 ">Use Proxy</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e513 ">Select to use a proxy server for Amazon S3.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e510 ">Proxy Host</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e513 ">Proxy host.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d10819e513 ">Specifies whether to use a proxy to connect to Amazon
+                                        S3.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e510 ">Proxy Port</td>
+                                    <td class="entry" valign="top" width="30%" headers="d10819e510 ">Proxy Host</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e513 ">Proxy port. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e510 ">Proxy User</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e513 ">User name for the proxy.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d10819e513 ">Proxy host.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d10819e510 ">Proxy Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d10819e510 ">Proxy Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d10819e513 ">Password for the user name.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d10819e513 ">Proxy port.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d10819e510 ">Proxy User</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d10819e513 ">User name for proxy credentials.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d10819e510 ">Proxy Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d10819e513 ">Password for proxy credentials. </td>
 
                                 </tr>
 

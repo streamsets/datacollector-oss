@@ -19,7 +19,13 @@
     <p><indexterm>data formats<indexterm>Directory</indexterm></indexterm><indexterm>Directory
           origin<indexterm>data formats</indexterm></indexterm>The Directory origin processes data
       differently based on the data format. Directory processes the following types of data:<dl>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIMFILE">
           <dt/>
           <dd/>
         </dlentry>
@@ -28,12 +34,12 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIMFILE">
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
           <dt/>
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XMLFILE">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoFile">
           <dt/>
           <dd/>
         </dlentry>
@@ -41,12 +47,12 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
           <dt/>
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XMLFILE">
           <dt/>
           <dd/>
         </dlentry>

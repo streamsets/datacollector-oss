@@ -23,36 +23,6 @@
             data:</p>
         <dl>
             <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
-                <dt/>
-                <dd/>
-            </dlentry>
-            <dlentry
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVRO">
                 <dt/>
                 <dd/>
@@ -63,7 +33,37 @@
                 <dd/>
             </dlentry>
             <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-JSON">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-LOG">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-ProtoMessage">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-SDC">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-TEXT">
+                <dt/>
+                <dd/>
+            </dlentry>
+            <dlentry
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-XML">
                 <dt/>
                 <dd/>
             </dlentry>
