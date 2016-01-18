@@ -132,4 +132,16 @@ public class ClusterHdfsConfigBean {
   )
   public Map<String, String> hdfsConfigs;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Batch Size (records)",
+      description = "Max number of records per batch",
+      displayPosition = 90,
+      group = "HADOOP_FS",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int maxBatchSize;
 }
