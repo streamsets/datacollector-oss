@@ -486,11 +486,11 @@
 
                                     <td class="entry" valign="top" width="72.22222222222221%" headers="d41226e612 ">Format of data in the file. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__ul_pwv_cr2_zq">
-                                            <li class="li">Text</li>
-
                                             <li class="li">JSON</li>
 
                                             <li class="li">Log</li>
+
+                                            <li class="li">Text</li>
 
                                         </ul>
 </td>
@@ -696,43 +696,6 @@ When you restart a stopped pipeline, File Tail
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
-                    properties:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d4804e1178" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e941">Text Property</th>
-
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e944">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e941 ">Max Line Length</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e944 ">Maximum number of characters allowed for a line. Longer
-                                        lines are truncated.<p class="p">Adds a boolean field to the record to
-                                            indicate if it was truncated. The field name is
-                                            Truncated. </p>
-</td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
                 <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
@@ -742,9 +705,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e989">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e941">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e992">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e944">Description</th>
 
                                 </tr>
 
@@ -752,9 +715,9 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e989 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e941 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e992 ">Type of JSON content. Use one of the following options: <div class="p">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e944 ">Type of JSON content. Use one of the following options: <div class="p">
                                             <ul class="ul" id="task_unq_wdw_yq__d4804e909">
                                                 <li class="li">Array of Objects </li>
 
@@ -768,9 +731,9 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr id="task_unq_wdw_yq__d4804e920" class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e989 ">Maximum Object Length (chars)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e941 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e992 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e944 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                         </p>
 </td>
@@ -794,9 +757,9 @@ When you restart a stopped pipeline, File Tail
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e1058">Log Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e1009">Log Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e1061">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e1012">Description</th>
 
                                 </tr>
 
@@ -804,9 +767,9 @@ When you restart a stopped pipeline, File Tail
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1058 ">Log Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1009 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1061 ">Format of the log files. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1012 ">Format of the log files. Use one of the following
                                             options:<ul class="ul" id="task_unq_wdw_yq__d4804e996">
                                             <li class="li">Common Log Format</li>
 
@@ -828,17 +791,17 @@ When you restart a stopped pipeline, File Tail
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1058 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1009 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1061 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1012 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1058 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1009 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1061 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1012 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -879,9 +842,9 @@ When you restart a stopped pipeline, File Tail
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d41226e1186">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d41226e1137">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d41226e1189">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d41226e1140">Description</th>
 
                                             </tr>
 
@@ -889,9 +852,9 @@ When you restart a stopped pipeline, File Tail
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1186 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1137 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1189 ">Determines how to handle information that
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1140 ">Determines how to handle information that
                                                   cannot be parsed:<ul class="ul" id="task_unq_wdw_yq__d4804e1119">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
@@ -911,17 +874,17 @@ When you restart a stopped pipeline, File Tail
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1186 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1137 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1189 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1140 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1186 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1137 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1189 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1140 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -935,6 +898,43 @@ When you restart a stopped pipeline, File Tail
 </li>
 
                     </ul>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_unq_wdw_yq__d4804e1178" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d41226e1215">Text Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d41226e1218">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d41226e1215 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d41226e1218 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
 
                 </div>
             </li>

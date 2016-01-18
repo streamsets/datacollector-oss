@@ -45,9 +45,9 @@
                                                 id="image_br4_fgs_5r"/></xref></entry>
                                     <entry>Format of data in the file. Use one of the following
                                             options:<ul id="ul_pwv_cr2_zq">
-                                            <li>Text</li>
                                             <li>JSON</li>
                                             <li>Log</li>
+                                            <li>Text</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -182,13 +182,13 @@
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
-                <cmd/>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSON-2props">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>
             </step>
         </steps>

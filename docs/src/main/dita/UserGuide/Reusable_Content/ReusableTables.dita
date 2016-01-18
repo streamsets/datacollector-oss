@@ -219,16 +219,16 @@
          <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_w4w_q3p_ht"/>
         </xref></entry>
        <entry>Data format for source files. Use one of the following formats:<ul id="ul_y1t_wql_5q">
-         <li>Text</li>
-         <li>JSON</li>
-         <li>Log</li>
          <li>Avro</li>
          <li>Delimited</li>
+         <li>JSON</li>
+         <li>Log</li>
+         <li>Protobuf</li>
          <li>SDC Record <xref href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
            <image href="../Graphics/icon_moreInfo.png" scale="10" id="image_wjh_ycl_br"
             placement="inline"/></xref></li>
+         <li>Text</li>
          <li>XML</li>
-         <li>Protobuf</li>
         </ul></entry>
       </row>
      </tbody>

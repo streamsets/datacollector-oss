@@ -39,6 +39,20 @@
                             </thead>
                             <tbody>
                                 <row>
+                                    <entry>Data Format <xref href="HadoopFS-DataFormat.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                placement="inline" id="image_mfn_hwx_5r"
+                                        /></xref></entry>
+                                    <entry>
+                                        <p>Type of data to be read. Use one of the following
+                                            options: <ul id="ul_czf_y14_vs">
+                                                <li>Avro</li>
+                                                <li>Delimited</li>
+                                                <li>Log</li>
+                                            </ul></p>
+                                    </entry>
+                                </row>
+                                <row>
                                     <entry>Hadoop FS URI</entry>
                                     <entry>HDFS URI. Include the HDFS scheme and authority as
                                         follows:
@@ -54,21 +68,6 @@
                                     <entry>Include All Subdirectories</entry>
                                     <entry>Reads from all directories within the specified directory
                                         path.</entry>
-                                </row>
-                                <row>
-                                    <entry>Data Format <xref
-                                            href="HadoopFS-DataFormat.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                placement="inline" id="image_mfn_hwx_5r"
-                                        /></xref></entry>
-                                    <entry>
-                                        <p>Type of data to be read. Use one of the following
-                                            options: <ul id="ul_czf_y14_vs">
-                                                <li>Text</li>
-                                                <li>JSON</li>
-                                                <li>Log</li>
-                                            </ul></p>
-                                    </entry>
                                 </row>
                                 <row>
                                     <entry>Produce Single Record</entry>
@@ -135,45 +134,31 @@
                                         </p>
                                     </entry>
                                 </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
-                <cmd/>
-            </step>
-            <step>
-                <cmd>For JSON data, on the <wintitle>JSON</wintitle> tab, configure the following
-                    property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_h3y_342_2t">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>JSON Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
                                 <row
-                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ROW-MaxObject">
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
                                     <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
                     </table>
+                    <draft-comment author="Loretta">Delete an avro step.</draft-comment>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/LogData_Log4j">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>
             </step>
         </steps>

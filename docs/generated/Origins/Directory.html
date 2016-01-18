@@ -505,22 +505,22 @@
         </a></td>
 
        <td class="entry" valign="top" width="72.22222222222221%" headers="d38862e617 ">Data format for source files. Use one of the following formats:<ul class="ul" id="task_gfj_ssv_yq__d4813e396">
-         <li class="li">Text</li>
+         <li class="li">Avro</li>
+
+         <li class="li">Delimited</li>
 
          <li class="li">JSON</li>
 
          <li class="li">Log</li>
 
-         <li class="li">Avro</li>
-
-         <li class="li">Delimited</li>
+         <li class="li">Protobuf</li>
 
          <li class="li">SDC Record <a class="xref" href="../Pipeline_Design/SDCRecordFormat.html#concept_qkk_mwk_br" title="SDC Record is a proprietary data format that the Data Collector uses to generate error records. The Data Collector can also use the data format to read and write data.">
            <img class="image" id="task_gfj_ssv_yq__d4813e418" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></li>
 
-         <li class="li">XML</li>
+         <li class="li">Text</li>
 
-         <li class="li">Protobuf</li>
+         <li class="li">XML</li>
 
         </ul>
 </td>
@@ -723,16 +723,16 @@ Use to
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
-                    properties:</span>
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, optionally configure the
+                    following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1178" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e610" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e967">Text Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e967">Avro Property</th>
 
                                     <th class="entry" valign="top" width="77.77777777777779%" id="d38862e970">Description</th>
 
@@ -742,64 +742,16 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e967 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e967 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e970 ">Maximum number of characters allowed for a line. Longer
-                                        lines are truncated.<p class="p">Adds a boolean field to the record to
-                                            indicate if it was truncated. The field name is
-                                            Truncated. </p>
-</td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
-                    properties:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e878" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1015">JSON Property</th>
-
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1018">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1015 ">JSON Content</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1018 ">Type of JSON content. Use one of the following options: <div class="p">
-                                            <ul class="ul" id="task_gfj_ssv_yq__d4804e909">
-                                                <li class="li">Array of Objects </li>
-
-                                                <li class="li">Multiple Objects</li>
-
-                                            </ul>
-
-                                        </div>
-</td>
-
-                                </tr>
-
-                                <tr id="task_gfj_ssv_yq__d4804e920" class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1015 ">Maximum Object Length (chars)</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1018 ">Maximum number of characters in a JSON object. <p class="p">Longer
-                                            objects are diverted to the pipeline for error handling.
-                                        </p>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e970 ">Avro schema definition to use when processing data.
+                                        Overrides any existing schema definitions associated with
+                                        the data. Defining a schema can improve performance.<p class="p">When
+                                            not used, the origin uses the schema defined in the
+                                            file.</p>
+<p class="p">You can optionally use the
+                                            runtime:loadResource function to use a schema definition
+                                            stored in a runtime resource file. </p>
 </td>
 
                                 </tr>
@@ -821,9 +773,9 @@ Use to
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1084">Delimited Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1017">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1087">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1020">Description</th>
 
                                 </tr>
 
@@ -831,9 +783,9 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Delimiter Format Type</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Delimiter Format Type</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_gfj_ssv_yq__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -858,47 +810,47 @@ Use to
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Header Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Indicates whether a file contains a header line, and
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Max Record Length (chars)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Maximum length of a record in characters. Longer records
                                         are not read. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Delimiter character for a custom file type.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Escape Character</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Escape character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Delimiter character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Escape Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Quote character for a custom file type.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Escape character for a custom file type.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Quote character for a custom file type.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Root Field Type <a class="xref" href="../Pipeline_Design/DelimitedDataRootFieldTypes.html#concept_zcg_bm4_fs">
                                             <img class="image" id="task_gfj_ssv_yq__d4804e829" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Root field type to use:<ul class="ul" id="task_gfj_ssv_yq__d4804e833">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Root field type to use:<ul class="ul" id="task_gfj_ssv_yq__d4804e833">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -914,9 +866,9 @@ Use to
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1084 ">Lines to Skip</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1017 ">Lines to Skip</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1087 ">Lines to skip before reading data. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1020 ">Lines to skip before reading data. </td>
 
                                 </tr>
 
@@ -928,18 +880,18 @@ Use to
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                <span class="ph cmd">For JSON data, on the <span class="keyword wintitle">JSON</span> tab, configure the following
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1237" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e878" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d38862e1239">XML Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1173">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d38862e1242">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1176">Description</th>
 
                                 </tr>
 
@@ -947,25 +899,28 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d38862e1239 ">Delimiter Element</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1173 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d38862e1242 ">
-                                        <p class="p">XML element that acts as a delimiter. Omit a delimiter to
-                                            treat the entire XML document as one record.</p>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1176 ">Type of JSON content. Use one of the following options: <div class="p">
+                                            <ul class="ul" id="task_gfj_ssv_yq__d4804e909">
+                                                <li class="li">Array of Objects </li>
 
-                                    </td>
+                                                <li class="li">Multiple Objects</li>
+
+                                            </ul>
+
+                                        </div>
+</td>
 
                                 </tr>
 
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d38862e1239 ">Max Record Length (chars)</td>
+                                <tr id="task_gfj_ssv_yq__d4804e920" class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1173 ">Maximum Object Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d38862e1242 ">
-                                        <p class="p">The maximum number of characters in a record. Longer
-                                            records are diverted to the pipeline for error handling.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1176 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                            objects are diverted to the pipeline for error handling.
                                         </p>
-
-                                    </td>
+</td>
 
                                 </tr>
 
@@ -986,9 +941,9 @@ Use to
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1300">Log Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1241">Log Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1303">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1244">Description</th>
 
                                 </tr>
 
@@ -996,9 +951,9 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1300 ">Log Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1241 ">Log Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1303 ">Format of the log files. Use one of the following
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1244 ">Format of the log files. Use one of the following
                                             options:<ul class="ul" id="task_gfj_ssv_yq__d4804e996">
                                             <li class="li">Common Log Format</li>
 
@@ -1020,17 +975,17 @@ Use to
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1300 ">Max Line Length</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1241 ">Max Line Length</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1303 ">Maximum length of a log line. The origin truncates longer
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1244 ">Maximum length of a log line. The origin truncates longer
                                         lines. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1300 ">Retain Original Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1241 ">Retain Original Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1303 ">Determines how to treat the original log line. Select to
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1244 ">Determines how to treat the original log line. Select to
                                         include the original log line as a field in the resulting
                                             record.<p class="p">By default, the original line is
                                             discarded.</p>
@@ -1071,9 +1026,9 @@ Use to
                                         
                                         <thead class="thead" align="left">
                                             <tr class="row">
-                                                <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1428">Log4j Property</th>
+                                                <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1369">Log4j Property</th>
 
-                                                <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1431">Description</th>
+                                                <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1372">Description</th>
 
                                             </tr>
 
@@ -1081,9 +1036,9 @@ Use to
 
                                         <tbody class="tbody">
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1428 ">On Parse Error</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1369 ">On Parse Error</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1431 ">Determines how to handle information that
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1372 ">Determines how to handle information that
                                                   cannot be parsed:<ul class="ul" id="task_gfj_ssv_yq__d4804e1119">
                                                   <li class="li">Skip and Log Error - Skips reading the line
                                                   and logs a stage error.</li>
@@ -1103,17 +1058,17 @@ Use to
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1428 ">Use Custom Log Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1369 ">Use Custom Log Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1431 ">Allows you to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1372 ">Allows you to define a custom log
                                                   format.</td>
 
                                             </tr>
 
                                             <tr class="row">
-                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1428 ">Custom Format</td>
+                                                <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1369 ">Custom Format</td>
 
-                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1431 ">Use log4j variables to define a custom log
+                                                <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1372 ">Use log4j variables to define a custom log
                                                   format. </td>
 
                                             </tr>
@@ -1131,18 +1086,18 @@ Use to
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, optionally configure the
-                    following property:</span>
+                <span class="ph cmd">For protobuf data, click the <span class="keyword wintitle">Protobuf</span> tab and configure
+                    the following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e610" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1448" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1505">Avro Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d38862e1446">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1508">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d38862e1449">Description</th>
 
                                 </tr>
 
@@ -1150,16 +1105,66 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1505 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="30%" headers="d38862e1446 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1508 ">Avro schema definition to use when processing data.
-                                        Overrides any existing schema definitions associated with
-                                        the data. Defining a schema can improve performance.<p class="p">When
-                                            not used, the origin uses the schema defined in the
-                                            file.</p>
-<p class="p">You can optionally use the
-                                            runtime:loadResource function to use a schema definition
-                                            stored in a runtime resource file. </p>
+                                    <td class="entry" valign="top" width="70%" headers="d38862e1449 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
+                                            information about generating the descriptor file, see
+                                                <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38862e1446 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38862e1449 ">Message type to use to read data. Enter a message type
+                                        defined in the descriptor file.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d38862e1446 ">Delimited Messages</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d38862e1449 ">Indicates if a file might include more than one protobuf
+                                        message.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1178" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d38862e1522">Text Property</th>
+
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d38862e1525">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d38862e1522 ">Max Line Length</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d38862e1525 ">Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p class="p">Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p>
 </td>
 
                                 </tr>
@@ -1172,18 +1177,18 @@ Use to
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">For protobuf data, click the <span class="keyword wintitle">Protobuf</span> tab and configure
-                    the following properties:</span>
+                <span class="ph cmd">For XML data, on the <span class="keyword wintitle">XML</span> tab, configure the following
+                    properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1448" class="table" frame="border" border="1" rules="all">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_gfj_ssv_yq__d4804e1237" class="table" frame="border" border="1" rules="all">
                             
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d38862e1555">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d38862e1570">XML Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d38862e1558">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d38862e1573">Description</th>
 
                                 </tr>
 
@@ -1191,30 +1196,25 @@ Use to
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d38862e1555 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d38862e1570 ">Delimiter Element</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d38862e1558 ">Descriptor file (.desc) to use. The descriptor file must
-                                        be in the <span class="ph">Data
-                  Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
-                                            information about generating the descriptor file, see
-                                                <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
-</td>
+                                    <td class="entry" valign="top" width="70%" headers="d38862e1573 ">
+                                        <p class="p">XML element that acts as a delimiter. Omit a delimiter to
+                                            treat the entire XML document as one record.</p>
 
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d38862e1555 ">Message Type</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d38862e1558 ">Message type to use to read data. Enter a message type
-                                        defined in the descriptor file.</td>
+                                    </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d38862e1555 ">Delimited Messages</td>
+                                    <td class="entry" valign="top" width="30%" headers="d38862e1570 ">Max Record Length (chars)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d38862e1558 ">Indicates if a file might include more than one protobuf
-                                        message.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d38862e1573 ">
+                                        <p class="p">The maximum number of characters in a record. Longer
+                                            records are diverted to the pipeline for error handling.
+                                        </p>
+
+                                    </td>
 
                                 </tr>
 
