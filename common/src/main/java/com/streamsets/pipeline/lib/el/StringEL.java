@@ -21,12 +21,18 @@ package com.streamsets.pipeline.lib.el;
 
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringEL {
+  public static final String MEMOIZED = "memoized";
+
+  private StringEL() {
+  }
 
   @ElFunction(
     prefix = "str",
@@ -113,6 +119,7 @@ public class StringEL {
     return string.substring(0, endIndex);
   }
 
+  @SuppressWarnings("unchecked")
   @ElFunction(
     prefix = "str",
     name = "regExCapture",
@@ -121,12 +128,24 @@ public class StringEL {
     @ElParam("string") String string,
     @ElParam("regEx") String regEx,
     @ElParam("groupNumber") int groupNumber) {
-    Pattern pattern = Pattern.compile(regEx);
-    Matcher matcher = pattern.matcher(string);
-    if(matcher.find()) {
+    Map<String, Pattern> patterns = (Map<String, Pattern>) ELEval.getVariablesInScope().getContextVariable(MEMOIZED);
+    Matcher matcher = getPattern(patterns, regEx).matcher(string);
+    if (matcher.find()) {
       return matcher.group(groupNumber);
     }
     return null;
+  }
+
+  private static Pattern getPattern(Map<String, Pattern> patterns, String regEx) {
+    if (patterns != null && patterns.containsKey(regEx)) {
+      return patterns.get(regEx);
+    } else {
+      Pattern pattern = Pattern.compile(regEx);
+      if (patterns != null) {
+        patterns.put(regEx, pattern);
+      }
+      return pattern;
+    }
   }
 
   @ElFunction(

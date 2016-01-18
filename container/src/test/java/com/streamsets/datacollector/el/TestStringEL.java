@@ -19,13 +19,14 @@
  */
 package com.streamsets.datacollector.el;
 
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.lib.el.StringEL;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class TestStringEL {
 
@@ -192,5 +193,29 @@ public class TestStringEL {
         "0)}", String.class);
     Assert.assertEquals("2015-01-18 22:31:51,813 DEBUG ZkClient - Received event: WatchedEvent state:Disconnected",
       result);
+  }
+
+  @Test
+  public void testRegexCaptureMemoization() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testRegExCaptureMemoization", StringEL.class);
+
+    ELVariables variables = new ELVariables();
+
+    Map<String, Pattern> memoizedRegex = new HashMap<>();
+    variables.addContextVariable(StringEL.MEMOIZED, memoizedRegex);
+
+    final String regex = ".*";
+
+    eval.eval(variables, "${str:regExCapture(\"abcdef\", \"" + regex + "\", 0)}", String.class);
+    Assert.assertEquals(1, memoizedRegex.size());
+    Pattern compiledPattern = memoizedRegex.get(regex);
+
+    eval.eval(variables, "${str:regExCapture(\"abcdef\", \"" + regex + "\", 0)}", String.class);
+    // When executed again, make sure it still only has one pattern.
+    Assert.assertEquals(1, memoizedRegex.size());
+    // Same regex instance (no new regex was compiled
+    Assert.assertEquals(compiledPattern, memoizedRegex.get(regex));
+    // Regex pattern was the one expected
+    Assert.assertEquals(Pattern.compile(".*").pattern(), memoizedRegex.get(regex).pattern());
   }
 }
