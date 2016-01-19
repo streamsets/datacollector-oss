@@ -22,6 +22,7 @@ package com.streamsets.pipeline.stage.origin.rabbitmq;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
@@ -65,7 +66,6 @@ public class RabbitConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "",
       label = "Bindings",
       description = "Optional list of exchange bindings.",
       displayPosition = 40,
@@ -106,4 +106,10 @@ public class RabbitConfigBean {
   /** Advanced Configuration Properties */
   @ConfigDefBean(groups = "ADVANCED")
   public RabbitAdvancedConfigBean advanced = new RabbitAdvancedConfigBean();
+
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    for (RabbitExchangeConfigBean exchange : exchanges) {
+      exchange.init(context, issues);
+    }
+  }
 }

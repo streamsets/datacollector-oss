@@ -67,6 +67,11 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    conf.init(getContext(), issues);
+
+    if (!issues.isEmpty()) {
+      return issues;
+    }
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 

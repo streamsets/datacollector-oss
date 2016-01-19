@@ -29,6 +29,7 @@ public enum Errors implements ErrorCode {
   RABBITMQ_03("Invalid URI provided: {}"),
   RABBITMQ_04("Failed to parse record from received message: '{}'"),
   RABBITMQ_05("Connection to RabbitMQ has been lost."),
+  RABBITMQ_06("Exchange name cannot be empty. To bind only to the default (nameless) exchange, remove all bindings."),
   ;
   private final String msg;
 

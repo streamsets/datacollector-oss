@@ -20,14 +20,16 @@
 package com.streamsets.pipeline.stage.origin.rabbitmq;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RabbitExchangeConfigBean {
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Name",
       displayPosition = 10,
@@ -100,4 +102,10 @@ public class RabbitExchangeConfigBean {
       group = "#0"
   )
   public Map<String, Object> bindingProperties = new HashMap<>();
+
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    if (name.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.EXCHANGE.name(), "exchanges.name", Errors.RABBITMQ_06));
+    }
+  }
 }
