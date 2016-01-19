@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -57,12 +58,6 @@ public class KafkaTargetConfig {
   private static final String RETRY_BACKOFF_MS_KEY = "retry.backoff.ms";
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
-  private static final String KAFKA_PRODUCER_OPTIONS_DEFAULT =
-    "{" +
-      " \"queue.buffering.max.ms\" : \"5000\", " +
-      " \"message.send.max.retries\" : \"10\", " +
-      " \"retry.backoff.ms\" : \"1000\" " +
-      "}";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
 
   @ConfigDef(
@@ -174,13 +169,13 @@ public class KafkaTargetConfig {
   @ConfigDef(
     required = false,
     type = ConfigDef.Type.MAP,
-    defaultValue = KAFKA_PRODUCER_OPTIONS_DEFAULT,
+    defaultValue = "",
     label = "Kafka Configuration",
     description = "Additional Kafka properties to pass to the underlying Kafka producer",
     displayPosition = 60,
     group = "#0"
   )
-  public Map<String, Object> kafkaProducerConfigs;
+  public Map<String, String> kafkaProducerConfigs;
 
 
   // Private members
@@ -279,7 +274,9 @@ public class KafkaTargetConfig {
 
     if (issues.isEmpty()) {
       ProducerFactorySettings settings = new ProducerFactorySettings(
-          kafkaProducerConfigs,
+          kafkaProducerConfigs == null ?
+              Collections.<String, Object>emptyMap() :
+              new HashMap<String, Object>(kafkaProducerConfigs),
           partitionStrategy,
           metadataBrokerList,
           dataFormat
@@ -347,7 +344,9 @@ public class KafkaTargetConfig {
       kafkaBrokers,
       metadataBrokerList,
       topic,
-      kafkaProducerConfigs,
+      kafkaProducerConfigs == null ?
+          Collections.<String, Object>emptyMap() :
+          new HashMap<String, Object>(kafkaProducerConfigs),
       issues
     );
     if(valid) {
@@ -355,7 +354,9 @@ public class KafkaTargetConfig {
         int partitionCount = kafkaValidationUtil.getPartitionCount(
             metadataBrokerList,
             topic,
-            kafkaProducerConfigs,
+            kafkaProducerConfigs == null ?
+                Collections.<String, Object>emptyMap() :
+                new HashMap<String, Object>(kafkaProducerConfigs),
             messageSendMaxRetries,
             retryBackoffMs
         );
@@ -548,7 +549,9 @@ public class KafkaTargetConfig {
             int partitionCount = kafkaValidationUtil.getPartitionCount(
                 metadataBrokerList,
                 result,
-                kafkaProducerConfigs,
+                kafkaProducerConfigs == null ?
+                    Collections.<String, Object>emptyMap() :
+                    new HashMap<String, Object>(kafkaProducerConfigs),
                 messageSendMaxRetries,
                 retryBackoffMs
             );

@@ -34,7 +34,7 @@ public class KafkaTargetUtil {
       String metadataBrokerList,
       String topic,
       String partition,
-      Map<String, Object> kafkaProducerConfigs,
+      Map<String, String> kafkaProducerConfigs,
       boolean singleMessagePerBatch,
       PartitionStrategy partitionStrategy,
       boolean runtimeTopicResolution,
