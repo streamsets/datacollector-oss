@@ -211,6 +211,8 @@
             <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/ExecutiveProto.java</exclude>
             <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/ExtensionsProto.java</exclude>
             <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/PersonProto.java</exclude>
+            <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/RepeatedProto.java</exclude>
+            <exclude>commonlib/src/test/java/com/streamsets/pipeline/lib/util/OneofProto.java</exclude>
             <exclude>commonlib/src/test/resources/*.ser</exclude>
             <exclude>commonlib/src/main/resources/*</exclude>
             <exclude>basic-lib/src/test/resources/*.ser</exclude>

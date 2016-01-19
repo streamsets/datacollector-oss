@@ -27,14 +27,19 @@ import com.google.protobuf.DynamicMessage;
 import com.google.protobuf.ExtensionRegistry;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.generator.DataGeneratorException;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -279,4 +284,190 @@ public class TestProtobufTypeUtil {
     bufferedOutputStream.close();
     ProtobufTestUtil.checkProtobufDataUnknownFields(bOut.toByteArray());
   }
+
+  // Tests for repeated fields
+  @Test
+  public void testNullRepeated() throws DataGeneratorException {
+    Record r = RecordCreator.create();
+    Map<String, Field> repeated = new HashMap<>();
+    repeated.put("samples", Field.create(Field.Type.LIST, null));
+    r.set(Field.create(repeated));
+    Descriptors.Descriptor descriptor = RepeatedProto.getDescriptor().findMessageTypeByName("Repeated");
+    // repeated field samples is null and ignored
+    DynamicMessage dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+      r,
+      descriptor,
+      typeToExtensionMap,
+      defaultValueMap
+    );
+    // null repeated fields are treated as empty arrays
+    Object samples = dynamicMessage.getField(descriptor.findFieldByName("samples"));
+    Assert.assertNotNull(samples);
+    Assert.assertTrue(samples instanceof List);
+    Assert.assertEquals(0, ((List) samples).size());
+  }
+
+  @Test
+  public void testEmptyRepeated() throws DataGeneratorException {
+    Record r = RecordCreator.create();
+    Map<String, Field> repeated = new HashMap<>();
+    repeated.put("samples", Field.create(Field.Type.LIST, new ArrayList<>()));
+    r.set(Field.create(repeated));
+    Descriptors.Descriptor descriptor = RepeatedProto.getDescriptor().findMessageTypeByName("Repeated");
+    // repeated field samples is null and ignored
+    DynamicMessage dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+      r,
+      descriptor,
+      typeToExtensionMap,
+      defaultValueMap
+    );
+    // null repeated fields are treated as empty arrays
+    Object samples = dynamicMessage.getField(descriptor.findFieldByName("samples"));
+    Assert.assertNotNull(samples);
+    Assert.assertTrue(samples instanceof List);
+    Assert.assertEquals(0, ((List)samples).size());
+  }
+
+  @Test
+  public void testNonEmptyRepeated() throws DataGeneratorException {
+    Record r = RecordCreator.create();
+    Map<String, Field> repeated = new HashMap<>();
+    repeated.put(
+        "samples",
+        Field.create(
+            Field.Type.LIST,
+            Arrays.asList(
+                Field.create(1),
+                Field.create(2),
+                Field.create(3),
+                Field.create(4),
+                Field.create(5)
+            )
+        )
+    );
+    r.set(Field.create(repeated));
+    Descriptors.Descriptor descriptor = RepeatedProto.getDescriptor().findMessageTypeByName("Repeated");
+    // repeated field samples is null and ignored
+    DynamicMessage dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+      r,
+      descriptor,
+      typeToExtensionMap,
+      defaultValueMap
+    );
+    // null repeated fields are treated as empty arrays
+    Object samples = dynamicMessage.getField(descriptor.findFieldByName("samples"));
+    Assert.assertNotNull(samples);
+    Assert.assertTrue(samples instanceof List);
+    Assert.assertEquals(5, ((List)samples).size());
+  }
+
+  // Tests for Oneof s
+  @Test
+  public void testOneofProtoToSdc() throws DataParserException, IOException, DataGeneratorException {
+
+    Descriptors.Descriptor descriptor = OneofProto.getDescriptor().findMessageTypeByName("Oneof");
+    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+    OneofProto.Oneof.Builder builder = OneofProto.Oneof.newBuilder();
+
+    OneofProto.Oneof build = builder.setOneofInt(5).build();
+    build.writeDelimitedTo(bOut);
+    bOut.close();
+
+    DynamicMessage.Builder dynBldr = DynamicMessage.newBuilder(descriptor);
+    dynBldr.mergeDelimitedFrom(new ByteArrayInputStream(bOut.toByteArray()), null);
+    Record record = RecordCreator.create();
+    Field field = ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, typeToExtensionMap, dynBldr.build());
+    Assert.assertNotNull(field);
+    Assert.assertEquals(null, field.getValueAsMap().get("oneofString").getValue());
+    Assert.assertEquals(Field.Type.INTEGER, field.getValueAsListMap().get("oneofInt").getType());
+    Assert.assertEquals(5, field.getValueAsMap().get("oneofInt").getValueAsInteger());
+
+    bOut.reset();
+    builder.clear();
+    build = builder.setOneofString("Hello").build();
+    build.writeDelimitedTo(bOut);
+    bOut.close();
+
+    dynBldr = DynamicMessage.newBuilder(descriptor);
+    dynBldr.mergeDelimitedFrom(new ByteArrayInputStream(bOut.toByteArray()), null);
+    record = RecordCreator.create();
+    field = ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, typeToExtensionMap, dynBldr.build());
+    Assert.assertNotNull(field);
+    Assert.assertEquals(null, field.getValueAsMap().get("oneofInt").getValue());
+    Assert.assertEquals(Field.Type.STRING, field.getValueAsListMap().get("oneofString").getType());
+    Assert.assertEquals("Hello", field.getValueAsMap().get("oneofString").getValueAsString());
+
+  }
+
+  @Test
+  public void testOneofSdcToProtobuf() throws DataGeneratorException {
+
+    Record r1 = RecordCreator.create();
+    Map<String, Field> oneofInt = new HashMap<>();
+    oneofInt.put("oneofInt", Field.create(5));
+    r1.set(Field.create(oneofInt));
+
+    Record r2 = RecordCreator.create();
+    Map<String, Field> oneofString = new HashMap<>();
+    oneofString.put("oneofString", Field.create("Hello"));
+    r2.set(Field.create(oneofString));
+
+    Record r3 = RecordCreator.create();
+    Map<String, Field> oneof = new HashMap<>();
+    oneof.put("oneofInt", Field.create(5));
+    oneof.put("oneofString", Field.create("Hello"));
+    r3.set(Field.create(oneof));
+
+    Descriptors.Descriptor descriptor = OneofProto.getDescriptor().findMessageTypeByName("Oneof");
+
+    // in r1 oneofInt field is set
+    DynamicMessage dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+        r1,
+        descriptor,
+        typeToExtensionMap,
+        defaultValueMap
+    );
+    Object oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofString"));
+    Assert.assertNotNull(oneof_name);
+    oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofInt"));
+    Assert.assertNotNull(oneof_name);
+    Assert.assertTrue(oneof_name instanceof Integer);
+    Assert.assertEquals(5, (int) oneof_name);
+
+    // in r2 oneofString field is set
+    dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+        r2,
+        descriptor,
+        typeToExtensionMap,
+        defaultValueMap
+    );
+    oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofInt"));
+    Assert.assertNotNull(oneof_name);
+    oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofString"));
+    Assert.assertNotNull(oneof_name);
+    Assert.assertTrue(oneof_name instanceof String);
+    Assert.assertEquals("Hello", oneof_name);
+
+    // Oneof.proto defines one fields in the this order:
+    // oneof oneof_name {
+    //    int32 oneofInt = 10;
+    //    string oneofString = 2;
+    // }
+    // Therefore when both fields are set the String field is expected to take over because
+    // ProtobufTypeUtil.sdcFieldToProtobufMsg sets fields in the order of declaration in the proto file
+    // Note that field number does not matter, order of declaration matters.
+    dynamicMessage = ProtobufTypeUtil.sdcFieldToProtobufMsg(
+      r3,
+      descriptor,
+      typeToExtensionMap,
+      defaultValueMap
+    );
+    oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofInt"));
+    Assert.assertNotNull(oneof_name);
+    oneof_name = dynamicMessage.getField(descriptor.findFieldByName("oneofString"));
+    Assert.assertNotNull(oneof_name);
+    Assert.assertTrue(oneof_name instanceof String);
+    Assert.assertEquals("Hello", oneof_name);
+  }
+
 }

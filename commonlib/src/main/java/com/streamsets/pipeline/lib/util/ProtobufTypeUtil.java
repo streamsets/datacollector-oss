@@ -761,32 +761,35 @@ public class ProtobufTypeUtil {
   ) throws DataGeneratorException {
     List<Object> toReturn = new ArrayList<>();
     List<Field> valueAsList = field.getValueAsList();
-
-    for (int i = 0; i < valueAsList.size(); i++) {
-      if (f.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE) {
-        // repeated field of type message
-        toReturn.add(
+    if(valueAsList != null) {
+      // According to proto 2 and 3 language guide repeated fields can have 0 elements.
+      // Also null is treated as empty in case of json mappings so I guess we can ignore if it is null.
+      for (int i = 0; i < valueAsList.size(); i++) {
+        if (f.getJavaType() == Descriptors.FieldDescriptor.JavaType.MESSAGE) {
+          // repeated field of type message
+          toReturn.add(
             sdcFieldToProtobufMsg(
-                record,
-                valueAsList.get(i),
-                fieldPath + FORWARD_SLASH + f.getName() + "[" + i + "]",
-                f.getMessageType(),
-                messageTypeToExtensionMap,
-                defaultValueMap
+              record,
+              valueAsList.get(i),
+              fieldPath + FORWARD_SLASH + f.getName() + "[" + i + "]",
+              f.getMessageType(),
+              messageTypeToExtensionMap,
+              defaultValueMap
             )
-        );
-      } else {
-        // repeated field of primitive types
-        toReturn.add(
+          );
+        } else {
+          // repeated field of primitive types
+          toReturn.add(
             getValue(
-                f,
-                valueAsList.get(i),
-                record,
-                fieldPath + FORWARD_SLASH + f.getName(),
-                messageTypeToExtensionMap,
-                defaultValueMap
+              f,
+              valueAsList.get(i),
+              record,
+              fieldPath + FORWARD_SLASH + f.getName(),
+              messageTypeToExtensionMap,
+              defaultValueMap
             )
-        );
+          );
+        }
       }
     }
     builder.setField(f, toReturn);
