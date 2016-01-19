@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DSource;
@@ -39,6 +40,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
     onlineHelpRefUrl = "index.html#Origins/AmazonS3.html#task_gfj_ssv_yq"
 )
 @ConfigGroups(Groups.class)
+@HideConfigs(value = {"s3ConfigBean.dataFormatConfig.schemaInMessage"})
 @GenerateResourceBundle
 public class AmazonS3DSource extends DSource {
 

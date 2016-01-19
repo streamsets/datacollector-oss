@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.RawSource;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
@@ -42,6 +43,7 @@ import com.streamsets.pipeline.configurablestage.DSource;
 )
 @RawSource(rawSourcePreviewer = FileRawSourcePreviewer.class)
 @ConfigGroups(Groups.class)
+@HideConfigs(value = {"conf.dataFormatConfig.schemaInMessage"})
 @GenerateResourceBundle
 public class SpoolDirDSource extends DSource {
 

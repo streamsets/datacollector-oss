@@ -486,7 +486,7 @@ public class DataParserFormatConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Message includes Schema",
-      description = "The Kafka message includes the Avro schema",
+      description = "The message includes an Avro schema",
       displayPosition = 580,
       group = "AVRO",
       dependsOn = "dataFormat^",

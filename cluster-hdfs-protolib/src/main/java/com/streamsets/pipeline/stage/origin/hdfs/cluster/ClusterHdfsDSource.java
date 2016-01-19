@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
@@ -40,6 +41,7 @@ import com.streamsets.pipeline.configurablestage.DClusterSourceOffsetCommitter;
   onlineHelpRefUrl = "index.html#Origins/HadoopFS-origin.html#task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)
+@HideConfigs(value = {"clusterHDFSConfigBean.dataFormatConfig.schemaInMessage"})
 @GenerateResourceBundle
 public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
   private ClusterHdfsSource clusterHDFSSource;
