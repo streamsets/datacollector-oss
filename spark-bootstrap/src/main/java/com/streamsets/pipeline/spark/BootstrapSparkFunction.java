@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.spark;
 
 import com.streamsets.pipeline.BootstrapCluster;
+import com.streamsets.pipeline.Utils;
 import com.streamsets.pipeline.impl.ClusterFunction;
 import com.streamsets.pipeline.impl.Pair;
 
@@ -43,6 +44,7 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapSparkFunction.class);
   private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
   private static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
+  private static final String MAX_BATCH_SIZE = "kafkaConfigBean.maxBatchSize";
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
   private volatile boolean initialized = false;
   private ClusterFunction clusterFunction;
@@ -72,7 +74,8 @@ public class BootstrapSparkFunction<T1, T2> implements VoidFunction<Iterator<Tup
     }
     clusterFunction = (ClusterFunction)BootstrapCluster.getClusterFunction(TaskContext.get().partitionId());
     properties = BootstrapCluster.getProperties();
-    batchSize = Integer.parseInt(properties.getProperty("production.maxBatchSize", "1000").trim());
+    batchSize = Integer.parseInt(Utils.checkArgumentNotNull(properties.getProperty(MAX_BATCH_SIZE),
+      "Property " + MAX_BATCH_SIZE +" cannot be null").trim());
     initialized = true;
   }
 
