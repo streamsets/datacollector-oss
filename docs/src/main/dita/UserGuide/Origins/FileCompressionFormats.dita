@@ -49,7 +49,7 @@
                   <li>lzma</li>
                   <li>Pack200</li>
                   <li>DEFLATE</li>
-                  <li>Z<draft-comment author="Loretta">add framed-snappy?</draft-comment></li>
+                  <li>Z</li>
                 </ul></entry>
             </row>
             <row>

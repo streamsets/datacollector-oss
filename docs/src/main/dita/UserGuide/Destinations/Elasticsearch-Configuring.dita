@@ -79,7 +79,8 @@
                                                   field>')}</codeph>. Uses the datetime result as
                                                   the time basis. </li>
                                             </ul></p>
-                                        <p>When not using time-based indexes, use the default. </p>
+                                        <p>When the Index definition does not include datetime
+                                            variables, you can ignore this property. </p>
                                         <p>Default is <codeph>${time:now()}</codeph>.</p>
                                     </entry>
                                 </row>

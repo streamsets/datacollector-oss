@@ -63,18 +63,14 @@
        <entry>Number of milliseconds to wait before sending a partial or empty batch. </entry>
       </row>
       <row id="MessagesCharset">
-       <entry>Charset<draft-comment author="Loretta">message origins</draft-comment></entry>
+       <entry>Charset</entry>
        <entry>Character encoding of the messages to be processed.<p>Not used for all data
          formats.</p></entry>
       </row>
       <row id="Charset">
-       <entry>Charset<draft-comment author="Loretta">file origins</draft-comment></entry>
+       <entry>Charset</entry>
        <entry>Character encoding of the files to be processed.<p>Not used for all data
         formats.</p></entry>
-      </row>
-      <row>
-       <entry>Compression Type</entry>
-       <entry/>
       </row>
      </tbody>
     </tgroup>
