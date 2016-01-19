@@ -135,6 +135,10 @@
                                     </entry>
                                 </row>
                                 <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
                                     <entry/>
                                 </row>
@@ -149,15 +153,20 @@
                             </tbody>
                         </tgroup>
                     </table>
-                    <draft-comment author="Loretta">Delete an avro step.</draft-comment>
                 </info>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-Mess">
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">
                 <cmd/>
             </step>
+>>>>>>> Stashed changes
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Text">
                 <cmd/>
             </step>

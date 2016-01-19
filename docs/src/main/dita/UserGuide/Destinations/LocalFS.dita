@@ -25,10 +25,6 @@
             as well. </p>
         <p>You can specify the amount of time that a record can be written to its associated
             directory and what happens to late records. </p>
-        <p>You can use compression to write output files. To use LZO compression, enable the Data
-            Collector for LZO compression.</p>
+        <p>You can use Gzip, Bzip2, Snappy, and other compression formats to write output files. </p>
     </conbody>
-    <related-links>
-        <link href="HadoopFS-Comp-LZO.dita#task_wcm_n13_45"/>
-    </related-links>
 </concept>

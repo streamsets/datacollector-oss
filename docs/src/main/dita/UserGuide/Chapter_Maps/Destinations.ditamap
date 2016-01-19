@@ -60,9 +60,6 @@
    <topicref href="../Destinations/HadoopFS-TimeBasis.dita"/>
    <topicref href="../Destinations/HadoopFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/HadoopFS-HadoopProperties-dest.dita"/>
-   <topicref href="../Destinations/HadoopFS-Compression.dita">
-    <topicref href="../Destinations/HadoopFS-Comp-LZO.dita"/>
-   </topicref>
    <topicref href="../Destinations/HadoopFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/HBase.dita" chunk='to-content'>
@@ -114,9 +111,6 @@
    <topicref href="../Destinations/LocalFS-DirectoryTemplates.dita"/>
    <topicref href="../Destinations/LocalFS-TimeBasis.dita"/>
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
-   <topicref href="../Destinations/LocalFS-Compression.dita">
-    <topicref href="../Destinations/LocalFS-Comp-LZO.dita"/>
-   </topicref>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 

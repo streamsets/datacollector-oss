@@ -41,7 +41,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Hosts Configuration</entry>
+                                    <entry>Host Configuration</entry>
                                     <entry>Flume host information:<ul id="ul_al4_s1q_yr">
                                             <li>Name - Local alias for the Flume host. </li>
                                             <li>Flume host and port - Host name and port number for
@@ -110,47 +110,52 @@
                                     <entry>Milliseconds to wait before resending data.</entry>
                                 </row>
                                 <row>
-                                    <entry>Data Format</entry>
-                                    <entry>Data format for output events:<ul id="ul_ssq_sks_zr">
-                                            <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
-                                            <li>Text</li>
-                                            <li>JSON</li>
-                                            <li>Delimited</li>
-                                            <li>Avro</li>
-                                        </ul></entry>
-                                </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
-                                    <entry/>
-                                </row>
-                                <row>
                                     <entry>One Event per Batch</entry>
                                     <entry>
                                         <p>Generates a single event for all records in the batch.
                                         </p>
                                     </entry>
                                 </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Data format for output events:<ul id="ul_ssq_sks_zr">
+                                            <li>Avro</li>
+                                            <li>Binary</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Protobuf</li>
+                                            <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
+                                            <li>Text</li>
+                                        </ul></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
+                                </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Event">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Event">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
             </step>
         </steps>

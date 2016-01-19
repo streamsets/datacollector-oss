@@ -27,10 +27,10 @@
         <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
         <li>HBase - Writes data to an HBase cluster.</li>
         <li>Hive Streaming - Writes data to Hive.</li>
-        <li>Local FS - Writes data to a local file system. </li>
         <li>JDBC Producer - Writes data to JDBC.</li>
         <li>Kafka Producer - Writes data to a Kafka cluster.</li>
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
+        <li>Local FS - Writes data to a local file system. </li>
         <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>

@@ -75,28 +75,27 @@
                                                 id="image_w4w_q3p_ht"/>
                                         </xref></entry>
                                     <entry>Data format to write data: <ul id="ul_lw1_2kx_rt">
-                                            <li>Text</li>
-                                            <li>JSON</li>
                                             <li>Avro</li>
+                                            <li>Binary</li>
                                             <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Protobuf</li>
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"
                                                   placement="inline"/></xref></li>
-                                            <li>Binary</li>
-                                            <li>Protobuf</li>
+                                            <li>Text</li>
                                         </ul></entry>
-                                </row>
-                                <row>
-                                    <entry>Charset</entry>
-                                    <entry>Character set to use when writing data. <p>Not used with
-                                            all data formats.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Compress with Gzip</entry>
                                     <entry>Compresses files with gzip before writing to Amazon
                                         S3.</entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    <entry/>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -106,22 +105,22 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/S3-AdvancedProps">
                 <cmd/>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
-                <cmd/>
-            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-File">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
             </step>
         </steps>

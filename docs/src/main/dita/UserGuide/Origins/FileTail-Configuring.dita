@@ -59,14 +59,6 @@
                                         standard line of text or log line.</entry>
                                 </row>
                                 <row>
-                                    <entry>Max Line Length<draft-comment author="Loretta"
-                                            >delete?</draft-comment></entry>
-                                    <entry>Maximum number of characters in a record, including
-                                        end-of-line characters. <p>Longer text and log lines are
-                                            truncated. Longer JSON objects are sent to the stage for
-                                            error handling.</p></entry>
-                                </row>
-                                <row>
                                     <entry>Maximum Batch Size</entry>
                                     <entry>Maximum number of lines to include in a batch. Honors
                                         values up to the <ph

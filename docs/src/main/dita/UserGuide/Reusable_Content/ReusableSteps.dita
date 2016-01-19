@@ -1233,10 +1233,8 @@
                                 <row>
                                     <entry>Avro Compression Codec</entry>
                                     <entry>The Avro compression type to use. <p>When using Avro
-                                            compression, do not enable other compression available
-                                            in the destination. <draft-comment author="Loretta"
-                                                >should I remove this? Is there Flume
-                                                compression?</draft-comment></p></entry>
+                                            compression, do not enable other compression for the
+                                            destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1571,7 +1569,7 @@
                 <cmd>On the <wintitle>Output Files</wintitle> tab, configure the following
                     options:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_byd_xpd_br">
+                    <table frame="all" rowsep="1" colsep="1" id="table_lpp_dd1_s5">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.25*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.25*"/>
@@ -1584,23 +1582,24 @@
                             <tbody>
                                 <row>
                                     <entry>File Type</entry>
-                                    <entry>Output file type:<ul id="ul_lgf_j3g_br">
+                                    <entry>Output file type:<ul id="ul_pzp_dd1_s5">
                                             <li>Text files</li>
                                             <li>Sequence files</li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="row-DataFormat">
                                     <entry>Data Format</entry>
                                     <entry>Format of data to be written. Use one of the following
-                                            options:<ul id="ul_un2_cqd_br">
-                                            <li>Text</li>
-                                            <li>JSON</li>
-                                            <li>Delimited</li>
+                                            options:<ul id="ul_vzp_dd1_s5">
                                             <li>Avro</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Protobuf</li>
+                                            <li>Text</li>
                                         </ul></entry>
                                 </row>
-                                <row>
-                                    <entry>Files Prefix</entry>
+                                <row id="row-FilePrefix">
+                                    <entry>File Prefix</entry>
                                     <entry>Prefix to use for output files. Use when writing to a
                                         directory that receives files from other sources.<p>Uses the
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
@@ -1609,66 +1608,59 @@
                                                 <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.
                                         </p></entry>
                                 </row>
-                                <row>
-                                    <entry>Data Charset</entry>
-                                    <entry>Character encoding to use when writing data. <p>Not used
-                                            for the SDC Record data format.</p></entry>
-                                </row>
-                                <row>
+                                <row id="row-DirectoryTemplate">
                                     <entry>Directory Template <xref
                                             href="../Destinations/HadoopFS-DirectoryTemplates.dita">
-                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref></entry>
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_c1q_dd1_s5"/></xref></entry>
                                     <entry>Template for creating output directories. You can use
                                         constants, field values, and datetime variables. <p>Output
                                             directories are created based on the smallest datetime
                                             variable in the template.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row-DataTimeZone">
                                     <entry>Data Time Zone</entry>
-                                    <entry>Time zone to use to create directories and evaluate where
+                                    <entry>Time zone for the destination system. Used to resolve
+                                        datetimes in the directory template and evaluate where
                                         records are written.</entry>
                                 </row>
-                                <row>
+                                <row id="row-TimeBasis">
                                     <entry>Time Basis <xref
                                             href="../Destinations/HadoopFS-TimeBasis.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_a4r_rkw_45"/></xref></entry>
+                                                id="image_f1q_dd1_s5"/></xref></entry>
                                     <entry>Time basis to use for creating output directories and
                                         writing records to the directories. Use one of the following
-                                            expressions:<ul id="ul_ggs_43g_br">
+                                            expressions:<ul id="ul_h1q_dd1_s5">
                                             <li>${time:now()} - Uses the processing time as the time
                                                 basis. </li>
                                             <li>${record:value("/&lt;date field>")} - Uses the time
                                                 associated with the record as the time basis.</li>
                                         </ul></entry>
                                 </row>
-                                <row>
+                                <row id="row-MaxRecords">
                                     <entry>Max Records in a File</entry>
                                     <entry>Maximum number of records to be written to an output
                                         file. Additional records are written to a new file. <p>Use 0
                                             to opt out of this property.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row-MaxFileSize">
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size of an output file. Additional records are
                                         written to a new file. <p>Use 0 to opt out of this
                                             property.</p></entry>
                                 </row>
-                                <row>
+                                <row id="row-CCodec">
                                     <entry>Compression Codec</entry>
-                                    <entry>Program to use to compress output files:<ul
-                                            id="ul_ltx_djg_br">
+                                    <entry>Compression type for output files:<ul id="ul_o1q_dd1_s5">
                                             <li>None </li>
                                             <li>gzip</li>
                                             <li>bzip2</li>
                                             <li>Snappy</li>
-                                            <li>Other - Use for LZO or other compression types. </li>
-                                        </ul><p>LZO compression require additional configuration.
-                                            For more information, see <xref
-                                                href="../Destinations/HadoopFS-Comp-LZO.dita"
-                                        />.</p></entry>
+                                            <li>Other</li>
+                                        </ul></entry>
                                 </row>
-                                <row>
+                                <row id="row-CCodecClass">
                                     <entry>Compression Codec Class</entry>
                                     <entry>Full class name of the other compression codec that you
                                         want to use. </entry>
@@ -1676,7 +1668,7 @@
                                 <row>
                                     <entry>Sequence File Key</entry>
                                     <entry>Record key for creating Hadoop sequence files. Use one of
-                                        the following options:<ul id="ul_xzr_vkg_br">
+                                        the following options:<ul id="ul_v1q_dd1_s5">
                                             <li>${record:value("/&lt;field name>")}</li>
                                             <li>${uuid()}</li>
                                         </ul></entry>
@@ -1684,7 +1676,7 @@
                                 <row>
                                     <entry>Compression Type</entry>
                                     <entry>Compression type for sequence files when using a
-                                        compression codec:<ul id="ul_etm_1lg_br">
+                                        compression codec:<ul id="ul_bbq_dd1_s5">
                                             <li>Block Compression</li>
                                             <li>Record Compression</li>
                                         </ul></entry>
@@ -1838,25 +1830,6 @@
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/EEditor"
                                             /></entry>
                                     </row>
-                                    <row>
-                                        <entry>Data Format</entry>
-                                        <entry>Data format for output messages:<ul
-                                                id="ul_wlj_353_br">
-                                                <li>Text</li>
-                                                <li>JSON</li>
-                                                <li>Delimited</li>
-                                                <li>SDC Record <xref
-                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
-                                                  <image href="../Graphics/icon_moreInfo.png"
-                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
-                                                <li>Avro</li>
-                                                <li>Binary</li>
-                                            </ul></entry>
-                                    </row>
-                                    <row
-                                        conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
-                                        <entry/>
-                                    </row>
                                     <row id="KPOneMessPBatch">
                                         <entry>One Message per Batch</entry>
                                         <entry>For each batch, writes the records to each partition
@@ -1871,6 +1844,26 @@
                                                 broker.list property.</p><p>Several properties are
                                                 defined by default. You can edit or delete the
                                                 properties. </p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>Data Format</entry>
+                                        <entry>Data format for output messages:<ul
+                                                id="ul_wlj_353_br">
+                                                <li>Avro</li>
+                                                <li>Binary</li>
+                                                <li>Delimited</li>
+                                                <li>JSON</li>
+                                                <li>Protobuf</li>
+                                                <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_ucp_chr_br"/></xref></li>
+                                                <li>Text</li>
+                                            </ul></entry>
+                                    </row>
+                                    <row
+                                        conref="ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                        <entry/>
                                     </row>
                                 </tbody>
                             </tgroup>

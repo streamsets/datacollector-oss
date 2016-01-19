@@ -65,16 +65,16 @@
                                     <entry>Data Format</entry>
                                     <entry>Format of data to be written. Use one of the following
                                             options:<ul id="ul_un2_cqd_br">
-                                            <li>Text</li>
-                                            <li>JSON</li>
+                                            <li>Avro</li>
+                                            <li>Binary</li>
                                             <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Protobuf</li>
                                             <li>SDC Record <xref
                                                   href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
                                                   <image href="../Graphics/icon_moreInfo.png"
                                                   scale="10" id="image_wjh_ycl_br"/></xref></li>
-                                            <li>Avro</li>
-                                            <li>Binary</li>
-                                            <li>Protobuf</li>
+                                            <li>Text</li>
                                         </ul></entry>
                                 </row>
                                 <row>
@@ -99,22 +99,14 @@
                                     <entry>Select to preserve the order of records. </entry>
                                 </row>
                                 <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Charset">
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
                                     <entry/>
                                 </row>
+                               
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
-                <cmd/>
-            </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
-                <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Mess">
                 <cmd/>
@@ -122,7 +114,16 @@
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
             </step>
         </steps>

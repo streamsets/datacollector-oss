@@ -26,11 +26,6 @@
   <p>You can specify the amount of time that a record can be written to its associated directory and
       what happens to late records. </p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
-    <p>You can use compression to write output files. To use LZO compression, enable the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> for LZO
-      compression.</p>
+    <p>You can use Gzip, Bzip2, Snappy, and other compression formats to write output files. </p>
  </conbody>
-  <related-links>
-    <link href="HadoopFS-Comp-LZO.dita#task_wcm_n13_45"/>
-  </related-links>
 </concept>

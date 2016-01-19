@@ -16,7 +16,8 @@
 <concept id="concept_dd3_vhk_r5">
  <title>Time Basis and Time-Based Indexes</title>
     <shortdesc>The time basis is the time used by the Elasticsearch destination to write records to
-        time-based indexes. When indexes have no time component, you can ignore the time basis.  </shortdesc>
+        time-based indexes. When indexes have no time component, you can ignore the time basis
+        property.</shortdesc>
     <conbody>
         <p><indexterm>Elasticsearch destination<indexterm>time
                 basis</indexterm></indexterm><indexterm>time
@@ -25,15 +26,15 @@
         <p>For example, say you define the Index property using the following datetime variables:
             <codeblock>logs-${YYYY()}-${MM()}-${DD()}</codeblock></p>
         <p>If you use the time of processing as the time basis, the destination write records to
-            indexes based on the when it processes each record. If you use the time associated with
-            the data, such as a transaction timestamp, then the destination writes records to the
+            indexes based on when it processes each record. If you use the time associated with the
+            data, such as a transaction timestamp, then the destination writes records to the
             indexes based on that timestamp. </p>
         <p>You can use the following times as the time basis: <dl>
                 <dlentry>
                     <dt>Processing Time</dt>
                     <dd>When you use processing time as the time basis, the destination writes to
-                        indexes based on the processing time and the index.</dd>
-                    <dd>To use the processing time as the time basis, use the following expression:
+                        indexes based on the processing time and the index. To use the processing
+                        time as the time basis, use the following expression:
                         <codeblock>${time:now()}</codeblock>This is the default time basis. </dd>
                 </dlentry>
                 <dlentry>

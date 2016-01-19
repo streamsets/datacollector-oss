@@ -19,12 +19,8 @@
   <p><indexterm>Local FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
           formats<indexterm>Local FS destination</indexterm></indexterm>Local FS writes data based
       on the data format that you select. You can use the following data formats: <dl>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
-          <dt/>
-          <dd/>
-        </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
           <dt/>
           <dd/>
         </dlentry>
@@ -33,13 +29,16 @@
           <dt/>
           <dd/>
         </dlentry>
-        <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
           <dt/>
           <dd/>
         </dlentry>
         <dlentry
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DestDF-ProtoFile">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
           <dt/>
           <dd/>
         </dlentry>

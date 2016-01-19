@@ -19,17 +19,11 @@
   <p><indexterm>data formats<indexterm>Hadoop FS origins</indexterm></indexterm><indexterm>Hadoop FS
           origin<indexterm>data formats</indexterm></indexterm>The Hadoop FS origin processes data
       differently based on the data format that you select. The origin processes the following types
-      of data:<draft-comment author="Loretta">delete an Avro these. </draft-comment><dl>
+      of data:<dl>
         <dlentry
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
           <dt/>
           <dd/>
-        </dlentry>
-        <dlentry>
-          <dt>Avro</dt>
-          <dd>Generates a record based on the Avro data in the file and the schema being used.</dd>
-          <dd>You can use the schema associated with the file or provide an alternate schema
-            definition. Providing an alternate schema can improve performance.</dd>
         </dlentry>
         <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-DELIM">
           <dt/>

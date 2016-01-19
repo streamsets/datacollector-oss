@@ -66,7 +66,7 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Auto Create Partitions</entry>
+                                    <entry>Create Partitions</entry>
                                     <entry>Automatically creates partitions when needed. Used for
                                         partitioned tables only.</entry>
                                 </row>

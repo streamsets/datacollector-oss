@@ -379,11 +379,11 @@
                               <dt/>
                               <dd>
                                     <draft-comment author="Loretta"><b>AvroFile</b> used by Local
-                                          and Hadoop FS and other file destinations - any changes
-                                          here also put into S3 destination. <b>AvroMess</b> used by
-                                          Kafka and Kinesis Producer and other message destinations.
-                                          When making changes to these, add updates to the Flume
-                                          data formats topic when necessary. </draft-comment>
+                                          and Hadoop FS, S3, and other file destinations.
+                                                <b>AvroMess</b> used by Kafka and Kinesis Producer
+                                          and other message destinations. When making changes to
+                                          these, add updates to the Flume data formats topic when
+                                          necessary. </draft-comment>
                               </dd>
                         </dlentry>
                         <dlentry id="DEST-DF-AvroFILE">
