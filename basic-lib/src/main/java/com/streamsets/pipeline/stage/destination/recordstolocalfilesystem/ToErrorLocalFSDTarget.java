@@ -43,7 +43,7 @@ import com.streamsets.pipeline.lib.el.TimeEL;
 @ErrorStage
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
-public class RecordsToLocalFileSystemDTarget extends DTarget {
+public class ToErrorLocalFSDTarget extends DTarget {
 
   @ConfigDef(
       required = true,
