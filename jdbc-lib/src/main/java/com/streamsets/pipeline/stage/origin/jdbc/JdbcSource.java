@@ -59,10 +59,11 @@ import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS
 public class JdbcSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcSource.class);
 
-  private static final String CONNECTION_STRING = "hikariConfigBean.connectionString";
+  private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
+  private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String QUERY = "query";
   private static final String OFFSET_COLUMN = "offsetColumn";
-  private static final String DRIVER_CLASSNAME = "hikariConfigBean.driverClassName";
+  private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String QUERY_INTERVAL_EL = "queryInterval";
   private static final String TXN_ID_COLUMN_NAME = "txnIdColumnName";
   private static final String TXN_MAX_SIZE = "txnMaxSize";

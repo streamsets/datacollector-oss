@@ -66,9 +66,10 @@ import static com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean.MILLISECONDS
 public class JdbcTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcTarget.class);
 
+  private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String CUSTOM_MAPPINGS = "columnNames";
   private static final String TABLE_NAME = "tableNameTemplate";
-  private static final String CONNECTION_STRING = "connectionString";
+  private static final String CONNECTION_STRING = HIKARI_CONFIG_PREFIX + "connectionString";
   private static final String EL_PREFIX = "${";
 
   private final boolean rollbackOnError;
@@ -126,8 +127,8 @@ public class JdbcTarget extends BaseTarget {
 
     issues = hikariConfigBean.validateConfigs(context, issues);
 
-    tableNameEval = context.createELEval("tableNameTemplate");
-    validateEL(tableNameEval, tableNameTemplate, "tableNameTemplate", Errors.JDBCDEST_20, Errors.JDBCDEST_21, issues);
+    tableNameEval = context.createELEval(TABLE_NAME);
+    validateEL(tableNameEval, tableNameTemplate, TABLE_NAME, Errors.JDBCDEST_20, Errors.JDBCDEST_21, issues);
 
     if (issues.isEmpty()) {
       createDataSource(issues);
