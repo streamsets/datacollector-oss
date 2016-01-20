@@ -30,9 +30,8 @@ public enum Groups implements Label {
   JSON("JSON"),
   DELIMITED("Delimited"),
   AVRO("Avro"),
-  BINARY(""),
+  BINARY("Binary"),
   PROTOBUF("Protobuf"),
-
   ;
 
   private final String label;
