@@ -48,6 +48,9 @@ import java.util.List;
 import java.util.Set;
 
 public class Configs {
+  private static final String CONFIG_PREFIX = "config.";
+  private static final String HOST_PORTS = CONFIG_PREFIX + "hostPorts";
+  private static final String TRUST_STORE_FILE = CONFIG_PREFIX + "trustStoreFile";
 
   @ConfigDef(
       required = true,
@@ -175,7 +178,7 @@ public class Configs {
         try {
           sslSocketFactory = createSSLSocketFactory(context);
         } catch (Exception ex) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
+          issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
                                                Errors.IPC_DEST_10, ex.toString()));
           ok = false;
         }
@@ -190,39 +193,39 @@ public class Configs {
   boolean validateHostPorts(Stage.Context context, List<Stage.ConfigIssue> issues) {
     boolean ok = true;
     if (hostPorts.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_00));
+      issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_00));
       ok = false;
     } else {
       Set<String> uniqueHostPorts = new HashSet<>();
       for (String hostPort : hostPorts) {
         if (hostPort == null) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_01));
+          issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_01));
           ok = false;
         } else {
           hostPort = hostPort.toLowerCase().trim();
           uniqueHostPorts.add(hostPort);
           String[] split = hostPort.split(":");
           if (split.length != 2) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_02,
+            issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_02,
                                                  hostPort));
             ok = false;
           } else {
             try {
               InetAddress.getByName(split[0]);
             } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_03,
+              issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_03,
                                                    split[0], ex.toString()));
               ok = false;
             }
             try {
               int port = Integer.parseInt(split[1]);
               if (port < 1 || port > 65535) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_04,
+                issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_04,
                                                      hostPort));
                 ok = false;
               }
             } catch (Exception ex) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_05,
+              issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_05,
                                                    hostPort, ex.toString()));
               ok = false;
             }
@@ -230,7 +233,7 @@ public class Configs {
         }
       }
       if (ok && uniqueHostPorts.size() != hostPorts.size()) {
-        issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts", Errors.IPC_DEST_06));
+        issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS, Errors.IPC_DEST_06));
         ok = false;
       }
     }
@@ -243,17 +246,17 @@ public class Configs {
       if (!trustStoreFile.isEmpty()) {
         File file = getTrustStoreFile(context);
         if (!file.exists()) {
-          issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
+          issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
                                                Errors.IPC_DEST_07));
           ok = false;
         } else {
           if (!file.isFile()) {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
+            issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
                                                  Errors.IPC_DEST_08));
             ok = false;
           } else {
             if (!file.canRead()) {
-              issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
+              issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
                                                    Errors.IPC_DEST_09));
               ok = false;
             } else {
@@ -263,7 +266,7 @@ public class Configs {
                   keystore.load(is, trustStorePassword.toCharArray());
                 }
               } catch (Exception ex) {
-                issues.add(context.createConfigIssue(Groups.RPC.name(), "trustStoreFile",
+                issues.add(context.createConfigIssue(Groups.RPC.name(), TRUST_STORE_FILE,
                                                      Errors.IPC_DEST_10, ex.toString()));
               }
             }
@@ -355,7 +358,7 @@ public class Configs {
           if (Constants.X_SDC_PING_VALUE.equals(conn.getHeaderField(Constants.X_SDC_PING_HEADER))) {
             ok = true;
           } else {
-            issues.add(context.createConfigIssue(Groups.RPC.name(), "hostPorts",
+            issues.add(context.createConfigIssue(Groups.RPC.name(), HOST_PORTS,
                                                  Errors.IPC_DEST_12, hostPort ));
           }
         } else {
