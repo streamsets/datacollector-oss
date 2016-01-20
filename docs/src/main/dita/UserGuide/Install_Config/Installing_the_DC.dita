@@ -14,11 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bt1_zcp_kq">
-    <title>Installation and Launch (Manual Start)</title>
-    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine to run pipelines.
-        After installation, you can launch the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        manually.</shortdesc>
+    <title>Full Installation and Launch (Manual Start)</title>
     <taskbody>
         <context/>
         <steps id="steps_g53_l3p_kq">
@@ -26,7 +22,7 @@
                 <cmd><indexterm>installation<indexterm>manual
                         start</indexterm></indexterm><indexterm>launch the Data
                             Collector<indexterm>manual start</indexterm></indexterm>Download the
-                    StreamSets SDC tarball and extract it to the desired location.</cmd>
+                    full StreamSets SDC tarball and extract it to the desired location.</cmd>
             </step>
             <step>
                 <cmd>Optionally, in the <codeph>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeph> file,

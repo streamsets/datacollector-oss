@@ -14,15 +14,11 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_pnf_344_1r">
-    <title>Installation and Launch (Service Start)</title>
-    <shortdesc>Install the <ph id="pName-long">Data Collector</ph> on the machine to run pipelines.
-        After installation, you can launch the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        />.</shortdesc>
+    <title>Full Installation and Launch (Service Start)</title>
     <taskbody>
-        <context><p><indexterm>installation<indexterm>service
-            start</indexterm></indexterm><indexterm>launch the Data
-                Collector<indexterm>service start</indexterm></indexterm>Installing the <ph
+        <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch the Data
+                        Collector<indexterm>service start</indexterm></indexterm>Installing the full
+                    <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service requires sudo privileges on the root directory.</p>
             <p>This procedure walks through setting the default directories, but you can

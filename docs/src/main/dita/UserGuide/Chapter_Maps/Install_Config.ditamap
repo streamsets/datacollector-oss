@@ -24,12 +24,6 @@
    <topicref href="../Install_Config/Installing_the_DC.dita"/>
    <topicref href="../Install_Config/Installing_the_DC-Service.dita"/>
   </topicref>
-  <topicref href="../Install_Config/AdditionalStageLibraries.dita" chunk="to-content">
-   <topicmeta>
-   <shortdesc/>
-  </topicmeta>
-   <topicref href="../Install_Config/AdditionalStageLibraries-Installing.dita"/>
-  </topicref>
   <topicref href="../Install_Config/AdditionalDrivers.dita"  chunk="to-content">
    <topicmeta>
     <shortdesc/>
@@ -77,6 +71,14 @@
    <topicref href="../Install_Config/ClouderaManager-SDCConfigs.dita"/>
    <topicref href="../Install_Config/AdditionalStageLibraries-Installing-CM.dita"/>
    <topicref href="../Install_Config/AdditionalDrivers-Installing-CM.dita"/>
+  </topicref>
+  <topicref href="../Install_Config/BasicInstall_Overview.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Install_Config/BasicInstall_Step1.dita"/>
+   <topicref href="../Install_Config/BasicInstall-Step2.dita"/>
+   <topicref href="../Install_Config/BasicInstall-LibList.dita"/>
   </topicref>
   </topicref>
 </map>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_bnl_n3n_s5">
+ <title>Step 2. Install Additional Libraries</title>
+ <shortdesc>Use the command line to install additional libraries to use stages that are not included
+        in the basic installation. This is an optional step, but generally you'll want to install
+        additional libraries to process data. </shortdesc>
+ <conbody>
+        <p><indexterm>basic install<indexterm>installing additional
+                libraries</indexterm></indexterm>You can use the following commands to install
+            additional libraries:<dl>
+                <dlentry>
+                    <dt>View the list of available libraries</dt>
+                    <dd>From the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> installation directory, use the following
+                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -list</codeblock></dd>
+                    <dd>This provides a list of all available stage libraries and whether they are
+                        already installed. For more information about the stages installed with each
+                        stage library, see <xref href="BasicInstall-LibList.dita"/>.</dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Install one or more stage libraries</dt>
+                    <dd>From the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> installation directory, use the following
+                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -install=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
+                    <dd>Use the full name of the libraries that you want to install, separating them
+                        with commas. Do not include spaces in the command. </dd>
+                    <dd>For example, to install the Amazon S3 origin and destination, as well as the
+                        Cassandra destination and Elasticsearch destination for Elasticsearch 1.6.2,
+                        use the following command:
+                        <codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -install\
+=streamsets-datacollector-aws-lib,streamsets-datacollector-cassandra_2-lib,\
+streamsets-datacollector-elasticsearch_1_6-lib </codeblock></dd>
+                    <dd>When successful, the command line indicates that the stage libraries have
+                        been installed as follows: <draft-comment author="Loretta">TUCU: what would
+                            this say instead of fakerepo if using the
+                        website?</draft-comment><codeblock>Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-aws-lib-1.2.0-SNAPSHOT.tgz
+######################################################################## 100.0%
+Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-jdbc-lib-1.2.0-SNAPSHOT.tgz
+######################################################################## 100.0%
+Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-rabbitmq-lib-1.2.0-SNAPSHOT.tgz
+######################################################################## 100.0%
+
+Stage library streamsets-datacollector-aws-lib installed
+Stage library streamsets-datacollector-jdbc-lib installed
+Stage library streamsets-datacollector-rabbitmq-lib installed</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Optionally generate the command required to perform the current
+                        installation</dt>
+                    <dd>You can use the <codeph>stagelibs</codeph> command to generate the command
+                        to install the libraries that are installed on the current <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        />. This allows you to easily replicate the installation elsewhere. </dd>
+                    <dd>For example, say you installed three libraries above, and then installed
+                        another two. The <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> can generate the command required to install all five libraries.</dd>
+                    <dd>To generate an installation script based on the current <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> installation, use the following
+                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -installScript</codeblock></dd>
+                    <dd>The command returns an install command, such as the following:
+                        <codeblock>=================================================================================
+streamsets stagelibs -install=streamsets-datacollector-apache-kafka_0_8_1-lib,\
+streamsets-datacollector-aws-lib,streamsets-datacollector-basic-lib,\
+streamsets-datacollector-cdh_kafka_1_3-lib,streamsets-datacollector-jdbc-lib,\
+streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
+=================================================================================</codeblock></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>When necessary, uninstall libraries</dt>
+                    <dd>You can uninstall libraries when necessary. To unstall a library, use the
+                        following
+                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
+                    <dd>Use the full name of the libraries that you want to install, separating them
+                        with commas. Do not include spaces in the command. </dd>
+                </dlentry>
+            </dl></p>
+ </conbody>
+</concept>

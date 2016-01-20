@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can install the Data Collector and start it manually or run it as a service. After installation, you can optionally install additional stages, create additional users, customize the Data Collector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation and Configuration"></meta><meta name="abstract" content="You can install the Data Collector and start it manually or run it as a service."></meta><meta name="description" content="You can install the Data Collector and start it manually or run it as a service."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation and Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can install the Data Collector and start it manually or run it as a service. If you use Cloudera Manager, you can alternatively install and administer the Data Collector through Cloudera Manager. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Installation and Configuration"></meta><meta name="abstract" content="You can install the Data Collector and start it manually or run it as a service."></meta><meta name="description" content="You can install the Data Collector and start it manually or run it as a service."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_gbn_4lv_1r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Installation and Configuration</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -37,16 +37,20 @@
  
   <div class="body conbody"><p class="shortdesc">You can install the <span class="ph">Data
                   Collector</span> and start it
-    manually or run it  as a service. </p>
-
-    <p class="p">After installation, you can optionally install additional stages, create additional users,
-      customize the <span class="ph">Data
-                  Collector</span>, and
-      configure the environment.</p>
+    manually or run it as a service. </p>
 
     <p class="p">If you use Cloudera Manager, you can alternatively install and administer the <span class="ph">Data
                   Collector</span> through
       Cloudera Manager. For more information, see <a class="xref" href="ClouderaManagerInstallation.html#concept_nb5_c3m_25" title="You can install the StreamSets Data Collector with Cloudera Manager.">Installation with Cloudera Manager</a>.</p>
+
+    <p class="p">You can alternatively install a basic version of the <span class="ph">Data
+                  Collector</span>, and add
+      additional stage libraries for additional functionality as needed. For more information, see
+        <a class="xref" href="BasicInstall_Overview.html#concept_vvw_p3m_s5" title="You can download and install a basic version of the Data Collector, and then install individual stage libraries as needed.">Basic Installation with Custom Libraries</a>.</p>
+
+    <p class="p">After installation, you can create additional users, customize the <span class="ph">Data
+                  Collector</span>, and
+      configure the environment. </p>
 
   </div>
 
@@ -65,9 +69,9 @@
         
         <thead class="thead" align="left">
           <tr class="row">
-            <th class="entry" valign="top" width="28.49002849002849%" id="d35463e81">Requirement</th>
+            <th class="entry" valign="top" width="28.49002849002849%" id="d36563e97">Requirement</th>
 
-            <th class="entry" valign="top" width="71.5099715099715%" id="d35463e88">Description</th>
+            <th class="entry" valign="top" width="71.5099715099715%" id="d36563e104">Description</th>
 
           </tr>
 
@@ -75,9 +79,9 @@
 
         <tbody class="tbody">
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d35463e81 ">Operating Systems</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d36563e97 ">Operating Systems</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d35463e88 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d36563e104 ">Use one of the following operating systems and versions:<ul class="ul" id="concept_vzg_n2p_kq__ul_cjh_sw4_1r">
                 <li class="li">Mac OS X</li>
 
                 <li class="li">CentOS 6 or 7</li>
@@ -92,16 +96,16 @@
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d35463e81 ">Java</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d36563e97 ">Java</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d35463e88 ">Oracle Java 7 or 8</td>
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d36563e104 ">Oracle Java 7 or 8</td>
 
           </tr>
 
           <tr class="row">
-            <td class="entry" valign="top" width="28.49002849002849%" headers="d35463e81 ">Browser</td>
+            <td class="entry" valign="top" width="28.49002849002849%" headers="d36563e97 ">Browser</td>
 
-            <td class="entry" valign="top" width="71.5099715099715%" headers="d35463e88 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
+            <td class="entry" valign="top" width="71.5099715099715%" headers="d36563e104 ">Use the latest version of one of the following browsers:<ul class="ul" id="concept_vzg_n2p_kq__ul_cvr_bx4_1r">
                 <li class="li">Chrome</li>
 
                 <li class="li">Firefox</li>
@@ -122,19 +126,14 @@
 
 </div>
 <div class="topic task nested1" id="task_bt1_zcp_kq">
-    <h2 class="title topictitle2">Installation and Launch (Manual Start)</h2>
+    <h2 class="title topictitle2">Full Installation and Launch (Manual Start)</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Install the <span class="ph" id="pName-long">Data Collector</span> on the machine to run pipelines.
-        After installation, you can launch the <span class="ph">Data
-                  Collector</span>
-        manually.</p>
-
+    <div class="body taskbody">
         <div class="section context"></div>
 
         <ol class="ol steps" id="task_bt1_zcp_kq__steps_g53_l3p_kq"><li class="li step stepexpand">
                 <span class="ph cmd">Download the
-                    StreamSets SDC tarball and extract it to the desired location.</span>
+                    full StreamSets SDC tarball and extract it to the desired location.</span>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">Optionally, in the <samp class="ph codeph">&lt;SDCinstalldir&gt;/libexec/sdc-env.sh</samp> file,
@@ -181,14 +180,11 @@
 
 </div>
 <div class="topic task nested1" id="task_pnf_344_1r">
-    <h2 class="title topictitle2">Installation and Launch (Service Start)</h2>
+    <h2 class="title topictitle2">Full Installation and Launch (Service Start)</h2>
 
-    
-    <div class="body taskbody"><p class="shortdesc">Install the <span class="ph" id="pName-long">Data Collector</span> on the machine to run pipelines.
-        After installation, you can launch the <span class="ph">Data
-                  Collector</span>.</p>
-
-        <div class="section context"><p class="p">Installing the <span class="ph">Data
+    <div class="body taskbody">
+        <div class="section context"><p class="p">Installing the full
+                    <span class="ph">Data
                   Collector</span> as a service requires sudo privileges on the root directory.</p>
 
             <p class="p">This procedure walks through setting the default directories, but you can
