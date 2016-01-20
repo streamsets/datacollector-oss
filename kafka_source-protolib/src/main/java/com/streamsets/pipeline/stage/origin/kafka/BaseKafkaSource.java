@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
@@ -30,7 +31,6 @@ import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -101,44 +101,54 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     parserFactory = conf.dataFormatConfig.getParserFactory();
 
     // Validate broker config
-    try {
-      int partitionCount = kafkaValidationUtil.getPartitionCount(
+    List<HostAndPort> kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(
+        issues,
+        conf.metadataBrokerList,
+        KafkaOriginGroups.KAFKA.name(),
+        KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+        getContext()
+    );
+
+    if(!kafkaBrokers.isEmpty()) {
+      try {
+        int partitionCount = kafkaValidationUtil.getPartitionCount(
           conf.metadataBrokerList,
           conf.topic,
           conf.kafkaConsumerConfigs == null ?
-              Collections.<String, Object>emptyMap() :
-              new HashMap<String, Object>(conf.kafkaConsumerConfigs),
+            Collections.<String, Object>emptyMap() :
+            new HashMap<String, Object>(conf.kafkaConsumerConfigs),
           3,
           1000
-      );
-      if (partitionCount < 1) {
-        issues.add(
-            getContext().createConfigIssue(
-                KafkaOriginGroups.KAFKA.name(),
-                KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
-                KafkaErrors.KAFKA_42,
-                conf.topic
-            )
         );
-      } else {
-        //cache the partition count as parallelism for future use
-        originParallelism = partitionCount;
-      }
-    } catch (StageException e) {
-      issues.add(
-          getContext().createConfigIssue(
+        if (partitionCount < 1) {
+          issues.add(
+            getContext().createConfigIssue(
               KafkaOriginGroups.KAFKA.name(),
               KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
-              KafkaErrors.KAFKA_41,
-              conf.topic,
-              e.toString(),
-              e
+              KafkaErrors.KAFKA_42,
+              conf.topic
+            )
+          );
+        } else {
+          //cache the partition count as parallelism for future use
+          originParallelism = partitionCount;
+        }
+      } catch (StageException e) {
+        issues.add(
+          getContext().createConfigIssue(
+            KafkaOriginGroups.KAFKA.name(),
+            KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "topic",
+            KafkaErrors.KAFKA_41,
+            conf.topic,
+            e.toString(),
+            e
           )
-      );
+        );
+      }
     }
 
     // Validate zookeeper config
-    List<KafkaBroker> kafkaBrokers = kafkaValidationUtil.validateZkConnectionString(
+    kafkaValidationUtil.validateZkConnectionString(
         issues,
         conf.zookeeperConnect,
         KafkaOriginGroups.KAFKA.name(),
@@ -146,9 +156,20 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext()
     );
 
-     //validate connecting to kafka
-     if (kafkaBrokers != null && !kafkaBrokers.isEmpty() && conf.topic !=null && !conf.topic.isEmpty()) {
-       ConsumerFactorySettings settings = new ConsumerFactorySettings(
+    //consumerGroup
+    if (conf.consumerGroup == null || conf.consumerGroup.isEmpty()) {
+      issues.add(
+        getContext().createConfigIssue(
+          KafkaOriginGroups.KAFKA.name(),
+          KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
+          KafkaErrors.KAFKA_33
+        )
+      );
+    }
+
+    //validate connecting to kafka
+    if (issues.isEmpty()) {
+      ConsumerFactorySettings settings = new ConsumerFactorySettings(
           conf.zookeeperConnect,
           conf.metadataBrokerList,
           conf.topic,
@@ -157,23 +178,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           conf.kafkaConsumerConfigs == null ?
               Collections.<String, Object>emptyMap() :
               new HashMap<String, Object>(conf.kafkaConsumerConfigs),
-          conf.consumerGroup
-       );
-       kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
-       kafkaConsumer.validate(issues, getContext());
-     }
+              conf.consumerGroup
+      );
+      kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
+      kafkaConsumer.validate(issues, getContext());
+    }
 
-     //consumerGroup
-     if (conf.consumerGroup == null || conf.consumerGroup.isEmpty()) {
-       issues.add(
-           getContext().createConfigIssue(
-               KafkaOriginGroups.KAFKA.name(),
-               KafkaConfigBean.KAFKA_CONFIG_BEAN_PREFIX + "consumerGroup",
-               KafkaErrors.KAFKA_33
-           )
-       );
-     }
-     return issues;
+    return issues;
   }
 
   // This API is being used by ClusterKafkaSource
@@ -189,6 +200,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           3,
           1000
       );
+      if(originParallelism < 1) {
+        throw new StageException(KafkaErrors.KAFKA_42, conf.topic);
+      }
     }
     return originParallelism;
   }

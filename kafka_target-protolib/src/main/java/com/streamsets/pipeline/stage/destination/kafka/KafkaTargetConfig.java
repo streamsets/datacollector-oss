@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kafka;
 
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -28,7 +29,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
@@ -188,7 +188,7 @@ public class KafkaTargetConfig {
   private ELVars topicVars;
   private Set<String> allowedTopics;
   private boolean allowAllTopics;
-  private List<KafkaBroker> kafkaBrokers;
+  private List<HostAndPort> kafkaBrokers;
   // cache topic name vs the number of partitions
   private Map<String, Integer> topicPartitionMap;
   // cache invalid topic names encountered while resolving the topic names dynamically at runtime
@@ -347,7 +347,8 @@ public class KafkaTargetConfig {
       kafkaProducerConfigs == null ?
           Collections.<String, Object>emptyMap() :
           new HashMap<String, Object>(kafkaProducerConfigs),
-      issues
+      issues,
+      true
     );
     if(valid) {
       try {
@@ -383,7 +384,7 @@ public class KafkaTargetConfig {
   private void validateTopicWhiteList(
       Stage.Context context,
       List<Stage.ConfigIssue> issues,
-      List<KafkaBroker> kafkaBrokers
+      List<HostAndPort> kafkaBrokers
   ) {
     //if runtimeTopicResolution then topic white list cannot be empty
     if(topicWhiteList == null || topicWhiteList.isEmpty()) {

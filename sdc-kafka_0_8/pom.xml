@@ -35,6 +35,7 @@
     <kafka.version>0.8.1.1</kafka.version>
     <tec.version>0.3</tec.version>
     <scala.version>2.10.4</scala.version>
+    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>
@@ -125,6 +126,12 @@
       <!-- Changed the scope from test to compile so that it gets shipped in the dist.
       without this lib i see class not found exception at times while starting pipeline.
       Will investigate the problem.-->
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

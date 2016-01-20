@@ -19,10 +19,11 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.kafka.api.LowLevelConsumerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumerFactory;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
+
 
 public class Kafka09LowLevelConsumerFactory extends SdcKafkaLowLevelConsumerFactory {
 
@@ -38,7 +39,7 @@ public class Kafka09LowLevelConsumerFactory extends SdcKafkaLowLevelConsumerFact
     return new KafkaLowLevelConsumer09(
         settings.getTopic(),
         settings.getPartition(),
-        new KafkaBroker(settings.getBrokerHost(), settings.getBrokerPort()),
+        HostAndPort.fromParts(settings.getBrokerHost(), settings.getBrokerPort()),
         settings.getMinFetchSize(),
         settings.getMaxFetchSize(),
         settings.getMaxWaitTime(),

@@ -20,11 +20,11 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 public class TestKafkaValidationUtil09 {
@@ -147,25 +148,29 @@ public class TestKafkaValidationUtil09 {
       sourceContext,
       "KAFKA",
       "topic",
-      new ArrayList<KafkaBroker>(),
+      new ArrayList<HostAndPort>(),
       "localhost:" + port,
       topic1,
       new HashMap<String, Object>(),
-      configIssues
+      configIssues,
+      true
     );
 
     Assert.assertEquals(true, valid);
     Assert.assertEquals(0, configIssues.size());
 
+    Map<String, Object> kafkaClientConfig = new HashMap<>();
+    kafkaClientConfig.put("max.block.ms", 5000);
     valid = sdcKafkaValidationUtil.validateTopicExistence(
       sourceContext,
       "KAFKA",
       "topic",
-      new ArrayList<KafkaBroker>(),
+      new ArrayList<HostAndPort>(),
       "localhost:" + port,
       topicX,
-      new HashMap<String, Object>(),
-      configIssues
+      kafkaClientConfig,
+      configIssues,
+      true
     );
 
     Assert.assertEquals(false, valid);

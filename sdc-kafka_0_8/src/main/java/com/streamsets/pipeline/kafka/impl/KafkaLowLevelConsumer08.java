@@ -19,10 +19,10 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.SdcKafkaLowLevelConsumer;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import kafka.api.FetchRequest;
@@ -61,7 +61,7 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
   /*Topic to readData from*/
   private final int partition;
   /*Host on which the seed broker is running*/
-  private final KafkaBroker broker;
+  private final HostAndPort broker;
   /*client id or consumer group id*/
   private final String clientName;
   /*The max amount of data that needs to be fetched from kafka in a single attempt*/
@@ -71,13 +71,20 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
   /*The max time to wait before returning from a kafka read operation if no message is available*/
   private final int maxWaitTime;
   /*replica brokers*/
-  private List<KafkaBroker> replicaBrokers;
+  private List<HostAndPort> replicaBrokers;
 
   private SimpleConsumer consumer;
-  private KafkaBroker leader;
+  private HostAndPort leader;
 
-  public KafkaLowLevelConsumer08(String topic, int partition, KafkaBroker broker, int minFetchSize, int maxFetchSize,
-                                 int maxWaitTime, String clientName) {
+  public KafkaLowLevelConsumer08(
+      String topic,
+      int partition,
+      HostAndPort broker,
+      int minFetchSize,
+      int maxFetchSize,
+      int maxWaitTime,
+      String clientName
+  ) {
     this.topic = topic;
     this.partition = partition;
     this.broker = broker;
@@ -89,7 +96,7 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
   }
 
   public void init() throws StageException {
-    List<KafkaBroker> brokers = new ArrayList<>();
+    List<HostAndPort> brokers = new ArrayList<>();
     brokers.add(broker);
     PartitionMetadata metadata = getPartitionMetadata(brokers, topic, partition);
     if (metadata == null) {
@@ -100,19 +107,19 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
       LOG.error(KafkaErrors.KAFKA_24.getMessage(), topic, partition);
       throw new StageException(KafkaErrors.KAFKA_24, topic, partition);
     }
-    leader = new KafkaBroker(metadata.leader().host(), metadata.leader().port());
+    leader = HostAndPort.fromParts(metadata.leader().host(), metadata.leader().port());
     //recreate consumer instance with the leader information for that topic
     LOG.info(
         "Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
         "fetch size {}, client columnName {}",
-        leader.getHost(),
+        leader.getHostText(),
         leader.getPort(),
         maxWaitTime,
         maxFetchSize,
         clientName
     );
     consumer = new SimpleConsumer(
-        leader.getHost(),
+        leader.getHostText(),
         leader.getPort(),
         maxWaitTime,
         maxFetchSize,
@@ -211,18 +218,18 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
     }
   }
 
-  private KafkaBroker findNewLeader(KafkaBroker oldLeader, String topic, int partition) throws StageException {
+  private HostAndPort findNewLeader(HostAndPort oldLeader, String topic, int partition) throws StageException {
     //try 3 times to find a new leader
     for (int i = 0; i < 3; i++) {
       boolean sleep;
       PartitionMetadata metadata = getPartitionMetadata(replicaBrokers, topic, partition);
       if (metadata == null || metadata.leader() == null) {
         sleep = true;
-      } else if (oldLeader.getHost().equalsIgnoreCase(metadata.leader().host()) && i == 0) {
+      } else if (oldLeader.getHostText().equalsIgnoreCase(metadata.leader().host()) && i == 0) {
         //leader has not yet changed, give zookeeper sometime
         sleep = true;
       } else {
-        return new KafkaBroker(metadata.leader().host(), metadata.leader().port());
+        return HostAndPort.fromParts(metadata.leader().host(), metadata.leader().port());
       }
       if (sleep) {
         ThreadUtil.sleep(ONE_SECOND);
@@ -232,15 +239,15 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
     throw new StageException(KafkaErrors.KAFKA_21);
   }
 
-  private PartitionMetadata getPartitionMetadata(List<KafkaBroker> brokers, String topic, int partition) {
+  private PartitionMetadata getPartitionMetadata(List<HostAndPort> brokers, String topic, int partition) {
     PartitionMetadata returnMetaData = null;
-    for(KafkaBroker broker : brokers) {
+    for(HostAndPort broker : brokers) {
       SimpleConsumer simpleConsumer = null;
       try {
         LOG.info("Creating SimpleConsumer using the following configuration: host {}, port {}, max wait time {}, max " +
-          "fetch size {}, client columnName {}", broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+          "fetch size {}, client columnName {}", broker.getHostText(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
           METADATA_READER_CLIENT);
-        simpleConsumer = new SimpleConsumer(broker.getHost(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
+        simpleConsumer = new SimpleConsumer(broker.getHostText(), broker.getPort(), METADATA_READER_TIME_OUT, BUFFER_SIZE,
           METADATA_READER_CLIENT);
 
         List<String> topics = Collections.singletonList(topic);
@@ -257,7 +264,7 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
           }
         }
       } catch (Exception e) {
-        LOG.error(KafkaErrors.KAFKA_25.getMessage(), broker.getHost() + ":" + broker.getPort(), topic, partition,
+        LOG.error(KafkaErrors.KAFKA_25.getMessage(), broker.toString(), topic, partition,
           e.toString(), e);
       } finally {
         if (simpleConsumer != null) {
@@ -268,7 +275,7 @@ public class KafkaLowLevelConsumer08 implements SdcKafkaLowLevelConsumer {
     if (returnMetaData != null) {
       replicaBrokers.clear();
       for (kafka.cluster.Broker replica : returnMetaData.replicas()) {
-        replicaBrokers.add(new KafkaBroker(replica.host(), replica.port()));
+        replicaBrokers.add(HostAndPort.fromParts(replica.host(), replica.port()));
       }
     }
     return returnMetaData;

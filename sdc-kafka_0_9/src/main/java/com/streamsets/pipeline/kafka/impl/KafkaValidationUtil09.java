@@ -19,24 +19,28 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.KafkaBroker;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
+import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.PartitionInfo;
-import org.apache.kafka.common.errors.AuthorizationException;
-import org.apache.kafka.common.errors.WakeupException;
-import org.apache.zookeeper.common.PathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
+public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements SdcKafkaValidationUtil {
 
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaValidationUtil09.class);
   private static final String KAFKA_VERSION = "0.9";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
 
@@ -45,6 +49,7 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
     return KAFKA_VERSION;
   }
 
+  @Override
   public int getPartitionCount(
       String metadataBrokerList,
       String topic,
@@ -52,109 +57,53 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
       int messageSendMaxRetries,
       long retryBackoffMs
   ) throws StageException {
-    KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
-    List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
-    return partitionInfoList.size();
+    int partitionCount = -1;
+    try {
+      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
+      List<PartitionInfo> partitionInfoList = kafkaConsumer.partitionsFor(topic);
+      if(partitionInfoList != null) {
+        partitionCount = partitionInfoList.size();
+      }
+    } catch (KafkaException e) {
+      LOG.error(Utils.format(KafkaErrors.KAFKA_41.getMessage(), topic, e.toString()));
+      throw new StageException(KafkaErrors.KAFKA_41, topic, e.toString());
+    }
+    return partitionCount;
   }
 
-  public List<KafkaBroker> validateKafkaBrokerConnectionString(
-      List<Stage.ConfigIssue> issues,
-      String connectionString,
-      String configGroupName,
-      String configName,
-      Stage.Context context
-  ) {
-    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    if (connectionString == null || connectionString.isEmpty()) {
-      issues.add(context.createConfigIssue(configGroupName, configName,
-          KafkaErrors.KAFKA_06, configName));
-    } else {
-      String[] brokers = connectionString.split(",");
-      for (String broker : brokers) {
-        String[] brokerHostAndPort = broker.split(":");
-        if (brokerHostAndPort.length != 2) {
-          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
-        } else {
-          try {
-            int port = Integer.parseInt(brokerHostAndPort[1].trim());
-            kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
-          } catch (NumberFormatException e) {
-            issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectionString));
-          }
-        }
-      }
-    }
-    return kafkaBrokers;
-  }
-
-  public List<KafkaBroker> validateZkConnectionString(
-      List<Stage.ConfigIssue> issues,
-      String connectString,
-      String configGroupName,
-      String configName,
-      Stage.Context context
-  ) {
-    List<KafkaBroker> kafkaBrokers = new ArrayList<>();
-    if (connectString == null || connectString.isEmpty()) {
-      issues.add(context.createConfigIssue(configGroupName, configName,
-          KafkaErrors.KAFKA_06, configName));
-      return kafkaBrokers;
-    }
-
-    String chrootPath;
-    int off = connectString.indexOf('/');
-    if (off >= 0) {
-      chrootPath = connectString.substring(off);
-      // ignore a single "/". Same as null. Anything longer must be validated
-      if (chrootPath.length() > 1) {
-        try {
-          PathUtils.validatePath(chrootPath);
-        } catch (IllegalArgumentException e) {
-          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_09, connectString,
-            e.toString()));
-        }
-      }
-      connectString = connectString.substring(0, off);
-    }
-
-    String brokers[] = connectString.split(",");
-    for(String broker : brokers) {
-      String[] brokerHostAndPort = broker.split(":");
-      if(brokerHostAndPort.length != 2) {
-        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_09, connectString,
-          "The connection String is not of the form <HOST>:<PORT>"));
-      } else {
-        try {
-          int port = Integer.parseInt(brokerHostAndPort[1].trim());
-          kafkaBrokers.add(new KafkaBroker(brokerHostAndPort[0].trim(), port));
-        } catch (NumberFormatException e) {
-          issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_07, connectString,
-            e.toString()));
-        }
-      }
-    }
-    return kafkaBrokers;
-  }
-
+  @Override
   public boolean validateTopicExistence(
     Stage.Context context,
     String groupName,
     String configName,
-    List<KafkaBroker> kafkaBrokers,
+    List<HostAndPort> kafkaBrokers,
     String metadataBrokerList,
     String topic,
     Map<String, Object> kafkaClientConfigs,
-    List<Stage.ConfigIssue> issues
+    List<Stage.ConfigIssue> issues,
+    boolean producer
   ) {
     boolean valid = true;
     if(topic == null || topic.isEmpty()) {
       issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_05));
       valid = false;
     } else {
-      KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(metadataBrokerList, kafkaClientConfigs);
+      List<PartitionInfo> partitionInfos;
       try {
-        List<PartitionInfo> partitionInfos = kafkaConsumer.partitionsFor(topic);
-        if(null == partitionInfos || partitionInfos.size() == 0) {
+        if(producer) {
+          KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(
+              metadataBrokerList,
+              kafkaClientConfigs
+          );
+          partitionInfos = kafkaProducer.partitionsFor(topic);
+        } else {
+          KafkaConsumer<String, String> kafkaConsumer = createTopicMetadataClient(
+              metadataBrokerList,
+              kafkaClientConfigs
+          );
+          partitionInfos = kafkaConsumer.partitionsFor(topic);
+        }
+        if(null == partitionInfos || partitionInfos.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   groupName,
@@ -166,7 +115,8 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
           );
           valid = false;
         }
-      } catch (WakeupException | AuthorizationException e) {
+      } catch (KafkaException e) {
+        LOG.error(Utils.format(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList));
         issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList));
         valid = false;
       }
@@ -192,7 +142,30 @@ public class KafkaValidationUtil09 implements SdcKafkaValidationUtil {
     return new KafkaConsumer<>(props);
   }
 
-  private void addSecurityProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+  private KafkaProducer<String, String> createProducerTopicMetadataClient(
+    String metadataBrokerList,
+    Map<String, Object> kafkaClientConfigs
+  ) {
+    Properties props = new Properties();
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, metadataBrokerList);
+    props.put(ProducerConfig.CLIENT_ID_CONFIG, "topicMetadataClient");
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+
+    // Check if user has configured 'max.block.ms' option, otherwise wait for 60 seconds to fetch metadata
+    if (kafkaClientConfigs != null &&
+        kafkaClientConfigs.containsKey(ProducerConfig.MAX_BLOCK_MS_CONFIG)
+    ) {
+      props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, kafkaClientConfigs.get(ProducerConfig.MAX_BLOCK_MS_CONFIG));
+    } else {
+      props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 60000);
+    }
+    addSecurityProperties(kafkaClientConfigs, props);
+
+    return new KafkaProducer<>(props);
+  }
+
+  private static void addSecurityProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
     //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
       kafkaClientConfigs.remove(Kafka09Constants.BOOTSTRAP_SERVERS_KEY);
