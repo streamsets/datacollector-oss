@@ -355,16 +355,16 @@ public class HdfsTargetConfigBean {
       validHadoopDir = validateHadoopDir(
           context,
           HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
-          dirPathTemplate,
-          issues
+          Groups.OUTPUT_FILES.name(),
+          dirPathTemplate, issues
       );
       if (lateRecordsAction == LateRecordsAction.SEND_TO_LATE_RECORDS_FILE &&
           lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         validHadoopDir &= validateHadoopDir(
             context,
             HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
-            lateRecordsDirPathTemplate,
-            issues
+            Groups.LATE_RECORDS.name(),
+            lateRecordsDirPathTemplate, issues
         );
       }
     }
@@ -785,11 +785,11 @@ public class HdfsTargetConfigBean {
     return validHapoopFsUri;
   }
 
-  private boolean validateHadoopDir(Stage.Context context, String configName, String dirPathTemplate,
-                            List<Stage.ConfigIssue> issues) {
+  private boolean validateHadoopDir(Stage.Context context, String configName, String configGroup,
+                            String dirPathTemplate, List<Stage.ConfigIssue> issues) {
     boolean ok;
     if (!dirPathTemplate.startsWith("/")) {
-      issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_40));
+      issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_40));
       ok = false;
     } else {
       int firstEL = dirPathTemplate.indexOf("$");
@@ -806,11 +806,11 @@ public class HdfsTargetConfigBean {
             if (fs.mkdirs(dir)) {
               ok = true;
             } else {
-              issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_41));
+              issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_41));
               ok = false;
             }
           } catch (IOException ex) {
-            issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_42,
+            issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_42,
               ex.toString()));
             ok = false;
           }
@@ -821,14 +821,14 @@ public class HdfsTargetConfigBean {
             fs.delete(dummy, false);
             ok = true;
           } catch (IOException ex) {
-            issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_43,
+            issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_43,
               ex.toString()));
             ok = false;
           }
         }
       } catch (Exception ex) {
         LOG.info("Validation Error: " + Errors.HADOOPFS_44.getMessage(), ex.toString(), ex);
-        issues.add(context.createConfigIssue(Groups.HADOOP_FS.name(), configName, Errors.HADOOPFS_44,
+        issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
           ex.toString()));
         ok = false;
       }
