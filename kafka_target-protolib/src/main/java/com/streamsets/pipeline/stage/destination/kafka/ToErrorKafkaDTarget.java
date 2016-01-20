@@ -28,11 +28,12 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Write to Kafka",
     description = "Writes records to Kafka as SDC Records",
     icon = "",
-    onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r")
+    onlineHelpRefUrl = "index.html#Pipeline_Configuration/ErrorHandling.html#concept_kgc_l4y_5r",
+    upgrader = KafkaTargetUpgrader.class)
 @ErrorStage
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {"kafkaConfigBean.dataFormat"})
 @GenerateResourceBundle
