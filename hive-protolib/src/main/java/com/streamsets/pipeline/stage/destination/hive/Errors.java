@@ -37,6 +37,7 @@ public enum Errors implements ErrorCode {
   HIVE_11("Failed to get login user"),
   HIVE_12("Failed to create Hive Endpoint: {}"),
   HIVE_13("Hive Metastore Thrift URL or Hive Configuration Directory is required."),
+  HIVE_14("Hive Metastore Thrift URL {} is not a valid URI"),
   ;
   private final String msg;
 
