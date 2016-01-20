@@ -599,7 +599,8 @@ public class PipelineConfigurationValidator {
       }
       for (Config conf : stageConf.getConfiguration()) {
         ConfigDefinition confDef = stageDef.getConfigDefinition(conf.getName());
-        preview &= validateConfigDefinition(confDef, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
+        Set<String> hideConfigs = stageDef.getHideConfigs();
+        preview &= validateConfigDefinition(confDef, hideConfigs, conf, stageConf, stageDef, null, issueCreator, true/*inject*/);
         if (confDef != null && stageDef.hasPreconditions() &&
             confDef.getName().equals(StageConfigBean.STAGE_PRECONDITIONS_CONFIG)) {
           preview &= validatePreconditions(stageConf.getInstanceName(), confDef, conf, issues, issueCreator);
@@ -745,6 +746,7 @@ public class PipelineConfigurationValidator {
 
   private boolean validateConfigDefinition(
       ConfigDefinition confDef,
+      Set<String> hideConfigs,
       Config conf,
       StageConfiguration stageConf,
       StageDefinition stageDef,
@@ -754,7 +756,7 @@ public class PipelineConfigurationValidator {
   ) {
     //parentConf is applicable when validating complex fields.
     boolean preview = true;
-    if (confDef == null) {
+    if (confDef == null && !hideConfigs.contains(conf.getName())) {
       // stage configuration defines an invalid configuration
       issues.add(
           issueCreator.create(
@@ -765,29 +767,31 @@ public class PipelineConfigurationValidator {
       );
       return false;
     }
-    boolean validateConfig = true;
-    if (confDef.getDependsOn() != null &&
-        (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().size() > 0)) {
-      String dependsOn = confDef.getDependsOn();
-      List<Object> triggeredBy = confDef.getTriggeredByValues();
-      Config dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
-      if (dependsOnConfig == null) {
-        //complex field case?
-        //look at the configurations in model definition
-        if (parentConf != null && parentConf.containsKey(dependsOn)) {
-          dependsOnConfig = new Config(dependsOn, parentConf.get(dependsOn));
+    if (confDef != null) {
+      boolean validateConfig = true;
+      if (confDef.getDependsOn() != null &&
+          (confDef.getTriggeredByValues() != null && confDef.getTriggeredByValues().size() > 0)) {
+        String dependsOn = confDef.getDependsOn();
+        List<Object> triggeredBy = confDef.getTriggeredByValues();
+        Config dependsOnConfig = getConfig(stageConf.getConfiguration(), dependsOn);
+        if (dependsOnConfig == null) {
+          //complex field case?
+          //look at the configurations in model definition
+          if (parentConf != null && parentConf.containsKey(dependsOn)) {
+            dependsOnConfig = new Config(dependsOn, parentConf.get(dependsOn));
+          }
+        }
+        if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
+          validateConfig = false;
+          Object value = dependsOnConfig.getValue();
+          for (Object trigger : triggeredBy) {
+            validateConfig |= String.valueOf(value).equals(String.valueOf(trigger));
+          }
         }
       }
-      if (dependsOnConfig != null && dependsOnConfig.getValue() != null) {
-        validateConfig = false;
-        Object value = dependsOnConfig.getValue();
-        for (Object trigger : triggeredBy) {
-          validateConfig |= String.valueOf(value).equals(String.valueOf(trigger));
-        }
+      if (conf.getValue() != null && confDef.getModel() != null) {
+        preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
       }
-    }
-    if (conf.getValue() != null && confDef.getModel() != null) {
-      preview &= validateModel(stageConf, stageDef, confDef, conf, issueCreator);
     }
     return preview;
   }
@@ -1051,9 +1055,11 @@ public class PipelineConfigurationValidator {
       String configName = entry.getKey();
       Object value = entry.getValue();
       ConfigDefinition configDefinition = configDefinitionsMap.get(configName);
+      Set<String> hideConfigs = stageDef.getHideConfigs();
       Config config = new Config(configName, value);
       preview &= validateConfigDefinition(
           configDefinition,
+          hideConfigs,
           config,
           stageConf,
           stageDef,

@@ -19,17 +19,22 @@
  */
 package com.streamsets.datacollector.config;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.creation.StageConfigBean;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Captures the configuration options for a {@link com.streamsets.pipeline.api.Stage}.
@@ -39,7 +44,7 @@ public class StageDefinition {
   private final StageLibraryDefinition libraryDefinition;
   private final boolean privateClassLoader;
   private final ClassLoader classLoader;
-  private final Class klass;
+  private final Class<? extends Stage> klass;
   private final String name;
   private final int version;
   private final String label;
@@ -119,7 +124,8 @@ public class StageDefinition {
     privateClassLoader = def.privateClassLoader;
     this.classLoader = classLoader;
     try {
-      klass = classLoader.loadClass(def.getClassName());
+
+      klass = (Class<? extends Stage>) classLoader.loadClass(def.getClassName());
     } catch (Exception ex) {
       throw new Error(ex);
     }
@@ -277,6 +283,14 @@ public class StageDefinition {
 
   public ConfigDefinition getConfigDefinition(String configName) {
     return configDefinitionsMap.get(configName);
+  }
+
+  public Set<String> getHideConfigs() {
+    HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
+    Set<String> hideConfigSet = (hideConfigs != null) ?
+        ImmutableSet.copyOf(hideConfigs.value()) :
+        Collections.<String>emptySet();
+    return hideConfigSet;
   }
 
   public Map<String, ConfigDefinition> getConfigDefinitionsMap() {
