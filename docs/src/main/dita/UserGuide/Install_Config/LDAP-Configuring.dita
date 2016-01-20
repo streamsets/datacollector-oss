@@ -19,30 +19,187 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
         LDAP authentication.</shortdesc>
  <conbody>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+        <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             provides file-based and LDAP authentication. If your organization uses LDAP, configure
             the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             /> to use LDAP authentication. By default, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses file-based authentication.</p>
-        <p>To enable LDAP authentication, configure the following properties in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            properties file: <ol id="ol_cmg_2bt_g5">
-                <li>To enable LDAP authentication, set
-                        <uicontrol>http.authentication.login.module</uicontrol> to
-                        <uicontrol>ldap</uicontrol>.</li>
-                <li>Configure <uicontrol>http.authentication.ldap.role.mapping</uicontrol> to map
-                    LDAP groups to <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> roles.<p>You can map multiple roles to the same group or vice versa. Use the
+        <p>To enable LDAP authentication, perform the following tasks:<dl>
+                <dlentry>
+                    <dt>Configure the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> LDAP properties</dt>
+                    <dd>Configure the LDAP properties in the <ph
+                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                        /> configuration file:<ul id="ul_tqz_224_s5">
+                            <li>To enable LDAP authentication, set
+                                    <uicontrol>http.authentication.login.module</uicontrol> to
+                                    <uicontrol>ldap</uicontrol>.</li>
+                            <li>Configure
+                                    <uicontrol>http.authentication.ldap.role.mapping</uicontrol> to
+                                map LDAP groups to <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                /> roles.<p>You can map multiple roles to the same group or vice
+                                    versa. Use the following
+                                    convention:<codeblock>&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>,&lt;additional SDC role>);
+&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>... </codeblock></p><p>Use
+                                    a semicolon to separate LDAP groups and commas to separate <ph
+                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> roles. The following example maps the DEV LDAP group to the
+                                    creator role, the OPS LDAP group to the manager role, and maps
+                                    the SUPER LDAP group to both creator and
+                                    manager:<codeblock>DEV:creator;OPS:manager,SUPER:creator,manager</codeblock></p></li>
+                        </ul></dd>
+                </dlentry>
+                <dlentry>
+                    <dt>Configure the ldap-login.conf file</dt>
+                    <dd>Configure the <codeph>ldap-login.conf</codeph> file. The file is in the
                         following
-                        convention:<codeblock>&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>,&lt;additional SDC role>);
-&lt;ldap group>:&lt;SDC role>,&lt;additional SDC role>... </codeblock></p></li>
-            </ol></p>
-        <p>Use a semicolon to separate LDAP groups and commas to separate <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            roles. The following example maps the DEV LDAP group to the creator role, the OPS LDAP
-            group to the manager role, and maps the SUPER LDAP group to both creator and
-            manager:<codeblock>DEV:creator;OPS:manager,SUPER:creator,manager</codeblock></p>
- </conbody>
+                        location:<codeblock>&lt;SDCInstallDir>/etc/ldap-login.conf</codeblock></dd>
+                    <dd>In the file, configure the following properties:<table frame="all"
+                            rowsep="1" colsep="1" id="table_g4g_hx4_s5">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                                <thead>
+                                    <row>
+                                        <entry>LDAP Property</entry>
+                                        <entry>Description</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry>debug</entry>
+                                        <entry>Enables LDAP debugging. Default is false.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>useLdaps</entry>
+                                        <entry>Enables using LDAP over TSL or SSL. Default is false.
+                                        </entry>
+                                    </row>
+                                    <row>
+                                        <entry>contextFactory</entry>
+                                        <entry>LDAP initial context factory. Default is
+                                            com.sun.jndi.ldap.LdapCtxFactory.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>hostname</entry>
+                                        <entry>Host name of the LDAP server.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>port</entry>
+                                        <entry>Port of the LDAP server.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>bindDn</entry>
+                                        <entry>Root DN for the connection. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>bindPassword</entry>
+                                        <entry>Password for the connection. For additional security,
+                                            save the password in the
+                                            &lt;SDCinstalldir>/etc/ldap-bind-password.txt file
+                                            without additional characters, spaces, or line breaks.
+                                                <p>Default is @ldap-bind-password.txt@, which points
+                                                the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> to the ldap-bind-password.txt file for the
+                                                password.</p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>authenticationMethod</entry>
+                                        <entry>Authentication method. Default is simple.
+                                                <draft-comment author="Loretta">should I say
+                                                more?</draft-comment></entry>
+                                    </row>
+                                    <row>
+                                        <entry>forceBindingLogin</entry>
+                                        <entry>Determines if binding login checks are performed.
+                                                <p>When set to false, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> performs the authentication based on information
+                                                received from the LDAP server. Use for Digest
+                                                authentication.</p><p>When set to true, the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                /> passes the user credentials to the LDAP server
+                                                for authentication. Use for Basic or Form
+                                                authentication, or when the password stored in the
+                                                LDAP server is encrypted.</p><p>Default is false.
+                                                  <draft-comment author="Loretta">add info about
+                                                  permissions/roles required by the bindDN? Or add
+                                                  in the bindDN property
+                                            above?</draft-comment></p></entry>
+                                    </row>
+                                    <row>
+                                        <entry>userBaseDn</entry>
+                                        <entry>Base DN for user information. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>userRdnAttribute</entry>
+                                        <entry>Name of the username attribute. Default is
+                                            uid.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>userIdAttribute</entry>
+                                        <entry>Name of the user ID attribute. Default is
+                                            uid.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>userPasswordAttribute</entry>
+                                        <entry>Name of the attribute where the user password is
+                                            stored. Default is userPassword.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>userObjectClass</entry>
+                                        <entry>Name of the user object class. Default is
+                                            inetOrgPerson.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>roleBaseDn</entry>
+                                        <entry>Base DN to search for role membership. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>roleNameAttribute</entry>
+                                        <entry>Name of the attribute for role names. Default is
+                                            roleName.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>roleMemberAttribute</entry>
+                                        <entry>Name of the role attribute for user names. Default is
+                                            uniqueMember. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>roleObjectClass</entry>
+                                        <entry>Role object class. Default is
+                                            groupOfUniqueNames.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table></dd>
+                    <dd>The following example shows the ldap-login.conf file for an Active Directory
+                        server:<codeblock>ldap {
+  com.streamsets.datacollector.http.LdapLoginModule required
+  debug="true"
+  useLdaps="true"
+  contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
+  hostname="*******"
+  port="636"
+  bindDn="********"
+  bindPassword="@ldap-bind-password.txt@"
+  authenticationMethod="simple"
+  forceBindingLogin="true"
+  userBaseDn="ou=example,dc=example,dc=net"
+  userRdnAttribute="CN"
+  userIdAttribute="sAMAccountName"
+  userPasswordAttribute="userPassword"
+  userObjectClass="person"
+  roleBaseDn="ou=Example,dc=example,dc=net"
+  roleNameAttribute=“cn"
+  roleMemberAttribute="member"
+  roleObjectClass="group";
+};</codeblock></dd>
+                </dlentry>
+            </dl></p>
+    </conbody>
 </concept>

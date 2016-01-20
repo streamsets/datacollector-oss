@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication. When you use file ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Authentication"></meta><meta name="abstract" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication."></meta><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if you have it. By default, the Data Collector uses file authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dns_dvg_h5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Authentication</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your organization uses it. By default, the Data Collector uses file authentication. When you ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data Collector Authentication"></meta><meta name="abstract" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your organization uses it. By default, the Data Collector uses file authentication."></meta><meta name="description" content="The Data Collector can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your organization uses it. By default, the Data Collector uses file authentication."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_dns_dvg_h5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data Collector Authentication</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -39,7 +39,7 @@
  
  <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
                   Collector</span> can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if
-        you have it. By default, the <span class="ph">Data
+        your organization uses it. By default, the <span class="ph">Data
                   Collector</span> uses
         file authentication.</p>
 
@@ -65,7 +65,7 @@
                   Collector</span> to use
         LDAP authentication.</p>
 
-  <p class="p">The <span class="ph">Data
+        <p class="p">The <span class="ph">Data
                   Collector</span>
             provides file-based and LDAP authentication. If your organization uses LDAP, configure
             the <span class="ph">Data
@@ -73,33 +73,252 @@
                   Collector</span>
             uses file-based authentication.</p>
 
-        <div class="p">To enable LDAP authentication, configure the following properties in the <span class="ph">Data
-                  Collector</span>
-            properties file: <ol class="ol" id="concept_x2j_5ts_g5__ol_cmg_2bt_g5">
-                <li class="li">To enable LDAP authentication, set
-                        <span class="ph uicontrol">http.authentication.login.module</span> to
-                        <span class="ph uicontrol">ldap</span>.</li>
+        <div class="p">To enable LDAP authentication, perform the following tasks:<dl class="dl">
+                
+                    <dt class="dt dlterm">Configure the <span class="ph">Data
+                  Collector</span> LDAP properties</dt>
 
-                <li class="li">Configure <span class="ph uicontrol">http.authentication.ldap.role.mapping</span> to map
-                    LDAP groups to <span class="ph">Data
-                  Collector</span> roles.<div class="p">You can map multiple roles to the same group or vice versa. Use the
-                        following
-                        convention:<pre class="pre codeblock">&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;,&lt;additional SDC role&gt;);
+                    <dd class="dd">Configure the LDAP properties in the <span class="ph">Data
+                  Collector</span> configuration file:<ul class="ul" id="concept_x2j_5ts_g5__ul_tqz_224_s5">
+                            <li class="li">To enable LDAP authentication, set
+                                    <span class="ph uicontrol">http.authentication.login.module</span> to
+                                    <span class="ph uicontrol">ldap</span>.</li>
+
+                            <li class="li">Configure
+                                    <span class="ph uicontrol">http.authentication.ldap.role.mapping</span> to
+                                map LDAP groups to <span class="ph">Data
+                  Collector</span> roles.<div class="p">You can map multiple roles to the same group or vice
+                                    versa. Use the following
+                                    convention:<pre class="pre codeblock">&lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;,&lt;additional SDC role&gt;);
 &lt;ldap group&gt;:&lt;SDC role&gt;,&lt;additional SDC role&gt;... </pre>
+</div>
+<div class="p">Use
+                                    a semicolon to separate LDAP groups and commas to separate <span class="ph">Data
+                  Collector</span> roles. The following example maps the DEV LDAP group to the
+                                    creator role, the OPS LDAP group to the manager role, and maps
+                                    the SUPER LDAP group to both creator and
+                                    manager:<pre class="pre codeblock">DEV:creator;OPS:manager,SUPER:creator,manager</pre>
 </div>
 </li>
 
-            </ol>
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Configure the ldap-login.conf file</dt>
+
+                    <dd class="dd">Configure the <samp class="ph codeph">ldap-login.conf</samp> file. The file is in the
+                        following
+                        location:<pre class="pre codeblock">&lt;SDCInstallDir&gt;/etc/ldap-login.conf</pre>
+</dd>
+
+                    <dd class="dd">In the file, configure the following properties:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x2j_5ts_g5__table_g4g_hx4_s5" class="table" frame="border" border="1" rules="all">
+                                
+                                
+                                <thead class="thead" align="left">
+                                    <tr class="row">
+                                        <th class="entry" valign="top" width="30%" id="d31372e160">LDAP Property</th>
+
+                                        <th class="entry" valign="top" width="70%" id="d31372e163">Description</th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody class="tbody">
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">debug</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Enables LDAP debugging. Default is false.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">useLdaps</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Enables using LDAP over TSL or SSL. Default is false.
+                                        </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">contextFactory</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">LDAP initial context factory. Default is
+                                            com.sun.jndi.ldap.LdapCtxFactory.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">hostname</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Host name of the LDAP server.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">port</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Port of the LDAP server.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">bindDn</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Root DN for the connection. </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">bindPassword</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Password for the connection. For additional security,
+                                            save the password in the
+                                            &lt;SDCinstalldir&gt;/etc/ldap-bind-password.txt file
+                                            without additional characters, spaces, or line breaks.
+                                                <p class="p">Default is @ldap-bind-password.txt@, which points
+                                                the <span class="ph">Data
+                  Collector</span> to the ldap-bind-password.txt file for the
+                                                password.</p>
+</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">authenticationMethod</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Authentication method. Default is simple.
+                                                </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">forceBindingLogin</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Determines if binding login checks are performed.
+                                                <p class="p">When set to false, the <span class="ph">Data
+                  Collector</span> performs the authentication based on information
+                                                received from the LDAP server. Use for Digest
+                                                authentication.</p>
+<p class="p">When set to true, the <span class="ph">Data
+                  Collector</span> passes the user credentials to the LDAP server
+                                                for authentication. Use for Basic or Form
+                                                authentication, or when the password stored in the
+                                                LDAP server is encrypted.</p>
+<p class="p">Default is false.
+                                                  </p>
+</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">userBaseDn</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Base DN for user information. </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">userRdnAttribute</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the username attribute. Default is
+                                            uid.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">userIdAttribute</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the user ID attribute. Default is
+                                            uid.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">userPasswordAttribute</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the attribute where the user password is
+                                            stored. Default is userPassword.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">userObjectClass</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the user object class. Default is
+                                            inetOrgPerson.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">roleBaseDn</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Base DN to search for role membership. </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">roleNameAttribute</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the attribute for role names. Default is
+                                            roleName.</td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">roleMemberAttribute</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Name of the role attribute for user names. Default is
+                                            uniqueMember. </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31372e160 ">roleObjectClass</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31372e163 ">Role object class. Default is
+                                            groupOfUniqueNames.</td>
+
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+</div>
+</dd>
+
+                    <dd class="dd">The following example shows the ldap-login.conf file for an Active Directory
+                        server:<pre class="pre codeblock">ldap {
+  com.streamsets.datacollector.http.LdapLoginModule required
+  debug="true"
+  useLdaps="true"
+  contextFactory="com.sun.jndi.ldap.LdapCtxFactory"
+  hostname="*******"
+  port="636"
+  bindDn="********"
+  bindPassword="@ldap-bind-password.txt@"
+  authenticationMethod="simple"
+  forceBindingLogin="true"
+  userBaseDn="ou=example,dc=example,dc=net"
+  userRdnAttribute="CN"
+  userIdAttribute="sAMAccountName"
+  userPasswordAttribute="userPassword"
+  userObjectClass="person"
+  roleBaseDn="ou=Example,dc=example,dc=net"
+  roleNameAttribute=“cn"
+  roleMemberAttribute="member"
+  roleObjectClass="group";
+};</pre>
+</dd>
+
+                
+            </dl>
 </div>
 
-        <div class="p">Use a semicolon to separate LDAP groups and commas to separate <span class="ph">Data
-                  Collector</span>
-            roles. The following example maps the DEV LDAP group to the creator role, the OPS LDAP
-            group to the manager role, and maps the SUPER LDAP group to both creator and
-            manager:<pre class="pre codeblock">DEV:creator;OPS:manager,SUPER:creator,manager</pre>
-</div>
-
- </div>
+    </div>
 
 </div>
 <div class="topic concept nested1" id="concept_dt2_cpb_kr">

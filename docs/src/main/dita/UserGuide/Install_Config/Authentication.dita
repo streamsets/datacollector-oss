@@ -18,7 +18,7 @@
         Authentication</title>
  <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /> can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if
-        you have it. By default, the <ph
+        your organization uses it. By default, the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         file authentication.</shortdesc>
  <conbody>
