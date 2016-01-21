@@ -398,7 +398,7 @@ public class FileTailSource extends BaseSource {
         List<FileLine> lines = chunk.getLines();
         int truncatedLine = chunk.isTruncated() ? lines.size()-1 : -1;
 
-        for(int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {
           FileLine line = lines.get(i);
           String sourceId = liveFileStr + "::" + line.getFileOffset();
           try (DataParser parser = parserFactory.getParser(sourceId, line.getText())) {
@@ -413,10 +413,13 @@ public class FileTailSource extends BaseSource {
               }
               record.getHeader().setAttribute("file", chunk.getFile().getPath().toString());
               batchMaker.addRecord(record, outputLane);
-              recordCounter++;
             }
           } catch (IOException | DataParserException ex) {
             handleException(sourceId, ex);
+          }
+          if (++recordCounter >= maxBatchSize) {
+            // break the for loop so that the while condition will be re-tested.
+            break;
           }
         }
       }
