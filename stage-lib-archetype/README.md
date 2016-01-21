@@ -26,12 +26,12 @@ Creating a project using the archetype is accomplished like so:
 % mvn archetype:generate \
     -DarchetypeGroupId=com.streamsets \
     -DarchetypeArtifactId=streamsets-datacollector-stage-lib-tutorial \
-    -DarchetypeVersion=1.1.1
+    -DarchetypeVersion=<version>
 ```
 
 This will then ask you a few questions:
 
   * Define value for property 'groupId': : **com.mytest**
   * Define value for property 'artifactId': : **mygame**
-  * Define value for property 'version':  1.0-SNAPSHOT: : **<default>**
+  * Define value for property 'version':  <version>: : **<default>**
   * Define value for property 'package':  com.mytest: : **<default>**
