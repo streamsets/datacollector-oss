@@ -14,21 +14,20 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_u1v_nkt_25">
-    <title>Step 3. Configure a StreamSets Service</title>
+    <title>Step 3. Configure the StreamSets Service</title>
     <taskbody>
-        <context>
-            <p><indexterm>Cloudera Manager<indexterm>creating a StreamSets
+        <context><p><indexterm>Cloudera Manager<indexterm>creating a StreamSets
                     service</indexterm></indexterm>After you install the StreamSets CSD, create and
-                configure a StreamSets service. When you configure the service, you assign the <ph
+                configure a StreamSets service. When you configure the service, you assign <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to the hosts where you want it to run.</p>
-            <note>To run the <ph
+                /> to the hosts where you want it to run.</p>To run <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
+            cluster mode, colocate <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
+            a node with the Spark Gateway role. <p>To write to HDFS, HBase, or Hive, colocate <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> in cluster mode, colocate the Data Collector on a node with the Spark Gateway
-                role.</note>
-            <p> When working with multiple clusters, perform the following steps for each
-                cluster.</p>
-        </context>
+                /> on a node with the HDFS Gateway Role. </p><p> When working with multiple
+                clusters, perform the following steps for each cluster.</p></context>
         <steps id="steps_vy1_wkt_25">
             <step>
                 <cmd>In Cloudera Manager, click the menu for the cluster you want to use, then click

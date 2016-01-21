@@ -115,21 +115,25 @@
                                     </row>
                                     <row>
                                         <entry>forceBindingLogin</entry>
-                                        <entry>Determines if binding login checks are performed.
-                                                <p>When set to false, the <ph
+                                        <entry>Determines if binding login checks are performed. Use
+                                            one of the following options:<ul id="ul_dpb_z2z_s5">
+                                                <li>false - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> performs the authentication based on information
-                                                received from the LDAP server. Use for Digest
-                                                authentication.</p><p>When set to true, the <ph
+                                                  /> performs the authentication based on
+                                                  information received from the LDAP server. <p>When
+                                                  set to false, the bindDn user must have permission
+                                                  to access the details, password, and group
+                                                  information for users.</p><p>Use for Digest
+                                                  authentication.</p></li>
+                                                <li>true - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                                /> passes the user credentials to the LDAP server
-                                                for authentication. Use for Basic or Form
-                                                authentication, or when the password stored in the
-                                                LDAP server is encrypted.</p><p>Default is false.
-                                                  <draft-comment author="Loretta">add info about
-                                                  permissions/roles required by the bindDN? Or add
-                                                  in the bindDN property
-                                            above?</draft-comment></p></entry>
+                                                  /> passes the user credentials to the LDAP server
+                                                  for authentication. <p>When set to true, the
+                                                  bindDn user must have permission to access the
+                                                  group information for users.</p><p>Use for Basic
+                                                  or Form authentication, or when the password
+                                                  stored in the LDAP server is encrypted.</p></li>
+                                            </ul><p>Default is false. </p></entry>
                                     </row>
                                     <row>
                                         <entry>userBaseDn</entry>

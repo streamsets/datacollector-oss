@@ -121,7 +121,7 @@
         record. </p>
 
         <div class="p">For example, you
-            have an alert that triggers when the number of columns in the record changes. When
+            have an alert that triggers when the number of fields in the record changes. When
             processing the records with the following number of columns, an alert triggers for both
             the third and fourth records:<table cellpadding="4" cellspacing="0" summary="" id="concept_rj4_y4g_q5__simpletable_xwv_stg_q5" border="1" class="simpletable"><tr class="sthead">
                     <th valign="bottom" align="left" id="d3776e166" class="stentry" width="50%">Record Number</th>
@@ -158,15 +158,16 @@
 
         <p class="p">Data drift functions include an ignoreWhenMissing flag to determine the behavior when the
             specified field does not exist. ignore a record if the specified field is missing. When
-            the specified field is missing and ignoreWhenMissing is set to yes, an alert is not
+            the specified field is missing and ignoreWhenMissing is set to true, an alert is not
             triggered.</p>
 
-        <p class="p">When the specified field is missing and the ignoreWhenMissing flag is set to no, the
+        <p class="p">When the specified field is missing and the ignoreWhenMissing flag is set to false, the
             expression triggers an alert for the missing field, and again for the next record when
             the field is present. </p>
 
         <div class="p">For example, the expression that checks the datatype of the ID column with
-            ignoreWhenMissing set to no: <pre class="pre codeblock">${drift:type('/UserID'), n}</pre>
+            ignoreWhenMissing set to false:
+            <pre class="pre codeblock">${drift:type('/UserID'), false}</pre>
 </div>
 
         <p class="p">Say all records include the UserID field, and then a single record passes without the

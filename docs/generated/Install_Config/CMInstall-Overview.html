@@ -60,10 +60,10 @@
             with Cloudera Manager, perform the following steps:<ol class="ol" id="concept_nb5_c3m_25__ol_n14_bf4_25">
                 <li class="li">Install the StreamSets custom service descriptor (CSD). </li>
 
-                <li class="li">Distribute the <span class="ph">Data
+                <li class="li">Download, distribute, and activate the <span class="ph">Data
                   Collector</span> parcel.</li>
 
-                <li class="li">Configure a StreamSets service.</li>
+                <li class="li">Configure the StreamSets service.</li>
 
             </ol>
 </div>
@@ -100,13 +100,19 @@
 <li class="li step stepexpand">
                 <span class="ph cmd">Set the file ownership to <samp class="ph codeph">cloudera-scm:cloudera-scm</samp> with
                     permission <span class="ph uicontrol">644</span>. </span>
+                <div class="itemgroup info">For example:
+                    <pre class="pre codeblock">chown cloudera-scm:cloudera-scm /opt/cloudera/csd/streamsets*.jar
+chmod 644 /opt/cloudera/csd/streamsets*.jar</pre>
+</div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd">Use the following command to restart the Cloudera Manager Server:</span>
-                <div class="itemgroup info">
-                    <pre class="pre codeblock">/etc/init.d/cloudera-scm-server restart</pre>
-
-                </div>
+                <span class="ph cmd">Use one of the following commands to restart the Cloudera Manager Server:</span>
+                <div class="itemgroup info"><div class="p">For Ubuntu and CentOS 6:
+                        <pre class="pre codeblock">service cloudera-scm-server restart</pre>
+</div>
+For CentOS 7:
+                    <pre class="pre codeblock">systemctl restart cloudera-scm-server</pre>
+</div>
             </li>
 <li class="li step stepexpand">
                 <span class="ph cmd">In the Cloudera Manager, to restart the Cloudera Management Service, click <span class="ph menucascade"><span class="ph uicontrol">Home</span> &gt; <span class="ph uicontrol">Status</span></span>. To the right of Cloudera Management Service, click the
@@ -119,14 +125,14 @@
 
 </div>
 <div class="topic task nested1" id="task_opg_yrm_25">
-    <h2 class="title topictitle2">Step 2. Distribute the <span class="ph">Data
+    <h2 class="title topictitle2">Step 2. Distribute and Activate the <span class="ph">Data
                   Collector</span>
         Parcel</h2>
 
     <div class="body taskbody">
         <div class="section context">
-            <p class="p">Install the <span class="ph">Data
-                  Collector</span> repository. And then, download and distribute the <span class="ph">Data
+            <p class="p">Add the <span class="ph">Data
+                  Collector</span> repository. And then download, distribute, and activate the <span class="ph">Data
                   Collector</span> parcel across the cluster.</p>
 
             <p class="p">When working with multiple clusters, perform the following steps for each
@@ -177,22 +183,21 @@
 
 </div>
 <div class="topic task nested1" id="task_u1v_nkt_25">
-    <h2 class="title topictitle2">Step 3. Configure a StreamSets Service</h2>
+    <h2 class="title topictitle2">Step 3. Configure the StreamSets Service</h2>
 
     <div class="body taskbody">
-        <div class="section context">
-            <p class="p">After you install the StreamSets CSD, create and
-                configure a StreamSets service. When you configure the service, you assign the <span class="ph">Data
+        <div class="section context"><p class="p">After you install the StreamSets CSD, create and
+                configure a StreamSets service. When you configure the service, you assign <span class="ph">Data
                   Collector</span> to the hosts where you want it to run.</p>
-
-            <div class="note note"><span class="notetitle">Note:</span> To run the <span class="ph">Data
-                  Collector</span> in cluster mode, colocate the Data Collector on a node with the Spark Gateway
-                role.</div>
-
-            <p class="p"> When working with multiple clusters, perform the following steps for each
-                cluster.</p>
-
-        </div>
+To run <span class="ph">Data
+                  Collector</span> in
+            cluster mode, colocate <span class="ph">Data
+                  Collector</span> on
+            a node with the Spark Gateway role. <p class="p">To write to HDFS, HBase, or Hive, colocate <span class="ph">Data
+                  Collector</span> on a node with the HDFS Gateway Role. </p>
+<p class="p"> When working with multiple
+                clusters, perform the following steps for each cluster.</p>
+</div>
 
         <ol class="ol steps" id="task_u1v_nkt_25__steps_vy1_wkt_25"><li class="li step stepexpand">
                 <span class="ph cmd">In Cloudera Manager, click the menu for the cluster you want to use, then click
@@ -293,16 +298,16 @@
                   Collector</span> administered by Cloudera Manager, perform the following steps:</p>
 <ol class="ol" id="task_yhv_1pn_25__ol_f3s_hrw_ft">
                 <li class="li">On every node that runs the <span class="ph">Data
-                  Collector</span>, copy the drivers to the Resources directory defined for the StreamSets
-                    service. By default, the path is<samp class="ph codeph">/var/lib/sdc</samp>. Use a directory
-                    structure for each set of drivers based on the stage library name and directory
-                    structure as follows: <div class="p">
-                        <pre class="pre codeblock">&lt;stage library name&gt;/lib/&lt;driver name&gt;</pre>
+                  Collector</span>, copy the drivers to the STREAMSETS_LIBRARIES_EXTRA_DIR defined for the
+                    StreamSets service. By default, the path is<samp class="ph codeph">/var/lib/sdc</samp>. Use a
+                    directory structure for each set of drivers based on the stage library name and
+                    directory structure as follows: <div class="p">
+                        <pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library directory&gt;/lib</pre>
 
                     </div>
 <div class="p">For example to install drivers for JMS in an opt/sdc-extras directory,
                         you would copy them to the following directory:
-                        <pre class="pre codeblock">/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</pre>
+                        <pre class="pre codeblock">$STREAMSETS_LIBRARIES_EXTRA_DIR/streamsets-datacollector-jms-lib/lib/</pre>
 </div>
 </li>
 

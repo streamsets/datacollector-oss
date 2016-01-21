@@ -26,18 +26,19 @@
                 optional. For example, you can install custom classes for the JavaScript or Jython
                 Evaluators. </p><p>To install additional drivers for a <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> administered by Cloudera Manager, perform the following steps:</p><ol
+                /> administered by Cloudera Manager, perform the following steps:<draft-comment
+                    author="Loretta">reverse these steps, then smooth out? </draft-comment></p><ol
                 id="ol_f3s_hrw_ft">
                 <li>On every node that runs the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />, copy the drivers to the Resources directory defined for the StreamSets
-                    service. By default, the path is<codeph>/var/lib/sdc</codeph>. Use a directory
-                    structure for each set of drivers based on the stage library name and directory
-                    structure as follows: <p>
-                        <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
+                    />, copy the drivers to the STREAMSETS_LIBRARIES_EXTRA_DIR defined for the
+                    StreamSets service. By default, the path is<codeph>/var/lib/sdc</codeph>. Use a
+                    directory structure for each set of drivers based on the stage library name and
+                    directory structure as follows: <p>
+                        <codeblock>$STREAMSETS_LIBRARIES_EXTRA_DIR/&lt;stage library directory>/lib</codeblock>
                     </p><p>For example to install drivers for JMS in an opt/sdc-extras directory,
                         you would copy them to the following directory:
-                        <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
+                        <codeblock>$STREAMSETS_LIBRARIES_EXTRA_DIR/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
                 <li>In Cloudera Manager, select the <uicontrol>StreamSets</uicontrol> service and
                     then click <uicontrol>Configuration</uicontrol>. </li>
                 <li>On the <wintitle>Configuration</wintitle> page, in the <uicontrol>Data Collector

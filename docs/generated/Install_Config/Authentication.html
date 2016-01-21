@@ -198,18 +198,30 @@
                                     <tr class="row">
                                         <td class="entry" valign="top" width="30%" headers="d30878e160 ">forceBindingLogin</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d30878e163 ">Determines if binding login checks are performed.
-                                                <p class="p">When set to false, the <span class="ph">Data
-                  Collector</span> performs the authentication based on information
-                                                received from the LDAP server. Use for Digest
-                                                authentication.</p>
-<p class="p">When set to true, the <span class="ph">Data
+                                        <td class="entry" valign="top" width="70%" headers="d30878e163 ">Determines if binding login checks are performed. Use
+                                            one of the following options:<ul class="ul" id="concept_x2j_5ts_g5__ul_dpb_z2z_s5">
+                                                <li class="li">false - <span class="ph">Data
+                  Collector</span> performs the authentication based on
+                                                  information received from the LDAP server. <p class="p">When
+                                                  set to false, the bindDn user must have permission
+                                                  to access the details, password, and group
+                                                  information for users.</p>
+<p class="p">Use for Digest
+                                                  authentication.</p>
+</li>
+
+                                                <li class="li">true - <span class="ph">Data
                   Collector</span> passes the user credentials to the LDAP server
-                                                for authentication. Use for Basic or Form
-                                                authentication, or when the password stored in the
-                                                LDAP server is encrypted.</p>
-<p class="p">Default is false.
-                                                  </p>
+                                                  for authentication. <p class="p">When set to true, the
+                                                  bindDn user must have permission to access the
+                                                  group information for users.</p>
+<p class="p">Use for Basic
+                                                  or Form authentication, or when the password
+                                                  stored in the LDAP server is encrypted.</p>
+</li>
+
+                                            </ul>
+<p class="p">Default is false. </p>
 </td>
 
                                     </tr>
