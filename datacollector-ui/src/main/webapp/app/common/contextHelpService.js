@@ -34,7 +34,7 @@ angular.module('dataCollectorApp.common')
         "errors-tab": "index.html#Pipeline_Monitoring/MonitoringErrors.html#concept_pd3_crv_yr",
         "data-rules-tab": "index.html#Alerts/DataAlerts.html#concept_tpm_rsk_zq",
         "metric-rules-tab": "index.html#Alerts/MetricAlerts.html#concept_abj_nsk_zq",
-        "data-drift-rules-tab": "index.html#Alerts/DataAlerts.html#concept_tpm_rsk_zq"  //TODO: Update the link
+        "data-drift-rules-tab": "index.html#Alerts/DataDriftAlerts.html#concept_wbz_mkk_p5"
       },
       buildInfo = {},
       helpWindow;
