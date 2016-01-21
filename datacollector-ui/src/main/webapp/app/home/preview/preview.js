@@ -27,7 +27,7 @@ angular
 
   .controller('PreviewController', function ($scope, $rootScope, $q, _, api, previewService, pipelineConstant,
                                              $timeout, $modal) {
-    var previewDataBackup, previewStatusTimer, currentPreviewerId;
+    var previewDataBackup, previewStatusTimer, currentPreviewerId, currentStage;
 
     angular.extend($scope, {
       previewInProgress: false,
@@ -446,13 +446,33 @@ angular
     $scope.$on('onSelectionChange', function(event, options) {
       if($scope.previewMode) {
         if (options.type === pipelineConstant.STAGE_INSTANCE) {
-          updatePreviewDataForStage(options.selectedObject);
+          if(options.selectedObject.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE &&
+            currentStage.instanceName != options.selectedObject.instanceName &&
+            currentStage.inputLanes && currentStage.inputLanes.length && options.selectedObject.inputLanes &&
+            currentStage.inputLanes[0] == options.selectedObject.inputLanes[0]) {
+
+            //If coming same input lanes force preview view refresh by setting to empty and filling preview data
+            $scope.stagePreviewData = {
+              input: [],
+              output: [],
+              errorRecords: [],
+              stageErrors: []
+            };
+
+            $timeout(function() {
+              updatePreviewDataForStage(options.selectedObject);
+            }, 100);
+          } else {
+            updatePreviewDataForStage(options.selectedObject);
+          }
         } else {
           $scope.stagePreviewData = {
             input: {},
             output: {}
           };
         }
+
+        currentStage = options.selectedObject;
       }
     });
 
