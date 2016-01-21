@@ -31,7 +31,7 @@
         <p>
             <note>When you use Cloudera Manager to install the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                />, you must use the Cloudera Manager to configure the <ph
+                />, you must use Cloudera Manager to configure the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> properties and environment. Manual changes to the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -39,13 +39,12 @@
         </p>
         <p>To install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            with the Cloudera Manager, perform the following steps:<ol id="ol_n14_bf4_25">
-                <li>Download the installation files from the StreamSets website. </li>
-                <li>Install the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> parcel and associated checksum file.</li>
+            with Cloudera Manager, perform the following steps:<ol id="ol_n14_bf4_25">
                 <li>Install the StreamSets custom service descriptor (CSD). </li>
-                <li>Create and configure a StreamSets service.</li>
+                <li>Distribute the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> parcel.</li>
+                <li>Configure a StreamSets service.</li>
             </ol></p>
         <p>This documentation includes details about Cloudera Manager to simplify the installation
             and configuration process. For more information about using Cloudera Manager, see the

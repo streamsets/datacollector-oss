@@ -22,7 +22,7 @@
     <p>If you use Cloudera Manager, you can install and administer the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
       Cloudera Manager. For more information, see <xref
-        href="ClouderaManagerInstallation.dita#concept_nb5_c3m_25"/>.</p>
+        href="CMInstall-Overview.dita#concept_nb5_c3m_25"/>.</p>
     <p>You can alternatively install a basic version of the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and add
       additional stage libraries for additional functionality as needed. For more information, see

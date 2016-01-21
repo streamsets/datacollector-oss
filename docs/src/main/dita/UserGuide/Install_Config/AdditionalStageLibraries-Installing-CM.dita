@@ -17,6 +17,7 @@
     <title>Installing Additional Stage Libraries (Cloudera Manager)</title>
     <taskbody>
         <context>
+            <draft-comment author="Loretta">no longer used.</draft-comment>
             <p><indexterm>Cloudera Manager<indexterm>installing additional stage
                         libraries</indexterm></indexterm>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

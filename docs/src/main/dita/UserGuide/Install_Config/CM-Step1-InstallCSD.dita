@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_hzt_dgn_25">
-    <title>Step 3. Installing the StreamSets Custom Service Descriptor</title>
+    <title>Step 1. Install the StreamSets Custom Service Descriptor</title>
     <taskbody>
         <context>
             <p><indexterm>Cloudera Manager<indexterm>installing the Streamsets
@@ -22,6 +22,11 @@
                 (CSD), and then restart Cloudera Manager.</p>
         </context>
         <steps id="steps_end_bln_25">
+            <step>
+                <cmd>Use the following URL to download the installation files from the StreamSets
+                    website: <xref href="http://www.streamsets.com/opensource" format="html"
+                        scope="external"/>.</cmd>
+            </step>
             <step>
                 <cmd>Copy the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

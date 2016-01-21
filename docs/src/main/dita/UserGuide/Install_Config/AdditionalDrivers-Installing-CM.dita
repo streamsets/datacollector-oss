@@ -28,10 +28,12 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> administered by Cloudera Manager, perform the following steps:</p><ol
                 id="ol_f3s_hrw_ft">
-                <li>Copy the drivers to the Resources directory defined for the StreamSets service.
-                    By default, the path is<codeph>/var/lib/sdc</codeph>. Use a directory structure
-                    for each set of drivers based on the stage library name and directory structure
-                    as follows: <p>
+                <li>On every node that runs the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    />, copy the drivers to the Resources directory defined for the StreamSets
+                    service. By default, the path is<codeph>/var/lib/sdc</codeph>. Use a directory
+                    structure for each set of drivers based on the stage library name and directory
+                    structure as follows: <p>
                         <codeblock>&lt;stage library name>/lib/&lt;driver name></codeblock>
                     </p><p>For example to install drivers for JMS in an opt/sdc-extras directory,
                         you would copy them to the following directory:

@@ -47,13 +47,15 @@
 =streamsets-datacollector-aws-lib,streamsets-datacollector-cassandra_2-lib,\
 streamsets-datacollector-elasticsearch_1_6-lib </codeblock></dd>
                     <dd>When successful, the command line indicates that the stage libraries have
-                        been installed as follows: <draft-comment author="Loretta">TUCU: what would
-                            this say instead of fakerepo if using the
-                        website?</draft-comment><codeblock>Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-aws-lib-1.2.0-SNAPSHOT.tgz
+                        been installed as follows:
+                        <codeblock>Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
+/streamsets-datacollector-aws-lib-1.2.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
-Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-jdbc-lib-1.2.0-SNAPSHOT.tgz
+Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
+streamsets-datacollector-jdbc-lib-1.2.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
-Downloading: file:/tmp/fakerepo/1.2.0-SNAPSHOT/tarball/streamsets-datacollector-rabbitmq-lib-1.2.0-SNAPSHOT.tgz
+Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
+streamsets-datacollector-rabbitmq-lib-1.2.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
 
 Stage library streamsets-datacollector-aws-lib installed

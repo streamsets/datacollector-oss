@@ -14,9 +14,9 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zn4_qrn_25">
-    <title>Changing <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        Configuration</title>
+    <title>Configuring the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+        /></title>
     <shortdesc>When administering the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
         Cloudera Manager, configure all <ph
@@ -27,6 +27,14 @@
             <p>Manual changes to the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration files can be overwritten by Cloudera Manager. </p>
+            <p>
+                <note>To use Kerberos, you need to enable the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> to use Kerberos add additional properties to the Kafka Consumer origin. For
+                    more information, see <draft-comment author="Loretta">After drafting the
+                        Kerberos info, add link or reword the note if necessary.</draft-comment>
+                </note>
+            </p>
         </context>
         <steps id="steps_tvq_xsn_25">
             <step>
