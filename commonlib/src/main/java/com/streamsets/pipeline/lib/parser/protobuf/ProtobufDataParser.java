@@ -39,7 +39,7 @@ public class ProtobufDataParser extends AbstractDataParser {
   private static final String OFFSET_SEPARATOR = "::";
 
   private boolean eof;
-  private Stage.Context context;
+  private final Stage.Context context;
   private final DynamicMessage.Builder builder;
   private final OverrunInputStream inputStream;
   private final String messageId;
@@ -83,9 +83,13 @@ public class ProtobufDataParser extends AbstractDataParser {
     long pos = inputStream.getPos();
     inputStream.resetCount();
     if (!isDelimited) {
-      builder.mergeFrom(inputStream, extensionRegistry);
-      // Set EOF since non-delimited can only contain a single message.
-      eof = true;
+      if (!eof) {
+        builder.mergeFrom(inputStream, extensionRegistry);
+        // Set EOF since non-delimited can only contain a single message.
+        eof = true;
+      } else {
+        return null;
+      }
     } else {
       if (!builder.mergeDelimitedFrom(inputStream, extensionRegistry)) {
         // No more messages to process in this stream.
