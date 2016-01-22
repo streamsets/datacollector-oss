@@ -14,23 +14,23 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_sjz_rmx_3q">
- <title>What is a Data Collector?</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> is a lightweight, powerful engine that streams data in real time. Use the <ph
+ <title>What is StreamSets Data Collector?</title>
+ <shortdesc>StreamSets <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> is a
+    lightweight, powerful engine that streams data in real time. Use <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to route and
     process data in your data streams. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector<indexterm>description</indexterm></indexterm>To define the flow of
-      data for the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
-      configure a <term>pipeline</term>. A pipeline consists of stages that represent the origin and
-      destination of the pipeline, and any additional processing that you want to perform. After you
-      configure the pipeline, you click Start, and the <ph
+      data for <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      />, you configure a <term>pipeline</term>. A pipeline consists of stages that represent the
+      origin and destination of the pipeline, and any additional processing that you want to
+      perform. After you configure the pipeline, you click Start, and <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to
       work. </p>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      processes data when it arrives at the origin and waits quietly when not needed. You can view
-      real-time statistics about your data, inspect data as it passes through the pipeline, or take
-      a close look at a snapshot of data. </p>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
+      data when it arrives at the origin and waits quietly when not needed. You can view real-time
+      statistics about your data, inspect data as it passes through the pipeline, or take a close
+      look at a snapshot of data. </p>
  </conbody>
 </concept>

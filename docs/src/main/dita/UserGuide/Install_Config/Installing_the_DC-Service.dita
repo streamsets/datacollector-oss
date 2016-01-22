@@ -16,7 +16,7 @@
 <task id="task_pnf_344_1r">
     <title>Full Installation and Launch (Service Start)</title>
     <taskbody>
-        <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch the Data
+        <context><p><indexterm>installation<indexterm>service start</indexterm></indexterm><indexterm>launch Data
                         Collector<indexterm>service start</indexterm></indexterm>Installing the full
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -27,7 +27,7 @@
         <steps id="steps_wnx_444_1r">
             <step>
                 <cmd>Download the StreamSets SDC tarball and extract it to the desired location,
-                    typically /opt/local/.</cmd>
+                        typically<codeph> /opt/local/</codeph>.</cmd>
             </step>
             <step>
                 <cmd>Copy <filepath>initd/_sdcinitd_prototype</filepath> to the
@@ -44,7 +44,7 @@
                 </info>
             </step>
             <step>
-                <cmd>Create a system user and group to run the <ph
+                <cmd>Create a system user and group to run <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />. </cmd>
                 <info>The default user and group are sdc/sdc.</info>
@@ -54,16 +54,16 @@
                     directory.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC log directory at /var/log/sdc and change the owner to
-                    sdc:sdc.</cmd>
+                <cmd>Create the SDC log directory at <codeph>/var/log/sdc</codeph> and change the
+                    owner to sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC data directory at /var/lib/sdc and change the owner to
-                    sdc:sdc.</cmd>
+                <cmd>Create the SDC data directory at /<codeph>var/lib/sdc</codeph> and change the
+                    owner to sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC data directory at /var/lib/sdc-resources and change the owner to
-                    sdc:sdc.</cmd>
+                <cmd>Create the SDC data directory at <codeph>/var/lib/sdc-resources</codeph> and
+                    change the owner to sdc:sdc.</cmd>
             </step>
             <step>
                 <cmd>To start the <ph

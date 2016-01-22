@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_ann_l2b_t5">
+ <title>Enabling SSL</title>
+ <conbody>
+        <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL
+            security</indexterm></indexterm>Perform the following steps to enable the Kafka Consumer
+            to use SSL to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
+            You can use the same steps to configure a Kafka Producer. </p>
+        <p>
+            <ol conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KAFKA-SSL-list"
+                id="ol_ctd_1pb_t5">
+                <li/>
+            </ol>
+        </p>
+        <p>For example, the following Kafka Consumer is configured to use SSL to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />:</p>
+        <p><image href="../Graphics/KafkaC-SSL.png" id="image_tq3_gkb_t5" scale="60"/></p>
+       
+ </conbody>
+</concept>

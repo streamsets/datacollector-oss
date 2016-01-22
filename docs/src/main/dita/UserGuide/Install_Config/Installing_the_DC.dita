@@ -20,9 +20,11 @@
         <steps id="steps_g53_l3p_kq">
             <step>
                 <cmd><indexterm>installation<indexterm>manual
-                        start</indexterm></indexterm><indexterm>launch the Data
+                        start</indexterm></indexterm><indexterm>launch Data
                             Collector<indexterm>manual start</indexterm></indexterm>Download the
-                    full StreamSets SDC tarball and extract it to the desired location.</cmd>
+                    full StreamSets <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> tarball and extract it to the desired location.</cmd>
             </step>
             <step>
                 <cmd>Optionally, in the <codeph>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeph> file,
@@ -55,12 +57,12 @@
                 </info>
             </step>
             <step>
-                <cmd>Use the following command to launch the <ph>Data Collector</ph>:</cmd>
+                <cmd>Use the following command to launch <ph>Data Collector</ph>:</cmd>
                 <info>
                     <codeblock>$ &lt;SDCinstalldir>/bin/streamsets dc</codeblock>
                 </info>
-                <info>Or, use the following command to launch the <ph>Data Collector</ph> and run it
-                    in the
+                <info>Or, use the following command to launch <ph>Data Collector</ph> and run it in
+                    the
                     background:<codeblock>$ nohup &lt;SDCinstalldir>/bin/streamsets dc &amp;</codeblock></info>
             </step>
         </steps>

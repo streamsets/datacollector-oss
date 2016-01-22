@@ -15,19 +15,19 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gbn_4lv_1r">
  <title>Installation and Configuration</title>
- <shortdesc>You can install the <ph
+ <shortdesc>You can install <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and start it
     manually or run it as a service. </shortdesc>
   <conbody>
-    <p>If you use Cloudera Manager, you can install and administer the <ph
+    <p>If you use Cloudera Manager, you can install and administer <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> through
       Cloudera Manager. For more information, see <xref
         href="CMInstall-Overview.dita#concept_nb5_c3m_25"/>.</p>
-    <p>You can alternatively install a basic version of the <ph
+    <p>You can alternatively install a basic version of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and add
       additional stage libraries for additional functionality as needed. For more information, see
         <xref href="BasicInstall_Overview.dita"/>.</p>
-    <p>After installation, you can create additional users, customize the <ph
+    <p>After installation, you can create additional users, customize <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
       configure the environment. </p>
   </conbody>

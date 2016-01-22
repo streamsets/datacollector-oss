@@ -1843,7 +1843,10 @@
                                                 values as expected by Kafka. Do not use the
                                                 broker.list property.</p><p>Several properties are
                                                 defined by default. You can edit or delete the
-                                                properties. </p></entry>
+                                                properties. </p><p>For information about enabling
+                                                secure connections to Kafka, see <xref
+                                                  href="../Destinations/KProducer-EnablingSecurity.dita"
+                                                />.</p></entry>
                                     </row>
                                     <row>
                                         <entry>Data Format</entry>

@@ -53,7 +53,7 @@ chmod 644 /opt/cloudera/csd/streamsets*.jar</codeblock></info>
                     <codeblock>systemctl restart cloudera-scm-server</codeblock></info>
             </step>
             <step>
-                <cmd>In the Cloudera Manager, to restart the Cloudera Management Service, click <menucascade>
+                <cmd>In Cloudera Manager, to restart the Cloudera Management Service, click <menucascade>
                         <uicontrol>Home</uicontrol>
                         <uicontrol>Status</uicontrol>
                     </menucascade>. To the right of Cloudera Management Service, click the

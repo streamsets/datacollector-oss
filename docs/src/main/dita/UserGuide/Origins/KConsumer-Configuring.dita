@@ -149,7 +149,10 @@
                                     <entry>Additional Kafka configuration properties to use. To add
                                         properties, click <uicontrol>Add</uicontrol> and define the
                                         Kafka property name and value. <p>Use the property names and
-                                            values as expected by Kafka.</p></entry>
+                                            values as expected by Kafka.</p><p>For information about
+                                            enabling secure connections to Kafka, see <xref
+                                                href="KConsumer-EnablingSecurity.dita"
+                                        />.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">

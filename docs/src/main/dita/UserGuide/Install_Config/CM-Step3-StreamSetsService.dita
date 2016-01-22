@@ -18,16 +18,19 @@
     <taskbody>
         <context><p><indexterm>Cloudera Manager<indexterm>creating a StreamSets
                     service</indexterm></indexterm>After you install the StreamSets CSD, create and
-                configure a StreamSets service. When you configure the service, you assign <ph
+                configure the StreamSets service. When you configure the service, you assign <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to the hosts where you want it to run.</p>To run <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
             cluster mode, colocate <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a node with the Spark Gateway role. <p>To write to HDFS, HBase, or Hive, colocate <ph
+            a node with the Spark Gateway role. <p>To write to HDFS, colocate <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> on a node with the HDFS Gateway Role. </p><p> When working with multiple
-                clusters, perform the following steps for each cluster.</p></context>
+                /> on a node with the HDFS Gateway role. Similarly, to write to HBase or Hive,
+                colocate <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> on nodes with the HBase or Hive Gateway roles, respectively.</p><p>When working
+                with multiple clusters, perform the following steps for each cluster.</p></context>
         <steps id="steps_vy1_wkt_25">
             <step>
                 <cmd>In Cloudera Manager, click the menu for the cluster you want to use, then click
@@ -55,11 +58,9 @@
                 <cmd>Optionally change the directories, then click
                     <uicontrol>Continue</uicontrol>.</cmd>
                 <info>The <wintitle>First Run Command</wintitle> page displays status updates as
-                    Cloudera Manager starts the <ph
+                    Cloudera Manager starts <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> on the selected hosts. If necessary, you can abort starting the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />.</info>
+                    /> on the selected hosts. </info>
             </step>
             <step>
                 <cmd>Click <uicontrol>Continue</uicontrol>, then click

@@ -16,9 +16,9 @@
 <concept id="concept_yth_5n5_jq">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
     Console</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> provides a console to configure pipelines, preview data, monitor pipelines, and review
-    snapshots of data. </shortdesc>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    provides a console to configure pipelines, preview data, monitor pipelines, and review snapshots
+    of data. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector console<indexterm>overview</indexterm></indexterm>The <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console
@@ -69,7 +69,7 @@
         <stentry>Administration icon</stentry>
         <stentry>Provides access to <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          configuration properties, directories, and log. Also allows you to shut down the <ph
+          configuration properties, directories, and log. Also allows you to shut down <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
           />.</stentry>
       </strow>

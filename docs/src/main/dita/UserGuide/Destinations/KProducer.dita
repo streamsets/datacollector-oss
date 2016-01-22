@@ -18,14 +18,16 @@
  <shortdesc>The Kafka Producer destination writes data to a Kafka cluster. </shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer
-                                        destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
-                                        Producer</indexterm></indexterm>When you configure a Kafka
-                        Producer, you define connection information, the partition strategy, and
-                        data format to use. You can add additional Kafka configuration properties as
-                        needed. You can also configure Kafka Producer to determine the topic to
-                        write to at runtime.</p>
+                    destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Kafka
+                    Producer</indexterm></indexterm>When you configure a Kafka Producer, you define
+            connection information, the partition strategy, and data format to use. You can also
+            configure Kafka Producer to determine the topic to write to at runtime.</p>
   <p>The Kafka Producer passes data to partitions in the Kafka topic based on the partition strategy
             that you choose. You can optionally write a batch of records to the Kafka cluster as a
             single message.</p>
+        <p>You can add additional Kafka configuration properties as needed. You can also configure
+            the destination to use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+            security features.</p>
  </conbody>
 </concept>

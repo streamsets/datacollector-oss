@@ -94,6 +94,9 @@
    <topicref href="../Destinations/KProducer-RuntimeResolution.dita"/>
    <topicref href="../Destinations/KProducer-PartitionStrategy.dita"/>
    <topicref href="../Destinations/KProducer-AdditionalKProperties.dita"/>
+   <topicref href="../Destinations/KProducer-EnablingSecurity.dita">
+    <topicref href="../Destinations/KProducer-EnablingSSL.dita"/>
+   </topicref>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/KinProducer.dita" chunk="to-content">  

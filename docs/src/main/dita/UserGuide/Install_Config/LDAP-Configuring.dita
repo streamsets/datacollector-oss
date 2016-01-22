@@ -75,8 +75,7 @@
                                     </row>
                                     <row>
                                         <entry>useLdaps</entry>
-                                        <entry>Enables using LDAP over TSL or SSL. Default is false.
-                                        </entry>
+                                        <entry>Enables using LDAP over SSL. Default is false. </entry>
                                     </row>
                                     <row>
                                         <entry>contextFactory</entry>
@@ -85,15 +84,16 @@
                                     </row>
                                     <row>
                                         <entry>hostname</entry>
-                                        <entry>Host name of the LDAP server.</entry>
+                                        <entry>LDAP server host name.</entry>
                                     </row>
                                     <row>
                                         <entry>port</entry>
-                                        <entry>Port of the LDAP server.</entry>
+                                        <entry>LDAP server port. Typically 389 for LDAP and 636 for
+                                            LDAPS.</entry>
                                     </row>
                                     <row>
                                         <entry>bindDn</entry>
-                                        <entry>Root DN for the connection. </entry>
+                                        <entry>Root distinguished name (DN) for the connection. </entry>
                                     </row>
                                     <row>
                                         <entry>bindPassword</entry>
@@ -109,9 +109,7 @@
                                     </row>
                                     <row>
                                         <entry>authenticationMethod</entry>
-                                        <entry>Authentication method. Default is simple.
-                                                <draft-comment author="Loretta">should I say
-                                                more?</draft-comment></entry>
+                                        <entry>Authentication method. Default is simple. </entry>
                                     </row>
                                     <row>
                                         <entry>forceBindingLogin</entry>
@@ -137,7 +135,7 @@
                                     </row>
                                     <row>
                                         <entry>userBaseDn</entry>
-                                        <entry>Base DN for user information. </entry>
+                                        <entry>Base DN under which user accounts are located. </entry>
                                     </row>
                                     <row>
                                         <entry>userRdnAttribute</entry>

@@ -16,7 +16,7 @@
 <map>
  <title>Getting Started</title>
  <topicref href="../Getting_Started/GettingStarted_Title.dita">
-  <topicref href="../Getting_Started/What_isa_DataCollector.dita" chunk="to-content">
+  <topicref href="../Getting_Started/What_is_DataCollector.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

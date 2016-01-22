@@ -18,9 +18,12 @@
  <shortdesc>The Kafka Consumer origin reads data from an Apache Kafka cluster.</shortdesc>
  <conbody>
   <p><indexterm>Kafka Consumer
-     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
-     Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the consumer
-   group name, topic, and ZooKeeper connection information. You can add additional Kafka
-   configuration properties as needed.</p>
+          origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>Kafka
+          Consumer</indexterm></indexterm>When you configure a Kafka Consumer, you configure the
+      consumer group name, topic, and ZooKeeper connection information. </p>
+    <p>You can add additional Kafka configuration properties as needed. You can also configure the
+      origin to use <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/> security
+      features.</p>
  </conbody>
 </concept>

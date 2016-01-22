@@ -15,7 +15,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_qsy_lsf_tq">
     <title>Logging In and Creating a Pipeline</title>
-    <shortdesc>After you start the <ph
+    <shortdesc>After you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, you
         can log in to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -25,7 +25,7 @@
             <p><indexterm>Data Collector<indexterm>logging in and creating a
                     pipeline</indexterm></indexterm><indexterm>logging in<indexterm>Data
                         Collector</indexterm></indexterm>You can customize the address and login
-                that you use to access the <ph
+                that you use to access <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />. This procedure uses the default settings.</p>
         </context>

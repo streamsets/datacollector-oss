@@ -23,6 +23,12 @@
                   this</draft-comment>
             <p>Full, init cap version of the product name: <ph id="pName-long">Data
                   Collector</ph></p>
+            <p>
+                  <draft-comment author="Loretta">KafkaSecure - used in KConsumer &amp; Producer
+                        encryption areas. Original value: Kafka 0.9.0.0</draft-comment>
+            </p>
+            <p>Kafka version that supports SSL and SASL/Kerberos security: <ph id="KafkaSecure"
+                        >Kafka 0.9.0.0</ph></p>
             <draft-comment author="Loretta">Using this in all DC Console topics:</draft-comment>
             <p>
                   <note id="Note-OptionDispay">Some icons and options might not display in the
@@ -529,6 +535,30 @@
                   when the field is missing. When set to "y", a missing field causes no errors. When
                   set to "n", a missing field generates an alert for the record missing the field,
                   and for the next recod that includes the field field.</p>
+            <p>
+                  <draft-comment author="Loretta">Kafka-SSL - using this ordered list for KConsumer
+                        and KProducer</draft-comment>
+            </p>
+            <ol id="KAFKA-SSL-list">
+                  <li>To use SSL to connect, first make sure Kafka is configured for SSL as
+                        described in the Kafka documentation: <xref
+                              href="http://kafka.apache.org/documentation.html#security_ssl"
+                              format="html" scope="external"/>. </li>
+                  <li>On the <uicontrol>General</uicontrol> tab of the Kafka Consumer or Kafka
+                        Producer, set the <uicontrol>Stage Library</uicontrol> property to
+                              <uicontrol>Apache Kafka 0.9.0.0</uicontrol>.</li>
+                  <li>On the <wintitle>Kafka</wintitle> tab, add the following Kafka configuration
+                        properties and configure them appropriately:<ul id="ul_hkf_ydb_t5">
+                              <li>security.protocol - Set to SSL.</li>
+                              <li>ssl.truststore.location</li>
+                              <li>ssl.truststore.password</li>
+                              <li>ssl.keystore.location</li>
+                              <li>ssl.keystore.password</li>
+                              <li>ssl.key.password</li>
+                              <li>ssl.enabled.protocols</li>
+                              <li>ssl.keystore.type</li>
+                        </ul></li>
+            </ol>
             <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
                   as a disclaimer:</draft-comment>
             <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>
