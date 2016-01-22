@@ -47,6 +47,7 @@ public enum Errors implements ErrorCode {
   JDBCDEST_19("Record did not contain primary key field mapped to primary key column '{}'"),
   JDBCDEST_20("Could not parse the table name template expression: {}"),
   JDBCDEST_21("Could not evaluate the table name template expression: {}"),
+  JDBCDEST_22("The record had no fields that matched the columns in the destination table."),
   ;
   private final String msg;
 

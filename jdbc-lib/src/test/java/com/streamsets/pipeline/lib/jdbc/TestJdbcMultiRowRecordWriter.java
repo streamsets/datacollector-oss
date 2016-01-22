@@ -22,7 +22,10 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.RecordCreator;
+import com.streamsets.pipeline.stage.destination.jdbc.Errors;
 import com.streamsets.pipeline.stage.destination.jdbc.JdbcFieldMappingConfig;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -129,7 +132,8 @@ public class TestJdbcMultiRowRecordWriter {
         "TEST.TEST_TABLE",
         false,
         mappings,
-        8);
+        8
+    );
 
     Collection<Record> records = generateRecords(10);
     writer.writeBatch(records);
@@ -142,6 +146,29 @@ public class TestJdbcMultiRowRecordWriter {
       ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM TEST.TEST_TABLE");
       rs.next();
       assertEquals(10, rs.getInt(1));
+    }
+  }
+
+  @Test(expected = OnRecordErrorException.class)
+  public void testEmptyColumnMappingError() throws Exception {
+    List<JdbcFieldMappingConfig> mappings = new ArrayList<>();
+
+    JdbcRecordWriter writer = new JdbcMultiRowRecordWriter(
+        connectionString,
+        dataSource,
+        "TEST.TEST_TABLE",
+        false,
+        mappings,
+        JdbcMultiRowRecordWriter.UNLIMITED_PARAMETERS
+    );
+
+    Collection<Record> records = new ArrayList<>();
+    records.add(RecordCreator.create());
+    try {
+      writer.writeBatch(records);
+    } catch (StageException e) {
+      assertEquals(Errors.JDBCDEST_22.getCode(), e.getErrorCode().toString());
+      throw e;
     }
   }
 

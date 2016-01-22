@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Array;
-import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -65,7 +64,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     }
   };
 
-  public static int UNLIMITED_PARAMETERS = -1;
+  public static final int UNLIMITED_PARAMETERS = -1;
   private int maxPrepStmtParameters;
 
   /**
@@ -75,7 +74,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param tableName the name of the table to write to
    * @param rollbackOnError whether to attempt rollback of failed queries
    * @param customMappings any custom mappings the user provided
-   * @param maxPrepStmtParameters
+   * @param maxPrepStmtParameters max number of parameters to include in each INSERT statement
    * @throws StageException
    */
   public JdbcMultiRowRecordWriter(
@@ -135,7 +134,10 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     LinkedList<Record> queue = new LinkedList<>(partition);
 
     // compute number of rows per batch
-    int maxRowsPerBatch = (int) Math.floor(maxPrepStmtParameters / columnsToParameters.size());
+    if (columnsToParameters.isEmpty()) {
+      throw new OnRecordErrorException(Errors.JDBCDEST_22);
+    }
+    int maxRowsPerBatch = maxPrepStmtParameters / columnsToParameters.size();
 
     PreparedStatement statement = null;
 
@@ -209,7 +211,12 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     }
   }
 
-  private PreparedStatement generatePreparedStatement(SortedMap<String, String> columns, int numRecords, Object tableName, Connection connection) throws SQLException {
+  private static PreparedStatement generatePreparedStatement(
+      SortedMap<String, String> columns,
+      int numRecords,
+      Object tableName,
+      Connection connection
+  ) throws SQLException {
     String valuePlaceholder = String.format("(%s)", Joiner.on(", ").join(columns.values()));
     String valuePlaceholders = StringUtils.repeat(valuePlaceholder, ", ", numRecords);
     String query = String.format(
@@ -274,55 +281,10 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
    * @param e SQLException
    * @throws StageException
    */
-  private void handleSqlException(SQLException e) throws StageException {
+  private static void handleSqlException(SQLException e) throws StageException {
     String formattedError = JdbcUtil.formatSqlException(e);
     LOG.error(formattedError);
     LOG.debug(formattedError, e);
     throw new StageException(Errors.JDBCDEST_14, formattedError);
-  }
-
-  /**
-   * <p>
-   *   Some databases drivers allow us to figure out which record in a particular batch failed.
-   * </p>
-   * <p>
-   *   In the case that we have a list of update counts, we can mark just the record as erroneous.
-   *   Otherwise we must send the entire batch to error.
-   * </p>
-   *
-   * @param batch Current batch
-   * @param e BatchUpdateException
-   * @param errorRecords List of error records for this batch
-   */
-  private void handleBatchUpdateException(
-      Collection<Record> batch,
-      SQLException e,
-      List<OnRecordErrorException> errorRecords
-  ) throws StageException {
-    if (JdbcUtil.isDataError(getConnectionString(), e)) {
-      String formattedError = JdbcUtil.formatSqlException(e);
-      LOG.error(formattedError);
-      LOG.debug(formattedError, e);
-
-      if (!getRollbackOnError() && e instanceof BatchUpdateException &&
-          ((BatchUpdateException) e).getUpdateCounts().length > 0) {
-        BatchUpdateException bue = (BatchUpdateException) e;
-
-        int i = 0;
-        for (Record record : batch) {
-          if (i >= bue.getUpdateCounts().length ||
-              bue.getUpdateCounts()[i] == PreparedStatement.EXECUTE_FAILED) {
-            errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
-          }
-          i++;
-        }
-      } else {
-        for (Record record : batch) {
-          errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_14, formattedError));
-        }
-      }
-    } else {
-      handleSqlException(e);
-    }
   }
 }
