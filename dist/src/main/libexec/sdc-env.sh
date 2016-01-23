@@ -45,8 +45,16 @@
 #
 export SDC_ROOT_CLASSPATH=${SDC_DIST}/root-lib/'*'
 
+# kafka jaas configuration file to be used in sasl authentication
+#
+#export SDC_KAFKA_JAAS_CONF="-Djava.security.auth.login.config=${SDC_CONF}/kafka_client_jaas.conf"
+
 export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -XX:PermSize=128m -XX:MaxPermSize=256m -server ${SDC_JAVA_OPTS}"
 
 # Enables/disables the JVM security manager
 #
 export SDC_SECURITY_MANAGER_ENABLED=true
+
+# Set KRB5CCNAME
+#
+#export KRB5CCNAME=${SDC_DATA}/sdc-krb5.ticketCache

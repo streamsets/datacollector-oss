@@ -53,6 +53,8 @@ SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
 SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
 SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
 SDC_RESOURCES=${SDC_RESOURCES:=${SDC_HOME}/resources}
+SDC_KAFKA_JAAS_CONF=${SDC_KAFKA_JAAS_CONF:="-Djava.security.auth.login.config=${SDC_CONF}/kafka_client_jaas.conf"}
+export KRB5CCNAME=${KRB5CCNAME:="${SDC_DATA}/sdc-krb5.ticketCache"}
 SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
 SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.datacollector.main.DataCollectorMain"}
 SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:="true"}
@@ -66,7 +68,7 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.log.dir=${SDC_LOG}"
 
 BOOTSTRAP_JAR="${SDC_DIST}/libexec/bootstrap-libs/main/streamsets-datacollector-bootstrap-${project.version}.jar"
 
-SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -javaagent:${BOOTSTRAP_JAR}"
+SDC_JAVA_OPTS="${SDC_KAFKA_JAAS_CONF} ${SDC_JAVA_OPTS} -javaagent:${BOOTSTRAP_JAR}"
 
 BOOTSTRAP_CLASSPATH="${BOOTSTRAP_JAR}"
 
@@ -125,6 +127,8 @@ then
   echo "  DATA                           : ${SDC_DATA}"
   echo "  LOG                            : ${SDC_LOG}"
   echo "  RESOURCES                      : ${SDC_RESOURCES}"
+  echo "  KAFKA_JAAS_CONF                : ${SDC_KAFKA_JAAS_CONF}"
+  echo "  KRB5CCNAME                     : ${KRB5CCNAME}"
   echo "  SECURITY MANAGER POLICY        : ${SDC_POLICY_FILE}"
   echo "  JAVA PATH                      : ${JAVA}"
   echo "  BOOTSTRAP_CLASSPATH            : ${BOOTSTRAP_CLASSPATH}"
@@ -150,6 +154,12 @@ exec ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.p
 -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
 -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
 -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
+
+# Remove credential cache if exists
+#
+if [ -f ${SDC_DATA}/sdc-krb5.ticketCache ]; then
+  rm ${SDC_DATA}/sdc-krb5.ticketCache
+fi
 
 status=$?
 echo "Exit: $status"

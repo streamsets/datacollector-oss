@@ -21,9 +21,7 @@ package com.streamsets.datacollector.security;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.security.SecurityContext;
 import com.streamsets.datacollector.util.Configuration;
-
 import org.apache.hadoop.minikdc.MiniKdc;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -32,9 +30,12 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import javax.security.auth.Subject;
-
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class TestSecurityContext {
@@ -102,6 +103,7 @@ public class TestSecurityContext {
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
     Assert.assertTrue(context.getSecurityConfiguration().isKerberosEnabled());
     context.login();
+    verifyCredentialCache(false);
   }
 
   @Test
@@ -112,6 +114,7 @@ public class TestSecurityContext {
     conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, "test.keytab");
     SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
     Assert.assertNull(context.getSubject());
+    verifyCredentialCache(false);
   }
 
   @Test
@@ -124,7 +127,19 @@ public class TestSecurityContext {
     Subject subject = context.getSubject();
     Assert.assertNotNull(subject);
     System.out.println(subject);
+    // No credential file is expected as kerberos is disabled
+    verifyCredentialCache(false);
     context.logout();
+  }
+
+  @Test
+  public void loginFromAbsoluteKeytab() throws Exception {
+    loginFromKeytab(keytabFile.getAbsolutePath());
+  }
+
+  @Test
+  public void loginFromRelativeKeytab() throws Exception {
+    loginFromKeytab(keytabFile.getName());
   }
 
   private void loginFromKeytab(String keytab) throws Exception {
@@ -138,17 +153,22 @@ public class TestSecurityContext {
     Subject subject = context.getSubject();
     Assert.assertNotNull(subject);
     System.out.println(subject);
+    // Expect a credential cache to exist
+    verifyCredentialCache(true);
     context.logout();
+    // Expect credential cache to be removed after logout
+    verifyCredentialCache(false);
   }
 
-  @Test
-  public void loginFromAbsoluteKeytab() throws Exception {
-    loginFromKeytab(keytabFile.getAbsolutePath());
-  }
-
-  @Test
-  public void loginFromRelativeKeytab() throws Exception {
-    loginFromKeytab(keytabFile.getName());
+  private void verifyCredentialCache(boolean expected) throws IOException {
+    File ticketCache = new File(getMockRuntimeInfo().getDataDir(), "sdc-krb5.ticketCache");
+    Assert.assertEquals(expected, ticketCache.exists());
+    if(expected) {
+      Set<PosixFilePermission> posixFilePermissions = Files.getPosixFilePermissions(ticketCache.toPath());
+      Assert.assertEquals(2, posixFilePermissions.size());
+      Assert.assertTrue(posixFilePermissions.contains(PosixFilePermission.OWNER_READ));
+      Assert.assertTrue(posixFilePermissions.contains(PosixFilePermission.OWNER_WRITE));
+    }
   }
 
 }
