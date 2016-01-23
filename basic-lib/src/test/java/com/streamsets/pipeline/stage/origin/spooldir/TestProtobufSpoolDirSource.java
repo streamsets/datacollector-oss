@@ -86,7 +86,7 @@ public class TestProtobufSpoolDirSource {
       assertTrue(record.has("/samples"));
 
       assertEquals("Adam", record.get("/first_name").getValueAsString());
-      assertTrue(null == record.get("/full_name").getValue());
+      assertEquals("", record.get("/full_name").getValue());
       List<Field> samples = record.get("/samples").getValueAsList();
       assertEquals(2, samples.size());
       assertEquals(1, samples.get(0).getValueAsInteger());

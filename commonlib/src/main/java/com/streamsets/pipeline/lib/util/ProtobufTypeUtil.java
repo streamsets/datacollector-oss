@@ -329,7 +329,12 @@ public class ProtobufTypeUtil {
     Field newField;
     if (message == null) {
       // If the message does not contain required fields then builder.build() throws UninitializedMessageException
-      newField = Field.create(getFieldType(fieldDescriptor.getJavaType()), null);
+      Object defaultValue = null;
+      // get default values only for optional fields and non-message types
+      if (fieldDescriptor.isOptional() && fieldDescriptor.getJavaType() != Descriptors.FieldDescriptor.JavaType.MESSAGE) {
+        defaultValue = fieldDescriptor.getDefaultValue();
+      }
+      newField = Field.create(getFieldType(fieldDescriptor.getJavaType()), defaultValue);
     } else if (fieldDescriptor.isMapField()) {
       // Map entry (protobuf 3 map)
       Map<String, Field> sdcMapFieldValues = new HashMap<>();

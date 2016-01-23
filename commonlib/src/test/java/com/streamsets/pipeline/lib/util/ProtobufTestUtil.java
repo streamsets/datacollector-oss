@@ -93,6 +93,9 @@ public class ProtobufTestUtil {
         PersonProto.Person.PhoneNumber.newBuilder()
           .setNumber("555-4321")
           .setType(PersonProto.Person.PhoneType.HOME))
+       .addPhone(
+       PersonProto.Person.PhoneNumber.newBuilder()
+          .setNumber("666-4321")) // default type is HOME
       .build();
 
     EmployeeProto.Employee.Builder employee;
@@ -157,7 +160,7 @@ public class ProtobufTestUtil {
       Assert.assertEquals("r&d", valueAsMap.get("depName").getValueAsString());
 
       Assert.assertTrue(valueAsMap.containsKey("depid"));
-      Assert.assertEquals(null, valueAsMap.get("depid").getValue());
+      Assert.assertEquals(0, valueAsMap.get("depid").getValue());
     }
 
     // check the person nested object
@@ -180,13 +183,21 @@ public class ProtobufTestUtil {
     // phone is a repeated message [List of Map expected]
     Assert.assertTrue(valueAsMap.containsKey("phone"));
     List<Field> phone = valueAsMap.get("phone").getValueAsList();
-    Assert.assertEquals(1, phone.size());
+    Assert.assertEquals(2, phone.size());
     valueAsMap = phone.get(0).getValueAsMap();
     Assert.assertEquals(2, valueAsMap.size());
 
     // map contains 2 keys number and type of type String
     Assert.assertTrue(valueAsMap.containsKey("number"));
     Assert.assertEquals("555-4321", valueAsMap.get("number").getValueAsString());
+    Assert.assertTrue(valueAsMap.containsKey("type"));
+    Assert.assertEquals("HOME", valueAsMap.get("type").getValueAsString());
+
+    valueAsMap = phone.get(1).getValueAsMap();
+    Assert.assertEquals(2, valueAsMap.size());
+
+    Assert.assertTrue(valueAsMap.containsKey("number"));
+    Assert.assertEquals("666-4321", valueAsMap.get("number").getValueAsString());
     Assert.assertTrue(valueAsMap.containsKey("type"));
     Assert.assertEquals("HOME", valueAsMap.get("type").getValueAsString());
 

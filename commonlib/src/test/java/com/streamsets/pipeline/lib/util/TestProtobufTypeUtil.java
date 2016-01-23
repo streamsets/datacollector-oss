@@ -49,10 +49,10 @@ import java.util.Set;
 
 public class TestProtobufTypeUtil {
 
-  private Map<String, Set<Descriptors.FileDescriptor>> fileDescriptorDependentsMap = new HashMap<>();
-  private Map<String, Descriptors.FileDescriptor> fileDescriptorMap = new HashMap<>();
-  private Map<String, Object> defaultValueMap = new HashMap<>();
-  private Map<String, Set<Descriptors.FieldDescriptor>> typeToExtensionMap = new HashMap<>();
+  private final Map<String, Set<Descriptors.FileDescriptor>> fileDescriptorDependentsMap = new HashMap<>();
+  private final Map<String, Descriptors.FileDescriptor> fileDescriptorMap = new HashMap<>();
+  private final Map<String, Object> defaultValueMap = new HashMap<>();
+  private final Map<String, Set<Descriptors.FieldDescriptor>> typeToExtensionMap = new HashMap<>();
   private DescriptorProtos.FileDescriptorSet set;
   private Descriptors.Descriptor md;
   private ExtensionRegistry extensionRegistry;
@@ -378,7 +378,7 @@ public class TestProtobufTypeUtil {
     Record record = RecordCreator.create();
     Field field = ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, typeToExtensionMap, dynBldr.build());
     Assert.assertNotNull(field);
-    Assert.assertEquals(null, field.getValueAsMap().get("oneofString").getValue());
+    Assert.assertEquals("", field.getValueAsMap().get("oneofString").getValue());
     Assert.assertEquals(Field.Type.INTEGER, field.getValueAsListMap().get("oneofInt").getType());
     Assert.assertEquals(5, field.getValueAsMap().get("oneofInt").getValueAsInteger());
 
@@ -393,7 +393,7 @@ public class TestProtobufTypeUtil {
     record = RecordCreator.create();
     field = ProtobufTypeUtil.protobufToSdcField(record, "", descriptor, typeToExtensionMap, dynBldr.build());
     Assert.assertNotNull(field);
-    Assert.assertEquals(null, field.getValueAsMap().get("oneofInt").getValue());
+    Assert.assertEquals(0, field.getValueAsMap().get("oneofInt").getValue());
     Assert.assertEquals(Field.Type.STRING, field.getValueAsListMap().get("oneofString").getType());
     Assert.assertEquals("Hello", field.getValueAsMap().get("oneofString").getValueAsString());
 

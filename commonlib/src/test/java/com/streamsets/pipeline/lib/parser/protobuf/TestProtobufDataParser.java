@@ -58,7 +58,7 @@ public class TestProtobufDataParser {
     List<Record> records = new ArrayList<>();
     Record r = dataParser.parse();
     // Engineer object in the stream is 59 bytes long
-    assertEquals("125", dataParser.getOffset());
+    assertEquals("138", dataParser.getOffset());
     while(r != null) {
       records.add(r);
       r = dataParser.parse();
@@ -105,7 +105,7 @@ public class TestProtobufDataParser {
     assertTrue(record.has("/samples"));
 
     assertEquals("Adam", record.get("/first_name").getValueAsString());
-    assertTrue(null == record.get("/full_name").getValue());
+    assertEquals("", record.get("/full_name").getValue());
     List<Field> samples = record.get("/samples").getValueAsList();
     assertEquals(2, samples.size());
     assertEquals(1, samples.get(0).getValueAsInteger());
@@ -123,11 +123,11 @@ public class TestProtobufDataParser {
     // Engineer object in the stream is 59 bytes long
     // Executive object in the stream is 54 bytes long
     // Skip first 5 objects => start from position 285 [59*3 54*2]
-    DataParser dataParser = getDataParser("685", "Employee.desc", "Employee");
+    DataParser dataParser = getDataParser("748", "Employee.desc", "Employee");
     List<Record> records = new ArrayList<>();
-    assertEquals("685", dataParser.getOffset());
+    assertEquals("748", dataParser.getOffset());
     Record r = dataParser.parse();
-    assertEquals("840", dataParser.getOffset());
+    assertEquals("915", dataParser.getOffset());
     while(r != null) {
       records.add(r);
       r = dataParser.parse();
