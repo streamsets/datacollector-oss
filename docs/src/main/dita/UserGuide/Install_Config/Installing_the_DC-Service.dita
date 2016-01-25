@@ -66,7 +66,7 @@
                     change the owner to sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>To start the <ph
+                <cmd>To start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service, use the following command: </cmd>
                 <info>

@@ -15,17 +15,16 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_mdc_shg_qr">
  <title>Java Heap Size Configuration</title>
- <shortdesc>You can define the Java heap size used by the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. By default,
-    the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java
-    heap size is 1024 MB. </shortdesc>
+ <shortdesc>You can define the <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> Java heap
+    size. By default, the  Java heap size is 1024 MB. </shortdesc>
  <conbody>
   <p><indexterm>Java configuration options<indexterm>heap
         size</indexterm></indexterm><indexterm>heap
         size<indexterm>configuring</indexterm></indexterm>The Java heap size determines the heap
-      size allocated to the <ph
+      size allocated to <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
-      affects the amount of memory the <ph
+      affects the amount of memory <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can use
       when it runs a pipeline. Running a pipeline can use up to 65% of the allocated heap size. </p>
     <p>Define the heap size as part of the SDC_JAVA_OPTS property in the <ph

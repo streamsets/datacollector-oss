@@ -16,9 +16,10 @@
 <concept id="concept_dns_dvg_h5">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         Authentication</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        /> can authenticate user accounts based on files or LDAP. Best practice is to use LDAP if
-        your organization uses it. By default, the <ph
+ <shortdesc>StreamSets <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
+        authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your
+        organization has it. By default, <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses
         file authentication.</shortdesc>
  <conbody>

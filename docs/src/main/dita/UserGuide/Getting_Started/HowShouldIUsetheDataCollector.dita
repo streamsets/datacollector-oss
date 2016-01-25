@@ -14,13 +14,13 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rlj_ftm_lq">
- <title>How should I use the Data Collector?</title>
- <shortdesc>Use the <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> like a pipe in
-  the data stream. Throughout your enterprise data topology, you have streams of data that you need
-  to move, collect, and process on the way to their destinations. The <ph
-   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides the
-  crucial connection between hops in the stream. </shortdesc>
+ <title>How should I use Data Collector?</title>
+ <shortdesc>Use StreamSets <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> like a pipe
+    in the data stream. Throughout your enterprise data topology, you have streams of data that you
+    need to move, collect, and process on the way to their destinations. <ph
+      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides the
+    crucial connection between hops in the stream. </shortdesc>
  <conbody>
   <p>To solve your ingest needs, you can use a single <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to run one

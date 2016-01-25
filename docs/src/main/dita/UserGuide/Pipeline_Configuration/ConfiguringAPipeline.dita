@@ -59,17 +59,17 @@
                                             <li>Standalone - A single <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> process runs the pipeline.</li>
-                                            <li>Cluster Batch - The <ph
+                                            <li>Cluster Batch - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
                                                 data in HDFS. Processes all available data and then
                                                 stops the pipeline.</li>
-                                            <li>Cluster Yarn Streaming - The <ph
+                                            <li>Cluster Yarn Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
                                                 data. Use to stream data from a Kafka cluster that
                                                 uses Spark Streaming on YARN.</li>
-                                            <li>Cluster Mesos Streaming - The <ph
+                                            <li>Cluster Mesos Streaming - <ph
                                                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                                 /> spawns additional workers as needed to process
                                                 data. Use to stream data from a Kafka cluster that
@@ -81,7 +81,7 @@
                                             href="../Pipeline_Design/DeliveryGuarantee.dita#concept_ffz_hhw_kq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 id="image_rtg_yfm_zs"/></xref></entry>
-                                    <entry>Determines how the <ph
+                                    <entry>Determines how <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> handles data after an unexpected event causes the
                                         pipeline to stop running:<ul id="ul_b4v_51m_sq">
@@ -118,9 +118,9 @@
                                         </xref></entry>
                                     <entry>Maximum amount of memory for the pipeline to use. You can
                                         enter a numeric value or edit the default expression to use
-                                        a percentage of the Java heap size defined for the <ph
+                                        a percentage of the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        />. <p>Default is 65% of the <ph
+                                        /> Java heap size. <p>Default is 65% of the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> Java heap
                                             size:<codeblock> ${jvm:maxMemoryMB() * 0.65}</codeblock></p></entry>
@@ -238,7 +238,7 @@
                                 </row>
                                 <row>
                                     <entry>File Wait Time (secs)</entry>
-                                    <entry>Number of seconds the <ph
+                                    <entry>Number of seconds <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> waits for error records. After that time, it creates a
                                         new error record file. <p>You can enter a number of seconds
@@ -494,7 +494,7 @@
                     the pipeline. </cmd>
             </step>
         </steps>
-        <result>When the <ph
+        <result>When <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             starts the pipeline, the Monitor console displays real-time statistics for the pipeline.
             For more information about monitoring, see <xref

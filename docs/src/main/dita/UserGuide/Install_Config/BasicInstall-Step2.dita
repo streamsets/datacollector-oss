@@ -70,9 +70,8 @@ Stage library streamsets-datacollector-rabbitmq-lib installed</codeblock></dd>
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         />. This allows you to easily replicate the installation elsewhere. </dd>
                     <dd>For example, say you installed three libraries above, and then installed
-                        another two. The <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> can generate the command required to install all five libraries.</dd>
+                        another two. You can generate the command required to install all five
+                        libraries on additional machines.</dd>
                     <dd>To generate an installation script based on the current <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> installation, use the following

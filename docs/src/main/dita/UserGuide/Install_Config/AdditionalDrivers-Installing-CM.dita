@@ -38,7 +38,7 @@
                         example:
                     </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR=/opt/sdc-extras/</codeblock>By
                     default, the path is <codeph>/var/lib/sdc</codeph>. </li>
-                <li>On every node that runs the <ph
+                <li>On every node that runs <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />, copy the drivers to the directory defined for the
                     STREAMSETS_LIBRARIES_EXTRA_DIR environment variable. <p>Use a directory

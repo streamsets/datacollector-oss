@@ -19,12 +19,8 @@
   <p><indexterm>Hadoop FS destination<indexterm>data formats</indexterm></indexterm><indexterm>data
           formats<indexterm>Hadoop FS destination</indexterm></indexterm>Hadoop FS writes data to
       HDFS based on the data format that you select. You can use the following data formats: <dl>
-        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
-          <dt/>
-          <dd/>
-        </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
           <dt/>
           <dd/>
         </dlentry>
@@ -34,12 +30,16 @@
           <dd/>
         </dlentry>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DataF-JSON">
           <dt/>
           <dd/>
         </dlentry>
         <dlentry
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DestDF-ProtoFile">
+          <dt/>
+          <dd/>
+        </dlentry>
+        <dlentry conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DESTDataF-Text">
           <dt/>
           <dd/>
         </dlentry>

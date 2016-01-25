@@ -17,10 +17,8 @@
  <title>Available Stage Libraries</title>
  <shortdesc></shortdesc>
  <conbody>
-  <p>The following table describes the stages installed with each stage library:<draft-comment
-                author="Loretta">Dev: should all the point releases be x? e.g. should CDH 5.2.6 be
-                CDH 5.2.x?</draft-comment><table frame="all" rowsep="1" colsep="1"
-                id="table_kyr_blm_s5">
+  <p>The following table describes the stages installed with each stage library:<table frame="all"
+                rowsep="1" colsep="1" id="table_kyr_blm_s5">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="1.0*"/>
                     <colspec colname="c2" colnum="2" colwidth="1.0*"/>

@@ -23,9 +23,9 @@
                 <li>Create a local directory external to the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> installation directory for the drivers. Use an external directory to enable
-                    use of the drivers after upgrading the <ph
+                    use of the drivers after <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />.<p>For example, if you installed the <ph
+                    /> ugrades.<p>For example, if you installed <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
                         might create the driver directory at:
@@ -63,7 +63,7 @@ grant codebase "file://&lt;driver directory>-" {
 grant codebase "file:///opt/sdc-extras/-" {
   permission java.security.AllPermission;
 };</codeblock></p></li>
-                <li>Restart the <ph
+                <li>Restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</li>
             </ol><p>The drivers in the directory become available to their respective

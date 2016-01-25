@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline. ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Memory"></meta><meta name="abstract" content="The Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."></meta><meta name="description" content="The Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/DCEnvironmentConfig.html#concept_mdc_shg_qr"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_twq_nhx_rr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Memory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline. Best ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Pipeline Memory"></meta><meta name="abstract" content="Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."></meta><meta name="description" content="Data Collector uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine, you can configure the maximum amount of memory that can be used for the pipeline."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Configuration/PipelineConfiguration_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/DCEnvironmentConfig.html#concept_mdc_shg_qr"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_twq_nhx_rr"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Pipeline Memory</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,15 +35,17 @@
  <h1 class="title topictitle1">Pipeline Memory</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
-                  Collector</span> uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine,
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+  uses memory when it runs a pipeline. To avoid causing out-of-memory errors on the host machine,
   you can configure the maximum amount of memory that can be used for the pipeline. </p>
 
   <p class="p">Best practice is to configure the pipeline to use up to 65% of
-   the Java heap size defined for the <span class="ph">Data
-                  Collector</span>. For example,
-   with the default Data Collector Java heap size of 1024 MB, the highest setting for the pipeline
-   memory should be 665 MB.</p>
+   the <span class="ph">Data
+                  Collector</span> Java
+   heap size. For example, with the default <span class="ph">Data
+                  Collector</span> Java heap size
+   of 1024 MB, the highest setting for the pipeline memory should be 665 MB.</p>
 
   <p class="p">Use the Max Pipeline Memory pipeline property to define the maximum amount of memory to use.
    When you configure the pipeline, you can also configure the action to take when pipeline memory
@@ -58,7 +60,7 @@
  </div>
 
  <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
-<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="You can define the Java heap size used by the Data Collector. By default, the Data Collector Java heap size is 1024 MB.">Java Heap Size Configuration</a></div>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="You can define the Data Collector Java heap size. By default, the Java heap size is 1024 MB.">Java Heap Size Configuration</a></div>
 </div>
 </div>
 <div class="navfooter"><!---->

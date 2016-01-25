@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_jdj_4rg_1t">
  <title>Enabling External JMX Tools</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> can provide JMX metrics to external tools. </shortdesc>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    can provide JMX metrics to external tools. </shortdesc>
  <conbody>
   <p><indexterm>JMX metrics<indexterm>enabling external JMX
         tools</indexterm></indexterm><indexterm>Java configuration options<indexterm>enabling

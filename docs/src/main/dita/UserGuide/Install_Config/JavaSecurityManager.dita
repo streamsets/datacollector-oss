@@ -2,8 +2,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_tm4_pbg_ht">
  <title>Java Security Manager</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> includes a Java Security Manager that is enabled by default. </shortdesc>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    includes a Java Security Manager that is enabled by default. </shortdesc>
  <conbody>
   <p>The Java Security Manager restricts the runtime permissions of user libraries. This allows
    administrators to control what user libraries do on production systems. For example, by default,

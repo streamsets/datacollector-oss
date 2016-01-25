@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can configure error record handling at a stage level and at a pipeline level. When an error occurs as a stage processes a record, the Data Collector handles the record based on the stage ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Record Handling"></meta><meta name="abstract" content="You can configure error record handling at a stage level and at a pipeline level."></meta><meta name="description" content="You can configure error record handling at a stage level and at a pipeline level."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Record Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can configure error record handling at a stage level and at a pipeline level. When an error occurs as a stage processes a record, Data Collector handles the record based on the stage ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Error Record Handling"></meta><meta name="abstract" content="You can configure error record handling at a stage level and at a pipeline level."></meta><meta name="description" content="You can configure error record handling at a stage level and at a pipeline level."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_pm4_txm_vq"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Error Record Handling</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -38,10 +38,10 @@
   <div class="body conbody"><p class="shortdesc">You can configure error record handling at a stage level and at a pipeline level. </p>
 
     <p class="p">When an error occurs as a
-      stage processes a record, the <span class="ph">Data
+      stage processes a record, <span class="ph">Data
                   Collector</span> handles
       the record based on the stage configuration. One of the stage options is to pass the record to
-      the pipeline for error handling. For this option, the <span class="ph">Data
+      the pipeline for error handling. For this option, <span class="ph">Data
                   Collector</span> processes
       the record based on the pipeline error record handling configuration. </p>
 
@@ -64,7 +64,7 @@
  <h2 class="title topictitle2">Pipeline Error Record Handling</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Pipeline error record handling determines how the <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">Pipeline error record handling determines how <span class="ph">Data
                   Collector</span> processes
     error records that stages send to the pipeline for error handling. It also handles records
     deliberately dropped from the pipeline such as records without required fields.</p>
@@ -74,7 +74,7 @@
         
           <dt class="dt dlterm">Discard</dt>
 
-          <dd class="dd">The pipeline discards the record. The <span class="ph">Data
+          <dd class="dd">The pipeline discards the record. <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics. </dd>
 
@@ -82,7 +82,7 @@
         
           <dt class="dt dlterm">Write to File</dt>
 
-          <dd class="dd">The pipeline writes error records and related details to a local directory. The <span class="ph">Data
+          <dd class="dd">The pipeline writes error records and related details to a local directory. <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
@@ -95,11 +95,11 @@
         
           <dt class="dt dlterm">Write to Another Pipeline</dt>
 
-          <dd class="dd">The pipeline writes error records to an SDC RPC pipeline. The <span class="ph">Data
+          <dd class="dd">The pipeline writes error records to an SDC RPC pipeline. <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
-          <dd class="dd">When you write to another pipeline, the <span class="ph">Data
+          <dd class="dd">When you write to another pipeline, <span class="ph">Data
                   Collector</span>
             effectively creates an SDC RPC origin pipeline to pass the error records to another
             pipeline. </dd>
@@ -114,7 +114,7 @@
         
           <dt class="dt dlterm">Write to Kafka</dt>
 
-          <dd class="dd">The pipeline writes error records and related details to Kafka. The <span class="ph">Data
+          <dd class="dd">The pipeline writes error records and related details to Kafka. <span class="ph">Data
                   Collector</span>
             includes the records in error record counts and metrics.</dd>
 
@@ -124,9 +124,9 @@
       </dl>
 </div>
 
-  <p class="p">When a <span class="ph">Data
+  <p class="p">When <span class="ph">Data
                   Collector</span>
-   encounters an unexpected error, it stops the pipeline and logs the error.</p>
+      encounters an unexpected error, it stops the pipeline and logs the error.</p>
 
  </div>
 
@@ -136,16 +136,16 @@
 
  
  <div class="body conbody"><p class="shortdesc">Most stages include error record handling options. When an error occurs when processing
-    a record, the <span class="ph">Data
-                  Collector</span> processes
-    records based on the On Record Error property for the stage.</p>
+    a record, <span class="ph">Data
+                  Collector</span>
+    processes records based on the On Record Error property for the stage.</p>
 
   <div class="p">Stages include the
       following error handling options:<dl class="dl">
         
           <dt class="dt dlterm">Discard</dt>
 
-          <dd class="dd">The stage silently discards the record. The <span class="ph">Data
+          <dd class="dd">The stage silently discards the record. <span class="ph">Data
                   Collector</span> does
             not log information about the error or note the specific record that encountered an
             error. The discarded record is not included in Monitor mode error record counts or
@@ -166,11 +166,10 @@
         
           <dt class="dt dlterm">Stop Pipeline</dt>
 
-          <dd class="dd">The <span class="ph">Data
+          <dd class="dd"><span class="ph">Data
                   Collector</span>
             stops the pipeline and logs information about the error. The error that stopped the
-            pipeline displays as an alert in Monitor mode and as an error in the pipeline history.
-          </dd>
+            pipeline displays as an alert in Monitor mode and as an error in the pipeline history. </dd>
 
           <dd class="dd">Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
 
@@ -186,22 +185,22 @@
 
  <div class="body conbody">
   <p class="p">A Kafka Consumer origin stage reads JSON data with a maximum object length of 4096 characters
-      and the stage encounters an object with 5000 characters. Based on the stage configuration, the
-        <span class="ph">Data
+      and the stage encounters an object with 5000 characters. Based on the stage configuration, <span class="ph">Data
                   Collector</span> either
       discards the record, stops the pipeline, or passes the record to the pipeline for error record
       handling. </p>
 
   <div class="p">When the stage is configured to send the record to the pipeline, one of the following occurs
    based on how you configure the pipeline error handling: <ul class="ul" id="concept_y4z_n4y_5r__ul_a3h_mjy_5r">
-    <li class="li">When the pipeline discards error records, the <span class="ph">Data
-                  Collector</span> discards the
-     record without noting the action or the cause. <p class="p">When you monitor the pipeline, you can view
-      the most recent set of error records and information about the errors on the Error Records tab
-      for the stage. But this information becomes unavailable after you stop the pipeline. </p>
+    <li class="li">When the pipeline discards error records, <span class="ph">Data
+                  Collector</span>
+          discards the record without noting the action or the cause. <p class="p">When you monitor the
+            pipeline, you can view the most recent set of error records and information about the
+            errors on the Error Records tab for the stage. But this information becomes unavailable
+            after you stop the pipeline. </p>
 </li>
 
-    <li class="li">When the pipeline writes error records to a destination, the <span class="ph">Data
+    <li class="li">When the pipeline writes error records to a destination, <span class="ph">Data
                   Collector</span> writes
           the error record and additional error information to the destination. It also includes the
           error records in monitor counts and metrics. </li>

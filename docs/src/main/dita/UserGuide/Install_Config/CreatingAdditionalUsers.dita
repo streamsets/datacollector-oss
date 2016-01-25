@@ -15,14 +15,13 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_nsz_lp4_1r">
     <title>Configuring Users (File-Based Authentication)</title>
-    <shortdesc>The <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         includes several default users - one for each role. For increased security, you can
         customize the default users, delete them, or create additional Data Collector
         users.</shortdesc>
     <taskbody>
         <context>
-            <p><indexterm>users<indexterm>creating</indexterm></indexterm>If the <ph
+            <p><indexterm>users<indexterm>creating</indexterm></indexterm>If <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> uses LDAP authentication, use LDAP to configure additional users. </p>
             <p>When using the default file-based authentication, you need to configure additional
@@ -47,7 +46,7 @@
                     that you use. </cmd>
                 <info>The file name is <filepath>&lt;authentication>-realm.properties</filepath>. </info>
                 <info>The file is located in the following directory:
-                        <filepath>&lt;SDCinstalldir>/etc/</filepath>. When the <ph
+                        <filepath>&lt;SDCinstalldir>/etc/</filepath>. When <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> is installed as a service, the file is located in the following directory:
                         <filepath>/etc/sdc/</filepath>. </info>
@@ -63,7 +62,7 @@
                 </info>
             </step>
             <step>
-                <cmd>To make the new users available, restart the <ph
+                <cmd>To make the new users available, restart <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     />.</cmd>
             </step>

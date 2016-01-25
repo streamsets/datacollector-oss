@@ -22,12 +22,12 @@
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>storing passwords and other sensitive
           values</indexterm></indexterm><indexterm>passwords<indexterm>storing in
-        files</indexterm></indexterm>You can store a single piece of information in a file. When the
-        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      starts, it checks the reference files for information. By default, the <ph
+        files</indexterm></indexterm>You can store a single piece of information in a file. When <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> starts, it
+      checks the reference files for information. By default, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> expects
       the email password and keystore file password to be stored in files. </p>
-    <p>For example, if you configure xmail.username as follows, the <ph
+    <p>For example, if you configure xmail.username as follows, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
       email_username.txt file for the user
       name:<codeblock><b>xmail.username</b>=@email_username.txt@</codeblock></p>

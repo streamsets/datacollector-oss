@@ -16,7 +16,7 @@
 <concept id="concept_w3y_cry_5q">
  <title>Merging Streams</title>
  <shortdesc>You can merge streams of data in a pipeline by connecting two or more stages to the same
-  downstream stage. When you merge streams of data, the <ph
+  downstream stage. When you merge streams of data, <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> channels the
   data from all streams to the same stage, but does not perform a join of records in the stream. </shortdesc>
  <conbody>

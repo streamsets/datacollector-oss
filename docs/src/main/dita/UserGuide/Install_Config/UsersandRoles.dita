@@ -15,25 +15,26 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dt2_cpb_kr">
  <title>Users and Roles</title>
- <shortdesc>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-    /> provides several roles and a default user account based on each role. You can change or
-    remove these accounts. You can also create new user accounts. </shortdesc>
+ <shortdesc><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    provides several roles and a default user account based on each role. You can change or remove
+    these accounts. You can also create new user accounts. </shortdesc>
  <conbody>
   <p><indexterm>users<indexterm>default users and
           roles</indexterm></indexterm><indexterm>roles<indexterm>for
       users</indexterm></indexterm>For increased security, change the passwords for the default
-      accounts. A production deployment of the <ph
+      accounts. A production deployment of <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> should
       integrate with LDAP authentication. </p>
     <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> roles
       define the tasks that a user can perform. When you configure a user, assign it one or more
       roles. Users can perform any task that their roles allow.</p>
-  <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      provides the following roles: <dl>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
+      the following roles: <dl>
         <dlentry>
           <dt>admin</dt>
-          <dd>Allows you to perform any task within the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. </dd>
+          <dd>Allows you to perform any <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            task. </dd>
           <dd>The default login for the admin user account is <codeph>admin</codeph> /
               <codeph>admin</codeph>.</dd>
         </dlentry>
@@ -55,11 +56,9 @@
         </dlentry>
         <dlentry>
           <dt>guest</dt>
-          <dd>Allows read-only access to the <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. As
-            a guest, you can view pipeline and alert configuration, view general monitoring and log
-            information. You cannot preview data or review snapshots, or configure pipelines or
-            alerts.</dd>
+          <dd>Allows read-only access. As a guest, you can view pipeline and alert configuration,
+            view general monitoring and log information. You cannot preview data or review
+            snapshots, or configure pipelines or alerts.</dd>
           <dd>The default login for the guest user account is <codeph>guest</codeph> /
               <codeph>guest</codeph>.</dd>
         </dlentry>

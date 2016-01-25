@@ -114,12 +114,29 @@
   <div class="p">Hadoop FS writes data to
       HDFS based on the data format that you select. You can use the following data formats: <dl class="dl">
         
-                              <dt class="dt dlterm">Text</dt>
+                              <dt class="dt dlterm">Avro</dt>
 
-                              <dd class="dd">The destination writes a single text field of a record. When you
-                                    configure the stage, you select the field to use. When
-                                    necessary, merge record data into the field earlier in the
-                                    pipeline. </dd>
+                              <dd class="dd">The destination writes records based on the Avro schema that you
+                                    provide. The schema definition is included in each file.</dd>
+
+                              <dd class="dd">You can also compress data with an Avro compression codec. When
+                                    using Avro compression, do not use other compression available
+                                    in the destination. </dd>
+
+                        
+        
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, you must ensure that the data uses the
+                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1332e572">
+                                          <li class="li">A root field that contains an array of maps.</li>
+
+                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
+                                                optional <dfn class="term">header</dfn> element.</li>
+
+                                    </ul>
+</dd>
 
                         
         
@@ -140,32 +157,6 @@
 
                         
         
-                              <dt class="dt dlterm">Delimited</dt>
-
-                              <dd class="dd">The destination writes records as delimited data. When you use
-                                    this data format, you must ensure that the data uses the
-                                    following data structure:<ul class="ul" id="concept_lww_3b3_kr__d1332e572">
-                                          <li class="li">A root field that contains an array of maps.</li>
-
-                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
-                                                optional <dfn class="term">header</dfn> element.</li>
-
-                                    </ul>
-</dd>
-
-                        
-        
-                              <dt class="dt dlterm">Avro</dt>
-
-                              <dd class="dd">The destination writes records based on the Avro schema that you
-                                    provide. The schema definition is included in each file.</dd>
-
-                              <dd class="dd">You can also compress data with an Avro compression codec. When
-                                    using Avro compression, do not use other compression available
-                                    in the destination. </dd>
-
-                        
-        
                         <dt class="dt dlterm">Protobuf</dt>
 
                         <dd class="dd">Writes a batch of messages in each file. </dd>
@@ -176,6 +167,15 @@
                         <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
 
                   
+        
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
       </dl>
 </div>
 

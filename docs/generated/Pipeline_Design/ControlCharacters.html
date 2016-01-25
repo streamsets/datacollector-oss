@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records. When the Data ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Control Character Removal"></meta><meta name="abstract" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records."></meta><meta name="description" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hfs_dkm_js"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Control Character Removal</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records. When Data Collector ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Control Character Removal"></meta><meta name="abstract" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records."></meta><meta name="description" content="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records."></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_hfs_dkm_js"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Control Character Removal</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -39,7 +39,7 @@
     end-of-transmission characters - from data. Remove control characters to avoid creating invalid
     records. </p>
 
-  <div class="p">When the <span class="ph">Data
+  <div class="p">When <span class="ph">Data
                   Collector</span> removes
       control characters, it removes ASCII character codes 0-31 and 127 with the following
         exceptions:<ul class="ul" id="concept_hfs_dkm_js__ul_i3y_2lm_js">
@@ -52,12 +52,15 @@
       </ul>
 </div>
 
-    <div class="p">You can use the following stages to remove control characters: <ul class="ul" id="concept_hfs_dkm_js__ul_hm5_nlm_js">
+    <div class="p">You can use the <span class="ph uicontrol">Ignore Ctrl Characters</span> property in the following
+      stages to remove control characters: <ul class="ul" id="concept_hfs_dkm_js__ul_hm5_nlm_js">
         <li class="li">Amazon S3 origin</li>
 
         <li class="li">Directory origin</li>
 
         <li class="li">File Tail origin</li>
+
+        <li class="li">Hadoop FS origin</li>
 
         <li class="li">HTTP Client origin</li>
 
@@ -66,6 +69,8 @@
         <li class="li">Kafka Consumer origin</li>
 
         <li class="li">Kinesis Consumer origin</li>
+
+        <li class="li">RabbitMQ Consumer origin</li>
 
         <li class="li">JSON Parser processor</li>
 

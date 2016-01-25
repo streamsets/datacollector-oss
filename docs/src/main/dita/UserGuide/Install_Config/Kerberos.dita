@@ -20,13 +20,13 @@
       Kafka and point to the Kafka docs? </draft-comment></shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
-     authentication</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>enabling for
-     the Data Collector</indexterm></indexterm>By default, the <ph
-    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the user
-   account who started it to connect to external systems. When you enable Kerberos, it can use the
-   Kerberos principal to connect to external systems.</p>
+          authentication</indexterm></indexterm><indexterm>Kerberos
+          authentication<indexterm>enabling for the Data Collector</indexterm></indexterm>By
+      default, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      uses the user account who started it to connect to external systems. When you enable Kerberos,
+      it can use the Kerberos principal to connect to external systems.</p>
   <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
-        <li>Configure the <ph
+        <li>Configure <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
           Kerberos. <p>In the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -43,8 +43,8 @@
               <li>HBase destination</li>
             </ul></p></li>
       </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
-        requires it, and if Kerberos is enabled for the <ph
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
-      </note></p>
+        requires it and if <ph
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has
+        Kerberos enabled. </note></p>
  </conbody>
 </concept>

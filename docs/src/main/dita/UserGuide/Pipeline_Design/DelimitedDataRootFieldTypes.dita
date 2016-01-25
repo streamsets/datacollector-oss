@@ -22,12 +22,12 @@
           data</indexterm></indexterm><indexterm>list root-field type<indexterm>delimited
           data</indexterm></indexterm><indexterm>JavaScript Evaluator<indexterm>scripts for
           delimited data</indexterm></indexterm><indexterm>Jython Evaluator<indexterm>scripts for
-          delimited data</indexterm></indexterm>When reading delimited data, the <ph
+          delimited data</indexterm></indexterm>When reading delimited data, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can create
       records that use the list or list-map root field type. </p>
-    <p>When the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-      /> creates records for delimited data, it creates a single root field of the specified type
-      and writes the delimited data within the root field. </p>
+    <p>When <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+      creates records for delimited data, it creates a single root field of the specified type and
+      writes the delimited data within the root field. </p>
     <p>Use the default list-map root field type to easily process delimited data.</p>
     <p>
       <dl>

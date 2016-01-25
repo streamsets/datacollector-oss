@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Data Collector passes data through the pipeline in batches . This is how it works: The origin creates a batch as it reads data from the origin system or as data arrives from the origin system, ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data in Motion"></meta><meta name="abstract" content="The Data Collector passes data through the pipeline in batches. This is how it works:"></meta><meta name="description" content="The Data Collector passes data through the pipeline in batches. This is how it works:"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_y1r_zky_bt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data in Motion</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="Data Collector passes data through the pipeline in batches . This is how it works: The origin creates a batch as it reads data from the origin system or as data arrives from the origin system, noting ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Data in Motion"></meta><meta name="abstract" content="Data Collector passes data through the pipeline in batches. This is how it works:"></meta><meta name="description" content="Data Collector passes data through the pipeline in batches. This is how it works:"></meta><meta name="DC.Relation" scheme="URI" content="../Pipeline_Design/PipelineDesign_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_y1r_zky_bt"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Data in Motion</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,8 +35,9 @@
  <h1 class="title topictitle1">Data in Motion</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The <span class="ph">Data
-                  Collector</span> passes data through the pipeline in <dfn class="term">batches</dfn>. This is how it works:</p>
+ <div class="body conbody"><p class="shortdesc"><span class="ph">Data
+                  Collector</span>
+    passes data through the pipeline in <dfn class="term">batches</dfn>. This is how it works:</p>
 
   <p class="p">The origin creates a batch as it
    reads data from the origin system or as data arrives from the origin system, noting the offset.
@@ -46,9 +47,9 @@
    The batch moves through the pipeline from processor to processor until it reaches pipeline
    destinations.</p>
 
-  <p class="p">Destinations write the batch to destination systems, and the <span class="ph">Data
+  <p class="p">Destinations write the batch to destination systems, and <span class="ph">Data
                   Collector</span> commits
-      the offset internally. Based on the pipeline delivery guarantee, the <span class="ph">Data
+      the offset internally. Based on the pipeline delivery guarantee, <span class="ph">Data
                   Collector</span> either
       commits the offset as soon as it writes to any destination system or after receiving
       confirmation of the write from all destination systems. </p>
@@ -75,19 +76,17 @@
         
           <dt class="dt dlterm">At least once</dt>
 
-          <dd class="dd">The <span class="ph">Data
-                  Collector</span>
-            ensures that the pipeline processes all data. </dd>
+          <dd class="dd">Ensures that the pipeline processes all data. </dd>
 
-          <dd class="dd">If a failure causes the <span class="ph">Data
+          <dd class="dd">If a failure causes <span class="ph">Data
                   Collector</span> to
             stop while processing a batch of data, when restarts, it reprocesses the batch. This
             option ensures that no data is lost. </dd>
 
-          <dd class="dd">With this option, the <span class="ph">Data
+          <dd class="dd">With this option, <span class="ph">Data
                   Collector</span>
             commits the offset after receiving write confirmation from destination systems. If a
-            failure occurs after the <span class="ph">Data
+            failure occurs after <span class="ph">Data
                   Collector</span>
             passes data to destination systems but before receiving confirmation and committing the
             offset, up to one batch data might be duplicated in destination systems.</dd>
@@ -96,23 +95,21 @@
         
           <dt class="dt dlterm">At most once</dt>
 
-          <dd class="dd">The <span class="ph">Data
-                  Collector</span>
-            ensures that data is not processed more than once. </dd>
+          <dd class="dd">Ensures that data is not processed more than once. </dd>
 
-          <dd class="dd">If a failure causes the <span class="ph">Data
+          <dd class="dd">If a failure causes <span class="ph">Data
                   Collector</span> to
             stop while processing a batch of data, when it starts up, it begins processing with the
             next batch of data. This option avoids the duplication of data in destinations due to
             reprocessing. </dd>
 
-          <dd class="dd">With this option, the <span class="ph">Data
+          <dd class="dd">With this option, <span class="ph">Data
                   Collector</span>
             commits the offset after a write without waiting for confirmation from destination
-            systems. If a failure occurs after the <span class="ph">Data
+            systems. If a failure occurs after <span class="ph">Data
                   Collector</span>
-            passes data to destinations and commits the offset, up to one batch of data might not be
-            written to the destination systems.</dd>
+            passes data to destinations and commits the offset, up to one batch of data might not
+            get written to the destination systems.</dd>
 
         
       </dl>

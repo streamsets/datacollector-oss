@@ -18,7 +18,7 @@
  <shortdesc>Perform the following prerequisites before reading or writing protobuf data.</shortdesc>
  <conbody>
         <p><indexterm>protobuf data format<indexterm>processing
-                prerequisites</indexterm></indexterm>The <ph
+                prerequisites</indexterm></indexterm><ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             processes data based on a protobuf descriptor file. The descriptor file (.desc)
             describes one or more message types. When you configure a stage to process data, you

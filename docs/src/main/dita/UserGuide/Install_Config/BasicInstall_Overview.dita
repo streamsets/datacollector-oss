@@ -15,20 +15,21 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vvw_p3m_s5">
  <title>Basic Installation with Custom Libraries</title>
- <shortdesc>You can download and install a basic version of the <ph
+ <shortdesc>You can download and install a basic version of <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>, and
         then install individual stage libraries as needed.</shortdesc>
  <conbody>
   <p><indexterm>installation<indexterm>basic with custom libraries</indexterm></indexterm>The basic
-            installation includes the <ph
+            installation includes <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>,
             development stages, all processors, and the origins and destinations in the basic stage
             library, such as Directory and Local FS. You can then use the command line interface to
             install additional stage libraries. </p>
         <p>Use the basic installation to install only the stage libraries that you want to use. The
-            basic installation also results in downloading smaller installation files. </p>
+            basic installation also results in smaller downloads for installation files. </p>
         <p>The basic installation provides all processors, all development stages, and the following
-            origins and destinations:<ul id="ul_z3l_k2n_s5">
+            origins and destinations in the basic stage library:<draft-comment author="Loretta"
+                >Check this list with each release</draft-comment><ul id="ul_z3l_k2n_s5">
                 <li>Directory origin</li>
                 <li>File Tail origin</li>
                 <li>HTTP Client origin</li>

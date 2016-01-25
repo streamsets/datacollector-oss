@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cgm_ktz_2t">
  <title>Retrying the Pipeline</title>
- <shortdesc>By default, when the <ph
+ <shortdesc>By default, when <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> encounters a
     stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That
     is, it waits a period of time, and then tries again to run the pipeline.</shortdesc>
@@ -23,9 +23,9 @@
   <p><indexterm>pipelines<indexterm>retry attempts upon error</indexterm></indexterm>A stage-level
             error might include a stage not being able to connect to an external system because the
             system or network is down.</p>
-  <p>You can define the maximum number of pipeline retries that the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> performs. </p>
-    <p>With the default value, -1, the <ph
+  <p>You can define the maximum number of pipeline retries that <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> attempts. </p>
+    <p>With the default value, -1, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> retries
       the pipeline an infinite number of times. This allows the pipeline to continue running as soon
       as any temporary connection or system failures resolve. </p>

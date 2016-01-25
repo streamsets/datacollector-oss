@@ -16,15 +16,14 @@
 <concept id="concept_atr_j4y_5r">
  <title>Stage Error Record Handling</title>
  <shortdesc>Most stages include error record handling options. When an error occurs when processing
-    a record, the <ph
-      conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes
-    records based on the On Record Error property for the stage.</shortdesc>
+    a record, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    processes records based on the On Record Error property for the stage.</shortdesc>
  <conbody>
   <p><indexterm>stages<indexterm>error record handling</indexterm></indexterm>Stages include the
       following error handling options:<dl>
         <dlentry>
           <dt>Discard</dt>
-          <dd>The stage silently discards the record. The <ph
+          <dd>The stage silently discards the record. <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> does
             not log information about the error or note the specific record that encountered an
             error. The discarded record is not included in Monitor mode error record counts or
@@ -40,11 +39,9 @@
         </dlentry>
         <dlentry>
           <dt>Stop Pipeline</dt>
-          <dd>The <ph
-              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          <dd><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             stops the pipeline and logs information about the error. The error that stopped the
-            pipeline displays as an alert in Monitor mode and as an error in the pipeline history.
-          </dd>
+            pipeline displays as an alert in Monitor mode and as an error in the pipeline history. </dd>
           <dd>Stop pipeline is not supported for cluster mode pipelines at this time.</dd>
         </dlentry>
       </dl></p>

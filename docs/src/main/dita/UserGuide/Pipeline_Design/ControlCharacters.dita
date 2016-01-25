@@ -21,7 +21,7 @@
  <conbody>
   <p><indexterm>pipeline design<indexterm>control character
         removal</indexterm></indexterm><indexterm>control characters<indexterm>removing from
-          data</indexterm></indexterm>When the <ph
+          data</indexterm></indexterm>When <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> removes
       control characters, it removes ASCII character codes 0-31 and 127 with the following
         exceptions:<ul id="ul_i3y_2lm_js">
@@ -29,14 +29,17 @@
         <li>10 - Line feed</li>
         <li>13 - Carriage return</li>
       </ul></p>
-    <p>You can use the following stages to remove control characters: <ul id="ul_hm5_nlm_js">
+    <p>You can use the <uicontrol>Ignore Ctrl Characters</uicontrol> property in the following
+      stages to remove control characters: <ul id="ul_hm5_nlm_js">
         <li>Amazon S3 origin</li>
         <li>Directory origin</li>
         <li>File Tail origin</li>
+        <li>Hadoop FS origin</li>
         <li>HTTP Client origin</li>
         <li>JMS Consumer origin</li>
         <li>Kafka Consumer origin</li>
         <li>Kinesis Consumer origin</li>
+        <li>RabbitMQ Consumer origin</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>
         <li>XML Parser processor</li>

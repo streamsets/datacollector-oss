@@ -59,15 +59,15 @@
 
 <div class="related-links"></div>
 <div class="topic concept nested1" id="concept_rlj_ftm_lq">
- <h2 class="title topictitle2">How should I use the Data Collector?</h2>
+ <h2 class="title topictitle2">How should I use Data Collector?</h2>
 
  
- <div class="body conbody"><p class="shortdesc">Use the <span class="ph">Data
-                  Collector</span> like a pipe in
-  the data stream. Throughout your enterprise data topology, you have streams of data that you need
-  to move, collect, and process on the way to their destinations. The <span class="ph">Data
+ <div class="body conbody"><p class="shortdesc">Use StreamSets <span class="ph">Data
+                  Collector</span> like a pipe
+    in the data stream. Throughout your enterprise data topology, you have streams of data that you
+    need to move, collect, and process on the way to their destinations. <span class="ph">Data
                   Collector</span> provides the
-  crucial connection between hops in the stream. </p>
+    crucial connection between hops in the stream. </p>
 
   <p class="p">To solve your ingest needs, you can use a single <span class="ph">Data
                   Collector</span> to run one
@@ -84,7 +84,7 @@
  
  <div class="body conbody"><p class="shortdesc">Let's walk through it...</p>
 
-  <p class="p">After you install and launch the <span class="ph">Data
+  <p class="p">After you install and launch <span class="ph">Data
                   Collector</span>, you access
    the <span class="ph">Data
                   Collector</span>
@@ -108,24 +108,23 @@
 
   <p class="p">Now that the data flow is done, you configure the pipeline error record handling to write error
    records to a file, and you configure an email alert to let you know when the pipeline generates
-   more than 100 error records. Then, you start the pipeline and the <span class="ph">Data
+   more than 100 error records. Then, you start the pipeline and <span class="ph">Data
                   Collector</span> goes to work. </p>
 
   <p class="p">The <span class="ph">Data
                   Collector</span>
    console goes into Monitor mode and displays summary and error statistics immediately. To get a
-   close look at the activity, you take a snapshot of the pipeline so you can examine how a set of
+   closer look at the activity, you take a snapshot of the pipeline so you can examine how a set of
    data passed through the pipeline. You see some unexpected data in the pipeline, so you create a
-   data rule for a link between two stages to gather  information about similar data and set an
-   alert to notify you when the numbers get too high.</p>
+   data rule for a link between two stages to gather information about similar data and set an alert
+   to notify you when the numbers get too high.</p>
 
   <p class="p">And what about those error records being written to file? They're saved with error details, so
    you can create an error pipeline to reprocess that data. Et voila!</p>
 
-  <p class="p">The <span class="ph">Data
-                  Collector</span> is a
-   powerful tool, but we're making it as simple as possible to use. So give it a try, click the Help
-   icon for information, and contact us if you need a hand. </p>
+  <p class="p">StreamSets <span class="ph">Data
+                  Collector</span> is a powerful tool, but we're making it as simple as possible to use. So give it a try, click
+   the Help icon for information, and contact us if you need a hand. </p>
 
  </div>
 

@@ -14,10 +14,10 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_lxk_kjw_1r">
-    <title>Configuring the <ph
+    <title>Configuring <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         /></title>
-    <shortdesc>You can customize the <ph
+    <shortdesc>You can customize <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> by
         editing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
@@ -29,9 +29,9 @@
                         Collector configuration</indexterm></indexterm>Use a text editor to edit the
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file. After you edit the file, restart the <ph
+                /> configuration file. To enable the changes, restart <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> to enable the changes. </p><p>The <ph
+                />. </p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, <filepath>sdc.properties</filepath>, is located in the
                 following
@@ -114,8 +114,7 @@
                                 <entry>http.authentication.ldap.role.mapping <xref
                                         href="LDAP-Configuring.dita">
                                         <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                            placement="inline"
-                                    /></xref></entry>
+                                            placement="inline"/></xref></entry>
                                 <entry>Maps groups defined by the LDAP server to <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> roles. <p>Enter a semicolon-separated list as
@@ -126,17 +125,14 @@
                             </row>
                             <row>
                                 <entry>kerberos.client.enabled</entry>
-                                <entry>Enables the <ph
+                                <entry>Enables Kerberos authentication for <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> to use Kerberos authentication. Must be enabled to allow a
-                                    stage to use Kerberos authentication to access external systems.
-                                </entry>
+                                    />. Must be enabled to allow stages to use Kerberos to access
+                                    external systems. </entry>
                             </row>
                             <row>
                                 <entry>kerberos.client.principal</entry>
-                                <entry>Kerberos principal for the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> to use. Enter a service principal.</entry>
+                                <entry>Kerberos principal to use. Enter a service principal.</entry>
                             </row>
                             <row>
                                 <entry>kerberos.client.keytab</entry>
@@ -194,16 +190,14 @@
                             </row>
                             <row>
                                 <entry>ui.help.base.url</entry>
-                                <entry>Base URL for the local <ph
+                                <entry>Base URL for the online help installed with <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> online help. <p>Do not change this value.</p></entry>
+                                        />.<p>Do not change this value.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.hosted.help.base.url</entry>
-                                <entry>Base URL for the <ph
-                                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> online help hosted by the StreamSets website. <p>Do not
-                                        change this value.</p></entry>
+                                <entry>Base URL for the online help hosted on the StreamSets
+                                    website. <p>Do not change this value.</p></entry>
                             </row>
                             <row>
                                 <entry>ui.refresh.interval.ms</entry>
@@ -225,7 +219,7 @@
                             </row>
                             <row>
                                 <entry>ui.enable.webSocket</entry>
-                                <entry>Enables the <ph
+                                <entry>Enables <ph
                                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                     /> to use WebSocket to gather pipeline information.</entry>
                             </row>
@@ -320,7 +314,7 @@
                     </thead>
                     <tbody>
                         <row>
-                            <entry>runtime.conf.location  <xref
+                            <entry>runtime.conf.location <xref
                                     href="../Advanced_Config/RuntimeProperties.dita#concept_fjx_g31_1s"
                                         ><image href="../Graphics/icon_moreInfo.png" scale="10"/>
                                 </xref></entry>
@@ -334,7 +328,7 @@
                                             name>.</p></li>
                                     <li>&lt;file path> - The directory and file name where runtime
                                         properties are defined. The runtime properties file must be
-                                        local to the <ph
+                                        local to <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         />. <p>When you define runtime properties in a separate
                                             file, do not prefix the property names with

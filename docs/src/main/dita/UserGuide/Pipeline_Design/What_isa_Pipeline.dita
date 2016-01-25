@@ -21,12 +21,12 @@
   <p><indexterm>pipelines<indexterm>overview</indexterm></indexterm>You can use a single origin
       stage to represent the origin system, multiple processor stages to transform data, and
       multiple destination stages to represent destination systems. </p>
-    <p>When you start a pipeline, the <ph
+    <p>When you start a pipeline, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> runs the
-      pipeline until you stop the pipeline or shut down the <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. A <ph
-        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can run
-      multiple pipelines.</p>
+      pipeline until you stop the pipeline or shut down <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You can
+      use <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+      run multiple pipelines.</p>
     <p>While the pipeline runs, you can monitor the pipeline to verify that the pipeline performs as
       expected. You can also define metric and data rules and alerts to let you know when certain
       thresholds are reached.</p>
