@@ -9,8 +9,10 @@
   },
   "runAs": {
     "user": "sdc",
-    "group": "sdc"
+    "group": "sdc",
+    "principal": "sdc"
   },
+  "kerberos": "true",
   "parcel": {
     "repoUrl": "https://archives.streamsets.com/datacollector/latest/parcel/",
     "requiredTags": ["streamsets"]
@@ -32,6 +34,9 @@
           "AUTH_TYPE": "${http.authentication}"
         }
       },
+      "kerberosPrincipals" : [
+        { "name" : "SDC_PRINCIPAL", "primary" : "${principal}", "instance" : "${host}" }
+      ],
       "logging": {
         "dir": "/var/log/sdc",
         "filename": "sdc.log",
@@ -66,6 +71,12 @@
           {
             "filename": "sdc.properties",
             "configFormat": "properties",
+            "kerberosPrincipals" : [
+              {
+                "principalName" : "SDC_PRINCIPAL",
+                "propertyName" : "kerberos.client.principal"
+              }
+            ],
             "includeParams": [
               "http.port",
               "https.port",
@@ -74,8 +85,6 @@
               "http.authentication",
               "http.realm.file.permission.check",
               "kerberos.client.enabled",
-              "kerberos.client.principal",
-              "kerberos.client.keytab",
               "preview.maxBatchSize",
               "preview.maxBatches",
               "production.maxBatchSize",
@@ -95,6 +104,12 @@
             ],
             "excludeParams": [
               "datacollector.users"
+            ],
+            "additionalConfigs" : [
+              {
+                "key" : "kerberos.client.keytab",
+                "value" : "streamsets.keytab"
+              }
             ]
           },
           {
@@ -217,21 +232,6 @@
           "description": "Runs the Data Collector within a Kerberos session which is propagated to all stagelibs",
           "type": "boolean",
           "default": "false"
-        },
-        {
-          "name": "kerberos.client.principal",
-          "label": "Kerberos Client Principal",
-          "description": "Kerberos client principal",
-          "type": "string",
-          "default": ""
-        },
-        {
-          "name": "kerberos.client.keytab",
-          "label": "Kerberos Client Keytab",
-          "description": "Path to keytab file for Kerberos principal",
-          "type": "path",
-          "pathType": "serviceSpecific",
-          "default": ""
         },
         {
           "name": "production.maxBatchSize",
