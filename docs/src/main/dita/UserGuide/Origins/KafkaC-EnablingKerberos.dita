@@ -23,9 +23,8 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses the Kerberos principal and keytab to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
-        <p>Perform the following steps to enable the Kafka Producer to use Kerberos to connect to
-                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
-            />. You can use the same steps to configure a Kafka Producer.<ol
+        <p>Perform the following steps to enable the Kafka Consumer to use Kerberos to connect to
+            Kafka. You can use the same steps to configure a Kafka Producer.<ol
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Kafka-Kerberos"
                 id="ol_m5v_brf_55">
                 <li/>
@@ -34,34 +33,5 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
             />:</p>
         <p><image href="../Graphics/KafkaC-Kerberos.png" id="image_ftx_dsf_55" scale="50"/></p>
-        <draft-comment author="Loretta">OLD:<p>Perform the following steps to enable the Kafka
-                Consumer to use Kerberos to connect to <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
-                />. You can use the same steps to configure a Kafka Producer. </p><ol
-                id="ol_lx1_bxb_t5">
-                <li>To use SSL to connect, first make sure Kafka is configured for SSL as described
-                    in the Kafka documentation: <xref
-                        href="http://kafka.apache.org/documentation.html#security_sasl"
-                        format="html" scope="external"/>.</li>
-                <li><draft-comment author="Loretta">Question. Do we want to replace Kafka step 3
-                        with our steps? And they should do the rest? Or should they only do Steps
-                        1&amp;2 in Kafka doc, then do our bit.</draft-comment>Step 3 of the Kafka
-                    documentation, "Configuring Kafka Clients" describes steps required to configure
-                    Kafka clients. In this case, the client is the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    />. <ol id="ol_old_bfh_t5">
-                        <li>Create a jaas configuration file for <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            />. Here's a sample jaas
-                            file:<codeblock> KafkaClient {
-        com.sun.security.auth.module.Krb5LoginModule required
-        useKeyTab=true
-        storeKey=true
-        keyTab="/etc/security/keytabs/kafkaSDC.keytab"
-        serviceName="kafka"
-        principal="kafka/client-1@EXAMPLE.COM";
-    };</codeblock></li>
-                    </ol></li>
-            </ol></draft-comment>
  </conbody>
 </concept>

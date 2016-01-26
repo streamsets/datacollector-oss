@@ -571,12 +571,14 @@
                         described in the Kafka documentation: <xref
                               href="http://kafka.apache.org/documentation.html#security_ssl"
                               format="html" scope="external"/>. </li>
-                  <li>On the <uicontrol>General</uicontrol> tab of the Kafka Consumer or Kafka
-                        Producer, set the <uicontrol>Stage Library</uicontrol> property to
-                              <uicontrol>Apache Kafka 0.9.0.0</uicontrol>.</li>
-                  <li>On the <wintitle>Kafka</wintitle> tab, add the following Kafka configuration
-                        properties and configure them appropriately:<ul id="ul_hkf_ydb_t5">
-                              <li>security.protocol - Set to SSL.</li>
+                  <li id="KAFKASetStage">On the <uicontrol>General</uicontrol> tab of the stage, set
+                        the <uicontrol>Stage Library</uicontrol> property to <uicontrol>Apache Kafka
+                              0.9.0.0</uicontrol>.</li>
+                  <li>On the <wintitle>Kafka</wintitle> tab, add the
+                              <uicontrol>security.protocol</uicontrol> Kafka configuration property
+                        and set it to <uicontrol>SSL</uicontrol>.</li>
+                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration properties
+                        and configure them appropriately:<ul id="ul_hkf_ydb_t5">
                               <li>ssl.truststore.location</li>
                               <li>ssl.truststore.password</li>
                               <li>ssl.keystore.location</li>
@@ -596,16 +598,41 @@
                               described in the Kafka documentation: <xref
                                     href="http://kafka.apache.org/documentation.html#security_sasl"
                                     format="html" scope="external"/>.</li>
-                        <li>In the <ph
+                        <li id="KafkaKERBsdcprops">In the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                              /> configuration file, configure the following Kerberos properties:<ul
+                              /> configuration file, make sure the following Kerberos properties are
+                                    configured:<ul
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
                                     id="ul_gyj_jpf_55">
                                     <li/>
                               </ul></li>
+                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
                         <li>On the <wintitle>Kafka</wintitle> tab, add the
                                     <uicontrol>security.protocol</uicontrol> Kafka configuration
                               property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
+                  </ol>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">KAFKA-SSLandKerberos - used in KConsumer and
+                        KProducer</draft-comment>
+            </p>
+            <p>
+                  <ol id="KAFKA-SSLandKerberos">
+                        <li>Make sure Kafka is configured to use SSL and Kerberos (SASL) as
+                              described in the following Kafka documentation:<ul id="ul_gx4_1sk_55">
+                                    <li><xref
+                                                href="http://kafka.apache.org/documentation.html#security_ssl"
+                                                format="html" scope="external"/></li>
+                                    <li><xref
+                                                href="http://kafka.apache.org/documentation.html#security_sasl"
+                                                format="html" scope="external"/></li>
+                              </ul></li>
+                        <li conref="#concept_vhs_5tz_xp/KafkaKERBsdcprops"/>
+                        <li conref="#concept_vhs_5tz_xp/KAFKASetStage"/>
+                        <li>On the <wintitle>Kafka</wintitle> tab, add the
+                                    <uicontrol>security.protocol</uicontrol> property and set it to
+                                    <uicontrol>SASL_SSL</uicontrol>.</li>
+                        <li conref="#concept_vhs_5tz_xp/KafkaSSLprops"/>
                   </ol>
             </p>
             <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial

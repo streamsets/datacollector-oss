@@ -97,6 +97,7 @@
    <topicref href="../Destinations/KProducer-EnablingSecurity.dita">
     <topicref href="../Destinations/KProducer-EnablingSSL.dita"/>
     <topicref href="../Destinations/KProducer-EnablingKerberos.dita"/>
+    <topicref href="../Destinations/KProducer-EnablingSSLandKerb.dita"/>
    </topicref>
    <topicref href="../Destinations/KProducer-Configuring.dita"/>
   </topicref>

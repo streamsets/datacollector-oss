@@ -94,6 +94,7 @@
    <topicref href="../Origins/KConsumer-EnablingSecurity.dita">
     <topicref href="../Origins/KafkaC-EnablingSSL.dita"/>
     <topicref href="../Origins/KafkaC-EnablingKerberos.dita"/>
+    <topicref href="../Origins/KafkaC-EnablingSSLKerb.dita"/>
    </topicref>
    <topicref href="../Origins/KConsumer-Configuring.dita"/>
   </topicref>
