@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
+public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcBaseRecordWriter.class);
   private final List<JdbcFieldMappingConfig> customMappings;
 
@@ -92,7 +92,7 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
   }
 
   // This is necessary for supporting array data types. For some awful reason, the JDBC
-  // spec requires a string name for a datatype, rather than just an enum.
+  // spec requires a string name for a data type, rather than just an enum.
   static String getSQLTypeName(Field.Type type) throws OnRecordErrorException {
     switch (type) {
       case BOOLEAN:
@@ -126,9 +126,9 @@ abstract public class JdbcBaseRecordWriter implements JdbcRecordWriter {
         throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported list or map type: MAP");
       case LIST:
         return "ARRAY";
+      default:
+        throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported type: " + type.name());
     }
-
-    throw new OnRecordErrorException(Errors.JDBCDEST_05, "Unsupported type: " + type.name());
   }
   /**
    * Database connection string

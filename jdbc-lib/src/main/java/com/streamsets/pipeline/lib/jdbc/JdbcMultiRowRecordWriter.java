@@ -112,6 +112,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     } finally {
       if (connection != null) {
         try {
+          connection.commit();
           connection.close();
         } catch (SQLException e) {
           handleSqlException(e);
@@ -176,7 +177,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
           case DATE:
           case DATETIME:
             // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Date
-            java.util.Date date = field.getValueAsDate();
+            java.util.Date date = field.getValueAsDatetime();
             statement.setObject(paramIdx, new java.sql.Date(date.getTime()));
             break;
           default:
@@ -192,7 +193,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       if (rowCount == maxRowsPerBatch) {
         // time to execute the current batch
         statement.addBatch();
-        statement.execute();
+        statement.executeBatch();
         statement.close();
         statement = null;
 
@@ -206,7 +207,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     // this partition.
     if (statement != null) {
       statement.addBatch();
-      statement.execute();
+      statement.executeBatch();
       statement.close();
     }
   }
