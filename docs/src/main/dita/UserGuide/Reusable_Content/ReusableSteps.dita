@@ -323,9 +323,9 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-AVROFILE</uicontrol>  - The
-                        following step is used by Directory, Hadoop FS - origins that read avro from
-                        files.</draft-comment>
+                    <draft-comment author="Loretta"><uicontrol>O-AVROFILE</uicontrol> - The
+                        following step is used by Directory, other file-based origins that read avro
+                        from files.</draft-comment>
                 </cmd>
             </step>
             <step id="O-AVRO-FILE">
@@ -352,6 +352,39 @@
                                             file.</p><p>You can optionally use the
                                             runtime:loadResource function to use a schema definition
                                             stored in a runtime resource file. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-AVROHadoopFS</uicontrol> - The
+                        following step is used by HadoopFS origin only.</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-AVROHadoopFS">
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, optionally configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_nyl_sbf_55">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Avro Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Avro Schema</entry>
+                                    <entry>Avro schema definition to use when processing data.<p>You
+                                            can optionally use the runtime:loadResource function to
+                                            use a schema definition stored in a runtime resource
+                                            file. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

@@ -48,7 +48,7 @@
                                             options: <ul id="ul_czf_y14_vs">
                                                 <li>Avro</li>
                                                 <li>Delimited</li>
-                                                <li>Log</li>
+                                                <li>Text</li>
                                             </ul></p>
                                     </entry>
                                 </row>
@@ -146,16 +146,12 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
-                                <row
-                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/Origin-FileCompression">
-                                    <entry/>
-                                </row>
                             </tbody>
                         </tgroup>
                     </table>
                 </info>
             </step>
-            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVRO-FILE">
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/O-AVROHadoopFS">
                 <cmd/>
             </step>
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimFILE">

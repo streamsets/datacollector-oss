@@ -21,7 +21,7 @@
       differently based on the data format that you select. The origin processes the following types
       of data:<dl>
         <dlentry
-          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/OriginDF-AVROfiles">
+          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/AVRO-HadoopFS">
           <dt/>
           <dd/>
         </dlentry>

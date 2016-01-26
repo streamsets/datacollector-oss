@@ -26,7 +26,7 @@
       in the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       configuration file. To use Kerberos authentication, configure all Kerberos properties in the
         <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file. </p>
+      configuration file, and then enable Kerberos in the Hadoop FS destination.</p>
  </conbody>
  <related-links>
   <link href="../Install_Config/Kerberos.dita#concept_hnm_n4l_xs"/>

@@ -15,14 +15,12 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_uxr_g52_qs">
  <title>File Compression Formats</title>
- <shortdesc>The Amazon S3 and Directory origins can read uncompressed, compressed files, archives,
-    and compressed archives. </shortdesc>
+ <shortdesc>Origins that read files can read uncompressed, compressed files, archives, and
+    compressed archives. </shortdesc>
  <conbody>
-  <p><indexterm>Directory origin<indexterm>compression
-        formats</indexterm></indexterm><indexterm>compression formats<indexterm>for Amazon S3 and
-          Directory</indexterm></indexterm><indexterm>Amazon S3 origin<indexterm>compression
-          formats</indexterm></indexterm>When you configure the origin, you indicate the types of
-      files you want to read. </p>
+  <p><indexterm>compression formats<indexterm>for file-based origins</indexterm></indexterm>Hadoop
+      FS reads compressed files automatically. For all other file-based origins, you indicate the
+      compression format in the origin. </p>
     <p>The following table lists the supported file types by extension:<table frame="all" rowsep="1"
         colsep="1" id="table_fwr_k3s_b5">
         <tgroup cols="2">

@@ -113,11 +113,12 @@
  <h2 class="title topictitle2">File Compression Formats</h2>
 
  
- <div class="body conbody"><p class="shortdesc">The Amazon S3 and Directory origins can read uncompressed, compressed files, archives,
-    and compressed archives. </p>
+ <div class="body conbody"><p class="shortdesc">Origins that read files can read uncompressed, compressed files, archives, and
+    compressed archives. </p>
 
-  <p class="p">When you configure the origin, you indicate the types of
-      files you want to read. </p>
+  <p class="p">Hadoop
+      FS reads compressed files automatically. For all other file-based origins, you indicate the
+      compression format in the origin. </p>
 
     <div class="p">The following table lists the supported file types by extension:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_uxr_g52_qs__table_fwr_k3s_b5" class="table" frame="border" border="1" rules="all">
@@ -125,9 +126,9 @@
           
           <thead class="thead" align="left">
             <tr class="row">
-              <th class="entry" valign="top" width="30%" id="d55779e174">Compression Format</th>
+              <th class="entry" valign="top" width="30%" id="d55667e166">Compression Format</th>
 
-              <th class="entry" valign="top" width="70%" id="d55779e177">Description</th>
+              <th class="entry" valign="top" width="70%" id="d55667e169">Description</th>
 
             </tr>
 
@@ -135,16 +136,16 @@
 
           <tbody class="tbody">
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d55779e174 ">Uncompressed</td>
+              <td class="entry" valign="top" width="30%" headers="d55667e166 ">Uncompressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d55779e177 ">Processes uncompressed files of the configured data format.</td>
+              <td class="entry" valign="top" width="70%" headers="d55667e169 ">Processes uncompressed files of the configured data format.</td>
 
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d55779e174 ">Compressed</td>
+              <td class="entry" valign="top" width="30%" headers="d55667e166 ">Compressed</td>
 
-              <td class="entry" valign="top" width="70%" headers="d55779e177 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
+              <td class="entry" valign="top" width="70%" headers="d55667e169 ">Processes files compressed by the following compression formats: <ul class="ul" id="concept_uxr_g52_qs__ul_ctx_3ss_b5">
                   <li class="li">gzip</li>
 
                   <li class="li">bgzip2</li>
@@ -165,9 +166,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d55779e174 ">Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d55667e166 ">Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d55779e177 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
+              <td class="entry" valign="top" width="70%" headers="d55667e169 ">Processes files archived by the following archive formats: <ul class="ul" id="concept_uxr_g52_qs__ul_l1q_gsm_c5">
                   <li class="li">7z</li>
 
                   <li class="li">ar</li>
@@ -188,9 +189,9 @@
             </tr>
 
             <tr class="row">
-              <td class="entry" valign="top" width="30%" headers="d55779e174 ">Compressed Archive</td>
+              <td class="entry" valign="top" width="30%" headers="d55667e166 ">Compressed Archive</td>
 
-              <td class="entry" valign="top" width="70%" headers="d55779e177 ">Processes files in compressed archives created by supported compression and
+              <td class="entry" valign="top" width="70%" headers="d55667e169 ">Processes files in compressed archives created by supported compression and
                 archive formats.</td>
 
             </tr>
@@ -241,9 +242,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55779e353">Kafka Raw Preview Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d55667e345">Kafka Raw Preview Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55779e356">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d55667e348">Description</th>
 
                                 </tr>
 
@@ -251,38 +252,38 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55779e353 ">Topic</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55667e345 ">Topic</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55779e356 ">Kafka topic to read.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55779e353 ">Partition</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55779e356 ">Partition to read.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55667e348 ">Kafka topic to read.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55779e353 ">Broker Host</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55667e345 ">Partition</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55779e356 ">Broker host name. Use any broker associated with the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55667e348 ">Partition to read.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55667e345 ">Broker Host</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55667e348 ">Broker host name. Use any broker associated with the
                                         partition.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55779e353 ">Broker Port</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55667e345 ">Broker Port</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55779e356 ">Broker port number.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55667e348 ">Broker port number.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55779e353 ">Max Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d55667e345 ">Max Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55779e356 ">Maximum amount of time the preview waits to receive data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d55667e348 ">Maximum amount of time the preview waits to receive data
                                         from Kafka.</td>
 
                                 </tr>

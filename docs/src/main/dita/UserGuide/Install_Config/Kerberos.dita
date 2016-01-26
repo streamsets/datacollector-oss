@@ -16,8 +16,7 @@
 <concept id="concept_hnm_n4l_xs">
  <title>Enabling Kerberos Authentication</title>
  <shortdesc>You can use Kerberos authentication to connect to origin and destination systems, as
-    well as YARN clusters. <draft-comment author="Loretta">add a note talking about Kerberos with
-      Kafka and point to the Kafka docs? </draft-comment></shortdesc>
+    well as YARN clusters. </shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>enabling Kerberos
           authentication</indexterm></indexterm><indexterm>Kerberos
@@ -25,6 +24,17 @@
       default, <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       uses the user account who started it to connect to external systems. When you enable Kerberos,
       it can use the Kerberos principal to connect to external systems.</p>
+    <p>You can configure Kerberos authentication for the following stages:<ul id="ul_u5p_x1f_55">
+        <li>Hadoop FS origin</li>
+        <li>Kafka Consumer, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+          only</li>
+        <li>Hadoop FS destination</li>
+        <li>HBase destination</li>
+        <li>Kafka Producer, <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+          only</li>
+      </ul></p>
   <p>To enable Kerberos authentication, perform the following steps:<ol id="ol_rnb_rtl_xs">
         <li>Configure <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to use
@@ -36,12 +46,7 @@
               <li>kerberos.client.principal</li>
               <li>kerberos.client.keytab</li>
             </ul></p></li>
-        <li>Configure the origin or destination stage to use Kerberos. <p>In the pipeline, you can
-            configure Kerberos authentication for the following stages:<ul id="ul_mwv_prl_xs">
-              <li>Hadoop FS origin</li>
-              <li>Hadoop FS destination</li>
-              <li>HBase destination</li>
-            </ul></p></li>
+        <li>Configure the origin or destination stage to use Kerberos. </li>
       </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster
         requires it and if <ph
           conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> has

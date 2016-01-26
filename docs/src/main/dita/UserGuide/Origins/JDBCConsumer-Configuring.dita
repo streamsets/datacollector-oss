@@ -90,9 +90,9 @@
                                     <entry>Root Field Type</entry>
                                     <entry>Root field type to use for generated records. Use the
                                         default List-Map option unless using the origin in a
-                                        pipeline built with version 1.1.0 of the <ph
+                                        pipeline built with <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> or earlier.</entry>
+                                        /> version 1.1.0 or earlier.</entry>
                                 </row>
                                 <row>
                                     <entry>Max Batch Size (records)</entry>

@@ -277,6 +277,8 @@
                                     improve performance.</dd>
                         </dlentry>
                   </dl>
+            </p>
+            <p>
                   <draft-comment author="Loretta">AVRO-Files - used by Directory and Amazon
                         S3.</draft-comment>
             </p>
@@ -287,6 +289,20 @@
                               <dd>Generates a record for every record. </dd>
                               <dd>The origin assumes each file includes an Avro schema definition.
                                     But you can optionally provide an alternate schema. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin -
+                        MapReduce doesn't allow getting the schema from the files.</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="AVRO-HadoopFS">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every record. </dd>
+                              <dd>The origin uses the specified schema definition to process Avro
+                                    data.</dd>
                         </dlentry>
                   </dl>
             </p>

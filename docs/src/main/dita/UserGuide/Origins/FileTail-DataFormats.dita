@@ -22,13 +22,6 @@
    can process the following types of data:</p>
   <dl>
    <dlentry>
-    <dt>Text</dt>
-    <dd>Generates a record for each line in the file. </dd>
-    <dd>When a line exceeds the maximum line length defined for the origin, File Tail truncates the
-     line. The origin adds a boolean field named Truncated to indicate if the line was
-     truncated.</dd>
-   </dlentry>
-   <dlentry>
     <dt>JSON</dt>
     <dd>Generates a record for each JSON object. Each JSON object must be written to file as a
      single line.</dd>
@@ -44,6 +37,13 @@
      truncated, and you request the log line in the record, File Tail includes the truncated
      line.</dd>
     <dd>You can define the log format or type to be read.</dd>
+   </dlentry>
+   <dlentry>
+    <dt>Text</dt>
+    <dd>Generates a record for each line in the file. </dd>
+    <dd>When a line exceeds the maximum line length defined for the origin, File Tail truncates the
+     line. The origin adds a boolean field named Truncated to indicate if the line was
+     truncated.</dd>
    </dlentry>
   </dl>
  </conbody>

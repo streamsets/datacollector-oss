@@ -24,6 +24,8 @@
           FS</indexterm></indexterm>When you configure the Hadoop FS origin, you specify the
       directory path and data format for the data. You can configure the origin to read from all
       subdirectories and to generate a single record for records that include multiple objects. </p>
+    <p>The origin reads compressed data based on file extension for all Hadoop-supported compression
+      codecs.</p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>
  </conbody>
   <related-links>

@@ -18,9 +18,9 @@
  <shortdesc>You can configure the Hadoop FS origin to use an HDFS user to read data from HDFS. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS origin<indexterm>using an HDFS user to write to
-        Hadoop</indexterm></indexterm>By default, the <ph
+        Hadoop</indexterm></indexterm>By default, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
-      user account who started it to connect to external systems. When using Kerberos, the <ph
+      user account who started it to connect to external systems. When using Kerberos, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses the
       Kerberos principal. <draft-comment author="Loretta">Make sure updates to this topic go into
         the destination version of the file.</draft-comment></p>

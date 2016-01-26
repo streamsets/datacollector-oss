@@ -57,9 +57,7 @@
    <topicref href="../Origins/HadoopFS-Kerberos.dita"/>
    <topicref href="../Origins/HadoopFS-HDFSUser-origin.dita"/>
    <topicref href="../Origins/HadoopFS-HadoopProperties-origin.dita"/>
-   <topicref href="../Origins/HadoopFS-DataFormat.dita">
-    <topicref href="../Origins/HadoopFS-LogFormats.dita"/>
-   </topicref>
+   <topicref href="../Origins/HadoopFS-DataFormat.dita"/>
    <topicref href="../Origins/HadoopFS-Configuring.dita"/>
   </topicref>
   <topicref href="../Origins/HTTPClient.dita" chunk="to-content">
