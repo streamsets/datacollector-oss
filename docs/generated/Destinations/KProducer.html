@@ -267,9 +267,7 @@
 <div class="topic concept nested2" id="concept_vcx_bnb_t5">
  <h3 class="title topictitle3">Enabling SSL</h3>
 
- 
- <div class="body conbody"><p class="shortdesc"></p>
-
+ <div class="body conbody">
   <div class="p">Perform the following steps to enable the Kafka Producer
             to use SSL to connect to <span class="ph">Kafka 0.9.0.0</span>.
             You can use the same steps to configure a Kafka Consumer.<ol class="ol" id="concept_vcx_bnb_t5__ol_pqd_54b_t5">
@@ -281,7 +279,7 @@
                               <span class="ph uicontrol">Apache Kafka 0.9.0.0</span>.</li>
 
                   <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the following Kafka configuration
-                        properties and configure them appropriately:<ul class="ul" id="concept_vcx_bnb_t5__d1332e906">
+                        properties and configure them appropriately:<ul class="ul" id="concept_vcx_bnb_t5__d1332e927">
                               <li class="li">security.protocol - Set to SSL.</li>
 
                               <li class="li">ssl.truststore.location</li>
@@ -315,23 +313,36 @@
  <h3 class="title topictitle3">Enabling Kerberos (SASL)</h3>
 
  <div class="body conbody">
-  <p class="p">You can use Kerberos authentication
-            to connect to <span class="ph">Kafka 0.9.0.0</span>.
-            When you use Kerberos authentication, <span class="ph">Data
-                  Collector</span>
-            uses the Kerberos principal and keytab to connect to Kafka. </p>
+  <p class="p">When you use Kerberos authentication,
+                <span class="ph">Data
+                  Collector</span> uses the Kerberos principal and keytab to connect to <span class="ph">Kafka 0.9.0.0</span>. </p>
 
-        <p class="p">The Kerberos principal and keytab are defined in the <span class="ph">Data
-                  Collector</span>
-            configuration file. To use Kerberos authentication, configure all Kerberos properties in
-            the <span class="ph">Data
-                  Collector</span> configuration file, and then enable Kerberos in the Kafka Producer.</p>
+        <div class="p">Perform the following steps to enable the Kafka Producer to use Kerberos to connect to
+                <span class="ph">Kafka 0.9.0.0</span>. You can use the same steps to configure a Kafka Consumer.<ol class="ol" id="concept_axt_5gf_55__ol_jzt_ypf_55">
+                        <li class="li">To use Kerberos, first make sure Kafka is configured for Kerberos as
+                              described in the Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a>.</li>
 
-        <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> To use Kerberos make sure Kafka is configured for Kerberos as described in the
-                Kafka documentation: <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a>.</div>
+                        <li class="li">In the <span class="ph">Data
+                  Collector</span> configuration file, configure the following Kerberos properties:<ul class="ul" id="concept_axt_5gf_55__ul_gyj_jpf_55">
+                        <li class="li">kerberos.client.enabled</li>
 
-        </div>
+                        <li class="li">kerberos.client.principal</li>
+
+                        <li class="li">kerberos.client.keytab</li>
+
+                  </ul>
+</li>
+
+                        <li class="li">On the <span class="keyword wintitle">Kafka</span> tab, add the
+                                    <span class="ph uicontrol">security.protocol</span> Kafka configuration
+                              property, and set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
+
+                  </ol>
+</div>
+
+        <p class="p">For example, the following Kafka Producer is configured to use Kerberos to write to <span class="ph">Kafka 0.9.0.0</span>:</p>
+
+        <p class="p"><img class="image" id="concept_axt_5gf_55__image_jmt_tqf_55" src="../Graphics/KafkaP-Kerberos.png" height="324" width="554"></img></p>
 
  </div>
 
@@ -357,9 +368,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e546">General Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e578">General Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e549">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e581">Description</th>
 
                                 </tr>
 
@@ -367,31 +378,31 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">Description</td>
-
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">Stage Library</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">Description</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Library version that you want to use. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_q4d_4yl_zq__d1250e2106" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -399,10 +410,10 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_q4d_4yl_zq__d1250e2120" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -410,9 +421,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e546 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e578 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e549 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d1250e2137">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e581 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d1250e2137">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -443,9 +454,9 @@
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="27.77777777777778%" id="d20164e670">Kafka Properties</th>
+                                        <th class="entry" valign="top" width="27.77777777777778%" id="d20164e702">Kafka Properties</th>
 
-                                        <th class="entry" valign="top" width="72.22222222222221%" id="d20164e673">Description</th>
+                                        <th class="entry" valign="top" width="72.22222222222221%" id="d20164e705">Description</th>
 
                                     </tr>
 
@@ -453,9 +464,9 @@
 
                                 <tbody class="tbody">
                                     <tr id="task_q4d_4yl_zq__d1250e3249" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -465,36 +476,36 @@
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3263" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d1250e3268" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Runtime Topic Resolution <a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_q4d_4yl_zq__d1250e3268" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Evaluates an expression at runtime to determine the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Evaluates an expression at runtime to determine the
                                             topic to use for each record.</td>
 
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3275" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Topic</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Kafka topic to use. <p class="p">Not available when using
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Kafka topic to use. <p class="p">Not available when using
                                                 runtime topic resolution.</p>
 </td>
 
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3286" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3295" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed the stage for error handling. <p class="p">Use an
@@ -505,9 +516,9 @@
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3307" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d1250e3314">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d1250e3314">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -522,10 +533,10 @@
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3327" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Partition Expression <a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
                                                 <img class="image" id="task_q4d_4yl_zq__d1250e3333" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Expression to use when using the expression partition
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Expression to use when using the expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
                                                 partition where you want each record written.
                                                 Partition numbers start with 0.</p>
@@ -536,17 +547,17 @@
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3342" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                     <tr id="task_q4d_4yl_zq__d1250e3351" class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -561,9 +572,9 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Data Format</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d1250e3378">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Data format for output messages:<ul class="ul" id="task_q4d_4yl_zq__d1250e3378">
                                                 <li class="li">Avro</li>
 
                                                 <li class="li">Binary</li>
@@ -585,9 +596,9 @@
                                     </tr>
 
                                     <tr class="row">
-       <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e670 ">Charset</td>
+       <td class="entry" valign="top" width="27.77777777777778%" headers="d20164e702 ">Charset</td>
 
-       <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e673 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
+       <td class="entry" valign="top" width="72.22222222222221%" headers="d20164e705 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
 </td>
 
       </tr>
@@ -611,9 +622,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e903">Avro Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e933">Avro Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e906">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e936">Description</th>
 
                                 </tr>
 
@@ -621,16 +632,16 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e903 ">Avro Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e933 ">Avro Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e906 ">Schema definition to use when writing data. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e936 ">Schema definition to use when writing data. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e903 ">Include Schema</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e933 ">Include Schema</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e906 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e936 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> Omitting the
                                             schema definition can improve performance, but requires
                                             the appropriate schema management to avoid losing track
                                             of the schema associated with the data.</div>
@@ -639,9 +650,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e903 ">Avro Compression Codec</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e933 ">Avro Compression Codec</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e906 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e936 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -665,9 +676,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e971">Binary Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1001">Binary Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e974">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1004">Description</th>
 
                                 </tr>
 
@@ -675,9 +686,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e971 ">Binary Field Path</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1001 ">Binary Field Path</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e974 ">Field that contains the binary data.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1004 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -698,9 +709,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1017">Delimited Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1047">Delimited Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1020">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1050">Description</th>
 
                                 </tr>
 
@@ -708,9 +719,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Delimiter Format</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Delimiter Format</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -734,16 +745,16 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Header Line</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Header Line</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Indicates whether to create a header line.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Remove New Line Characters</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Remove New Line Characters</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Removes new line characters from within a record.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Removes new line characters from within a record.
                                             <p class="p">Recommended when writing data as a single line of
                                             text.</p>
 </td>
@@ -751,9 +762,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Delimiter Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Delimiter Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the pipe character ( |
                                         ).</p>
@@ -762,9 +773,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Escape Character </td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Escape Character </td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -773,9 +784,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1017 ">Quote Character</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1047 ">Quote Character</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1020 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1050 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -800,9 +811,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1151">JSON Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1181">JSON Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1154">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1184">Description</th>
 
                                 </tr>
 
@@ -810,9 +821,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1151 ">JSON Content</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1181 ">JSON Content</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1154 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d1250e2605">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1184 ">Determines how JSON data is written:<ul class="ul" id="task_q4d_4yl_zq__d1250e2605">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -843,9 +854,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d20164e1205">Protobuf Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d20164e1235">Protobuf Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d20164e1208">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d20164e1238">Description</th>
 
                                 </tr>
 
@@ -853,9 +864,9 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d20164e1205 ">Protobuf Descriptor File </td>
+                                    <td class="entry" valign="top" width="30%" headers="d20164e1235 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d20164e1208 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry" valign="top" width="70%" headers="d20164e1238 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data
                   Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
                                             information about generating the descriptor file, see
@@ -865,9 +876,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d20164e1205 ">Message Type</td>
+                                    <td class="entry" valign="top" width="30%" headers="d20164e1235 ">Message Type</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d20164e1208 ">Message type to use to write data. Enter a message type
+                                    <td class="entry" valign="top" width="70%" headers="d20164e1238 ">Message type to use to write data. Enter a message type
                                         defined in the descriptor file.</td>
 
                                 </tr>
@@ -889,9 +900,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1272">Text Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d20164e1302">Text Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1275">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d20164e1305">Description</th>
 
                                 </tr>
 
@@ -899,17 +910,17 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1272 ">Text Field Path</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1302 ">Text Field Path</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1275 ">Field that contains the text data to be written. All data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1305 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1272 ">Empty Line If No Text</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d20164e1302 ">Empty Line If No Text</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1275 ">Creates an empty line when a record does not include the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d20164e1305 ">Creates an empty line when a record does not include the
                                         text field specified above. <p class="p">When not selected, records
                                             without the specified text field are
                                         discarded.</p>

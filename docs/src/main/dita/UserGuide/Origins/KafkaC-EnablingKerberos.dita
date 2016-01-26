@@ -18,20 +18,22 @@
  <conbody>
   <p><indexterm>Kafka Consumer origin<indexterm>Kerberos
                 authentication</indexterm></indexterm><indexterm>Kerberos
-                    authentication<indexterm>using with Kafka Consumer</indexterm></indexterm>You
-            can use Kerberos authentication to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            When you use Kerberos authentication, <ph
+                    authentication<indexterm>using with Kafka Consumer</indexterm></indexterm>When
+            you use Kerberos authentication, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal and keytab to connect to Kafka. </p>
-        <p>The Kerberos principal and keytab are defined in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file. To use Kerberos authentication, configure all Kerberos properties in
-            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> configuration file, and then enable Kerberos in the Kafka Consumer.</p>
-        <note>To use Kerberos make sure Kafka is configured for Kerberos as described in the Kafka
-            documentation: <xref href="http://kafka.apache.org/documentation.html#security_sasl"
-                format="html" scope="external"/>.</note>
+            uses the Kerberos principal and keytab to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
+        <p>Perform the following steps to enable the Kafka Producer to use Kerberos to connect to
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />. You can use the same steps to configure a Kafka Producer.<ol
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Kafka-Kerberos"
+                id="ol_m5v_brf_55">
+                <li/>
+            </ol></p>
+        <p>For example, the following Kafka Consumer is configured to use Kerberos to read from <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />:</p>
+        <p><image href="../Graphics/KafkaC-Kerberos.png" id="image_ftx_dsf_55" scale="50"/></p>
         <draft-comment author="Loretta">OLD:<p>Perform the following steps to enable the Kafka
                 Consumer to use Kerberos to connect to <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"

@@ -15,7 +15,6 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vcx_bnb_t5">
  <title>Enabling SSL</title>
- <shortdesc></shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer destination<indexterm>enabling SSL
             security</indexterm></indexterm>Perform the following steps to enable the Kafka Producer

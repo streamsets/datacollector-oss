@@ -41,10 +41,10 @@
           Kerberos. <p>In the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, configure the following Kerberos properties to enable Kerberos and
-            define the principal and keytab:<ul id="ul_qnh_jxb_t5">
-              <li>kerberos.client.enabled</li>
-              <li>kerberos.client.principal</li>
-              <li>kerberos.client.keytab</li>
+            define the principal and keytab:<ul
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
+              id="ul_w1d_hpf_55">
+              <li/>
             </ul></p></li>
         <li>Configure the origin or destination stage to use Kerberos. </li>
       </ol><note>Cluster pipelines automatically use Kerberos authentication if the YARN cluster

@@ -552,6 +552,17 @@
                   set to "n", a missing field generates an alert for the record missing the field,
                   and for the next recod that includes the field field.</p>
             <p>
+                  <draft-comment author="Loretta">ul-KERBprops - Kerberos properties in Data
+                        Collector config file:</draft-comment>
+            </p>
+            <p>
+                  <ul id="ul-KERBprops">
+                        <li>kerberos.client.enabled</li>
+                        <li>kerberos.client.principal</li>
+                        <li>kerberos.client.keytab</li>
+                  </ul>
+            </p>
+            <p>
                   <draft-comment author="Loretta">Kafka-SSL - using this ordered list for KConsumer
                         and KProducer</draft-comment>
             </p>
@@ -575,6 +586,28 @@
                               <li>ssl.keystore.type</li>
                         </ul></li>
             </ol>
+            <p>
+                  <draft-comment author="Loretta">Kafka-Kerberos - using this in KConsumer and
+                        KProducer</draft-comment>
+            </p>
+            <p>
+                  <ol id="Kafka-Kerberos">
+                        <li>To use Kerberos, first make sure Kafka is configured for Kerberos as
+                              described in the Kafka documentation: <xref
+                                    href="http://kafka.apache.org/documentation.html#security_sasl"
+                                    format="html" scope="external"/>.</li>
+                        <li>In the <ph
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                              /> configuration file, configure the following Kerberos properties:<ul
+                                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
+                                    id="ul_gyj_jpf_55">
+                                    <li/>
+                              </ul></li>
+                        <li>On the <wintitle>Kafka</wintitle> tab, add the
+                                    <uicontrol>security.protocol</uicontrol> Kafka configuration
+                              property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
+                  </ol>
+            </p>
             <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
                   as a disclaimer:</draft-comment>
             <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>

@@ -18,22 +18,20 @@
  <conbody>
   <p><indexterm>Kafka Producer origin<indexterm>enabling Kerberos
                 security</indexterm></indexterm><indexterm>Kerberos authentication<indexterm>using
-                    with Kafka Producer</indexterm></indexterm>You can use Kerberos authentication
-            to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            When you use Kerberos authentication, <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            uses the Kerberos principal and keytab to connect to Kafka. </p>
-        <p>The Kerberos principal and keytab are defined in the <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            configuration file. To use Kerberos authentication, configure all Kerberos properties in
-            the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> configuration file, and then enable Kerberos in the Kafka Producer.</p>
-        <p>
-            <note>To use Kerberos make sure Kafka is configured for Kerberos as described in the
-                Kafka documentation: <xref
-                    href="http://kafka.apache.org/documentation.html#security_sasl" format="html"
-                    scope="external"/>.</note>
-        </p>
+                    with Kafka Producer</indexterm></indexterm>When you use Kerberos authentication,
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+            /> uses the Kerberos principal and keytab to connect to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. </p>
+        <p>Perform the following steps to enable the Kafka Producer to use Kerberos to connect to
+                <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />. You can use the same steps to configure a Kafka Consumer.<ol
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/Kafka-Kerberos"
+                id="ol_jzt_ypf_55">
+                <li/>
+            </ol></p>
+        <p>For example, the following Kafka Producer is configured to use Kerberos to write to <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
+            />:</p>
+        <p><image href="../Graphics/KafkaP-Kerberos.png" id="image_jmt_tqf_55" scale="50"/></p>
  </conbody>
 </concept>
