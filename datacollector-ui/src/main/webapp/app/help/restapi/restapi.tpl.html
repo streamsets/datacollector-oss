@@ -25,6 +25,12 @@
 
   <div class="panel-body"  ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <div swagger-ui url="swaggerURL" api-explorer="true"></div>
+
+
+    <div class="alert alert-info">
+      <strong>Note!</strong> Custom HTTP header attribute (X-Requested-By) is required for all POST/PUT/DELETE REST API requests.
+      <pre>curl -X DELETE https://localhost:18630/rest/v1/pipeline/samplepipeline -H "X-Requested-By:sdc"</pre>
+    </div>
   </div>
 
 </div>
