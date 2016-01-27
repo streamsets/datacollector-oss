@@ -21,10 +21,11 @@ To build the Data Collector you will need the following software :
 - Git 1.9+
 - JDK 1.7.*
 - Maven 3.2.3+
-- Node 0.10.32+1  (OSX, brew install nodejs       : Linux, sudo install nodejs)
+- Node 0.10.32+1  (OSX, brew install nodejs       : Linux, curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash OR sudo apt-get install -y nodejs)
  - npm            (OSX, brew install npm          : Linux, sudo install npm)
  - bower          (OSX, npm -g install bower      : Linux, sudo npm -g install bower)
  - grunt-cli      (OSX, npm -g install grunt-cli  : Linux, sudo npm -g install grunt-cli)
+- md5sum          (OSX, brew install md5sha1sum)
 
 Prerequisites for Data Collector :
 
@@ -53,11 +54,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-1.2.0-SNAPSHOT/streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets dc`
+`dist/target/streamsets-datacollector-1.2.0.0/streamsets-datacollector-1.2.0.0/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-1.2.0-SNAPSHOT/streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets cli`
+`dist/target/streamsets-datacollector-1.2.0.0/streamsets-datacollector-1.2.0.0/bin/streamsets cli`
 
 ## Release build
 
@@ -67,12 +68,12 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/tar/streamsets-datacollector-1.2.0-SNAPSHOT.tgz`
+`release/target/tar/streamsets-datacollector-1.2.0.0.tgz`
 
 Untar the tarball in your prefered location :
 
-`tar xvzf streamsets-datacollector-1.2.0-SNAPSHOT.tgz`
+`tar xvzf streamsets-datacollector-1.2.0.0.tgz`
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets dc`
+`streamsets-datacollector-1.2.0.0/bin/streamsets dc`
