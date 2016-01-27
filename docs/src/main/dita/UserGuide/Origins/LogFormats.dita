@@ -51,7 +51,7 @@
     <dlentry>
      <dt>Grok Pattern</dt>
      <dd>Use a grok pattern to define the structure of log data. You can use the grok patterns
-      supported by the <ph
+      supported by <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. You can
       also define a custom grok pattern and then use it as part of the log format. </dd>
      <dd>For more information about supported grok patterns, see <xref

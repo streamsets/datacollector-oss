@@ -45,14 +45,8 @@ name &lt;stage name>, version &lt;version></codeblock>
                         />. </dd>
                     <dd>If you need to use a stage that is not installed on the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        />, install the related stage library. For more information, see &lt;create
-                        cross ref>. <draft-comment author="Loretta">where for what? do we need to
-                            discuss the whitelist here? </draft-comment></dd>
-                    <dd>If the unavailable stage is a custom stage, you might have upgraded the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> after creating the pipeline and neglected to reinstall the custom stage.
-                            <draft-comment author="Loretta">should i add more information
-                            here.</draft-comment></dd>
+                        />, install the related stage library. For more information, see <xref
+                            href="../Install_Config/BasicInstall-Step2.dita"/>.</dd>
                 </dlentry>
             </dl></p>
  </conbody>

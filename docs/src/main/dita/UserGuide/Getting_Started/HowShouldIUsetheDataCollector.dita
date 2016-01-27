@@ -17,7 +17,7 @@
  <title>How should I use Data Collector?</title>
  <shortdesc>Use StreamSets <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> like a pipe
-    in the data stream. Throughout your enterprise data topology, you have streams of data that you
+    for a data stream. Throughout your enterprise data topology, you have streams of data that you
     need to move, collect, and process on the way to their destinations. <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides the
     crucial connection between hops in the stream. </shortdesc>

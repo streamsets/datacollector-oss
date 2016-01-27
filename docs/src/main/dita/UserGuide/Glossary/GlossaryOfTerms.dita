@@ -37,8 +37,19 @@
           stages.</dd>
       </dlentry>
       <dlentry>
+        <dt>data drift alerts</dt>
+        <dd>Alerts based on data drift functions that gather information about the structure of data
+          that passes between two stages.</dd>
+      </dlentry>
+      <dlentry>
         <dt>data preview</dt>
         <dd>Preview of data as it moves through a pipeline. Use to develop and test pipelines.</dd>
+      </dlentry>
+      <dlentry>
+        <dt>delivery guarantee</dt>
+        <dd>Pipeline property that determines how the <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          handles data when the pipeline stops unexpectedly.</dd>
       </dlentry>
    <dlentry>
     <dt>destination</dt>
@@ -111,6 +122,11 @@
         <dd>A data format used for <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> error
           records and an optional format to use for output records. </dd>
+      </dlentry>
+      <dlentry>
+        <dt>SDC RPC pipelines</dt>
+        <dd>A set of pipelines that use the SDC RPC destination and SDC RPC origin to pass data from
+          one pipeline to another without writing to an intermediary system. </dd>
       </dlentry>
       <dlentry>
         <dt>snapshot</dt>

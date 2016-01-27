@@ -25,7 +25,7 @@
       data for <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
       />, you configure a <term>pipeline</term>. A pipeline consists of stages that represent the
       origin and destination of the pipeline, and any additional processing that you want to
-      perform. After you configure the pipeline, you click Start, and <ph
+      perform. After you configure the pipeline, you click Start and <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to
       work. </p>
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> processes

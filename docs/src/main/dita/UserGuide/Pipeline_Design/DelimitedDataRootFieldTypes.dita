@@ -19,7 +19,7 @@
     <p><indexterm>delimited data<indexterm>root field
         type</indexterm></indexterm><indexterm>pipeline design<indexterm>delimited data root field
           type</indexterm></indexterm><indexterm>list-map root field type<indexterm>delimited
-          data</indexterm></indexterm><indexterm>list root-field type<indexterm>delimited
+          data</indexterm></indexterm><indexterm>list root field type<indexterm>delimited
           data</indexterm></indexterm><indexterm>JavaScript Evaluator<indexterm>scripts for
           delimited data</indexterm></indexterm><indexterm>Jython Evaluator<indexterm>scripts for
           delimited data</indexterm></indexterm>When reading delimited data, <ph

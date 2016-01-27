@@ -23,8 +23,8 @@
    mask data in a field. When that doesn't work for you, you can use a regular expression to define
    a specific custom mask. Similarly, you can use a regular expression to define the format of a log
    line if it does not use one of the listed formats. </p>
-  <p>The following table describes the ways you can use a regular expression in the pipeline:<table
-    frame="all" rowsep="1" colsep="1" id="table_dtb_35j_ks">
+  <p>The following table describes some examples of how you might use regular expressions in the
+    pipeline:<table frame="all" rowsep="1" colsep="1" id="table_dtb_35j_ks">
     <tgroup cols="2">
      <colspec colname="c1" colnum="1" colwidth="1*"/>
      <colspec colname="c2" colnum="2" colwidth="3.08*"/>

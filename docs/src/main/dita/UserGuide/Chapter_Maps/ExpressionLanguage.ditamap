@@ -33,7 +33,11 @@
    <topicref href="../Expression_Language/StringFunctions.dita"/>
    <topicref href="../Expression_Language/MiscFunctions.dita"/>
   </topicref>
-  <topicref href="../Expression_Language/Constants.dita"/>
+  <topicref href="../Expression_Language/Constants.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   <topicref href="../Expression_Language/Literals.dita">
    <topicmeta>
     <shortdesc/>

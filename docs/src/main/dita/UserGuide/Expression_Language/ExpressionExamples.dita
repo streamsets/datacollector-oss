@@ -19,7 +19,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
         />.</shortdesc>
  <conbody>
-        <p>Here are some conditions:</p>
+        <p>Here are some examples of conditions:</p>
         <table frame="all" rowsep="1" colsep="1" id="table_zhy_jmp_tt">
             <tgroup cols="2">
                 <colspec colname="c1" colnum="1" colwidth="2.5*"/>
@@ -60,8 +60,8 @@
                 </tbody>
             </tgroup>
         </table>
-        <p>The following table includes some string manipulation:<table frame="all" rowsep="1"
-                colsep="1" id="table_wnx_v5s_q5">
+        <p>The following table includes some string manipulation examples:<table frame="all"
+                rowsep="1" colsep="1" id="table_wnx_v5s_q5">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="2.5*"/>
                     <colspec colname="c2" colnum="2" colwidth="2.0*"/>
@@ -84,11 +84,11 @@
                     </tbody>
                 </tgroup>
             </table></p>
-        <p>The following table includes some numeric operations:<table frame="all" rowsep="1"
-                colsep="1" id="table_txw_dvs_q5">
+        <p>The following table includes an example of a numeric operation:<table frame="all"
+                rowsep="1" colsep="1" id="table_txw_dvs_q5">
                 <tgroup cols="2">
                     <colspec colname="c1" colnum="1" colwidth="2.5*"/>
-                    <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="2.0*"/>
                     <thead>
                         <row>
                             <entry>Sample Numeric Operations</entry>

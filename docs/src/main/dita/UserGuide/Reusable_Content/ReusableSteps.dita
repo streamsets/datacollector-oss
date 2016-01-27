@@ -284,7 +284,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_rv1_q3d_3t">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -334,7 +334,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_igl_bq2_2t">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -370,7 +370,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_nyl_sbf_55">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -446,7 +446,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_DelimitedData">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -523,7 +523,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_JSONdata">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -573,7 +573,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -684,7 +684,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_LogData">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -891,7 +891,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_blh_n2h_hr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -955,7 +955,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wjk_pfh_hr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1008,7 +1008,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1037,7 +1037,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1080,7 +1080,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_fvw_4kg_j5">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1145,7 +1145,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_tvy_43h_hr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1212,7 +1212,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1243,7 +1243,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_igm_vtd_3t">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1286,7 +1286,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1324,7 +1324,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1368,7 +1368,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1433,7 +1433,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1471,7 +1471,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -1604,8 +1604,8 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lpp_dd1_s5">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Output Files Property</entry>
@@ -1734,7 +1734,7 @@
                     <table frame="all" rowsep="1" colsep="1" id="table_wv3_xzd_br">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
                                     <entry>Late Records Property <xref
@@ -1794,8 +1794,8 @@
                     <p>
                         <table frame="all" rowsep="1" colsep="1" id="KafkaTableProperties">
                             <tgroup cols="2">
-                                <colspec colname="c1" colnum="1" colwidth="1.25*"/>
-                                <colspec colname="c2" colnum="2" colwidth="3.25*"/>
+                                <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                                <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                                 <thead>
                                     <row>
                                         <entry>Kafka Properties</entry>
@@ -1991,7 +1991,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_mhd_nd1_ft">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>

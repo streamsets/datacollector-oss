@@ -34,8 +34,9 @@
   <p>You preview data to see how source data moves through the pipeline and notice that some fields
    have missing data. So you add a Value Replacer to replace null values in those fields. </p>
   <p>Now that the data flow is done, you configure the pipeline error record handling to write error
-   records to a file, and you configure an email alert to let you know when the pipeline generates
-   more than 100 error records. Then, you start the pipeline and <ph
+   records to a file, you create a data drift alert to let you know when field names change, and you
+   configure an email alert to let you know when the pipeline generates more than 100 error records.
+   Then, you start the pipeline and <ph
     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> goes to work. </p>
   <p>The <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    console goes into Monitor mode and displays summary and error statistics immediately. To get a

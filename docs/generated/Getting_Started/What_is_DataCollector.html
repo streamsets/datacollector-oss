@@ -45,7 +45,7 @@
       data for <span class="ph">Data
                   Collector</span>, you configure a <dfn class="term">pipeline</dfn>. A pipeline consists of stages that represent the
       origin and destination of the pipeline, and any additional processing that you want to
-      perform. After you configure the pipeline, you click Start, and <span class="ph">Data
+      perform. After you configure the pipeline, you click Start and <span class="ph">Data
                   Collector</span> goes to
       work. </p>
 
@@ -64,7 +64,7 @@
  
  <div class="body conbody"><p class="shortdesc">Use StreamSets <span class="ph">Data
                   Collector</span> like a pipe
-    in the data stream. Throughout your enterprise data topology, you have streams of data that you
+    for a data stream. Throughout your enterprise data topology, you have streams of data that you
     need to move, collect, and process on the way to their destinations. <span class="ph">Data
                   Collector</span> provides the
     crucial connection between hops in the stream. </p>
@@ -107,8 +107,9 @@
    have missing data. So you add a Value Replacer to replace null values in those fields. </p>
 
   <p class="p">Now that the data flow is done, you configure the pipeline error record handling to write error
-   records to a file, and you configure an email alert to let you know when the pipeline generates
-   more than 100 error records. Then, you start the pipeline and <span class="ph">Data
+   records to a file, you create a data drift alert to let you know when field names change, and you
+   configure an email alert to let you know when the pipeline generates more than 100 error records.
+   Then, you start the pipeline and <span class="ph">Data
                   Collector</span> goes to work. </p>
 
   <p class="p">The <span class="ph">Data

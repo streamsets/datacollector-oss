@@ -17,8 +17,8 @@
  <title>Enabling SSL</title>
  <conbody>
         <p><indexterm>Kafka Consumer origin<indexterm>enabling SSL
-            security</indexterm></indexterm>Perform the following steps to enable the Kafka Consumer
-            to use SSL to connect to <ph
+            security</indexterm></indexterm>Perform the following steps to enable Kafka Consumer to
+            use SSL to connect to <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
             You can use the same steps to configure a Kafka Producer. </p>
         <p>
@@ -28,8 +28,8 @@
             </ol>
         </p>
         <p>For example, the following Kafka Consumer is configured to use SSL to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
-            />:</p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+            with client authentication:</p>
         <p><image href="../Graphics/KafkaC-SSL.png" id="image_tq3_gkb_t5" scale="60"/></p>
        
  </conbody>

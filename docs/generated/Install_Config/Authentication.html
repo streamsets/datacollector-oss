@@ -74,13 +74,10 @@
                   Collector</span>
             uses file-based authentication.</p>
 
-        <div class="p">To enable LDAP authentication, perform the following tasks:<dl class="dl">
-                
-                    <dt class="dt dlterm">1. Configure the <span class="ph">Data
-                  Collector</span> LDAP properties</dt>
-
-                    <dd class="dd">Configure the LDAP properties in the <span class="ph">Data
-                  Collector</span> configuration file:<ul class="ul" id="concept_x2j_5ts_g5__ul_tqz_224_s5">
+        <div class="p">To enable LDAP authentication, perform the following tasks:<ol class="ol" id="concept_x2j_5ts_g5__ol_b11_nxl_55">
+                <li class="li">Configure the LDAP properties in the <span class="ph">Data
+                  Collector</span> configuration file:<div class="p">
+                        <ul class="ul" id="concept_x2j_5ts_g5__ul_tqz_224_s5">
                             <li class="li">To enable LDAP authentication, set
                                     <span class="ph uicontrol">http.authentication.login.module</span> to
                                     <span class="ph uicontrol">ldap</span>.</li>
@@ -104,26 +101,24 @@
 </li>
 
                         </ul>
-</dd>
 
-                
-                
-                    <dt class="dt dlterm">2. Configure the ldap-login.conf file</dt>
+                    </div>
+</li>
 
-                    <dd class="dd">Configure LDAP connection information in the
-                            <samp class="ph codeph">ldap-login.conf</samp> file. The file is in the following
+                <li class="li">Configure LDAP connection information in the <samp class="ph codeph">ldap-login.conf</samp>
+                    file. <div class="p">The file is in the following
                         location:<pre class="pre codeblock">&lt;SDCInstallDir&gt;/etc/ldap-login.conf</pre>
-</dd>
-
-                    <dd class="dd">In the file, configure the following properties:
+</div>
+<div class="p">In
+                        the file, configure the following properties:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_x2j_5ts_g5__table_g4g_hx4_s5" class="table" frame="border" border="1" rules="all">
                                 
                                 
                                 <thead class="thead" align="left">
                                     <tr class="row">
-                                        <th class="entry" valign="top" width="30%" id="d31331e159">LDAP Property</th>
+                                        <th class="entry" valign="top" width="30%" id="d31428e149">LDAP Property</th>
 
-                                        <th class="entry" valign="top" width="70%" id="d31331e162">Description</th>
+                                        <th class="entry" valign="top" width="70%" id="d31428e152">Description</th>
 
                                     </tr>
 
@@ -131,53 +126,55 @@
 
                                 <tbody class="tbody">
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">debug</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">debug</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Enables LDAP debugging. Default is false.</td>
-
-                                    </tr>
-
-                                    <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">useLdaps</td>
-
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Enables using LDAP over SSL. Default is false. </td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Enables LDAP debugging. Default is false.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">contextFactory</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">useLdaps</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">LDAP initial context factory. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Enables using LDAP over SSL. Default is false.
+                                        </td>
+
+                                    </tr>
+
+                                    <tr class="row">
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">contextFactory</td>
+
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">LDAP initial context factory. Default is
                                             com.sun.jndi.ldap.LdapCtxFactory.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">hostname</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">hostname</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">LDAP server host name.</td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">LDAP server host name.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">port</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">port</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">LDAP server port. Typically 389 for LDAP and 636 for
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">LDAP server port. Typically 389 for LDAP and 636 for
                                             LDAPS.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">bindDn</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">bindDn</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Root distinguished name (DN) for the connection. </td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Root distinguished name (DN) for the connection.
+                                        </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">bindPassword</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">bindPassword</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Password for the connection. For additional security,
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Password for the connection. For additional security,
                                             save the password in the
                                             &lt;SDCinstalldir&gt;/etc/ldap-bind-password.txt file
                                             without additional characters, spaces, or line breaks.
@@ -189,16 +186,16 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">authenticationMethod</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">authenticationMethod</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Authentication method. Default is simple. </td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Authentication method. Default is simple. </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">forceBindingLogin</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">forceBindingLogin</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Determines if binding login checks are performed. Use
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Determines if binding login checks are performed. Use
                                             one of the following options:<ul class="ul" id="concept_x2j_5ts_g5__ul_dpb_z2z_s5">
                                                 <li class="li">false - <span class="ph">Data
                   Collector</span> performs the authentication based on
@@ -227,71 +224,72 @@
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">userBaseDn</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">userBaseDn</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Base DN under which user accounts are located. </td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Base DN under which user accounts are located.
+                                        </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">userRdnAttribute</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">userRdnAttribute</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the username attribute. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the username attribute. Default is
                                             uid.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">userIdAttribute</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">userIdAttribute</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the user ID attribute. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the user ID attribute. Default is
                                             uid.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">userPasswordAttribute</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">userPasswordAttribute</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the attribute where the user password is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the attribute where the user password is
                                             stored. Default is userPassword.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">userObjectClass</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">userObjectClass</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the user object class. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the user object class. Default is
                                             inetOrgPerson.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">roleBaseDn</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">roleBaseDn</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Base DN to search for role membership. </td>
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Base DN to search for role membership. </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">roleNameAttribute</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">roleNameAttribute</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the attribute for role names. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the attribute for role names. Default is
                                             roleName.</td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">roleMemberAttribute</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">roleMemberAttribute</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Name of the role attribute for user names. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Name of the role attribute for user names. Default is
                                             uniqueMember. </td>
 
                                     </tr>
 
                                     <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d31331e159 ">roleObjectClass</td>
+                                        <td class="entry" valign="top" width="30%" headers="d31428e149 ">roleObjectClass</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d31331e162 ">Role object class. Default is
+                                        <td class="entry" valign="top" width="70%" headers="d31428e152 ">Role object class. Default is
                                             groupOfUniqueNames.</td>
 
                                     </tr>
@@ -300,9 +298,9 @@
 
                             </table>
 </div>
-</dd>
-
-                    <dd class="dd">The following example shows the ldap-login.conf file for an Active Directory
+</div>
+<div class="p">The following example shows the ldap-login.conf file for an
+                        Active Directory
                         server:<pre class="pre codeblock">ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
@@ -324,10 +322,10 @@
   roleMemberAttribute="member"
   roleObjectClass="group";
 };</pre>
-</dd>
+</div>
+</li>
 
-                
-            </dl>
+            </ol>
 </div>
 
     </div>

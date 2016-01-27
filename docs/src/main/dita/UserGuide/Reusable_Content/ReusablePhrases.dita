@@ -548,9 +548,9 @@
                         Drift Functions topic:</draft-comment>
             </p>
             <p id="DRIFT-ignoreWMissing">Use the ignoreWhenMissing flag to determine the behavior
-                  when the field is missing. When set to "y", a missing field causes no errors. When
-                  set to "n", a missing field generates an alert for the record missing the field,
-                  and for the next recod that includes the field field.</p>
+                  when the field is missing. When set to "true", a missing field causes no errors.
+                  When set to "false", a missing field generates an alert for the record missing the
+                  field, and for the next recod that includes the field field.</p>
             <p>
                   <draft-comment author="Loretta">ul-KERBprops - Kerberos properties in Data
                         Collector config file:</draft-comment>
@@ -577,16 +577,23 @@
                   <li>On the <wintitle>Kafka</wintitle> tab, add the
                               <uicontrol>security.protocol</uicontrol> Kafka configuration property
                         and set it to <uicontrol>SSL</uicontrol>.</li>
-                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration properties
-                        and configure them appropriately:<ul id="ul_hkf_ydb_t5">
+                  <li id="KafkaSSLprops">Then, add the following SSL Kafka configuration
+                              properties:<ul id="ul_hkf_ydb_t5">
                               <li>ssl.truststore.location</li>
                               <li>ssl.truststore.password</li>
-                              <li>ssl.keystore.location</li>
-                              <li>ssl.keystore.password</li>
-                              <li>ssl.key.password</li>
-                              <li>ssl.enabled.protocols</li>
-                              <li>ssl.keystore.type</li>
-                        </ul></li>
+                        </ul><p>When the Kafka broker requires client authentication - when the
+                              ssl.client.auth broker property is set to "required" - add and
+                              configure the following properties: <ul id="ul_y5b_rml_55">
+                                    <li>ssl.keystore.location</li>
+                                    <li>ssl.keystore.password</li>
+                                    <li>ssl.key.password</li>
+                              </ul></p><p>Some brokers might require adding the following properties
+                              as well:<ul>
+                                    <li>ssl.enabled.protocols</li>
+                                    <li>ssl.truststore.type</li>
+                                    <li>ssl.keystore.type</li>
+                              </ul></p><p>For details about these properties, see the Kafka
+                              documentation.</p></li>
             </ol>
             <p>
                   <draft-comment author="Loretta">Kafka-Kerberos - using this in KConsumer and
@@ -610,6 +617,10 @@
                         <li>On the <wintitle>Kafka</wintitle> tab, add the
                                     <uicontrol>security.protocol</uicontrol> Kafka configuration
                               property, and set it to <uicontrol>SASL_PLAINTEXT</uicontrol>.</li>
+                        <li id="KafkaKERBservicename">Then, add the
+                                    <uicontrol>sasl.kerberos.service.name</uicontrol> configuration
+                              property, and set it to the Kerberos principal name that Kafka runs
+                              as. </li>
                   </ol>
             </p>
             <p>
@@ -632,6 +643,7 @@
                         <li>On the <wintitle>Kafka</wintitle> tab, add the
                                     <uicontrol>security.protocol</uicontrol> property and set it to
                                     <uicontrol>SASL_SSL</uicontrol>.</li>
+                        <li conref="#concept_vhs_5tz_xp/KafkaKERBservicename"/>
                         <li conref="#concept_vhs_5tz_xp/KafkaSSLprops"/>
                   </ol>
             </p>

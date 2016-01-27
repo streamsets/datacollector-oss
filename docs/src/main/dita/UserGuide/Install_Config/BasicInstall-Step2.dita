@@ -23,7 +23,7 @@
                 libraries</indexterm></indexterm>You can use the following commands to install
             additional libraries:<dl>
                 <dlentry>
-                    <dt>View the list of available libraries</dt>
+                    <dt>To view the list of available libraries:</dt>
                     <dd>From the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> installation directory, use the following
@@ -33,7 +33,7 @@
                         stage library, see <xref href="BasicInstall-LibList.dita"/>.</dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Install one or more stage libraries</dt>
+                    <dt>To install one or more stage libraries:</dt>
                     <dd>From the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> installation directory, use the following
@@ -63,8 +63,8 @@ Stage library streamsets-datacollector-jdbc-lib installed
 Stage library streamsets-datacollector-rabbitmq-lib installed</codeblock></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>Optionally generate the command required to perform the current
-                        installation</dt>
+                    <dt>To generate the command required to perform the current installation
+                        (optional):</dt>
                     <dd>You can use the <codeph>stagelibs</codeph> command to generate the command
                         to install the libraries that are installed on the current <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -85,9 +85,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 =================================================================================</codeblock></dd>
                 </dlentry>
                 <dlentry>
-                    <dt>When necessary, uninstall libraries</dt>
-                    <dd>You can uninstall libraries when necessary. To unstall a library, use the
-                        following
+                    <dt>To uninstall libraries when necessary:</dt>
+                    <dd>To unstall a library, use the following
                         command:<codeblock>&lt;SDCinstalldir>/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
                     <dd>Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>

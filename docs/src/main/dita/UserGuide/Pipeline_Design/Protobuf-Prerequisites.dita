@@ -53,5 +53,22 @@
                     /> resources directory: <codeblock>&lt;SDCinstalldir>/resources</codeblock></dd>
             </dlentry>
         </dl>
+        <p>After completing the prerequisites, you can use the following origins to read protobuf
+                data:<ul id="ul_qmf_3gm_55">
+                <li>Amazon S3</li>
+                <li>Directory</li>
+                <li>JMS Consumer</li>
+                <li>Kafka Consumer</li>
+                <li>Kinesis Consumer</li>
+                <li>RabbitMQ Consumer</li>
+            </ul></p>
+        <p>You can also use the following destinations to write protobuf data:<ul id="ul_vzs_kgm_55">
+                <li>Amazon S3</li>
+                <li>Flume</li>
+                <li>Hadoop FS</li>
+                <li>Kafka Producer</li>
+                <li>Kinesis Producer</li>
+                <li>Local FS</li>
+            </ul></p>
  </conbody>
 </concept>

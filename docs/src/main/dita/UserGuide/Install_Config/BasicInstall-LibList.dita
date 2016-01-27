@@ -41,7 +41,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-apache-kafka_0_9-lib</entry>
-                            <entry>For Kafka version 0.9.0.x.<p>Includes the Kafka Consumer and
+                            <entry>For Kafka version 0.9.0.0.<p>Includes the Kafka Consumer and
                                     Kafka Producer.</p></entry>
                         </row>
                         <row>

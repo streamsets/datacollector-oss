@@ -260,8 +260,6 @@
                 <cmd>When writing error records to Kafka, click the <wintitle>Error Records - Write
                         to Kafka</wintitle> tab and configure the following properties:</cmd>
                 <info>
-                    <draft-comment author="Loretta">Table rows from Kafka Producer, Kafka tab of
-                        reusablesteps.dita - no data format &amp; charset.</draft-comment>
                     <table frame="all" rowsep="1" colsep="1" id="table_lb5_svh_ms">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.25*"/>

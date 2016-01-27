@@ -25,7 +25,7 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             through Cloudera Manager, you can easily install <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            across the cluster as an add-on service. And then, use Cloudera Manager to manage <ph
+            across the cluster as an add-on service. And then use Cloudera Manager to manage <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.</p>
         <p>
@@ -33,9 +33,9 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />, you must use Cloudera Manager to configure <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> properties and environment. Manual changes to <ph
+                /> properties and environment. Manual changes to the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> properties or environment file are not recognized by Cloudera Manager.</note>
+                /> properties or environment files are not recognized by Cloudera Manager.</note>
         </p>
         <p>To install <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

@@ -105,7 +105,7 @@
                 </info>
             </step>
             <step>
-                <cmd>Click <uicontrol>Save</uicontrol>.'</cmd>
+                <cmd>Click <uicontrol>Save</uicontrol>.</cmd>
                 <info>The new data drift rule displays in the list. </info>
             </step>
             <step>

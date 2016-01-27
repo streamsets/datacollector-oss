@@ -25,14 +25,11 @@
             /> to use LDAP authentication. By default, <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses file-based authentication.</p>
-        <p>To enable LDAP authentication, perform the following tasks:<dl>
-                <dlentry>
-                    <dt>1. Configure the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> LDAP properties</dt>
-                    <dd>Configure the LDAP properties in the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration file:<ul id="ul_tqz_224_s5">
+        <p>To enable LDAP authentication, perform the following tasks:<ol id="ol_b11_nxl_55">
+                <li>Configure the LDAP properties in the <ph
+                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                    /> configuration file:<p>
+                        <ul id="ul_tqz_224_s5">
                             <li>To enable LDAP authentication, set
                                     <uicontrol>http.authentication.login.module</uicontrol> to
                                     <uicontrol>ldap</uicontrol>.</li>
@@ -51,15 +48,13 @@
                                     the OPS LDAP group to the manager role, and the SUPER LDAP group
                                     to both creator and
                                     manager:<codeblock>DEV:creator;OPS:manager,SUPER:creator,manager</codeblock></p></li>
-                        </ul></dd>
-                </dlentry>
-                <dlentry>
-                    <dt>2. Configure the ldap-login.conf file</dt>
-                    <dd>Configure LDAP connection information in the
-                            <codeph>ldap-login.conf</codeph> file. The file is in the following
-                        location:<codeblock>&lt;SDCInstallDir>/etc/ldap-login.conf</codeblock></dd>
-                    <dd>In the file, configure the following properties:<table frame="all"
-                            rowsep="1" colsep="1" id="table_g4g_hx4_s5">
+                        </ul>
+                    </p></li>
+                <li>Configure LDAP connection information in the <codeph>ldap-login.conf</codeph>
+                    file. <p>The file is in the following
+                        location:<codeblock>&lt;SDCInstallDir>/etc/ldap-login.conf</codeblock></p><p>In
+                        the file, configure the following properties:<table frame="all" rowsep="1"
+                            colsep="1" id="table_g4g_hx4_s5">
                             <tgroup cols="2">
                                 <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                                 <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -76,7 +71,8 @@
                                     </row>
                                     <row>
                                         <entry>useLdaps</entry>
-                                        <entry>Enables using LDAP over SSL. Default is false. </entry>
+                                        <entry>Enables using LDAP over SSL. Default is false.
+                                        </entry>
                                     </row>
                                     <row>
                                         <entry>contextFactory</entry>
@@ -94,7 +90,8 @@
                                     </row>
                                     <row>
                                         <entry>bindDn</entry>
-                                        <entry>Root distinguished name (DN) for the connection. </entry>
+                                        <entry>Root distinguished name (DN) for the connection.
+                                        </entry>
                                     </row>
                                     <row>
                                         <entry>bindPassword</entry>
@@ -134,7 +131,8 @@
                                     </row>
                                     <row>
                                         <entry>userBaseDn</entry>
-                                        <entry>Base DN under which user accounts are located. </entry>
+                                        <entry>Base DN under which user accounts are located.
+                                        </entry>
                                     </row>
                                     <row>
                                         <entry>userRdnAttribute</entry>
@@ -177,8 +175,8 @@
                                     </row>
                                 </tbody>
                             </tgroup>
-                        </table></dd>
-                    <dd>The following example shows the ldap-login.conf file for an Active Directory
+                        </table></p><p>The following example shows the ldap-login.conf file for an
+                        Active Directory
                         server:<codeblock>ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
   debug="true"
@@ -199,8 +197,7 @@
   roleNameAttribute=“cn"
   roleMemberAttribute="member"
   roleObjectClass="group";
-};</codeblock></dd>
-                </dlentry>
-            </dl></p>
+};</codeblock></p></li>
+            </ol></p>
     </conbody>
 </concept>

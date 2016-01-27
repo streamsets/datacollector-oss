@@ -72,19 +72,14 @@
                                     <entry>Use Multi-Row Insert</entry>
                                     <entry>Determines how the destination inserts records. Select to
                                         allow inserts of multiple rows at a time. Clear to insert a
-                                        single row at a time. <draft-comment author="Loretta">Adam,
-                                            should we be discussing this more, or is this all we
-                                            need? Should I mention a performance
-                                            hit?</draft-comment></entry>
+                                        single row at a time. </entry>
                                 </row>
                                 <row>
                                     <entry>Prepared Statement Parameter Limit for Multi-Row
                                         Insert</entry>
                                     <entry>Defines the number of parameters allowed in the prepared
                                         statement for multi-row inserts.<p>Use -1 to disable the
-                                            parameter limit. Default is -1.</p><draft-comment
-                                            author="Loretta">Adam: ditto
-                                        above.</draft-comment></entry>
+                                            parameter limit. Default is -1.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Use Credentials</entry>

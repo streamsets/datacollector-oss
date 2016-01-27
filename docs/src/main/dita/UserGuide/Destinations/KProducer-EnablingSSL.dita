@@ -26,8 +26,8 @@
                 <li/>
             </ol></p>
         <p>For example, the following Kafka Producer is configured to use SSL to connect to <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"
-            />:</p>
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
+            with client authentication:</p>
         <p><image href="../Graphics/KafkaP-SSL.png" id="image_it1_cqb_t5" scale="50"/></p>
  </conbody>
 </concept>
