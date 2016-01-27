@@ -164,7 +164,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
           batchMaker.addRecord(record);
           nextSourceOffset = record.getHeader().getAttribute("deliveryTag");
         }
-
+        numRecords++;
       } catch (InterruptedException e) {
         LOG.warn("Pipeline is shutting down.");
       }
