@@ -111,7 +111,6 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:value('/es-index')}",
       label = "Index",
       description = "",
       displayPosition = 40,
@@ -124,7 +123,6 @@ public class ElasticSearchDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      defaultValue = "${record:value('/es-mapping')}",
       label = "Mapping",
       description = "",
       displayPosition = 50,
