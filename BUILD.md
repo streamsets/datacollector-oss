@@ -53,11 +53,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-1.2.0-SNAPSHOT/streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets dc`
+`dist/target/streamsets-datacollector-1.2.1.0-SNAPSHOT/streamsets-datacollector-1.2.1.0-SNAPSHOT/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-1.2.0-SNAPSHOT/streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets cli`
+`dist/target/streamsets-datacollector-1.2.1.0-SNAPSHOT/streamsets-datacollector-1.2.1.0-SNAPSHOT/bin/streamsets cli`
 
 ## Release build
 
@@ -67,12 +67,12 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/tar/streamsets-datacollector-1.2.0-SNAPSHOT.tgz`
+`release/target/tar/streamsets-datacollector-1.2.1.0-SNAPSHOT.tgz`
 
 Untar the tarball in your prefered location :
 
-`tar xvzf streamsets-datacollector-1.2.0-SNAPSHOT.tgz`
+`tar xvzf streamsets-datacollector-1.2.1.0-SNAPSHOT.tgz`
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-1.2.0-SNAPSHOT/bin/streamsets dc`
+`streamsets-datacollector-1.2.1.0-SNAPSHOT/bin/streamsets dc`
