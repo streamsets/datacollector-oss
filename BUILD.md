@@ -21,10 +21,11 @@ To build the Data Collector you will need the following software :
 - Git 1.9+
 - JDK 1.7.*
 - Maven 3.2.3+
-- Node 0.10.32+1  (OSX, brew install nodejs       : Linux, sudo install nodejs)
+- Node 0.10.32+1  (OSX, brew install nodejs       : Linux, curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash OR sudo apt-get install -y nodejs)
  - npm            (OSX, brew install npm          : Linux, sudo install npm)
  - bower          (OSX, npm -g install bower      : Linux, sudo npm -g install bower)
  - grunt-cli      (OSX, npm -g install grunt-cli  : Linux, sudo npm -g install grunt-cli)
+- md5sum          (OSX, brew install md5sha1sum)
 
 Prerequisites for Data Collector :
 
