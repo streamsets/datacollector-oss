@@ -22,9 +22,12 @@ package com.streamsets.datacollector.http;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.rewrite.handler.RewriteHandler;
@@ -162,17 +165,12 @@ public class WebServerTask extends AbstractTask {
 
     // initialize a global session manager
     hashSessionManager = new HashSessionManager();
-    SessionHandler sessionHandler = new SessionHandler(hashSessionManager);
-
     ContextHandlerCollection appHandlers = new ContextHandlerCollection();
-
 
     // load web apps
     Set<String> contextPaths = new LinkedHashSet<>();
     for (WebAppProvider appProvider : webAppProviders) {
       ServletContextHandler appHandler = appProvider.get();
-      // all webapps must have a session manager
-      appHandler.setSessionHandler(sessionHandler);
       String contextPath = appHandler.getContextPath();
       if (contextPath.equals("/")) {
         throw new RuntimeException("Webapps cannot be registered at the root context");
@@ -180,23 +178,18 @@ public class WebServerTask extends AbstractTask {
       if (contextPaths.contains(contextPath)) {
         throw new RuntimeException(Utils.format("Webapp already registered at '{}' context", contextPath));
       }
+      // all webapps must have a session manager
+      appHandler.setSessionHandler(new SessionHandler(hashSessionManager));
+
+      appHandler.setSecurityHandler(createSecurityHandler(server, contextPath));
       contextPaths.add(contextPath);
       appHandlers.addHandler(appHandler);
     }
 
-    // configure root app
-    contextPaths.add("");
-
-    ServletContextHandler appHandler = configureRootContext(sessionHandler);
+    ServletContextHandler appHandler = configureRootContext(new SessionHandler(hashSessionManager));
+    appHandler.setSecurityHandler(createSecurityHandler(server, "/"));
     Handler handler = configureRedirectionRules(appHandler);
     appHandlers.addHandler(handler);
-
-    SecurityHandler securityHandler = createSecurityHandler(server, new ArrayList<>(contextPaths));
-    for (Handler h : appHandlers.getChildHandlers()) {
-      if (h instanceof ServletContextHandler) {
-        ((ServletContextHandler) h).setSecurityHandler(securityHandler);
-      }
-    }
 
     server.setHandler(appHandlers);
 
@@ -234,14 +227,14 @@ public class WebServerTask extends AbstractTask {
     return handlerCollection;
   }
 
-  private List<ConstraintMapping> createConstraintMappings(String context) {
+  private List<ConstraintMapping> createConstraintMappings() {
     // everything under /* public
     Constraint noAuthConstraint = new Constraint();
     noAuthConstraint.setName("auth");
     noAuthConstraint.setAuthenticate(false);
     noAuthConstraint.setRoles(new String[]{"user"});
     ConstraintMapping noAuthMapping = new ConstraintMapping();
-    noAuthMapping.setPathSpec(context + "/*");
+    noAuthMapping.setPathSpec("/*");
     noAuthMapping.setConstraint(noAuthConstraint);
 
     // everything under /public-rest/* public
@@ -250,7 +243,7 @@ public class WebServerTask extends AbstractTask {
     publicRestConstraint.setAuthenticate(false);
     publicRestConstraint.setRoles(new String[] { "user"});
     ConstraintMapping publicRestMapping = new ConstraintMapping();
-    publicRestMapping.setPathSpec(context + "/public-rest/*");
+    publicRestMapping.setPathSpec("/public-rest/*");
     publicRestMapping.setConstraint(publicRestConstraint);
 
 
@@ -260,7 +253,7 @@ public class WebServerTask extends AbstractTask {
     restConstraint.setAuthenticate(true);
     restConstraint.setRoles(new String[] { "user"});
     ConstraintMapping restMapping = new ConstraintMapping();
-    restMapping.setPathSpec(context + "/rest/*");
+    restMapping.setPathSpec("/rest/*");
     restMapping.setConstraint(restConstraint);
 
     // index page is restricted to trigger login correctly when using form authentication
@@ -269,14 +262,14 @@ public class WebServerTask extends AbstractTask {
     indexConstraint.setAuthenticate(true);
     indexConstraint.setRoles(new String[] { "user"});
     ConstraintMapping indexMapping = new ConstraintMapping();
-    indexMapping.setPathSpec(context);
+    indexMapping.setPathSpec("");
     indexMapping.setConstraint(indexConstraint);
 
     return ImmutableList.of(restMapping, indexMapping, noAuthMapping, publicRestMapping);
   }
 
 
-  private SecurityHandler createSecurityHandler(Server server, List<String> contexts) {
+  private SecurityHandler createSecurityHandler(Server server, String appContext) {
     ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     switch (auth) {
@@ -290,15 +283,16 @@ public class WebServerTask extends AbstractTask {
       case "form":
         securityHandler = configureForm(server, auth);
         break;
+      case "sso":
+        securityHandler = configureSSO(appContext);
+        break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
             auth, AUTHENTICATION_MODES));
     }
     if (securityHandler != null) {
       List<ConstraintMapping> constraintMappings = new ArrayList<>();
-      for (String context : contexts) {
-        constraintMappings.addAll(createConstraintMappings(context));
-      }
+      constraintMappings.addAll(createConstraintMappings());
       securityHandler.setConstraintMappings(constraintMappings);
     }
     return securityHandler;
@@ -331,6 +325,21 @@ public class WebServerTask extends AbstractTask {
       throw new RuntimeException(Utils.format("Could not get the permissions of the realm file '{}', {}", realmFile,
                                               ex.toString(), ex));
     }
+  }
+
+  private ConstraintSecurityHandler configureSSO(String appContext) {
+    ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+    Configuration ssoConf = conf.getSubSetConfiguration("sso");
+    final SSOService ssoService = new RemoteSSOService(ssoConf);
+    addToPostStart(new Runnable() {
+      @Override
+      public void run() {
+        LOG.debug("Initializing SSO service");
+        ssoService.init();
+      }
+    });
+    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService));
+    return security;
   }
 
   private ConstraintSecurityHandler configureDigestBasic(Server server, String mode) {
@@ -452,6 +461,18 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
+  private final List<Runnable> postStartRunnables = new ArrayList<>();
+
+  void addToPostStart(Runnable runnable) {
+    postStartRunnables.add(runnable);
+  }
+
+  void postStart() {
+    for (Runnable runnable : postStartRunnables) {
+      runnable.run();
+    }
+  }
+
   @Override
   protected void runTask() {
     for (ContextConfigurator cc : contextConfigurators) {
@@ -492,6 +513,7 @@ public class WebServerTask extends AbstractTask {
         throw new RuntimeException(ex);
       }
     }
+    postStart();
   }
 
   public URI getServerURI() throws ServerNotYetRunningException {
