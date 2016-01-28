@@ -1091,13 +1091,13 @@ public class TestKafkaSource {
     sourceRunner.runInit();
 
     startLatch.countDown();
-    StageRunner.Output output = sourceRunner.runProduce(null, 5);
+    List<Record> records = new ArrayList<>();
+    StageRunner.Output output = getOutputAndRecords(sourceRunner, 10, "lane", records);
     shutDownExecutorService(executorService);
 
     String newOffset = output.getNewOffset();
     Assert.assertNull(newOffset);
-    List<Record> records = output.getRecords().get("lane");
-    Assert.assertEquals(5, records.size());
+    Assert.assertEquals(10, records.size());
 
     for(int i = 0; i < records.size(); i++) {
       Assert.assertNotNull(records.get(i).get("/"));
