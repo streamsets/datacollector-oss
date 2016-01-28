@@ -39,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.SequenceInputStream;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,6 +54,10 @@ public class TestCompressionInputBuilder {
     testCompressedFile("bzip2");
     testCompressedFile("xz");
     testCompressedFile("DEFLATE");
+
+    testConcatenatedCompressedFile("gz");
+    testConcatenatedCompressedFile("bzip2");
+    testConcatenatedCompressedFile("xz");
   }
 
   @Test
@@ -64,9 +69,9 @@ public class TestCompressionInputBuilder {
 
     //write data into the stream using the specified compression
     ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-    CompressorOutputStream bzip2 = new CompressorStreamFactory().createCompressorOutputStream(compressionType, bOut);
-    bzip2.write(new String("StreamSets").getBytes());
-    bzip2.close();
+    CompressorOutputStream cOut = new CompressorStreamFactory().createCompressorOutputStream(compressionType, bOut);
+    cOut.write("StreamSets".getBytes());
+    cOut.close();
 
     //create compression input
     CompressionDataParser.CompressionInputBuilder compressionInputBuilder =
@@ -83,6 +88,44 @@ public class TestCompressionInputBuilder {
     Assert.assertEquals("StreamSets", reader.readLine());
   }
 
+  private void testConcatenatedCompressedFile(String compressionType) throws Exception {
+    ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
+    ByteArrayOutputStream bytes2 = new ByteArrayOutputStream();
+    CompressorOutputStream compressed1 = new CompressorStreamFactory()
+        .createCompressorOutputStream(compressionType, bytes1);
+
+    CompressorOutputStream compressed2 = new CompressorStreamFactory()
+        .createCompressorOutputStream(compressionType, bytes2);
+
+    compressed1.write("line1\n".getBytes());
+    compressed1.close();
+
+    compressed2.write("line2".getBytes());
+    compressed2.close();
+
+    CompressionDataParser.CompressionInputBuilder compressionInputBuilder =
+        new CompressionDataParser.CompressionInputBuilder(
+            Compression.COMPRESSED_FILE,
+            null,
+            new SequenceInputStream(
+                new ByteArrayInputStream(bytes1.toByteArray()),
+                new ByteArrayInputStream(bytes2.toByteArray())
+            ),
+            "0"
+        );
+    CompressionDataParser.CompressionInput input = compressionInputBuilder.build();
+
+    //verify
+    Assert.assertNotNull(input);
+    Assert.assertEquals("myFile::4567", input.wrapOffset("myFile::4567"));
+    Assert.assertEquals("myFile::4567", input.wrapRecordId("myFile::4567"));
+    InputStream myFile = input.getNextInputStream();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(myFile));
+    Assert.assertEquals("line1", reader.readLine());
+    Assert.assertEquals("line2", reader.readLine());
+  }
+
+  @SuppressWarnings("unchecked")
   private void testArchive(String archiveType) throws Exception {
     //create an archive with multiple files, files containing multiple objects
     File dir = new File("target", UUID.randomUUID().toString());
@@ -98,7 +141,7 @@ public class TestCompressionInputBuilder {
       String fileName = "file-" + i + ".txt";
       inputFile = new File(dir, fileName);
       fileOutputStream = new FileOutputStream(inputFile);
-      IOUtils.write(new String("StreamSets" + i).getBytes(), fileOutputStream);
+      IOUtils.write(("StreamSets" + i).getBytes(), fileOutputStream);
       fileOutputStream.close();
       archiveEntry = archiveOutputStream.createArchiveEntry(inputFile, fileName);
       archiveOutputStream.putArchiveEntry(archiveEntry);

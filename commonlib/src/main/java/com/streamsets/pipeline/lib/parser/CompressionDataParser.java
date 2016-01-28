@@ -46,13 +46,18 @@ public class CompressionDataParser extends AbstractDataParser {
   public static final String MINUS_ONE = "-1";
   public static final String PATH_SEPARATOR = "/";
 
+  private static final boolean DECOMPRESS_UNTIL_EOF = true;
+
   private final InputStream is;
   private final String id;
-  private String offset;
   private final Compression compression;
   private final String compressionFilePattern;
-
   private final DataParserFactory dataParserFactory;
+
+  private String offset;
+  private DataParser parser;
+  private boolean eof = false;
+  private CompressionInput compressionInput;
 
   public CompressionDataParser(
       String id,
@@ -69,10 +74,6 @@ public class CompressionDataParser extends AbstractDataParser {
     this.compressionFilePattern = compressionFilePattern;
     this.dataParserFactory = dataParserFactory;
   }
-
-  private DataParser parser;
-  private boolean eof = false;
-  private CompressionInput compressionInput;
 
   @Override
   public Record parse() throws IOException, DataParserException {
@@ -209,7 +210,7 @@ public class CompressionDataParser extends AbstractDataParser {
 
       @Override
       public void close() {
-
+        // NO-OP
       }
 
       @Override
@@ -227,7 +228,7 @@ public class CompressionDataParser extends AbstractDataParser {
 
       public CompressorInput(InputStream inputStream) throws IOException {
         try {
-          this.inputStream = new CompressorStreamFactory().createCompressorInputStream(
+          this.inputStream = new CompressorStreamFactory(DECOMPRESS_UNTIL_EOF).createCompressorInputStream(
             new BufferedInputStream(inputStream));
         } catch (CompressorException e) {
           throw new IOException(e);
@@ -270,13 +271,14 @@ public class CompressionDataParser extends AbstractDataParser {
       public static final String FILE_NAME = "fileName";
       public static final String FILE_OFFSET = "fileOffset";
 
+      private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
       private final PathMatcher pathMatcher;
       private ArchiveEntry currentEntry;
       private ArchiveInputStream archiveInputStream;
       private String wrappedOffset;
       private InputStream nextInputStream;
       private CompressionDataParser.CompressionInput compressionInput;
-      private final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
       public ArchiveInput(
           String compressedFilePattern,
@@ -303,9 +305,9 @@ public class CompressionDataParser extends AbstractDataParser {
         return OBJECT_MAPPER.writeValueAsString(archiveOffset);
       }
 
+      @SuppressWarnings("unchecked")
       @Override
       public InputStream getNextInputStream() throws IOException {
-
         if(archiveInputStream == null) {
           // Very first call to getNextInputStream, initialize archiveInputStream using the wrappedOffset
           wrappedOffset = wrappedOffset.equals(ZERO) ? wrapOffset(wrappedOffset) : wrappedOffset;
@@ -333,6 +335,7 @@ public class CompressionDataParser extends AbstractDataParser {
         return temp;
       }
 
+      @SuppressWarnings("unchecked")
       @Override
       public String getStreamPosition(String offset) throws IOException {
         if(ZERO.equals(offset)) {
