@@ -27,7 +27,6 @@ import com.google.common.cache.RemovalNotification;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;

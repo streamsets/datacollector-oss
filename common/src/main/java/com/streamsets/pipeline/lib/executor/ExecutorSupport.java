@@ -19,8 +19,6 @@
  */
 package com.streamsets.pipeline.lib.executor;
 
-import java.util.concurrent.Callable;
-
 import org.slf4j.Logger;
 
 import java.util.concurrent.Callable;

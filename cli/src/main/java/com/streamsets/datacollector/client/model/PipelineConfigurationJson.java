@@ -25,8 +25,6 @@ import com.streamsets.datacollector.client.model.StageConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.ConfigConfigurationJson;
 import java.util.*;
-import java.util.Map;
-
 
 
 import io.swagger.annotations.*;

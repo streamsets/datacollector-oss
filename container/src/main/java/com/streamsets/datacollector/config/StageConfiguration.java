@@ -19,7 +19,6 @@
  */
 package com.streamsets.datacollector.config;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 

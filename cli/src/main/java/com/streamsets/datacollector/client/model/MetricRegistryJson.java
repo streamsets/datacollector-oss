@@ -25,8 +25,6 @@ import com.streamsets.datacollector.client.model.MeterJson;
 import com.streamsets.datacollector.client.model.CounterJson;
 import com.streamsets.datacollector.client.model.TimerJson;
 import java.util.*;
-import java.util.Map;
-
 
 
 import io.swagger.annotations.*;

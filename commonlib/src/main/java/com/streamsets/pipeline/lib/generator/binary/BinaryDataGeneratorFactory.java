@@ -23,12 +23,9 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
-import com.streamsets.pipeline.lib.generator.avro.AvroDataOutputStreamGenerator;
-import com.streamsets.pipeline.lib.generator.avro.AvroMessageGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.HashMap;

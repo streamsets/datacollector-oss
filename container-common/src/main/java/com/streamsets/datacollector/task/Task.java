@@ -19,12 +19,6 @@
  */
 package com.streamsets.datacollector.task;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableSet;
-
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * A Task is a component with a lifecycle that provides a service to the system.
  * <p/>

@@ -19,17 +19,6 @@
  */
 package com.streamsets.pipeline;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 public class ClassLoaderUtil {
 
   private static final String[] EMPTY_STRING_ARRAY = new String[0];

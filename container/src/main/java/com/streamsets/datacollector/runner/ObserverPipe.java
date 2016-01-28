@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.validation.Issue;
-import com.streamsets.pipeline.api.StageException;
 
 import java.util.Collections;
 import java.util.List;

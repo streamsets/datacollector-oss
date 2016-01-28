@@ -26,7 +26,6 @@ import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.api.Record;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

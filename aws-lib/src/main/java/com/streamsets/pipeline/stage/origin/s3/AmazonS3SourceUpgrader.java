@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
-import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
 import java.util.List;
 

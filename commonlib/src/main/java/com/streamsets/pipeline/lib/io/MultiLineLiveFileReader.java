@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 
 import java.io.IOException;

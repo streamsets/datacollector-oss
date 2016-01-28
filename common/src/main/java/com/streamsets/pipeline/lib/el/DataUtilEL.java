@@ -20,8 +20,6 @@
 package com.streamsets.pipeline.lib.el;
 
 import com.streamsets.pipeline.api.ElFunction;
-import com.streamsets.pipeline.api.ElParam;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.UUID;
 

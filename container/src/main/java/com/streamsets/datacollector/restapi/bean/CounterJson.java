@@ -19,9 +19,6 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class CounterJson {
 
   private long count;

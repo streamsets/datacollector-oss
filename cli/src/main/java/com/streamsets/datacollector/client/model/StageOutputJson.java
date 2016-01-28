@@ -23,8 +23,6 @@ import com.streamsets.datacollector.client.StringUtil;
 import com.streamsets.datacollector.client.model.RecordJson;
 import com.streamsets.datacollector.client.model.ErrorMessageJson;
 import java.util.*;
-import java.util.Map;
-
 
 
 import io.swagger.annotations.*;

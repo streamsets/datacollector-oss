@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.CountingReader;
 import com.streamsets.pipeline.lib.io.ObjectLengthException;

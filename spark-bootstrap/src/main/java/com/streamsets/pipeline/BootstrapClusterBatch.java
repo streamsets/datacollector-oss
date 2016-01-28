@@ -20,16 +20,8 @@
 package com.streamsets.pipeline;
 
 import com.streamsets.pipeline.hadoop.HadoopMapReduceBinding;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 public class BootstrapClusterBatch {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapClusterBatch.class);

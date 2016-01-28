@@ -29,14 +29,6 @@ import com.streamsets.datacollector.client.model.*;
 
 import java.util.*;
 
-import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
-import com.streamsets.datacollector.client.model.RuleDefinitionsJson;
-import com.streamsets.datacollector.client.model.PipelineInfoJson;
-
-import java.io.File;
-import java.util.Map;
-import java.util.HashMap;
-
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaClientCodegen", date = "2015-09-11T14:51:29.367-07:00")
 public class StoreApi {
   private ApiClient apiClient;

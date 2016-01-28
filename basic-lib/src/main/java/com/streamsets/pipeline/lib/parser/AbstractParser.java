@@ -24,7 +24,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import io.netty.buffer.ByteBuf;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 

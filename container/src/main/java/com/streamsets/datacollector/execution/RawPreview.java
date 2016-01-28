@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.execution;
 
-import java.io.InputStream;
-
 public interface RawPreview {
 
   public String getPreviewData();

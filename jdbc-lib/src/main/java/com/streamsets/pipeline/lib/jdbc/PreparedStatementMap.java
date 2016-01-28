@@ -25,11 +25,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.SortedSet;
 
 class PreparedStatementMap {
   private final Connection connection;

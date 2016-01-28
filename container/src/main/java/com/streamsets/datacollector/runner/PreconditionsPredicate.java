@@ -20,10 +20,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.creation.StageConfigBean;
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.Record;

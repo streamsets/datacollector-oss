@@ -19,7 +19,6 @@
  */
 package com.streamsets.pipeline.stage.devtest;
 
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ChooserValues;
 
 import java.util.ArrayList;

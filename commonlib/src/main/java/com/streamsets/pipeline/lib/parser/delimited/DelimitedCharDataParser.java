@@ -28,7 +28,6 @@ import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.io.OverrunReader;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
-import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import org.apache.commons.csv.CSVFormat;
 

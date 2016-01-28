@@ -21,21 +21,12 @@ package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.store.PipelineStoreException;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-
-import org.eclipse.jetty.security.authentication.FormAuthenticator;
-
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-
-import java.io.IOException;
 
 @Path("/v1/authentication")
 public class AuthenticationResource {

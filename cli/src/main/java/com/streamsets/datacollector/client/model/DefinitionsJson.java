@@ -23,8 +23,6 @@ import com.streamsets.datacollector.client.StringUtil;
 import com.streamsets.datacollector.client.model.StageDefinitionJson;
 import com.streamsets.datacollector.client.model.PipelineDefinitionJson;
 import java.util.*;
-import java.util.Map;
-
 
 
 import io.swagger.annotations.*;

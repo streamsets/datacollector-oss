@@ -19,8 +19,6 @@
  */
 package com.streamsets.datacollector.runner.production;
 
-import java.util.List;
-
 public class PipelineErrorNotificationRequest {
   private final Throwable throwable;
 

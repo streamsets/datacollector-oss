@@ -21,7 +21,7 @@ package com.streamsets.datacollector.client.model;
 
 import com.streamsets.datacollector.client.StringUtil;
 import java.util.*;
-import java.util.Map;
+
 import com.streamsets.datacollector.client.model.ModelDefinitionJson;
 
 

@@ -21,8 +21,6 @@ package com.streamsets.datacollector.el;
 
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.lang.reflect.Field;
-
 public class ElConstantDefinition {
   private final String index;
   private final String name;

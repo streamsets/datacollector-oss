@@ -19,7 +19,6 @@
  */
 package com.streamsets.datacollector.definition;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.json.ObjectMapperFactory;

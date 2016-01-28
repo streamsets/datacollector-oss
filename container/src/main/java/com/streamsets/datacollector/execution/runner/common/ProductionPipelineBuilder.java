@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Named;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProductionPipelineBuilder {
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineBuilder.class);

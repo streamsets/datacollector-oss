@@ -23,8 +23,6 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 
-import java.util.Iterator;
-
 public class NullTarget extends BaseTarget {
 
   @Override

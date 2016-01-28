@@ -23,7 +23,6 @@ import com.google.common.collect.AbstractIterator;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
-import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
 

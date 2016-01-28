@@ -22,8 +22,6 @@ package com.streamsets.datacollector.client.model;
 import com.streamsets.datacollector.client.StringUtil;
 import com.streamsets.datacollector.client.model.ConfigConfigurationJson;
 import java.util.*;
-import java.util.Map;
-
 
 
 import io.swagger.annotations.*;

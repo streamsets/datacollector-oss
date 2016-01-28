@@ -23,7 +23,6 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ext.ContextExtensions;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
-import com.streamsets.pipeline.lib.generator.DataGeneratorException;
 
 import java.io.IOException;
 import java.io.OutputStream;

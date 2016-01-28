@@ -19,15 +19,8 @@
  */
 package com.streamsets.datacollector.util;
 
-import com.streamsets.datacollector.creation.PipelineConfigBean;
-import com.streamsets.datacollector.el.ELEvaluator;
-import com.streamsets.datacollector.el.ELVariables;
-import com.streamsets.datacollector.el.JvmEL;
-import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.lib.el.StringEL;
 
 import java.util.List;
 import java.util.Map;

@@ -20,7 +20,6 @@
 package com.streamsets.pipeline;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
