@@ -52,6 +52,7 @@ public class LogStreamer implements Closeable {
     return startingOffset;
   }
 
+  @Override
   public void close() throws IOException {
     if (raf != null) {
       raf.close();

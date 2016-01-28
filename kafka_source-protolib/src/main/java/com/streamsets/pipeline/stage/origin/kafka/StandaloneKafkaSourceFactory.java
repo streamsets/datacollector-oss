@@ -25,6 +25,7 @@ public class StandaloneKafkaSourceFactory extends KafkaSourceFactory {
     super(conf);
   }
 
+  @Override
   public BaseKafkaSource create() {
     return new StandaloneKafkaSource(conf);
   }

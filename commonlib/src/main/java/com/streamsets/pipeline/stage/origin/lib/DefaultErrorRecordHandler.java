@@ -31,6 +31,7 @@ public class DefaultErrorRecordHandler implements ErrorRecordHandler {
     this.context = context;
   }
 
+  @Override
   public void onError(ErrorCode errorCode, Object... params) throws StageException {
     switch (context.getOnErrorRecord()) {
       case DISCARD:

@@ -227,6 +227,7 @@ public class MultiFileReader implements Closeable {
   /**
    * Closes all open readers.
    */
+  @Override
   public void close() throws IOException {
     if (open) {
       open = false;

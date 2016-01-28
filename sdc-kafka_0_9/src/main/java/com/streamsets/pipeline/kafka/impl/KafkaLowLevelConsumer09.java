@@ -95,6 +95,7 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
     this.replicaBrokers = new ArrayList<>();
   }
 
+  @Override
   public void init() throws StageException {
     List<HostAndPort> brokers = new ArrayList<>();
     brokers.add(broker);
@@ -127,6 +128,7 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
     );
   }
 
+  @Override
   public void destroy() {
     if(consumer != null) {
       consumer.close();
@@ -138,6 +140,7 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
     return Kafka09Constants.KAFKA_VERSION;
   }
 
+  @Override
   public List<MessageAndOffset> read(long offset) throws StageException {
 
     FetchRequest req = buildFetchRequest(offset);
@@ -286,6 +289,7 @@ public class KafkaLowLevelConsumer09 implements SdcKafkaLowLevelConsumer {
     return returnMetaData;
   }
 
+  @Override
   public long getOffsetToRead(boolean fromBeginning) throws StageException {
     long whichTime = kafka.api.OffsetRequest.LatestTime();
     if (fromBeginning) {

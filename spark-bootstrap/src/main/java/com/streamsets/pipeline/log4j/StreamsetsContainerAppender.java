@@ -72,22 +72,27 @@ public class StreamsetsContainerAppender extends FileAppender
     public SystemErrStream() {
     }
 
+    @Override
     public void close() {
     }
 
+    @Override
     public void flush() {
       System.err.flush();
     }
 
+    @Override
     public void write(final byte[] b) throws IOException {
       System.err.write(b);
     }
 
+    @Override
     public void write(final byte[] b, final int off, final int len)
       throws IOException {
       System.err.write(b, off, len);
     }
 
+    @Override
     public void write(final int b) throws IOException {
       System.err.write(b);
     }

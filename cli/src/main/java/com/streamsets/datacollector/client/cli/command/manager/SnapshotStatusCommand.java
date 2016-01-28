@@ -49,6 +49,7 @@ public class SnapshotStatusCommand extends BaseCommand {
   )
   public String snapshotName;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

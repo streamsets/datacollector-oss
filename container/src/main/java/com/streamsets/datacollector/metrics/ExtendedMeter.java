@@ -69,6 +69,7 @@ public class ExtendedMeter extends Meter {
     h24Rate = new EWMA(H24_ALPHA, INTERVAL, TimeUnit.SECONDS);
   }
 
+  @Override
   public void mark(long n) {
     super.mark(n);
     tickIfNecessary();

@@ -36,6 +36,7 @@ public class MemoryMonitor implements Runnable {
     this.memoryUsageCollector = memoryUsageCollector;
   }
 
+  @Override
   public void run() {
     MemoryUsageSnapshot snapshot = memoryUsageCollector.get().collect();
     String name = snapshot.getStageName();

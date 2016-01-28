@@ -206,6 +206,7 @@ public class Matcher implements MatchResult {
      * @return The (possibly empty) subsequence matched by the previous match,
      * in string form
      */
+    @Override
     public String group() {
         return matcher.group();
     }
@@ -219,6 +220,7 @@ public class Matcher implements MatchResult {
      * @throws IllegalStateException If no match has yet been attempted, or
      * if the previous match operation failed
      */
+    @Override
     public String group(int group) {
         return matcher.group(group);
     }
@@ -228,6 +230,7 @@ public class Matcher implements MatchResult {
      *
      * @return The number of capturing groups in this matcher's pattern
      */
+    @Override
     public int groupCount() {
         return matcher.groupCount();
     }
@@ -238,6 +241,7 @@ public class Matcher implements MatchResult {
      *
      * @return the matches
      */
+    @Override
     public List<String> orderedGroups() {
         int groupCount = groupCount();
         List<String> groups = new ArrayList<String>(groupCount);
@@ -255,6 +259,7 @@ public class Matcher implements MatchResult {
      * @return the subsequence
      * @throws IndexOutOfBoundsException if group name not found
      */
+    @Override
     public String group(String groupName) {
         int idx = groupIndex(groupName);
         if (idx < 0) {
@@ -271,6 +276,7 @@ public class Matcher implements MatchResult {
      * @return a map of the group named and matched values
      * (empty if no match found)
      */
+    @Override
     public Map<String, String> namedGroups() {
         Map<String, String> result = new LinkedHashMap<String, String>();
 
@@ -302,6 +308,7 @@ public class Matcher implements MatchResult {
      *
      * @return the start index
      */
+    @Override
     public int start() {
         return matcher.start();
     }
@@ -313,6 +320,7 @@ public class Matcher implements MatchResult {
      * @param group the index of the capture group
      * @return the index
      */
+    @Override
     public int start(int group) {
         return matcher.start(group);
     }
@@ -324,6 +332,7 @@ public class Matcher implements MatchResult {
      * @param groupName the name of the capture group
      * @return the index
      */
+    @Override
     public int start(String groupName) {
         return start(groupIndex(groupName));
     }
@@ -333,6 +342,7 @@ public class Matcher implements MatchResult {
      *
      * @return the offset
      */
+    @Override
     public int end() {
         return matcher.end();
     }
@@ -344,6 +354,7 @@ public class Matcher implements MatchResult {
      * @param group the index of the capture group
      * @return the offset
      */
+    @Override
     public int end(int group) {
         return matcher.end(group);
     }
@@ -355,6 +366,7 @@ public class Matcher implements MatchResult {
      * @param group the name of the capture group
      * @return the offset
      */
+    @Override
     public int end(String groupName) {
         return end(groupIndex(groupName));
     }

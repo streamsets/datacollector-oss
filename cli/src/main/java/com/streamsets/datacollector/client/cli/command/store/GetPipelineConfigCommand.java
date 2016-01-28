@@ -50,6 +50,7 @@ public class GetPipelineConfigCommand extends BaseCommand {
   )
   public String get;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

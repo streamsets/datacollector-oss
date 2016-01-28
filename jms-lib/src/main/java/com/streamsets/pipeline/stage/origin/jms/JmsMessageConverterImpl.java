@@ -47,6 +47,7 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
     this.parser = new DataFormatParser(JmsGroups.JMS.name(), dataFormat, dataFormatConfig, messageConfig);
   }
 
+  @Override
   public List<Stage.ConfigIssue> init(Source.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     issues.addAll(parser.init(context));

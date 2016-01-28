@@ -42,6 +42,7 @@ public class PreviewStatusCommand extends BaseCommand {
   )
   public String previewerId;
 
+  @Override
   public void run() {
     PreviewApi previewApi = new PreviewApi(getApiClient());
     try {

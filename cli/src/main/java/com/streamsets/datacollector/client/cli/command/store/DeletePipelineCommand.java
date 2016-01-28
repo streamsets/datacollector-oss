@@ -33,6 +33,7 @@ public class DeletePipelineCommand extends BaseCommand {
   )
   public String pipelineName;
 
+  @Override
   public void run() {
     StoreApi storeApi = new StoreApi(getApiClient());
     try {

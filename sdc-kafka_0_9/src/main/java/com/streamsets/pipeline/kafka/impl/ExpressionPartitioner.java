@@ -57,6 +57,7 @@ public class ExpressionPartitioner implements Partitioner, kafka.producer.Partit
 
   }
 
+  @Override
   public int partition(Object key, int numPartitions) {
     return Integer.parseInt((String)key);
   }

@@ -80,6 +80,7 @@ public class RBGenMojo extends AbstractMojo {
     }
   }
 
+  @Override
   @SuppressWarnings("unchecked")
   public void execute() throws MojoExecutionException {
     try {

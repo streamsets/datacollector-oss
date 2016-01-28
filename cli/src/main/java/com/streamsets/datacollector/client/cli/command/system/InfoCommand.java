@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "info", description = "Returns Data Collector Info")
 public class InfoCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

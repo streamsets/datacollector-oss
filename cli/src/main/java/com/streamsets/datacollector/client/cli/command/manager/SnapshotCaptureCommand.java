@@ -68,6 +68,7 @@ public class SnapshotCaptureCommand extends BaseCommand {
   )
   public int batchSize;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

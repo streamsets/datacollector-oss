@@ -28,6 +28,7 @@ public class ExpressionPartitioner implements Partitioner {
 
   }
 
+  @Override
   public int partition(Object key, int numPartitions) {
     return Integer.parseInt((String)key);
   }

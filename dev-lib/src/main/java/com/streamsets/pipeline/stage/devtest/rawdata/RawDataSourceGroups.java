@@ -42,6 +42,7 @@ public enum RawDataSourceGroups implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

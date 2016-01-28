@@ -30,6 +30,7 @@ public interface DataGenerator extends Closeable {
 
   public void flush() throws IOException;
 
+  @Override
   public void close() throws IOException;
 
 }

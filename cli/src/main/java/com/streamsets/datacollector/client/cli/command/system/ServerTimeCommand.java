@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "server-time", description = "Returns Server Time")
 public class ServerTimeCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

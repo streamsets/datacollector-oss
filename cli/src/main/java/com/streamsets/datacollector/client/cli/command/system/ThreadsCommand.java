@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "threads", description = "Returns Thread Dump along with stack trace")
 public class ThreadsCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

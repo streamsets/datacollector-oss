@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "list", description = "Definitions Command")
 public class DefinitionsCommand extends BaseCommand {
 
+  @Override
   public void run() {
     DefinitionsApi definitionsApi = new DefinitionsApi(getApiClient());
     try {

@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "current-user", description = "Returns Current User Info")
 public class CurrentUserCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

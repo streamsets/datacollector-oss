@@ -35,6 +35,7 @@ public interface DataParser extends Closeable {
 
   public void setTruncated();
 
+  @Override
   public void close() throws IOException;
 
 }

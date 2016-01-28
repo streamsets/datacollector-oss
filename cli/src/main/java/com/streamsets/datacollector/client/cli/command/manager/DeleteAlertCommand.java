@@ -48,6 +48,7 @@ public class DeleteAlertCommand extends BaseCommand {
   public String ruleId;
 
 
+  @Override
   public void run() {
     ManagerApi managerApi = new ManagerApi(getApiClient());
     try {

@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "directories", description = "Returns Data Collector Directories")
 public class DirectoriesCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

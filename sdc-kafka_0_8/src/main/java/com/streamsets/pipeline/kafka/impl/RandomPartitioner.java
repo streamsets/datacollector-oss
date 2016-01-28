@@ -32,6 +32,7 @@ public class RandomPartitioner implements Partitioner {
     random = new Random();
   }
 
+  @Override
   public int partition(Object key, int numPartitions) {
     return random.nextInt(numPartitions);
   }

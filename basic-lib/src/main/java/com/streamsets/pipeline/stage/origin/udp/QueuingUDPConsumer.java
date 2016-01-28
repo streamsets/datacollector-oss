@@ -45,6 +45,7 @@ public class QueuingUDPConsumer implements UDPConsumer {
     this.totalPackets = new AtomicLong(0);
   }
 
+  @Override
   public void process(DatagramPacket packet) throws Exception {
     long total = totalPackets.incrementAndGet();
     boolean droppedPacket = false;

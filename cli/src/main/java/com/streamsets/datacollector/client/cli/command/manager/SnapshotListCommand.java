@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "snapshot-list", description = "List all available Snapshots Info")
 public class SnapshotListCommand extends BaseCommand {
 
+  @Override
   public void run() {
     ManagerApi managerApi = new ManagerApi(getApiClient());
     try {

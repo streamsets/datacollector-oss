@@ -73,6 +73,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
     this.kafkaProducerConfigs = kafkaProducerConfigs;
   }
 
+  @Override
   public void init() throws StageException {
     Properties props = new Properties();
     //metadata.broker.list
@@ -94,6 +95,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
     producer = new Producer<>(config);
   }
 
+  @Override
   public void destroy() {
     if(producer != null) {
       producer.close();
@@ -105,6 +107,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
     return Kafka08Constants.KAFKA_VERSION;
   }
 
+  @Override
   public void enqueueMessage(String topic, byte[] message, String partitionKey) {
     //Topic could be a record EL string. This is not a good place to evaluate expression
     //Hence get topic as parameter
@@ -116,6 +119,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
     messageList.clear();
   }
 
+  @Override
   public void write() throws StageException {
     try {
       producer.send(messageList);

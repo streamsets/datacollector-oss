@@ -42,6 +42,7 @@ public class PipelineStatusCommand extends BaseCommand {
   )
   public String pipelineRev;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

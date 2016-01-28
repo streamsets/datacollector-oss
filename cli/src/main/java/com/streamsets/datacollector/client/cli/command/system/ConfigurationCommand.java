@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "configuration", description = "Returns Data Collector Configuration")
 public class ConfigurationCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

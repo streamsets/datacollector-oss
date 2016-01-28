@@ -52,6 +52,7 @@ public class RunPreviewCommand extends BaseCommand {
   )
   public boolean skipTargets;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

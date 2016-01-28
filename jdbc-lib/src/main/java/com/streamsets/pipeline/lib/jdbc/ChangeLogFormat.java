@@ -32,6 +32,7 @@ public enum ChangeLogFormat implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

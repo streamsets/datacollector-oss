@@ -153,6 +153,7 @@ public class SecurityContext {
       saveCredentials();
       if (renewalThread == null) {
         renewalThread = new Thread() {
+          @Override
           public void run() {
             while (true) {
               try {

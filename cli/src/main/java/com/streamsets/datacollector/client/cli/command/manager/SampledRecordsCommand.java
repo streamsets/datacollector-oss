@@ -57,6 +57,7 @@ public class SampledRecordsCommand extends BaseCommand {
   public String ruleId;
 
 
+  @Override
   public void run() {
     if(size == 0) {
       size = 10;

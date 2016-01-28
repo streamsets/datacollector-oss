@@ -30,6 +30,7 @@ public class RoundRobinPartitioner implements Partitioner {
 
   }
 
+  @Override
   public int partition(Object key, int numPartitions) {
     lastPartition = (lastPartition + 1) % numPartitions;
     return lastPartition;

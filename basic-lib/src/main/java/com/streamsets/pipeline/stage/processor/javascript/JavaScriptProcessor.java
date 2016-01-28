@@ -34,6 +34,7 @@ public class JavaScriptProcessor extends AbstractScriptingProcessor {
     super(LOG, JAVASCRIPT_ENGINE, Groups.JAVASCRIPT.name(), "script", processingMode, script);
   }
 
+  @Override
   protected ScriptObjectFactory createScriptObjectFactory() {
     return ScriptObjectFactoryFactory.getScriptObjectFactory(engine);
   }

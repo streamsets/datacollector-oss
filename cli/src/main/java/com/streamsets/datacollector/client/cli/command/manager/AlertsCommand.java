@@ -28,6 +28,7 @@ import io.airlift.airline.Command;
 @Command(name = "alerts", description = "Get All Alerts")
 public class AlertsCommand extends BaseCommand {
 
+  @Override
   public void run() {
     ManagerApi managerApi = new ManagerApi(getApiClient());
     try {

@@ -27,9 +27,11 @@ import io.swagger.models.auth.BasicAuthDefinition;
 
 @Api
 public class SwaggerReaderListener implements ReaderListener {
+  @Override
   public void beforeScan(Reader reader, Swagger swagger) {
   }
 
+  @Override
   public void afterScan(Reader reader, Swagger swagger) {
     swagger.securityDefinition("basic", new BasicAuthDefinition());
   }

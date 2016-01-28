@@ -203,6 +203,7 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return the userinfo for the username
    * @throws Exception
    */
+  @Override
   public UserInfo getUserInfo(String username) throws Exception
   {
     String pwdCredential = getUserCredentials(username);
@@ -389,6 +390,7 @@ public class LdapLoginModule extends AbstractLoginModule
    * @return true if authenticated, false otherwise
    * @throws LoginException
    */
+  @Override
   public boolean login() throws LoginException
   {
     try
@@ -539,6 +541,7 @@ public class LdapLoginModule extends AbstractLoginModule
    * @param sharedState
    * @param options
    */
+  @Override
   public void initialize(Subject subject,
                          CallbackHandler callbackHandler,
                          Map<String,?> sharedState,
@@ -591,6 +594,7 @@ public class LdapLoginModule extends AbstractLoginModule
     }
   }
 
+  @Override
   public boolean commit() throws LoginException
   {
     try
@@ -605,6 +609,7 @@ public class LdapLoginModule extends AbstractLoginModule
     return super.commit();
   }
 
+  @Override
   public boolean abort() throws LoginException
   {
     try

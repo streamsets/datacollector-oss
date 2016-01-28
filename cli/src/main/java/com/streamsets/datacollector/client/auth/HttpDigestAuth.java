@@ -29,6 +29,7 @@ public class HttpDigestAuth implements Authentication {
     return username;
   }
 
+  @Override
   public void setUsername(String username) {
     this.username = username;
   }
@@ -37,6 +38,7 @@ public class HttpDigestAuth implements Authentication {
     return password;
   }
 
+  @Override
   public void setPassword(String password) {
     this.password = password;
   }

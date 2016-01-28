@@ -27,6 +27,7 @@ import io.airlift.airline.Command;
 @Command(name = "ping", description = "Ping Data Collector")
 public class PingCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

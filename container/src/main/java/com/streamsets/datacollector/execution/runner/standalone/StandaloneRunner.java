@@ -366,6 +366,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     return snapshotInfo.getId();
   }
 
+  @Override
   public String updateSnapshotLabel(String snapshotName, String snapshotLabel)
       throws PipelineException {
     SnapshotInfo snapshotInfo = snapshotStore.updateLabel(name, rev, snapshotName, snapshotLabel);

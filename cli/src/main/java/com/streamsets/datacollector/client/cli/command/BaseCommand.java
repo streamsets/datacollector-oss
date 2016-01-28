@@ -64,6 +64,7 @@ public class BaseCommand implements Runnable {
   )
   public boolean printStackTrace;
 
+  @Override
   public void run() {
     System.out.println(getClass().getSimpleName());
   }

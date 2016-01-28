@@ -62,6 +62,7 @@ public class SnapshotInfoImpl implements SnapshotInfo {
     return rev;
   }
 
+  @Override
   public long getTimeStamp() {
     return timestamp;
   }

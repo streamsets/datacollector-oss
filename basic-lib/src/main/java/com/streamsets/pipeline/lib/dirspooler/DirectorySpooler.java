@@ -455,6 +455,7 @@ public class DirectorySpooler {
 
   class FilePurger implements Runnable {
 
+    @Override
     @SuppressWarnings("unchecked")
     public void run() {
       LOG.debug("Starting archived files purging");

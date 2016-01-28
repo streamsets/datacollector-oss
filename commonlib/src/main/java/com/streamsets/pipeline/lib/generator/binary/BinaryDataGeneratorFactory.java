@@ -62,6 +62,7 @@ public class BinaryDataGeneratorFactory extends DataGeneratorFactory {
     return new BinaryDataGenerator(os, fieldPath);
   }
 
+  @Override
   public Writer createWriter(OutputStream os) {
     throw new UnsupportedOperationException();
   }

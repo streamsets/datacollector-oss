@@ -27,6 +27,7 @@ import io.airlift.airline.Command;
 
 @Command(name = "list", description = "List all available pipelines info")
 public class ListPipelinesCommand extends BaseCommand {
+  @Override
   public void run() {
     StoreApi storeApi = new StoreApi(getApiClient());
     try {

@@ -26,6 +26,7 @@ import io.airlift.airline.Command;
 @Command(name = "shutdown", description = "Shutdown Data Collector")
 public class ShutdownCommand extends BaseCommand {
 
+  @Override
   public void run() {
     SystemApi systemApi = new SystemApi(getApiClient());
     try {

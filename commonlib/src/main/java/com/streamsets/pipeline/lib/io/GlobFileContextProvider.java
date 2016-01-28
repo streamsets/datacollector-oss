@@ -130,6 +130,7 @@ public class GlobFileContextProvider implements FileContextProvider {
     }
   }
 
+  @Override
   public void purge() {
     Iterator<FileContext> iterator = fileContexts.iterator();
     boolean purgedAtLeastOne = false;

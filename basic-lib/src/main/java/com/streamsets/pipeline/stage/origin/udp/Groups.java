@@ -35,6 +35,7 @@ public enum Groups implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

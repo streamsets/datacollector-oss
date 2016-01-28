@@ -43,6 +43,7 @@ public class CountingReader extends ProxyReader  {
     return skip;
   }
 
+  @Override
   protected void afterRead(int n) {
     if (n != -1) {
       this.count += n;

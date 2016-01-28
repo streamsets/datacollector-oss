@@ -86,6 +86,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
     this.context = context;
   }
 
+  @Override
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
     Properties props = new Properties();
     configureKafkaProperties(props);
@@ -98,6 +99,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
     }
   }
 
+  @Override
   public void init() throws StageException {
     if(consumer == null) {
       Properties props = new Properties();
@@ -108,6 +110,7 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
     }
   }
 
+  @Override
   public void destroy() {
     if(consumer != null) {
       try {
@@ -118,10 +121,12 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
     }
   }
 
+  @Override
   public void commit() {
     consumer.commitOffsets();
   }
 
+  @Override
   public MessageAndOffset read() throws StageException {
     try {
       //has next blocks indefinitely if consumer.timeout.ms is set to -1

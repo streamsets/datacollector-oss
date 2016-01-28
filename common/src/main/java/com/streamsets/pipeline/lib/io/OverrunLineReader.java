@@ -78,6 +78,7 @@ public class OverrunLineReader extends ProxyReader {
    */
   private boolean markedSkipLF = false;
 
+  @Override
   public void mark(int readAheadLimit) throws IOException {
     if (readAheadLimit < 0) {
       throw new IllegalArgumentException("Read-ahead limit < 0");
@@ -87,6 +88,7 @@ public class OverrunLineReader extends ProxyReader {
     markedSkipLF = skipLF;
   }
 
+  @Override
   public void reset() throws IOException {
     if (markedChar < 0) {
       throw new IOException((markedChar == INVALIDATED) ? "Mark invalid" : "Stream not marked");

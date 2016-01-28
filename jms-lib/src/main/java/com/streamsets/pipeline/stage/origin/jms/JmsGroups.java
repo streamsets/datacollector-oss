@@ -44,6 +44,7 @@ public enum JmsGroups implements Label {
     this.label = label;
   }
 
+  @Override
   public String getLabel() {
     return this.label;
   }

@@ -56,6 +56,7 @@ public class ErrorMessagesCommand extends BaseCommand {
   )
   public int size;
 
+  @Override
   public void run() {
     if(pipelineRev == null) {
       pipelineRev = "0";

@@ -95,6 +95,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     this.pollCommitMutex = new Object();
   }
 
+  @Override
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
     createConsumer();
     try {
@@ -104,6 +105,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     }
   }
 
+  @Override
   public void init() throws StageException {
     // guard against developer error - init must not be called twice and it must be called after validate
     if(isInited) {
@@ -117,6 +119,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     isInited = true;
   }
 
+  @Override
   public void destroy() {
     if(kafkaConsumerRunner != null) {
       kafkaConsumerRunner.shutdown();
@@ -136,12 +139,14 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     isInited = false;
   }
 
+  @Override
   public void commit() {
     synchronized (pollCommitMutex) {
       kafkaConsumer.commitSync(topicPartitionToOffsetMetadataMap);
     }
   }
 
+  @Override
   public MessageAndOffset read() throws StageException {
     ConsumerRecord<String, byte[]> next;
     try {
@@ -224,6 +229,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
       this.mutex = mutex;
     }
 
+    @Override
     public void run() {
       try {
         ConsumerRecords<String, byte[]> poll;

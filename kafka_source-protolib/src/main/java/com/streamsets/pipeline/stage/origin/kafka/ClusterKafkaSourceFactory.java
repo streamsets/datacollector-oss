@@ -25,6 +25,7 @@ public class ClusterKafkaSourceFactory extends KafkaSourceFactory {
     super(conf);
   }
 
+  @Override
   public BaseKafkaSource create() {
     try {
       Class clusterModeClazz = Class.forName(CLUSTER_MODE_CLASS);
