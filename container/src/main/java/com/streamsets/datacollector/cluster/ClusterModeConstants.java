@@ -33,4 +33,6 @@ public class ClusterModeConstants {
   public static final String SPARK_KAFKA_JAR_REGEX = "spark-streaming-kafka.*";
   public static final String AVRO_MAPRED_JAR_REGEX = "avro-mapred.*";
   public static final String AVRO_JAR_REGEX = "avro-\\d+.*";
+
+  private ClusterModeConstants() {}
 }

@@ -27,6 +27,8 @@ import java.util.Map;
 
 public class FlumeUtil {
 
+  private FlumeUtil() {}
+
   public static boolean validateHostConfig(List<Stage.ConfigIssue> issues, Map<String, String> flumeHostsConfig,
                                                     String configGroupName, String configName, Stage.Context context) {
     boolean valid = true;

@@ -47,10 +47,14 @@ import java.util.Set;
 
 public class AvroTypeUtil {
 
+  public static final String SCHEMA_PATH_SEPARATOR = ".";
+
   @VisibleForTesting
   static final String AVRO_UNION_TYPE_INDEX_PREFIX = "avro.union.typeIndex.";
+
   private static final String FORWARD_SLASH = "/";
-  public static final String SCHEMA_PATH_SEPARATOR = ".";
+
+  private AvroTypeUtil() {}
 
   public static Field avroToSdcField(Record record, Schema schema, Object value) {
     return avroToSdcField(record, "", schema, value);

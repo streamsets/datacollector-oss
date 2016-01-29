@@ -28,6 +28,8 @@ import java.util.List;
 public class RecordCreator {
   private static long counter;
 
+  private RecordCreator() {}
+
   public static Record create() {
     return create("sdk", "sdk:");
   }

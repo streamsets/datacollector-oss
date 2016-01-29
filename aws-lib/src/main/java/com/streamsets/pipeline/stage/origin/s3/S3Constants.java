@@ -26,4 +26,6 @@ import com.streamsets.pipeline.common.InterfaceStability;
 @InterfaceStability.Unstable
 public class S3Constants {
   public static final String MINUS_ONE = "-1";
+
+  private S3Constants() {}
 }

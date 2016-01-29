@@ -30,8 +30,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 
 public class EmbeddedDataCollectorFactory {
-
   private static final Logger LOG = LoggerFactory.getLogger(EmbeddedDataCollectorFactory.class);
+
+  private EmbeddedDataCollectorFactory() {}
+
   public static Source startPipeline(final Runnable postBatchRunnable) throws Exception {
     EmbeddedDataCollector embeddedDataCollector = new EmbeddedDataCollector();
     embeddedDataCollector.init();

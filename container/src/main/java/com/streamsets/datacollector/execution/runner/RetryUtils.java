@@ -23,7 +23,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 public class RetryUtils {
   // Retry at 15 secs, 225 secs and 300 secs
-  private static final int RETRY_BACKOFF_SECS[] = { 15, 30, 60, 120, 240, 300 };
+  private static final int[] RETRY_BACKOFF_SECS = { 15, 30, 60, 120, 240, 300 };
+
+  private RetryUtils() {}
 
   public static long getNextRetryTimeStamp(int retryAttempt, long previousRetryEndTimeStamp) {
     Utils.checkState(retryAttempt != 0, "Retry attempt cannot be 0");
@@ -32,8 +34,7 @@ public class RetryUtils {
     } else {
       retryAttempt = retryAttempt - 1;
     }
-    long scheduledTime = previousRetryEndTimeStamp + (RETRY_BACKOFF_SECS[retryAttempt] * 1000);
-    return scheduledTime;
+    return previousRetryEndTimeStamp + (RETRY_BACKOFF_SECS[retryAttempt] * 1000);
   }
 
 }

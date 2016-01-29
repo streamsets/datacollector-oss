@@ -40,6 +40,8 @@ public class TimeEL {
   @ElConstant(name = "SECONDS", description = "")
   public static final int SECONDS = 1;
 
+  private TimeEL() {}
+
   public static void setCalendarInContext(ELVars variables, Calendar calendar) {
     Utils.checkNotNull(variables, "variables");
     variables.addContextVariable(CALENDER_CONTEXT_VAR, calendar);

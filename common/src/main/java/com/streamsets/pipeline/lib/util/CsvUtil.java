@@ -33,6 +33,8 @@ import java.util.Map;
 
 public class CsvUtil {
 
+  private CsvUtil() {}
+
   public static List<String> fieldToCsv(Field field) throws IOException {
     Map<String, Field> map  = field.getValueAsMap();
     List<String> values = new ArrayList<>();

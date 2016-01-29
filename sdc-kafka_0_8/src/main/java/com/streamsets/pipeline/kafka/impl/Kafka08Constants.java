@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.kafka.impl;
 
 public class Kafka08Constants {
-
   public static final String KAFKA_VERSION = "0.8";
+
+  private Kafka08Constants() {}
 }

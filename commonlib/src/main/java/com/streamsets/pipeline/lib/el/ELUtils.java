@@ -29,6 +29,8 @@ import java.util.Map;
 
 public class ELUtils {
 
+  private ELUtils() {}
+
   public static ELVars parseConstants(Map<String,?> constants, Stage.Context context, String group,
       String config, ErrorCode err, List<Stage.ConfigIssue> issues) {
     ELVars variables = context.createELVars();

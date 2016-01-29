@@ -36,6 +36,8 @@ public class RecordWriterReaderFactory {
   private static final Logger LOG = LoggerFactory.getLogger(RecordWriterReaderFactory.class);
   private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
+  private RecordWriterReaderFactory() {}
+
   public static RecordReader createRecordReader(InputStream is, long initialPosition, int maxObjectLen)
       throws IOException {
     RecordReader reader;

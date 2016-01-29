@@ -28,6 +28,8 @@ public class OffsetFileUtil {
 
   private static final String OFFSET_FILE = "offset.json";
 
+  private OffsetFileUtil() {}
+
   public static File getPipelineOffsetFile(RuntimeInfo runtimeInfo, String pipelineName, String rev) {
     return new File(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, pipelineName, rev), OFFSET_FILE);
   }

@@ -24,6 +24,8 @@ import com.streamsets.pipeline.api.ElParam;
 
 public class ExtraTimeEL {
 
+  private ExtraTimeEL() {}
+
   @ElFunction(name = "every")
   public static String every(@ElParam("value") int value, @ElParam("timeUnitFunction") String unit) {
     return unit;

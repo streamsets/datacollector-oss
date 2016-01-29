@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 public class StageLibraryUtils {
   private static final String LIBRARY_RB = "data-collector-library-bundle";
 
+  private StageLibraryUtils() {}
+
   public static String getLibraryName(ClassLoader cl) {
     String name;
     try {

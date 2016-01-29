@@ -27,6 +27,8 @@ public class ScriptObjectFactoryFactory {
 
   private static double JAVA_VERSION = getVersion();
 
+  private ScriptObjectFactoryFactory() {}
+
   static double getVersion () {
     String version = System.getProperty("java.version");
     int pos = version.indexOf('.');

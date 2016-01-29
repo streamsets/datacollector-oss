@@ -21,6 +21,8 @@ package com.streamsets.pipeline.lib.util;
 
 public class ThreadUtil {
 
+  private ThreadUtil() {}
+
   /**
    * <p>
    *   Puts the current thread to sleep for the specified number of milliseconds.

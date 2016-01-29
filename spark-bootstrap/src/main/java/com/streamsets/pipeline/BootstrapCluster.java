@@ -68,6 +68,8 @@ public class BootstrapCluster {
   public static final String SDC_MESOS_BASE_DIR = "sdc_mesos";
   private static File mesosBootstrapFile;
 
+  private BootstrapCluster() {}
+
   public static synchronized Properties getProperties() throws Exception {
     initialize();
     return properties;

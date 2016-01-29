@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.kafka.impl;
 
 public class Kafka09Constants {
-
   public static final String KAFKA_VERSION = "0.9";
 
   // Producer related Constants
@@ -36,4 +35,6 @@ public class Kafka09Constants {
   public static final String RANDOM_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RandomPartitioner";
   public static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
   public static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
+
+  private Kafka09Constants() {}
 }

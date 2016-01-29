@@ -21,6 +21,8 @@ package org.apache.hadoop.util;
 
 public class NativeCodeLoader {
 
+  private NativeCodeLoader() {}
+
   public static boolean isNativeCodeLoaded() {
     return false;
   }
@@ -36,6 +38,5 @@ public class NativeCodeLoader {
   public static String getLibraryName() {
     return "<NO NATIVE LIB>";
   }
-
 
 }

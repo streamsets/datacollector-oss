@@ -29,6 +29,8 @@ public class Log4jHelper {
   private static final int ERROR = -1;
   private static final String TRAILING_SPACE = "(?:\\s*)";
 
+  private Log4jHelper() {}
+
   public static String translateLog4jLayoutToGrok(String patternLayout) throws DataParserException {
     //remove trailing '%n's since the reader does not return the new line character
     while(patternLayout.endsWith("%n")) {

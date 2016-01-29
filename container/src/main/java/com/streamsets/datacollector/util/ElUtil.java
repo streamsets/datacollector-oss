@@ -39,6 +39,8 @@ public class ElUtil {
   private static final String EL_PREFIX = "${";
   private static final String CONSTANTS = "constants";
 
+  private ElUtil() {}
+
   public static Object evaluate(Object value, StageDefinition stageDefinition,
       ConfigDefinition configDefinition,
       Map<String, Object> constants) throws ELEvalException {

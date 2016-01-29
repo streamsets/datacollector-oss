@@ -31,6 +31,8 @@ public class TimeNowEL {
   public static final String TIME_CONTEXT_VAR = "time";
   public static final String TIME_NOW_CONTEXT_VAR = "time_now";
 
+  private TimeNowEL() {}
+
   @ElFunction(prefix = TIME_CONTEXT_VAR, name = "now", description = "")
   public static Date getTimeNowFunc() {
     Date now = (Date) ELEval.getVariablesInScope().getContextVariable(TIME_NOW_CONTEXT_VAR);

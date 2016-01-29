@@ -38,6 +38,8 @@ import java.util.zip.GZIPOutputStream;
 
 public class TarFileCreator {
 
+  private TarFileCreator() {}
+
   public static void createLibsTarGz(List<URL> apiCl, List<URL> containerCL,
                                          Map<String, List<URL>> streamsetsLibsCl,
                                          Map<String, List<URL>> userLibsCL,

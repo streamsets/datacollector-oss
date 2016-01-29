@@ -46,6 +46,8 @@ public class MetricsConfigurator {
   private static MetricRegistry sdcMetrics;
   private static List<String> runningPipelines = new ArrayList<>();
 
+  private MetricsConfigurator() {}
+
   private static String metricName(String name, String type) {
     if (name.endsWith(type)) {
       return name;

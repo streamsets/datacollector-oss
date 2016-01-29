@@ -29,6 +29,8 @@ import java.util.Map;
 
 public class ELSupport {
 
+  private ELSupport() {}
+
   //TODO: decide prefix. These functions seem very similar to uuid which is in DataUtilEL and has no prefix.
   @ElFunction(
     prefix = "",

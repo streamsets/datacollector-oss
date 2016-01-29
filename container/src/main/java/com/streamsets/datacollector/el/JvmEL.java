@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.ElFunction;
 
 public class JvmEL {
 
+  private JvmEL() {}
+
   @ElFunction(prefix = "jvm", name = "maxMemoryMB",
       description = "JVM Maximum Heap size, in MB"
   )

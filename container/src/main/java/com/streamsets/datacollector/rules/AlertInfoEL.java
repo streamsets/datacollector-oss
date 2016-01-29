@@ -26,6 +26,8 @@ public class AlertInfoEL {
 
   private static final String ALERT_INFO = "ALERT_INFO";
 
+  private AlertInfoEL() {}
+
   public static void setInfo(String msg) {
     if (ELEval.getVariablesInScope() != null) {
       ELEval.getVariablesInScope().addContextVariable(ALERT_INFO, msg);

@@ -19,14 +19,12 @@
  */
 package com.streamsets.datacollector.util;
 
+import com.streamsets.datacollector.execution.runner.common.Constants;
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
 import org.slf4j.LoggerFactory;
-
-import com.streamsets.datacollector.execution.runner.common.Constants;
-import com.streamsets.datacollector.util.Configuration;
 
 import java.io.IOException;
 
@@ -36,6 +34,8 @@ public class LogUtil {
   private static final String DOT = ".";
   private static final String LAYOUT_PATTERN = "%m%n";
   private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(LogUtil.class);
+
+  private LogUtil() {}
 
   public static boolean registerLogger(String pipelineName, String rev, String suffix, String filename,
     Configuration configuration) {

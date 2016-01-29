@@ -43,6 +43,8 @@ public class LogUtils {
   public static final String LOG4J_GROK_ATTR = "log4j.grok";
   public static final String LOG4J_CONVERSION_PATTERN = "%d{ISO8601} [user:%X{s-user}] [pipeline:%X{s-entity}] [thread:%t] %-5p %c{1} - %m%n";
 
+  private LogUtils() {}
+
   public static String getLogFile(RuntimeInfo runtimeInfo) throws IOException {
     if(Boolean.getBoolean("sdc.transient-env")) {
       // running under mesos

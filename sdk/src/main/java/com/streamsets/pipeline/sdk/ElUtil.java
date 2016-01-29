@@ -32,6 +32,8 @@ import java.util.Map;
 
 class ElUtil {
 
+  private ElUtil() {}
+
   public static Map<String, Class<?>[]> getConfigToElDefMap(Class<?> stageClass) throws Exception {
     Map<String, Class<?>[]> configToElDefMap = new HashMap<>();
     for (Field field : stageClass.getFields()) {

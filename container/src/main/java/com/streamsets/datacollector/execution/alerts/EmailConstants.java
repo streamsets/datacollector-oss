@@ -44,4 +44,5 @@ public class EmailConstants {
 
   public static final String ALERT_TEXTS = "alertTexts";
 
+  private EmailConstants() {}
 }

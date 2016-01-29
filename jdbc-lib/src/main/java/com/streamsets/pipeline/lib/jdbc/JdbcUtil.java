@@ -42,6 +42,8 @@ public class JdbcUtil {
    */
   public static final int COLUMN_NAME = 4;
 
+  private JdbcUtil() {}
+
   /**
    * <p>Mapping of sqlStates that when encountered should determine that we will send a record to the
    * error pipeline. All other SQL states will result in a StageException.

@@ -29,4 +29,5 @@ public class PatternEL {
   @ElConstant(name = TOKEN_NAME, description = "")
   public static final String PATTERN = TOKEN;
 
+  private PatternEL() {}
 }

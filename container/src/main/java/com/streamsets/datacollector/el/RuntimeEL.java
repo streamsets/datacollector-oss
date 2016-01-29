@@ -52,6 +52,8 @@ public class RuntimeEL {
   @ElConstant(name = "NULL", description = "NULL value")
   public static final Object NULL = null;
 
+  private RuntimeEL() {}
+
   @ElFunction(
     prefix = "runtime",
     name = "conf",

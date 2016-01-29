@@ -27,6 +27,8 @@ import java.util.Map;
 
 public class ValidationUtil {
 
+  private  ValidationUtil() {}
+
   public static String getFirstIssueAsString(String name, Issues issues) {
     StringBuilder sb = new StringBuilder();
     if(issues.getPipelineIssues().size() > 0) {

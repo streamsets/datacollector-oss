@@ -31,6 +31,8 @@ class RecordEncodingConstants {
   static final byte KRYO1_MAGIC_NUMBER = BASE_MAGIC_NUMBER | (byte) 0x02;
   //10100001
   static final byte JSON1_MAGIC_NUMBER = BASE_MAGIC_NUMBER | (byte) 0x01;
+
+  private RecordEncodingConstants() {}
 }
 
 public enum RecordEncoding {

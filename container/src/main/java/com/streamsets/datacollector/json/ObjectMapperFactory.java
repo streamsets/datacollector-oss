@@ -38,6 +38,8 @@ public class ObjectMapperFactory {
   private static final ObjectMapper OBJECT_MAPPER = create(true);
   private static final ObjectMapper OBJECT_MAPPER_ONE_LINE = create(false);
 
+  private ObjectMapperFactory() {}
+
   private static ObjectMapper create(boolean indent) {
     ObjectMapper objectMapper = new ObjectMapper();
     // This will cause the objectmapper to not close the underlying output stream

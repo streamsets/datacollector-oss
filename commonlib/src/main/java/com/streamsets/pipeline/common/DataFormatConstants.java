@@ -24,8 +24,10 @@ import java.nio.charset.StandardCharsets;
 
 public class DataFormatConstants {
 
-  public final static Charset UTF8 = StandardCharsets.UTF_8;
+  public static final Charset UTF8 = StandardCharsets.UTF_8;
   public static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
     System.getProperty("DataFactoryBuilder.OverRunLimit", "1048576"));
   public static final String FILE_PATTERN_IN_ARCHIVE = "*";
+
+  private DataFormatConstants() {}
 }

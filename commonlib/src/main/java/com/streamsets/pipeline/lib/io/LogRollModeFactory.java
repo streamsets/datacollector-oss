@@ -33,6 +33,8 @@ class LogRollModeConstants {
   static final String YYYY_MM_DD_REGEX = YYYY_MM_REGEX + "-[0-9]{2}";
   static final String YYYY_MM_DD_HH_REGEX = YYYY_MM_DD_REGEX + "-[0-9]{2}";
   static final String YYYY_MM_DD_HH_MM_REGEX = YYYY_MM_DD_HH_REGEX + "-[0-9]{2}";
+
+  private LogRollModeConstants() {}
 }
 
 /**

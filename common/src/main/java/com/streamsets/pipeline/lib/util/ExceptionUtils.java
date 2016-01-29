@@ -21,6 +21,8 @@ package com.streamsets.pipeline.lib.util;
 
 public class ExceptionUtils {
 
+  private ExceptionUtils() {}
+
   /**
    * Throws an undeclared checked exception, use with caution.
    */

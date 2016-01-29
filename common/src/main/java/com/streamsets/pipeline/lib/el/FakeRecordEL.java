@@ -27,6 +27,8 @@ public class FakeRecordEL {
 
   public static final String RECORD_EL_PREFIX = "record";
 
+  private FakeRecordEL() {}
+
   @ElFunction(
     prefix = RECORD_EL_PREFIX,
     name = "type",

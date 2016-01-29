@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BeanHelper {
+  private BeanHelper() {}
 
   public static com.streamsets.datacollector.restapi.bean.PipelineStateJson wrapPipelineState(com.streamsets.datacollector.execution.PipelineState pipelineState) {
     if(pipelineState == null) {

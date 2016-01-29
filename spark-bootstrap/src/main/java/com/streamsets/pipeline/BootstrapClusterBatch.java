@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 
 public class BootstrapClusterBatch {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapClusterBatch.class);
+
+  private BootstrapClusterBatch() {}
   /**
    * Bootstrapping the Driver which starts a Hadoop job on cluster
    */

@@ -67,4 +67,5 @@ public class Constants {
   public static final String THREAD = "thread";
   public static final String RELATIVETIME = "relativetime";
 
+  private Constants() {}
 }

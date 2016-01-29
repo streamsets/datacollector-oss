@@ -29,6 +29,8 @@ import java.util.UUID;
  */
 public class DataUtilEL {
 
+  private DataUtilEL() {}
+
   @ElFunction(prefix = "", name = "uuid", description = "generates uuid")
   public static String UUIDFunc() {
     return UUID.randomUUID().toString();

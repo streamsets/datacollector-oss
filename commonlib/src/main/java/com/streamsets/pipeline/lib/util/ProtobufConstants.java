@@ -28,4 +28,6 @@ public class ProtobufConstants {
   public static final String MESSAGE_TYPE_DEFAULT = "";
   public static final String DELIMITED_KEY = KEY_PREFIX + "delimited";
   public static final boolean DELIMITED_DEFAULT = true;
+
+  private ProtobufConstants() {}
 }

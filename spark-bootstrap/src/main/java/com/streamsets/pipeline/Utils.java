@@ -21,6 +21,8 @@ package com.streamsets.pipeline;
 
 public class Utils {
 
+  private Utils() {}
+
   public static <T> T checkNotNull(T value, Object varName) {
     if (value == null) {
       throw new NullPointerException(varName + " cannot be null");

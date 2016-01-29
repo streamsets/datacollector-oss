@@ -34,6 +34,8 @@ import java.util.Map;
 
 public class XmlUtil {
 
+  private XmlUtil() {}
+
   public static Object fieldToObject(Record record, Field field) throws StageException {
     Object obj;
     if (field.getValue() == null) {

@@ -30,6 +30,8 @@ import java.util.List;
 
 public class AWSUtil {
 
+  private AWSUtil() {}
+
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider;
     if (!config.awsAccessKeyId.isEmpty() && !config.awsSecretAccessKey.isEmpty()) {

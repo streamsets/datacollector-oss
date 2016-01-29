@@ -25,4 +25,6 @@ public class Constants {
   public static final String IO_COMPRESSION_CODEC_LZ4_UNSAFE_KEY = "sdc.io.compression.codec.lz4.unsafe";
 
   public static final boolean IO_COMPRESSION_CODEC_LZ4_UNSAFE_DEFAULT = true;
+
+  private Constants() {}
 }

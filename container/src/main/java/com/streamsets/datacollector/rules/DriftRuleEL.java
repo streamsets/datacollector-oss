@@ -38,8 +38,9 @@ import java.util.Set;
 public class DriftRuleEL {
   public static final String DRIFT_EL_PREFIX = "drift";
 
+  private DriftRuleEL() {}
 
-  static abstract class DriftDetector<T> {
+  abstract static class DriftDetector<T> {
 
     @VisibleForTesting
     Record getRecord() {

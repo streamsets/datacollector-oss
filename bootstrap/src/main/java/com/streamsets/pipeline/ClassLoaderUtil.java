@@ -21,9 +21,12 @@ package com.streamsets.pipeline;
 
 public class ClassLoaderUtil {
 
-  private static final String[] EMPTY_STRING_ARRAY = new String[0];
   static final String SERVICES_PREFIX = "/META-INF/services/";
+
   private static final String SERVICES_PREFIX_CANONICALIZED = canonicalizeClass(SERVICES_PREFIX);
+  private static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+  private ClassLoaderUtil() {}
 
   static String canonicalizeClass(String name) {
     String canonicalName = name.replace('/', '.');

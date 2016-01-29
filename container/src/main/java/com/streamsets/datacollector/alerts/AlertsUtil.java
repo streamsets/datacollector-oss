@@ -31,6 +31,8 @@ public class AlertsUtil {
   private static final String ALERT_PREFIX = "alert.";
   private static final String USER_PREFIX = "user.";
 
+  private AlertsUtil() {}
+
   public static boolean evaluateRecord(Record record, String predicate, ELVariables variables,
                                        ELEvaluator elEvaluator) throws ObserverException {
     try {

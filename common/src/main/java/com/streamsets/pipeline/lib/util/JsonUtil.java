@@ -38,6 +38,8 @@ import java.util.UUID;
 
 public class JsonUtil {
 
+  private JsonUtil() {}
+
   public static Field jsonToField(Object json) throws IOException {
     Field field;
     if (json == null) {

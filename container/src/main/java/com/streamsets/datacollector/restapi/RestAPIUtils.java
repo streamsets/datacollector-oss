@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.log.LogConstants;
 import org.slf4j.MDC;
 
 public class RestAPIUtils {
+  private RestAPIUtils() {}
 
   static void injectPipelineInMDC(String pipeline) {
     MDC.put(LogConstants.ENTITY, pipeline);

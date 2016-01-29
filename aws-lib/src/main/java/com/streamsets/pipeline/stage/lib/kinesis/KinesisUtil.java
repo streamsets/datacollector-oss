@@ -47,6 +47,8 @@ public class KinesisUtil {
   public static final int ONE_MB = 1000 * 1000;
   public static final String KINESIS_CONFIG_BEAN = "kinesisConfig";
 
+  private KinesisUtil() {}
+
   /**
    * Checks for existence of the requested stream and adds
    * any configuration issues to the list.

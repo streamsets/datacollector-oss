@@ -18,11 +18,15 @@
  * limitations under the License.
  */
 package com.streamsets.pipeline.mesos;
-import java.io.File;
-import java.lang.reflect.Method;
 import com.streamsets.pipeline.BootstrapCluster;
 
+import java.io.File;
+import java.lang.reflect.Method;
+
 public class BootstrapMesosDriver {
+
+  private BootstrapMesosDriver() {}
+
   /**
    * Bootstrapping the Driver which starts a Spark job on Mesos
    */

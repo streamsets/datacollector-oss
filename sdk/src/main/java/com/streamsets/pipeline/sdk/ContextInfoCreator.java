@@ -34,6 +34,8 @@ import java.util.Map;
 
 public class ContextInfoCreator {
 
+  private ContextInfoCreator() {}
+
   public static Stage.Info createInfo(final String name, final int version, final String instanceName) {
     return new Stage.Info() {
       @Override

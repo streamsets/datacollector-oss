@@ -49,4 +49,6 @@ public class Constants {
   public static final String MESOS_JAR_URL = "mesos.jar.url";
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
+
+  private Constants() {}
 }

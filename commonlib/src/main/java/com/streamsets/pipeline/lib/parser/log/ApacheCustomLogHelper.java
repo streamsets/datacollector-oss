@@ -31,6 +31,8 @@ public class ApacheCustomLogHelper {
   private static final int NEXT_LAYOUT = 2;
   private static final int ERROR = -1;
 
+  private ApacheCustomLogHelper() {}
+
   public static String translateApacheLayoutToGrok(String patternLayout) throws DataParserException {
 
     int state = NEXT_LAYOUT;

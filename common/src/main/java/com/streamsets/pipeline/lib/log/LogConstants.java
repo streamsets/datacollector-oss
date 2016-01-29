@@ -20,6 +20,8 @@
 package com.streamsets.pipeline.lib.log;
 
 public class LogConstants {
-  public final static String USER = "s-user";
-  public final static String ENTITY = "s-entity";
+  public static final String USER = "s-user";
+  public static final String ENTITY = "s-entity";
+
+  private LogConstants() {}
 }

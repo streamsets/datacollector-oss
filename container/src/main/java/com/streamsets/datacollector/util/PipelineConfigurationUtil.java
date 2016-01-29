@@ -38,6 +38,9 @@ public class PipelineConfigurationUtil {
 
   private static final String KEY = "key";
   private static final String VALUE = "value";
+
+  private PipelineConfigurationUtil() {}
+
   public static Map<String, String> getFlattenedStringMap(String mapName, PipelineConfiguration pipelineConf) {
     Map<String, String> result = new HashMap<>();
     for (Map.Entry<String, Object> entry : getFlattenedMap(mapName, pipelineConf).entrySet()) {

@@ -32,4 +32,6 @@ public class DataUnitsEL {
   @ElConstant(name = "GB", description = "Gigabytes")
   public static final int GB = 1000 * MB;
 
+  private DataUnitsEL() {}
+
 }

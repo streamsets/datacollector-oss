@@ -40,6 +40,24 @@ import java.util.Map;
 import java.util.TimeZone;
 
 public class PathResolver {
+  private static final String VALIDATE_CONTEXT = "validateContext";
+  private static final String DATE_CONTEXT = "dateContext";
+  private static final String TIME_UNIT = "timeUnit";
+  private static final String TIME_INCREMENT_VALUE = "timeIncrement";
+  private static final String[] FUNCTION_NAMES = { "YYYY() or YY()", "MM()", "DD()", "hh()", "mm()", "ss()"};
+
+  private static final int[] UNITS_ORDERED = { Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY,
+      Calendar.MINUTE, Calendar.SECOND};
+
+  private static final Map<String, Integer> VALID_UNITS = ImmutableMap.<String, Integer>builder().
+      //TODO: we'll not support arbitrary frequencies for the following units for now:
+      //TODO:    put("YYYY", 3000).put("MM", 12).put("DD", 31).put("hh", 23).
+          put("mm", 59).put("ss", 59).build();
+
+  private static final Map<String, Integer> UNIT_TO_CALENDAR = ImmutableMap.<String, Integer>builder().
+      put("YYYY", Calendar.YEAR).put("MM", Calendar.MONTH).put("DD", Calendar.DAY_OF_MONTH).
+      put("hh", Calendar.HOUR_OF_DAY).put("mm", Calendar.MINUTE).put("ss", Calendar.SECOND).build();
+
   private final Stage.Context context;
   private final String pathTemplate;
   private int incrementUnit;
@@ -59,24 +77,9 @@ public class PathResolver {
     pathEval = context.createELEval(config);
   }
 
-  private static final String VALIDATE_CONTEXT = "validateContext";
-  private static final String DATE_CONTEXT = "dateContext";
-  private static final String TIME_UNIT = "timeUnit";
-  private static final String TIME_INCREMENT_VALUE = "timeIncrement";
-
-  private static int[] UNITS_ORDERED = { Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY,
-      Calendar.MINUTE, Calendar.SECOND};
-
-  private static Map<String, Integer> VALID_UNITS = ImmutableMap.<String, Integer>builder().
-      //TODO: we'll not support arbitrary frequencies for the following units for now:
-      //TODO:    put("YYYY", 3000).put("MM", 12).put("DD", 31).put("hh", 23).
-          put("mm", 59).put("ss", 59).build();
-
-  private static Map<String, Integer> UNIT_TO_CALENDAR = ImmutableMap.<String, Integer>builder().
-      put("YYYY", Calendar.YEAR).put("MM", Calendar.MONTH).put("DD", Calendar.DAY_OF_MONTH).
-      put("hh", Calendar.HOUR_OF_DAY).put("mm", Calendar.MINUTE).put("ss", Calendar.SECOND).build();
-
   public static class ValidateEL {
+
+    private ValidateEL() {}
 
     private static int[] getFunctionsUsage() {
       return(int[]) ELEval.getVariablesInScope().getContextVariable(VALIDATE_CONTEXT);
@@ -131,7 +134,7 @@ public class PathResolver {
 
     @ElFunction(name = "every")
     public static String every(@ElParam("value") int value, @ElParam("unit") String unit) {
-      getFunctionsUsage()[6] = (getFunctionsUsage()[6] + 1);
+      getFunctionsUsage()[6] = getFunctionsUsage()[6] + 1;
       if (!VALID_UNITS.containsKey(unit)) {
         getFunctionsUsage()[7] = 1;
       } else if (value < 1 || value > VALID_UNITS.get(unit)) {
@@ -171,8 +174,10 @@ public class PathResolver {
 
   public static class FrequencyEdgeEL {
 
+    private FrequencyEdgeEL() {}
+
     private static void revertUnit(int unit) {
-      DateContext context = ((DateContext)ELEval.getVariablesInScope().getContextVariable(DATE_CONTEXT));
+      DateContext context = (DateContext)ELEval.getVariablesInScope().getContextVariable(DATE_CONTEXT);
       context.noDate = false;
       context.revert(unit);
     }
@@ -220,7 +225,7 @@ public class PathResolver {
 
     @ElFunction(name = "every")
     public static String every(@ElParam("value") int value, @ElParam("unit") String unit) {
-      DateContext context = ((DateContext)ELEval.getVariablesInScope().getContextVariable(DATE_CONTEXT));
+      DateContext context = (DateContext)ELEval.getVariablesInScope().getContextVariable(DATE_CONTEXT);
       context.noDate = false;
       context.frequency = value;
       context.frequencyUnit = UNIT_TO_CALENDAR.get(unit);
@@ -228,8 +233,6 @@ public class PathResolver {
     }
 
   }
-
-  private String[] FUNCTION_NAMES = { "YYYY() or YY()", "MM()", "DD()", "hh()", "mm()", "ss()"};
 
   public boolean validate(String group, String config, String qualifiedConfigName, List<Stage.ConfigIssue> issues) {
     int previousIssuesCount = issues.size();
@@ -274,16 +277,13 @@ public class PathResolver {
         // the value specified in the every() function is outside of the unit domain
         issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_32, validationInfo[8]));
       }
-      if (validationInfo[9] > 0) {
-        if (validationInfo[9] < validationInfo[11]) {
-          // the unit specified in the every() function is not the smallest unit in the path
-          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_33, validationInfo[8]));
-        } else {
-          if (validationInfo[9] == Calendar.SECOND || validationInfo[9] == Calendar.MINUTE) {
-            if (60 % validationInfo[10] != 0) {
-              issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_34));
-            }
-          }
+      if (validationInfo[9] > 0 && validationInfo[9] < validationInfo[11]) {
+        // the unit specified in the every() function is not the smallest unit in the path
+        issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_33, validationInfo[8]));
+      } else if (validationInfo[9] > 0) {
+        if ((validationInfo[9] == Calendar.SECOND || validationInfo[9] == Calendar.MINUTE) &&
+            (60 % validationInfo[10] != 0)) {
+          issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_34));
         }
         if (validationInfo[9] == Calendar.SECOND && validationInfo[5] > 1) {
           issues.add(context.createConfigIssue(group, qualifiedConfigName, Errors.HADOOPFS_36));
@@ -327,7 +327,7 @@ public class PathResolver {
     }
     elVars.addContextVariable(DATE_CONTEXT, null);
     if (!dc.noDate) {
-      int rangeEdgeCorrection = (floorDate) ? 0 : 1;
+      int rangeEdgeCorrection = floorDate ? 0 : 1;
       // set to the minimum all values for units smaller than the the incrementUnit
       for (int i = 0; i < UNITS_ORDERED.length; i++) {
         if (UNITS_ORDERED[i] > incrementUnit) {
@@ -384,6 +384,8 @@ public class PathResolver {
   }
 
   public static class TimeIncrementUnitEL {
+
+    private TimeIncrementUnitEL() {}
 
     private static void adjustTimeUnit(int unit) {
       Integer currentUnit = (Integer) ELEval.getVariablesInScope().getContextVariable(TIME_UNIT);

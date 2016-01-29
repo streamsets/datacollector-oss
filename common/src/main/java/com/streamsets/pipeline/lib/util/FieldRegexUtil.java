@@ -28,6 +28,8 @@ import java.util.regex.Pattern;
 
 public class FieldRegexUtil {
 
+  private FieldRegexUtil() {}
+
   public static boolean hasWildCards(String fieldPath) {
     if(fieldPath.contains("[*]") || fieldPath.contains("/*")) {
       return true;

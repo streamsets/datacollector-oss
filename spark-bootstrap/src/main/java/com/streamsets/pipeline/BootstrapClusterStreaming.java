@@ -28,6 +28,8 @@ import java.util.Date;
 public class BootstrapClusterStreaming {
   private static final Logger LOG = LoggerFactory.getLogger(BootstrapClusterStreaming.class);
 
+  private BootstrapClusterStreaming() {}
+
   /**
    * Bootstrapping the Driver which starts a Spark job on cluster
    */

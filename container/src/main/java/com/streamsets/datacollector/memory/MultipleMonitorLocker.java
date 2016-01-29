@@ -44,12 +44,13 @@ public class MultipleMonitorLocker {
     UNSAFE = unsafe;
   }
 
+  private MultipleMonitorLocker() {}
+
   public static boolean isEnabled() {
     return UNSAFE != null;
   }
 
-  public static <RESULT> RESULT lock(List<Object> locks, Callable<RESULT> callable)
-  throws Exception {
+  public static <RESULT> RESULT lock(List<Object> locks, Callable<RESULT> callable) throws Exception {
     if (!isEnabled()) {
       return null;
     }

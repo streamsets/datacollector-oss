@@ -26,4 +26,5 @@ public class DelimitedDataConstants {
   public static final String QUOTE_CONFIG = "quoteChar";
   public static final String SKIP_START_LINES = "skipStartLines";
 
+  private DelimitedDataConstants() {}
 }

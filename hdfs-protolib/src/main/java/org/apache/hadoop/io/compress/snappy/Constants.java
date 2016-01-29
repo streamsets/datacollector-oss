@@ -21,4 +21,6 @@ package org.apache.hadoop.io.compress.snappy;
 
 public class Constants {
   public static final int DEFAULT_BUFFER_SIZE = 64 * 1024;
+
+  private Constants() {}
 }

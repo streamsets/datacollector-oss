@@ -38,24 +38,25 @@ public class OmnitureAuthUtil {
 
   private static BASE64Encoder b64 = new BASE64Encoder();
 
+  private OmnitureAuthUtil() {}
+
   public static String getHeader(String clientId, String clientSecret) throws UnsupportedEncodingException {
     byte[] nonceB = generateNonce();
     String nonce = base64Encode(nonceB);
     String created = generateTimestamp();
     String password64 = getBase64Digest(nonceB, created.getBytes("UTF-8"), clientSecret.getBytes("UTF-8"));
-    StringBuffer header = new StringBuffer("UsernameToken Username=\"");
-    header.append(clientId);
-    header.append("\", ");
-    header.append("PasswordDigest=\"");
-    header.append(password64.trim());
-    header.append("\", ");
-    header.append("Nonce=\"");
-    header.append(nonce.trim());
-    header.append("\", ");
-    header.append("Created=\"");
-    header.append(created);
-    header.append("\"");
-    return header.toString();
+    return "UsernameToken Username=\"" +
+        clientId +
+        "\", " +
+        "PasswordDigest=\"" +
+        password64.trim() +
+        "\", " +
+        "Nonce=\"" +
+        nonce.trim() +
+        "\", " +
+        "Created=\"" +
+        created +
+        "\"";
   }
 
   private static byte[] generateNonce() {

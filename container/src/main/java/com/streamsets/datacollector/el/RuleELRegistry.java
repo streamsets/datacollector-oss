@@ -37,6 +37,8 @@ public class RuleELRegistry {
 
   private static final String[] FAMILIES = {ALERT, GENERAL, DRIFT};
 
+  private RuleELRegistry() {}
+
   public static String[] getFamilies() {
     return FAMILIES;
   }

@@ -65,4 +65,5 @@ public class ApacheAccessLogConstants {
   static final String BYTES_TRANSFERRED = "bytesTransferred";
   static final String HTTP_VERSION = "httpversion";
 
+  private ApacheAccessLogConstants() {}
 }

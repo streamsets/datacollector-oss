@@ -42,6 +42,7 @@ public class FuzzyMatch {
   private static final Pattern removeNonAlphaNum = Pattern.compile("[^\\w+]", Pattern.UNICODE_CHARACTER_CLASS);
   private static final Pattern camelAndSnakeCaseSplitter = Pattern.compile("(?=\\p{Lu})|(_)");
 
+  private FuzzyMatch() {}
 
   // Build a cache with sane defaults. Shouldn't have to ask user to configure this.
   private static LoadingCache<Pair<String, String>, Integer> ratioCache = CacheBuilder.newBuilder()
