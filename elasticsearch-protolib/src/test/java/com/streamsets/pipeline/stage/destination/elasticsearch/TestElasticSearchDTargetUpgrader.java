@@ -30,18 +30,16 @@ import java.util.List;
 public class TestElasticSearchDTargetUpgrader {
 
   @Test
-  public void testUpgraderV1toV2() throws Exception {
+  public void testUpgraderV1toV3() throws Exception {
     StageUpgrader upgrader = new ElasticSearchDTargetUpgrader();
 
     List<Config> configs = new ArrayList<>();
 
-    upgrader.upgrade("l", "s", "i", 1, 2, configs);
+    upgrader.upgrade("l", "s", "i", 1, 3, configs);
 
     Assert.assertEquals(2, configs.size());
-    Assert.assertEquals(new Config("timeDriver", "${time:now()}").getName(), configs.get(0).getName());
-    Assert.assertEquals(new Config("timeZoneID", "UTC").getName(), configs.get(1).getName());
-    Assert.assertEquals(new Config("timeDriver", "${time:now()}").getValue(), configs.get(0).getValue());
-    Assert.assertEquals(new Config("timeZoneID", "UTC").getValue(), configs.get(1).getValue());
+    Assert.assertEquals(new Config("elasticSearchConfigBean.timeDriver", "${time:now()}").getName(), configs.get(0).getName());
+    Assert.assertEquals(new Config("elasticSearchConfigBean.timeZoneID", "UTC").getName(), configs.get(1).getName());
   }
 
 }

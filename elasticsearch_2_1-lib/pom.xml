@@ -25,15 +25,16 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-elasticsearch_1_6-lib</artifactId>
+  <artifactId>streamsets-datacollector-elasticsearch_2_1-lib</artifactId>
   <version>1.2.0.1</version>
-  <description>StreamSets Data Collector Elastic Search 1.6.2 Lib</description>
-  <name>StreamSets Data Collector Elastic Search 1.6.2 Lib</name>
+  <description>StreamSets Data Collector Elastic Search 2.1.1 Lib</description>
+  <name>StreamSets Data Collector Elastic Search 2.1.1 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>1.6.2</elasticsearch.version>
-    <shield.version>1.3.3</shield.version>
+    <elasticsearch.version>2.1.1</elasticsearch.version>
+    <shield.version>2.1.1</shield.version>
+    <jackson.version>2.6.2</jackson.version>
   </properties>
 
   <dependencies>
@@ -87,7 +88,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-elasticsearch-1</artifactId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-2</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
@@ -98,9 +99,15 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch-shield</artifactId>
+      <groupId>org.elasticsearch.plugin</groupId>
+      <artifactId>shield</artifactId>
       <version>${shield.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
       <scope>compile</scope>
     </dependency>
 
