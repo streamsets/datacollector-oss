@@ -157,7 +157,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-elasticsearch_1_7-lib</artifactId>
+      <artifactId>streamsets-datacollector-elasticsearch_2_1-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -267,6 +267,16 @@
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-elasticsearch_1_6-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-elasticsearch_1_7-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-elasticsearch_2_0-lib</artifactId>
           <scope>provided</scope>
         </dependency>
         <dependency>

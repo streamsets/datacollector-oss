@@ -28,17 +28,14 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.elasticsearch.api.ElasticSearchFactory;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
-import org.elasticsearch.plugins.PluginsService;
 import org.elasticsearch.search.SearchHit;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -51,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -71,27 +69,27 @@ public class TestElasticSearchTarget {
   }
 
   @BeforeClass
+  @SuppressWarnings("unchecked")
   public static void setUp() throws Exception {
     File esDir = new File("target", UUID.randomUUID().toString());
     esPort = getRandomPort();
     Assert.assertTrue(esDir.mkdirs());
-    ImmutableSettings.Builder settings = ImmutableSettings.builder();
-    settings.put("cluster.name", esName);
-    settings.put("http.enabled", false);
-    settings.put("transport.tcp.port", esPort);
-    settings.put("path.conf", esDir.getAbsolutePath());
-    settings.put("path.data", esDir.getAbsolutePath());
-    settings.put("path.logs", esDir.getAbsolutePath());
-    settings.put("plugins." + PluginsService.LOAD_PLUGIN_FROM_CLASSPATH, false);
-    esServer = NodeBuilder.nodeBuilder().settings(settings.build()).build();
+    Map<String, Object> configs = new HashMap<>();
+    configs.put("cluster.name", esName);
+    configs.put("http.enabled", false);
+    configs.put("transport.tcp.port", esPort);
+    configs.put("path.home", esDir.getAbsolutePath());
+    configs.put("path.conf", esDir.getAbsolutePath());
+    configs.put("path.data", esDir.getAbsolutePath());
+    configs.put("path.logs", esDir.getAbsolutePath());
+    esServer = NodeBuilder.nodeBuilder().settings(ElasticSearchFactory.settings(configs)).build();
     esServer.start();
   }
-
 
   @AfterClass
   public static void cleanUp() {
     if (esServer != null) {
-      esServer.stop();
+      esServer.close();
     }
   }
 
@@ -101,10 +99,20 @@ public class TestElasticSearchTarget {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testValidations() throws Exception {
-    Target target = new ElasticSearchTarget("", Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-        "${time:now()}", TimeZone.getTimeZone("UTC"),
-        "${record:value('/index')x}", "${record:valxue('/type')}", "", "UTF-8");
+    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    conf.clusterName = "";
+    conf.uris = Collections.EMPTY_LIST;
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')x}";
+    conf.typeTemplate = "${record:valxue('/type')}";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+
+    Target target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(4, issues.size());
@@ -113,15 +121,33 @@ public class TestElasticSearchTarget {
     Assert.assertTrue(issues.get(2).toString().contains(Errors.ELASTICSEARCH_06.name()));
     Assert.assertTrue(issues.get(3).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
-    target = new ElasticSearchTarget("x", ImmutableList.of("x"), Collections.EMPTY_MAP,
-        "${time:now()}", TimeZone.getTimeZone("UTC"), "x", "x", "", "UTF-8");
+    conf.clusterName = "x";
+    conf.uris = ImmutableList.of("x");
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "x";
+    conf.typeTemplate = "x";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+
+    target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
 
-    target = new ElasticSearchTarget("x", ImmutableList.of("localhost:0"), Collections.EMPTY_MAP,
-        "${time:now()}", TimeZone.getTimeZone("UTC"), "x", "x", "", "UTF-8");
+    conf.clusterName = "x";
+    conf.uris = ImmutableList.of("localhost:0");
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "x";
+    conf.typeTemplate = "x";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+
+    target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
@@ -132,18 +158,20 @@ public class TestElasticSearchTarget {
     return createTarget("${time:now()}", "${record:value('/index')}");
   }
 
+  @SuppressWarnings("unchecked")
   private ElasticSearchTarget createTarget(String timeDriver, String indexEL) {
-    return new ElasticSearchTarget(
-        esName,
-        ImmutableList.of("127.0.0.1:" + esPort),
-        Collections.EMPTY_MAP,
-        timeDriver,
-        TimeZone.getTimeZone("UTC"),
-        indexEL,
-        "${record:value('/type')}",
-        "",
-        "UTF-8"
-    );
+    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    conf.clusterName = esName;
+    conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = timeDriver;
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = indexEL;
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+
+    return new ElasticSearchTarget(conf);
   }
 
   @Test
@@ -288,17 +316,20 @@ public class TestElasticSearchTarget {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testTimeDriverNow() throws Exception {
-    ElasticSearchTarget target = new ElasticSearchTarget(
-        esName, ImmutableList.of("127.0.0.1:" + esPort),
-        Collections.EMPTY_MAP,
-        "${time:now()}",
-        TimeZone.getTimeZone("UTC"),
-        "${YYYY()}",
-        "${record:value('/type')}",
-        "",
-        "UTF-8"
-    );
+    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    conf.clusterName = esName;
+    conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${YYYY()}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+
+    ElasticSearchTarget target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     runner.runInit();
     try {

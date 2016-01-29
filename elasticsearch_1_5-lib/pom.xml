@@ -33,6 +33,7 @@
 
   <properties>
     <elasticsearch.version>1.5.2</elasticsearch.version>
+    <shield.version>1.3.3</shield.version>
   </properties>
 
   <dependencies>
@@ -83,18 +84,23 @@
       <artifactId>streamsets-datacollector-elasticsearch-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.elasticsearch</groupId>
-          <artifactId>elasticsearch</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
-
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-1</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.elasticsearch</groupId>
       <artifactId>elasticsearch</artifactId>
       <version>${elasticsearch.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch-shield</artifactId>
+      <version>${shield.version}</version>
       <scope>compile</scope>
     </dependency>
 

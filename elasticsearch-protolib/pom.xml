@@ -32,8 +32,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>1.7.1</elasticsearch.version>
-    <shield.version>1.3.2</shield.version>
+    <elasticsearch.version>2.1.1</elasticsearch.version>
   </properties>
 
   <dependencies>
@@ -67,6 +66,18 @@
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-2</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.elasticsearch</groupId>
+      <artifactId>elasticsearch</artifactId>
+      <version>${elasticsearch.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -76,6 +87,12 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-2</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -95,18 +112,10 @@
       <artifactId>streamsets-datacollector-commonlib</artifactId>
       <scope>compile</scope>
     </dependency>
-
     <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-      <version>${elasticsearch.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch-shield</artifactId>
-      <version>${shield.version}</version>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-elasticsearch-api</artifactId>
+      <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
 

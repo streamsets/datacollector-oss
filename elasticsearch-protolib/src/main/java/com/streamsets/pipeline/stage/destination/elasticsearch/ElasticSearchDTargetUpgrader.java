@@ -24,9 +24,13 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElasticSearchDTargetUpgrader implements StageUpgrader {
+
+  private final List<Config> configsToRemove = new ArrayList<>();
+  private final List<Config> configsToAdd = new ArrayList<>();
 
   @Override
   public List<Config> upgrade(
@@ -40,6 +44,9 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -47,9 +54,32 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("timeDriver", "${time:now()}"));
     configs.add(new Config("timeZoneID", "UTC"));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "clusterName":
+        case "uris":
+        case "configs":
+        case "timeDriver":
+        case "timeZoneID":
+        case "indexTemplate":
+        case "typeTemplate":
+        case "docIdTemplate":
+        case "charset":
+          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + config.getName(), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        default:
+          // no op
+      }
+    }
+    configs.addAll(configsToAdd);
+    configs.removeAll(configsToRemove);
   }
 
 }
