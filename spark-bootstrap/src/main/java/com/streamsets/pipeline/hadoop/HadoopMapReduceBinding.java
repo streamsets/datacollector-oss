@@ -70,7 +70,7 @@ public class HadoopMapReduceBinding implements ClusterBinding {
     String javaOpts = remainingArgs[1];
     try (InputStream in = new FileInputStream(propertiesFile)) {
       properties.load(in);
-      String dataFormat = getProperty("dataFormat");
+      String dataFormat = getProperty("clusterHDFSConfigBean.dataFormat");
       String source = this.getClass().getSimpleName();
       for (Object key : properties.keySet()) {
         String realKey = String.valueOf(key);
@@ -80,14 +80,14 @@ public class HadoopMapReduceBinding implements ClusterBinding {
       conf.set("mapred.child.java.opts", javaOpts);
       conf.setBoolean("mapreduce.map.speculative", false);
       conf.setBoolean("mapreduce.reduce.speculative", false);
-      if (dataFormat.equalsIgnoreCase("AVRO")) {
+      if ("AVRO".equalsIgnoreCase(dataFormat)) {
         conf.set(Job.INPUT_FORMAT_CLASS_ATTR, "org.apache.avro.mapreduce.AvroKeyInputFormat");
         conf.set(Job.MAP_OUTPUT_KEY_CLASS, "org.apache.avro.mapred.AvroKey");
       }
       job = Job.getInstance(conf, "StreamSets Data Collector - Batch Execution Mode");
       job.setJarByClass(this.getClass());
       job.setNumReduceTasks(0);
-      if (!dataFormat.equalsIgnoreCase("AVRO")) {
+      if (!"AVRO".equalsIgnoreCase(dataFormat)) {
         job.setOutputKeyClass(NullWritable.class);
       }
       job.setMapperClass(PipelineMapper.class);
