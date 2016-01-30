@@ -21,6 +21,7 @@
 package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -47,9 +48,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class HttpClientSource extends BaseSource implements OffsetCommitter {
+  private static final Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
   private static final int SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS = 100;
-  private final static Logger LOG = LoggerFactory.getLogger(HttpClientSource.class);
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
+
   public static final String BASIC_CONFIG_PREFIX = "conf.basic.";
 
   private final HttpClientConfigBean conf;
@@ -121,13 +123,10 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     if (httpConsumer != null) {
       httpConsumer.stop();
       httpConsumer = null;
-      switch (conf.httpMode) {
-        case STREAMING:
-          executorService.shutdownNow();
-          break;
-        case POLLING:
-          safeExecutor.shutdownNow();
-          break;
+      if (conf.httpMode == HttpClientMode.STREAMING) {
+        executorService.shutdownNow();
+      } else if (conf.httpMode == HttpClientMode.POLLING) {
+        safeExecutor.shutdownNow();
       }
     }
     super.destroy();
@@ -146,6 +145,11 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
     }
 
     List<String> chunks = new ArrayList<>(chunksToFetch);
+
+    // We didn't receive any new data within the time allotted for this batch.
+    if (entityQueue.isEmpty()) {
+      return getOffset();
+    }
     entityQueue.drainTo(chunks, chunksToFetch);
 
     Response.StatusType lastResponseStatus = httpConsumer.getLastResponseStatus();
@@ -153,69 +157,55 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       for (String chunk : chunks) {
         String sourceId = getOffset();
         try (DataParser parser = parserFactory.getParser(sourceId, chunk.getBytes(StandardCharsets.UTF_8))) {
-          if (conf.dataFormat == DataFormat.JSON) {
-            // For json, a chunk only contains a single record, so we only parse it once.
-            Record record = parser.parse();
-            if (record != null) {
-              batchMaker.addRecord(record);
-              recordCount++;
-            }
-            if (null != parser.parse()) {
-              throw new DataParserException(Errors.HTTP_02);
-            }
-          } else {
-            // For text and xml, a chunk may contain multiple records.
-            Record record = parser.parse();
-            while (record != null) {
-              batchMaker.addRecord(record);
-              recordCount++;
-              record = parser.parse();
-            }
-          }
-        } catch (IOException | DataParserException ex) {
-          switch (getContext().getOnErrorRecord()) {
-            case DISCARD:
-              break;
-            case TO_ERROR:
-              getContext().reportError(Errors.HTTP_00, sourceId, ex.toString(), ex);
-              break;
-            case STOP_PIPELINE:
-              if (ex instanceof StageException) {
-                throw (StageException) ex;
-              } else {
-                throw new StageException(Errors.HTTP_00, sourceId, ex.toString(), ex);
-              }
-            default:
-              throw new IllegalStateException
-                  (Utils.format("Unknown OnError value '{}'",
-                  getContext().getOnErrorRecord(), ex)
-              );
-          }
-
+          parseChunk(parser, batchMaker);
+        } catch (IOException | DataParserException e) {
+          handleError(Errors.HTTP_00, sourceId, e.toString(), e);
         }
       }
     } else {
       // If http response status != 2xx
-      switch (getContext().getOnErrorRecord()) {
-        case DISCARD:
-          break;
-        case TO_ERROR:
-          getContext().reportError(
-              Errors.HTTP_01,
-              lastResponseStatus.getStatusCode(),
-              lastResponseStatus.getReasonPhrase()
-          );
-          break;
-        case STOP_PIPELINE:
-          throw new StageException(
-              Errors.HTTP_01,
-              lastResponseStatus.getStatusCode(),
-              lastResponseStatus.getReasonPhrase()
-          );
-      }
+      handleError(Errors.HTTP_01, lastResponseStatus.getStatusCode(), lastResponseStatus.getReasonPhrase());
     }
 
     return getOffset();
+  }
+
+  private void parseChunk(DataParser parser, BatchMaker batchMaker) throws IOException, DataParserException {
+    if (conf.dataFormat == DataFormat.JSON) {
+      // For JSON, a chunk only contains a single record, so we only parse it once.
+      Record record = parser.parse();
+      if (record != null) {
+        batchMaker.addRecord(record);
+        recordCount++;
+      }
+      if (null != parser.parse()) {
+        throw new DataParserException(Errors.HTTP_02);
+      }
+    } else {
+      // For text and xml, a chunk may contain multiple records.
+      Record record = parser.parse();
+      while (record != null) {
+        batchMaker.addRecord(record);
+        recordCount++;
+        record = parser.parse();
+      }
+    }
+  }
+
+  private void handleError(ErrorCode errorCode, Object... context) throws StageException {
+    switch (getContext().getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        getContext().reportError(errorCode, context);
+        break;
+      case STOP_PIPELINE:
+        throw new StageException(errorCode, context);
+      default:
+        throw new IllegalStateException(
+            Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord())
+        );
+    }
   }
 
   private String getOffset() {
