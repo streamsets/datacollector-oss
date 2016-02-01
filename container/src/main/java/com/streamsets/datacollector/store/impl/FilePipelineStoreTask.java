@@ -218,7 +218,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public List<PipelineInfo> getPipelines() throws PipelineStoreException {
     List<PipelineInfo> pipelineInfoList = new ArrayList<PipelineInfo>();
-    for (String name : storeDir.list(new FilenameFilter() {
+    String[] filenames = storeDir.list(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
         // If one browses to the pipelines directory, mac creates a ".DS_store directory and this causes us problems
@@ -226,7 +226,13 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         return !name.startsWith(".");
       }
 
-    })) {
+    });
+    // filenames can be null if storeDir is not actually a directory.
+    if (filenames == null) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0213, storeDir.getPath());
+    }
+
+    for (String name : filenames) {
       PipelineInfoJson pipelineInfoJsonBean;
       try {
         pipelineInfoJsonBean = json.readValue(getInfoFile(name), PipelineInfoJson.class);

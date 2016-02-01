@@ -99,6 +99,7 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0211("Pipeline state doesn't exist for pipeline '{}::{}' in execution mode: '{}'"),
   CONTAINER_0212("Cannot save state of pipeline '{}::{}' in execution mode: '{}' as there is already an existing"
     + "pipeline '{}::{}'"),
+  CONTAINER_0213("{} is a file not a directory, and can't be used as the pipeline store directory!"),
 
   //Previewr
   CONTAINER_0250("Cannot create previewer: '{}'"),
