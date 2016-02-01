@@ -36,7 +36,7 @@ import org.apache.kafka.common.errors.WakeupException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +100,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     createConsumer();
     try {
       kafkaConsumer.partitionsFor(topic);
-    } catch (WakeupException | AuthorizationException e) {
+    } catch (WakeupException | AuthorizationException e) { // NOSONAR
       issues.add(context.createConfigIssue(null, null, KafkaErrors.KAFKA_10, e.toString()));
     }
   }
@@ -166,7 +166,9 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
 
   private void updateEntry(ConsumerRecord<String, byte[]> next) {
     TopicPartition topicPartition = new TopicPartition(topic, next.partition());
-    OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(next.offset());
+    // The committed offset should always be the offset of the next message that we will read.
+    // http://www.confluent.io/blog/tutorial-getting-started-with-the-new-apache-kafka-0.9-consumer-client
+    OffsetAndMetadata offsetAndMetadata = new OffsetAndMetadata(next.offset() + 1);
     topicPartitionToOffsetMetadataMap.put(topicPartition, offsetAndMetadata);
   }
 
@@ -180,7 +182,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     configureKafkaProperties(kafkaConsumerProperties);
     LOG.debug("Creating Kafka Consumer with properties {}" , kafkaConsumerProperties.toString());
     kafkaConsumer = new KafkaConsumer<>(kafkaConsumerProperties);
-    kafkaConsumer.subscribe(Arrays.asList(topic));
+    kafkaConsumer.subscribe(Collections.singletonList(topic));
   }
 
   private void configureKafkaProperties(Properties props) {
@@ -237,10 +239,7 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
            poll = consumer.poll(CONSUMER_POLLING_WINDOW_MS);
         }
         for(ConsumerRecord<String, byte[]> r : poll) {
-          try {
-            blockingQueue.put(r);
-          } catch (InterruptedException e) {
-            LOG.error("Failed to poll KafkaConsumer, reason : {}", e.toString(), e);
+          if (!putConsumerRecord(r)) {
             return;
           }
         }
@@ -256,6 +255,17 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
     public void shutdown() {
       closed.set(true);
       consumer.wakeup();
+    }
+
+    private boolean putConsumerRecord(ConsumerRecord<String, byte[]> record) {
+      boolean succeeded = false;
+      try {
+        blockingQueue.put(record);
+        succeeded = true;
+      } catch (InterruptedException e) {
+        LOG.error("Failed to poll KafkaConsumer, reason : {}", e.toString(), e);
+      }
+      return succeeded;
     }
   }
 
