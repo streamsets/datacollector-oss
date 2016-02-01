@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class KafkaConsumer09 implements SdcKafkaConsumer {
 
   private static final boolean AUTO_COMMIT_ENABLED_DEFAULT = false;
-  private static final String AUTO_OFFSET_RESET_KEY = "auto.reset.offset";
+  private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
   private static final String AUTO_OFFSET_RESET_PREVIEW = "earliest";
   private static final String KEY_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringDeserializer";
   private static final String VALUE_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArrayDeserializer";
@@ -69,9 +69,9 @@ public class KafkaConsumer09 implements SdcKafkaConsumer {
   // runnable that polls the kafka topic for records and populates the blocking queue
   private KafkaConsumerRunner kafkaConsumerRunner;
   // map holding required information to commit offset
-  private Map<TopicPartition, OffsetAndMetadata> topicPartitionToOffsetMetadataMap;
+  private final Map<TopicPartition, OffsetAndMetadata> topicPartitionToOffsetMetadataMap;
   // mutex to ensure poll and commit are never called concurrently
-  private Object pollCommitMutex;
+  private final Object pollCommitMutex;
 
   private boolean isInited = false;
 
