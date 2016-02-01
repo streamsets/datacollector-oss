@@ -12,12 +12,22 @@
     "group": "sdc",
     "principal": "sdc"
   },
-  "kerberos": "true",
+  "kerberos": "${kerberos.client.enabled}",
   "parcel": {
     "repoUrl": "https://archives.streamsets.com/datacollector/latest/parcel/",
     "requiredTags": ["streamsets"]
   },
   "icon": "images/streamsets.png",
+  "parameters" : [
+    {
+      "name" : "kerberos.client.enabled",
+      "label" : "Enable Kerberos Client",
+      "description" : "Runs the Data Collector within a Kerberos session which is propagated to all stagelibs",
+      "required" : "true",
+      "type" : "boolean",
+      "default" : "false"
+    }
+  ],
   "roles": [
     {
       "name": "DATACOLLECTOR",
@@ -223,13 +233,6 @@
           "name": "http.realm.file.permission.check",
           "label": "HTTP Realm File Permission Check",
           "description": "Validate that the permissions of the realm file are owner-readable only",
-          "type": "boolean",
-          "default": "false"
-        },
-        {
-          "name": "kerberos.client.enabled",
-          "label": "Enable Kerberos Client",
-          "description": "Runs the Data Collector within a Kerberos session which is propagated to all stagelibs",
           "type": "boolean",
           "default": "false"
         },
