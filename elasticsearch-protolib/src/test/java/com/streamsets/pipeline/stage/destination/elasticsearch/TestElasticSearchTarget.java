@@ -111,6 +111,8 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:valxue('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
 
     Target target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -130,6 +132,8 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
 
     target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -146,6 +150,8 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
 
     target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -170,6 +176,8 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
 
     return new ElasticSearchTarget(conf);
   }
@@ -328,6 +336,8 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
 
     ElasticSearchTarget target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -415,6 +425,51 @@ public class TestElasticSearchTarget {
     } finally {
       runner.runDestroy();
     }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testInvalidUrisAndShieldUser() throws Exception {
+    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    conf.clusterName = esName;
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${YYYY()}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
+
+    // Invalid url
+    conf.uris = ImmutableList.of("127.0.0.1:" + "NOT_A_NUMBER");
+
+    ElasticSearchTarget target = new ElasticSearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
+
+    // Invalid port number
+    conf.uris = ImmutableList.of("127.0.0.1:" + Integer.MAX_VALUE);
+
+    target = new ElasticSearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_10.name()));
+
+    // Invalid shield user
+    conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.useShield = true;
+    conf.shieldConfigBean.shieldUser = "INVALID_SHIELD_USER";
+
+    target = new ElasticSearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
   }
 
 }

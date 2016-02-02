@@ -56,9 +56,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ElasticSearchTarget extends BaseTarget {
 
+  private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
+  private static final Pattern SHIELD_USER_PATTERN = Pattern.compile("\\S+:\\S+");
   private final ElasticSearchConfigBean conf;
   private ELEval timeDriverEval;
   private TimeZone timeZone;
@@ -108,7 +112,7 @@ public class ElasticSearchTarget extends BaseTarget {
       issues.add(getContext().createConfigIssue(
           Groups.ELASTIC_SEARCH.name(),
           "timeDriverEval",
-          Errors.ELASTICSEARCH_13,
+          Errors.ELASTICSEARCH_18,
           ex.toString(),
           ex
       ));
@@ -163,26 +167,72 @@ public class ElasticSearchTarget extends BaseTarget {
       );
     } else {
       for (String uri : conf.uris) {
-        if (!uri.contains(":")) {
+        Matcher matcher = URI_PATTERN.matcher(uri);
+        if (!matcher.matches()) {
           clusterInfo = false;
           issues.add(
               getContext().createConfigIssue(
                   Groups.ELASTIC_SEARCH.name(),
                   ElasticSearchConfigBean.CONF_PREFIX + "uris",
-                  Errors.ELASTICSEARCH_09, uri
+                  Errors.ELASTICSEARCH_09,
+                  uri
               )
           );
+        } else {
+          int port = Integer.valueOf(matcher.group(1));
+          if (port < 0 || port > 65535) {
+            clusterInfo = false;
+            issues.add(
+                getContext().createConfigIssue(
+                    Groups.ELASTIC_SEARCH.name(),
+                    ElasticSearchConfigBean.CONF_PREFIX + "uris",
+                    Errors.ELASTICSEARCH_10,
+                    port
+                )
+            );
+          }
         }
+      }
+    }
+
+    if (conf.useShield) {
+      if (!SHIELD_USER_PATTERN.matcher(conf.shieldConfigBean.shieldUser).matches()) {
+        clusterInfo = false;
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.SHIELD.name(),
+                ShieldConfigBean.CONF_PREFIX + "shieldUser",
+                Errors.ELASTICSEARCH_20,
+                conf.shieldConfigBean.shieldUser
+            )
+        );
       }
     }
 
     if (clusterInfo) {
       try {
-        elasticClient = ElasticSearchFactory.client(conf.clusterName, conf.uris, conf.configs);
+        elasticClient = ElasticSearchFactory.client(
+            conf.clusterName,
+            conf.uris,
+            conf.configs,
+            conf.useShield,
+            conf.shieldConfigBean.shieldUser,
+            conf.shieldConfigBean.shieldTransportSsl,
+            conf.shieldConfigBean.sslKeystorePath,
+            conf.shieldConfigBean.sslKeystorePassword,
+            conf.useFound
+        );
         elasticClient.admin().cluster().health(new ClusterHealthRequest());
       } catch (RuntimeException|UnknownHostException ex) {
-        issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), null, Errors.ELASTICSEARCH_08,
-                                                  ex.toString(), ex));
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.ELASTIC_SEARCH.name(),
+                null,
+                Errors.ELASTICSEARCH_08,
+                ex.toString(),
+                ex
+            )
+        );
       }
     }
 
@@ -262,7 +312,7 @@ public class ElasticSearchTarget extends BaseTarget {
             getContext().toError(record, ex);
             break;
           case STOP_PIPELINE:
-            throw new StageException(Errors.ELASTICSEARCH_10, record.getHeader().getSourceId(), ex.toString(), ex);
+            throw new StageException(Errors.ELASTICSEARCH_15, record.getHeader().getSourceId(), ex.toString(), ex);
           default:
             throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                          getContext().getOnErrorRecord(), ex));
@@ -279,7 +329,7 @@ public class ElasticSearchTarget extends BaseTarget {
             for (BulkItemResponse item : bulkResponse.getItems()) {
               if (item.isFailed()) {
                 Record record = records.get(item.getItemId());
-                getContext().toError(record, Errors.ELASTICSEARCH_11, item.getFailureMessage());
+                getContext().toError(record, Errors.ELASTICSEARCH_16, item.getFailureMessage());
               }
             }
             break;
@@ -288,7 +338,7 @@ public class ElasticSearchTarget extends BaseTarget {
             if (msg != null && msg.length() > 100) {
               msg = msg.substring(0, 100) + " ...";
             }
-            throw new StageException(Errors.ELASTICSEARCH_12, msg);
+            throw new StageException(Errors.ELASTICSEARCH_17, msg);
           default:
             throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
                                                          getContext().getOnErrorRecord()));

@@ -34,13 +34,15 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_07("At least one URI must be provided"),
   ELASTICSEARCH_08("Could not connect to the cluster: {}"),
   ELASTICSEARCH_09("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
+  ELASTICSEARCH_10("Port value out of range: '{}'"),
 
-  ELASTICSEARCH_10("Could not write record '{}': {}"),
-  ELASTICSEARCH_11("Could not index record '{}': {}"),
-  ELASTICSEARCH_12("Could not index '{}' records: {}"),
+  ELASTICSEARCH_15("Could not write record '{}': {}"),
+  ELASTICSEARCH_16("Could not index record '{}': {}"),
+  ELASTICSEARCH_17("Could not index '{}' records: {}"),
 
-  ELASTICSEARCH_13("Could not evaluate the time driver expression: {}"),
+  ELASTICSEARCH_18("Could not evaluate the time driver expression: {}"),
 
+  ELASTICSEARCH_20("Invalid Shield user, it must be <USERNAME>:<PASSWORD>: '{}'"),
   ;
   private final String msg;
 
