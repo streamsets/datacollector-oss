@@ -475,6 +475,26 @@ public class TestWebServerTaskHttpHttps {
     }
   }
 
+  @Test
+  public void testKeystoreAbsolutePath() {
+    Configuration conf = new Configuration();
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "/tmp/absolute/sdc-keystore.jks");
+    File keystore = WebServerTask.getHttpsKeystore(conf, "/tmp/config");
+    String absolutePath = keystore.getAbsolutePath();
+
+    Assert.assertEquals("/tmp/absolute/sdc-keystore.jks", absolutePath);
+  }
+
+  @Test
+  public void testKeystoreRelativePath() {
+    Configuration conf = new Configuration();
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
+    File keystore = WebServerTask.getHttpsKeystore(conf, "/tmp/config");
+    String absolutePath = keystore.getAbsolutePath();
+
+    Assert.assertEquals("/tmp/config/sdc-keystore.jks", absolutePath);
+  }
+
   private URLConnection openWithBasicAuth(URL url) throws Exception {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     byte[] authEncBytes = Base64.encodeBase64("admin:admin".getBytes());
