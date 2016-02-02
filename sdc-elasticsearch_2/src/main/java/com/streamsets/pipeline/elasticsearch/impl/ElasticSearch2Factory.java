@@ -24,6 +24,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.shield.ShieldPlugin;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -33,15 +34,50 @@ import java.util.Map;
 public class ElasticSearch2Factory extends ElasticSearchFactory {
 
   @Override
-  public Client createClient(String clusterName, List<String> uris, Map<String, String> configs) throws UnknownHostException {
-    Settings settings = Settings.settingsBuilder().put("cluster.name", clusterName).put(configs).build();
+  public Client createClient(
+      String clusterName,
+      List<String> uris,
+      Map<String, String> configs,
+      boolean useShield,
+      String shieldUser,
+      boolean shieldTransportSsl,
+      String sslKeystorePath,
+      String sslKeystorePassword,
+      boolean useFound
+  ) throws UnknownHostException {
+    Settings.Builder settingsBuilder = Settings.settingsBuilder()
+        .put("cluster.name", clusterName)
+        .put(configs);
+
+    if (useShield) {
+      settingsBuilder = settingsBuilder
+          .put("shield.user", shieldUser)
+          .put("shield.transport.ssl", shieldTransportSsl);
+      if (sslKeystorePath != null && !sslKeystorePath.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.path", sslKeystorePath);
+      }
+      if (sslKeystorePassword != null && !sslKeystorePassword.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.password", sslKeystorePassword);
+      }
+    }
+    if (useFound) {
+      settingsBuilder = settingsBuilder
+          .put("action.bulk.compress", false) // To use Found, action.bulk.compress must be disabled
+          .put("request.headers.X-Found-Cluster", clusterName);
+    }
+
+    Settings settings = settingsBuilder.build();
     InetSocketTransportAddress[] elasticAddresses = new InetSocketTransportAddress[uris.size()];
     for (int i = 0; i < uris.size(); i++) {
       String uri = uris.get(i);
       String[] parts = uri.split(":");
       elasticAddresses[i] = new InetSocketTransportAddress(InetAddress.getByName(parts[0]), Integer.parseInt(parts[1]));
     }
-    return TransportClient.builder().settings(settings).build().addTransportAddresses(elasticAddresses);
+    TransportClient.Builder clientBuilder = TransportClient.builder().settings(settings);
+    if (useShield) {
+      clientBuilder = clientBuilder.addPlugin(ShieldPlugin.class);
+    }
+    return clientBuilder.build().addTransportAddresses(elasticAddresses);
   }
 
   @Override

@@ -34,8 +34,34 @@ import java.util.Map;
 public class ElasticSearch1Factory extends ElasticSearchFactory {
 
   @Override
-  public Client createClient(String clusterName, List<String> uris, Map<String, String> configs) throws UnknownHostException {
-    Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", clusterName).put(configs).build();
+  public Client createClient(
+      String clusterName,
+      List<String> uris,
+      Map<String, String> configs,
+      boolean useShield,
+      String shieldUser,
+      boolean shieldTransportSsl,
+      String sslKeystorePath,
+      String sslKeystorePassword,
+      boolean useFound
+  ) throws UnknownHostException {
+    ImmutableSettings.Builder settingsBuilder = ImmutableSettings.settingsBuilder()
+        .put("cluster.name", clusterName)
+        .put(configs);
+
+    if (useShield) {
+      settingsBuilder = settingsBuilder
+          .put("shield.user", shieldUser)
+          .put("shield.transport.ssl", shieldTransportSsl);
+      if (sslKeystorePath != null && !sslKeystorePath.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.path", sslKeystorePath);
+      }
+      if (sslKeystorePassword != null && !sslKeystorePassword.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.keystore.password", sslKeystorePassword);
+      }
+    }
+
+    Settings settings = settingsBuilder.build();
     InetSocketTransportAddress[] elasticAddresses = new InetSocketTransportAddress[uris.size()];
     for (int i = 0; i < uris.size(); i++) {
       String uri = uris.get(i);

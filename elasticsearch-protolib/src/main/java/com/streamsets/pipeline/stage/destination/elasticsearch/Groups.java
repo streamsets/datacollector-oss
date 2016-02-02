@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   ELASTIC_SEARCH("Elasticsearch"),
-
+  SHIELD("Shield"),
   ;
 
   private final String label;

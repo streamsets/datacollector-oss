@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.elasticsearch;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.CharsetChooserValues;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
@@ -34,6 +35,9 @@ import java.util.Map;
 public class ElasticSearchConfigBean {
 
   public static final String CONF_PREFIX = "elasticSearchConfigBean.";
+
+  @ConfigDefBean
+  public ShieldConfigBean shieldConfigBean;
 
   @ConfigDef(
       required = true,
@@ -58,9 +62,31 @@ public class ElasticSearchConfigBean {
   public List<String> uris;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Shield",
+      defaultValue = "false",
+      description = "Use Shield",
+      displayPosition = 21,
+      group = "ELASTIC_SEARCH"
+  )
+  public boolean useShield;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Elastic Found Cluster",
+      defaultValue = "false",
+      description = "Select this option when connecting to an Elastic Found hosted cluster",
+      displayPosition = 22,
+      group = "ELASTIC_SEARCH"
+  )
+  public boolean useFound;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
-      defaultValue = "{ \"client.transport.sniff\" : \"true\" }",
+      defaultValue = "{ \"client.transport.sniff\" : \"false\" }",
       label = "Additional Configuration",
       description = "Additional Elasticsearch client configuration properties",
       displayPosition = 30,

@@ -32,7 +32,18 @@ public abstract class ElasticSearchFactory {
   private static ServiceLoader<ElasticSearchFactory> factoriesLoader = ServiceLoader.load(ElasticSearchFactory.class);
   private static ElasticSearchFactory factory;
 
-  public abstract Client createClient(String clusterName, List<String> uris, Map<String, String> configs) throws UnknownHostException;
+  public abstract Client createClient(
+      String clusterName,
+      List<String> uris,
+      Map<String, String> configs,
+      boolean useShield,
+      String shieldUser,
+      boolean shieldTransportSsl,
+      String sslKeystorePath,
+      String sslKeystorePassword,
+      boolean useFound
+  ) throws UnknownHostException;
+
   public abstract Settings createSettings(Map<String, Object> configs);
 
   static {
@@ -49,8 +60,28 @@ public abstract class ElasticSearchFactory {
     }
   }
 
-  public static Client client(String clusterName, List<String> uris, Map<String, String> configs) throws UnknownHostException {
-    return factory.createClient(clusterName, uris, configs);
+  public static Client client(
+      String clusterName,
+      List<String> uris,
+      Map<String, String> configs,
+      boolean useShield,
+      String shieldUser,
+      boolean shieldTransportSsl,
+      String sslKeystorePath,
+      String sslKeystorePassword,
+      boolean useFound
+  ) throws UnknownHostException {
+    return factory.createClient(
+        clusterName,
+        uris,
+        configs,
+        useShield,
+        shieldUser,
+        shieldTransportSsl,
+        sslKeystorePath,
+        sslKeystorePassword,
+        useFound
+    );
   }
 
   public static Settings settings(Map<String, Object> configs) {
