@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -71,6 +72,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
 import java.util.HashMap;
@@ -392,8 +394,9 @@ public class WebServerTask extends AbstractTask {
       return new Server(port);
     } else {
       port = conf.get(HTTPS_PORT_KEY, HTTPS_PORT_DEFAULT);
-      File keyStore = new File(runtimeInfo.getConfigDir(),
-                               conf.get(HTTPS_KEYSTORE_PATH_KEY, HTTPS_KEYSTORE_PATH_DEFAULT)).getAbsoluteFile();
+
+      File keyStore = getHttpsKeystore(conf, runtimeInfo.getConfigDir());
+
       if (!keyStore.exists()) {
         throw new RuntimeException(Utils.format("KeyStore file '{}' does not exist", keyStore.getPath()));
       }
@@ -413,6 +416,16 @@ public class WebServerTask extends AbstractTask {
       server.setConnectors(new Connector[]{httpsConnector});
     }
     return server;
+  }
+
+  @VisibleForTesting
+  static File getHttpsKeystore(Configuration conf, String configDir) {
+    final String httpsKeystorePath = conf.get(HTTPS_KEYSTORE_PATH_KEY, HTTPS_KEYSTORE_PATH_DEFAULT);
+    if (Paths.get(httpsKeystorePath).isAbsolute()) {
+      return new File(httpsKeystorePath).getAbsoluteFile();
+    } else {
+      return new File(configDir, httpsKeystorePath).getAbsoluteFile();
+    }
   }
 
   private Server createRedirectorServer() {
