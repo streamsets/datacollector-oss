@@ -25,16 +25,16 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-elasticsearch_2_0-lib</artifactId>
+  <artifactId>streamsets-datacollector-elasticsearch_2_2-lib</artifactId>
   <version>1.2.0.1</version>
-  <description>StreamSets Data Collector Elastic Search 2.0.2 Lib</description>
-  <name>StreamSets Data Collector Elastic Search 2.0.2 Lib</name>
+  <description>StreamSets Data Collector Elastic Search 2.2.0 Lib</description>
+  <name>StreamSets Data Collector Elastic Search 2.2.0 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>2.0.2</elasticsearch.version>
-    <shield.version>2.0.2</shield.version>
-    <jackson.version>2.5.3</jackson.version>
+    <elasticsearch.version>2.2.0</elasticsearch.version>
+    <shield.version>2.2.0</shield.version>
+    <jackson.version>2.6.2</jackson.version>
   </properties>
 
   <dependencies>
@@ -63,12 +63,12 @@
       <artifactId>metrics-core</artifactId>
       <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
