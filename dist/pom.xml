@@ -281,6 +281,11 @@
         </dependency>
         <dependency>
           <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-elasticsearch_2_2-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-aws-lib</artifactId>
           <scope>provided</scope>
         </dependency>

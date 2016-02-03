@@ -27,13 +27,13 @@
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-elasticsearch_2_0-lib</artifactId>
   <version>1.2.1.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Elastic Search 2.0.0 Lib</description>
-  <name>StreamSets Data Collector Elastic Search 2.0.0 Lib</name>
+  <description>StreamSets Data Collector Elastic Search 2.0.2 Lib</description>
+  <name>StreamSets Data Collector Elastic Search 2.0.2 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <elasticsearch.version>2.0.0</elasticsearch.version>
-    <shield.version>2.1.1</shield.version>
+    <elasticsearch.version>2.0.2</elasticsearch.version>
+    <shield.version>2.0.2</shield.version>
     <jackson.version>2.5.3</jackson.version>
   </properties>
 
@@ -194,5 +194,18 @@
       </build>
     </profile>
   </profiles>
+
+  <repositories>
+    <repository>
+      <id>elasticsearch-releases</id>
+      <url>http://maven.elasticsearch.org/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
 </project>
