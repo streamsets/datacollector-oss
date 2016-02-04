@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Label;
 import org.apache.hadoop.io.compress.BZip2Codec;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.GzipCodec;
+import org.apache.hadoop.io.compress.Lz4Codec;
 import org.apache.hadoop.io.compress.SnappyCodec;
 
 @GenerateResourceBundle
@@ -32,6 +33,7 @@ public enum CompressionMode implements Label {
   GZIP("Gzip", GzipCodec.class),
   BZIP2("Bzip2", BZip2Codec.class),
   SNAPPY("Snappy", SnappyCodec.class),
+  LZ4("LZ4", Lz4Codec.class),
   OTHER("Other...", null),
 
   ;
