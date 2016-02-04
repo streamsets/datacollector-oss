@@ -90,7 +90,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     } else {
       List<PartitionInfo> partitionInfos;
       try {
-        if(producer) {
+        if (producer) {
           KafkaProducer<String, String> kafkaProducer = createProducerTopicMetadataClient(
               metadataBrokerList,
               kafkaClientConfigs
@@ -103,7 +103,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
           );
           partitionInfos = kafkaConsumer.partitionsFor(topic);
         }
-        if(null == partitionInfos || partitionInfos.isEmpty()) {
+        if (null == partitionInfos || partitionInfos.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   groupName,
@@ -116,8 +116,8 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
           valid = false;
         }
       } catch (KafkaException e) {
-        LOG.error(Utils.format(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList));
-        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList));
+        LOG.error(Utils.format(KafkaErrors.KAFKA_68.getMessage(), topic, metadataBrokerList, e.getMessage()));
+        issues.add(context.createConfigIssue(groupName, configName, KafkaErrors.KAFKA_68, topic, metadataBrokerList, e.getMessage()));
         valid = false;
       }
     }
