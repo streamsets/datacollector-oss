@@ -115,9 +115,11 @@ public class JdbcDTarget extends DTarget {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "-1",
-      label = "Prepared Statement Parameter Limit for Multi-Row Insert",
+      label = "Statement Parameter Limit",
       description = "The maximum number of prepared statement parameters allowed in each batch insert statement when " +
-          "using Multi-Row Inserts. Set to -1 to disable limit.",
+          "using multi-row inserts. Set to -1 to disable limit.",
+      dependsOn = "useMultiRowInsert",
+      triggeredByValue = "true",
       displayPosition = 60,
       group = "JDBC"
   )
