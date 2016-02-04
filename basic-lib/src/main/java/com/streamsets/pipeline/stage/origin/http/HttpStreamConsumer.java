@@ -93,7 +93,7 @@ class HttpStreamConsumer implements Runnable {
         .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, authToken)
         .async();
     final Future<Response> responseFuture;
-    if (conf.requestData != null && !conf.requestData.isEmpty()) {
+    if (conf.requestData != null && !conf.requestData.isEmpty() && conf.httpMethod != HttpMethod.GET) {
       responseFuture = asyncInvoker.method(conf.httpMethod.getLabel(), Entity.json(conf.requestData));
     } else {
       responseFuture = asyncInvoker.method(conf.httpMethod.getLabel());
