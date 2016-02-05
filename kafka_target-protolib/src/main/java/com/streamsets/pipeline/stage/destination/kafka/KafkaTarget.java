@@ -28,6 +28,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.exception.KafkaConnectionException;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class KafkaTarget extends BaseTarget {
 
@@ -144,31 +146,43 @@ public class KafkaTarget extends BaseTarget {
               //clear the message list
               kafkaProducer.clearMessages();
               String sourceId = (currentRecord == null) ? "<NONE>" : currentRecord.getHeader().getSourceId();
-              switch (getContext().getOnErrorRecord()) {
-                case DISCARD:
-                  LOG.warn("Could not serialize record '{}', all records from batch '{}' for partition '{}' are " +
-                    "discarded, error: {}", sourceId, batch.getSourceOffset(), partition, ex.toString(), ex);
-                  break;
-                case TO_ERROR:
-                  for (Record record : list) {
-                    getContext().toError(record, KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
-                      ex.toString(), ex);
-                  }
-                  break;
-                case STOP_PIPELINE:
-                  throw new StageException(KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(),
-                    ex);
-                default:
-                  throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                    getContext().getOnErrorRecord()));
+              handleErrorRecords(list, sourceId, batch, partition, ex);
+            }
+            try {
+              kafkaProducer.write();
+            } catch (StageException ex) {
+              if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
+                List<Exception> failedRecordException = (List<Exception>) ex.getParams()[1];
+                handleErrorRecords(list, "<NONE>", batch, partition, failedRecordException.get(0));
+              } else {
+                throw ex;
               }
             }
-            kafkaProducer.write();
             recordCounter += count;
             LOG.debug("Wrote {} records in this batch.", count);
           }
         }
       }
+    }
+  }
+
+  private void handleErrorRecords(List<Record> list, String sourceId, Batch batch, String partition, Exception ex)
+    throws StageException {
+    switch (getContext().getOnErrorRecord()) {
+      case DISCARD:
+        LOG.warn("All records from batch '{}' for partition '{}' are " + "discarded, error: {}",
+          batch.getSourceOffset(), partition, ex.toString(), ex);
+        break;
+      case TO_ERROR:
+        for (Record record : list) {
+          getContext().toError(record, KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition,
+            ex.toString(), ex);
+        }
+        break;
+      case STOP_PIPELINE:
+        throw new StageException(KafkaErrors.KAFKA_60, sourceId, batch.getSourceOffset(), partition, ex.toString(), ex);
+      default:
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord()));
     }
   }
 
@@ -190,32 +204,48 @@ public class KafkaTarget extends BaseTarget {
         kafkaProducer.enqueueMessage(topic, bytes, partitionKey);
         count++;
       } catch (KafkaConnectionException ex) {
-        //Kafka connection exception is thrown when the client cannot connect to the list of brokers
-        //even after retrying with backoff as specified in the retry and backoff config options
-        //In this case we fail pipeline.
+        // Kafka connection exception is thrown when the client cannot connect to the list of brokers
+        // even after retrying with backoff as specified in the retry and backoff config options
+        // In this case we fail pipeline.
         throw ex;
       } catch (IOException | StageException ex) {
-        switch (getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            if (ex instanceof StageException) {
-              throw (StageException) ex;
-            } else {
-              throw new StageException(KafkaErrors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
-            }
-          default:
-            throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                         getContext().getOnErrorRecord()));
-        }
+        handleErrorRecords(record, ex);
       }
     }
-    kafkaProducer.write();
+    try {
+      kafkaProducer.write();
+    } catch (StageException ex) {
+      if (ex.getErrorCode().getCode().equals(KafkaErrors.KAFKA_69.name())) {
+        List<Integer> failedRecordIndices = (List<Integer>) ex.getParams()[0];
+        List<Exception> failedRecordExceptions = (List<Exception>) ex.getParams()[1];
+        for (int i = 0; i < failedRecordIndices.size(); i++) {
+          handleErrorRecords(recordList.get(failedRecordIndices.get(i)), failedRecordExceptions.get(i));
+        }
+      } else {
+        throw ex;
+      }
+    }
     recordCounter += count;
     LOG.debug("Wrote {} records in this batch.", count);
+  }
+
+  private void handleErrorRecords(Record record, Exception ex) throws StageException {
+    switch (getContext().getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        getContext().toError(record, ex);
+        break;
+      case STOP_PIPELINE:
+        if (ex instanceof StageException) {
+          throw (StageException) ex;
+        } else {
+          throw new StageException(KafkaErrors.KAFKA_51, record.getHeader().getSourceId(), ex.toString(), ex);
+        }
+      default:
+        throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
+                                                     getContext().getOnErrorRecord()));
+    }
   }
 
   @Override

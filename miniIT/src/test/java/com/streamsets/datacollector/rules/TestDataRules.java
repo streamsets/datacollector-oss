@@ -24,12 +24,15 @@ import com.streamsets.datacollector.MiniSDC;
 import com.streamsets.datacollector.MiniSDCTestingUtility;
 import com.streamsets.datacollector.util.VerifyUtils;
 import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -42,6 +45,7 @@ import java.util.Map;
 public class TestDataRules {
 
   private static final String TOPIC = "TestKafkaDestinationSinglePartitionPipelineOperations";
+  private static final Logger LOG = LoggerFactory.getLogger(TestDataRules.class);
   private static MiniSDCTestingUtility miniSDCTestingUtility;
   private static URI serverURI;
   private static MiniSDC miniSDC;
@@ -150,13 +154,13 @@ public class TestDataRules {
     Assert.assertTrue(gauges.containsKey(alertId3));
     map = (Map<String, Object>) gauges.get(alertId3).get("value");
     Assert.assertTrue((Integer)map.get("currentValue") >= expectedCountAlert3);
-
     //change rule definitions to a large number before attempting to delete
     ruleDefinitions = ruleDefinitions.replaceAll("\"thresholdValue\" : \"100\"", "\"thresholdValue\" : \"10000000\"");
     ruleDefinitions = ruleDefinitions.replaceAll("\"thresholdValue\" : \"50\"", "\"thresholdValue\" : \"5000000\"");
     ruleDefinitions = ruleDefinitions.replaceAll("\"thresholdValue\" : \"25\"", "\"thresholdValue\" : \"2500000\"");
     ruleDefinitions = miniSDC.createRules(getPipelineName(), getPipelineRev(), ruleDefinitions);
 
+    printGuages(gauges);
     //delete alert and wait until alerts are cleared.
     // It takes about 2 seconds for the rules config loader to load changes to rules.
     boolean alertRemoved = false;
@@ -166,20 +170,24 @@ public class TestDataRules {
       Assert.assertNotNull(gauges);
       alertRemoved = !gauges.containsKey(alertId1);
     }
-
+    printGuages(gauges);
     //changes have been reflected, delete without waiting
     Assert.assertTrue(gauges.containsKey(alertId2));
     Assert.assertTrue(gauges.containsKey(alertId3));
 
+
     VerifyUtils.deleteAlert(serverURI, getPipelineName(), getPipelineRev(), dataRuleId2);
     gauges = VerifyUtils.getGaugesFromMetrics(serverURI, getPipelineName(), getPipelineRev());
+    printGuages(gauges);
     Assert.assertNotNull(gauges);
     Assert.assertFalse(gauges.containsKey(alertId1));
     Assert.assertFalse(gauges.containsKey(alertId2));
     Assert.assertTrue(gauges.containsKey(alertId3));
 
+
     VerifyUtils.deleteAlert(serverURI, getPipelineName(), getPipelineRev(), dataRuleId3);
     gauges = VerifyUtils.getGaugesFromMetrics(serverURI, getPipelineName(), getPipelineRev());
+    printGuages(gauges);
     Assert.assertNotNull(gauges);
     Assert.assertFalse(gauges.containsKey(alertId1));
     Assert.assertFalse(gauges.containsKey(alertId2));
@@ -230,5 +238,15 @@ public class TestDataRules {
     Assert.assertTrue(gauges.containsKey(alertId3));
     map = (Map<String, Object>) gauges.get(alertId3).get("value");
     Assert.assertTrue((Integer)map.get("currentValue") >= expectedCountAlert3);
+  }
+
+  private static void printGuages(Map<String, Map<String, Object>> guages) {
+    LOG.debug("Printing guages");
+    for (Map.Entry<String, Map<String, Object>> mapEntry : guages.entrySet()) {
+      LOG.debug("Entry key " + mapEntry.getKey());
+      for (Map.Entry<String, Object> mapEntryKey : mapEntry.getValue().entrySet()) {
+        LOG.debug("Value pair: " + mapEntryKey.getKey() + ": " + mapEntry.getValue());
+      }
+    }
   }
 }
