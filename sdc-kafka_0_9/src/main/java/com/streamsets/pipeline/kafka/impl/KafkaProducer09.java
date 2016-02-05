@@ -25,10 +25,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.errors.RecordTooLargeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,18 +108,30 @@ public class KafkaProducer09 implements SdcKafkaProducer {
     // force all records in the buffer to be written out
     producer.flush();
     // make sure each record was written and handle exception if any
-    for(Future<RecordMetadata> f : futureList) {
+    List<Integer> failedRecordIndices = new ArrayList<Integer>();
+    List<Exception> failedRecordExceptions = new ArrayList<Exception>();
+    for (int i = 0; i < futureList.size(); i++) {
+      Future<RecordMetadata> f = futureList.get(i);
       try {
         f.get();
       } catch (InterruptedException | ExecutionException e) {
-        // error writing this record to kafka broker.
-        LOG.error(KafkaErrors.KAFKA_50.getMessage(), e.toString(), e);
-        // throwing of this exception results in stopped pipeline as it is not handled by KafkaTarget
-        // Retry feature at the pipeline level will re attempt
-        throw new StageException(KafkaErrors.KAFKA_50, e.toString(), e);
+        Throwable actualCause = e.getCause();
+        if (actualCause != null && actualCause instanceof RecordTooLargeException) {
+          failedRecordIndices.add(i);
+          failedRecordExceptions.add((Exception)actualCause);
+        } else {
+          // error writing this record to kafka broker.
+          LOG.error(KafkaErrors.KAFKA_50.getMessage(), e.toString(), e);
+          // throwing of this exception results in stopped pipeline as it is not handled by KafkaTarget
+          // Retry feature at the pipeline level will re attempt
+          throw new StageException(KafkaErrors.KAFKA_50, e.toString(), e);
+        }
       }
     }
     futureList.clear();
+    if (!failedRecordIndices.isEmpty()) {
+      throw new StageException(KafkaErrors.KAFKA_69, failedRecordIndices, failedRecordExceptions);
+    }
   }
 
   @Override

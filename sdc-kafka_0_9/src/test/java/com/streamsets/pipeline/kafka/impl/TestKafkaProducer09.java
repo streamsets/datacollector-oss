@@ -19,6 +19,9 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
@@ -26,10 +29,13 @@ import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+
 import kafka.admin.AdminUtils;
 import kafka.server.KafkaServer;
 import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -81,6 +87,49 @@ public class TestKafkaProducer09 {
     sdcKafkaProducer.write();
 
     verify(topic, 1, "localhost:" + port, message);
+
+    AdminUtils.deleteTopic(
+      zkUtils,
+      topic
+    );
+
+    kafkaServer.shutdown();
+    zookeeper.shutdown();
+  }
+
+  @Test
+  public void testKafkaProducer09WriteFailsRecordTooLarge() throws IOException, StageException {
+    int zkConnectionTimeout = 6000;
+    int zkSessionTimeout = 6000;
+
+    EmbeddedZookeeper zookeeper = new EmbeddedZookeeper();
+    String zkConnect = String.format("127.0.0.1:%d", zookeeper.port());
+    ZkUtils zkUtils = ZkUtils.apply(
+      zkConnect, zkSessionTimeout, zkConnectionTimeout,
+      JaasUtils.isZkSecurityEnabled());
+
+    int port = TestUtil.getFreePort();
+    KafkaServer kafkaServer = TestUtil.createKafkaServer(port, zkConnect);
+
+    final String topic = "TestKafkaProducer09_1";
+
+    HashMap<String, Object> kafkaProducerConfigs = new HashMap<>();
+    kafkaProducerConfigs.put("retries", 0);
+    kafkaProducerConfigs.put("batch.size", 100);
+    kafkaProducerConfigs.put("linger.ms", 0);
+    // Set the message size to 510 as "message.max.bytes" is set to 500
+    final String message = StringUtils.leftPad("a", 510, "b");
+    SdcKafkaProducer sdcKafkaProducer = createSdcKafkaProducer(port, kafkaProducerConfigs);
+    sdcKafkaProducer.init();
+    sdcKafkaProducer.enqueueMessage(topic, message.getBytes(), "0");
+    try {
+      sdcKafkaProducer.write();
+      fail("Expected exception but didn't get any");
+    } catch (StageException se) {
+      assertEquals(KafkaErrors.KAFKA_69, se.getErrorCode());
+    } catch (Exception e) {
+      fail("Expected Stage Exception but got " + e);
+    }
 
     AdminUtils.deleteTopic(
       zkUtils,

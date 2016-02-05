@@ -61,6 +61,7 @@ public class TestUtil {
       TestUtils.RandomPort());
     props.setProperty("auto.create.topics.enable", String.valueOf(autoCreateTopic));
     props.setProperty("num.partitions", "1");
+    props.setProperty("message.max.bytes", "500");
     return props;
   }
 

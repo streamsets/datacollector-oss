@@ -72,6 +72,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_66("Kafka Producer configuration '{}' must be specified a valid {} value greater than or equal to 0"),
   KAFKA_67("Error connecting to Kafka Brokers '{}'"),
   KAFKA_68("Error getting metadata for topic '{}' from broker '{}' due to error: {}"),
+  KAFKA_69("Message is larger than the maximum allowed size configured in Kafka Broker")
   ;
 
   private final String msg;
