@@ -148,8 +148,9 @@ public class ElasticSearchConfigBean {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Document ID",
-      description = "Typically left empty",
-      displayPosition = 50,
+      description = "An expression which evaluates to a document ID. Required for upserts. Leave blank to use " +
+          "auto-generated IDs.",
+      displayPosition = 60,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, DataUtilEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -161,9 +162,20 @@ public class ElasticSearchConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "UTF-8",
       label = "Data Charset",
-      displayPosition = 55,
+      displayPosition = 70,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Enable Upsert",
+      description = "Select to enable upserts. A Document ID expression is required.",
+      displayPosition = 80,
+      group = "ELASTIC_SEARCH"
+  )
+  public boolean upsert;
 }
