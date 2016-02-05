@@ -618,4 +618,31 @@ public class TestExpressionProcessor {
     }
   }
 
+  @Test
+  public void testPreservesFieldTypeOnNull() throws StageException {
+    ExpressionProcessorConfig expressionProcessorConfig = new ExpressionProcessorConfig();
+    expressionProcessorConfig.expression = "${NULL}";
+    expressionProcessorConfig.fieldToSet = "/a";
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(ExpressionDProcessor.class)
+        .addConfiguration("expressionProcessorConfigs", ImmutableList.of(expressionProcessorConfig))
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("a", Field.create(123));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertEquals(Field.Type.INTEGER, field.getValueAsMap().get("a").getType());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
 }
