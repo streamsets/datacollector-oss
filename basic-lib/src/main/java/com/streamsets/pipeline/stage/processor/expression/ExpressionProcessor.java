@@ -104,7 +104,15 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
         throw new OnRecordErrorException(Errors.EXPR_03, expressionProcessorConfig.expression,
                                          record.getHeader().getSourceId(), e.toString(), e);
       }
-      Field newField = Field.create(getTypeFromObject(result), result);
+
+      Field newField = null;
+      // we want to preserve existing type info if we have it iff the result value is null.
+      if (result == null && record.has(fieldToSet)) {
+        newField = Field.create(record.get(fieldToSet).getType(), null);
+      } else {
+        // otherwise, deduce type from result, even if it's null (which will result in coercion to string)
+        newField = Field.create(getTypeFromObject(result), result);
+      }
 
       if(FieldRegexUtil.hasWildCards(fieldToSet)) {
         for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record.getFieldPaths())) {
