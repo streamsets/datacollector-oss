@@ -111,6 +111,7 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:valxue('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.upsert = false;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -132,6 +133,7 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.upsert = false;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -150,6 +152,7 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "x";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.upsert = false;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -161,11 +164,11 @@ public class TestElasticSearchTarget {
   }
 
   private Target createTarget() {
-    return createTarget("${time:now()}", "${record:value('/index')}");
+    return createTarget("${time:now()}", "${record:value('/index')}", "", false);
   }
 
   @SuppressWarnings("unchecked")
-  private ElasticSearchTarget createTarget(String timeDriver, String indexEL) {
+  private ElasticSearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, boolean upsert) {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
     conf.clusterName = esName;
     conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
@@ -174,8 +177,9 @@ public class TestElasticSearchTarget {
     conf.timeZoneID = "UTC";
     conf.indexTemplate = indexEL;
     conf.typeTemplate = "${record:value('/type')}";
-    conf.docIdTemplate = "";
+    conf.docIdTemplate = docIdEL;
     conf.charset = "UTF-8";
+    conf.upsert = upsert;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -336,6 +340,7 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.upsert = false;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -360,7 +365,7 @@ public class TestElasticSearchTarget {
 
   @Test
   public void testTimeDriverValue() throws Exception {
-    ElasticSearchTarget target = createTarget("${record:value('/')}", "${YYYY()}");
+    ElasticSearchTarget target = createTarget("${record:value('/')}", "${YYYY()}", "", false);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     runner.runInit();
     try {
@@ -384,7 +389,7 @@ public class TestElasticSearchTarget {
 
   @Test
   public void testWriteRecordsNow() throws Exception {
-    ElasticSearchTarget target = createTarget("${time:now()}", "${YYYY()}");
+    ElasticSearchTarget target = createTarget("${time:now()}", "${YYYY()}", "", false);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     try {
       runner.runInit();
@@ -439,6 +444,7 @@ public class TestElasticSearchTarget {
     conf.typeTemplate = "${record:value('/type')}";
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
+    conf.upsert = false;
     conf.useShield = false;
     conf.shieldConfigBean = new ShieldConfigBean();
 
@@ -470,6 +476,70 @@ public class TestElasticSearchTarget {
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testUpsertWithNoDocId() throws Exception {
+    ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
+    conf.clusterName = esName;
+    conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.configs = Collections.EMPTY_MAP;
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${YYYY()}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = ""; // empty document ID expression
+    conf.charset = "UTF-8";
+    conf.upsert = true; // enable upsert
+    conf.useShield = false;
+    conf.shieldConfigBean = new ShieldConfigBean();
+
+    ElasticSearchTarget target = new ElasticSearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_19.name()));
+  }
+
+  @Test
+  public void testUpsertRecords() throws Exception {
+    // Use the index field as document ID.
+    Target target = createTarget("${time:now()}", "${record:value('/index')}", "${record:value('/index')}", true);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    try {
+      runner.runInit();
+      List<Record> records = new ArrayList<>();
+      Record record1 = RecordCreator.create();
+      record1.set(Field.create(ImmutableMap.of("a", Field.create("Old"),
+          "index", Field.create("j"), "type", Field.create("t"))));
+      Record record2 = RecordCreator.create();
+      record2.set(Field.create(ImmutableMap.of("a", Field.create("New"),
+          "index", Field.create("j"), "type", Field.create("t"))));
+      records.add(record1);
+      records.add(record2);
+      runner.runWrite(records);
+      Assert.assertTrue(runner.getErrorRecords().isEmpty());
+      Assert.assertTrue(runner.getErrors().isEmpty());
+
+      prepareElasticSearchServerForQueries();
+
+      // First record must be replaced by second record: "Old" => "New".
+      Set<Map> expected = new HashSet<>();
+      expected.add(ImmutableMap.of("a", "New", "index", "j", "type", "t"));
+
+      SearchResponse response = esServer.client().prepareSearch("j").setTypes("t")
+          .setSearchType(SearchType.DEFAULT).execute().actionGet();
+      SearchHit[] hits = response.getHits().getHits();
+      Assert.assertEquals(1, hits.length);
+      Set<Map> got = new HashSet<>();
+      got.add(hits[0].getSource());
+
+      Assert.assertEquals(expected, got);
+
+    } finally {
+      runner.runDestroy();
+    }
   }
 
 }

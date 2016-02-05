@@ -42,6 +42,8 @@ import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentType;
 
@@ -195,6 +197,19 @@ public class ElasticSearchTarget extends BaseTarget {
       }
     }
 
+    if (conf.upsert) {
+      if (conf.docIdTemplate == null || conf.docIdTemplate.isEmpty()) {
+        clusterInfo = false;
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.ELASTIC_SEARCH.name(),
+                ElasticSearchConfigBean.CONF_PREFIX + "upsert",
+                Errors.ELASTICSEARCH_19
+            )
+        );
+      }
+    }
+
     if (conf.useShield) {
       if (!SHIELD_USER_PATTERN.matcher(conf.shieldConfigBean.shieldUser).matches()) {
         clusterInfo = false;
@@ -303,7 +318,24 @@ public class ElasticSearchTarget extends BaseTarget {
         generator.write(record);
         generator.close();
         String json = new String(baos.toByteArray(), StandardCharsets.UTF_8);
-        bulkRequest.add(elasticClient.prepareIndex(index, type, id).setContentType(XContentType.JSON).setSource(json));
+
+        IndexRequest insert = elasticClient.prepareIndex(index, type, id)
+            .setContentType(XContentType.JSON)
+            .setSource(json)
+            .request();
+        if (conf.upsert) {
+          // Upsert cannot be processed without the id. Bulk process does not read document content
+          // but only headers and then pass content to the right shard. To extract the right shard,
+          // Elasticsearch needs to know the id without parsing the body itself.
+          Utils.checkNotNull(id, "Document ID");
+          UpdateRequest upsert = elasticClient.prepareUpdate(index, type, id)
+              .setDoc(json)
+              .setUpsert(insert)
+              .request();
+          bulkRequest.add(upsert);
+        } else {
+          bulkRequest.add(insert);
+        }
       } catch (IOException ex) {
         switch (getContext().getOnErrorRecord()) {
           case DISCARD:

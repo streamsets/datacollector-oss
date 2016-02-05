@@ -41,6 +41,7 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_17("Could not index '{}' records: {}"),
 
   ELASTICSEARCH_18("Could not evaluate the time driver expression: {}"),
+  ELASTICSEARCH_19("Document ID expression must be provided to use the upsert option"),
 
   ELASTICSEARCH_20("Invalid Shield user, it must be <USERNAME>:<PASSWORD>: '{}'"),
   ;
