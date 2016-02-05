@@ -199,9 +199,9 @@ public class ManagerResource {
         return Response.ok().type(MediaType.APPLICATION_JSON).entity(runner.getMetrics()).build();
       }
       if (runner != null) {
-        LOG.info("Status is " + runner.getState().getStatus());
+        LOG.debug("Status is " + runner.getState().getStatus());
       } else {
-        LOG.info("Runner is null");
+        LOG.debug("Runner is null");
       }
 
     }
