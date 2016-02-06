@@ -216,6 +216,7 @@ public class KinesisTarget extends BaseTarget {
 
         ++i;
       } catch (IOException e) {
+        LOG.error("Error processing record: {}", e.toString(), e);
         handleFailedRecord(record, e.toString());
       }
     }
