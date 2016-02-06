@@ -199,7 +199,7 @@ public class ProtobufTypeUtil {
    * @param set               set of file descriptors
    * @param fileDescriptorMap map of message types to file descriptors
    * @param descriptorFile    descriptor file for message to be decoded
-   * @param messageType       the name of the message to be decoded
+   * @param qualifiedMessageType       the name of the message to be decoded
    * @return protobuf descriptor instance
    * @throws StageException
    */
@@ -207,33 +207,74 @@ public class ProtobufTypeUtil {
       DescriptorProtos.FileDescriptorSet set,
       Map<String, Descriptors.FileDescriptor> fileDescriptorMap,
       String descriptorFile,
-      String messageType
+      String qualifiedMessageType
   ) throws StageException {
 
     // find the FileDescriptorProto which contains the message type
     // IF cannot find, then bail out
-    DescriptorProtos.FileDescriptorProto file = null;
-    for (DescriptorProtos.FileDescriptorProto fileDescriptorProto : set.getFileList()) {
-      for (DescriptorProtos.DescriptorProto descriptorProto :
-          getAllMessageTypesInDescriptorProto(fileDescriptorProto)) {
-        if (messageType.equals(descriptorProto.getName())) {
-          file = fileDescriptorProto;
-          break;
-        }
-      }
-      if (file != null) {
-        break;
-      }
+    String packageName = null;
+    String messageType = qualifiedMessageType;
+    int lastIndex = qualifiedMessageType.lastIndexOf('.');
+    if (lastIndex != -1) {
+      packageName = qualifiedMessageType.substring(0, lastIndex);
+      messageType = qualifiedMessageType.substring(lastIndex + 1);
     }
+    DescriptorProtos.FileDescriptorProto file = getFileDescProtoForMsgType(packageName, messageType, set);
     if (file == null) {
       // could not find the message type from all the proto files contained in the descriptor file
-      throw new StageException(Errors.PROTOBUF_00, messageType, descriptorFile);
+      throw new StageException(Errors.PROTOBUF_00, qualifiedMessageType, descriptorFile);
     }
     // finally get the FileDescriptor for the message type
     Descriptors.FileDescriptor fileDescriptor = fileDescriptorMap.get(file.getName());
     // create builder using the FileDescriptor
+    // this can only find the top level message types
     return fileDescriptor.findMessageTypeByName(messageType);
 
+  }
+
+  private static DescriptorProtos.FileDescriptorProto getFileDescProtoForMsgType(
+      String packageName,
+      String messageType,
+      DescriptorProtos.FileDescriptorSet set
+  ) {
+    DescriptorProtos.FileDescriptorProto file = null;
+    for (DescriptorProtos.FileDescriptorProto fileDescriptorProto : set.getFileList()) {
+      if (!packageMatch(fileDescriptorProto, packageName)) {
+        continue;
+      }
+      file = containsMessageType(fileDescriptorProto, messageType);
+      if (file != null) {
+        break;
+      }
+    }
+    return file;
+  }
+
+  private static DescriptorProtos.FileDescriptorProto containsMessageType(
+    DescriptorProtos.FileDescriptorProto fileDescriptorProto, String messageType
+  ) {
+    DescriptorProtos.FileDescriptorProto file = null;
+    for (DescriptorProtos.DescriptorProto descriptorProto :
+      getAllMessageTypesInDescriptorProto(fileDescriptorProto)) {
+      if (messageType.equals(descriptorProto.getName())) {
+        file = fileDescriptorProto;
+        break;
+      }
+    }
+    return file;
+  }
+
+  private static boolean packageMatch(DescriptorProtos.FileDescriptorProto fileDescriptorProto, String packageName) {
+    // Its a match iff
+    // 1. package name specified as part of message type matches the package name of FileDescriptorProto
+    // 2. No package specified as part of message type and no package name specified in FileDescriptorProto
+    boolean packageMatch = false;
+    if (packageName != null && packageName.equals(fileDescriptorProto.getPackage())) {
+      packageMatch = true;
+    } else if (packageName == null && !fileDescriptorProto.hasPackage()) {
+      packageMatch = true;
+    }
+    return packageMatch;
   }
 
   /**

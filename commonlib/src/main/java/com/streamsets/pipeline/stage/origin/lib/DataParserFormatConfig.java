@@ -525,6 +525,7 @@ public class DataParserFormatConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
+      description = "Fully Qualified Message Type name. Use format <packageName>.<messageTypeName>",
       label = "Message Type",
       displayPosition = 610,
       group = "PROTOBUF",

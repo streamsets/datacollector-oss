@@ -83,7 +83,7 @@ public class TestProtobufDataGenerator {
     List<Record> records = ProtobufTestUtil.getProtobufRecords();
 
     // write these records using the protobuf generator
-    DataGenerator gen = getDataGenerator(bOut, "Employee.desc", "Employee");
+    DataGenerator gen = getDataGenerator(bOut, "Employee.desc", "util.Employee");
     for(Record r : records) {
       gen.write(r);
     }

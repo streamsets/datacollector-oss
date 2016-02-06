@@ -54,7 +54,7 @@ public class TestProtobufDataParser {
 
   @Test
   public void testProtobufDataParser() throws IOException, DataParserException {
-    DataParser dataParser = getDataParser("0", "Employee.desc", "Employee");
+    DataParser dataParser = getDataParser("0", "Employee.desc", "util.Employee");
     List<Record> records = new ArrayList<>();
     Record r = dataParser.parse();
     // Engineer object in the stream is 59 bytes long
@@ -123,7 +123,7 @@ public class TestProtobufDataParser {
     // Engineer object in the stream is 59 bytes long
     // Executive object in the stream is 54 bytes long
     // Skip first 5 objects => start from position 285 [59*3 54*2]
-    DataParser dataParser = getDataParser("748", "Employee.desc", "Employee");
+    DataParser dataParser = getDataParser("748", "Employee.desc", "util.Employee");
     List<Record> records = new ArrayList<>();
     assertEquals("748", dataParser.getOffset());
     Record r = dataParser.parse();
@@ -152,7 +152,7 @@ public class TestProtobufDataParser {
     john.writeDelimitedTo(bOut);
     bOut.flush();
 
-    DataParserFactory factory = getDataParserFactory("test1.desc", "Person");
+    DataParserFactory factory = getDataParserFactory("test1.desc", "util.Person");
     DataParser parser = factory.getParser("Person", new ByteArrayInputStream(bOut.toByteArray()), "0");
 
     try {
