@@ -1138,7 +1138,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.charset = "UTF-8";
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.protoDescriptorFile = protoDescFile.getPath();
-    conf.dataFormatConfig.messageType = "Employee";
+    conf.dataFormatConfig.messageType = "util.Employee";
     conf.dataFormatConfig.isDelimited = true;
 
     SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))
@@ -1181,7 +1181,7 @@ public class TestKafkaSource {
     conf.dataFormatConfig.charset = "UTF-8";
     conf.dataFormatConfig.removeCtrlChars = false;
     conf.dataFormatConfig.protoDescriptorFile = protoDescFile.getPath();
-    conf.dataFormatConfig.messageType = "Employee";
+    conf.dataFormatConfig.messageType = "util.Employee";
     conf.dataFormatConfig.isDelimited = true;
 
     SourceRunner sourceRunner = new SourceRunner.Builder(StandaloneKafkaSource.class, createSource(conf))

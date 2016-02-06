@@ -37,7 +37,7 @@ import java.util.Collections;
 public class TestProtobufDataGeneratorFactory {
 
   private static final String PROTO_FILE = "Employee.desc";
-  private static final String MESSAGE_TYPE = "Employee";
+  private static final String MESSAGE_TYPE = "util.Employee";
 
   @Test
   public void testGetFactory() throws Exception {

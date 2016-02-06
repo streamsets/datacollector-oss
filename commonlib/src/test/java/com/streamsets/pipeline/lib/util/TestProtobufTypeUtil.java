@@ -64,7 +64,7 @@ public class TestProtobufTypeUtil {
     set = DescriptorProtos.FileDescriptorSet.parseFrom(fin);
     ProtobufTypeUtil.getAllFileDescriptors(set, fileDescriptorDependentsMap, fileDescriptorMap);
     ProtobufTypeUtil.populateDefaultsAndExtensions(fileDescriptorMap, typeToExtensionMap, defaultValueMap);
-    md = ProtobufTypeUtil.getDescriptor(set, fileDescriptorMap, "Employee.desc", "Employee");
+    md = ProtobufTypeUtil.getDescriptor(set, fileDescriptorMap, "Employee.desc", "util.Employee");
     extensionRegistry = ProtobufTestUtil.createExtensionRegistry(typeToExtensionMap);
   }
 
