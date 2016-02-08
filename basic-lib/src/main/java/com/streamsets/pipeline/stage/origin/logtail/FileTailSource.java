@@ -413,13 +413,10 @@ public class FileTailSource extends BaseSource {
               }
               record.getHeader().setAttribute("file", chunk.getFile().getPath().toString());
               batchMaker.addRecord(record, outputLane);
+              recordCounter++;
             }
           } catch (IOException | DataParserException ex) {
             handleException(sourceId, ex);
-          }
-          if (++recordCounter >= maxBatchSize) {
-            // break the for loop so that the while condition will be re-tested.
-            break;
           }
         }
       }
