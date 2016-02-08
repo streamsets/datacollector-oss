@@ -37,6 +37,7 @@ public class ElasticSearch2Factory extends ElasticSearchFactory {
   public Client createClient(
       String clusterName,
       List<String> uris,
+      boolean clientSniff,
       Map<String, String> configs,
       boolean useShield,
       String shieldUser,
@@ -46,6 +47,7 @@ public class ElasticSearch2Factory extends ElasticSearchFactory {
       boolean useFound
   ) throws UnknownHostException {
     Settings.Builder settingsBuilder = Settings.settingsBuilder()
+        .put("client.transport.sniff", clientSniff)
         .put("cluster.name", clusterName)
         .put(configs);
 

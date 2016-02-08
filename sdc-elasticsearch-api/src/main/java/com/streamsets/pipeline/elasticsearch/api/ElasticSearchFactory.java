@@ -35,6 +35,7 @@ public abstract class ElasticSearchFactory {
   public abstract Client createClient(
       String clusterName,
       List<String> uris,
+      boolean clientSniff,
       Map<String, String> configs,
       boolean useShield,
       String shieldUser,
@@ -63,6 +64,7 @@ public abstract class ElasticSearchFactory {
   public static Client client(
       String clusterName,
       List<String> uris,
+      boolean clientSniff,
       Map<String, String> configs,
       boolean useShield,
       String shieldUser,
@@ -74,6 +76,7 @@ public abstract class ElasticSearchFactory {
     return factory.createClient(
         clusterName,
         uris,
+        clientSniff,
         configs,
         useShield,
         shieldUser,
