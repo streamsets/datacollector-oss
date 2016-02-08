@@ -84,9 +84,21 @@ public class ElasticSearchConfigBean {
   public boolean useFound;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Detect Additional Nodes in Cluster",
+      defaultValue = "false",
+      description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
+          "Do not use if the Data Collector is on a different network from the cluster.",
+      displayPosition = 23,
+      group = "ELASTIC_SEARCH"
+  )
+  public boolean clientSniff;
+
+  @ConfigDef(
       required = false,
       type = ConfigDef.Type.MAP,
-      defaultValue = "{ \"client.transport.sniff\" : \"false\" }",
+      defaultValue = "",
       label = "Additional Configuration",
       description = "Additional Elasticsearch client configuration properties",
       displayPosition = 30,

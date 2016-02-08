@@ -37,6 +37,7 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
   public Client createClient(
       String clusterName,
       List<String> uris,
+      boolean clientSniff,
       Map<String, String> configs,
       boolean useShield,
       String shieldUser,
@@ -46,6 +47,7 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
       boolean useFound
   ) throws UnknownHostException {
     ImmutableSettings.Builder settingsBuilder = ImmutableSettings.settingsBuilder()
+        .put("client.transport.sniff", clientSniff)
         .put("cluster.name", clusterName)
         .put(configs);
 

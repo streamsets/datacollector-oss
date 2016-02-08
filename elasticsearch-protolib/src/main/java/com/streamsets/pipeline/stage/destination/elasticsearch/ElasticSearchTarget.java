@@ -229,6 +229,7 @@ public class ElasticSearchTarget extends BaseTarget {
         elasticClient = ElasticSearchFactory.client(
             conf.clusterName,
             conf.uris,
+            conf.clientSniff,
             conf.configs,
             conf.useShield,
             conf.shieldConfigBean.shieldUser,

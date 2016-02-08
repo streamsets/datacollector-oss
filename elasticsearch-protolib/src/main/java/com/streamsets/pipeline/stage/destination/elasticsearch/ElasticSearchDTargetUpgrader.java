@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ElasticSearchDTargetUpgrader implements StageUpgrader {
 
@@ -59,12 +60,12 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
     configs.add(new Config("timeZoneID", "UTC"));
   }
 
+  @SuppressWarnings("unchecked")
   private void upgradeV2ToV3(List<Config> configs) {
     for (Config config : configs) {
       switch (config.getName()) {
         case "clusterName":
         case "uris":
-        case "configs":
         case "timeDriver":
         case "timeZoneID":
         case "indexTemplate":
@@ -72,6 +73,25 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         case "docIdTemplate":
         case "charset":
           configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + config.getName(), config.getValue()));
+          configsToRemove.add(config);
+          break;
+        case "configs":
+          // Remove client.transport.sniff from the additional configs when loading an old pipeline.
+          // This config is disabled by default, and it should be enabled only when the user explicitly
+          // checks a new checkbox in the UI.
+          List<Map<String, String>> keyValues = (List<Map<String, String>>) config.getValue();
+          Map<String, String> clientSniffKeyValue = null;
+          for (Map<String, String> keyValue : keyValues) {
+            for (Map.Entry entry : keyValue.entrySet()) {
+              if (entry.getValue().equals("client.transport.sniff")) {
+                clientSniffKeyValue = keyValue;
+              }
+            }
+          }
+          if (clientSniffKeyValue != null) {
+            keyValues.remove(clientSniffKeyValue);
+          }
+          configsToAdd.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + config.getName(), keyValues));
           configsToRemove.add(config);
           break;
         default:
