@@ -3,9 +3,9 @@
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
 <head><meta name="description" content="You can download and install a basic version of Data Collector , and then install individual stage libraries as needed. The basic installation includes Data Collector , development stages, all ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Basic Installation with Custom Libraries"></meta><meta name="abstract" content="You can download and install a basic version of Data Collector, and then install individual stage libraries as needed."></meta><meta name="description" content="You can download and install a basic version of Data Collector, and then install individual stage libraries as needed."></meta><meta name="DC.Relation" scheme="URI" content="../Install_Config/Install_Config_title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_vvw_p3m_s5"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Basic Installation with Custom Libraries</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
-          
+
           var prefix = "../index.html";
-          
+
           --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@
 <div class="nested0" id="concept_vvw_p3m_s5">
  <h1 class="title topictitle1">Basic Installation with Custom Libraries</h1>
 
- 
+
  <div class="body conbody"><p class="shortdesc">You can download and install a basic version of <span class="ph">Data
                   Collector</span>, and
         then install individual stage libraries as needed.</p>
@@ -100,14 +100,14 @@
 <div class="topic concept nested1" id="concept_bnl_n3n_s5">
  <h2 class="title topictitle2">Step 2. Install Additional Libraries</h2>
 
- 
+
  <div class="body conbody"><p class="shortdesc">Use the command line to install additional libraries to use stages that are not included
         in the basic installation. This is an optional step, but generally you'll want to install
         additional libraries to process data. </p>
 
         <div class="p">You can use the following commands to install
             additional libraries:<dl class="dl">
-                
+
                     <dt class="dt dlterm">To view the list of available libraries:</dt>
 
                     <dd class="dd">From the <span class="ph">Data
@@ -119,8 +119,8 @@
                         already installed. For more information about the stages installed with each
                         stage library, see <a class="xref" href="BasicInstall_Overview.html#concept_evs_xkm_s5">Available Stage Libraries</a>.</dd>
 
-                
-                
+
+
                     <dt class="dt dlterm">To install one or more stage libraries:</dt>
 
                     <dd class="dd">From the <span class="ph">Data
@@ -142,13 +142,13 @@ streamsets-datacollector-elasticsearch_1_6-lib </pre>
                     <dd class="dd">When successful, the command line indicates that the stage libraries have
                         been installed as follows:
                         <pre class="pre codeblock">Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
-/streamsets-datacollector-aws-lib-1.2.1.0-SNAPSHOT.tgz
+/streamsets-datacollector-aws-lib-1.3.0.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
 Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
-streamsets-datacollector-jdbc-lib-1.2.1.0-SNAPSHOT.tgz
+streamsets-datacollector-jdbc-lib-1.3.0.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
 Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
-streamsets-datacollector-rabbitmq-lib-1.2.1.0-SNAPSHOT.tgz
+streamsets-datacollector-rabbitmq-lib-1.3.0.0-SNAPSHOT.tgz
 ######################################################################## 100.0%
 
 Stage library streamsets-datacollector-aws-lib installed
@@ -156,8 +156,8 @@ Stage library streamsets-datacollector-jdbc-lib installed
 Stage library streamsets-datacollector-rabbitmq-lib installed</pre>
 </dd>
 
-                
-                
+
+
                     <dt class="dt dlterm">To generate the command required to perform the current installation
                         (optional):</dt>
 
@@ -183,8 +183,8 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 =================================================================================</pre>
 </dd>
 
-                
-                
+
+
                     <dt class="dt dlterm">To uninstall libraries when necessary:</dt>
 
                     <dd class="dd">To unstall a library, use the following
@@ -194,7 +194,7 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                     <dd class="dd">Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>
 
-                
+
             </dl>
 </div>
 
@@ -204,13 +204,13 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
 <div class="topic concept nested1" id="concept_evs_xkm_s5">
  <h2 class="title topictitle2">Available Stage Libraries</h2>
 
- 
+
  <div class="body conbody"><p class="shortdesc"></p>
 
   <div class="p">The following table describes the stages installed with each stage library:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_evs_xkm_s5__table_kyr_blm_s5" class="table" frame="border" border="1" rules="all">
-                    
-                    
+
+
                     <thead class="thead" align="left">
                         <tr class="row">
                             <th class="entry" valign="top" width="50%" id="d32372e262">Stage Library Name</th>
