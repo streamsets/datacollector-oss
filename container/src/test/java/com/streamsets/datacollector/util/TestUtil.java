@@ -102,7 +102,7 @@ public class TestUtil {
   public static final String PIPELINE_WITH_EMAIL = "Pipeline with Email";
   public static final String PIPELINE_REV = "2.0";
   public static final String ZERO_REV = "0";
-  public static boolean EMPTY_OFFSET = false;
+  public volatile static boolean EMPTY_OFFSET = false;
 
   public static class SourceOffsetTrackerImpl implements SourceOffsetTracker {
     private String currentOffset;
