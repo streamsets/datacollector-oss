@@ -71,7 +71,7 @@ import java.util.UUID;
 public class HdfsTargetConfigBean {
 
   private static final Logger LOG = LoggerFactory.getLogger(HdfsTargetConfigBean.class);
-  private final static int MEGA_BYTE = 1024 * 1024;
+  private static final int MEGA_BYTE = 1024 * 1024;
   public static final String HDFS_TARGET_CONFIG_BEAN_PREFIX = "hdfsTargetConfigBean.";
 
   @ConfigDef(
