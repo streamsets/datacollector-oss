@@ -24,6 +24,7 @@ import org.apache.hadoop.minikdc.MiniKdc;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import javax.security.auth.login.Configuration;
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
+@Ignore
 public class TestSaslEnabledKafka extends TestSecureKafkaBase {
 
   private static final String JAAS_CONF =
