@@ -72,7 +72,7 @@ public class BootstrapMain {
   static final String WHITE_LIST_FILE = "stagelibswhitelist.properties";
   static final String SYSTEM_LIBS_WHITE_LIST_KEY = "system.stagelibs.whitelist";
   static final String USER_LIBS_WHITE_LIST_KEY = "user.stagelibs.whitelist";
-  static final String SYSTEM_LIBS_BLACK_LIST_KEY = "system.stagelibs.blackist";
+  static final String SYSTEM_LIBS_BLACK_LIST_KEY = "system.stagelibs.blacklist";
   static final String USER_LIBS_BLACK_LIST_KEY = "user.stagelibs.blacklist";
   static final String ALL_VALUES = "*";
 
