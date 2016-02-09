@@ -43,11 +43,11 @@
                 <cmd>Set the file ownership to <codeph>cloudera-scm:cloudera-scm</codeph> with
                     permission <uicontrol>644</uicontrol>. </cmd>
                 <info>For example:
-                    <codeblock>chown cloudera-scm:cloudera-scm /opt/cloudera/csd/streamsets*.jar
-chmod 644 /opt/cloudera/csd/streamsets*.jar</codeblock></info>
+                    <codeblock>chown cloudera-scm:cloudera-scm /opt/cloudera/csd/STREAMSETS*.jar
+chmod 644 /opt/cloudera/csd/STREAMSETS*.jar</codeblock></info>
             </step>
             <step>
-                <cmd>Use one of the following commands to restart the Cloudera Manager Server:</cmd>
+                <cmd>Use one of the following commands to restart Cloudera Manager Server:</cmd>
                 <info><p>For Ubuntu and CentOS 6:
                         <codeblock>service cloudera-scm-server restart</codeblock></p>For CentOS 7:
                     <codeblock>systemctl restart cloudera-scm-server</codeblock></info>

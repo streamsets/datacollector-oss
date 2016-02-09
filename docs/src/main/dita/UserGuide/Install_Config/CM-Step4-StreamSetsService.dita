@@ -14,17 +14,21 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_u1v_nkt_25">
-    <title>Step 3. Configure the StreamSets Service</title>
+    <title>Step 4. Configure the StreamSets Service</title>
     <taskbody>
-        <context><p><indexterm>Cloudera Manager<indexterm>creating a StreamSets
-                    service</indexterm></indexterm>After you install the StreamSets CSD, create and
-                configure the StreamSets service. When you configure the service, you assign <ph
+        <context><p><indexterm>Cloudera Manager<indexterm>creating and configuring a StreamSets
+                        service</indexterm></indexterm>When you configure the service, you assign
+                    <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> to the hosts where you want it to run.</p>To run <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
-            cluster mode, colocate <ph
+            cluster streaming mode, colocate <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a node with the Spark Gateway role. <p>To write to HDFS, colocate <ph
+            a node with the Spark Gateway role. To run <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> in
+            cluster batch mode, colocate <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
+            a node with the YARN Gateway role.<p>To write to HDFS, colocate <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> on a node with the HDFS Gateway role. Similarly, to write to HBase or Hive,
                 colocate <ph

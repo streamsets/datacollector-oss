@@ -108,6 +108,7 @@ function showDivs() {
  * @param dynamicURL - URL to be loaded
  */
 function loadIframe(dynamicURL) {
+dynamicURL = dynamicURL.replace(/%23/g,'#');
     debug('loadIframe(' + dynamicURL + ')');
     var anchor = "";
     if (dynamicURL.indexOf("#") > 0) {

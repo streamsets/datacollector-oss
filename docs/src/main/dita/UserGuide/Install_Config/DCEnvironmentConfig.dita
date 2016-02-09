@@ -15,33 +15,34 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rng_qym_qr">
  <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-  Environment Configuration</title>
+    Environment Variables</title>
  <conbody>
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
       two environment configuration files:<ul id="ul_v4w_fph_1t">
-        <li><codeph>sdc-env.sh</codeph> - Use when you start <ph
+        <li><codeph>sdc-env.sh</codeph> - Used when you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
           manually.</li>
-        <li><codeph>sdcd.env.sh</codeph> - Use when you start <ph
+        <li><codeph>sdcd.env.sh</codeph> - Used when you start <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> as a
           service. Also defines the Data Collector user, group, and directories.</li>
       </ul></p>
   <p>Both <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-   environment configuration files include the following environment variables:<dl>
-    <dlentry>
-     <dt>SDC_ROOT_CLASSPATH</dt>
-     <dd>Defines the path to jar files to be added to the <ph
-       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> root
-      classloader. Use for components that must be in the root classloader, such as Snappy. </dd>
-    </dlentry>
-    <dlentry>
-     <dt>SDC_JAVA_OPTS</dt>
-     <dd>Defines additional Java configuration options for <ph
+      environment configuration files include the following key environment variables:<dl>
+        <dlentry>
+          <dt>SDC_ROOT_CLASSPATH</dt>
+          <dd>Defines the path to jar files to be added to the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> root
+            classloader. Use for components that must be in the root classloader, such as Snappy.
+          </dd>
+        </dlentry>
+        <dlentry>
+          <dt>SDC_JAVA_OPTS</dt>
+          <dd>Defines additional Java configuration options for <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. By
             default, this property includes the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> heap
             size.</dd>
-    </dlentry>
-   </dl></p>
+        </dlentry>
+      </dl></p>
  </conbody>
 </concept>
