@@ -91,34 +91,38 @@ public class FileTailSource extends BaseSource {
     boolean ok = true;
     String fileName = Paths.get(fileInfo.fileFullPath).getFileName().toString();
     String token = fileInfo.fileRollMode.getTokenForPattern();
-    if (!token.isEmpty() && !fileName.contains(token)) {
-      ok = false;
+
+    if (!validateFilePathNoNull(fileInfo, fileName, issues)) {
+      return false;
+    }
+    ok &= validateTokenInFilePath(fileInfo, issues, fileName, token);
+    ok &= validateTokenNotInParentDir(fileInfo, issues, token);
+    ok &= validatePatternForToken(fileInfo, issues);
+
+    return ok;
+  }
+
+  private boolean validateFilePathNoNull(FileInfo fileInfo, String fileName, List<ConfigIssue> issues) {
+    if (fileName == null || fileName.isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
               Groups.FILES.name(),
               FILE_TAIL_CONF_PREFIX + "fileInfos",
-              Errors.TAIL_08,
-              fileInfo.fileFullPath,
-              fileInfo.fileRollMode.getTokenForPattern(),
-              fileName
+              Errors.TAIL_20,
+              fileInfo.fileFullPath
           )
       );
+      return false;
     }
-    String fileParentDir = Paths.get(fileInfo.fileFullPath).getParent().toString();
-    if (!token.isEmpty() && fileParentDir.contains(token)) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.FILES.name(),
-              FILE_TAIL_CONF_PREFIX + "fileInfos",
-              Errors.TAIL_16,
-              fileInfo.fileFullPath,
-              fileInfo.fileRollMode.getTokenForPattern()
-          )
-      );
-    }
+    return true;
+  }
+
+  private boolean validatePatternForToken(FileInfo fileInfo, List<ConfigIssue> issues) {
+    boolean ok = true;
     if (fileInfo.fileRollMode == FileRollMode.PATTERN) {
+      // must provide a pattern if using this roll mode
       if (fileInfo.patternForToken == null || fileInfo.patternForToken.isEmpty()) {
-        ok = false;
+        ok &= false;
         issues.add(
             getContext().createConfigIssue(
                 Groups.FILES.name(),
@@ -128,50 +132,13 @@ public class FileTailSource extends BaseSource {
             )
         );
       } else {
-        try {
-          Pattern.compile(fileInfo.patternForToken);
-        } catch (PatternSyntaxException ex) {
-          ok = false;
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.FILES.name(),
-                  FILE_TAIL_CONF_PREFIX + "fileInfos",
-                  Errors.TAIL_09,
-                  fileInfo.fileFullPath,
-                  fileInfo.patternForToken,
-                  ex.toString()
-              )
-          );
-        }
-        ELVars elVars = getContext().createELVars();
-        elVars.addVariable("PATTERN", "");
-        ELEval elEval = getContext().createELEval("fileFullPath");
-        try {
-          String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
-          if (FileFinder.hasGlobWildcard(pathWithoutPattern)) {
-            ok = false;
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.FILES.name(),
-                    FILE_TAIL_CONF_PREFIX + "fileInfos",
-                    Errors.TAIL_17,
-                    fileInfo.fileFullPath
-                )
-            );
-          }
-        } catch (ELEvalException ex) {
-          ok = false;
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.FILES.name(),
-                  FILE_TAIL_CONF_PREFIX + "fileInfos",
-                  Errors.TAIL_18,
-                  fileInfo.fileFullPath,
-                  ex.toString()
-              )
-          );
-        }
+        // valid patternForTokens must be parseable regexes
+        ok &= validatePatternIsValidRegex(fileInfo, issues);
+        // and no glob wildcards
+        ok &= validatePatternNoWildcards(fileInfo, issues);
       }
+
+      // if firstFile is provided, make sure it's possible to use it
       if (ok && fileInfo.firstFile != null && !fileInfo.firstFile.isEmpty()) {
         RollMode rollMode = fileInfo.fileRollMode.createRollMode(fileInfo.fileFullPath, fileInfo.patternForToken);
         if (!rollMode.isFirstAcceptable(fileInfo.firstFile)) {
@@ -188,6 +155,91 @@ public class FileTailSource extends BaseSource {
       }
     }
     return ok;
+  }
+
+  private boolean validatePatternNoWildcards(FileInfo fileInfo, List<ConfigIssue> issues) {
+    ELVars elVars = getContext().createELVars();
+    elVars.addVariable("PATTERN", "");
+    ELEval elEval = getContext().createELEval("fileFullPath");
+    try {
+      String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
+      if (FileFinder.hasGlobWildcard(pathWithoutPattern)) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.FILES.name(),
+                FILE_TAIL_CONF_PREFIX + "fileInfos",
+                Errors.TAIL_17,
+                fileInfo.fileFullPath
+            )
+        );
+        return false;
+      }
+    } catch (ELEvalException ex) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_18,
+              fileInfo.fileFullPath,
+              ex.toString()
+          )
+      );
+      return false;
+    }
+    return true;
+  }
+
+  private boolean validatePatternIsValidRegex(FileInfo fileInfo, List<ConfigIssue> issues) {
+    try {
+      Pattern.compile(fileInfo.patternForToken);
+    } catch (PatternSyntaxException ex) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_09,
+              fileInfo.fileFullPath,
+              fileInfo.patternForToken,
+              ex.toString()
+          )
+      );
+      return false;
+    }
+    return true;
+  }
+
+  private boolean validateTokenNotInParentDir(FileInfo fileInfo, List<ConfigIssue> issues, String token) {
+    String fileParentDir = Paths.get(fileInfo.fileFullPath).getParent().toString();
+    if (!token.isEmpty() && fileParentDir.contains(token)) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_16,
+              fileInfo.fileFullPath,
+              fileInfo.fileRollMode.getTokenForPattern()
+          )
+      );
+      return false;
+    }
+    return true;
+  }
+
+  private boolean validateTokenInFilePath(FileInfo fileInfo, List<ConfigIssue> issues, String fileName, String token) {
+    if (!token.isEmpty() && !fileName.contains(token)) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FILES.name(),
+              FILE_TAIL_CONF_PREFIX + "fileInfos",
+              Errors.TAIL_08,
+              fileInfo.fileFullPath,
+              fileInfo.fileRollMode.getTokenForPattern(),
+              fileName
+          )
+      );
+      return false;
+    }
+    return true;
   }
 
   @Override
