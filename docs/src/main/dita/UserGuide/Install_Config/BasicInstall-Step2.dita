@@ -48,6 +48,7 @@
 streamsets-datacollector-elasticsearch_1_6-lib </codeblock></dd>
                     <dd>When successful, the command line indicates that the stage libraries have
                         been installed as follows:
+<<<<<<< Updated upstream
                         <codeblock>Downloading: https://archives.streamsets.com/datacollector/1.2.0/tarball\
 /streamsets-datacollector-aws-lib-1.2.1.0-SNAPSHOT.tgz
 ######################################################################## 100.0%

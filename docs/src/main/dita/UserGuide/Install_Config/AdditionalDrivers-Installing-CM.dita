@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_yhv_1pn_25">
-    <title>Installing Additional Drivers (Cloudera Manager)</title>
+    <title>Installing Additional Drivers with Cloudera Manager (Optional)</title>
     <taskbody>
         <context><indexterm>additional drivers<indexterm>installing through Cloudera
                     Manager</indexterm></indexterm><indexterm>Cloudera Manager<indexterm>installing

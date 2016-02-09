@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
+<task id="task_opg_yrm_25">
+    <title>Step 2. Manually Install the Parcel and Checksum Files (Optional)</title>
+    <taskbody>
+        <context>
+            <p><indexterm>Cloudera Manager<indexterm>optional install of parcel and checksum
+                        files</indexterm></indexterm>You can manually install the StreamSets parcel
+                and related checksum files. Manually install the files when the Cloudera Manager
+                Server does not have internet access.</p>
+            <p>When working with multiple clusters, perform the following steps for each
+                cluster.</p>
+        </context>
+        <steps id="steps_zj3_4sm_25">
+            <step>
+                <cmd>Download the StreamSets parcel and related checksum file for the Cloudera
+                    Manager Server operating system. </cmd>
+                <info>StreamSets provides parcels and checksum files for supported operating
+                    systems. <p>Use the following links to download the latest files:<table
+                            frame="all" rowsep="1" colsep="1" id="table_ldm_g3z_w5">
+                            <tgroup cols="2">
+                                <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                                <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                                <thead>
+                                    <row>
+                                        <entry>Operating System </entry>
+                                        <entry>Related Checksum Files</entry>
+                                    </row>
+                                </thead>
+                                <tbody>
+                                    <row>
+                                        <entry><xref
+                                                href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el6.parcel"
+                                                format="html" scope="external">RHEL 6 / CentOS
+                                                6</xref>
+                                        </entry>
+                                        <entry><xref
+                                                href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el6.parcel.md5"
+                                                format="md5" scope="external">MD5</xref><p><xref
+                                                  href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el6.parcel.sha"
+                                                  format="sha" scope="external"
+                                            >SHA</xref></p></entry>
+                                    </row>
+                                    <row>
+                                        <entry><xref
+                                                href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el7.parcel"
+                                                format="parcel" scope="external">RHEL 7 /
+                                                CentOS7</xref></entry>
+                                        <entry><xref
+                                                href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el7.parcel.md5"
+                                                format="md5" scope="external">MD5</xref><p><xref
+                                                  href="https://archives.streamsets.com/datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-el7.parcel.sha"
+                                                  format="sha" scope="external"
+                                            >SHA</xref></p></entry>
+                                    </row>
+                                    <row>
+                                        <entry><xref
+                                                href="datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-trusty.parcel"
+                                                format="parcel" scope="external">Ubuntu 14.04
+                                                (Trusty)</xref></entry>
+                                        <entry><xref
+                                                href="datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-trusty.parcel.md5"
+                                                format="md5" scope="external">MD5</xref><p><xref
+                                                  href="datacollector/1.2.0.1/parcel/STREAMSETS_DATACOLLECTOR-1.2.0.1-trusty.parcel.sha"
+                                                  format="sha" scope="external"
+                                            >SHA</xref></p></entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table></p><draft-comment author="Loretta">*** UPDATE links with each
+                        release, or replace with a stable URL if we set that
+                    up***</draft-comment></info>
+            </step>
+            <step>
+                <cmd>Copy the StreamSets parcel and checksum files to the <uicontrol>Cloudera
+                        Manager Local Parcel Repository Path</uicontrol>. </cmd>
+                <info>By default, the path is <codeph>/opt/cloudera/parcel-repo</codeph>.</info>
+                <info>To verify the path to use, click <menucascade>
+                        <uicontrol>Administration</uicontrol>
+                        <uicontrol>Settings</uicontrol>
+                    </menucascade>. In the navigation panel, select the
+                        <uicontrol>Parcels</uicontrol> category. Place the StreamSets parcel file in
+                    the path configured for <uicontrol>Local Parcel Repository Path</uicontrol>. </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

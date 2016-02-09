@@ -15,8 +15,8 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zn4_qrn_25">
     <title>Configuring <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        /></title>
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
+        Cloudera Manager</title>
     <shortdesc>When administering <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
         Cloudera Manager, configure all <ph
@@ -27,12 +27,6 @@
             <p>Manual changes to <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration files can be overwritten by Cloudera Manager. </p>
-            <p>
-                <note>To use Kerberos authentication, you need to configure the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> to use Kerberos. For more information, see <xref
-                        href="Kerberos.dita#concept_hnm_n4l_xs"/>. </note>
-            </p>
         </context>
         <steps id="steps_tvq_xsn_25">
             <step>
