@@ -161,6 +161,12 @@ public class HdfsTarget extends BaseTarget {
   protected void write(Record record) throws StageException {
     try {
       Date recordTime = getRecordTime(record);
+
+      // recordTime may not be null!
+      if (recordTime == null) {
+        throw new StageException(Errors.HADOOPFS_47, hdfsTargetConfigBean.getTimeDriver());
+      }
+
       RecordWriter writer = hdfsTargetConfigBean.getCurrentWriters().get(getBatchTime(), recordTime, record);
       if (writer != null) {
         hdfsTargetConfigBean.getToHdfsRecordsCounter().inc();
