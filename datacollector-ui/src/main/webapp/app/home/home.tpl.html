@@ -226,7 +226,7 @@
 
                 <li role="presentation"
                     ng-if="isAuthorized([userRoles.admin, userRoles.manager])"
-                    ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || !pipeline.valid">
+                    ng-hide="common.pipelineStatusMap[pipeline.name].status === 'RUNNING' || common.pipelineStatusMap[pipeline.name].status === 'STARTING' || !pipeline.valid">
                   <a href="#" dropdown-toggle ng-click="startPipeline(pipeline, $event)">
                     <i class="glyphicon glyphicon-play"></i>
                     <span>{{'home.header.start' | translate}}</span>
