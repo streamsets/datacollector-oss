@@ -58,6 +58,7 @@
     <cdh_5_5-lib>none</cdh_5_5-lib>
     <hdp_2_2-lib>none</hdp_2_2-lib>
     <hdp_2_3-lib>none</hdp_2_3-lib>
+    <mapr_5_0-lib>none</mapr_5_0-lib>
     <cdh_kafka_1_2-lib>none</cdh_kafka_1_2-lib>
     <cdh_kafka_1_3-lib>none</cdh_kafka_1_3-lib>
     <cdh_5_4-cluster-cdh_kafka_1_2-lib>none</cdh_5_4-cluster-cdh_kafka_1_2-lib>
@@ -118,6 +119,7 @@
     <module>rabbitmq-lib</module>
 
     <module>hdfs-protolib</module>
+    <module>maprfs-protolib</module>
     <module>hive-protolib</module>
 
     <module>sdc-kafka-api</module>
@@ -442,6 +444,7 @@
       <properties>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
+        <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
@@ -455,6 +458,7 @@
       <modules>
         <module>cdh_5_5-lib</module>
         <module>hdp_2_3-lib</module>
+        <module>mapr_5_0-lib</module>
         <module>jython_2_7-lib</module>
         <module>elasticsearch_2_2-lib</module>
         <module>cassandra_2-lib</module>
