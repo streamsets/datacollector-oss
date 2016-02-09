@@ -157,7 +157,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-elasticsearch_2_1-lib</artifactId>
+      <artifactId>streamsets-datacollector-elasticsearch_2_2-lib</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
