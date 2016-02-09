@@ -38,6 +38,7 @@ public enum Errors implements ErrorCode {
   TAIL_17("The configuration for '{}' uses 'Files matching a pattern', it cannot have wildcards"),
   TAIL_18("The configuration for '{}' is an invalid expression: {}"),
   TAIL_19("The configuration for '{}' has an invalid 'First File'"),
+  TAIL_20("File path cannot be null or empty"),
 
   TAIL_10("Could not deserialize offset: {}"),
   TAIL_11("Error reading file '{}': {}"),
