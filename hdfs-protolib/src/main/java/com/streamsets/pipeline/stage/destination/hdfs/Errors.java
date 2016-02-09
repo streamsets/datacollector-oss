@@ -79,7 +79,10 @@ public enum Errors implements ErrorCode {
   HADOOPFS_45("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
 
   HADOOPFS_46("The compression codec '{}' requires native libraries to be installed: {}"),
+  HADOOPFS_47("Time basis expression '{}' evaluated to NULL for this record"),
+
   ;
+
   private final String msg;
 
   Errors(String msg) {
