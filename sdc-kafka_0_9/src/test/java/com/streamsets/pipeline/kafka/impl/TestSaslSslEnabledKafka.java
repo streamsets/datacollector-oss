@@ -21,10 +21,12 @@ package com.streamsets.pipeline.kafka.impl;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 
 import java.util.Map;
 import java.util.Properties;
 
+@Ignore
 public class TestSaslSslEnabledKafka extends TestSaslEnabledKafka {
 
   @BeforeClass
