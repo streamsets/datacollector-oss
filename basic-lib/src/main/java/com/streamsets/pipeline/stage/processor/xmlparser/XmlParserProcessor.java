@@ -54,12 +54,12 @@ public class XmlParserProcessor extends SingleLaneRecordProcessor {
     if (field != null) {
       try {
         Record xmlRecord = parserFactory.getParser("", field.getValueAsString()).parse();
-        record.set(configs.parsedFieldPath, xmlRecord.get());
+        record.set(configs.parsedFieldPath, xmlRecord != null ? xmlRecord.get() : Field.create(field.getType(), null));
       } catch (IOException|DataParserException ex) {
         throw new OnRecordErrorException(
             Errors.XMLP_01,
-            record.getHeader().getSourceId(),
             configs.fieldPathToParse,
+            record.getHeader().getSourceId(),
             ex.toString(),
             ex
         );
