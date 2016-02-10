@@ -106,6 +106,11 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
   private final Map<String, Object> previewBuffer;
   private final CountDownLatch countDownLatch;
   private final ClusterHdfsConfigBean conf;
+  private static final String CORE_SITE_XML = "core-site.xml";
+  private static final String YARN_SITE_XML = "yarn-site.xml";
+  private static final String HDFS_SITE_XML = "hdfs-site.xml";
+  private static final String MAPRED_SITE_XML = "mapred-site.xml";
+
 
   public ClusterHdfsSource(ClusterHdfsConfigBean conf) {
     controlChannel = new ControlChannel();
@@ -353,7 +358,7 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             )
         );
       } else {
-        File coreSite = new File(hadoopConfigDir, "core-site.xml");
+        File coreSite = new File(hadoopConfigDir, CORE_SITE_XML);
         if (coreSite.exists()) {
           if (!coreSite.isFile()) {
             issues.add(
@@ -366,8 +371,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             );
           }
           hadoopConf.addResource(new Path(coreSite.getAbsolutePath()));
+        } else {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                Errors.HADOOPFS_30,
+                CORE_SITE_XML
+            )
+          );
         }
-        File hdfsSite = new File(hadoopConfigDir, "hdfs-site.xml");
+        File hdfsSite = new File(hadoopConfigDir, HDFS_SITE_XML);
         if (hdfsSite.exists()) {
           if (!hdfsSite.isFile()) {
             issues.add(
@@ -380,8 +394,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             );
           }
           hadoopConf.addResource(new Path(hdfsSite.getAbsolutePath()));
+        } else {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                Errors.HADOOPFS_30,
+                HDFS_SITE_XML
+            )
+          );
         }
-        File yarnSite = new File(hadoopConfigDir, "yarn-site.xml");
+        File yarnSite = new File(hadoopConfigDir, YARN_SITE_XML);
         if (yarnSite.exists()) {
           if (!yarnSite.isFile()) {
             issues.add(
@@ -394,8 +417,17 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             );
           }
           hadoopConf.addResource(new Path(yarnSite.getAbsolutePath()));
+        } else {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                Errors.HADOOPFS_30,
+                YARN_SITE_XML
+            )
+          );
         }
-        File mapredSite = new File(hadoopConfigDir, "mapred-site.xml");
+        File mapredSite = new File(hadoopConfigDir, MAPRED_SITE_XML);
         if (mapredSite.exists()) {
           if (!mapredSite.isFile()) {
             issues.add(
@@ -408,6 +440,15 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
             );
           }
           hadoopConf.addResource(new Path(mapredSite.getAbsolutePath()));
+        } else {
+          issues.add(
+            getContext().createConfigIssue(
+                Groups.HADOOP_FS.name(),
+                ClusterHdfsConfigBean.CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "hdfsConfDir",
+                Errors.HADOOPFS_30,
+                MAPRED_SITE_XML
+            )
+          );
         }
       }
     }
