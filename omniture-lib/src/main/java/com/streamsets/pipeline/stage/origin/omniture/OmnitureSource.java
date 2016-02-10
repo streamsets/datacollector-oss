@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +86,20 @@ public class OmnitureSource extends BaseSource {
     this.reportDescription = config.getReportDescription();
   }
 
+  /**
+   * Validate Ominture Report Description.
+   */
+  private void validateReportDescription(List<ConfigIssue> issues){
+    if(!JsonUtil.isJSONValid(this.reportDescription)) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.REPORT.name(),
+              "reportDescription",
+              Errors.OMNITURE_03
+          ));
+    }
+  }
+
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> errors = super.init();
@@ -97,6 +112,7 @@ public class OmnitureSource extends BaseSource {
 
     switch (httpMode) {
       case POLLING:
+        validateReportDescription(errors);
         httpConsumer = new OmniturePollingConsumer(
             resourceUrl,
             reportDescription,

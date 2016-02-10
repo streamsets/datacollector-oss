@@ -40,6 +40,8 @@ public class JsonUtil {
 
   private JsonUtil() {}
 
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
   public static Field jsonToField(Object json) throws IOException {
     Field field;
     if (json == null) {
@@ -142,29 +144,36 @@ public class JsonUtil {
   }
 
   public static String jsonRecordToString(Record r) throws StageException {
-    ObjectMapper objectMapper = new ObjectMapper();
     try {
-      return objectMapper.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
+      return OBJECT_MAPPER.writeValueAsString(JsonUtil.fieldToJsonObject(r, r.get()));
     } catch (JsonProcessingException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
   public static byte[] jsonRecordToBytes(Record r, Field f) throws StageException {
-    ObjectMapper objectMapper = new ObjectMapper();
     try {
-      return objectMapper.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
+      return OBJECT_MAPPER.writeValueAsBytes(JsonUtil.fieldToJsonObject(r, f));
     } catch (JsonProcessingException e) {
       throw new StageException(CommonError.CMN_0101, r.getHeader().getSourceId(), e.toString(), e);
     }
   }
 
   public static Field bytesToField(byte[] bytes) throws StageException {
-    ObjectMapper objectMapper = new ObjectMapper();
     try {
-      return jsonToField(objectMapper.readValue(bytes, Object.class));
+      return jsonToField(OBJECT_MAPPER.readValue(bytes, Object.class));
     } catch (Exception e) {
       throw new StageException(CommonError.CMN_0101, new String(bytes, StandardCharsets.UTF_8), e.toString(), e);
     }
   }
+
+  public static boolean isJSONValid(String jsonString) {
+    try {
+      OBJECT_MAPPER.readTree(jsonString);
+    } catch (IOException e) {
+      return false;
+    }
+    return true;
+  }
+
 }
