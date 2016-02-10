@@ -44,6 +44,7 @@ import org.apache.avro.generic.GenericRecord;
 import com.streamsets.pipeline.api.Field;
 
 import org.apache.avro.io.DatumWriter;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -67,6 +68,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
@@ -81,10 +83,11 @@ public class TestClusterHDFSSource {
   private static File dummyEtc;
   private static String resourcesDir;
   private static String hadoopConfDir;
+  private static File minidfsDir;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    File minidfsDir = new File("target/minidfs-" + UUID.randomUUID()).getAbsoluteFile();
+    minidfsDir = new File("target/minidfs-" + UUID.randomUUID()).getAbsoluteFile();
     minidfsDir.mkdirs();
     Assert.assertTrue(minidfsDir.exists());
     System.setProperty(MiniDFSCluster.PROP_TEST_BUILD_DATA, minidfsDir.getPath());
@@ -125,6 +128,62 @@ public class TestClusterHDFSSource {
   }
 
   @Test
+  public void testConfigsAbsent() throws Exception {
+    File dummyEtcConfigsAbsent = new File(minidfsDir, "dummyEtcConfigsAbsent");
+    dummyEtcConfigsAbsent.mkdirs();
+    try {
+      // Write only config file
+      writeConfig(dummyEtcConfigsAbsent, "core");
+      ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
+      conf.hdfsUri = miniDFS.getURI().toString();
+      conf.hdfsDirLocations = Arrays.asList(dir.toUri().getPath());
+      conf.hdfsConfigs = new HashMap<>();
+      conf.hdfsConfDir = dummyEtcConfigsAbsent.getName();
+      conf.dataFormat = DataFormat.TEXT;
+      conf.dataFormatConfig.textMaxLineLen = 1024;
+      SourceRunner sourceRunner =
+        new SourceRunner.Builder(ClusterHdfsDSource.class, createSource(conf))
+        .addOutputLane("lane")
+        .setExecutionMode(ExecutionMode.CLUSTER_BATCH)
+        .setResourcesDir(resourcesDir)
+        .build();
+
+      verifyForTestConfigsAbsent(sourceRunner, 3);
+
+      // Write second config file
+      writeConfig(dummyEtcConfigsAbsent, "mapred");
+      verifyForTestConfigsAbsent(sourceRunner, 2);
+
+      // Write third config file
+      writeConfig(dummyEtcConfigsAbsent, "hdfs");
+      verifyForTestConfigsAbsent(sourceRunner, 1);
+
+      // Write the 4th; now all config files are present so init shouldn't throw exception
+      writeConfig(dummyEtcConfigsAbsent, "yarn");
+      sourceRunner.runInit();
+      sourceRunner.runDestroy();
+
+    } finally {
+      FileUtils.deleteQuietly(dummyEtcConfigsAbsent);
+    }
+  }
+
+  private void verifyForTestConfigsAbsent(SourceRunner sourceRunner, int issueCount) throws StageException {
+    List<ConfigIssue> issues = sourceRunner.runValidateConfigs();
+    assertEquals(String.valueOf(issues), issueCount, issues.size());
+    assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_30"));
+  }
+
+
+  private void writeConfig(File configDir, String configFileNamePrefix) throws IOException {
+    Configuration dummyConf = new Configuration(false);
+    File siteXml = new File(configDir, configFileNamePrefix + "-site.xml");
+    FileOutputStream out = new FileOutputStream(siteXml);
+    dummyConf.writeXml(out);
+    out.close();
+  }
+
+  @Test
   public void testWrongHDFSDirLocation() throws Exception {
     ClusterHdfsConfigBean conf = new ClusterHdfsConfigBean();
     conf.hdfsUri = miniDFS.getURI().toString();
@@ -159,7 +218,7 @@ public class TestClusterHDFSSource {
       assertEquals(String.valueOf(issues), 1, issues.size());
       assertTrue(String.valueOf(issues), issues.get(0).toString().contains("HADOOPFS_13"));
 
-      conf.hdfsUri = "hdfs://localhost:8020";
+      conf.hdfsUri = "hdfs://localhost:50000";
       clusterHdfsSource = createSource(conf);
       issues = clusterHdfsSource.init(null, ContextInfoCreator
           .createSourceContext("myInstance", false, OnRecordError.TO_ERROR,

@@ -46,6 +46,7 @@ public enum Errors implements ErrorCode {
   HADOOPFS_28("Could not resolve the default Kerberos realm, you must set the 'dfs.namenode.kerberos.principal' " +
     "property to the HDFS principal name: {}"),
   HADOOPFS_29("Hadoop configuration directory '{}' must be relative to SDC resources directory in cluster mode"),
+  HADOOPFS_30("Hadoop configuration file '{}' does not exist"),
   ;
   private final String msg;
 
