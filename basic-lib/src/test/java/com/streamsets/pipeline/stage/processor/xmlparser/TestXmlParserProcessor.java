@@ -68,7 +68,7 @@ public class TestXmlParserProcessor {
   }
 
   @Test
-  public void testParsingInvalid() throws Exception {
+  public void testParsingInvalidXmlRecord() throws Exception {
     XmlParserConfig configs = new XmlParserConfig();
     configs.charset = "UTF-8";
     configs.fieldPathToParse = "/xml";
@@ -93,6 +93,38 @@ public class TestXmlParserProcessor {
       Assert.assertTrue(output.getRecords().containsKey("out"));
       Assert.assertEquals(0, output.getRecords().get("out").size());
       Assert.assertEquals(1, runner.getErrorRecords().size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testParsingInvalidDelimiter() throws Exception {
+    XmlParserConfig configs = new XmlParserConfig();
+    configs.charset = "UTF-8";
+    configs.fieldPathToParse = "/xml";
+    configs.parsedFieldPath = "/data";
+    configs.removeCtrlChars = false;
+    configs.xmlRecordElement = "WRONG_DELIMITER"; // Delimiter element does not exist!
+
+    XmlParserDProcessor processor = new XmlParserDProcessor();
+    processor.configs = configs;
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(XmlParserDProcessor.class, processor)
+        .addOutputLane("out").setOnRecordError(OnRecordError.TO_ERROR).build();
+    Map<String, Field> map = new HashMap<>();
+    map.put("xml", Field.create("<root><a>A</a></root>"));
+    Record record = RecordCreator.create();
+    record.set(Field.create(map));
+    List<Record> input = new ArrayList<>();
+    input.add(record);
+    try {
+      runner.runInit();
+      StageRunner.Output output = runner.runProcess(input);
+      Assert.assertTrue(output.getRecords().containsKey("out"));
+      Assert.assertEquals(1, output.getRecords().get("out").size());
+      Assert.assertNull(output.getRecords().get("out").get(0).get("/data/value"));
 
     } finally {
       runner.runDestroy();
