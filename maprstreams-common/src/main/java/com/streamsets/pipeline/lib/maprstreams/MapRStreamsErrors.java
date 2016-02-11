@@ -17,15 +17,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.kafka.impl;
+package com.streamsets.pipeline.lib.maprstreams;
 
-public class Kafka09Constants {
-  public static final String KAFKA_VERSION = "0.9";
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-  // Producer related Constants
-  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  public static final String KEY_SERIALIZER_KEY = "key.serializer";
-  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+@GenerateResourceBundle
+public enum MapRStreamsErrors implements ErrorCode {
 
-  private Kafka09Constants() {}
+  // MapR Streams Common
+  MAPRSTREAMS_01("Cannot find metadata for topic '{}'"),
+  MAPRSTREAMS_02("Error getting metadata for topic '{}' from MapR Streams due to error: {}"),
+  MAPRSTREAMS_03("Cannot find metadata for topic '{}' from MapR Streams"),
+
+
+  // MapR Streams Producer
+  MAPRSTREAMS_20("Error writing data to the MapR Streams: {}"),
+
+  // MapR Streams Consumer
+
+  ;
+
+  private final String msg;
+
+  MapRStreamsErrors(String msg) {
+    this.msg = msg;
+  }
+
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
+  }
 }

@@ -19,13 +19,33 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-public class Kafka09Constants {
-  public static final String KAFKA_VERSION = "0.9";
+import org.apache.kafka.clients.producer.StreamsPartitioner;
 
-  // Producer related Constants
-  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  public static final String KEY_SERIALIZER_KEY = "key.serializer";
-  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+import java.util.Map;
 
-  private Kafka09Constants() {}
+public class ExpressionPartitioner implements StreamsPartitioner {
+
+  @Override
+  public int partition(
+      String topic,
+      Object key,
+      byte[] keyBytes,
+      Object value,
+      byte[] valueBytes,
+      int numPartitions
+  ) {
+    return Integer.parseInt((String)key);
+  }
+
+  @Override
+  public void close() {
+
+  }
+
+  @Override
+  public void configure(Map<String, ?> map) {
+
+  }
+
+
 }

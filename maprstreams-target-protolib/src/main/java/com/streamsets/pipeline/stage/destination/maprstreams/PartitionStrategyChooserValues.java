@@ -17,15 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.kafka.impl;
+package com.streamsets.pipeline.stage.destination.maprstreams;
 
-public class Kafka09Constants {
-  public static final String KAFKA_VERSION = "0.9";
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 
-  // Producer related Constants
-  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  public static final String KEY_SERIALIZER_KEY = "key.serializer";
-  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+public class PartitionStrategyChooserValues extends BaseEnumChooserValues {
 
-  private Kafka09Constants() {}
+  public PartitionStrategyChooserValues() {
+    super(PartitionStrategy.class);
+  }
+
 }

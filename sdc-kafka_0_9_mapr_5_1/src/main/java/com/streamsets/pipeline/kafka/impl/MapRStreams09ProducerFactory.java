@@ -19,13 +19,27 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-public class Kafka09Constants {
-  public static final String KAFKA_VERSION = "0.9";
+import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
+import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
+import com.streamsets.pipeline.kafka.api.SdcKafkaProducerFactory;
 
-  // Producer related Constants
-  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  public static final String KEY_SERIALIZER_KEY = "key.serializer";
-  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+public class MapRStreams09ProducerFactory extends SdcKafkaProducerFactory {
 
-  private Kafka09Constants() {}
+  private ProducerFactorySettings settings;
+
+  public MapRStreams09ProducerFactory() {
+  }
+
+  @Override
+  protected void init(ProducerFactorySettings settings) {
+    this.settings = settings;
+  }
+
+  @Override
+  public SdcKafkaProducer create() {
+    return new MapRStreamsProducer09(
+        settings.getKafkaProducerConfigs(),
+        settings.getPartitionStrategy()
+    );
+  }
 }

@@ -19,13 +19,35 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-public class Kafka09Constants {
-  public static final String KAFKA_VERSION = "0.9";
 
-  // Producer related Constants
-  public static final String BOOTSTRAP_SERVERS_KEY = "bootstrap.servers";
-  public static final String KEY_SERIALIZER_KEY = "key.serializer";
-  public static final String VALUE_SERIALIZER_KEY = "value.serializer";
+import org.apache.kafka.clients.producer.StreamsPartitioner;
 
-  private Kafka09Constants() {}
+import java.util.Map;
+import java.util.Random;
+
+public class RandomPartitioner implements StreamsPartitioner {
+
+  private final Random random = new Random();
+
+  @Override
+  public int partition(
+      String topic,
+      Object key,
+      byte[] keyBytes,
+      Object value,
+      byte[] valueBytes,
+      int numPartitions
+  ) {
+    return random.nextInt(numPartitions);
+  }
+
+  @Override
+  public void close() {
+
+  }
+
+  @Override
+  public void configure(Map<String, ?> map) {
+
+  }
 }
