@@ -25,10 +25,10 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-sdc-kafka-09</artifactId>
+  <artifactId>streamsets-datacollector-sdc-kafka-09-mapr51</artifactId>
   <version>1.2.2.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector SDC Kafka 09</description>
-  <name>StreamSets Data Collector SDC kafka 09</name>
+  <description>StreamSets Data Collector SDC Kafka 09 MapR51</description>
+  <name>StreamSets Data Collector SDC kafka 09 MapR51</name>
   <packaging>jar</packaging>
 
   <properties>
@@ -42,6 +42,15 @@
     <guava.version>18.0</guava.version>
     <commons.version>3.4</commons.version>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>mapr-releases</id>
+      <url>http://repository.mapr.com/nexus/content/repositories/releases</url>
+      <snapshots><enabled>true</enabled></snapshots>
+      <releases><enabled>true</enabled></releases>
+    </repository>
+  </repositories>
 
   <dependencies>
     <dependency>
@@ -64,16 +73,15 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-09-common</artifactId>
+      <artifactId>streamsets-datacollector-maprstreams-common</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-kafka-common</artifactId>
+      <artifactId>streamsets-datacollector-sdc-kafka-09-common</artifactId>
       <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -96,90 +104,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdk</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.101tec</groupId>
-      <artifactId>zkclient</artifactId>
-      <version>${tec.version}</version>
-      <scope>compile</scope> <!-- Needed for high level consumer -->
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.11</artifactId>
-      <version>${kafka.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.11</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
-      <version>${bcpkix-jdk15on.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minikdc</artifactId>
-      <version>${minikdc-hadoop.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.directory.jdbm</groupId>
-          <artifactId>apacheds-jdbm1</artifactId>
-        </exclusion>
-      </exclusions>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.directory.jdbm</groupId>
-      <artifactId>apacheds-jdbm1</artifactId>
-      <version>${minikdc-jdbm1.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>${zookeeper.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
-      <scope>compile</scope>
-      <!-- Changed the scope from test to compile so that it gets shipped in the dist.
-      without this lib i see class not found exception at times while starting pipeline.
-      Will investigate the problem.-->
+      <version>0.9.0.0-mapr-streams-5.1.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>

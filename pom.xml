@@ -124,10 +124,14 @@
 
     <module>sdc-kafka-api</module>
     <module>sdc-kafka_0_8</module>
+    <module>sdc-kafka_0_9-common</module>
     <module>sdc-kafka_0_9</module>
+    <module>sdc-kafka_0_9_mapr_5_1</module>
     <module>kafka-common</module>
     <module>kafka_source-protolib</module>
     <module>kafka_target-protolib</module>
+    <module>maprstreams-common</module>
+    <module>maprstreams-target-protolib</module>
 
     <module>jython-protolib</module>
 
