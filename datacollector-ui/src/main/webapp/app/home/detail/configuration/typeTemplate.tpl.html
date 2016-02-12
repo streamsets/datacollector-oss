@@ -324,10 +324,10 @@
     <ui-select multiple
                ng-disabled="isPipelineReadOnly || isPipelineRunning"
                ng-model="detailPaneConfig.configuration[configIndex].value">
-      <ui-select-match>
+      <ui-select-match class="ui-select-match">
         {{$item}}
       </ui-select-match>
-      <ui-select-choices repeat="listValue in configDefinition.model.values| filter:$select.search">
+      <ui-select-choices class="ui-select-choices" repeat="listValue in configDefinition.model.values| filter:$select.search">
         <div ng-bind-html="listValue | highlight: $select.search"></div>
       </ui-select-choices>
     </ui-select>
@@ -344,8 +344,8 @@
                ng-disabled="isPipelineReadOnly || isPipelineRunning"
                tagging-tokens=",|ENTER"
                ng-model="detailPaneConfig.configuration[configIndex].value">
-      <ui-select-match>{{$item}}</ui-select-match>
-      <ui-select-choices
+      <ui-select-match class="ui-select-match">{{$item}}</ui-select-match>
+      <ui-select-choices class="ui-select-choices"
         repeat="fieldPath in fieldSelectorPaths.concat(detailPaneConfig.configuration[configIndex].value) | filter:$select.search">
         <div ng-bind-html="fieldPath | highlight: $select.search"></div>
       </ui-select-choices>

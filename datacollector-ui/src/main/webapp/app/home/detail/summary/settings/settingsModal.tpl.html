@@ -14,8 +14,8 @@
       <label class="control-label" translate="home.detailPane.summaryTab.chartsLabel">Charts</label>
       <ui-select multiple
           ng-model="selectedCharts.selected">
-        <ui-select-match placeholder="{{'home.detailPane.summaryTab.chartsPlaceholder' | translate}}">{{$item.label | translate}}</ui-select-match>
-        <ui-select-choices repeat="chart in availableCharts |  filter: {label: $select.search}">
+        <ui-select-match class="ui-select-match" placeholder="{{'home.detailPane.summaryTab.chartsPlaceholder' | translate}}">{{$item.label | translate}}</ui-select-match>
+        <ui-select-choices class="ui-select-choices" repeat="chart in availableCharts |  filter: {label: $select.search}">
           {{chart.label | translate}}
         </ui-select-choices>
       </ui-select>

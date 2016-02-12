@@ -76,11 +76,11 @@
                  tagging-tokens=",|ENTER"
                  ng-disabled="isPipelineReadOnly || isPipelineRunning"
                  ng-model="customFieldValue[customFieldConfigDefinition.name]">
-        <ui-select-match
+        <ui-select-match class="ui-select-match"
           placeholder="{{'home.detailPane.configurationTab.selectFields' | translate}}">
           {{$item}}
         </ui-select-match>
-        <ui-select-choices repeat="fieldPath in fieldPaths | filter:$select.search">
+        <ui-select-choices class="ui-select-choices" repeat="fieldPath in fieldPaths | filter:$select.search">
           {{fieldPath}}
         </ui-select-choices>
       </ui-select>
