@@ -181,7 +181,7 @@ public class CollectdParser extends AbstractParser {
     }
 
     try {
-      Path authFilePath = FileSystems.getDefault().getPath(authFileLocation);
+      Path authFilePath = FileSystems.getDefault().getPath(authFileLocation); // NOSONAR
       List<String> lines = Files.readAllLines(authFilePath, charset);
 
       for (String line : lines) {
@@ -201,7 +201,7 @@ public class CollectdParser extends AbstractParser {
       if (typesDbLocation == null || typesDbLocation.isEmpty()) {
         lines = Resources.readLines(Resources.getResource("types.db"), Charset.defaultCharset());
       } else {
-        Path typesDbFile = FileSystems.getDefault().getPath(typesDbLocation);
+        Path typesDbFile = FileSystems.getDefault().getPath(typesDbLocation); // NOSONAR
         lines = Files.readAllLines(typesDbFile, charset);
       }
 
