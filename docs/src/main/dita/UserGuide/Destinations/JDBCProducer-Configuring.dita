@@ -75,8 +75,7 @@
                                         single row at a time. </entry>
                                 </row>
                                 <row>
-                                    <entry>Prepared Statement Parameter Limit for Multi-Row
-                                        Insert</entry>
+                                    <entry>Statement Parameter Limit</entry>
                                     <entry>Defines the number of parameters allowed in the prepared
                                         statement for multi-row inserts.<p>Use -1 to disable the
                                             parameter limit. Default is -1.</p></entry>

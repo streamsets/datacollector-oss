@@ -15,14 +15,18 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_u5t_vpv_4r">
  <title>Elasticsearch</title>
- <shortdesc>The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch
-  destination writes each record to Elasticsearch as a document.</shortdesc>
+ <shortdesc>The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write
+    to Elasticsearch Found clusters. The Elasticsearch destination writes each record to
+    Elasticsearch as a document.</shortdesc>
  <conbody>
   <p><indexterm>Elasticsearch
-     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
-   you configure the Elasticsearch destination, you configure the cluster name, node URI, and
-   document-related information. You can add advanced Elasticsearch properties as needed. </p>
-  <p>By default, the Elasticsearch destination accesses the cluster through the node URI that you
-   provide, then accesses other available nodes in the cluster. </p>
+          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
+      you configure the Elasticsearch destination, you configure the cluster name, node URI, and
+      document-related information. </p>
+    <p>When the <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+      /> shares the same network as the Elasticsearch cluster, you can enter one or more node URI
+      and automatically detect additional Elasticsearch nodes on the cluster. </p>
+    <p>You can configure the destination to perform upserts. You can also add advanced Elasticsearch
+      properties as needed. </p>
  </conbody>
 </concept>

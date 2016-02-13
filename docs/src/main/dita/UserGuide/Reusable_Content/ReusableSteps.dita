@@ -1690,6 +1690,7 @@
                                             <li>gzip</li>
                                             <li>bzip2</li>
                                             <li>Snappy</li>
+                                            <li>LZ4</li>
                                             <li>Other</li>
                                         </ul></entry>
                                 </row>

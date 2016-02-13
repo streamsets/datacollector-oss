@@ -2,7 +2,7 @@
 <!DOCTYPE html
   SYSTEM "about:legacy-compat">
 <html xml:lang="en-us" lang="en-us">
-<head><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document. When you configure the Elasticsearch ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Elasticsearch"></meta><meta name="abstract" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_u5t_vpv_4r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Elasticsearch</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+<head><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write to Elasticsearch Found clusters. The Elasticsearch destination writes each record to Elasticsearch as a ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="Elasticsearch"></meta><meta name="abstract" content="The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write to Elasticsearch Found clusters. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="description" content="The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write to Elasticsearch Found clusters. The Elasticsearch destination writes each record to Elasticsearch as a document."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_u5t_vpv_4r"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>Elasticsearch</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
           
           var prefix = "../index.html";
           
@@ -35,15 +35,20 @@
  <h1 class="title topictitle1">Elasticsearch</h1>
 
  
- <div class="body conbody"><p class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster. The Elasticsearch
-  destination writes each record to Elasticsearch as a document.</p>
+ <div class="body conbody"><p class="shortdesc">The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write
+    to Elasticsearch Found clusters. The Elasticsearch destination writes each record to
+    Elasticsearch as a document.</p>
 
   <p class="p">When
-   you configure the Elasticsearch destination, you configure the cluster name, node URI, and
-   document-related information. You can add advanced Elasticsearch properties as needed. </p>
+      you configure the Elasticsearch destination, you configure the cluster name, node URI, and
+      document-related information. </p>
 
-  <p class="p">By default, the Elasticsearch destination accesses the cluster through the node URI that you
-   provide, then accesses other available nodes in the cluster. </p>
+    <p class="p">When the <span class="ph">Data
+                  Collector</span> shares the same network as the Elasticsearch cluster, you can enter one or more node URI
+      and automatically detect additional Elasticsearch nodes on the cluster. </p>
+
+    <p class="p">You can configure the destination to perform upserts. You can also add advanced Elasticsearch
+      properties as needed. </p>
 
  </div>
 
@@ -97,6 +102,23 @@ This is the default time basis. </dd>
     </div>
 
 </div>
+<div class="topic concept nested1" id="concept_yr2_1tf_z5">
+ <h2 class="title topictitle2">Document IDs and Upserts</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">When appropriate, you can specify the expression that defines the document ID. When you
+        do not specify an expression, Elasticsearch generates IDs for each document.</p>
+
+  <p class="p">When you configure the destination to perform upserts,
+            you must define the document ID. </p>
+
+        <p class="p">For example, to perform upserts for documents with IDs based on the EmployeeID field,
+            select the <span class="ph uicontrol">Enable Upsert</span> property and define the Document ID as
+            follows: <samp class="ph codeph">${record:value('/EmployeeID')}</samp>.</p>
+
+ </div>
+
+</div>
 <div class="topic task nested1" id="task_uns_gtv_4r">
     <h2 class="title topictitle2">Configuring an Elasticsearch Destination</h2>
 
@@ -114,9 +136,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d13231e148">General Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d13231e184">General Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d13231e151">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d13231e187">Description</th>
 
                                 </tr>
 
@@ -124,24 +146,24 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d13231e148 ">Name</td>
+                                    <td class="entry" valign="top" width="30%" headers="d13231e184 ">Name</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d13231e151 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d13231e148 ">Description</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d13231e151 ">Optional description.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d13231e187 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d13231e148 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e184 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d13231e187 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e184 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
                                             <img class="image" id="task_uns_gtv_4r__d1250e1643" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d13231e151 ">Fields that must include data to be passed into the
+                                    <td class="entry" valign="top" width="70%" headers="d13231e187 ">Fields that must include data to be passed into the
                                         stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
                                             fields that the stage uses.</div>
 </td>
@@ -149,10 +171,10 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d13231e148 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e184 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
                                             <img class="image" id="task_uns_gtv_4r__d1250e1657" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d13231e151 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry" valign="top" width="70%" headers="d13231e187 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. </td>
@@ -160,9 +182,9 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d13231e148 ">On Record Error</td>
+                                    <td class="entry" valign="top" width="30%" headers="d13231e184 ">On Record Error</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d13231e151 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d1250e1673">
+                                    <td class="entry" valign="top" width="70%" headers="d13231e187 ">Error record handling for the stage: <ul class="ul" id="task_uns_gtv_4r__d1250e1673">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -193,9 +215,9 @@ This is the default time basis. </dd>
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d13231e260">Elasticsearch Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d13231e296">Elasticsearch Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d13231e263">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d13231e299">Description</th>
 
                                 </tr>
 
@@ -203,25 +225,54 @@ This is the default time basis. </dd>
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Cluster Name</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Cluster Name</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">Elasticsearch cluster name.</td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Elasticsearch cluster name.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Cluster URIs</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Cluster URIs</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">URI of one or more nodes in the cluster. <p class="p">To ensure a
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">URI of one or more nodes in the cluster. <p class="p">To ensure a
                                             connection, enter additional URIs.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Additional Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Use Shield</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">Additional Elasticsearch properties that you want to use.
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Enables access to a Shield-protected cluster.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Elastic Found Cluster</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Enables access to a Found cluster. <p class="p">Found requires
+                                            Shield. When enabling Found, enable Shield and configure
+                                            the additional Shield properties. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Detect Additional Nodes in Cluster</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Uses the configured Cluster URI to detect additional
+                                        nodes in the cluster by enabling the Elasticsearch
+                                        client.transport.sniff property.<p class="p">Use only when the <span class="ph">Data
+                  Collector</span> shares the same network as the Elasticsearch cluster.
+                                            Do not use for Found or Docker clusters.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Additional Configuration</td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Additional Elasticsearch properties that you want to use.
                                         Enter the exact property name and value expected by
                                             Elasticsearch.<p class="p">By default, the client.transport.sniff
                                             property is set to True. This allows the <span class="ph">Data
@@ -232,11 +283,11 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Time Basis <a class="xref" href="Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
                                             <img class="image" id="task_uns_gtv_4r__image_w4w_q3p_ht" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                         </a></td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">
                                         <div class="p">Time basis to use for writing to time-based indexes. Use
                                             one of the following expressions:<ul class="ul" id="task_uns_gtv_4r__ul_wbn_qdt_r5">
                                                 <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
@@ -263,17 +314,17 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Data Time Zone</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Data Time Zone</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Time zone for the destination system. Used to resolve
                                         datetimes in time-based indexes. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Index</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Index</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">Index information for the generated documents. You can
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Index information for the generated documents. You can
                                         use a constant, datetime variables, a field that includes
                                         the index information, or any valid combination. <p class="p">When
                                             using datetime variables, make sure to configure the
@@ -283,18 +334,18 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Mapping</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Mapping</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">Mapping information for the generated documents. You can
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Mapping information for the generated documents. You can
                                         use a constant or a field that includes the mapping
                                         information. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Document ID</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Document ID</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">ID for the record. Use to specify the ID for the
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">ID for the record. Use to specify the ID for the
                                         generated documents. When you do not specify an ID,
                                         Elasticsearch creates an ID for each document.<p class="p">By default,
                                             the destination allows Elasticsearch to create the
@@ -304,12 +355,81 @@ This is the default time basis. </dd>
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e260 ">Data Charset</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Data Charset</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e263 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">
                                         <p class="p">Character encoding of the data to be processed. </p>
 
                                     </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d13231e296 ">Enable Upsert <a class="xref" href="Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify the expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
+                                            <img class="image" id="task_uns_gtv_4r__image_r1f_ggg_z5" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a></td>
+
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d13231e299 ">Enables upserts to the cluster. When enabled, configure
+                                        the Document ID property.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When writing to a Shield-protected cluster, on the <span class="keyword wintitle">Shield</span>
+                    tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uns_gtv_4r__table_jsk_fhg_z5" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d13231e519">Shield Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d13231e522">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e519 ">Shield Username/Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d13231e522 ">Shield username and password.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e519 ">Enable SSL</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d13231e522 ">Enables SSL between the <span class="ph">Data
+                  Collector</span> and the Elasticsearch cluster.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e519 ">SSL Keystore Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d13231e522 ">Location of the keystore file. <p class="p">Not necessary for Found
+                                            clusters. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d13231e519 ">SSL Keystore Password</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d13231e522 ">Password for the keystore file.<p class="p">Not necessary for Found
+                                            clusters.</p>
+</td>
 
                                 </tr>
 
