@@ -181,12 +181,27 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-elasticsearch_1_6-lib</entry>
-                            <entry>For Elasticsearch 1.6.2. <p>Includes the Elasticsearch
+                            <entry>For Elasticsearch 1.6.<p>Includes the Elasticsearch
                                     destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-elasticsearch_1_7-lib</entry>
-                            <entry>For Elasticsearch 1.7.1. <p>Includes the Elasticsearch
+                            <entry>For Elasticsearch 1.7.<p>Includes the Elasticsearch
+                                    destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-elasticsearch_2_0-lib</entry>
+                            <entry>For Elasticsearch 2.0. <p>Includes the Elasticsearch
+                                    destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-elasticsearch_2_1-lib</entry>
+                            <entry>For Elasticsearch 2.1. <p>Includes the Elasticsearch
+                                    destination.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-elasticsearch_2_2-lib</entry>
+                            <entry>For Elasticsearch 2.2. <p>Includes the Elasticsearch
                                     destination.</p></entry>
                         </row>
                         <row>
