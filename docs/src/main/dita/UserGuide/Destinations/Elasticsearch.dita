@@ -16,8 +16,8 @@
 <concept id="concept_u5t_vpv_4r">
  <title>Elasticsearch</title>
  <shortdesc>The Elasticsearch destination writes data to an Elasticsearch cluster. It can also write
-    to Elasticsearch Found clusters. The Elasticsearch destination writes each record to
-    Elasticsearch as a document.</shortdesc>
+    to Elasticsearch Found clusters and Shield-enabled clusters. The Elasticsearch destination
+    writes each record to Elasticsearch as a document.</shortdesc>
  <conbody>
   <p><indexterm>Elasticsearch
           destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Elasticsearch</indexterm></indexterm>When
