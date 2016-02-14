@@ -44,6 +44,8 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
       boolean shieldTransportSsl,
       String sslKeystorePath,
       String sslKeystorePassword,
+      String sslTruststorePath,
+      String sslTruststorePassword,
       boolean useFound
   ) throws UnknownHostException {
     ImmutableSettings.Builder settingsBuilder = ImmutableSettings.settingsBuilder()
@@ -60,6 +62,12 @@ public class ElasticSearch1Factory extends ElasticSearchFactory {
       }
       if (sslKeystorePassword != null && !sslKeystorePassword.isEmpty()) {
         settingsBuilder = settingsBuilder.put("shield.ssl.keystore.password", sslKeystorePassword);
+      }
+      if (sslTruststorePath != null && !sslTruststorePath.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.truststore.path", sslTruststorePath);
+      }
+      if (sslTruststorePassword != null && !sslTruststorePassword.isEmpty()) {
+        settingsBuilder = settingsBuilder.put("shield.ssl.truststore.password", sslTruststorePassword);
       }
     }
 
