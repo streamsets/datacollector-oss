@@ -42,6 +42,8 @@ public abstract class ElasticSearchFactory {
       boolean shieldTransportSsl,
       String sslKeystorePath,
       String sslKeystorePassword,
+      String sslTruststorePath,
+      String sslTruststorePassword,
       boolean useFound
   ) throws UnknownHostException;
 
@@ -71,6 +73,8 @@ public abstract class ElasticSearchFactory {
       boolean shieldTransportSsl,
       String sslKeystorePath,
       String sslKeystorePassword,
+      String sslTruststorePath,
+      String sslTruststorePassword,
       boolean useFound
   ) throws UnknownHostException {
     return factory.createClient(
@@ -83,6 +87,8 @@ public abstract class ElasticSearchFactory {
         shieldTransportSsl,
         sslKeystorePath,
         sslKeystorePassword,
+        sslTruststorePath,
+        sslTruststorePassword,
         useFound
     );
   }

@@ -76,4 +76,30 @@ public class ShieldConfigBean {
       group = "SHIELD"
   )
   public String sslKeystorePassword;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "SSL Truststore Path",
+      description = "",
+      dependsOn = "useShield^",
+      triggeredByValue = "true",
+      displayPosition = 50,
+      group = "SHIELD"
+  )
+  public String sslTruststorePath;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "SSL Truststore Password",
+      description = "",
+      dependsOn = "useShield^",
+      triggeredByValue = "true",
+      displayPosition = 60,
+      group = "SHIELD"
+  )
+  public String sslTruststorePassword;
 }
