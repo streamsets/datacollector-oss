@@ -25,12 +25,14 @@ import com.streamsets.pipeline.kafka.common.KafkaTestUtil;
 import kafka.javaapi.producer.Producer;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Ignore
 public class TestKafkaOriginMultiPartitionPipelineRun extends TestPipelineRunStandalone {
 
   private static final String TOPIC = "TestKafkaOriginMultiPartition";
