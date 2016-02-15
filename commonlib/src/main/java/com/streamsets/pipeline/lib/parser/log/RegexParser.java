@@ -52,9 +52,6 @@ public class RegexParser extends LogCharDataParser {
         throw new DataParserException(Errors.LOG_PARSER_03, sb.toString(), "Regular Expression - " + pattern.pattern());
       }
     }
-    for(int i = 1; i <= m.groupCount(); i++) {
-      System.out.println("Group : " + i + "= " + m.group() + ",  Value : " + m.group(i));
-    }
 
     Map<String, Field> map = new HashMap<>();
     for(Map.Entry<String, Integer> e : fieldToGroupMap.entrySet()) {
