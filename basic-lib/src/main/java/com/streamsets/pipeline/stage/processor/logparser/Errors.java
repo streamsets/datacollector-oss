@@ -27,7 +27,8 @@ public enum Errors implements ErrorCode {
   LOGP_00("Field '{}' does not exist in record '{}'. Cannot parse the field."),
   LOGP_01("Field '{}' in record '{}' is set to NULL. Cannot parse the field."),
   LOGP_02("Cannot pass the parsed Log line to field '{}' for record '{}'. Field does not exist."),
-  LOGP_03("Cannot parse the Long line field '{}' for record '{}': {}"),
+  LOGP_03("Cannot parse the Log line field '{}' for record '{}': {}"),
+  LOGP_04("Cannot create the parser factory: '{}'"),
   ;
 
 

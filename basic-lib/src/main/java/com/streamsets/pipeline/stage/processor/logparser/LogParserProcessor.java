@@ -99,8 +99,15 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
     try {
       parserFactory = builder.build();
     } catch (Exception ex) {
-      issues.add(getContext().createConfigIssue(null, null,
-        com.streamsets.pipeline.stage.origin.spooldir.Errors.SPOOLDIR_24, ex.toString(), ex));
+      issues.add(
+          getContext().createConfigIssue(
+              null,
+              null,
+              Errors.LOGP_04,
+              ex.toString(),
+              ex
+          )
+      );
     }
     return issues;
   }
@@ -109,11 +116,11 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
     Field field = record.get(fieldPathToParse);
     if (field == null) {
-      throw new OnRecordErrorException(Errors.LOGP_00, record.getHeader().getSourceId(), fieldPathToParse);
+      throw new OnRecordErrorException(Errors.LOGP_00, fieldPathToParse, record.getHeader().getSourceId());
     } else {
       String value = field.getValueAsString();
       if (value == null) {
-        throw new OnRecordErrorException(Errors.LOGP_01, record.getHeader().getSourceId(), fieldPathToParse);
+        throw new OnRecordErrorException(Errors.LOGP_01, fieldPathToParse, record.getHeader().getSourceId());
       }
       try (DataParser parser = parserFactory.getParser(record.getHeader().getSourceId(), value)){
         Record r = parser.parse();
@@ -122,11 +129,16 @@ public class LogParserProcessor extends SingleLaneRecordProcessor {
           record.set(parsedFieldPath, parsed);
         }
       } catch (IOException | DataParserException ex) {
-        throw new OnRecordErrorException(Errors.LOGP_03, record.getHeader().getSourceId(), fieldPathToParse,
-                                         ex.toString(), ex);
+        throw new OnRecordErrorException(
+            Errors.LOGP_03,
+            fieldPathToParse,
+            record.getHeader().getSourceId(),
+            ex.toString(),
+            ex
+        );
       }
       if (!record.has(parsedFieldPath)) {
-        throw new OnRecordErrorException(Errors.LOGP_02, record.getHeader().getSourceId(), parsedFieldPath);
+        throw new OnRecordErrorException(Errors.LOGP_02, parsedFieldPath, record.getHeader().getSourceId());
       }
       batchMaker.addRecord(record);
     }
