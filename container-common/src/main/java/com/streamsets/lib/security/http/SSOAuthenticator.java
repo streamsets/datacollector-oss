@@ -21,6 +21,7 @@ package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -55,12 +56,8 @@ public class SSOAuthenticator implements Authenticator {
   static {
     try {
       FORBIDDEN_JSON_STR = new ObjectMapper().writeValueAsString(ImmutableMap.of(
-          "errorCode",
-          "SSO_00",
-          "message",
-          "Forbidden, user not authenticated",
-          "localizedMessage",
-          "Forbidden, user not authenticated"
+          "ISSUES",
+          ImmutableList.of(ImmutableMap.of("code", "SSO_00", "message", "Forbidden, user not authenticated"))
       ));
     } catch (Exception ex) {
       throw new RuntimeException("Shouldn't happen: " + ex.toString(), ex);
