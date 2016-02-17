@@ -23,9 +23,9 @@
         </context>
         <steps id="steps_end_bln_25">
             <step>
-                <cmd>Use the following URL to download the installation files from the StreamSets
-                    website: <xref href="http://www.streamsets.com/opensource" format="html"
-                        scope="external"/>.</cmd>
+                <cmd>Use the following URL to download the CSD from the StreamSets website: <xref
+                        href="http://www.streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
             </step>
             <step>
                 <cmd>Copy the <ph
