@@ -680,9 +680,78 @@ public class TestFieldFilterProcessor {
     }
   }
 
+  @Test
+  public void testRemoveNull() throws StageException {
+    Record record = createNestedRecord(true);
+    // Remove fields that match "/USA[*]/SanFrancisco/*/streets[*][1]/name" and their values are null.
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("/USA[*]/SanFrancisco/*/streets[*][1]/name"))
+        .addConfiguration("filterOperation", FilterOperation.REMOVE_NULL)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][0]/name"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name")); // Matched && null
+
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[1][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[1][1]/name")); // Matched && non-null
+      Assert.assertNotNull(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValue());
+
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/folsom/streets[0][0]/name"));
+      Assert.assertFalse(resultRecord.has("/USA[0]/SanFrancisco/folsom/streets[0][1]/name")); // Matched && null
+
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaMonica/cole/streets[0][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaMonica/cole/streets[0][1]/name")); // Unmatched && null
+      Assert.assertNull(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+
+    record = createNestedRecord(true);
+    // "/CANADA" doesn't match any field, so this should be just no-op.
+    runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("/CANADA"))
+        .addConfiguration("filterOperation", FilterOperation.REMOVE_NULL)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+
+      Record resultRecord = output.getRecords().get("a").get(0);
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[0][1]/name")); // Unmatched && null
+      Assert.assertNull(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValue());
+
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[1][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/noe/streets[1][1]/name")); // Unmatched && non-null
+      Assert.assertNotNull(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValue());
+
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/folsom/streets[0][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[0]/SanFrancisco/folsom/streets[0][1]/name")); // Unmatched && null
+      Assert.assertNull(record.get("/USA[0]/SanFrancisco/folsom/streets[0][1]/name").getValue());
+
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaMonica/cole/streets[0][0]/name"));
+      Assert.assertTrue(resultRecord.has("/USA[1]/SantaMonica/cole/streets[0][1]/name")); // Unmatched && null
+      Assert.assertNull(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValue());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
   private Record createNestedRecord() {
+    return createNestedRecord(false);
+  }
+
+  private Record createNestedRecord(boolean includeNulls) {
     Field name1 = Field.create("a");
-    Field name2 = Field.create("b");
+    Field name2 = includeNulls ? Field.create(Field.Type.STRING, null) : Field.create("b");
     Map<String, Field> nameMap1 = new HashMap<>();
     nameMap1.put("name", name1);
     Map<String, Field> nameMap2 = new HashMap<>();
@@ -696,14 +765,14 @@ public class TestFieldFilterProcessor {
     nameMap4.put("name", name4);
 
     Field name5 = Field.create("e");
-    Field name6 = Field.create("f");
+    Field name6 = includeNulls ? Field.create(Field.Type.STRING, null) : Field.create("f");
     Map<String, Field> nameMap5 = new HashMap<>();
     nameMap5.put("name", name5);
     Map<String, Field> nameMap6 = new HashMap<>();
     nameMap6.put("name", name6);
 
     Field name7 = Field.create("g");
-    Field name8 = Field.create("h");
+    Field name8 = includeNulls ? Field.create(Field.Type.STRING, null) : Field.create("h");
 
     Map<String, Field> nameMap7 = new HashMap<>();
     nameMap7.put("name", name7);
@@ -748,14 +817,25 @@ public class TestFieldFilterProcessor {
     record.set(Field.create(map));
 
     //Nested record looks like this:
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name").getValueAsString(), "a");
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValueAsString(), "b");
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name").getValueAsString(), "c");
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValueAsString(), "d");
-    Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(), "e");
-    Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(), "f");
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][0]/name").getValueAsString(), "g");
-    Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][1]/name").getValueAsString(), "h");
+    if (includeNulls) {
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name").getValueAsString(), "a");
+      Assert.assertNull(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValue()); // null
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name").getValueAsString(), "c");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValueAsString(), "d");
+      Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(), "e");
+      Assert.assertNull(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValue()); // null
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][0]/name").getValueAsString(), "g");
+      Assert.assertNull(record.get("/USA[0]/SanFrancisco/folsom/streets[0][1]/name").getValue()); // null
+    } else {
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][0]/name").getValueAsString(), "a");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[0][1]/name").getValueAsString(), "b");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][0]/name").getValueAsString(), "c");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/noe/streets[1][1]/name").getValueAsString(), "d");
+      Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][0]/name").getValueAsString(), "e");
+      Assert.assertEquals(record.get("/USA[1]/SantaMonica/cole/streets[0][1]/name").getValueAsString(), "f");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][0]/name").getValueAsString(), "g");
+      Assert.assertEquals(record.get("/USA[0]/SanFrancisco/folsom/streets[0][1]/name").getValueAsString(), "h");
+    }
 
     return record;
   }

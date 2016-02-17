@@ -54,6 +54,17 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
           list.addAll(matchingFieldPaths);
         }
         break;
+      case REMOVE_NULL:
+        list = new ArrayList<>();
+        for (String field : fields) {
+          List<String> matchingFieldPaths = FieldRegexUtil.getMatchingFieldPaths(field, fieldPaths);
+          for (String fieldPath : matchingFieldPaths) {
+            if (fieldPaths.contains(fieldPath) && record.get(fieldPath).getValue() == null) {
+              list.add(fieldPath);
+            }
+          }
+        }
+        break;
       case KEEP:
         //Algorithm:
         // - Get all possible field paths in the record

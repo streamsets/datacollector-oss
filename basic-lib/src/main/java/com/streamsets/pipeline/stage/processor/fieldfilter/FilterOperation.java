@@ -25,7 +25,8 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum FilterOperation implements Label {
   KEEP("Keep Listed Fields"),
-  REMOVE("Remove Listed Fields");
+  REMOVE("Remove Listed Fields"),
+  REMOVE_NULL("Remove Listed Fields If Their Values Are Null");
 
   private String label;
 
