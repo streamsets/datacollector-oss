@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class KafkaConsumer09 extends BaseKafkaConsumer09 {
+public class MapRStreamsConsumer09 extends BaseKafkaConsumer09 {
 
   private static final boolean AUTO_COMMIT_ENABLED_DEFAULT = false;
   private static final String AUTO_OFFSET_RESET_KEY = "auto.offset.reset";
@@ -40,22 +40,19 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private static final String KEY_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.StringDeserializer";
   private static final String VALUE_DESERIALIZER_DEFAULT = "org.apache.kafka.common.serialization.ByteArrayDeserializer";
 
-  private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer09.class);
-
   private final Stage.Context context;
-  private final String bootStrapServers;
   private final String consumerGroup;
   private final Map<String, Object> kafkaConsumerConfigs;
 
-  public KafkaConsumer09(
-      String bootStrapServers,
-      String topic,
-      String consumerGroup,
-      Map<String, Object> kafkaConsumerConfigs,
-      Source.Context context
+  private static final Logger LOG = LoggerFactory.getLogger(MapRStreamsConsumer09.class);
+
+  public MapRStreamsConsumer09(
+    String topic,
+    String consumerGroup,
+    Map<String, Object> kafkaConsumerConfigs,
+    Source.Context context
   ) {
     super(topic);
-    this.bootStrapServers = bootStrapServers;
     this.consumerGroup = consumerGroup;
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
@@ -63,14 +60,32 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
 
   @Override
   protected void configureKafkaProperties(Properties props) {
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
+
+    // MapR Streams supports following Kafka consumer configs
+    // 1. key.deserializer
+    // 2. value.deserializer
+    // 3. fetch.min.bytes
+    // 4. group.id
+    // 5. max.partition.fetch.bytes
+    // 6. auto.offset.reset
+    // 7. enable.auto.commit
+    // 8. auto.commit.interval.ms
+    // 9. client.id
+    // 10. metadata.max.age.ms
+
+    // MapR Streams related proeprties
+    // 1. streams.consumer.default.stream
+    // 2. streams.rpc.timeout.ms
+
     props.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
     props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, AUTO_COMMIT_ENABLED_DEFAULT);
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, KEY_DESERIALIZER_DEFAULT);
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, VALUE_DESERIALIZER_DEFAULT);
+
     if (this.context.isPreview()) {
       props.put(AUTO_OFFSET_RESET_KEY, AUTO_OFFSET_RESET_PREVIEW);
     }
+
     addUserConfiguredProperties(props);
   }
 
@@ -92,7 +107,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
     if (kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
-      kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
