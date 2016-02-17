@@ -79,6 +79,8 @@
     <cassandra_2-lib>none</cassandra_2-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
     <influxdb_0_9-lib>none</influxdb_0_9-lib>
+    <mapr_5_1-lib>none</mapr_5_1-lib>
+
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -418,6 +420,7 @@
         <elasticsearch_2_0-lib>elasticsearch_2_0-lib</elasticsearch_2_0-lib>
         <elasticsearch_2_1-lib>elasticsearch_2_1-lib</elasticsearch_2_1-lib>
         <aws-lib>aws-lib</aws-lib>
+        <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
       </properties>
       <modules>
         <module>cdh_5_2-lib</module>
@@ -437,6 +440,7 @@
         <module>elasticsearch_2_0-lib</module>
         <module>elasticsearch_2_1-lib</module>
         <module>aws-lib</module>
+        <module>mapr_5_1-lib</module>
       </modules>
     </profile>
 
