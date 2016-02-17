@@ -36,6 +36,7 @@ import org.apache.kafka.common.PartitionInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -134,6 +135,30 @@ public class MapRStreamsValidationUtil09 extends BaseKafkaValidationUtil impleme
       }
     }
     return valid;
+  }
+
+  @Override
+  public List<HostAndPort> validateKafkaBrokerConnectionString(
+    List<Stage.ConfigIssue> issues,
+    String connectionString,
+    String configGroupName,
+    String configName,
+    Stage.Context context
+  ) {
+    List<HostAndPort> kafkaBrokers = new ArrayList<>();
+    return kafkaBrokers;
+  }
+
+  @Override
+  public List<HostAndPort> validateZkConnectionString(
+    List<Stage.ConfigIssue> issues,
+    String connectString,
+    String configGroupName,
+    String configName,
+    Stage.Context context
+  ) {
+    List<HostAndPort> kafkaBrokers = new ArrayList<>();
+    return kafkaBrokers;
   }
 
   private KafkaConsumer<String, String> createTopicMetadataClient() {

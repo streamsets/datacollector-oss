@@ -47,7 +47,7 @@ public class MapRStreamsTargetConfigBean {
   @ValueChooserModel(ProducerDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
-  @ConfigDefBean(groups = {"MapR Streams"})
+  @ConfigDefBean(groups = {"MAPR_STREAMS"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
