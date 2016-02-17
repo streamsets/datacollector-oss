@@ -31,7 +31,7 @@
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ht4_x5v_4r">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
@@ -55,31 +55,29 @@
                                 </row>
                                 <row>
                                     <entry>Elastic Found Cluster</entry>
-                                    <entry>Enables access to a Found cluster. <p>Found requires
-                                            Shield. When enabling Found, enable Shield and configure
-                                            the additional Shield properties. </p></entry>
+                                    <entry>Enables access to a Found cluster. <p>Selecting this
+                                            property is the equivalent to setting the
+                                            action.bulk.compress Elasticsearch property to false,
+                                            and the request.headers.X-Found-Cluster to the cluster
+                                            name. </p><p>Found requires Shield. When enabling Found,
+                                            enable Shield and configure the additional Shield
+                                            properties. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Detect Additional Nodes in Cluster</entry>
-                                    <entry>Uses the configured Cluster URI to detect additional
-                                        nodes in the cluster by enabling the Elasticsearch
-                                        client.transport.sniff property.<p>Use only when the <ph
+                                    <entry><p>Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>Selecting this property is
+                                        the equivalent to setting the  client.transport.sniff
+                                        Elasticsearch property to true.<p>Use only when the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> shares the same network as the Elasticsearch cluster.
-                                            Do not use for Found or Docker clusters.<draft-comment
-                                                author="Loretta">Should I say this last sentence?
-                                                Ihave not mentioned Docker elsewhere in the
-                                                doc.</draft-comment></p></entry>
+                                            Do not use for Found or Docker clusters.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Additional Configuration</entry>
                                     <entry>Additional Elasticsearch properties that you want to use.
                                         Enter the exact property name and value expected by
-                                            Elasticsearch.<p>By default, the client.transport.sniff
-                                            property is set to True. This allows the <ph
-                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> to write to nodes in the cluster that are not listed
-                                            in the stage.</p></entry>
+                                        Elasticsearch.</entry>
                                 </row>
                                 <row>
                                     <entry>Time Basis <xref
@@ -169,25 +167,49 @@
                             <tbody>
                                 <row>
                                     <entry>Shield Username/Password</entry>
-                                    <entry>Shield username and password.</entry>
+                                    <entry>Shield username and password. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.user Elasticsearch property.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Enable SSL</entry>
                                     <entry>Enables SSL between the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> and the Elasticsearch cluster.</entry>
+                                        /> and the Elasticsearch cluster.<p>Selecting this property
+                                            is the equivalent to setting the shield.transport.ssl
+                                            Elasticsearch property to true.</p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Keystore Path</entry>
-                                    <entry>Location of the keystore file. <p>Not necessary for Found
-                                            clusters. <draft-comment author="Loretta">Are there
-                                                other cases where this is not necessary after you
-                                                enable SSL?</draft-comment></p></entry>
+                                    <entry>Location of the keystore file. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.keystore.path Elasticsearch
+                                            property.</p><p>Not necessary for Found clusters.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>SSL Keystore Password</entry>
-                                    <entry>Password for the keystore file.<p>Not necessary for Found
-                                            clusters.</p></entry>
+                                    <entry>Password for the keystore file.<p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.keystore.password Elasticsearch
+                                            property.</p><p>Not necessary for Found
+                                        clusters.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Path</entry>
+                                    <entry>Location of the truststore file. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.truststore.path Elasticsearch
+                                            property.</p><p>Not necessary for Found clusters.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Password</entry>
+                                    <entry>Password for the truststore file.<p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.truststore.password Elasticsearch
+                                            property.</p><p>Not necessary for Found
+                                        clusters.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

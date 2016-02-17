@@ -782,7 +782,8 @@
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-PROTO-Mess</uicontrol>. Step used
                         by message-reading stages except for Kafka. Kafka conrefs the first two rows
-                        of table:</draft-comment>
+                        of table. <p>NOTE: When making changes, make sure to update the file version
+                            and destination versions, as necessary.</p></draft-comment>
                 </cmd>
             </step>
             <step id="O-PROTO-Mess">
@@ -813,8 +814,11 @@
                                 </row>
                                 <row id="row-MessageType">
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to read data. Enter a message type
-                                        defined in the descriptor file.</entry>
+                                    <entry>The fully-qualified name for the message type to use when
+                                        reading data.<p>Use the following format:
+                                                <codeph>&lt;package name>.&lt;message
+                                            type></codeph>. </p>Use a message type defined in the
+                                        descriptor file.</entry>
                                 </row>
                                 <row>
                                     <entry>Delimited Messages</entry>
@@ -829,7 +833,9 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-Proto-File</uicontrol>. Step used
-                        by file-based proto</draft-comment>
+                        by file-based proto. <p>NOTE: When making changes, make sure to update the
+                            message version and destination versions, as
+                        necessary.</p></draft-comment>
                 </cmd>
             </step>
             <step id="O-PROTO-File">
@@ -860,8 +866,11 @@
                                 </row>
                                 <row>
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to read data. Enter a message type
-                                        defined in the descriptor file.</entry>
+                                    <entry>The fully-qualified name for the message type to use when
+                                        reading data.<p>Use the following format:
+                                                <codeph>&lt;package name>.&lt;message
+                                            type></codeph>. </p>Use a message type defined in the
+                                        descriptor file.</entry>
                                 </row>
                                 <row>
                                     <entry>Delimited Messages</entry>
@@ -1500,7 +1509,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><b>D-PROTO-props</b> - used by all protobuf
-                        destinations</draft-comment>
+                            destinations<p>NOTE: when making changes, make sure to make any related
+                            ones to BOTH origin tables.</p></draft-comment>
                 </cmd>
             </step>
             <step id="D-PROTO-props">
@@ -1531,8 +1541,11 @@
                                 </row>
                                 <row>
                                     <entry>Message Type</entry>
-                                    <entry>Message type to use to write data. Enter a message type
-                                        defined in the descriptor file.</entry>
+                                    <entry>The fully-qualified name for the message type to use when
+                                        reading data.<p>Use the following format:
+                                                <codeph>&lt;package name>.&lt;message
+                                            type></codeph>. </p>Use a message type defined in the
+                                        descriptor file.</entry>
                                 </row>
                             </tbody>
                         </tgroup>
