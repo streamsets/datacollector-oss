@@ -136,7 +136,7 @@
     <module>kafka_target-protolib</module>
     <module>maprstreams-common</module>
     <module>maprstreams-target-protolib</module>
-
+    <module>maprstreams-source-protolib</module>
     <module>jython-protolib</module>
     <module>groovy-protolib</module>
 
