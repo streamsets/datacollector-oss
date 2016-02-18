@@ -128,10 +128,13 @@ public class StringEL {
     @ElParam("string") String string,
     @ElParam("regEx") String regEx,
     @ElParam("groupNumber") int groupNumber) {
-    Map<String, Pattern> patterns = (Map<String, Pattern>) ELEval.getVariablesInScope().getContextVariable(MEMOIZED);
-    Matcher matcher = getPattern(patterns, regEx).matcher(string);
-    if (matcher.find()) {
-      return matcher.group(groupNumber);
+    Utils.checkArgument(regEx != null, "Argument regEx for str:regExCapture() cannot be null.");
+    if (string != null) {
+      Map<String, Pattern> patterns = (Map<String, Pattern>) ELEval.getVariablesInScope().getContextVariable(MEMOIZED);
+      Matcher matcher = getPattern(patterns, regEx).matcher(string);
+      if (matcher.find()) {
+        return matcher.group(groupNumber);
+      }
     }
     return null;
   }
@@ -177,4 +180,28 @@ public class StringEL {
     @ElParam("suffix") String suffix) {
     return string.endsWith(suffix);
   }
+
+  @ElFunction(
+      prefix = "str",
+      name = "matches",
+      description = "Tells whether the argument string matches the argument regex.")
+  public static boolean matches(
+      @ElParam("string") String string,
+      @ElParam("regex") String regEx) {
+    Utils.checkArgument(regEx != null, "Argument regEx for str:matches() cannot be null.");
+    return string != null && string.matches(regEx);
+  }
+
+  @ElFunction(
+      prefix = "str",
+      name = "concat",
+      description = "Returns a new string that is a concatenation of the two argument strings.")
+  public static String concat(
+      @ElParam("string1") String string1,
+      @ElParam("string2") String string2) {
+    string1 = (string1 == null)? "" : string1;
+    string2 = (string2 == null)? "" : string2;
+    return string1.concat(string2);
+  }
+
 }

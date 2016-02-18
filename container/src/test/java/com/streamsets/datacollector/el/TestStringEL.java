@@ -218,4 +218,34 @@ public class TestStringEL {
     // Regex pattern was the one expected
     Assert.assertEquals(Pattern.compile(".*").pattern(), memoizedRegex.get(regex).pattern());
   }
+
+  @Test
+  public void testConcat() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testConcat", StringEL.class);
+    ELVariables variables = new ELVariables();
+    String result = eval.eval(variables, "${str:concat(\"abc\", \"def\")}", String.class);
+    Assert.assertEquals("abcdef", result);
+    result = eval.eval(variables, "${str:concat(\"\", \"def\")}", String.class);
+    Assert.assertEquals("def", result);
+    result = eval.eval(variables, "${str:concat(\"abc\", \"\")}", String.class);
+    Assert.assertEquals("abc", result);
+    result = eval.eval(variables, "${str:concat(\"\", \"\")}", String.class);
+    Assert.assertTrue(result.isEmpty());
+  }
+
+  @Test
+  public void testMatches() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testMatches", StringEL.class);
+    ELVariables variables = new ELVariables();
+
+    Assert.assertTrue(eval.eval(variables, "${str:matches(\"abc\", \"[a-z]+\")}", Boolean.class));
+    Assert.assertTrue(eval.eval(variables, "${str:matches(\"abc123\", \"[a-z]+[0-9]+\")}", Boolean.class));
+    Assert.assertTrue(eval.eval(variables, "${str:matches(\"abc123\", \".*\")}", Boolean.class));
+    Assert.assertTrue(eval.eval(variables, "${str:matches(\"  bc  cd\", \"[a-z ]+\")}", Boolean.class));
+    Assert.assertTrue(eval.eval(variables,
+        "${str:matches(\"vcpip-hdvrjkdfkjd\", \"^(vc[rkpm]ip-hdvr.*)\")}", Boolean.class));
+
+    Assert.assertFalse(eval.eval(variables, "${str:matches(\"Abc\", \"[a-z]+\")}", Boolean.class));
+    Assert.assertFalse(eval.eval(variables, "${str:matches(\"abc\n123\", \".*\")}", Boolean.class));
+  }
 }
