@@ -21,8 +21,6 @@ package com.streamsets.datacollector.email;
 
 
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.PipelineException;
 
 import javax.inject.Inject;
 import javax.mail.Authenticator;
@@ -113,7 +111,7 @@ public class EmailSender {
     return session;
   }
 
-  public void send(List<String> addresses, String subject, String body) throws PipelineException {
+  public void send(List<String> addresses, String subject, String body) throws EmailException {
     try {
       session = (session == null) ? createSession() : session;
       Message message = new MimeMessage(session);
@@ -126,7 +124,7 @@ public class EmailSender {
       Transport.send(message);
     } catch (Exception ex) {
       session = null;
-      throw new PipelineException(ContainerError.CONTAINER_0500, ex.toString(), ex);
+      throw new EmailException(ex);
     }
   }
 

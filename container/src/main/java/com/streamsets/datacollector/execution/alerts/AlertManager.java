@@ -26,6 +26,7 @@ import com.google.common.io.Resources;
 import com.streamsets.datacollector.alerts.AlertsUtil;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinition;
+import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -101,7 +102,7 @@ public class AlertManager {
       } else {
         emailSender.send(emailIds, subject, emailBody);
       }
-    } catch (PipelineException | IOException e) {
+    } catch (EmailException | IOException e) {
       LOG.error("Error sending alert email, reason: {}", e.toString(), e);
       //Log error and move on. This should not stop the pipeline.
     }
@@ -148,7 +149,7 @@ public class AlertManager {
           } else {
             emailSender.send(emailIds, EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + ruleDefinition.getAlertText(), emailBody);
           }
-        } catch (PipelineException | IOException e) {
+        } catch (EmailException | IOException e) {
           LOG.error("Error sending alert email, reason: {}", e.toString(), e);
           //Log error and move on. This should not stop the pipeline.
         }

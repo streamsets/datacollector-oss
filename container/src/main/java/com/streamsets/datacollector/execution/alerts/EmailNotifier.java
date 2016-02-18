@@ -21,13 +21,13 @@ package com.streamsets.datacollector.execution.alerts;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import com.streamsets.datacollector.email.EmailException;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.util.ContainerError;
-import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.dc.execution.manager.standalone.ThreadUsage;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.slf4j.Logger;
@@ -133,7 +133,7 @@ public class EmailNotifier implements StateEventListener {
             toState.getName().replaceAll(" ", "%20"));
         try {
           emailSender.send(emails, subject, emailBody);
-        } catch (PipelineException e) {
+        } catch (EmailException e) {
           LOG.error("Error sending email : '{}'", e.toString());
         }
       }
