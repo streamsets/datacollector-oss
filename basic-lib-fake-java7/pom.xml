@@ -22,12 +22,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>1.2.1.0</version>
+    <version>1.2.1.1-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-basic-lib-fake-java7</artifactId>
-  <version>1.2.1.0</version>
+  <version>1.2.1.1-SNAPSHOT</version>
   <description>StreamSets Data Collector Basic Lib Fake Java 7</description>
   <name>StreamSets Data Collector Basic Lib Fake Java 7</name>
   <packaging>jar</packaging>
