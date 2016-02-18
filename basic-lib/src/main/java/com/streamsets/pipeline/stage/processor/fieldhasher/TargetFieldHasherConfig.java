@@ -21,29 +21,30 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.FieldSelectorModel;
-import com.streamsets.pipeline.api.ValueChooserModel;
 
-import java.util.List;
+public class TargetFieldHasherConfig extends FieldHasherConfig {
+    @ConfigDef(
+        required = false,
+        type = ConfigDef.Type.MODEL,
+        defaultValue="",
+        label = "Target Field",
+        description = "A Target field to store the hash value" +
+            " obtained by combining the source fields to hash.",
+        group = "RECORD_HASHING",
+        displayPosition = 30
+    )
+    @FieldSelectorModel(singleValued = true)
+    public String targetField;
 
-public class FieldHasherConfig {
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL, defaultValue="",
-      label = "Fields to Hash",
-      description = "Hash string fields. You can enter multiple fields for the same hash type.",
-      displayPosition = 10
-  )
-  @FieldSelectorModel
-  public List<String> sourceFieldsToHash;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue="MD5",
-      label = "Hash Type",
-      description="",
-      displayPosition = 20
-  )
-  @ValueChooserModel(HashTypeChooserValues.class)
-  public HashType hashType;
+    @ConfigDef(
+        required = false,
+        type = ConfigDef.Type.STRING,
+        defaultValue="",
+        label = "Header Attribute",
+        description = "A Header Attribute to store the hash value" +
+            " obtained by combining the source fields to hash.",
+        group = "RECORD_HASHING",
+        displayPosition = 40
+    )
+    public String headerAttribute;
 }

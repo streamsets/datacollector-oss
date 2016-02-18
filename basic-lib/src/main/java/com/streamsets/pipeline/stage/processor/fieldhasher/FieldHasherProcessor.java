@@ -20,30 +20,129 @@
 package com.streamsets.pipeline.stage.processor.fieldhasher;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.hash.HashFunction;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.config.OnStagePreConditionFailure;
+import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.util.FieldRegexUtil;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class FieldHasherProcessor extends SingleLaneRecordProcessor {
-  private final List<FieldHasherConfig> fieldHasherConfigs;
+  private final HasherConfig hasherConfig;
   private final OnStagePreConditionFailure onStagePreConditionFailure;
+  private static final Joiner JOINER = Joiner.on(".");
 
   public FieldHasherProcessor(
-      List<FieldHasherConfig> fieldHasherConfigs,
+      HasherConfig hasherConfig,
       OnStagePreConditionFailure onStagePreConditionFailure) {
-    this.fieldHasherConfigs = fieldHasherConfigs;
+    this.hasherConfig = hasherConfig;
     this.onStagePreConditionFailure = onStagePreConditionFailure;
+  }
+
+  private void validateTargetFieldHeaderAttribute(
+      String targetFieldOrHeaderAttr,
+      String group,
+      String configPrefix,
+      String configName,
+      List<ConfigIssue> configIssues) {
+    if (!targetFieldOrHeaderAttr.isEmpty() && FieldRegexUtil.hasWildCards(targetFieldOrHeaderAttr)) {
+      configIssues.add(
+          getContext().createConfigIssue(
+              group,
+              JOINER.join(configPrefix, configName),
+              Errors.HASH_02,
+              configName
+          )
+      );
+    }
+  }
+
+  private void validateTarget(
+      String targetField,
+      String headerAttribute,
+      String group,
+      String configPrefix,
+      List<ConfigIssue> configIssues
+  ) {
+    if (targetField.isEmpty() && headerAttribute.isEmpty()) {
+      configIssues.add(
+          getContext().createConfigIssue(
+              group,
+              configPrefix,
+              Errors.HASH_03
+          )
+      );
+    }
+
+    validateTargetFieldHeaderAttribute(
+        targetField,
+        group,
+        configPrefix,
+        "targetField",
+        configIssues
+    );
+
+    validateTargetFieldHeaderAttribute(
+        headerAttribute,
+        group,
+        configPrefix,
+        "headerAttribute",
+        configIssues
+    );
+
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> configIssues = super.init();
+
+    if (!hasherConfig.recordHasherConfig.hashEntireRecord &&
+        hasherConfig.inPlaceFieldHasherConfigs.isEmpty() &&
+        hasherConfig.targetFieldHasherConfigs.isEmpty()) {
+      configIssues.add(
+          getContext().createConfigIssue(
+              Groups.FIELD_HASHING.name(),
+              "hasherConfig.targetFieldHasherConfigs",
+              Errors.HASH_04
+          )
+      );
+    }
+
+    //Check whether the config defines combined hash
+    // of fields and then check for errors in targetField.
+    if (hasherConfig.recordHasherConfig.hashEntireRecord) {
+      validateTarget(
+          hasherConfig.recordHasherConfig.targetField,
+          hasherConfig.recordHasherConfig.headerAttribute,
+          Groups.RECORD_HASHING.name(),
+          "hasherConfig.recordHasherConfig",
+          configIssues
+      );
+    }
+
+    List<TargetFieldHasherConfig> targetFieldHasherConfigs = hasherConfig.targetFieldHasherConfigs;
+    for (TargetFieldHasherConfig targetFieldHasherConfig : targetFieldHasherConfigs) {
+      validateTarget(
+          targetFieldHasherConfig.targetField,
+          targetFieldHasherConfig.headerAttribute,
+          Groups.FIELD_HASHING.name(),
+          "hasherConfig.targetFieldHasherConfigs",
+          configIssues
+      );
+    }
+
+    return configIssues;
   }
 
   @Override
@@ -53,86 +152,145 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
     Set<String> fieldsWithListOrMapType = new HashSet<>();
     Set<String> fieldsWithNull = new HashSet<>();
 
-    for(FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
-      for(String fieldToHash : fieldHasherConfig.fieldsToHash) {
-        for(String matchingFieldPath : FieldRegexUtil.getMatchingFieldPaths(fieldToHash, fieldPaths)) {
+    //Process inPlaceFieldHasherConfigs
+    List<FieldHasherConfig> inPlaceFieldHasherConfigs = hasherConfig.inPlaceFieldHasherConfigs;
+    processFieldHasherConfigs(record, fieldPaths, fieldsDontExist, fieldsWithListOrMapType,
+        fieldsWithNull, inPlaceFieldHasherConfigs);
+
+    //Process TargetFieldHasherConfigs
+    processFieldHasherConfigs(
+        record,
+        fieldPaths,
+        fieldsDontExist,
+        fieldsWithListOrMapType,
+        fieldsWithNull,
+        Collections.unmodifiableList((List<? extends FieldHasherConfig>)hasherConfig.targetFieldHasherConfigs));
+
+    //Process Record Hasher Config
+    RecordHasherConfig recordHasherConfig = hasherConfig.recordHasherConfig;
+    if (recordHasherConfig.hashEntireRecord) {
+      handleHashingForTarget(
+          record,
+          recordHasherConfig.hashType,
+          record.getFieldPaths(),
+          fieldsDontExist,
+          recordHasherConfig.targetField,
+          recordHasherConfig.headerAttribute,
+          recordHasherConfig.includeRecordHeaderForHashing);
+    }
+
+    if (onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR
+        && !(fieldsDontExist.isEmpty() && fieldsWithListOrMapType.isEmpty() && fieldsWithNull.isEmpty())) {
+      throw new OnRecordErrorException(Errors.HASH_01, record.getHeader().getSourceId(),
+          Joiner.on(", ").join(fieldsDontExist),  Joiner.on(", ").join(fieldsWithNull),
+          Joiner.on(", ").join(fieldsWithListOrMapType));
+    }
+    batchMaker.addRecord(record);
+  }
+
+  private void processFieldHasherConfigs(
+      Record record,
+      Set<String> fieldPaths,
+      Set<String> fieldsDontExist,
+      Set<String> fieldsWithListOrMapType,
+      Set<String> fieldsWithNull,
+      List<FieldHasherConfig> fieldHasherConfigs
+  ) throws StageException {
+    for (FieldHasherConfig fieldHasherConfig : fieldHasherConfigs) {
+      Set<String> fieldsToHashForThisConfig = new HashSet<>();
+      //Collect the matching fields to Hash.
+      for (String fieldToHash : fieldHasherConfig.sourceFieldsToHash) {
+        List<String> matchingFieldsPath =
+            FieldRegexUtil.getMatchingFieldPaths(fieldToHash, fieldPaths);
+        for (String matchingFieldPath : matchingFieldsPath) {
           if (record.has(matchingFieldPath)) {
             Field field = record.get(matchingFieldPath);
-            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST || field.getType() == Field.Type.LIST_MAP) {
+            if (field.getType() == Field.Type.MAP || field.getType() == Field.Type.LIST ||
+                field.getType() == Field.Type.LIST_MAP) {
               fieldsWithListOrMapType.add(matchingFieldPath);
             } else if (field.getValue() == null) {
               fieldsWithNull.add(matchingFieldPath);
             } else {
-              Field newField = Field.create(generateHashForField(field, fieldHasherConfig.hashType));
-              record.set(matchingFieldPath, newField);
+              fieldsToHashForThisConfig.add(matchingFieldPath);
             }
           } else {
             fieldsDontExist.add(matchingFieldPath);
           }
         }
       }
+      performHashingForFields(record, fieldHasherConfig, fieldsToHashForThisConfig, fieldsDontExist);
     }
-
-    if(onStagePreConditionFailure == OnStagePreConditionFailure.TO_ERROR
-      && !(fieldsDontExist.isEmpty() && fieldsWithListOrMapType.isEmpty() && fieldsWithNull.isEmpty())) {
-      throw new OnRecordErrorException(Errors.HASH_01, record.getHeader().getSourceId(),
-        Joiner.on(", ").join(fieldsDontExist),  Joiner.on(", ").join(fieldsWithNull),
-        Joiner.on(", ").join(fieldsWithListOrMapType));
-    }
-    batchMaker.addRecord(record);
   }
 
-  private String generateHashForField(Field field, HashType hashType) throws StageException {
-    String valueAsString = getValueAsString(field);
-    if(valueAsString == null) {
-      return null;
+  private void performHashingForFields(
+      Record record,
+      FieldHasherConfig fieldHasherConfig,
+      Set<String> fieldsToHashForThisConfig,
+      Set<String> fieldsDontExist
+  ) throws StageException {
+    if (fieldHasherConfig instanceof TargetFieldHasherConfig) {
+      TargetFieldHasherConfig targetFieldHasherConfig = ((TargetFieldHasherConfig) fieldHasherConfig);
+      handleHashingForTarget(
+          record,
+          fieldHasherConfig.hashType,
+          fieldsToHashForThisConfig,
+          fieldsDontExist,
+          targetFieldHasherConfig.targetField,
+          targetFieldHasherConfig.headerAttribute,
+          false);
+    } else {
+      //Perform individual one to one hashing.
+      for (String fieldToHashForThisConfig : fieldsToHashForThisConfig) {
+        String hashVal = generateHash(
+            record,
+            fieldHasherConfig.hashType,
+            ImmutableList.of(fieldToHashForThisConfig),
+            false);
+        Field newField = Field.create(hashVal);
+        record.set(fieldToHashForThisConfig, newField);
+      }
     }
-    MessageDigest messageDigest;
+  }
+
+  private void handleHashingForTarget(
+      Record record,
+      HashType hashType,
+      Set<String> fieldsToHashForThisConfig,
+      Set<String> fieldsDontExist,
+      String targetField,
+      String headerAttribute,
+      boolean includeRecordHeader
+  ) throws StageException {
+    String hashVal = generateHash(record, hashType, fieldsToHashForThisConfig, includeRecordHeader);
+    if (!targetField.isEmpty()) {
+      Field newField = Field.create(hashVal);
+      //Handle already existing field.
+      if (record.has(targetField)) {
+        record.set(targetField, newField);
+      } else {
+        record.set(targetField, newField);
+        if (!record.has(targetField)) {
+          fieldsDontExist.add(targetField);
+        }
+      }
+    }
+    if (!headerAttribute.isEmpty()) {
+      record.getHeader().setAttribute(headerAttribute, hashVal);
+    }
+  }
+
+  private String generateHash(
+      Record record,
+      HashType hashType,
+      Collection<String> fieldsToHash,
+      boolean includeRecordHeader
+  ) throws StageException {
     try {
-      messageDigest = MessageDigest.getInstance(hashType.getDigest());
-    } catch (NoSuchAlgorithmException e) {
+      HashFunction hasher = HashingUtil.getHasher(hashType.getDigest());
+      HashingUtil.RecordFunnel recordFunnel = HashingUtil.getRecordFunnel(fieldsToHash, includeRecordHeader);
+      return hasher.hashObject(record, recordFunnel).toString();
+    } catch (IllegalArgumentException e) {
       throw new StageException(Errors.HASH_00, hashType.getDigest(), e.toString(), e);
     }
-    messageDigest.update(valueAsString.getBytes(StandardCharsets.UTF_8));
-    byte byteData[] = messageDigest.digest();
-
-    //encode byte[] into hex
-    StringBuilder sb = new StringBuilder();
-    for(byte b : byteData) {
-      sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-    }
-    return sb.toString();
   }
-
-  private String getValueAsString(Field field) {
-    if (field.getType() == Field.Type.BOOLEAN) {
-      return String.valueOf(field.getValueAsBoolean());
-    } else if (field.getType() == Field.Type.BYTE) {
-      return String.valueOf(field.getValueAsByte());
-    } else if (field.getType() == Field.Type.BYTE_ARRAY) {
-      return new String(field.getValueAsByteArray(), StandardCharsets.UTF_8);
-    } else if (field.getType() == Field.Type.CHAR) {
-      return String.valueOf(field.getValueAsChar());
-    } else if (field.getType() == Field.Type.DATE) {
-      return String.valueOf(field.getValueAsDate());
-    } else if (field.getType() == Field.Type.DATETIME) {
-      return String.valueOf(field.getValueAsDatetime());
-    } else if (field.getType() == Field.Type.DECIMAL) {
-      return String.valueOf(field.getValueAsDecimal());
-    } else if (field.getType() == Field.Type.DOUBLE) {
-      return String.valueOf(field.getValueAsDouble());
-    } else if (field.getType() == Field.Type.FLOAT) {
-      return String.valueOf(field.getValueAsFloat());
-    } else if (field.getType() == Field.Type.INTEGER) {
-      return String.valueOf(field.getValueAsInteger());
-    } else if (field.getType() == Field.Type.LONG) {
-      return String.valueOf(field.getValueAsLong());
-    } else if (field.getType() == Field.Type.SHORT) {
-      return String.valueOf(field.getValueAsShort());
-    } else if (field.getType() == Field.Type.STRING) {
-      return String.valueOf(field.getValueAsString());
-    }
-    return null;
-  }
-
 }

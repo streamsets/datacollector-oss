@@ -1,0 +1,93 @@
+/**
+ * Copyright 2015 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.processor.fieldhasher;
+
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ValueChooserModel;
+
+public class RecordHasherConfig {
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue="false",
+      label = "Hash Entire Record",
+      description="",
+      displayPosition = 10,
+      group = "RECORD_HASHING"
+  )
+  public boolean hashEntireRecord;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue="false",
+      label = "Include Record Header",
+      description="Include Record Header for hashing along with the record fields.",
+      displayPosition = 20,
+      group = "RECORD_HASHING"
+  )
+  public boolean includeRecordHeaderForHashing;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="MD5",
+      label = "Hash Type",
+      description="",
+      displayPosition = 30,
+      dependsOn = "hashEntireRecord",
+      triggeredByValue = {"true"},
+      group = "RECORD_HASHING"
+  )
+  @ValueChooserModel(HashTypeChooserValues.class)
+  public HashType hashType;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue="",
+      label = "Target Field",
+      description = "A Target field to store the hash value" +
+          " obtained by combining the source fields to hash.",
+      group = "RECORD_HASHING",
+      dependsOn = "hashEntireRecord",
+      triggeredByValue = {"true"},
+      displayPosition = 40
+  )
+  @FieldSelectorModel(singleValued = true)
+  public String targetField;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue="",
+      label = "Header Attribute",
+      description = "A Header Attribute to store the hash value" +
+          " obtained by combining the source fields to hash.",
+      group = "RECORD_HASHING",
+      dependsOn = "hashEntireRecord",
+      triggeredByValue = {"true"},
+      displayPosition = 50
+  )
+  public String headerAttribute;
+
+}

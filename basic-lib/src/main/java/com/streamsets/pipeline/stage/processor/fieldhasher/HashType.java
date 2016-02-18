@@ -22,7 +22,8 @@ package com.streamsets.pipeline.stage.processor.fieldhasher;
 public enum HashType {
   MD5("MD5"),
   SHA1("SHA-1"),
-  SHA2("SHA-256");
+  SHA2("SHA-256"),
+  MURMUR3_128("murmur3_128");
 
   private String digest;
 

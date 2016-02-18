@@ -24,11 +24,17 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  HASHING;
+  FIELD_HASHING("Hash Field"),
+  RECORD_HASHING("Hash Record"),
+  ERROR("Field Error Action");
 
+  String label;
+  Groups(String label) {
+    this.label = label;
+  }
   @Override
   public String getLabel() {
-    return "Hash";
+    return this.label;
   }
 
 }

@@ -26,7 +26,10 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum Errors implements ErrorCode {
   HASH_00("Error creating message digest for {}: {}"),
   HASH_01("The record '{}' has the following issues: fields '{}' do not exist, fields '{}' include null values, " +
-    "fields '{}' are of type Map or List")
+    "fields '{}' are of type Map or List"),
+  HASH_02("Error processing does not support wild cards."),
+  HASH_03("Atleast one of Target Field or Record Header should be specified."),
+  HASH_04("No Hashing Configuration Specified");
   ;
 
   private final String msg;
