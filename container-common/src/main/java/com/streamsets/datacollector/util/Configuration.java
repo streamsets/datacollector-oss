@@ -111,9 +111,14 @@ public class Configuration {
 
     @Override
     public String getValue() {
-      try (BufferedReader br = new BufferedReader(new FileReader(new File(fileRefsBaseDir,
-                                                                          getUnresolvedValueWithoutDelimiter())))) {
-        return br.readLine();
+      StringBuilder sb = new StringBuilder();
+      try (Reader reader = new FileReader(new File(fileRefsBaseDir, getUnresolvedValueWithoutDelimiter()))) {
+        int c = reader.read();
+        while (c > -1) {
+          sb.append((char)c);
+          c = reader.read();
+        }
+        return sb.toString();
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

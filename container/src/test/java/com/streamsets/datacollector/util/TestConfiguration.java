@@ -166,12 +166,12 @@ public class TestConfiguration {
     Configuration.setFileRefsBaseDir(dir);
 
     Writer writer = new FileWriter(new File(dir, "hello.txt"));
-    IOUtils.write("secret", writer);
+    IOUtils.write("secret\nfoo\n", writer);
     writer.close();
     Configuration conf = new Configuration();
 
     conf.set("a", "@hello.txt@");
-    Assert.assertEquals("secret", conf.get("a", null));
+    Assert.assertEquals("secret\nfoo\n", conf.get("a", null));
 
     writer = new FileWriter(new File(dir, "config.properties"));
     conf.save(writer);
@@ -182,14 +182,14 @@ public class TestConfiguration {
     conf.load(reader);
     reader.close();
 
-    Assert.assertEquals("secret", conf.get("a", null));
+    Assert.assertEquals("secret\nfoo\n", conf.get("a", null));
 
     reader = new FileReader(new File(dir, "config.properties"));
     StringWriter stringWriter = new StringWriter();
     IOUtils.copy(reader, stringWriter);
     reader.close();
     Assert.assertTrue(stringWriter.toString().contains("@hello.txt@"));
-    Assert.assertFalse(stringWriter.toString().contains("secret"));
+    Assert.assertFalse(stringWriter.toString().contains("secret\nfoo\n"));
   }
 
   @Test(expected = RuntimeException.class)
