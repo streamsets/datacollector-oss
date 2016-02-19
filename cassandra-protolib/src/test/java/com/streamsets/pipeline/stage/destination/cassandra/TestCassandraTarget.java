@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.stage.destination.cassandra;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
@@ -66,7 +67,11 @@ public class TestCassandraTarget {
   @BeforeClass
   public static void setUpClass() throws InterruptedException, TTransportException, ConfigurationException, IOException {
     EmbeddedCassandraServerHelper.startEmbeddedCassandra(CASSANDRA_STARTUP_TIMEOUT);
-    cluster = Cluster.builder().addContactPoint("localhost").withPort(CASSANDRA_NATIVE_PORT).build();
+    cluster = Cluster.builder()
+        .addContactPoint("127.0.0.1")
+        .withPort(CASSANDRA_NATIVE_PORT)
+        .withProtocolVersion(ProtocolVersion.V4)
+        .build();
     session = cluster.connect();
   }
 
@@ -116,6 +121,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -142,6 +148,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -191,6 +198,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -238,6 +246,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -283,6 +292,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -329,6 +339,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -374,6 +385,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -424,6 +436,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)
@@ -447,6 +460,7 @@ public class TestCassandraTarget {
     );
 
     TargetRunner targetRunner = new TargetRunner.Builder(CassandraDTarget.class)
+        .addConfiguration("protocolVersion", ProtocolVersion.V4)
         .addConfiguration("contactNodes", ImmutableList.of("localhost"))
         .addConfiguration("useCredentials", false)
         .addConfiguration("compression", CassandraCompressionCodec.NONE)

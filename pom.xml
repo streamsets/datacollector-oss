@@ -87,7 +87,7 @@
     <elasticsearch_2_1-lib>none</elasticsearch_2_1-lib>
     <elasticsearch_2_2-lib>none</elasticsearch_2_2-lib>
     <elasticsearch_2_3-lib>none</elasticsearch_2_3-lib>
-    <cassandra_2-lib>none</cassandra_2-lib>
+    <cassandra_3-lib>none</cassandra_3-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
     <influxdb_0_9-lib>none</influxdb_0_9-lib>
     <redis-lib>none</redis-lib>
@@ -515,7 +515,7 @@
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
-        <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
+        <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <cdh_5_7-cluster-cdh_kafka_2_0-lib>cdh_5_7-cluster-cdh_kafka_2_0-lib</cdh_5_7-cluster-cdh_kafka_2_0-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
@@ -530,7 +530,7 @@
         <module>jython_2_7-lib</module>
         <module>groovy_2_4-lib</module>
         <module>elasticsearch_2_3-lib</module>
-        <module>cassandra_2-lib</module>
+        <module>cassandra_3-lib</module>
         <module>cdh_kafka_2_0-lib</module>
         <module>mongodb_3-lib</module>
         <module>cdh_5_7-cluster-cdh_kafka_2_0-lib</module>

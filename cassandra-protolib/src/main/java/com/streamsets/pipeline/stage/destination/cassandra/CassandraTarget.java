@@ -26,9 +26,11 @@ import com.datastax.driver.core.ColumnMetadata;
 import com.datastax.driver.core.KeyspaceMetadata;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ProtocolOptions;
+import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.TableMetadata;
 import com.datastax.driver.core.exceptions.AuthenticationException;
+import com.datastax.driver.core.exceptions.CodecNotFoundException;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.google.common.base.Function;
@@ -80,9 +82,11 @@ import java.util.TreeSet;
 public class CassandraTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(CassandraTarget.class);
   private static final int MAX_BATCH_SIZE = 65535;
+  private static final String CONTACT_NODES_LABEL = "contactNodes";
 
   private final List<String> addresses;
   private final ProtocolOptions.Compression compression;
+  private final ProtocolVersion protocolVersion;
   private List<InetAddress> contactPoints;
   private final int port;
   private final String username;
@@ -92,8 +96,8 @@ public class CassandraTarget extends BaseTarget {
   private final List<CassandraFieldMappingConfig> columnNames;
 
 
-  private Cluster cluster = null;
-  private Session session = null;
+  private Cluster cluster;
+  private Session session;
 
   private SortedMap<String, String> columnMappings;
   private LoadingCache<SortedSet<String>, PreparedStatement> statementCache;
@@ -102,6 +106,7 @@ public class CassandraTarget extends BaseTarget {
   public CassandraTarget(
       final List<String> addresses,
       final int port,
+      final ProtocolVersion protocolVersion,
       final ProtocolOptions.Compression compression,
       final String username,
       final String password,
@@ -110,6 +115,7 @@ public class CassandraTarget extends BaseTarget {
   ) {
     this.addresses = addresses;
     this.port = port;
+    this.protocolVersion = protocolVersion;
     this.compression = compression;
     this.username = username;
     this.password = password;
@@ -124,12 +130,12 @@ public class CassandraTarget extends BaseTarget {
 
     Target.Context context = getContext();
     if (addresses.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "contactNodes", Errors.CASSANDRA_00));
+      issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), CONTACT_NODES_LABEL, Errors.CASSANDRA_00));
     }
 
     for (String address : addresses) {
       if (address.isEmpty()) {
-        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "contactNodes", Errors.CASSANDRA_01));
+        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), CONTACT_NODES_LABEL, Errors.CASSANDRA_01));
       }
     }
 
@@ -144,12 +150,13 @@ public class CassandraTarget extends BaseTarget {
       try {
         contactPoints.add(InetAddress.getByName(address));
       } catch (UnknownHostException e) {
-        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "contactNodes", Errors.CASSANDRA_04, address));
+        LOG.error(Errors.CASSANDRA_04.getMessage(), address, e);
+        issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), CONTACT_NODES_LABEL, Errors.CASSANDRA_04, address));
       }
     }
 
-    if (contactPoints.size() < 1) {
-      issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), "contactNodes", Errors.CASSANDRA_00));
+    if (contactPoints.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.CASSANDRA.name(), CONTACT_NODES_LABEL, Errors.CASSANDRA_00));
     }
 
     if (!qualifiedTableName.contains(".")) {
@@ -157,7 +164,7 @@ public class CassandraTarget extends BaseTarget {
     } else {
       if (checkCassandraReachable(issues)) {
         List<String> invalidColumns = checkColumnMappings();
-        if (invalidColumns.size() != 0) {
+        if (!invalidColumns.isEmpty()) {
           issues.add(
               context.createConfigIssue(
                   Groups.CASSANDRA.name(),
@@ -208,6 +215,7 @@ public class CassandraTarget extends BaseTarget {
                 }
             );
       } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
+        LOG.error(Errors.CASSANDRA_03.getMessage(), e.toString(), e);
         issues.add(context.createConfigIssue(null, null, Errors.CASSANDRA_03, e.toString()));
       }
     }
@@ -233,8 +241,8 @@ public class CassandraTarget extends BaseTarget {
     final String keyspace = tableNameParts[0];
     final String table = tableNameParts[1];
 
-    try (Cluster cluster = getCluster()) {
-      final KeyspaceMetadata keyspaceMetadata = cluster.getMetadata().getKeyspace(keyspace);
+    try (Cluster validationCluster = getCluster()) {
+      final KeyspaceMetadata keyspaceMetadata = validationCluster.getMetadata().getKeyspace(keyspace);
       final TableMetadata tableMetadata = keyspaceMetadata.getTable(table);
       final List<String> columns = Lists.transform(
           tableMetadata.getColumns(),
@@ -259,16 +267,17 @@ public class CassandraTarget extends BaseTarget {
 
   private boolean checkCassandraReachable(List<ConfigIssue> issues) {
     boolean isReachable = true;
-    try (Cluster cluster = getCluster()) {
-      Session session = cluster.connect();
-      session.close();
+    try (Cluster validationCluster = getCluster()) {
+      Session validationSession = validationCluster.connect();
+      validationSession.close();
     } catch (NoHostAvailableException | AuthenticationException | IllegalStateException e) {
       isReachable = false;
       Target.Context context = getContext();
+      LOG.error(Errors.CASSANDRA_05.getMessage(), e.toString(), e);
       issues.add(
               context.createConfigIssue(
               Groups.CASSANDRA.name(),
-              "contactNodes",
+              CONTACT_NODES_LABEL,
               Errors.CASSANDRA_05, e.toString()
           )
       );
@@ -311,6 +320,7 @@ public class CassandraTarget extends BaseTarget {
   /**
    * Convert a Record into a fully-bound statement.
    */
+  @SuppressWarnings("unchecked")
   private BoundStatement recordToBoundStatement(Record record) throws StageException {
     ImmutableList.Builder<Object> values = new ImmutableList.Builder<>();
     SortedSet<String> columnsPresent = Sets.newTreeSet(columnMappings.keySet());
@@ -351,9 +361,11 @@ public class CassandraTarget extends BaseTarget {
     BoundStatement boundStmt = null;
     try {
       boundStmt = stmt.bind(valuesArray);
-    } catch (InvalidTypeException | NullPointerException e) {
+    } catch (CodecNotFoundException | InvalidTypeException | NullPointerException e) {
       // NPE can occur if one of the values is a collection type with a null value inside it. Thus, it's a record
       // error. Note that this runs the risk of mistakenly treating a bug as a record error.
+      // CodecNotFound is caused when there is no type conversion definition available from the provided type
+      // to the target type.
       errorRecordHandler.onError(
           new OnRecordErrorException(
               record,
@@ -371,6 +383,7 @@ public class CassandraTarget extends BaseTarget {
     return Cluster.builder()
         .addContactPoints(contactPoints)
         .withCredentials(username, password)
+        .withProtocolVersion(protocolVersion)
         .withPort(port)
         .build();
   }

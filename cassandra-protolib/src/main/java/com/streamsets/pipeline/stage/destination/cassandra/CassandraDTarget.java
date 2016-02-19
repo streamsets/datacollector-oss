@@ -19,11 +19,12 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.datacollector.el.VaultEL;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -33,7 +34,7 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Cassandra",
     description = "Writes data to Cassandra",
     icon = "cassandra.png",
@@ -68,10 +69,22 @@ public class CassandraDTarget extends DTarget {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      label = "Protocol Version",
+      description = "If unsure which setting to use, refer to: https://datastax.github" +
+          ".io/java-driver/manual/native_protocol",
+      displayPosition = 30,
+      group = "CASSANDRA"
+  )
+  @ValueChooserModel(ProtocolVersionChooserValues.class)
+  public ProtocolVersion protocolVersion;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "LZ4",
       label = "Compression",
       description = "Optional compression for transport-level requests and responses.",
-      displayPosition = 30,
+      displayPosition = 35,
       group = "CASSANDRA"
   )
   @ValueChooserModel(CompressionChooserValues.class)
@@ -85,7 +98,7 @@ public class CassandraDTarget extends DTarget {
       displayPosition = 40,
       group = "CASSANDRA"
   )
-  public boolean useCredentials;
+  public boolean useCredentials = false;
 
   @ConfigDef(
       required = true,
@@ -141,6 +154,7 @@ public class CassandraDTarget extends DTarget {
     return new CassandraTarget(
         contactNodes,
         port,
+        protocolVersion,
         compression.getCodec(),
         username,
         password,

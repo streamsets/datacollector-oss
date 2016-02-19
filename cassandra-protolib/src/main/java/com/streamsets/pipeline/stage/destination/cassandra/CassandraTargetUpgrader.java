@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.destination.cassandra;
 
+import com.datastax.driver.core.ProtocolVersion;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -32,6 +33,12 @@ public class CassandraTargetUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        if (toVersion == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -40,6 +47,10 @@ public class CassandraTargetUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config("compression", "NONE"));
+    configs.add(new Config("compression", CassandraCompressionCodec.NONE));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("protocolVersion", ProtocolVersion.V3));
   }
 }

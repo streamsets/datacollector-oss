@@ -308,7 +308,7 @@
 
     <!-- Cassandra libs -->
     <fileSet>
-      <directory>${basedir}/../${cassandra_2-lib}/target/streamsets-libs/</directory>
+      <directory>${basedir}/../${cassandra_3-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
