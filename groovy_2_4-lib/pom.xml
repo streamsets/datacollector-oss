@@ -25,14 +25,14 @@
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
-  <artifactId>streamsets-datacollector-jython_2_7-lib</artifactId>
+  <artifactId>streamsets-datacollector-groovy_2_4-lib</artifactId>
   <version>1.3.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Jython 2.7.0 Lib</description>
-  <name>StreamSets Data Collector Jython 2.7.0 Lib</name>
+  <description>StreamSets Data Collector Groovy 2.4.6 Lib</description>
+  <name>StreamSets Data Collector Groovy 2.4.6 Lib</name>
   <packaging>jar</packaging>
 
   <properties>
-    <jython.version>2.7.0</jython.version>
+    <groovy.version>2.4.6</groovy.version>
     <guava.version>18.0</guava.version>
   </properties>
 
@@ -94,21 +94,21 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-jython-protolib</artifactId>
+      <artifactId>streamsets-datacollector-groovy-protolib</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
         <exclusion>
-          <groupId>org.python</groupId>
-          <artifactId>jython-standalone</artifactId>
+          <groupId>org.codehaus.groovy</groupId>
+          <artifactId>groovy-jsr223</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
 
     <dependency>
-      <groupId>org.python</groupId>
-      <artifactId>jython-standalone</artifactId>
-      <version>${jython.version}</version>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-jsr223</artifactId>
+      <version>${groovy.version}</version>
       <scope>compile</scope>
     </dependency>
 
@@ -128,7 +128,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${basedir}/../jython-protolib/src/test/java</source>
+                <source>${basedir}/../groovy-protolib/src/test/java</source>
               </sources>
             </configuration>
           </execution>
@@ -141,7 +141,7 @@
             <configuration>
               <resources>
                 <resource>
-                  <directory>${basedir}/../jython-protolib/src/test/resources</directory>
+                  <directory>${basedir}/../groovy-protolib/src/test/resources</directory>
                 </resource>
               </resources>
             </configuration>
@@ -186,7 +186,6 @@
                   <finalName>streamsets-libs</finalName>
                   <descriptors>
                     <descriptor>${basedir}/../root/src/main/assemblies/stage-lib.xml</descriptor>
-                    <descriptor>${basedir}/../root/src/main/assemblies/jython.xml</descriptor>
                   </descriptors>
                 </configuration>
               </execution>

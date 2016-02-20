@@ -119,6 +119,7 @@ module.exports = function(grunt) {
         'bower_components/codemirror/mode/clike/clike.js',
         'bower_components/codemirror/mode/python/python.js',
         'bower_components/codemirror/mode/ruby/ruby.js',
+        'bower_components/codemirror/mode/groovy/groovy.js',
         'bower_components/codemirror/mode/javascript/javascript.js',
         'bower_components/codemirror/mode/sql/sql.js',
         'bower_components/codemirror/mode/xml/xml.js',

@@ -127,6 +127,11 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-groovy_2_4-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-apache-kafka_0_8_2-lib</artifactId>
       <scope>provided</scope>
     </dependency>
