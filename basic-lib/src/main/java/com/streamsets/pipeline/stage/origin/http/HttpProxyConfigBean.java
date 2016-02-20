@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,34 +17,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDef;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  HTTP("HTTP"),
-  CREDENTIALS("Credentials"),
-  PROXY("Proxy"),
-  TEXT("Text"),
-  JSON("JSON"),
-  DELIMITED("Delimited"),
-  XML("XML"),
-  LOG("Log"),
-  AVRO("Avro"),
-  BINARY("Binary"),
-  PROTOBUF("Protobuf"),
-  ;
+public class HttpProxyConfigBean {
 
-  private final String label;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 10,
+      group = "#0"
+  )
+  public String uri = "";
 
-  private Groups(String label) {
-    this.label = label;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 20,
+      group = "#0"
+  )
+  public String username = "";
 
-  public String getLabel() {
-    return this.label;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 30,
+      group = "#0"
+  )
+  public String password = ""; // NOSONAR
 }

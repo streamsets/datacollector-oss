@@ -29,6 +29,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestHttpClientSourceUpgrader {
 
@@ -55,12 +56,9 @@ public class TestHttpClientSourceUpgrader {
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
 
-    Assert.assertEquals(17, configs.size());
+    Assert.assertEquals(19, configs.size());
 
-    HashMap<String, Object> configValues = new HashMap<>();
-    for (Config c : configs) {
-      configValues.put(c.getName(), c.getValue());
-    }
+    Map<String, Object> configValues = getConfigsAsMap(configs);
 
     Assert.assertTrue(configValues.containsKey("conf.dataFormat"));
     Assert.assertEquals(DataFormat.JSON, configValues.get("conf.dataFormat"));
@@ -113,5 +111,33 @@ public class TestHttpClientSourceUpgrader {
     Assert.assertTrue(configValues.containsKey("conf.dataFormatConfig.csvSkipStartLines"));
     Assert.assertEquals(0, configValues.get("conf.dataFormatConfig.csvSkipStartLines"));
 
+  }
+
+  @Test
+  public void testV2ToV3() throws StageException {
+    List<Config> configs = new ArrayList<>();
+
+    HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
+    httpClientSourceUpgrader.upgrade("a", "b", "c", 2, 3, configs);
+
+    Map<String, Object> configValues = getConfigsAsMap(configs);
+
+    Assert.assertTrue(configValues.containsKey("conf.useProxy"));
+    Assert.assertEquals(false, configValues.get("conf.useProxy"));
+
+    Assert.assertTrue(configValues.containsKey("conf.proxy"));
+    HttpProxyConfigBean proxyConfig = (HttpProxyConfigBean) configValues.get("conf.proxy");
+
+    Assert.assertTrue(proxyConfig.uri.isEmpty());
+    Assert.assertTrue(proxyConfig.username.isEmpty());
+    Assert.assertTrue(proxyConfig.password.isEmpty());
+  }
+
+  private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
+    HashMap<String, Object> map = new HashMap<>();
+    for (Config c : configs) {
+      map.put(c.getName(), c.getValue());
+    }
+    return map;
   }
 }

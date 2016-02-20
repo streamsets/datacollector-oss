@@ -445,6 +445,7 @@ public class TestHttpClientSource extends JerseyTest {
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.JSON;
     conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.useProxy = false;
 
     return new HttpClientSource(conf);
   }

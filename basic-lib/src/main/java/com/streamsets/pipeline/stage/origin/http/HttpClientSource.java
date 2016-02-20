@@ -140,8 +140,14 @@ public class HttpClientSource extends BaseSource implements OffsetCommitter {
       try {
         Thread.sleep(SLEEP_TIME_WAITING_FOR_BATCH_SIZE_MS);
       } catch (InterruptedException ex) {
-        break;
+        Thread.currentThread().interrupt();
       }
+    }
+
+    // Check for an error and propagate to the user
+    if (httpConsumer.getError().isPresent()) {
+      Exception e = httpConsumer.getError().get();
+      throw new StageException(Errors.HTTP_03, e.getMessage(), e);
     }
 
     List<String> chunks = new ArrayList<>(chunksToFetch);

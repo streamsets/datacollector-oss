@@ -142,5 +142,18 @@ public class HttpClientConfigBean {
       displayPosition = 50,
       group = "HTTP"
   )
-  public String entityDelimiter;
+  public String entityDelimiter = "\\r\\n";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Proxy",
+      defaultValue = "false",
+      displayPosition = 60,
+      group = "HTTP"
+  )
+  public boolean useProxy = false;
+
+  @ConfigDefBean(groups = "PROXY")
+  public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
 }
