@@ -30,10 +30,11 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "JavaScript Evaluator",
     description = "Processes records using JavaScript",
-    icon="javascript.png",
+    icon = "javascript.png",
+    upgrader = JavaScriptProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/JavaScript.html#task_mzc_1by_nr"
 )
 @ConfigGroups(Groups.class)

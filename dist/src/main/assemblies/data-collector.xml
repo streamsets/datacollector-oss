@@ -291,6 +291,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Groovy libs -->
+    <fileSet>
+      <directory>${basedir}/../${groovy_2_4-lib}/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Elasticsearch libs -->
     <fileSet>
       <directory>${basedir}/../${elasticsearch_1_4-lib}/target/streamsets-libs/</directory>

@@ -388,6 +388,8 @@ public abstract class ConfigDefinitionExtractor {
         return "text/x-ruby";
       case JAVA:
         return "text/x-java";
+      case GROOVY:
+        return "text/x-groovy";
       case SCALA:
         return "text/x-scala";
       case SQL:

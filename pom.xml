@@ -69,6 +69,7 @@
     <apache-kafka_0_8_2-lib>none</apache-kafka_0_8_2-lib>
     <apache-kafka_0_9-lib>none</apache-kafka_0_9-lib>
     <jython_2_7-lib>none</jython_2_7-lib>
+    <groovy_2_4-lib>none</groovy_2_4-lib>
     <elasticsearch_1_4-lib>none</elasticsearch_1_4-lib>
     <elasticsearch_1_5-lib>none</elasticsearch_1_5-lib>
     <elasticsearch_1_6-lib>none</elasticsearch_1_6-lib>
@@ -136,6 +137,7 @@
     <module>maprstreams-target-protolib</module>
     <module>maprstreams-source-protolib</module>
     <module>jython-protolib</module>
+    <module>groovy-protolib</module>
 
     <module>sdc-elasticsearch-api</module>
     <module>sdc-elasticsearch_1</module>
@@ -456,6 +458,7 @@
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
+        <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <elasticsearch_2_2-lib>elasticsearch_2_2-lib</elasticsearch_2_2-lib>
         <cassandra_2-lib>cassandra_2-lib</cassandra_2-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
@@ -468,6 +471,7 @@
         <module>hdp_2_3-lib</module>
         <module>mapr_5_1-lib</module>
         <module>jython_2_7-lib</module>
+        <module>groovy_2_4-lib</module>
         <module>elasticsearch_2_2-lib</module>
         <module>cassandra_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>

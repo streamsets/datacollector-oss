@@ -30,10 +30,11 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingMode;
 import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserValues;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Jython Evaluator",
     description = "Processes records using Jython",
-    icon="jython.png",
+    icon = "jython.png",
+    upgrader = JythonProcessorUpgrader.class,
     onlineHelpRefUrl = "index.html#Processors/Jython.html#task_fty_jwx_nr"
 )
 @ConfigGroups(Groups.class)
