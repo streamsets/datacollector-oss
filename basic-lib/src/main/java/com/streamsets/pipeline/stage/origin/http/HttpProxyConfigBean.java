@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,31 +19,40 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ConfigDef;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  HTTP_00("Cannot parse record '{}': {}"),
-  HTTP_01("Error fetching resource. Status: {} Reason: {}"),
-  HTTP_02("JSON parser found more than one record in chunk. Verify that the correct delimiter is configured."),
-  HTTP_03("Error fetching resource. Reason: {}"),
-  ;
+public class HttpProxyConfigBean {
 
-  private final String msg;
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 10,
+      group = "#0"
+  )
+  public String uri = "";
 
-  Errors(String msg) {
-    this.msg = msg;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 20,
+      group = "#0"
+  )
+  public String username = "";
 
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true",
+      displayPosition = 30,
+      group = "#0"
+  )
+  public String password = ""; // NOSONAR
 }
-

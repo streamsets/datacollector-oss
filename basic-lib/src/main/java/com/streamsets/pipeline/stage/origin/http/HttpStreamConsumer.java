@@ -19,11 +19,15 @@
  */
 package com.streamsets.pipeline.stage.origin.http;
 
+import com.google.common.base.Optional;
 import org.glassfish.jersey.client.ChunkedInput;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.oauth1.AccessToken;
 import org.glassfish.jersey.client.oauth1.ConsumerCredentials;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +38,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -52,6 +57,7 @@ class HttpStreamConsumer implements Runnable {
 
   private final BlockingQueue<String> entityQueue;
   private Response.StatusType lastResponseStatus;
+  private Optional<Exception> error = Optional.absent();
 
   private volatile boolean stop = false;
 
@@ -64,7 +70,11 @@ class HttpStreamConsumer implements Runnable {
   public HttpStreamConsumer(HttpClientConfigBean conf, BlockingQueue<String> entityQueue) {
     this.conf = conf;
     this.entityQueue = entityQueue;
-    ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+
+    ClientConfig clientConfig = new ClientConfig()
+        .connectorProvider(new GrizzlyConnectorProvider());
+
+    ClientBuilder clientBuilder = ClientBuilder.newBuilder().withConfig(clientConfig);
 
     if (conf.authType == AuthenticationType.OAUTH) {
       ConsumerCredentials consumerCredentials = new ConsumerCredentials(
@@ -84,7 +94,31 @@ class HttpStreamConsumer implements Runnable {
       clientBuilder.register(HttpAuthenticationFeature.universal(conf.basicAuth.username, conf.basicAuth.password));
     }
 
+    configureProxy(clientBuilder);
+
     resource = clientBuilder.build().target(conf.resourceUrl);
+    for (Map.Entry<String, Object> entry : resource.getConfiguration().getProperties().entrySet()) {
+      LOG.info("Config: {}, {}", entry.getKey(), entry.getValue());
+    }
+  }
+
+  private void configureProxy(ClientBuilder clientBuilder) {
+    if (!conf.useProxy) {
+      return;
+    }
+
+    if (!conf.proxy.uri.isEmpty()) {
+      clientBuilder.property(ClientProperties.PROXY_URI, conf.proxy.uri);
+      LOG.info("Using Proxy: '{}'", conf.proxy.uri);
+    }
+    if (!conf.proxy.username.isEmpty()) {
+      clientBuilder.property(ClientProperties.PROXY_USERNAME, conf.proxy.username);
+      LOG.info("Using Proxy Username: '{}'", conf.proxy.username);
+    }
+    if (!conf.proxy.password.isEmpty()) {
+      clientBuilder.property(ClientProperties.PROXY_PASSWORD, conf.proxy.password);
+      LOG.info("Using Proxy Password: '{}'", conf.proxy.password);
+    }
   }
 
   @Override
@@ -123,8 +157,12 @@ class HttpStreamConsumer implements Runnable {
       LOG.debug("HTTP stream consumer closed.");
     } catch (InterruptedException | ExecutionException e) {
       LOG.warn(Errors.HTTP_01.getMessage(), e.toString(), e);
+      error = Optional.of((Exception)e);
+      Thread.currentThread().interrupt();
     } catch (TimeoutException e) {
       LOG.warn("HTTP request future timed out", e.toString(), e);
+      error = Optional.of((Exception)e);
+      Thread.currentThread().interrupt();
     }
   }
 
@@ -134,5 +172,9 @@ class HttpStreamConsumer implements Runnable {
 
   public Response.StatusType getLastResponseStatus() {
     return lastResponseStatus;
+  }
+
+  public Optional<Exception> getError() {
+    return error;
   }
 }

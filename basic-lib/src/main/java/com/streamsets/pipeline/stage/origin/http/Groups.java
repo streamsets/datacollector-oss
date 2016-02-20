@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   HTTP("HTTP"),
   CREDENTIALS("Credentials"),
+  PROXY("Proxy"),
   TEXT("Text"),
   JSON("JSON"),
   DELIMITED("Delimited"),

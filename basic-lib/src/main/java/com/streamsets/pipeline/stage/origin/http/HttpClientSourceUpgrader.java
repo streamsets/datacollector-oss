@@ -44,6 +44,9 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        // fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -100,5 +103,10 @@ public class HttpClientSourceUpgrader implements StageUpgrader {
 
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config("conf.useProxy", false));
+    configs.add(new Config("conf.proxy", new HttpProxyConfigBean()));
   }
 }
