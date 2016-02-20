@@ -28,14 +28,24 @@ then
   exit 1
 fi
 mvn versions:set -Drelease -Parchetype -DnewVersion=$version
-pushd rbgen-maven-plugin
-mvn versions:set -DnewVersion=$version
-popd
-pushd stage-lib-archetype
-mvn versions:set -DnewVersion=$version
-popd
-pushd e2e-tests
-mvn versions:set -DnewVersion=$version
-popd
-perl -i -pe 's@^(\s+"version"\s*:\s*").*("\s*,\s*)$@${1}'"$version"'$2@' datacollector-ui/package.json
+
+# mvn version:set doesn't work with the following sub-modules. Update them via perl regex.
+for d in rbgen-maven-plugin stage-lib-archetype e2e-tests
+do
+  pushd $d
+  perl -i -pe 's@(<version>)(\d+.\d+.\d+.\d+(-SNAPSHOT)?)(<\/version>)@${1}'"$version"'${4}@g' pom.xml
+  popd
+done
+
+for f in BUILD.md dist/src/main/etc/sdc.properties
+do
+  perl -i -pe 's@(datacollector.)\d+.\d+.\d+.\d+(-SNAPSHOT)?@${1}'"$version"'@g' $f
+done
+
+ui_version=$(echo $version | perl -pe 's@(\d+.\d+.\d+).(\d+)(-SNAPSHOT)?@${1}${2}${3}@g')
+for f in datacollector-ui/package.json datacollector-ui/bower.json
+do
+  perl -i -pe 's@^(\s+"version"\s*:\s*").*("\s*,\s*)@${1}'"$ui_version"'${2}@g' $f
+done
+
 find . -name pom.xml.versionsBackup -delete
