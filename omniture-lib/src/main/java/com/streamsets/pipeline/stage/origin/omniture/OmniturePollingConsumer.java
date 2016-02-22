@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.origin.omniture;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.StageException;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
+import org.glassfish.jersey.grizzly.connector.GrizzlyConnectorProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +69,7 @@ class OmniturePollingConsumer implements Runnable {
    * @param username
    * @param sharedSecret
    * @param entityQueue A queue to place received chunks (usually a single JSON object) into.
+   * @param proxySettings
    */
   public OmniturePollingConsumer(
       final String resourceUrl,
@@ -73,16 +77,34 @@ class OmniturePollingConsumer implements Runnable {
       final long responseTimeoutMillis,
       final String username,
       final String sharedSecret,
-      BlockingQueue<String> entityQueue
-  ) {
+      BlockingQueue<String> entityQueue,
+      HttpProxyConfigBean proxySettings) {
     this.responseTimeoutMillis = responseTimeoutMillis;
     this.username = username;
     this.sharedSecret = sharedSecret;
     this.reportDescription = reportDescription;
     this.entityQueue = entityQueue;
-    Client client = ClientBuilder.newClient();
+    ClientConfig config = new ClientConfig();
+    configureProxy(config, proxySettings);
+    Client client = ClientBuilder.newClient(config);
+
     queueResource = client.target(resourceUrl + "?method=Report.Queue");
     getResource = client.target(resourceUrl + "?method=Report.Get");
+  }
+
+  private void configureProxy(ClientConfig config, HttpProxyConfigBean proxySettings) {
+    // Proxy is optional, so if null do nothing. We also allow for anonymous or
+    // unauthenticated connections.
+    if (proxySettings != null) {
+      config.property(ClientProperties.PROXY_URI, proxySettings.proxyUri);
+      if (proxySettings.username != null && !proxySettings.username.isEmpty()) {
+        config.property(ClientProperties.PROXY_USERNAME, proxySettings.username);
+      }
+      if (proxySettings.password != null && !proxySettings.password.isEmpty()) {
+        config.property(ClientProperties.PROXY_PASSWORD, proxySettings.password);
+      }
+    }
+    config.connectorProvider(new GrizzlyConnectorProvider());
   }
 
   @Override
@@ -137,8 +159,7 @@ class OmniturePollingConsumer implements Runnable {
     }
 
     if (root.has("error")) {
-      throw new StageException(Errors.OMNITURE_01,
-          root.get("error").get("error_description").asText());
+      throw new StageException(Errors.OMNITURE_01, root.get("error_description").asText());
     }
 
     LOG.info("Omniture report queued");
