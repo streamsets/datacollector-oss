@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,7 +20,6 @@
 package com.streamsets.pipeline.stage.origin.omniture;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
@@ -30,22 +29,18 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.configurablestage.DSource;
 
 @StageDef(
-    version = 2,
+    version = 1,
     label = "Omniture",
     description = "Retrieves Omniture reports via the REST API.",
     icon="omniture_icon.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    upgrader = OmnitureSourceUpgrader.class,
     onlineHelpRefUrl = "index.html#Origins/Omniture.html#task_of4_wpw_1s"
 )
 
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class OmnitureDSource extends DSource {
-
-  @ConfigDefBean(groups = "PROXY")
-  public HttpProxyConfigBean proxySettings = new HttpProxyConfigBean();
 
   @ConfigDef(
       required = true,
@@ -148,18 +143,6 @@ public class OmnitureDSource extends DSource {
   )
   public String sharedSecret;
 
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Proxy",
-      description = "Whether or not HTTP proxy should be used for connection",
-      defaultValue = "false",
-      displayPosition = 60,
-      group = "OMNITURE"
-  )
-  public boolean useProxy;
-
   @Override
   protected Source createSource() {
     OmnitureConfig config = new OmnitureConfig();
@@ -172,7 +155,6 @@ public class OmnitureDSource extends DSource {
     config.setResourceUrl(resourceUrl);
     config.setSharedSecret(sharedSecret);
     config.setUsername(username);
-    if (useProxy) config.setProxySettings(proxySettings);
 
     return new OmnitureSource(config);
   }

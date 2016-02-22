@@ -48,9 +48,6 @@ public class OmnitureConfig {
   // JSON report description to define the request
   String reportDescription;
 
-  // Proxy settings for the HTTP connection
-  HttpProxyConfigBean proxySettings = null;
-
   public String getReportDescription() {
     return reportDescription;
   }
@@ -122,8 +119,4 @@ public class OmnitureConfig {
   public void setSharedSecret(String sharedSecret) {
     this.sharedSecret = sharedSecret;
   }
-
-  public void setProxySettings(HttpProxyConfigBean proxySettings) { this.proxySettings = proxySettings; }
-
-  public HttpProxyConfigBean getProxySettings() { return proxySettings; }
 }
