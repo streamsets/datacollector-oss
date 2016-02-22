@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -63,6 +63,7 @@ public class OmnitureSource extends BaseSource {
 
   private final HttpClientMode httpMode;
   private final long pollingInterval;
+  private final HttpProxyConfigBean proxySettings;
 
   private ScheduledExecutorService executorService;
 
@@ -86,6 +87,7 @@ public class OmnitureSource extends BaseSource {
     this.username = config.getUsername();
     this.sharedSecret = config.getSharedSecret();
     this.reportDescription = config.getReportDescription();
+    this.proxySettings = config.getProxySettings();
   }
 
   /**
@@ -121,7 +123,8 @@ public class OmnitureSource extends BaseSource {
             requestTimeoutMillis,
             username,
             sharedSecret,
-            entityQueue
+            entityQueue,
+            proxySettings
         );
         createPollingConsumer();
         break;

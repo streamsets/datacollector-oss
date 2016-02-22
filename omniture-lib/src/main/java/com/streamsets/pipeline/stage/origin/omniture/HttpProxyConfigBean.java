@@ -19,23 +19,39 @@
  */
 package com.streamsets.pipeline.stage.origin.omniture;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDef;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  OMNITURE("Omniture"),
-  REPORT("Report"),
-  PROXY("Proxy")
-  ;
+public class HttpProxyConfigBean {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy URI",
+      displayPosition = 10,
+      group = "#0",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true"
+  )
+  public String proxyUri;
 
-  private final String label;
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Username",
+      displayPosition = 20,
+      group = "#0",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true"
+  )
+  public String username;
 
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  public String getLabel() {
-    return this.label;
-  }
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Password",
+      displayPosition = 30,
+      group = "#0",
+      dependsOn = "useProxy^",
+      triggeredByValue = "true"
+  )
+  public String password;
 }
