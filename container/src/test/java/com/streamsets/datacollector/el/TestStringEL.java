@@ -248,4 +248,15 @@ public class TestStringEL {
     Assert.assertFalse(eval.eval(variables, "${str:matches(\"Abc\", \"[a-z]+\")}", Boolean.class));
     Assert.assertFalse(eval.eval(variables, "${str:matches(\"abc\n123\", \".*\")}", Boolean.class));
   }
+
+  @Test
+  public void testStringLength() throws Exception {
+    ELEvaluator eval = new ELEvaluator("testStringLength", StringEL.class);
+    ELVariables variables = new ELVariables();
+    Assert.assertTrue(eval.eval(variables, "${str:length(\"abc\")}", Integer.class) == 3);
+    Assert.assertTrue(eval.eval(variables, "${str:length(\"\")}", Integer.class) == 0);
+    Assert.assertTrue(eval.eval(variables, "${str:length(str:concat(\"abc\",\"def\"))}", Integer.class) == 6);
+    Assert.assertTrue(eval.eval(variables, "${str:length(str:trim(\" abc \"))}", Integer.class) == 3);
+    Assert.assertTrue(eval.eval(variables, "${str:length(str:substring(\"abcdef\", 0, 3))}", Integer.class) == 3);
+  }
 }
