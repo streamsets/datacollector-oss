@@ -110,7 +110,7 @@
           <thead>
           <tr>
             <th class="custom-field-property"
-                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions">
+                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
               <span>{{customeFieldConfigDefintion.label}}</span>
               <i class="fa fa-info-circle help-icon"
                  ng-if="customeFieldConfigDefintion.description"
@@ -126,7 +126,7 @@
           <tr ng-repeat="customFieldValue in customeFieldValueList = detailPaneConfig.configuration[configIndex].value track by $index">
 
             <td class="col-md-5"
-                ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions">
+                ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'">
 
               <div ng-if="(!customFieldConfigDefinition.dependsOn || verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
                 <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
