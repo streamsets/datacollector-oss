@@ -204,4 +204,16 @@ public class StringEL {
     return string1.concat(string2);
   }
 
+  @ElFunction(
+      prefix = "str",
+      name = "length",
+      description = "Returns the string length of the string argument."
+  )
+  public static int len (
+      @ElParam("string") String string
+  ) {
+    string = (string == null)? "" : string;
+    return string.length();
+  }
+
 }
