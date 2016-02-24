@@ -38,6 +38,8 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
+import org.apache.http.client.fluent.Request;
+import org.elasticsearch.Version;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.bulk.BulkItemResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
@@ -65,6 +67,7 @@ public class ElasticSearchTarget extends BaseTarget {
 
   private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
   private static final Pattern SHIELD_USER_PATTERN = Pattern.compile("\\S+:\\S+");
+  private static final Pattern VERSION_NUMBER_PATTERN = Pattern.compile(".*\"number\":\"([^\"]*)\".*");
   private final ElasticSearchConfigBean conf;
   private ELEval timeDriverEval;
   private TimeZone timeZone;
@@ -147,9 +150,7 @@ public class ElasticSearchTarget extends BaseTarget {
       );
     }
 
-    boolean clusterInfo = true;
     if (conf.clusterName == null || conf.clusterName.isEmpty()) {
-      clusterInfo = false;
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
@@ -159,7 +160,6 @@ public class ElasticSearchTarget extends BaseTarget {
       );
     }
     if (conf.uris == null || conf.uris.isEmpty()) {
-      clusterInfo = false;
       issues.add(
           getContext().createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
@@ -169,37 +169,12 @@ public class ElasticSearchTarget extends BaseTarget {
       );
     } else {
       for (String uri : conf.uris) {
-        Matcher matcher = URI_PATTERN.matcher(uri);
-        if (!matcher.matches()) {
-          clusterInfo = false;
-          issues.add(
-              getContext().createConfigIssue(
-                  Groups.ELASTIC_SEARCH.name(),
-                  ElasticSearchConfigBean.CONF_PREFIX + "uris",
-                  Errors.ELASTICSEARCH_09,
-                  uri
-              )
-          );
-        } else {
-          int port = Integer.valueOf(matcher.group(1));
-          if (port < 0 || port > 65535) {
-            clusterInfo = false;
-            issues.add(
-                getContext().createConfigIssue(
-                    Groups.ELASTIC_SEARCH.name(),
-                    ElasticSearchConfigBean.CONF_PREFIX + "uris",
-                    Errors.ELASTICSEARCH_10,
-                    port
-                )
-            );
-          }
-        }
+        validateUri(uri, issues, ElasticSearchConfigBean.CONF_PREFIX + "uris");
       }
     }
 
     if (conf.upsert) {
       if (conf.docIdTemplate == null || conf.docIdTemplate.isEmpty()) {
-        clusterInfo = false;
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
@@ -212,7 +187,6 @@ public class ElasticSearchTarget extends BaseTarget {
 
     if (conf.useShield) {
       if (!SHIELD_USER_PATTERN.matcher(conf.shieldConfigBean.shieldUser).matches()) {
-        clusterInfo = false;
         issues.add(
             getContext().createConfigIssue(
                 Groups.SHIELD.name(),
@@ -224,40 +198,104 @@ public class ElasticSearchTarget extends BaseTarget {
       }
     }
 
-    if (clusterInfo) {
-      try {
-        elasticClient = ElasticSearchFactory.client(
-            conf.clusterName,
-            conf.uris,
-            conf.clientSniff,
-            conf.configs,
-            conf.useShield,
-            conf.shieldConfigBean.shieldUser,
-            conf.shieldConfigBean.shieldTransportSsl,
-            conf.shieldConfigBean.sslKeystorePath,
-            conf.shieldConfigBean.sslKeystorePassword,
-            conf.shieldConfigBean.sslTruststorePath,
-            conf.shieldConfigBean.sslTruststorePassword,
-            conf.useFound
-        );
-        elasticClient.admin().cluster().health(new ClusterHealthRequest());
-      } catch (RuntimeException|UnknownHostException ex) {
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
+    // By default, try to use the 1st cluster uri w/ port 9200 as http endpoint.
+    // If this doesn't work, validation will fail and ask the user provide an alternative uri.
+    if (conf.httpUri == null || conf.httpUri.isEmpty() || "hostname:port".equals(conf.httpUri)) {
+      conf.httpUri = conf.uris.get(0).split(":")[0] + ":9200";
+    }
+    validateUri(conf.httpUri, issues, ElasticSearchConfigBean.CONF_PREFIX + "httpUri");
+
+    try {
+      String response = Request
+          .Get("http://" + conf.httpUri + "?pretty=false")
+          .execute()
+          .returnContent()
+          .asString();
+      Matcher matcher = VERSION_NUMBER_PATTERN.matcher(response);
+
+      if (!matcher.matches()) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.ELASTIC_SEARCH.name(),
                 null,
-                Errors.ELASTICSEARCH_08,
-                ex.toString(),
-                ex
+                Errors.ELASTICSEARCH_12,
+                response
             )
         );
+      } else {
+        Version clientVersion = Version.CURRENT;
+        Version clusterVersion = Version.fromString(matcher.group(1));
+
+        // The major and minor version numbers must match between the client and cluster.
+        if (clientVersion.major != clusterVersion.major || clientVersion.minor != clusterVersion.minor) {
+          issues.add(
+              getContext().createConfigIssue(
+                  Groups.ELASTIC_SEARCH.name(),
+                  null,
+                  Errors.ELASTICSEARCH_13,
+                  clientVersion,
+                  clusterVersion
+              )
+          );
+        }
       }
+    } catch (IOException e) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ELASTIC_SEARCH.name(),
+              ElasticSearchConfigBean.CONF_PREFIX + "httpUri",
+              Errors.ELASTICSEARCH_11,
+              e.toString(),
+              e
+          )
+      );
     }
 
-    if (issues.isEmpty()) {
-      generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
-          .setMode(JsonMode.MULTIPLE_OBJECTS).setCharset(Charset.forName(conf.charset)).build();
+    if (!issues.isEmpty()) {
+      return issues;
     }
+
+    try {
+      elasticClient = ElasticSearchFactory.client(
+          conf.clusterName,
+          conf.uris,
+          conf.clientSniff,
+          conf.configs,
+          conf.useShield,
+          conf.shieldConfigBean.shieldUser,
+          conf.shieldConfigBean.shieldTransportSsl,
+          conf.shieldConfigBean.sslKeystorePath,
+          conf.shieldConfigBean.sslKeystorePassword,
+          conf.shieldConfigBean.sslTruststorePath,
+          conf.shieldConfigBean.sslTruststorePassword,
+          conf.useFound
+      );
+      elasticClient.admin().cluster().health(new ClusterHealthRequest());
+    } catch (RuntimeException|UnknownHostException ex) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ELASTIC_SEARCH.name(),
+              null,
+              Errors.ELASTICSEARCH_08,
+              ex.toString(),
+              ex
+          )
+      );
+    }
+
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
+    generatorFactory = new DataGeneratorFactoryBuilder(getContext(), DataGeneratorFormat.JSON)
+        .setMode(JsonMode.MULTIPLE_OBJECTS)
+        .setCharset(Charset.forName(conf.charset))
+        .build();
+
     return issues;
   }
 
@@ -391,4 +429,29 @@ public class ElasticSearchTarget extends BaseTarget {
     return batchTime;
   }
 
+  private void validateUri(String uri, List<ConfigIssue> issues, String configName) {
+    Matcher matcher = URI_PATTERN.matcher(uri);
+    if (!matcher.matches()) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.ELASTIC_SEARCH.name(),
+              configName,
+              Errors.ELASTICSEARCH_09,
+              uri
+          )
+      );
+    } else {
+      int port = Integer.valueOf(matcher.group(1));
+      if (port < 0 || port > 65535) {
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.ELASTIC_SEARCH.name(),
+                configName,
+                Errors.ELASTICSEARCH_10,
+                port
+            )
+        );
+      }
+    }
+  }
 }

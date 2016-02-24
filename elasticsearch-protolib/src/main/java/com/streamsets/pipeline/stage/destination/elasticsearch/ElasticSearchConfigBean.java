@@ -54,7 +54,7 @@ public class ElasticSearchConfigBean {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Cluster URIs",
-      defaultValue = "[\"localhost:9300\"]",
+      defaultValue = "[\"hostname:port\"]",
       description = "Elasticsearch Node URIs",
       displayPosition = 20,
       group = "ELASTIC_SEARCH"
@@ -62,12 +62,24 @@ public class ElasticSearchConfigBean {
   public List<String> uris;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Cluster HTTP URI",
+      defaultValue = "hostname:port",
+      description = "Elasticsearch HTTP Endpoint. " +
+          "This is needed to verify version compatibility between the stage library and Elasticsearch cluster.",
+      displayPosition = 21,
+      group = "ELASTIC_SEARCH"
+  )
+  public String httpUri;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Shield",
       defaultValue = "false",
       description = "Use Shield",
-      displayPosition = 21,
+      displayPosition = 22,
       group = "ELASTIC_SEARCH"
   )
   public boolean useShield;
@@ -78,7 +90,7 @@ public class ElasticSearchConfigBean {
       label = "Elastic Found Cluster",
       defaultValue = "false",
       description = "Select this option when connecting to an Elastic Found hosted cluster",
-      displayPosition = 22,
+      displayPosition = 23,
       group = "ELASTIC_SEARCH"
   )
   public boolean useFound;
@@ -90,7 +102,7 @@ public class ElasticSearchConfigBean {
       defaultValue = "false",
       description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
           "Do not use if the Data Collector is on a different network from the cluster.",
-      displayPosition = 23,
+      displayPosition = 24,
       group = "ELASTIC_SEARCH"
   )
   public boolean clientSniff;
