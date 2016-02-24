@@ -51,6 +51,7 @@ import com.streamsets.pipeline.lib.parser.text.TextDataParserFactory;
 import com.streamsets.pipeline.lib.parser.xml.XmlDataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
+import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 
@@ -67,7 +68,7 @@ import java.util.Map;
  * Instances of this object must be called 'dataFormatConfig' exactly for error
  * messages to be placed in the correct location on the UI.
  */
-public class DataParserFormatConfig {
+public class DataParserFormatConfig implements DataFormatConfig{
   private static final String DEFAULT_REGEX =
       "^(\\S+) (\\S+) (\\S+) \\[([\\w:/]+\\s[+\\-]\\d{4})\\] \"(\\S+) (\\S+) (\\S+)\" (\\d{3}) (\\d+)";
   private static final String DEFAULT_APACHE_CUSTOM_LOG_FORMAT = "%h %l %u %t \"%r\" %>s %b";

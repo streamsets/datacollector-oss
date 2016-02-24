@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,37 +17,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.rabbitmq;
+package com.streamsets.pipeline.stage.destination.rabbitmq;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
-import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
     version = 1,
-    label = "RabbitMQ Consumer",
-    description = "Reads data from a RabbitMQ source.",
+    label = "RabbitMQ Producer",
+    description = "Writes data to a RabbitMQ Target.",
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Origins/RabbitMQ.html#task_hrz_mq1_h5"
+    onlineHelpRefUrl = "index.html#Destinations/RabbitMQ.html#"
 )
 @ConfigGroups(value = Groups.class)
-@HideConfigs(value = {"conf.dataFormatConfig.compression"})
 @GenerateResourceBundle
-public class RabbitDSource extends DSourceOffsetCommitter {
-
+public class RabbitDTarget extends DTarget{
   @ConfigDefBean(groups = {"RABBITMQ", "QUEUE", "EXCHANGE", "ADVANCED"})
-  public RabbitSourceConfigBean conf;
+  public RabbitTargetConfigBean conf;
 
   @Override
-  protected Source createSource() {
-    return new RabbitSource(conf);
+  protected Target createTarget() {
+    return new RabbitTarget(this.conf);
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,37 +17,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.rabbitmq;
+package com.streamsets.pipeline.stage.common;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  RABBITMQ("RabbitMQ"),
-  CREDENTIALS("Credentials"),
-  QUEUE("Queue"),
-  EXCHANGE("Exchange"),
-  ADVANCED("Advanced"),
-  TEXT(DataFormat.TEXT.getLabel()),
-  JSON(DataFormat.JSON.getLabel()),
-  DELIMITED(DataFormat.DELIMITED.getLabel()),
-  XML(DataFormat.XML.getLabel()),
-  LOG(DataFormat.LOG.getLabel()),
-  AVRO(DataFormat.AVRO.getLabel()),
-  BINARY(DataFormat.BINARY.getLabel()),
-  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
-  ;
+import java.util.List;
 
-  private final String label;
+public interface DataFormatConfig {
 
-  Groups(String label) {
-    this.label = label;
-  }
+  boolean init(
+      Stage.Context context,
+      DataFormat dataFormat,
+      String groupName,
+      String configPrefix,
+      List<Stage.ConfigIssue> issues
+  );
 
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
 }

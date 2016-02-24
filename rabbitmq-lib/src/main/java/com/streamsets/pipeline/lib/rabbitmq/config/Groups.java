@@ -17,30 +17,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.rabbitmq;
+package com.streamsets.pipeline.lib.rabbitmq.config;
 
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.config.DataFormat;
 
-public enum ExchangeType implements Label {
-  DIRECT("Direct", "direct"),
-  FANOUT("Fanout", "fanout"),
-  TOPIC("Topic", "topic"),
-  //TODO: Support for headers exchange. HEADERS("Headers", "headers"),
+@GenerateResourceBundle
+public enum Groups implements Label {
+  RABBITMQ("RabbitMQ"),
+  CREDENTIALS("Credentials"),
+  QUEUE("Queue"),
+  EXCHANGE("Exchange"),
+  ADVANCED("Advanced"),
+  TEXT(DataFormat.TEXT.getLabel()),
+  JSON(DataFormat.JSON.getLabel()),
+  DELIMITED(DataFormat.DELIMITED.getLabel()),
+  XML(DataFormat.XML.getLabel()),
+  LOG(DataFormat.LOG.getLabel()),
+  AVRO(DataFormat.AVRO.getLabel()),
+  BINARY(DataFormat.BINARY.getLabel()),
+  PROTOBUF(DataFormat.PROTOBUF.getLabel()),
   ;
 
   private final String label;
-  private final String value;
 
-  ExchangeType(String label, String value) {
+  Groups(String label) {
     this.label = label;
-    this.value = value;
   }
 
   @Override
   public String getLabel() {
-    return label;
+    return this.label;
   }
-
-  public String getValue() { return value; }
-
 }
