@@ -48,6 +48,9 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -100,6 +103,10 @@ public class ElasticSearchDTargetUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private static void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config(ElasticSearchConfigBean.CONF_PREFIX + "httpUri", "hostname:port"));
   }
 
 }

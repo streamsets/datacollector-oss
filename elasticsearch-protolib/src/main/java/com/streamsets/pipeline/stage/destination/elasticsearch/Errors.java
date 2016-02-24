@@ -35,6 +35,9 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_08("Could not connect to the cluster: {}"),
   ELASTICSEARCH_09("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
   ELASTICSEARCH_10("Port value out of range: '{}'"),
+  ELASTICSEARCH_11("Could not connect to the cluster HTTP endpoint: {}"),
+  ELASTICSEARCH_12("Could not get the cluster version from HTTP response: {}"),
+  ELASTICSEARCH_13("Stage library version '{}' and cluster version '{}' are not compatible"),
 
   ELASTICSEARCH_15("Could not write record '{}': {}"),
   ELASTICSEARCH_16("Could not index record '{}': {}"),

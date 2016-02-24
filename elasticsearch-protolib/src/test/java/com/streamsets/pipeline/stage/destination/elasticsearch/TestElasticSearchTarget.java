@@ -60,6 +60,7 @@ public class TestElasticSearchTarget {
   private static String esName = UUID.randomUUID().toString();
   private static Node esServer;
   private static int esPort;
+  private static int esHttpPort;
 
   private static int getRandomPort() throws Exception {
     ServerSocket ss = new ServerSocket(0);
@@ -73,10 +74,12 @@ public class TestElasticSearchTarget {
   public static void setUp() throws Exception {
     File esDir = new File("target", UUID.randomUUID().toString());
     esPort = getRandomPort();
+    esHttpPort = getRandomPort();
     Assert.assertTrue(esDir.mkdirs());
     Map<String, Object> configs = new HashMap<>();
     configs.put("cluster.name", esName);
-    configs.put("http.enabled", false);
+    configs.put("http.enabled", true);
+    configs.put("http.port", esHttpPort);
     configs.put("transport.tcp.port", esPort);
     configs.put("path.home", esDir.getAbsolutePath());
     configs.put("path.conf", esDir.getAbsolutePath());
@@ -104,6 +107,7 @@ public class TestElasticSearchTarget {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
     conf.clusterName = "";
     conf.uris = Collections.EMPTY_LIST;
+    conf.httpUri = "";
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
@@ -126,6 +130,7 @@ public class TestElasticSearchTarget {
 
     conf.clusterName = "x";
     conf.uris = ImmutableList.of("x");
+    conf.httpUri = "";
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
@@ -145,6 +150,7 @@ public class TestElasticSearchTarget {
 
     conf.clusterName = "x";
     conf.uris = ImmutableList.of("localhost:0");
+    conf.httpUri = "localhost:0";
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
@@ -160,7 +166,7 @@ public class TestElasticSearchTarget {
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_11.name()));
   }
 
   private Target createTarget() {
@@ -172,6 +178,7 @@ public class TestElasticSearchTarget {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
     conf.clusterName = esName;
     conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.httpUri = "127.0.0.1:" + esHttpPort;
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = timeDriver;
     conf.timeZoneID = "UTC";
@@ -333,6 +340,7 @@ public class TestElasticSearchTarget {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
     conf.clusterName = esName;
     conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.httpUri = "127.0.0.1:" + esHttpPort;
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
@@ -450,6 +458,7 @@ public class TestElasticSearchTarget {
 
     // Invalid url
     conf.uris = ImmutableList.of("127.0.0.1:" + "NOT_A_NUMBER");
+    conf.httpUri = "";
 
     ElasticSearchTarget target = new ElasticSearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -459,6 +468,7 @@ public class TestElasticSearchTarget {
 
     // Invalid port number
     conf.uris = ImmutableList.of("127.0.0.1:" + Integer.MAX_VALUE);
+    conf.httpUri = "";
 
     target = new ElasticSearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -468,6 +478,7 @@ public class TestElasticSearchTarget {
 
     // Invalid shield user
     conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.httpUri = "127.0.0.1:" + esHttpPort;
     conf.useShield = true;
     conf.shieldConfigBean.shieldUser = "INVALID_SHIELD_USER";
 
@@ -484,6 +495,7 @@ public class TestElasticSearchTarget {
     ElasticSearchConfigBean conf = new ElasticSearchConfigBean();
     conf.clusterName = esName;
     conf.uris = ImmutableList.of("127.0.0.1:" + esPort);
+    conf.httpUri = "127.0.0.1:" + esHttpPort;
     conf.configs = Collections.EMPTY_MAP;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
