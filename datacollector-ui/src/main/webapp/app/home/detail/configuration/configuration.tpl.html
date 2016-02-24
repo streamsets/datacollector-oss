@@ -54,7 +54,7 @@
               name="badRecordsForm">
           <div class="form-group"
                ng-class="{'has-error': getConfigurationIssueMessage(detailPaneConfig, configDefinition)}"
-               ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions track by $index | orderBy: 'displayPosition'"
+               ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
                ng-if="(!configDefinition.dependsOn || verifyDependsOnMap(errorStageConfig, configDefinition))"
                ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);">
 
