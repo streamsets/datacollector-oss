@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,32 +21,14 @@ package com.streamsets.pipeline.stage.origin.rabbitmq;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ListBeanModel;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.DataFormatChooserValues;
+import com.streamsets.pipeline.lib.rabbitmq.config.BaseRabbitConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
-import com.streamsets.pipeline.stage.origin.lib.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class RabbitConfigBean {
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "URI",
-      defaultValue = "amqp://",
-      description = "RabbitMQ URI e.g. amqp://host:port/virtualhost",
-      displayPosition = 10,
-      group = "#0"
-  )
-  public String uri = "amqp://";
-
+public class RabbitSourceConfigBean extends BaseRabbitConfigBean{
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
@@ -58,27 +40,8 @@ public class RabbitConfigBean {
   )
   public String consumerTag = "";
 
-  /** Exchange Configuration Properties */
-  @ConfigDefBean(groups = "QUEUE")
-  public RabbitQueueConfigBean queue = new RabbitQueueConfigBean();
-
-  /** Exchange Configuration Properties */
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Bindings",
-      description = "Optional list of exchange bindings.",
-      displayPosition = 40,
-      group = "EXCHANGE"
-  )
-  @ListBeanModel
-  public List<RabbitExchangeConfigBean> exchanges = new ArrayList<>();
-
   @ConfigDefBean(groups = "RABBITMQ")
   public BasicConfig basicConfig = new BasicConfig();
-
-  @ConfigDefBean(groups = "RABBITMQ")
-  public CredentialsConfig credentialsConfig = new CredentialsConfig();
 
   @ConfigDef(
       required = true,
@@ -93,23 +56,4 @@ public class RabbitConfigBean {
   @ConfigDefBean(groups = "RABBITMQ")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MAP,
-      defaultValue = "",
-      label = "Additional Client Configuration",
-      displayPosition = 40,
-      group = "#0"
-  )
-  public Map<String, Object> rabbitmqProperties = new HashMap<>();
-
-  /** Advanced Configuration Properties */
-  @ConfigDefBean(groups = "ADVANCED")
-  public RabbitAdvancedConfigBean advanced = new RabbitAdvancedConfigBean();
-
-  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    for (RabbitExchangeConfigBean exchange : exchanges) {
-      exchange.init(context, issues);
-    }
-  }
 }

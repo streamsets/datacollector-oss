@@ -43,6 +43,7 @@ import com.streamsets.pipeline.lib.generator.text.TextDataGeneratorFactory;
 import com.streamsets.pipeline.lib.util.AvroTypeUtil;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
 import com.streamsets.pipeline.lib.util.ProtobufConstants;
+import com.streamsets.pipeline.stage.common.DataFormatConfig;
 import com.streamsets.pipeline.stage.common.DataFormatErrors;
 import com.streamsets.pipeline.stage.common.DataFormatGroups;
 import org.apache.avro.Schema;
@@ -57,7 +58,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class DataGeneratorFormatConfig {
+public class DataGeneratorFormatConfig implements DataFormatConfig{
 
   private static final String CHARSET_UTF8 = "UTF-8";
 

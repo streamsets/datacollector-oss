@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 StreamSets Inc.
+ * Copyright 2016 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,12 +17,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.rabbitmq;
+package com.streamsets.pipeline.stage.destination.rabbitmq;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public class ExchangeTypeChooserValues extends BaseEnumChooserValues<ExchangeType> {
-  public ExchangeTypeChooserValues() {
-    super(ExchangeType.class);
+public enum Priority implements Label{
+  ZERO("0", 0),
+  ONE("1", 1),
+  TWO("2", 2),
+  THREE("3", 3),
+  FOUR("4", 4),
+  FIVE("5", 5),
+  SIX("6", 6),
+  SEVEN("7", 7),
+  EIGHT("8", 8),
+  NINE("9", 9)
+  ;
+
+  private String label;
+  private int priority;
+
+  Priority(String label, int priority) {
+    this.label = label;
+    this.priority = priority;
   }
+
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
+
+  public int getPriority() {
+    return this.priority;
+  }
+
 }

@@ -20,9 +20,6 @@
 package com.streamsets.pipeline.stage.origin.rabbitmq;
 
 import com.google.common.base.Optional;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
@@ -31,15 +28,16 @@ import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
+import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
+import com.streamsets.pipeline.lib.rabbitmq.common.RabbitCxnManager;
+import com.streamsets.pipeline.lib.rabbitmq.common.RabbitUtil;
 import com.streamsets.pipeline.stage.origin.lib.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.lib.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
@@ -48,85 +46,49 @@ import java.util.concurrent.TransferQueue;
 
 public class RabbitSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(RabbitSource.class);
-  public static final String RABBIT_DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
 
-  private final RabbitConfigBean conf;
+  private final RabbitSourceConfigBean conf;
   private final TransferQueue<RabbitMessage> messages = new LinkedTransferQueue<>();
 
   private ErrorRecordHandler errorRecordHandler;
-  private Connection connection = null;
-  private Channel channel = null;
+  private RabbitCxnManager rabbitCxnManager = new RabbitCxnManager();
   private StreamSetsMessageConsumer consumer;
   private DataParserFactory parserFactory;
   private String lastSourceOffset;
 
-  public RabbitSource(RabbitConfigBean conf) {
+  public RabbitSource(RabbitSourceConfigBean conf) {
     this.conf = conf;
   }
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    conf.init(getContext(), issues);
+
+    this.lastSourceOffset = "";
+
+    RabbitUtil.initRabbitStage(
+        getContext(),
+        conf,
+        conf.dataFormat,
+        conf.dataFormatConfig,
+        rabbitCxnManager,
+        issues
+    );
 
     if (!issues.isEmpty()) {
       return issues;
     }
 
-    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-
-    lastSourceOffset = "";
-    ConnectionFactory factory = createConnectionFactory();
     try {
-      factory.setUri(conf.uri);
-
-      connection = factory.newConnection();
-      channel = connection.createChannel();
-
-      // Channel is always bound to the default exchange. When specified, we must declare the exchange.
-      for (RabbitExchangeConfigBean exchange : conf.exchanges) {
-        channel.exchangeDeclare(
-            exchange.name,
-            exchange.type.getValue(),
-            exchange.durable,
-            exchange.autoDelete,
-            exchange.declarationProperties
-        );
-      }
-
-      channel.queueDeclare(
-          conf.queue.name, conf.queue.durable, conf.queue.exclusive, conf.queue.autoDelete, conf.queue.properties
-      );
-
-      for (RabbitExchangeConfigBean exchange : conf.exchanges) {
-        bindQueue(exchange);
-      }
-
-      conf.dataFormatConfig.init(
-          getContext(),
-          conf.dataFormat,
-          Groups.RABBITMQ.name(),
-          RABBIT_DATA_FORMAT_CONFIG_PREFIX,
-          issues
-      );
-      parserFactory = conf.dataFormatConfig.getParserFactory();
-
       startConsuming();
-    } catch (IllegalArgumentException | NoSuchAlgorithmException | KeyManagementException | URISyntaxException e) {
-      issues.add(getContext().createConfigIssue(
-          Groups.RABBITMQ.name(),
-          "conf.uri",
-          Errors.RABBITMQ_03,
-          e.toString()
-      ));
-    } catch (TimeoutException | IOException e) {
-      // Connecting to RabbitMQ timed out or some other issue.
-      String reason;
-      if (e.getCause() != null) {
-        reason = e.getCause().toString();
-      } else {
-        reason = e.toString();
-      }
+      errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+      parserFactory = conf.dataFormatConfig.getParserFactory();
+    } catch (IOException e) {
+      // Some other issue.
+      LOG.error("Rabbit MQ issue.", e);
+
+      String reason = (e.getCause() == null) ? e.toString() : e.getCause().toString();
+
       issues.add(getContext().createConfigIssue(
           Groups.RABBITMQ.name(),
           "conf.uri",
@@ -172,10 +134,6 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
     return nextSourceOffset;
   }
 
-  private boolean isConnected() {
-    return channel.isOpen() && connection.isOpen();
-  }
-
   @Override
   public void commit(String offset) throws StageException {
     if (offset == null || offset.isEmpty() || lastSourceOffset.equals(offset)) {
@@ -194,48 +152,19 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   @Override
   public void destroy() {
     try {
-      if (channel != null) {
-        channel.close();
-      }
-
-      if (connection != null) {
-        connection.close();
-      }
+      this.rabbitCxnManager.close();
     } catch (IOException | TimeoutException e) {
       LOG.warn("Error while closing channel/connection: {}", e.toString(), e);
     }
     super.destroy();
   }
 
-  private ConnectionFactory createConnectionFactory() {
-    ConnectionFactory factory = new ConnectionFactory();
-    factory.setUsername(conf.credentialsConfig.username);
-    factory.setPassword(conf.credentialsConfig.password);
-    factory.setClientProperties(conf.rabbitmqProperties);
-    factory.setConnectionTimeout(conf.advanced.connectionTimeout);
-    factory.setAutomaticRecoveryEnabled(conf.advanced.automaticRecoveryEnabled);
-    factory.setNetworkRecoveryInterval(conf.advanced.networkRecoveryInterval);
-    factory.setRequestedHeartbeat(conf.advanced.heartbeatInterval);
-    factory.setHandshakeTimeout(conf.advanced.handshakeTimeout);
-    factory.setShutdownTimeout(conf.advanced.shutdownTimeout);
-    factory.setRequestedFrameMax(conf.advanced.frameMax);
-    factory.setRequestedChannelMax(conf.advanced.channelMax);
-    return factory;
-  }
-
-  private void bindQueue(RabbitExchangeConfigBean exchange) throws IOException {
-    // If an exchange is specified, we need the routing key and then we bind it to the channel.
-    // Note that routing key is ignored for Fanout and Headers (unsupported) type exchanges.
-    String bindingKey = exchange.routingKey.isEmpty() ? conf.queue.name : exchange.routingKey;
-    channel.queueBind(conf.queue.name, exchange.name, bindingKey, exchange.bindingProperties);
-  }
-
   private void startConsuming() throws IOException {
-    consumer = new StreamSetsMessageConsumer(channel, messages);
+    consumer = new StreamSetsMessageConsumer(this.rabbitCxnManager.getChannel(), messages);
     if (conf.consumerTag == null || conf.consumerTag.isEmpty()) {
-      channel.basicConsume(conf.queue.name, false, consumer);
+      this.rabbitCxnManager.getChannel().basicConsume(conf.queue.name, false, consumer);
     } else {
-      channel.basicConsume(conf.queue.name, false, conf.consumerTag, consumer);
+      this.rabbitCxnManager.getChannel().basicConsume(conf.queue.name, false, conf.consumerTag, consumer);
     }
   }
 
@@ -249,5 +178,9 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
       errorRecordHandler.onError(Errors.RABBITMQ_04, new String(data, parserFactory.getSettings().getCharset()));
     }
     return Optional.fromNullable(record);
+  }
+
+  private boolean isConnected() {
+    return this.rabbitCxnManager.checkConnected();
   }
 }
