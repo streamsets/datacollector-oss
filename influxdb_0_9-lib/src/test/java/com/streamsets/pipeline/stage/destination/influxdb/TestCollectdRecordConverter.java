@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,13 +70,30 @@ public class TestCollectdRecordConverter {
   }
 
   @Test
-  public void testGetTags() {
+  public void testGetTags() throws OnRecordErrorException {
     Map<String, String> expectedTags = new ImmutableMap.Builder<String, String>()
         .put("host", HOSTNAME)
         .put("instance", PLUGIN_INSTANCE)
         .put("type", TYPE)
         .build();
-    Map<String, String> tags = CollectdRecordConverter.getTags(record);
+    Map<String, String> tags = CollectdRecordConverter.getTags(Collections.<String>emptyList(), record);
+    assertEquals(expectedTags, tags);
+  }
+
+  @Test
+  public void testGetTagsWithExtraTagFields() throws OnRecordErrorException {
+    GenericRecordConverterConfigBean conf = new GenericRecordConverterConfigBean();
+    conf.tagFields.add("/extraTag");
+
+    Map<String, String> expectedTags = new ImmutableMap.Builder<String, String>()
+        .put("host", HOSTNAME)
+        .put("instance", PLUGIN_INSTANCE)
+        .put("type", TYPE)
+        .put("extraTag", "tagValue")
+        .build();
+
+    record.set("/extraTag", Field.create("tagValue"));
+    Map<String, String> tags = CollectdRecordConverter.getTags(conf.tagFields, record);
     assertEquals(expectedTags, tags);
   }
 
@@ -140,7 +158,8 @@ public class TestCollectdRecordConverter {
   @Test
   public void testGetValueFields() throws OnRecordErrorException {
     List<String> expected = ImmutableList.of("rx");
-    List<String> actual = CollectdRecordConverter.getValueFields(record);
+    CollectdRecordConverter converter = new CollectdRecordConverter();
+    List<String> actual = converter.getValueFields(record);
     assertEquals(expected, actual);
   }
 
@@ -148,7 +167,8 @@ public class TestCollectdRecordConverter {
   public void testNoValueFields() throws OnRecordErrorException {
     thrown.expect(OnRecordErrorException.class);
     record.delete("/rx");
-    CollectdRecordConverter.getValueFields(record);
+    CollectdRecordConverter converter = new CollectdRecordConverter();
+    converter.getValueFields(record);
   }
 
   @Test
@@ -161,8 +181,9 @@ public class TestCollectdRecordConverter {
 
   @Test
   public void testIsValueField() {
-    assertTrue(CollectdRecordConverter.isValueField("/rx"));
-    assertFalse(CollectdRecordConverter.isValueField("/plugin"));
+    CollectdRecordConverter converter = new CollectdRecordConverter();
+    assertTrue(converter.isValueField("/rx"));
+    assertFalse(converter.isValueField("/plugin"));
   }
 
   @Test

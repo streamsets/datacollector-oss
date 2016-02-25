@@ -77,7 +77,7 @@ public class InfluxTarget extends BaseTarget {
 
   private RecordConverter createRecordConverter(RecordConverterType recordConverterType) throws StageException {
     if (recordConverterType == RecordConverterType.COLLECTD) {
-      return new CollectdRecordConverter();
+      return new CollectdRecordConverter(conf.fieldMapping);
     } else if (recordConverterType == RecordConverterType.CUSTOM) {
       return new GenericRecordConverter(conf.fieldMapping);
     }

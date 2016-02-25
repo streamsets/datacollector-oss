@@ -52,13 +52,25 @@ public class CollectdRecordConverter implements RecordConverter {
   private static final String TIME = "time";
   private static final String TIME_HIRES = "time_hires";
 
+  private final GenericRecordConverterConfigBean conf;
+
+  public CollectdRecordConverter() {
+    this.conf = new GenericRecordConverterConfigBean();
+  }
+
+  public CollectdRecordConverter(GenericRecordConverterConfigBean conf) {
+    this.conf = conf;
+  }
+
   @VisibleForTesting
-  static Map<String, String> getTags(Record record) {
+  static Map<String, String> getTags(List<String> tagFields, Record record) throws OnRecordErrorException {
     Map<String, String> tags = new HashMap<>(TAG_FIELDS.size());
 
     for (String tag : TAG_FIELDS) {
       putIfTag(record, tags, tag);
     }
+
+    tags.putAll(RecordConverterUtil.getTags(tagFields, record));
     return tags;
   }
 
@@ -113,7 +125,7 @@ public class CollectdRecordConverter implements RecordConverter {
   }
 
   @VisibleForTesting
-  static List<String> getValueFields(Record record) throws OnRecordErrorException {
+  List<String> getValueFields(Record record) throws OnRecordErrorException {
     List<String> fields = new ArrayList<>();
     Set<String> fieldPaths = record.getFieldPaths();
 
@@ -136,10 +148,13 @@ public class CollectdRecordConverter implements RecordConverter {
   }
 
   @VisibleForTesting
-  static boolean isValueField(String fieldPath) {
+  boolean isValueField(String fieldPath) {
     String fieldName = stripPathPrefix(fieldPath);
-    return !fieldPath.isEmpty() && !FIELD_PATH_PREFIX.equals(fieldPath) &&
-        !TAG_FIELDS.contains(fieldName) && !NON_VALUE_FIELDS.contains(fieldName);
+    if (fieldPath.isEmpty() || FIELD_PATH_PREFIX.equals(fieldPath) ) {
+      return false;
+    }
+    return !TAG_FIELDS.contains(fieldName) && !NON_VALUE_FIELDS.contains(fieldName)
+        && !conf.tagFields.contains(fieldPath);
   }
 
   @Override
@@ -150,7 +165,7 @@ public class CollectdRecordConverter implements RecordConverter {
     for (String fieldName : fieldNames) {
       points.add(Point
           .measurement(joiner.join(getMeasurementBaseName(record), fieldName))
-          .tag(getTags(record))
+          .tag(getTags(conf.tagFields, record))
           .time(getTime(record), getTimePrecision(record))
           .field("value", record.get(FIELD_PATH_PREFIX + fieldName).getValue())
           .build()

@@ -75,8 +75,6 @@ public class GenericRecordConverterConfigBean {
       label = "Tag Fields",
       description = "Fields which will be used as tag keys and values.",
       displayPosition = 110,
-      dependsOn = "recordConverterType^",
-      triggeredByValue = "CUSTOM",
       group = "#0"
   )
   @FieldSelectorModel

@@ -25,9 +25,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import org.influxdb.dto.Point;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.streamsets.pipeline.stage.destination.influxdb.CollectdRecordConverter.stripPathPrefix;
 
@@ -52,7 +50,7 @@ public class GenericRecordConverter implements RecordConverter {
       }
       Point.Builder point = Point
           .measurement(measurementName)
-          .tag(getTags(record))
+          .tag(RecordConverterUtil.getTags(conf.tagFields, record))
           .field(stripPathPrefix(fieldPath), record.get(fieldPath).getValue());
 
       if (!conf.timeField.isEmpty()) {
@@ -83,33 +81,5 @@ public class GenericRecordConverter implements RecordConverter {
     if (!conf.timeField.isEmpty() && !record.has(conf.timeField)) {
       throw new OnRecordErrorException(Errors.INFLUX_07, conf.timeField);
     }
-  }
-
-  private Map<String, String> getTags(Record record) throws OnRecordErrorException {
-    Map<String, String> tags = new HashMap<>();
-
-    for (String fieldPath : conf.tagFields) {
-      if (!record.has(fieldPath)) {
-        continue;
-      }
-
-      Field tagField = record.get(fieldPath);
-      switch (tagField.getType()) {
-        case MAP:
-          // fall through
-        case LIST_MAP:
-          for (Map.Entry<String, Field> entry : tagField.getValueAsMap().entrySet()) {
-            tags.put(entry.getKey(), entry.getValue().getValueAsString());
-          }
-          break;
-        case LIST:
-          throw new OnRecordErrorException(Errors.INFLUX_08, fieldPath);
-        default:
-          tags.put(stripPathPrefix(fieldPath), tagField.getValueAsString());
-          break;
-      }
-    }
-
-    return tags;
   }
 }
