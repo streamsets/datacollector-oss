@@ -93,6 +93,13 @@ angular
             defer.promise.then(function(previewData) {
               $rootScope.common.infoList = [];
               if(previewData.status === 'VALID') {
+                // clear previous errors if any
+                var commonErrors = $rootScope.common.errors;
+                if(commonErrors && commonErrors.length) {
+                  $rootScope.common.errors = [];
+                  $scope.refreshGraph();
+                }
+
                 $rootScope.common.successList.push({
                   message: pipelineValidationSuccess
                 });
