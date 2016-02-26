@@ -32,7 +32,7 @@
   <packaging>jar</packaging>
 
   <properties>
-        <avro.version>1.7.7</avro.version>
+    <avro.version>1.7.7</avro.version>
     <!-- Closed source artifacts should be provided dependency -->
     <hadoop.version>2.7.0-mapr-1506</hadoop.version>
  </properties>
@@ -133,6 +133,13 @@
     </dependency>
 
     <!-- Protolibs -->
+
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-maprfs-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.streamsets</groupId>
