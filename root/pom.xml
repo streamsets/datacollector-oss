@@ -81,6 +81,7 @@
     <commons-pool.version>2.4.1</commons-pool.version>
     <jodatime.version>2.3</jodatime.version>
     <airlift.version>0.7</airlift.version>
+    <selma.version>0.13</selma.version>
   </properties>
 
   <dependencyManagement>
@@ -97,6 +98,11 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-container-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-json-dto</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -623,7 +629,16 @@
         <artifactId>commons-pool2</artifactId>
         <version>${commons-pool.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>fr.xebia.extras</groupId>
+        <artifactId>selma-processor</artifactId>
+        <version>${selma.version}</version>
+       </dependency>
+      <dependency>
+        <groupId>fr.xebia.extras</groupId>
+        <artifactId>selma</artifactId>
+        <version>${selma.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
