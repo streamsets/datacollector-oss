@@ -48,7 +48,7 @@ public class MapRStreamsDTarget extends DTarget {
     return new KafkaTarget(convertToKafkaConfigBean(maprStreamsTargetConfigBean));
   }
 
-  private KafkaConfigBean convertToKafkaConfigBean(MapRStreamsTargetConfigBean maprStreamsTargetConfigBean) {
+  protected KafkaConfigBean convertToKafkaConfigBean(MapRStreamsTargetConfigBean maprStreamsTargetConfigBean) {
 
     KafkaConfigBean kafkaConfigBean = new KafkaConfigBean();
     kafkaConfigBean.dataFormat = maprStreamsTargetConfigBean.dataFormat;
