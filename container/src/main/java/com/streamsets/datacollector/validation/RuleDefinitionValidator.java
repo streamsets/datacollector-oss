@@ -303,6 +303,7 @@ public class RuleDefinitionValidator {
       }
 
       @Override
+      @Deprecated
       public Set<String> getFieldPaths() {
         return null;
       }

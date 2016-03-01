@@ -44,7 +44,7 @@ public class FieldFilterProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getFieldPaths();
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
     List<String> list;
     switch(filterOperation) {
       case REMOVE:

@@ -99,6 +99,35 @@ public class TestFieldFilterProcessor {
   }
 
   @Test
+  public void testKeepQuotedFieldPath() throws StageException {
+    ProcessorRunner runner = new ProcessorRunner.Builder(FieldFilterDProcessor.class)
+        .addConfiguration("fields", ImmutableList.of("/'name with quotes'", "/age"))
+        .addConfiguration("filterOperation", FilterOperation.KEEP)
+        .addOutputLane("a").build();
+    runner.runInit();
+
+    try {
+      Map<String, Field> map = new LinkedHashMap<>();
+      map.put("name with quotes", Field.create("a"));
+      map.put("age", Field.create("b"));
+      map.put("streetAddress", Field.create("c"));
+      Record record = RecordCreator.create("s", "s:1");
+      record.set(Field.create(map));
+
+      StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
+      Assert.assertEquals(1, output.getRecords().get("a").size());
+      Field field = output.getRecords().get("a").get(0).get();
+      Assert.assertTrue(field.getValue() instanceof Map);
+      Map<String, Field> result = field.getValueAsMap();
+      Assert.assertTrue(result.size() == 2);
+      Assert.assertTrue(result.containsKey("name with quotes"));
+      Assert.assertTrue(result.containsKey("age"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
   public void testNestedKeep1() throws StageException {
     /*
      * In a deep nested field path try to retain the second elements of an array within an array

@@ -311,19 +311,29 @@ public class RecordImpl implements Record, Cloneable {
   }
 
   @Override
+  @Deprecated
   public Set<String> getFieldPaths() {
+    return gatherPaths(false);
+  }
+
+  @Override
+  public Set<String> getEscapedFieldPaths() {
+    return gatherPaths(true);
+  }
+
+  private Set<String> gatherPaths(boolean includeSingleQuotes) {
     Set<String> paths = new LinkedHashSet<>();
     if (value != null) {
       paths.add("");
       switch (value.getType()) {
         case MAP:
-          gatherPaths("", value.getValueAsMap(), paths);
+          gatherPaths("", value.getValueAsMap(), paths, includeSingleQuotes);
           break;
         case LIST:
-          gatherPaths("", value.getValueAsList(), paths);
+          gatherPaths("", value.getValueAsList(), paths, includeSingleQuotes);
           break;
         case LIST_MAP:
-          gatherPaths("", value.getValueAsListMap(), paths);
+          gatherPaths("", value.getValueAsListMap(), paths, includeSingleQuotes);
           break;
         default:
           break;
@@ -332,25 +342,35 @@ public class RecordImpl implements Record, Cloneable {
     return paths;
   }
 
-  @Override
-  public Set<String> getEscapedFieldPaths() {
-    return null;
-  }
-
-  private void gatherPaths(String base, Map<String, Field> map, Set<String> paths) {
+  private void gatherPaths(String base, Map<String, Field> map, Set<String> paths, boolean includeSingleQuotes) {
     base += "/";
     if (map != null) {
       for (Map.Entry<String, Field> entry : map.entrySet()) {
-        paths.add(base + escapeName(entry.getKey()));
+        paths.add(base + escapeName(entry.getKey(), includeSingleQuotes));
         switch (entry.getValue().getType()) {
           case MAP:
-            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsMap(), paths);
+            gatherPaths(
+                base + escapeName(entry.getKey(), includeSingleQuotes),
+                entry.getValue().getValueAsMap(),
+                paths,
+                includeSingleQuotes
+            );
             break;
           case LIST:
-            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsList(), paths);
+            gatherPaths(
+                base + escapeName(entry.getKey(), includeSingleQuotes),
+                entry.getValue().getValueAsList(),
+                paths,
+                includeSingleQuotes
+            );
             break;
           case LIST_MAP:
-            gatherPaths(base + escapeName(entry.getKey()), entry.getValue().getValueAsListMap(), paths);
+            gatherPaths(
+                base + escapeName(entry.getKey(), includeSingleQuotes),
+                entry.getValue().getValueAsListMap(),
+                paths,
+                includeSingleQuotes
+            );
             break;
           default:
             // not a collection type, so don't need to do anything
@@ -360,30 +380,34 @@ public class RecordImpl implements Record, Cloneable {
     }
   }
 
-  private String escapeName(String name) {
-    return name.replace("/", "//").replace("[", "[[").replace("]", "]]");
-  }
-
-  private void gatherPaths(String base, List<Field> list, Set<String> paths) {
+  private void gatherPaths(String base, List<Field> list, Set<String> paths, boolean includeSingleQuotes) {
     if (list != null) {
       for (int i = 0; i < list.size(); i++) {
         paths.add(base + "[" + i + "]");
         Field element = list.get(i);
         switch (element.getType()) {
           case MAP:
-            gatherPaths(base + "[" + i + "]", element.getValueAsMap(), paths);
+            gatherPaths(base + "[" + i + "]", element.getValueAsMap(), paths, includeSingleQuotes);
             break;
           case LIST:
-            gatherPaths(base + "[" + i + "]", element.getValueAsList(), paths);
+            gatherPaths(base + "[" + i + "]", element.getValueAsList(), paths, includeSingleQuotes);
             break;
           case LIST_MAP:
-            gatherPaths(base + "[" + i + "]", element.getValueAsListMap(), paths);
+            gatherPaths(base + "[" + i + "]", element.getValueAsListMap(), paths, includeSingleQuotes);
             break;
           default:
             // not a collection type, no further effort needed
             break;
         }
       }
+    }
+  }
+
+  private String escapeName(String name, boolean includeSingleQuotes) {
+    if (includeSingleQuotes) {
+      return EscapeUtil.singleQuoteEscape(name.replace("/", "//").replace("[", "[[").replace("]", "]]"));
+    } else {
+      return name.replace("/", "//").replace("[", "[[").replace("]", "]]");
     }
   }
 
@@ -394,7 +418,7 @@ public class RecordImpl implements Record, Cloneable {
 
   @Override
   public int hashCode() {
-    return getFieldPaths().hashCode();
+    return getEscapedFieldPaths().hashCode();
   }
 
   @Override

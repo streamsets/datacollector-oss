@@ -54,7 +54,7 @@ public class FieldValueReplacerProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getFieldPaths();
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsThatDoNotExist = new HashSet<>();
     if(fieldsToNull != null && !fieldsToNull.isEmpty()) {
       for (String fieldToNull : fieldsToNull) {
