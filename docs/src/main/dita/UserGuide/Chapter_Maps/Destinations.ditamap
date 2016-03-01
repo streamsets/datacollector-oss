@@ -119,6 +119,7 @@
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/RabbitMQ.dita"/>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 
    <topicmeta>
    <shortdesc/>
