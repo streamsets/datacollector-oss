@@ -147,7 +147,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getFieldPaths();
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
     Set<String> fieldsDontExist = new HashSet<>();
     Set<String> fieldsWithListOrMapType = new HashSet<>();
     Set<String> fieldsWithNull = new HashSet<>();
@@ -172,7 +172,7 @@ public class FieldHasherProcessor extends SingleLaneRecordProcessor {
       handleHashingForTarget(
           record,
           recordHasherConfig.hashType,
-          record.getFieldPaths(),
+          record.getEscapedFieldPaths(),
           fieldsDontExist,
           recordHasherConfig.targetField,
           recordHasherConfig.headerAttribute,

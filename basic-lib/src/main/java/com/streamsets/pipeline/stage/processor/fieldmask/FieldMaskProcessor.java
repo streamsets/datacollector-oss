@@ -94,7 +94,7 @@ public class FieldMaskProcessor extends SingleLaneRecordProcessor {
 
   @Override
   protected void process(Record record, SingleLaneBatchMaker batchMaker) throws StageException {
-    Set<String> fieldPaths = record.getFieldPaths();
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
     List<String> nonStringFields = new ArrayList<>();
     for(FieldMaskConfig fieldMaskConfig : fieldMaskConfigs) {
       for (String toMask : fieldMaskConfig.fields) {

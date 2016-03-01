@@ -85,7 +85,7 @@ public final class HashingUtil {
     }
 
     protected List<String> getFieldsToHash(Record record) {
-      Set<String> fieldPaths = record.getFieldPaths();
+      Set<String> fieldPaths = record.getEscapedFieldPaths();
       List<String> fields = new ArrayList<>();
       if (fieldsToHash != null) {
         for(String field : fieldsToHash) {
@@ -94,7 +94,7 @@ public final class HashingUtil {
           fields.addAll(matchingFieldPaths);
         }
       } else {
-        fields = new ArrayList<>(record.getFieldPaths());
+        fields = new ArrayList<>(record.getEscapedFieldPaths());
         Collections.sort(fields);
       }
       return fields;

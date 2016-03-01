@@ -1177,7 +1177,7 @@ public class TestFieldHasherProcessor {
     try {
       StageRunner.Output output = runner.runProcess(ImmutableList.of(record));
       Assert.assertEquals(
-          computeHashForRecordUsingFields(record, record.getFieldPaths(), HashType.MD5),
+          computeHashForRecordUsingFields(record, record.getEscapedFieldPaths(), HashType.MD5),
           output.getRecords().get("a").get(0).getHeader().getAttribute("/rf1")
       );
     } finally {
@@ -1209,7 +1209,7 @@ public class TestFieldHasherProcessor {
       Assert.assertEquals(
           hashForRecordsWithFieldsHeader(
               record,
-              record.getFieldPaths(),
+              record.getEscapedFieldPaths(),
               HashType.MD5,
               true
           ),

@@ -133,7 +133,7 @@ public class TestRecordImpl {
     Assert.assertNull(r.get(""));
     Assert.assertNull(r.get("/a"));
     Assert.assertNull(r.get("[1]"));
-    Assert.assertTrue(r.getFieldPaths().isEmpty());
+    Assert.assertTrue(r.getEscapedFieldPaths().isEmpty());
     Assert.assertNull(r.delete(""));
     Assert.assertNull(r.delete("/a"));
     Assert.assertNull(r.delete("[1]"));
@@ -147,7 +147,7 @@ public class TestRecordImpl {
     Assert.assertEquals(f, r.get(""));
     Assert.assertNull(r.get("/a"));
     Assert.assertNull(r.get("[1]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertTrue(r.has(""));
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
@@ -170,7 +170,7 @@ public class TestRecordImpl {
     Assert.assertTrue(r.has(""));
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
 
@@ -183,7 +183,7 @@ public class TestRecordImpl {
     Assert.assertTrue(r.has(""));
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
 
@@ -198,14 +198,14 @@ public class TestRecordImpl {
     Assert.assertTrue(r.has(""));
     Assert.assertTrue(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
-    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(true), r.delete("/a"));
     Assert.assertEquals(f, r.get());
     Assert.assertEquals(f, r.get(""));
     Assert.assertNull(r.get("/a"));
     Assert.assertTrue(r.has(""));
     Assert.assertFalse(r.has("/a"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
   }
@@ -223,7 +223,7 @@ public class TestRecordImpl {
     Assert.assertTrue(r.has(""));
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
 
@@ -238,7 +238,7 @@ public class TestRecordImpl {
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("/b"));
     Assert.assertFalse(r.has("[0]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
 
@@ -254,12 +254,12 @@ public class TestRecordImpl {
     Assert.assertTrue(r.has("[0]"));
     Assert.assertFalse(r.has("/a"));
     Assert.assertFalse(r.has("[1]"));
-    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(true), r.delete("[0]"));
     Assert.assertEquals(f, r.get());
     Assert.assertEquals(f, r.get(""));
     Assert.assertFalse(r.has("[0]"));
-    Assert.assertEquals(ImmutableSet.of(""), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of(""), r.getEscapedFieldPaths());
     Assert.assertEquals(f, r.delete(""));
     Assert.assertNull(r.get());
   }
@@ -285,9 +285,9 @@ public class TestRecordImpl {
     Assert.assertFalse(r.has("/b"));
     Assert.assertTrue(r.has("/a[0]"));
     Assert.assertFalse(r.has("/a[1]"));
-    Assert.assertEquals(ImmutableSet.of("", "/a", "/a[0]"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "/a", "/a[0]"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(true), r.delete("/a[0]"));
-    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "/a"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(new ArrayList<Field>()), r.delete("/a"));
   }
 
@@ -311,9 +311,9 @@ public class TestRecordImpl {
     Assert.assertFalse(r.has("[1]"));
     Assert.assertTrue(r.has("[0]/a"));
     Assert.assertFalse(r.has("[1]/a"));
-    Assert.assertEquals(ImmutableSet.of("", "[0]", "[0]/a"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "[0]", "[0]/a"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(true), r.delete("[0]/a"));
-    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "[0]"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(new HashMap<String, Field>()), r.delete("[0]"));
   }
 
@@ -338,9 +338,9 @@ public class TestRecordImpl {
     Assert.assertFalse(r.has("/b"));
     Assert.assertTrue(r.has("/a" + escaped + "[0]"));
     Assert.assertFalse(r.has("/a" + escaped + "[1]"));
-    Assert.assertEquals(ImmutableSet.of("", "/a" + escaped, "/a" + escaped + "[0]"), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "/'a" + escaped + "'", "/'a" + escaped + "'[0]"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(true), r.delete("/a" + escaped + "[0]"));
-    Assert.assertEquals(ImmutableSet.of("", "/a" + escaped), r.getFieldPaths());
+    Assert.assertEquals(ImmutableSet.of("", "/'a" + escaped + "'"), r.getEscapedFieldPaths());
     Assert.assertEquals(Field.create(new ArrayList<Field>()), r.delete("/a" + escaped));
   }
 

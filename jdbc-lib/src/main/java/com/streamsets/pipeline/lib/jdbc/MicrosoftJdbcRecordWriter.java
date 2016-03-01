@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Record writer implementation that resolves a Microsoft change data capture log
@@ -206,14 +207,17 @@ public class MicrosoftJdbcRecordWriter implements JdbcRecordWriter {
   }
 
   private Map<String, Object> getColumnMappings(Record record) {
-    Map<String, Object> mappings = new HashMap<>(record.getFieldPaths().size());
-    for (String fieldPath : record.getFieldPaths()) {
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
+    Map<String, Object> mappings = new HashMap<>(fieldPaths.size());
+    for (String fieldPath : fieldPaths) {
       if (fieldPath.isEmpty()) {
         continue;
       }
 
       final String fieldName = fieldPath.substring(1);
-      if (!fieldName.startsWith("__")) {
+      // The field path that contains "__$" is escaped by single quotes by Record.getEscapedFieldPaths().
+      // So we should look for "'__$" instead.
+      if (!fieldName.startsWith("'__$")) {
         mappings.put(fieldPath.substring(1), record.get(fieldPath).getValue());
       }
     }

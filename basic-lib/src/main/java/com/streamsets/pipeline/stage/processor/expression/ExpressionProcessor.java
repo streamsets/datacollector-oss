@@ -115,7 +115,7 @@ public class ExpressionProcessor extends SingleLaneRecordProcessor {
       }
 
       if(FieldRegexUtil.hasWildCards(fieldToSet)) {
-        for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record.getFieldPaths())) {
+        for(String field : FieldRegexUtil.getMatchingFieldPaths(fieldToSet, record.getEscapedFieldPaths())) {
           record.set(field, newField);
         }
       } else {
