@@ -19,8 +19,9 @@
   reporting APIs. Omniture is also known as the Adobe Marketing Cloud.</shortdesc>
  <conbody>
   <p><indexterm>origins<indexterm>Omniture</indexterm></indexterm><indexterm>Omniture
-     origin<indexterm>overview</indexterm></indexterm>When you configure the Omniture origin, you
-   specify connection information, the request interval, and the report description. </p>
+          origin<indexterm>overview</indexterm></indexterm>When you configure the Omniture origin,
+      you specify connection information, the request interval, and the report description. You can
+      optionally use a proxy to connect to the origin system. </p>
   <p>The request interval is the amount of time the Omniture origin waits before requesting another
    report. However, if the Omniture API has not yet responded to the previous request, the origin
    waits until it receives a response, and then sends a new request immediately. </p>
