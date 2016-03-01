@@ -308,6 +308,11 @@ public class RuleDefinitionValidator {
       }
 
       @Override
+      public Set<String> getEscapedFieldPaths() {
+        return null;
+      }
+
+      @Override
       public Field set(String fieldPath, Field newField) {
         return null;
       }

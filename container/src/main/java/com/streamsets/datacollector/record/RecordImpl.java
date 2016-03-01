@@ -332,6 +332,11 @@ public class RecordImpl implements Record, Cloneable {
     return paths;
   }
 
+  @Override
+  public Set<String> getEscapedFieldPaths() {
+    return null;
+  }
+
   private void gatherPaths(String base, Map<String, Field> map, Set<String> paths) {
     base += "/";
     if (map != null) {
