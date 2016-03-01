@@ -43,6 +43,8 @@ public class RecordHasherConfig {
       label = "Include Record Header",
       description="Include Record Header for hashing along with the record fields.",
       displayPosition = 20,
+      dependsOn = "hashEntireRecord",
+      triggeredByValue = "true",
       group = "RECORD_HASHING"
   )
   public boolean includeRecordHeaderForHashing;
@@ -55,7 +57,7 @@ public class RecordHasherConfig {
       description="",
       displayPosition = 30,
       dependsOn = "hashEntireRecord",
-      triggeredByValue = {"true"},
+      triggeredByValue = "true",
       group = "RECORD_HASHING"
   )
   @ValueChooserModel(HashTypeChooserValues.class)
@@ -70,7 +72,7 @@ public class RecordHasherConfig {
           " obtained by combining the source fields to hash.",
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
-      triggeredByValue = {"true"},
+      triggeredByValue = "true",
       displayPosition = 40
   )
   @FieldSelectorModel(singleValued = true)
@@ -85,7 +87,7 @@ public class RecordHasherConfig {
           " obtained by combining the source fields to hash.",
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
-      triggeredByValue = {"true"},
+      triggeredByValue = "true",
       displayPosition = 50
   )
   public String headerAttribute;
