@@ -51,16 +51,19 @@ public class SolrTarget extends BaseTarget {
   private final InstanceTypeOptions instanceType;
   private final String solrURI;
   private final String zookeeperConnect;
+  private final String defaultCollection;
   private final ProcessingMode indexingMode;
   private final List<SolrFieldMappingConfig> fieldNamesMap;
 
   private SolrServer solrClient;
 
   public SolrTarget(final InstanceTypeOptions instanceType, final String solrURI, final String zookeeperConnect,
-                    final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap) {
+                    final ProcessingMode indexingMode, final List<SolrFieldMappingConfig> fieldNamesMap,
+                    String defaultCollection) {
     this.instanceType = instanceType;
     this.solrURI = solrURI;
     this.zookeeperConnect = zookeeperConnect;
+    this.defaultCollection = defaultCollection;
     this.indexingMode = indexingMode;
     this.fieldNamesMap = fieldNamesMap;
   }
@@ -104,7 +107,9 @@ public class SolrTarget extends BaseTarget {
     if(SolrInstanceType.SINGLE_NODE.equals(instanceType.getInstanceType())) {
       return new HttpSolrServer(this.solrURI);
     } else {
-      return new CloudSolrServer(this.zookeeperConnect);
+      CloudSolrServer cloudSolrServer = new CloudSolrServer(this.zookeeperConnect);
+      cloudSolrServer.setDefaultCollection(defaultCollection);
+      return cloudSolrServer;
     }
   }
 

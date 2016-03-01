@@ -34,11 +34,12 @@ import java.util.List;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Solr",
     description = "Upload data to an Apache Solr",
     icon = "solr.png",
-    onlineHelpRefUrl = "index.html#Destinations/Solr.html#task_ld1_phr_wr"
+    onlineHelpRefUrl = "index.html#Destinations/Solr.html#task_ld1_phr_wr",
+    upgrader = SolrDTargetUpgrader.class
 )
 @ConfigGroups(Groups.class)
 public class SolrDTarget extends DTarget {
@@ -83,6 +84,19 @@ public class SolrDTarget extends DTarget {
   public String zookeeperConnect;
 
   @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "",
+      label = "Default Collection Name",
+      description = "",
+      displayPosition = 30,
+      group = "SOLR",
+      dependsOn = "instanceType",
+      triggeredByValue = { "SOLR_CLOUD"}
+  )
+  public String defaultCollection;
+
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     defaultValue = "BATCH",
@@ -109,7 +123,7 @@ public class SolrDTarget extends DTarget {
 
   @Override
   protected Target createTarget() {
-    return new SolrTarget(instanceType, solrURI, zookeeperConnect, indexingMode, fieldNamesMap);
+    return new SolrTarget(instanceType, solrURI, zookeeperConnect, indexingMode, fieldNamesMap, defaultCollection);
   }
 
 }
