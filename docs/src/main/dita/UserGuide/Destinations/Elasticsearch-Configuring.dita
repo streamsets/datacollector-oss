@@ -50,6 +50,13 @@
                                             connection, enter additional URIs.</p></entry>
                                 </row>
                                 <row>
+                                    <entry>Cluster HTTP URI</entry>
+                                    <entry>Use when the cluster uses a custom HTTP URI. <p>Unless
+                                            configured, the destination uses the default HTTP URI to
+                                            verify that the cluster version is compatible with the
+                                            destination libraries.</p></entry>
+                                </row>
+                                <row>
                                     <entry>Use Shield</entry>
                                     <entry>Enables access to a Shield-protected cluster.</entry>
                                 </row>
