@@ -170,7 +170,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineInfo info = new PipelineInfo(name, description, date, date, user, user, REV, uuid, false);
       PipelineConfiguration pipeline =
         new PipelineConfiguration(SCHEMA_VERSION, PipelineConfigBean.VERSION, uuid, description, stageLibrary
-          .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null);
+          .getPipeline().getPipelineDefaultConfigs(), Collections.EMPTY_MAP, Collections.EMPTY_LIST, null, null);
 
       try {
         json.writeValue(getInfoFile(name), BeanHelper.wrapPipelineInfo(info));

@@ -43,6 +43,8 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         upgradeV2ToV3(configs);
       case 3:
         upgradeV3ToV4(configs);
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -92,6 +94,10 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config("notifyOnStates",
       ImmutableList.of(PipelineState.RUN_ERROR, PipelineState.STOPPED, PipelineState.FINISHED)));
     configs.add(new Config("emailIDs", Collections.EMPTY_LIST));
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    configs.add(new Config("statsAggregatorTarget", null));
   }
 
 }

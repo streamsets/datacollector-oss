@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.datacollector.config.DeliveryGuarantee;
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
@@ -54,7 +55,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 4;
+  public static final int VERSION = 5;
 
   @ConfigDef(
       required = true,
@@ -167,6 +168,15 @@ public class PipelineConfigBean implements Stage {
   @ValueChooserModel(ErrorHandlingChooserValues.class)
   public String badRecordsHandling;
 
+  @ConfigDef(
+    required = false,
+    type = ConfigDef.Type.MODEL,
+    label = "Statistics Aggregator",
+    displayPosition = 95,
+    group = "STATS"
+  )
+  @ValueChooserModel(StatsTargetChooserValues.class)
+  public String statsAggregatorTarget;
 
   @ConfigDef(
       required = true,

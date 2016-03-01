@@ -116,9 +116,17 @@ public class TestClusterProviderImpl {
     configs.add(new Config("kerberosPrincipal", ""));
     configs.add(new Config("kerberosKeytab", ""));
     configs.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING));
-    pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
-      UUID.randomUUID(), null, configs, null, new ArrayList<StageConfiguration>(),
-      MockStages.getErrorStageConfig());
+    pipelineConf = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        configs,
+        null,
+        new ArrayList<StageConfiguration>(),
+        MockStages.getErrorStageConfig(),
+        null
+    );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
     File sparkKafkaJar = new File(tempDir, "spark-streaming-kafka-1.2.jar");
@@ -188,9 +196,17 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     List<Config> list = new ArrayList<Config>();
     list.add(new Config("executionMode", ExecutionMode.CLUSTER_YARN_STREAMING.name()));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
-      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
-      MockStages.getErrorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        list,
+        null,
+        MockStages.getSourceStageConfig(),
+        MockStages.getErrorStageConfig(),
+        null
+    );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
@@ -211,9 +227,17 @@ public class TestClusterProviderImpl {
     List<Config> list = new ArrayList<Config>();
     list.add(new Config("executionMode", ExecutionMode.CLUSTER_MESOS_STREAMING.name()));
     list.add(new Config("hdfsS3ConfDir", "dir"));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
-      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
-      MockStages.getErrorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        list,
+        null,
+        MockStages.getSourceStageConfig(),
+        MockStages.getErrorStageConfig(),
+        null
+    );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
     ApplicationState appState = sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,
@@ -234,9 +258,17 @@ public class TestClusterProviderImpl {
     MockSystemProcess.output.add(" application_1429587312661_0024 ");
     List<Config> list = new ArrayList<Config>();
     list.add(new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()));
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION,
-      UUID.randomUUID(), null, list, null, MockStages.getSourceStageConfig(),
-      MockStages.getErrorStageConfig());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        list,
+        null,
+        MockStages.getSourceStageConfig(),
+        MockStages.getErrorStageConfig(),
+        null
+    );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
     Assert.assertNotNull(sparkProvider.startPipeline(new MockSystemProcessFactory(), sparkManagerShell,

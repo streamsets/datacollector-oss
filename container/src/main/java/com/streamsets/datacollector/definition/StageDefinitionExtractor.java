@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.StageConfigBean;
+import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -42,7 +43,6 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.ArrayList;
@@ -188,6 +188,7 @@ public abstract class StageDefinitionExtractor {
         String icon = sDef.icon();
         StageType type = extractStageType(klass);
         boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
+        boolean statsAggregatorTarget = klass.getAnnotation(StatsAggregatorStage.class) != null;
         HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
@@ -251,11 +252,33 @@ public abstract class StageDefinitionExtractor {
 
         String onlineHelpRefUrl = sDef.onlineHelpRefUrl();
 
-        return new StageDefinition(libraryDef, privateClassLoader, klass, name, version, label, description, type,
-            errorStage, preconditions, onRecordError, configDefinitions, rawSourceDefinition, icon,
-            configGroupDefinition, variableOutputStreams, outputStreams,
-            outputStreamLabelProviderClass, executionModes, recordsByRef, upgrader, libJarsRegex,
-            resetOffset, onlineHelpRefUrl);
+        return new StageDefinition(
+            libraryDef,
+            privateClassLoader,
+            klass,
+            name,
+            version,
+            label,
+            description,
+            type,
+            errorStage,
+            preconditions,
+            onRecordError,
+            configDefinitions,
+            rawSourceDefinition,
+            icon,
+            configGroupDefinition,
+            variableOutputStreams,
+            outputStreams,
+            outputStreamLabelProviderClass,
+            executionModes,
+            recordsByRef,
+            upgrader,
+            libJarsRegex,
+            resetOffset,
+            onlineHelpRefUrl,
+            statsAggregatorTarget
+        );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);
       }

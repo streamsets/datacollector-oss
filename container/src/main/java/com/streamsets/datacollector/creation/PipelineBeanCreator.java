@@ -88,6 +88,7 @@ public abstract class PipelineBeanCreator {
     int priorErrors = errors.size();
     PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors);
     StageBean errorStageBean = null;
+    StageBean statsStageBean = null;
     List<StageBean> stages = new ArrayList<>();
     if (pipelineConfigBean != null && pipelineConfigBean.constants != null) {
       for (StageConfiguration stageConf : pipelineConf.getStages()) {
@@ -97,6 +98,20 @@ public abstract class PipelineBeanCreator {
           stages.add(stageBean);
         }
       }
+
+      StageConfiguration statsStageConf = pipelineConf.getStatsAggregatorTarget();
+      if (statsStageConf != null) {
+        statsStageBean = createStageBean(
+            forExecution,
+            library,
+            statsStageConf,
+            false,
+            pipelineConfigBean.constants,
+            errors
+        );
+        // It is not mandatory to have a stats aggregating target configured
+      }
+
       StageConfiguration errorStageConf = pipelineConf.getErrorStage();
       if (errorStageConf != null) {
         errorStageBean = createStageBean(forExecution, library, errorStageConf, true, pipelineConfigBean.constants,
@@ -106,7 +121,8 @@ public abstract class PipelineBeanCreator {
                                                      CreationError.CREATION_009));
       }
     }
-    return (errors.size() == priorErrors) ? new PipelineBean(pipelineConfigBean, stages, errorStageBean) : null;
+    return (errors.size() == priorErrors) ?
+        new PipelineBean(pipelineConfigBean, stages, errorStageBean, statsStageBean) : null;
   }
 
   public ExecutionMode getExecutionMode(PipelineConfiguration pipelineConf, List<Issue> errors) {

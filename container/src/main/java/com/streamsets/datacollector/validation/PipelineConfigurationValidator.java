@@ -140,6 +140,7 @@ public class PipelineConfigurationValidator {
       canPreview &= validateStageConfiguration();
       canPreview &= validatePipelineLanes();
       canPreview &= validateErrorStage();
+      canPreview &= validateStatsAggregatorStage();
       canPreview &= validateStagesExecutionMode(pipelineConfiguration);
 
       if (LOG.isTraceEnabled() && issues.hasIssues()) {
@@ -198,15 +199,15 @@ public class PipelineConfigurationValidator {
   }
 
   boolean resolveLibraryAliases() {
-    StageConfiguration errorStageConf = pipelineConfiguration.getErrorStage();
-    if (errorStageConf != null) {
-      String name = errorStageConf.getLibrary();
-      if (isLibraryAlias(name)) {
-        errorStageConf.setLibrary(resolveLibraryAlias(name));
-      }
-      resolveStageAlias(errorStageConf);
+    List<StageConfiguration> stageConfigurations = new ArrayList<>();
+    if(pipelineConfiguration.getStatsAggregatorTarget() != null) {
+      stageConfigurations.add(pipelineConfiguration.getStatsAggregatorTarget());
     }
-    for (StageConfiguration stageConf : pipelineConfiguration.getStages()) {
+    if(pipelineConfiguration.getErrorStage() != null) {
+      stageConfigurations.add(pipelineConfiguration.getErrorStage());
+    }
+    stageConfigurations.addAll(pipelineConfiguration.getStages());
+    for (StageConfiguration stageConf : stageConfigurations) {
       String name = stageConf.getLibrary();
       if (isLibraryAlias(name)) {
         stageConf.setLibrary(resolveLibraryAlias(name));
@@ -1118,6 +1119,17 @@ public class PipelineConfigurationValidator {
     if (errorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
       preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
+    }
+    return preview;
+  }
+
+  @VisibleForTesting
+  boolean validateStatsAggregatorStage() {
+    boolean preview = true;
+    StageConfiguration statsAggregatorTarget = pipelineConfiguration.getStatsAggregatorTarget();
+    if (statsAggregatorTarget != null) {
+      IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorTarget.getInstanceName());
+      preview = validateStageConfiguration(false, statsAggregatorTarget, false, errorStageCreator);
     }
     return preview;
   }

@@ -74,12 +74,33 @@ public class TestStageDefinitionLocalization {
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),
         (List)ImmutableList.of(ImmutableMap.of("label", "Group", "name", "GROUP"))
     );
-    StageDefinition def = new StageDefinition(MOCK_LIB_DEF, false, TProcessor.class, "stage", 1, "StageLabel",
-                                              "StageDescription", StageType.PROCESSOR, true, true, true, configs,
-                                              rawSource, "", configGroup, false, 1,
-                                              TOutput.class.getName(),
-                                              Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE), false,
-                                              new StageUpgrader.Default(), Collections.<String>emptyList(), false, "");
+    StageDefinition def = new StageDefinition(
+        MOCK_LIB_DEF,
+        false,
+        TProcessor.class,
+        "stage",
+        1,
+        "StageLabel",
+        "StageDescription",
+        StageType.PROCESSOR,
+        true,
+        true,
+        true,
+        configs,
+        rawSource,
+        "",
+        configGroup,
+        false,
+        1,
+        TOutput.class.getName(),
+        Arrays.asList(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE),
+        false,
+        new StageUpgrader.Default(),
+        Collections.<String>emptyList(),
+        false,
+        "",
+        false
+    );
     return def;
   }
 

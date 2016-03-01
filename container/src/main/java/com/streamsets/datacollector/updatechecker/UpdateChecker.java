@@ -92,8 +92,17 @@ public class UpdateChecker implements Runnable {
     if (pipelineConf != null) {
       List stages = new ArrayList();
 
-      // error stage
+      // Stats aggregator target stage
       Map stage = new LinkedHashMap();
+      if(pipelineConf.getStatsAggregatorTarget() != null) {
+        stage.put("name", pipelineConf.getStatsAggregatorTarget().getStageName());
+        stage.put("version", pipelineConf.getStatsAggregatorTarget().getStageVersion());
+        stage.put("library", pipelineConf.getStatsAggregatorTarget().getLibrary());
+        stages.add(stage);
+      }
+
+      // error stage
+      stage = new LinkedHashMap();
       stage.put("name", pipelineConf.getErrorStage().getStageName());
       stage.put("version", pipelineConf.getErrorStage().getStageVersion());
       stage.put("library", pipelineConf.getErrorStage().getLibrary());

@@ -51,6 +51,7 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private final boolean errorStage;
+  private final boolean statsAggregatorTarget;
   private final boolean preconditions;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
@@ -70,13 +71,34 @@ public class StageDefinition {
   private final String onlineHelpRefUrl;
 
   // localized version
-  private StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, ClassLoader classLoader,
-                          Class klass, String name,
-                          int version, String label, String description, StageType type, boolean errorStage, boolean preconditions,
-                          boolean onRecordError, List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition,
-                          String icon, ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-                          List<String> outputStreamLabels, List<ExecutionMode> executionModes, boolean recordsByRef,
-                          StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset, String onlineHelpRefUrl) {
+  private StageDefinition(
+      StageLibraryDefinition libraryDefinition,
+      boolean privateClassLoader,
+      ClassLoader classLoader,
+      Class klass,
+      String name,
+      int version,
+      String label,
+      String description,
+      StageType type,
+      boolean errorStage,
+      boolean preconditions,
+      boolean onRecordError,
+      List<ConfigDefinition> configDefinitions,
+      RawSourceDefinition rawSourceDefinition,
+      String icon,
+      ConfigGroupDefinition configGroupDefinition,
+      boolean variableOutputStreams,
+      int outputStreams,
+      List<String> outputStreamLabels,
+      List<ExecutionMode> executionModes,
+      boolean recordsByRef,
+      StageUpgrader upgrader,
+      List<String> libJarsRegex,
+      boolean resetOffset,
+      String onlineHelpRefUrl,
+      boolean statsAggregatorTarget
+  ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
     this.classLoader = classLoader;
@@ -92,6 +114,7 @@ public class StageDefinition {
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
     this.onlineHelpRefUrl = onlineHelpRefUrl;
+    this.statsAggregatorTarget = statsAggregatorTarget;
     configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
@@ -151,15 +174,36 @@ public class StageDefinition {
     libJarsRegex = def.libJarsRegex;
     resetOffset = def.resetOffset;
     onlineHelpRefUrl = def.onlineHelpRefUrl;
+    statsAggregatorTarget = def.statsAggregatorTarget;
   }
 
-    public StageDefinition(StageLibraryDefinition libraryDefinition, boolean privateClassLoader, Class klass,
-                           String name, int version, String label, String description,
-                           StageType type, boolean errorStage, boolean preconditions, boolean onRecordError,
-                           List<ConfigDefinition> configDefinitions, RawSourceDefinition rawSourceDefinition, String icon,
-                           ConfigGroupDefinition configGroupDefinition, boolean variableOutputStreams, int outputStreams,
-                           String outputStreamLabelProviderClass, List<ExecutionMode> executionModes, boolean recordsByRef,
-                           StageUpgrader upgrader, List<String> libJarsRegex, boolean resetOffset, String onlineHelpRefUrl) {
+  public StageDefinition(
+      StageLibraryDefinition libraryDefinition,
+      boolean privateClassLoader,
+      Class klass,
+      String name,
+      int version,
+      String label,
+      String description,
+      StageType type,
+      boolean errorStage,
+      boolean preconditions,
+      boolean onRecordError,
+      List<ConfigDefinition> configDefinitions,
+      RawSourceDefinition rawSourceDefinition,
+      String icon,
+      ConfigGroupDefinition configGroupDefinition,
+      boolean variableOutputStreams,
+      int outputStreams,
+      String outputStreamLabelProviderClass,
+      List<ExecutionMode> executionModes,
+      boolean recordsByRef,
+      StageUpgrader upgrader,
+      List<String> libJarsRegex,
+      boolean resetOffset,
+      String onlineHelpRefUrl,
+      boolean statsAggregatorTarget
+  ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
       this.onlineHelpRefUrl = onlineHelpRefUrl;
@@ -198,6 +242,7 @@ public class StageDefinition {
     this.upgrader = upgrader;
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
+    this.statsAggregatorTarget = statsAggregatorTarget;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -266,6 +311,10 @@ public class StageDefinition {
 
   public boolean hasOnRecordError() {
     return onRecordError;
+  }
+
+  public boolean isStatsAggregatorTarget() {
+    return statsAggregatorTarget;
   }
 
   public void addConfiguration(ConfigDefinition confDef) {
@@ -433,11 +482,34 @@ public class StageDefinition {
       streamLabels = getLocalizedOutputStreamLabels(classLoader);
     }
 
-    return new StageDefinition(libraryDefinition, privateClassLoader, getStageClassLoader(), getStageClass(), getName(),
-                               getVersion(), label, description, getType(), isErrorStage(),
-                               hasPreconditions(), hasOnRecordError(), configDefs, rawSourceDef, getIcon(), groupDefs,
-                               isVariableOutputStreams(), getOutputStreams(), streamLabels, executionModes,
-                               recordsByRef, upgrader, libJarsRegex, resetOffset, onlineHelpRefUrl);
+    return new StageDefinition(
+        libraryDefinition,
+        privateClassLoader,
+        getStageClassLoader(),
+        getStageClass(),
+        getName(),
+        getVersion(),
+        label,
+        description,
+        getType(),
+        isErrorStage(),
+        hasPreconditions(),
+        hasOnRecordError(),
+        configDefs,
+        rawSourceDef,
+        getIcon(),
+        groupDefs,
+        isVariableOutputStreams(),
+        getOutputStreams(),
+        streamLabels,
+        executionModes,
+        recordsByRef,
+        upgrader,
+        libJarsRegex,
+        resetOffset,
+        onlineHelpRefUrl,
+        statsAggregatorTarget
+    );
   }
 
   private List<String> _getOutputStreamLabels(ClassLoader classLoader, boolean localized) {

@@ -17,25 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
+package com.streamsets.pipeline.stage.destination.devnull;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.StatsAggregatorStage;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
+import com.streamsets.pipeline.api.StageDef;
 
-public enum PipelineGroups implements Label {
-  CONSTANTS("Constants"),
-  BAD_RECORDS("Error Records"),
-  CLUSTER("Cluster"),
-  STATS("Statistics")
-  ;
-
-  private final String label;
-
-  PipelineGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
+@StageDef(
+    version = 1,
+    label = "Discard",
+    description = "Discards Pipeline Statistic Records",
+    icon="",
+    onlineHelpRefUrl = ""
+)
+@HideConfigs(preconditions = true, onErrorRecord = true)
+@StatsAggregatorStage
+@GenerateResourceBundle
+public class StatsNullDTarget extends NullDTarget {
 }

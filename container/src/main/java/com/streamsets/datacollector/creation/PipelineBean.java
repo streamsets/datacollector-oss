@@ -25,11 +25,17 @@ public class PipelineBean {
   private final PipelineConfigBean config;
   private final List<StageBean> stages;
   private final StageBean errorStage;
+  private final StageBean statsAggregatorStage;
 
-  public PipelineBean(PipelineConfigBean config, List<StageBean> stages, StageBean errorStage) {
+  public PipelineBean(
+      PipelineConfigBean config,
+      List<StageBean> stages,
+      StageBean errorStage,
+      StageBean statsAggregatorStage) {
     this.config = config;
     this.stages = stages;
     this.errorStage = errorStage;
+    this.statsAggregatorStage = statsAggregatorStage;
   }
 
   public PipelineConfigBean getConfig() {
@@ -44,4 +50,7 @@ public class PipelineBean {
     return errorStage;
   }
 
+  public StageBean getStatsAggregatorStage() {
+    return statsAggregatorStage;
+  }
 }

@@ -30,6 +30,7 @@ import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.validation.Issue;
+import com.streamsets.pipeline.api.StatsAggregatorStage;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Config;
@@ -309,6 +310,11 @@ public class TestPipelineBeanCreator {
   public static class ErrorMyTarget extends MyTarget {
   }
 
+  @StageDef(version = 1, label = "A", onlineHelpRefUrl = "")
+  @StatsAggregatorStage
+  public static class AggregatingMyTarget extends MyTarget {
+  }
+
   @Test
   public void testToList() throws NoSuchFieldException {
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
@@ -502,11 +508,14 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
+    StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq(false)))
            .thenReturn(stageDef);
     Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq(false)))
            .thenReturn(errorStageDef);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("a"), Mockito.eq(false)))
+      .thenReturn(aggStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<Config> pipelineConfigs = ImmutableList.of(
@@ -520,8 +529,20 @@ public class TestPipelineBeanCreator {
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
         ImmutableList.of(new Config("list", ImmutableList.of("E"))),
         Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, UUID.randomUUID(),
-        "D", pipelineConfigs, Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
+    StageConfiguration aggStageConf = new StageConfiguration("ai", "l", "a", 1,
+      ImmutableList.of(new Config("list", ImmutableList.of("A"))),
+      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        "D",
+        pipelineConfigs,
+        Collections.EMPTY_MAP,
+        ImmutableList.of(stageConf),
+        errorStageConf,
+        aggStageConf
+    );
 
     List<Issue> issues = new ArrayList<>();
     PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);
@@ -535,6 +556,10 @@ public class TestPipelineBeanCreator {
     Assert.assertEquals(1, bean.getStages().size());
     MyTarget stage = (MyTarget) bean.getStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("S"), stage.list);
+
+    // Aggregating stage
+    AggregatingMyTarget aggregatingStage = (AggregatingMyTarget) bean.getStatsAggregatorStage().getStage();
+    Assert.assertEquals(ImmutableList.of("A"), aggregatingStage.list);
 
     // error stage
     ErrorMyTarget errorStage = (ErrorMyTarget) bean.getErrorStage().getStage();
@@ -574,11 +599,14 @@ public class TestPipelineBeanCreator {
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition stageDef = StageDefinitionExtractor.get().extract(libraryDef, MyTarget.class, "");
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
+    StageDefinition aggregatingStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("s"), Mockito.eq(false)))
            .thenReturn(stageDef);
     Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("e"), Mockito.eq(false)))
            .thenReturn(errorStageDef);
+    Mockito.when(library.getStage(Mockito.eq("l"), Mockito.eq("a"), Mockito.eq(false)))
+      .thenReturn(aggregatingStageDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
 
     List<Config> pipelineConfigs = ImmutableList.of(
@@ -592,8 +620,20 @@ public class TestPipelineBeanCreator {
     StageConfiguration errorStageConf = new StageConfiguration("ei", "l", "e", 1,
          ImmutableList.of(new Config("list", ImmutableList.of("E"))),
          Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
-    PipelineConfiguration pipelineConf = new PipelineConfiguration(1, PipelineConfigBean.VERSION, UUID.randomUUID(),
-         "D", pipelineConfigs, Collections.EMPTY_MAP, ImmutableList.of(stageConf), errorStageConf);
+    StageConfiguration aggStageConf = new StageConfiguration("ai", "l", "a", 1,
+      ImmutableList.of(new Config("list", ImmutableList.of("A"))),
+      Collections.<String, Object>emptyMap(), Collections.<String>emptyList(), Collections.<String>emptyList());
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        "D",
+        pipelineConfigs,
+        Collections.EMPTY_MAP,
+        ImmutableList.of(stageConf),
+        errorStageConf,
+        aggStageConf
+    );
 
     List<Issue> issues = new ArrayList<>();
     PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, issues);

@@ -151,7 +151,7 @@ public class TestRemoteEventHandler {
         // API Config needs fixing
         PipelineConfiguration pipelineConf =
           new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION, PipelineConfigBean.VERSION, UUID.randomUUID(),
-            "description", list, uiInfo, MockStages.getSourceStageConfig(), MockStages.getErrorStageConfig());
+            "description", list, uiInfo, MockStages.getSourceStageConfig(), MockStages.getErrorStageConfig(), null);
         PipelineConfigurationJson pipelineConfigJson = BeanHelper.wrapPipelineConfiguration(pipelineConf);
         PipelineConfigAndRulesJson configRulesJson = new PipelineConfigAndRulesJson();
         configRulesJson.setPipelineConfig(JsonToFromDto.getInstance().serialize(pipelineConfigJson));

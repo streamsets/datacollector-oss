@@ -35,7 +35,7 @@ public class TestPipelineConfigUpgrader {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
 
     List<Config> upgrade = pipelineConfigUpgrader.upgrade("x", "y", "z", 1, 3, new ArrayList<Config>());
-    Assert.assertEquals(5, upgrade.size());
+    Assert.assertEquals(6, upgrade.size());
     Assert.assertEquals("executionMode", upgrade.get(0).getName());
     Assert.assertEquals(ExecutionMode.STANDALONE, upgrade.get(0).getValue());
 
@@ -43,6 +43,9 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals(-1, upgrade.get(2).getValue());
     Assert.assertNotNull(upgrade.get(3).getValue());
     Assert.assertNotNull(upgrade.get(4).getValue());
+
+    Assert.assertEquals("statsAggregatorTarget", upgrade.get(5).getName());
+    Assert.assertNull(upgrade.get(5).getValue());
   }
 
 }
