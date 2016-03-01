@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -374,6 +375,27 @@ public class JdbcSource extends BaseSource {
     return query.replaceAll("\\$\\{offset\\}", offset);
   }
 
+  private String getClobString(Clob data) throws IOException, SQLException {
+    StringBuilder sb = new StringBuilder();
+    int bufLen = 1024;
+    char[] cbuf = new char[bufLen];
+
+    // Read up to max clob length
+    long available = maxClobSize;
+    int c = 0;
+    Reader r = data.getCharacterStream();
+    while ((c = r.read(cbuf)) > -1 && available > 0) {
+      // If c is more then the remaining chars we want to read, read only as many are available
+      if (c > available) {
+        c = (int)available;
+      }
+      sb.append(cbuf, 0, c);
+      // decrement available according to the number of chars we've read
+      available -= c;
+    }
+    return sb.toString();
+  }
+
   private Record processRow(ResultSet resultSet) throws SQLException, StageException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
@@ -384,14 +406,15 @@ public class JdbcSource extends BaseSource {
     for (int i = 1; i <= numColumns; i++) {
       Object value = resultSet.getObject(i);
       try {
-        // Convert clob to string by truncating it by maxClobSize.
+        // Convert clob to string by truncating it to maxClobSize.
         if (value instanceof Clob) {
           // The first character is at position 1.
-          value = ((Clob) value).getSubString(1, maxClobSize);
+          Clob clobValue = (Clob)value;
+          value = getClobString(clobValue);
         }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
       } catch (SQLException e) {
-        errorRecordHandler.onError(Errors.JDBC_13, e.getCause().toString());
+        errorRecordHandler.onError(Errors.JDBC_13, e.getMessage());
       } catch (IOException e) {
         errorRecordHandler.onError(Errors.JDBC_03, md.getColumnName(i), value);
       }
