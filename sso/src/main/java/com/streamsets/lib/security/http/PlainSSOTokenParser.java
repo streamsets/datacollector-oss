@@ -55,12 +55,13 @@ public class PlainSSOTokenParser implements SSOTokenParser {
     return (idx > -1) ? token.substring(idx + 1) : null;
   }
 
-  protected SSOUserToken parseData(String dataB64) throws IOException {
-    SSOUserToken token = null;
+  @SuppressWarnings("unchecked")
+  protected SSOUserPrincipal parsePrincipal(String tokenStr, String dataB64) throws IOException {
+    SSOUserPrincipal token = null;
     try {
       byte[] data = Base64.decodeBase64(dataB64);
-      Map map = OBJECT_MAPPER.readValue(data, Map.class);
-      token = new SSOUserToken(map);
+      Map<String, ?> map = OBJECT_MAPPER.readValue(data, Map.class);
+      token = SSOUserPrincipalImpl.fromMap(tokenStr, map);
     } catch (IOException ex) {
       LOG.warn("Could not parse token payload: {}", ex.toString(), ex);
     }
@@ -73,24 +74,21 @@ public class PlainSSOTokenParser implements SSOTokenParser {
   }
 
   @Override
-  public SSOUserToken parse(String tokenStr) throws IOException {
+  public SSOUserPrincipal parse(String tokenStr) throws IOException {
     Utils.checkNotNull(tokenStr, "tokenStr");
-    SSOUserToken token = null;
-    String version = getHead(tokenStr);
-    if (version == null) {
-      getLog().warn("Invalid token '{}', cannot get version", tokenStr);
+    SSOUserPrincipal token = null;
+    String type = getHead(tokenStr);
+    if (type == null) {
+      getLog().warn("Invalid token '{}', cannot get type for token", tokenStr);
     } else {
-      if (getType().equals(version)) {
+      if (getType().equals(type)) {
         String payload = getTail(tokenStr);
         if (payload == null) {
           getLog().warn("Invalid token '{}', cannot get payload", tokenStr);
         }
-        token = parseData(payload);
-        if (token != null) {
-          token.setRawToken(tokenStr);
-        }
+        token = parsePrincipal(tokenStr, payload);
       } else {
-        getLog().warn("Invalid token version '{}', parser expects version '{}'", version, getType());
+        getLog().warn("Invalid token type '{}', parser expects type '{}'", type, getType());
       }
     }
     return token;

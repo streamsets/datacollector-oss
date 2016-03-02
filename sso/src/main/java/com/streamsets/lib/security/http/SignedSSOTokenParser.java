@@ -103,9 +103,9 @@ public class SignedSSOTokenParser extends PlainSSOTokenParser {
   }
 
   @Override
-  public SSOUserToken parseData(String data) throws IOException {
+  public SSOUserPrincipal parsePrincipal(String tokenStr, String data) throws IOException {
     Utils.checkNotNull(data, "data");
-    SSOUserToken token = null;
+    SSOUserPrincipal token = null;
     String signatureB64 = getHead(data);
     if (signatureB64 == null) {
       getLog().warn("Invalid signed token '{}', cannot get signature", data);
@@ -115,7 +115,7 @@ public class SignedSSOTokenParser extends PlainSSOTokenParser {
         getLog().warn("Invalid signed token '{}', cannot get signed data", data);
       } else {
         if (verifySignature(signedData, signatureB64)) {
-          token = super.parseData(signedData);
+          token = super.parsePrincipal(tokenStr, signedData);
         }
       }
     }

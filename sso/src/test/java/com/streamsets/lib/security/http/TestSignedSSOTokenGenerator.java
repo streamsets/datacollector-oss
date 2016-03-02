@@ -17,17 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.lib.security.http;
 
+public class TestSignedSSOTokenGenerator extends TestPlainSSOTokenGenerator {
 
-import java.io.IOException;
+  @Override
+  public SSOTokenGenerator getGenerator() {
+    return new SignedSSOTokenGenerator(600000);
+  }
 
-public interface SSOTokenParser {
-
-  String getType();
-
-  void setVerificationData(String data);
-
-  SSOUserPrincipal parse(String tokenStr) throws IOException;
-
+  @Override
+  public SSOTokenParser getParser() {
+    return new SignedSSOTokenParser();
+  }
 }

@@ -26,17 +26,17 @@ public class TestSSOAuthenticationUser {
 
   @Test
   public void testUser() {
-    SSOUserToken token = TestSSOUserToken.createToken();
-    SSOAuthenticationUser user = new SSOAuthenticationUser(token);
+    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createToken();
+    SSOAuthenticationUser user = new SSOAuthenticationUser(principal);
     Assert.assertEquals(SSOConstants.AUTHENTICATION_METHOD, user.getAuthMethod());
-    Assert.assertEquals(token, user.getToken());
-    Assert.assertEquals(token.getUserId(), user.getUserIdentity().getUserPrincipal().getName());
+    Assert.assertEquals(principal, user.getToken());
+    Assert.assertEquals(principal.getName(), user.getUserIdentity().getUserPrincipal().getName());
     Assert.assertEquals(1, user.getUserIdentity().getSubject().getPrincipals().size());
     Assert.assertEquals(
         user.getUserIdentity().getUserPrincipal(),
         user.getUserIdentity().getSubject().getPrincipals().iterator().next()
     );
-    Assert.assertTrue(user.getUserIdentity().isUserInRole("ROLE", null));
+    Assert.assertTrue(user.getUserIdentity().isUserInRole("ROLE1", null));
     Assert.assertFalse(user.getUserIdentity().isUserInRole("NOT_THERE", null));
 
     Assert.assertTrue(user.isValid());
@@ -45,9 +45,9 @@ public class TestSSOAuthenticationUser {
 
     Assert.assertFalse(user.isValid());
 
-    Assert.assertEquals(user, user.getUserIdentity().getUserPrincipal());
+    Assert.assertEquals(principal, user.getUserIdentity().getUserPrincipal());
 
-    SSOAuthenticationUser idUser = SSOAuthenticationUser.createForInvalidation(user.getToken().getId());
+    SSOAuthenticationUser idUser = SSOAuthenticationUser.createForInvalidation(user.getToken().getTokenId());
     Assert.assertTrue(user.equals(idUser));
     Assert.assertEquals(user.hashCode(), idUser.hashCode());
   }

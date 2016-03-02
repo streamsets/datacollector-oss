@@ -49,8 +49,8 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
   }
 
   @Override
-  protected String createTokenStr(SSOUserToken token) throws Exception {
-    String info = encodeToken(token);
+  protected String createTokenStr(SSOUserPrincipal principal) throws Exception {
+    String info = encodeToken(principal);
     String version = createParser().getType();
     String signature =
         Base64.encodeBase64String(DataSignature.get().getSigner(getKeyPair().getPrivate()).sign(info.getBytes()));
@@ -60,7 +60,7 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
   @Test
   public void testParserNoKey() throws Exception {
     SignedSSOTokenParser parser = new SignedSSOTokenParser();
-    Assert.assertNull(parser.parseData(""));
+    Assert.assertNull(parser.parsePrincipal("", ""));
   }
 
   @Test
@@ -68,15 +68,15 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
     SignedSSOTokenParser parser = new SignedSSOTokenParser();
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
-    String tokenWithFirstKey = createTokenStr(TestSSOUserToken.createToken());
-    SSOUserToken got = parser.parse(tokenWithFirstKey);
+    String tokenWithFirstKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
+    SSOUserPrincipal got = parser.parse(tokenWithFirstKey);
     Assert.assertNotNull(got);
 
     spinKeyPair();
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
     got = parser.parse(tokenWithFirstKey);
     Assert.assertNotNull(got);
-    String tokenWithSecondtKey = createTokenStr(TestSSOUserToken.createToken());
+    String tokenWithSecondtKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
     got = parser.parse(tokenWithSecondtKey);
     Assert.assertNotNull(got);
 
@@ -86,7 +86,7 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
     Assert.assertNull(got);
     got = parser.parse(tokenWithSecondtKey);
     Assert.assertNotNull(got);
-    String tokenWithThirdKey = createTokenStr(TestSSOUserToken.createToken());
+    String tokenWithThirdKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
     got = parser.parse(tokenWithThirdKey);
     Assert.assertNotNull(got);
   }

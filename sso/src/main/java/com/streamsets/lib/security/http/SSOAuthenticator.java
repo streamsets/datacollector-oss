@@ -249,10 +249,10 @@ public class SSOAuthenticator implements Authenticator {
     Authentication ret;
     try {
       if (ssoService.getTokenParser() != null) {
-        SSOUserToken userToken = ssoService.getTokenParser().parse(authToken);
+        SSOUserPrincipal userToken = ssoService.getTokenParser().parse(authToken);
         if (userToken != null) {
           SSOAuthenticationUser user = new SSOAuthenticationUser(userToken);
-          LOG.debug("Token '{}' valid, user '{}'", authToken, user.getToken().getUserId());
+          LOG.debug("Token '{}' valid, user '{}'", authToken, user.getToken().getName());
 
           // caching the authenticated user info
           HttpSession session = httpReq.getSession(true);
@@ -304,12 +304,12 @@ public class SSOAuthenticator implements Authenticator {
 
       // if authentication header is present, verify it matches the cached token
       String authToken = httpReq.getHeader(SSOConstants.X_USER_AUTH_TOKEN);
-      if (authToken != null && !authToken.equals(user.getToken().getRawToken())) {
+      if (authToken != null && !authToken.equals(user.getToken().getTokenStr())) {
         LOG.debug(
             "Request authentication token does not match cached token for '{}', re-validating",
-            user.getToken().getUserId()
+            user.getToken().getName()
         );
-        invalidateToken(user.getToken().getId());
+        invalidateToken(user.getToken().getTokenId());
         ret = null;
       }
     }
@@ -317,8 +317,8 @@ public class SSOAuthenticator implements Authenticator {
     if (isLogoutRequest(httpReq)) {
       // trapping logout requests to return always OK
       if (ret != null) {
-        LOG.debug("Logout request for '{}'", user.getToken().getUserId());
-        invalidateToken(user.getToken().getId());
+        LOG.debug("Logout request for '{}'", user.getToken().getName());
+        invalidateToken(user.getToken().getTokenId());
       }
       httpRes.setStatus(HttpServletResponse.SC_OK);
       ret = Authentication.SEND_SUCCESS;
@@ -328,8 +328,8 @@ public class SSOAuthenticator implements Authenticator {
         if (!(user).isValid()) {
           // cached token is invalid, invalidate session and forget token to trigger new authentication
 
-          LOG.debug("User '{}' authentication token '{}' expired", user.getToken().getUserId(),
-              user.getToken().getRawToken()
+          LOG.debug("User '{}' authentication token '{}' expired", user.getToken().getName(),
+              user.getToken().getTokenStr()
           );
           session.invalidate();
 
@@ -340,7 +340,7 @@ public class SSOAuthenticator implements Authenticator {
           if (LOG.isDebugEnabled()) {
             LOG.debug("Request '{}' cached authentication '{}'",
                 getRequestUrl(httpReq),
-                ((SSOAuthenticationUser) ret).getToken().getUserId()
+                ((SSOAuthenticationUser) ret).getToken().getName()
             );
           }
         }

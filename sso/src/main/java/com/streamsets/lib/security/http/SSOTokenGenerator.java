@@ -17,17 +17,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.lib.security.http;
 
-
-import java.io.IOException;
-
-public interface SSOTokenParser {
+public interface SSOTokenGenerator {
 
   String getType();
 
-  void setVerificationData(String data);
+  String getVerificationData();
 
-  SSOUserPrincipal parse(String tokenStr) throws IOException;
+  String generate(SSOUserPrincipal principal);
 
 }

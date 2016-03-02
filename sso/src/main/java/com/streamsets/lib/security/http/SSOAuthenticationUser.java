@@ -28,27 +28,22 @@ import javax.security.auth.Subject;
 import java.security.Principal;
 import java.util.Collections;
 
-public class SSOAuthenticationUser implements Authentication.User, Principal {
-  private final SSOUserToken userToken;
+public class SSOAuthenticationUser implements Authentication.User {
+  private final SSOUserPrincipal principal;
   private final String id;
-  private transient boolean valid;
+  private volatile boolean valid;
 
   private SSOAuthenticationUser(String id) {
-    userToken = null;
+    principal = null;
     this.id = id;
     valid = false;
   }
 
-  public SSOAuthenticationUser(final SSOUserToken userToken) {
-    Utils.checkNotNull(userToken, "clientUserToken");
-    this.userToken = userToken;
-    this.id = userToken.getId();
+  public SSOAuthenticationUser(final SSOUserPrincipal principal) {
+    Utils.checkNotNull(principal, "principal");
+    this.principal = principal;
+    id = principal.getTokenId();
     valid = true;
-  }
-
-  @Override
-  public String getName() {
-    return userToken.getUserId();
   }
 
   @Override
@@ -61,25 +56,24 @@ public class SSOAuthenticationUser implements Authentication.User, Principal {
     return new UserIdentity() {
       @Override
       public Subject getSubject() {
-        return new Subject(true, ImmutableSet.of(SSOAuthenticationUser.this), Collections.emptySet(), Collections
-            .emptySet());
+        return new Subject(true, ImmutableSet.of(principal), Collections.emptySet(), Collections.emptySet());
       }
 
       @Override
       public Principal getUserPrincipal() {
-        return SSOAuthenticationUser.this;
+        return principal;
       }
 
       @Override
       public boolean isUserInRole(String s, Scope scope) {
-        return userToken.getRoles().contains(s);
+        return principal.getRoles().contains(s);
       }
     };
   }
 
   @Override
   public boolean isUserInRole(UserIdentity.Scope scope, String s) {
-    return userToken.getRoles().contains(s);
+    return principal.getRoles().contains(s);
   }
 
   @Override
@@ -87,12 +81,12 @@ public class SSOAuthenticationUser implements Authentication.User, Principal {
     valid = false;
   }
 
-  public SSOUserToken getToken() {
-    return userToken;
+  public SSOUserPrincipal getToken() {
+    return principal;
   }
 
   public boolean isValid() {
-    return valid && System.currentTimeMillis() < userToken.getExpires();
+    return valid && System.currentTimeMillis() < principal.getExpires();
   }
 
   @Override

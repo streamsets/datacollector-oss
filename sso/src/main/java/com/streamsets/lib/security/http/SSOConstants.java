@@ -22,7 +22,7 @@ package com.streamsets.lib.security.http;
 /**
  * SSO public constants.
  */
-public interface SSOConstants {
+public interface  SSOConstants {
   /**
    * Authentication method name for StreamSets single sign on.
    */
