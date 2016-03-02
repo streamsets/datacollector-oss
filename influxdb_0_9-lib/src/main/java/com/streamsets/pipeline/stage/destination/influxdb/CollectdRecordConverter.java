@@ -127,7 +127,7 @@ public class CollectdRecordConverter implements RecordConverter {
   @VisibleForTesting
   List<String> getValueFields(Record record) throws OnRecordErrorException {
     List<String> fields = new ArrayList<>();
-    Set<String> fieldPaths = record.getFieldPaths();
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
 
     for (String fieldPath : fieldPaths) {
       if (!isValueField(fieldPath)) {
