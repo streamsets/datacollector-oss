@@ -23,9 +23,12 @@
     Consumer origin<indexterm>initial and subsequent offsets</indexterm></indexterm>After the origin
    passes data to destinations, it saves the offset with the ZooKeeper. When you stop and restart
    the pipeline, processing continues based on the offset provided by the ZooKeeper.</p>
-  <p>To configure the origin to read all unread data in the topic, you can add a Kafka configuration
-   property, <uicontrol>auto.offset.reset</uicontrol>, and set it to
-   <uicontrol>smallest</uicontrol>. For more information about this property, see the Apache Kafka
-   documentation. </p>
+  <p>To configure the origin to read all unread data in the topic, you can add the
+        <uicontrol>auto.offset.reset</uicontrol> Kafka configuration property. Set the property to
+        <uicontrol>smallest</uicontrol> for versions before <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>. Set it
+      to <uicontrol>earliest</uicontrol> for <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/> and
+      later.  For more information about auto.offset.reset, see the Apache Kafka documentation. </p>
  </conbody>
 </concept>
