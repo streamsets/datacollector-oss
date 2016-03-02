@@ -101,9 +101,9 @@
                                             <li>/tip_amount</li>
                                             <li>/tolls_amount</li>
                                             <li>/total_amount</li>
-                                        </ul><p>If a field display in a list, you can type in the
-                                            field name and use the Tab or Enter key to complete the
-                                            action.</p></entry>
+                                        </ul><p>If a field doesn't display in a list, you can type
+                                            in the field name and use the Tab or Enter key to
+                                            complete the action.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Convert to Type</entry>

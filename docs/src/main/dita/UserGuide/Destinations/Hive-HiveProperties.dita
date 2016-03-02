@@ -28,7 +28,7 @@
                             <li/>
                         </ul></dd>
                     <dd>To use the configuration files: <ol id="ol_rb2_2nr_bt">
-                            <li>Store the files or a symlink to the files the <ph
+                            <li>Store the files or a symlink to the files in the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                 /> resources directory or elsewhere in a path local to the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"

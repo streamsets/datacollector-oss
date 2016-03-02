@@ -14,7 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_jmz_3dn_ls">
-    <title>Creating a Pipeline and Defining Pipeline Properties</title>
+    <title>Create a Pipeline and Define Pipeline Properties</title>
     <shortdesc>When you configure a pipeline, you need to decide what to do with error records. You
         can discard them or - more productively - write them to file, another pipeline, or to Kafka. </shortdesc>
     <taskbody>

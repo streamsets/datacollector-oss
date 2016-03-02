@@ -43,7 +43,7 @@
             <step id="CreatePipeline2">
                 <cmd>In the <wintitle>New Pipeline</wintitle> window, enter a pipeline name and
                     optional description, and click <uicontrol>Save</uicontrol>.</cmd>
-                <stepresult>The pipeline canvas displays pipeline name and an error icon. The error
+                <stepresult>The pipeline canvas displays the pipeline name and an error icon. The error
                     icon indicates that you need to configure error handling for the pipeline. The
                     Properties panel displays the pipeline properties. </stepresult>
             </step>
@@ -568,8 +568,8 @@
                 </cmd>
             </step>
             <step id="LogData_Log4j">
-                <cmd>For log data, click the <wintitle>Log</wintitle> tab and configure the
-                    following properties:</cmd>
+                <cmd>For log data, on the <wintitle>Log</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_ihc_3fs_sr">
                         <tgroup cols="2">
@@ -754,7 +754,7 @@
                 </cmd>
             </step>
             <step id="O-Binary">
-                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
                     following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
@@ -787,8 +787,8 @@
                 </cmd>
             </step>
             <step id="O-PROTO-Mess">
-                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
-                    the following properties:</cmd>
+                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_s3c_mz4_45">
                         <tgroup cols="2">
@@ -839,8 +839,8 @@
                 </cmd>
             </step>
             <step id="O-PROTO-File">
-                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
-                    the following properties:</cmd>
+                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_f4r_4cp_45">
                         <tgroup cols="2">
@@ -1216,7 +1216,7 @@
                 </cmd>
             </step>
             <step id="D-Binary">
-                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
                     following property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_xct_mbm_gt">
@@ -1247,8 +1247,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-Event">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_igm_vtd_3t">
                         <tgroup cols="2">
@@ -1290,8 +1290,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-File">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_fpg_rx3_ks">
                         <tgroup cols="2">
@@ -1328,8 +1328,8 @@
                 </cmd>
             </step>
             <step id="D-AVRO-Mess">
-                <cmd>For Avro data, click the <wintitle>Avro</wintitle> tab and configure the
-                    following properties:</cmd>
+                <cmd>For Avro data, on the <wintitle>Avro</wintitle> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_o2j_4nd_3t">
                         <tgroup cols="2">
@@ -1372,8 +1372,8 @@
                 </cmd>
             </step>
             <step id="DelimProps">
-                <cmd>For delimited data, click the <wintitle>Delimited</wintitle> tab and configure
-                    the following properties:</cmd>
+                <cmd>For delimited data, on the <wintitle>Delimited</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_wb3_2kg_br">
                         <tgroup cols="2">
@@ -1437,8 +1437,8 @@
                 </cmd>
             </step>
             <step id="JSONProps">
-                <cmd>For JSON data, click the <uicontrol>JSON</uicontrol> tab and configure the
-                    following property:</cmd>
+                <cmd>For JSON data, on the <uicontrol>JSON</uicontrol> tab, configure the following
+                    property:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_lgq_53c_wr">
                         <tgroup cols="2">
@@ -1475,8 +1475,8 @@
                 </cmd>
             </step>
             <step id="TextProps">
-                <cmd>For text data, click the <uicontrol>Text</uicontrol> tab and configure the
-                    following properties:</cmd>
+                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
+                    properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_egv_3df_jr">
                         <tgroup cols="2">
@@ -1514,8 +1514,8 @@
                 </cmd>
             </step>
             <step id="D-PROTO-props">
-                <cmd>For protobuf data, click the <wintitle>Protobuf</wintitle> tab and configure
-                    the following properties:</cmd>
+                <cmd>For protobuf data, on the <wintitle>Protobuf</wintitle> tab, configure the
+                    following properties:</cmd>
                 <info>
                     <table frame="all" rowsep="1" colsep="1" id="table_vmt_tdp_45">
                         <tgroup cols="2">

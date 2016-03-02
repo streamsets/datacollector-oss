@@ -15,8 +15,8 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_n2p_jgf_lr">
  <title>JavaScript Evaluator</title>
- <shortdesc>The JavaScript Evaluator data based on JavaScript code. Use the JavaScript processor to
-        use JavaScript code to perform custom processing.</shortdesc>
+ <shortdesc>The JavaScript Evaluator processes data based on JavaScript code. Use the JavaScript
+        processor to use JavaScript code to perform custom processing.</shortdesc>
  <conbody>
   <p><indexterm>JavaScript Evaluator
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>JavaScript

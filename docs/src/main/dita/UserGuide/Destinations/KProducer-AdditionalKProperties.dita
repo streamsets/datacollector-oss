@@ -24,7 +24,7 @@
             property names or values.</p>
         <p>Several properties are defined by default, you can edit or remove the properties as
             necessary.</p>
-  <note>The Kafka Producer uses the several configuration properties. The Kafka Producer ignores
+  <note>The Kafka Producer uses several configuration properties. The Kafka Producer ignores
             user-defined values for the following properties:<ul id="ul_uqg_4ft_xr">
                 <li>key.serializer.class</li>
                 <li>metadata.broker.list</li>

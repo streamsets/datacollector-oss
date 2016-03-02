@@ -17,7 +17,7 @@
     <title>Configuring a Solr Destination</title>
     <taskbody>
         <context><indexterm>Solr destination<indexterm>configuring</indexterm></indexterm>Configure
-            a Solr destination to write data to an Solr node or cluster.</context>
+            a Solr destination to write data to a Solr node or cluster.</context>
         <steps id="steps_tgy_3tv_4r">
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-ReqField-EHandling">

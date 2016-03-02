@@ -19,10 +19,10 @@
     can write the data to HDFS as flat files or Hadoop sequence files. </shortdesc>
  <conbody>
   <p><indexterm>Hadoop FS
-     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
-     FS</indexterm></indexterm>When you configure a Hadoop FS destination, you define the output
-   directory template. Hadoop FS creates output directories based the template and the time basis.
-   Hadoop FS writes records to the directories based on the time basis as well.</p>
+          destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Hadoop
+          FS</indexterm></indexterm>When you configure a Hadoop FS destination, you define the
+      output directory template. Hadoop FS creates output directories based on the template and the
+      time basis. Hadoop FS writes records to the directories based on the time basis as well.</p>
   <p>You can specify the amount of time that a record can be written to its associated directory and
       what happens to late records. </p>
     <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/HDFS_user_props"/>

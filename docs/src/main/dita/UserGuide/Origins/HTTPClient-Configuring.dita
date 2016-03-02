@@ -18,7 +18,7 @@
     <taskbody>
         <context>
             <p><indexterm>HTTP Client origin<indexterm>configuring</indexterm></indexterm>Configure
-                an HTTP Client origin to read JSON data from an HTTP resource URL.</p>
+                an HTTP Client origin to read data from an HTTP resource URL.</p>
         </context>
         <steps id="steps_xmt_2lz_5r">
             <step

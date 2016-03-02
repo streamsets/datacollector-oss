@@ -23,7 +23,7 @@
   <p><indexterm>Data Collector console<indexterm>preview mode</indexterm></indexterm>The following
       image shows the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console in
-      during data preview mode:</p>
+      data preview mode:</p>
   <p><image href="../Graphics/CanvasPreview.png" id="image_w2r_ktq_kq" scale="85"/><table
         frame="all" rowsep="1" colsep="1" id="table_nrm_fvt_sq">
         <tgroup cols="3">

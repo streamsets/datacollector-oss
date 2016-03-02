@@ -18,8 +18,8 @@
  <shortdesc>Similar to runtime properties, runtime resources are values that you define in a file
         local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> and
-        call from within pipeline. But with runtime resources, you can restrict the permissions for
-        the files to secure sensitive information. Use runtime properties to load sensitive
+        call from within a pipeline. But with runtime resources, you can restrict the permissions
+        for the files to secure sensitive information. Use runtime resources to load sensitive
         information from files at runtime.</shortdesc>
  <conbody>
   <p><indexterm>runtime resources<indexterm>overview</indexterm></indexterm>You can use runtime

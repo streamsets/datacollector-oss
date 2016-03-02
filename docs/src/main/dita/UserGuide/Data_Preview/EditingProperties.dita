@@ -16,8 +16,8 @@
 <task id="task_dyy_k3l_5s">
     <title>Editing Properties</title>
     <shortdesc>In data preview, you can edit stage properties to see how the changes affect preview
-        data. For example, you might edit the expression in an Expression Evaluator to see verify
-        how the expression alters data. </shortdesc>
+        data. For example, you might edit the expression in an Expression Evaluator to see how the
+        expression alters data. </shortdesc>
     <taskbody>
         <context>
             <p><indexterm>data preview<indexterm>editing properties</indexterm></indexterm>When you
