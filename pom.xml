@@ -98,6 +98,8 @@
     <module>root</module>
 
     <module>bootstrap</module>
+    <module>utils</module>
+    <module>sso</module>
     <module>common</module>
     <module>container-common</module>
     <module>json-dto</module>

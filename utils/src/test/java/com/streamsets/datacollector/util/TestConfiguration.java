@@ -20,7 +20,6 @@
 package com.streamsets.datacollector.util;
 
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.util.Configuration;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.After;

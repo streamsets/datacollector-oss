@@ -24,10 +24,10 @@
     <version>1.3.0.0-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
-  <artifactId>streamsets-datacollector-container-common</artifactId>
+  <artifactId>streamsets-sso</artifactId>
   <version>1.3.0.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Container Common</description>
-  <name>StreamSets Data Collector Container Common</name>
+  <description>StreamSets SSO</description>
+  <name>StreamSets SSO</name>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -38,40 +38,10 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-common</artifactId>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-csv</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-utils</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-sso</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dropwizard.metrics</groupId>
-      <artifactId>metrics-core</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>io.dropwizard.metrics</groupId>
-      <artifactId>metrics-json</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dropwizard.metrics</groupId>
-      <artifactId>metrics-jvm</artifactId>
-      <scope>compile</scope>
-    </dependency>
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
@@ -85,16 +55,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.dagger</groupId>
-      <artifactId>dagger</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.squareup.dagger</groupId>
-      <artifactId>dagger-compiler</artifactId>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -139,6 +99,11 @@
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
       <scope>compile</scope>
     </dependency>
@@ -148,22 +113,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-jersey2-jaxrs</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.icegreen</groupId>
-      <artifactId>greenmail</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -190,4 +141,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>
