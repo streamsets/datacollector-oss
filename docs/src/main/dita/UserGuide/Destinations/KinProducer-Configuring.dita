@@ -19,8 +19,7 @@
         <context>
             <p><indexterm>Kinesis Producer
                 destination<indexterm>configuring</indexterm></indexterm>Configure a Kinesis
-                Producer destination to write JSON or SDC Record data to an Amazon Kinesis
-                cluster.</p>
+                Producer destination to write data to an Amazon Kinesis cluster.</p>
         </context>
         <steps id="steps_dsb_sn4_yr">
             <step

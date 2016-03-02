@@ -20,7 +20,7 @@
         <p><indexterm>Local FS
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>Local
                     FS</indexterm></indexterm>When you configure a Local FS destination, you define
-            the output directory template. Local FS creates output directories based the template
+            the output directory template. Local FS creates output directories based on the template
             and the time basis. Local FS writes records to the directories based on the time basis
             as well. </p>
         <p>You can specify the amount of time that a record can be written to its associated

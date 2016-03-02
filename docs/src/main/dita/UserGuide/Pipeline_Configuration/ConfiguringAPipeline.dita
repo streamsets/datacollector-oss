@@ -178,7 +178,7 @@
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Error Record Handling <xref
+                                    <entry>Error Records <xref
                                             href="ErrorHandling.dita#concept_pm4_txm_vq">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                             /></xref></entry>
@@ -248,8 +248,8 @@
                                 <row>
                                     <entry>Max File Size (MB)</entry>
                                     <entry>Maximum size for error files. Exceeding this size creates
-                                        a new error file. <p>Use 0 to write to avoid using this
-                                            property.</p></entry>
+                                        a new error file. <p>Use 0 to avoid using this
+                                        property.</p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

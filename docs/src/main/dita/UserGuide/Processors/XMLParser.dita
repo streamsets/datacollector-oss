@@ -19,7 +19,7 @@
   <p><indexterm>XML Parser
                     processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>XML
                     Parser</indexterm></indexterm>The XML Parser parses a valid XML document
-            embedded in string field and passes the resulting data into the pipeline. </p>
+            embedded in a string field and passes the resulting data into the pipeline. </p>
         <p>The XML Parser creates records based on a user-defined delimiter element. When no
             delimiter element is defined, it reads the entire contents of the field as a single
             record.</p>

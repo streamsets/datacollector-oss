@@ -49,8 +49,8 @@
       </ul></dd>
     </dlentry>
     <dlentry>
-     <dt>The server writes creates a new active file as needed, archiving the previous file without
-      renaming</dt>
+     <dt>The server writes a new active file as needed, archiving the previous file without
+            renaming</dt>
      <dd>The server writes to an active file, creating a new active file as necessary. When it
       creates a new active file, it archives the previous active file without renaming it. The
       active file changes, but file names do not change. </dd>

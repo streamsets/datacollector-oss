@@ -25,7 +25,7 @@
        types</indexterm></indexterm><indexterm>mask types<indexterm>Field
        Masker</indexterm></indexterm>Replaces values with a fixed-length mask. Use when you want to
       mask variations in the length of the data. </dd>
-     <dd>The following example uses a fixed-length masks to hide passwords:<simpletable frame="none"
+     <dd>The following example uses a fixed-length mask to hide passwords:<simpletable frame="none"
        relcolwidth="1.0* 1.0*" id="simpletable_zyf_5cj_yq">
        <strow>
         <stentry>

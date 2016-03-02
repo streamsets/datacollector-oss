@@ -31,9 +31,9 @@
      type based on the credit card number. </li>
     <li>Add a Field Masker to mask credit card numbers. Use a required field to discard records
      without credit card numbers.</li>
+    <li>Connect both branches to a Hadoop FS destination.</li>
     <li>In the secondary branch, use an Expression Evaluator to add fields to the cash records to
      match the credit card records. Use data preview to verify the fields to add. </li>
-    <li>Connect both branches to a Hadoop FS destination.</li>
     <li>Add a data rule to raise an alert if too many credit card payments are missing credit card
      numbers.</li>
     <li>Start the pipeline and monitor the results.</li>
