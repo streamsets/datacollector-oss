@@ -426,6 +426,7 @@ public class PipelineConfigurationValidator {
       boolean shouldBeSource,
       StageConfiguration stageConf,
       boolean errorStage,
+      boolean statsAggregatorStage,
       IssueCreator issueCreator
   ) {
     boolean preview = true;
@@ -560,7 +561,7 @@ public class PipelineConfigurationValidator {
           }
           break;
         case TARGET:
-          if (!errorStage && stageConf.getInputLanes().isEmpty()) {
+          if (!errorStage && !statsAggregatorStage && stageConf.getInputLanes().isEmpty()) {
             // target stage must have at least one input lane
             issues.add(
                 issueCreator.create(
@@ -816,6 +817,7 @@ public class PipelineConfigurationValidator {
       preview &= validateStageConfiguration(
           shouldBeSource,
           stageConf,
+          false,
           false,
           IssueCreator.getStage(stageConf.getInstanceName())
       );
@@ -1118,7 +1120,7 @@ public class PipelineConfigurationValidator {
     StageConfiguration errorStage = pipelineConfiguration.getErrorStage();
     if (errorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(errorStage.getInstanceName());
-      preview = validateStageConfiguration(false, errorStage, true, errorStageCreator);
+      preview = validateStageConfiguration(false, errorStage, true, false, errorStageCreator);
     }
     return preview;
   }
@@ -1129,7 +1131,7 @@ public class PipelineConfigurationValidator {
     StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
     if (statsAggregatorStage != null) {
       IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorStage.getInstanceName());
-      preview = validateStageConfiguration(false, statsAggregatorStage, false, errorStageCreator);
+      preview = validateStageConfiguration(false, statsAggregatorStage, false, true, errorStageCreator);
     }
     return preview;
   }

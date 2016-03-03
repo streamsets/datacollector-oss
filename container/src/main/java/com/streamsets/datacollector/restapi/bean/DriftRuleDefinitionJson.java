@@ -32,20 +32,34 @@ public class DriftRuleDefinitionJson {
   private final com.streamsets.datacollector.config.DriftRuleDefinition driftRuleDefinition;
 
   @JsonCreator
-  public DriftRuleDefinitionJson(@JsonProperty("id") String id,
-                                 @JsonProperty("label") String label,
-                                 @JsonProperty("lane") String lane,
-                                 @JsonProperty("samplingPercentage") double samplingPercentage,
-                                 @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
-                                 @JsonProperty("condition") String condition,
-                                 @JsonProperty("alertEnabled") boolean alertEnabled,
-                                 @JsonProperty("alertText") String alertText,
-                                 @JsonProperty("meterEnabled") boolean meterEnabled,
-                                 @JsonProperty("sendEmail") boolean sendEmail,
-                                 @JsonProperty("enabled") boolean enabled) {
-    this.driftRuleDefinition = new DriftRuleDefinition(id, label, lane,
-      samplingPercentage, samplingRecordsToRetain, condition, alertEnabled, alertText,
-      meterEnabled, sendEmail, enabled);
+  public DriftRuleDefinitionJson(
+      @JsonProperty("id") String id,
+      @JsonProperty("label") String label,
+      @JsonProperty("lane") String lane,
+      @JsonProperty("samplingPercentage") double samplingPercentage,
+      @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
+      @JsonProperty("condition") String condition,
+      @JsonProperty("alertEnabled") boolean alertEnabled,
+      @JsonProperty("alertText") String alertText,
+      @JsonProperty("meterEnabled") boolean meterEnabled,
+      @JsonProperty("sendEmail") boolean sendEmail,
+      @JsonProperty("enabled") boolean enabled,
+      @JsonProperty("timestamp") long timestamp
+  ) {
+    this.driftRuleDefinition = new DriftRuleDefinition(
+        id,
+        label,
+        lane,
+        samplingPercentage,
+        samplingRecordsToRetain,
+        condition,
+        alertEnabled,
+        alertText,
+        meterEnabled,
+        sendEmail,
+        enabled,
+        timestamp
+    );
   }
 
   public DriftRuleDefinitionJson(DriftRuleDefinition driftRuleDefinition) {
@@ -99,6 +113,10 @@ public class DriftRuleDefinitionJson {
 
   public boolean isMeterEnabled() {
     return driftRuleDefinition.isMeterEnabled();
+  }
+
+  public long getTimestamp() {
+    return driftRuleDefinition.getTimestamp();
   }
 
   @JsonIgnore

@@ -201,23 +201,25 @@ public class PipelineStoreResource {
     //Add predefined Metric Rules to the pipeline
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
 
+    long timestamp = System.currentTimeMillis();
+
     metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_BAD_RECORDS_ID, HIGH_BAD_RECORDS_TEXT,
       HIGH_BAD_RECORDS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_BAD_RECORDS_CONDITION, false,
-      false));
+      false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(HIGH_STAGE_ERRORS_ID, HIGH_STAGE_ERRORS_TEXT,
       HIGH_STAGE_ERRORS_METRIC_ID, MetricType.METER, MetricElement.METER_COUNT, HIGH_STAGE_ERRORS_CONDITION, false,
-      false));
+      false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(PIPELINE_IDLE_ID, PIPELINE_IDLE_TEXT,
       PIPELINE_IDLE_METRIC_ID, MetricType.GAUGE, MetricElement.TIME_OF_LAST_RECEIVED_RECORD, PIPELINE_IDLE_CONDITION,
-      false, false));
+      false, false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(BATCH_TIME_ID, BATCH_TIME_TEXT, BATCH_TIME_METRIC_ID,
-      MetricType.GAUGE, MetricElement.CURRENT_BATCH_AGE, BATCH_TIME_CONDITION, false, false));
+      MetricType.GAUGE, MetricElement.CURRENT_BATCH_AGE, BATCH_TIME_CONDITION, false, false, timestamp));
 
     metricsRuleDefinitions.add(new MetricsRuleDefinition(MEMORY_LIMIt_ID, MEMORY_LIMIt_TEXT, MEMORY_LIMIt_METRIC_ID,
-      MetricType.COUNTER, MetricElement.COUNTER_COUNT, MEMORY_LIMIt_CONDITION, false, false));
+      MetricType.COUNTER, MetricElement.COUNTER_COUNT, MEMORY_LIMIt_CONDITION, false, false, timestamp));
 
     RuleDefinitions ruleDefinitions = new RuleDefinitions(
         metricsRuleDefinitions,

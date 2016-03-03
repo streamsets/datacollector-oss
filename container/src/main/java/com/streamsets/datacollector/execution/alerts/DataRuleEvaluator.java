@@ -39,10 +39,10 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.LaneResolver;
+import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ObserverException;
 import com.streamsets.pipeline.api.Record;
-
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -50,9 +50,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 public class DataRuleEvaluator {
 
@@ -109,12 +111,19 @@ public class DataRuleEvaluator {
   private final String name;
   private final String rev;
   private final MetricRegistryJson metricRegistryJson;
-
+  private final BlockingQueue<Record> statsQueue;
 
   public DataRuleEvaluator(
-      String name, String rev, MetricRegistry metrics, AlertManager alertManager, List<String> emailIds,
-      Map<String, Object> pipelineELContext, DataRuleDefinition dataRuleDefinition, Configuration configuration,
-      MetricRegistryJson metricRegistryJson
+      String name,
+      String rev,
+      MetricRegistry metrics,
+      AlertManager alertManager,
+      List<String> emailIds,
+      Map<String, Object> pipelineELContext,
+      DataRuleDefinition dataRuleDefinition,
+      Configuration configuration,
+      MetricRegistryJson metricRegistryJson,
+      BlockingQueue<Record> statsQueue
   ) {
     this.name = name;
     this.rev = rev;
@@ -125,26 +134,7 @@ public class DataRuleEvaluator {
     this.configuration = configuration;
     this.alertManager = alertManager;
     this.metricRegistryJson = metricRegistryJson;
-  }
-
-  private DataRuleDefinition cloneRuleWithResolvedAlertText(DataRuleDefinition def, String alterInfo) {
-    return new DataRuleDefinition(
-        def.getFamily(),
-        def.getId(),
-        def.getLabel(),
-        def.getLane(),
-        def.getSamplingPercentage(),
-        def.getSamplingRecordsToRetain(),
-        def.getCondition(),
-        def.isAlertEnabled(),
-        alterInfo,
-        def.getThresholdType(),
-        def.getThresholdValue(),
-        def.getMinVolume(),
-        def.isMeterEnabled(),
-        def.isSendEmail(),
-        def.isAlertEnabled()
-    );
+    this.statsQueue = statsQueue;
   }
 
   public void evaluateRule(List<Record> sampleRecords, String lane,
@@ -234,15 +224,35 @@ public class DataRuleEvaluator {
           case COUNT:
             if (matchingRecordCounter.getCount() > threshold) {
               if (dataRuleDefinition instanceof DriftRuleDefinition) {
-                for (String alertText : alertTextForMatchRecords) {
-                  alertManager.alert(matchingRecordCounter.getCount(), emailIds,
-                      cloneRuleWithResolvedAlertText(dataRuleDefinition, alertText)
-                  );
+                if (isStatAggregationEnabled()) {
+                  createAndEnqueDataRuleRecord(dataRuleDefinition, evaluatedRecordCount, matchingRecordCount, alertTextForMatchRecords);
+                } else {
+                  for (String alertText : alertTextForMatchRecords) {
+                    alertManager.alert(
+                        matchingRecordCounter.getCount(),
+                        emailIds,
+                        AlertManagerHelper.cloneRuleWithResolvedAlertText(dataRuleDefinition, alertText)
+                    );
+                  }
                 }
               } else if (dataRuleDefinition instanceof DataRuleDefinition) {
-                alertManager.alert(matchingRecordCounter.getCount(), emailIds,
-                    cloneRuleWithResolvedAlertText(dataRuleDefinition, resolveAlertText(elVars, dataRuleDefinition))
-                );
+                if (isStatAggregationEnabled()) {
+                  createAndEnqueDataRuleRecord(
+                      dataRuleDefinition,
+                      evaluatedRecordCount,
+                      matchingRecordCount,
+                      Arrays.asList(resolveAlertText(elVars, dataRuleDefinition))
+                  );
+                } else {
+                  alertManager.alert(
+                      matchingRecordCounter.getCount(),
+                      emailIds,
+                      AlertManagerHelper.cloneRuleWithResolvedAlertText(
+                          dataRuleDefinition,
+                          resolveAlertText(elVars, dataRuleDefinition)
+                      )
+                  );
+                }
               } else {
                 throw new RuntimeException(Utils.format(
                     "Unexpected RuleDefinition class '{}'",
@@ -254,11 +264,23 @@ public class DataRuleEvaluator {
           case PERCENTAGE:
             if ((matchingRecordCounter.getCount() * 100.0 / evaluatedRecordCounter.getCount()) > threshold
                 && evaluatedRecordCounter.getCount() >= dataRuleDefinition.getMinVolume()) {
-              alertManager.alert(
+              if(isStatAggregationEnabled()) {
+                createAndEnqueDataRuleRecord(
+                    dataRuleDefinition,
+                    evaluatedRecordCount,
+                    matchingRecordCount,
+                    alertTextForMatchRecords
+                );
+              } else {
+                alertManager.alert(
                   matchingRecordCounter.getCount(),
                   emailIds,
-                  cloneRuleWithResolvedAlertText(dataRuleDefinition, resolveAlertText(elVars, dataRuleDefinition))
-              );
+                  AlertManagerHelper.cloneRuleWithResolvedAlertText(
+                    dataRuleDefinition,
+                    resolveAlertText(elVars, dataRuleDefinition)
+                  )
+                );
+              }
             }
             break;
         }
@@ -278,10 +300,10 @@ public class DataRuleEvaluator {
   boolean evaluate(ELVariables elVars, Record record, String el, String id) {
     try {
       return AlertsUtil.evaluateRecord(
-          record,
-          el,
-          elVars,
-          new ELEvaluator("el", RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
+        record,
+        el,
+        elVars,
+        new ELEvaluator("el", RuleELRegistry.getRuleELs(dataRuleDefinition.getFamily()))
       );
     } catch (ObserverException e) {
       //A faulty condition should not take down rest of the alerts with it.
@@ -328,6 +350,30 @@ public class DataRuleEvaluator {
 
   public static Map<String,Map<String, List<String>>> getELDefinitions() {
     return DATA_RULES_EL_DEFS;
+  }
+
+  private void createAndEnqueDataRuleRecord(
+    DataRuleDefinition dataRuleDefinition,
+    int evaluatedRecordCount,
+    int matchingRecordCount,
+    List<String> alertTextForMatchRecords
+  ) {
+    AggregatorUtil.enqueStatsRecord(
+      AggregatorUtil.createDataRuleRecord(
+          dataRuleDefinition.getId(),
+          dataRuleDefinition.getLane(),
+          evaluatedRecordCount,
+          matchingRecordCount,
+          alertTextForMatchRecords,
+          dataRuleDefinition instanceof DriftRuleDefinition
+      ),
+      statsQueue,
+      configuration
+    );
+  }
+
+  private boolean isStatAggregationEnabled() {
+    return null != statsQueue;
   }
 
 }

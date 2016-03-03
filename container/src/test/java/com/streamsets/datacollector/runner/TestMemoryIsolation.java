@@ -81,7 +81,7 @@ public class TestMemoryIsolation {
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION, UUID.randomUUID(),
-      null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), null);
+      null, pipelineConfigs, null, stageDefs, MockStages.getErrorStageConfig(), MockStages.getStatsAggregatorStageConfig());
     Pipeline.Builder builder = new Pipeline.Builder(lib, new Configuration(), "name",  "name", "0", pipelineConf);
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);

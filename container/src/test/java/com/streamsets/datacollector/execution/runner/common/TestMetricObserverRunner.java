@@ -75,9 +75,17 @@ public class TestMetricObserverRunner {
     t.update(2000, TimeUnit.MILLISECONDS);
     t.update(3000, TimeUnit.MILLISECONDS);
 
-    MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerMatch", "testTimerMatch",
-      "testTimerMatch", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${value()>2}", false, true);
+    MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition(
+        "testTimerMatch",
+        "testTimerMatch",
+        "testTimerMatch",
+        MetricType.TIMER,
+        MetricElement.TIMER_COUNT,
+        "${value()>2}",
+        false,
+        true,
+        System.currentTimeMillis()
+    );
 
     List<MetricsRuleDefinition> metricsRuleDefinitions = new ArrayList<>();
     metricsRuleDefinitions.add(metricsRuleDefinition);

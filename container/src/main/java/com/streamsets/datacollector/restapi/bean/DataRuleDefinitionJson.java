@@ -31,23 +31,39 @@ public class DataRuleDefinitionJson {
   private final com.streamsets.datacollector.config.DataRuleDefinition dataRuleDefinition;
 
   @JsonCreator
-  public DataRuleDefinitionJson(@JsonProperty("id") String id,
-                                @JsonProperty("label") String label,
-                                @JsonProperty("lane") String lane,
-                                @JsonProperty("samplingPercentage") double samplingPercentage,
-                                @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
-                                @JsonProperty("condition") String condition,
-                                @JsonProperty("alertEnabled") boolean alertEnabled,
-                                @JsonProperty("alertText") String alertText,
-                                @JsonProperty("thresholdType") ThresholdTypeJson thresholdTypeJson,
-                                @JsonProperty("thresholdValue") String thresholdValue,
-                                @JsonProperty("minVolume") long minVolume,
-                                @JsonProperty("meterEnabled") boolean meterEnabled,
-                                @JsonProperty("sendEmail") boolean sendEmail,
-                                @JsonProperty("enabled") boolean enabled) {
-    this.dataRuleDefinition = new com.streamsets.datacollector.config.DataRuleDefinition(id, label, lane,
-      samplingPercentage, samplingRecordsToRetain, condition, alertEnabled, alertText,
-      BeanHelper.unwrapThresholdType(thresholdTypeJson), thresholdValue, minVolume, meterEnabled, sendEmail, enabled);
+  public DataRuleDefinitionJson(
+      @JsonProperty("id") String id,
+      @JsonProperty("label") String label,
+      @JsonProperty("lane") String lane,
+      @JsonProperty("samplingPercentage") double samplingPercentage,
+      @JsonProperty("samplingRecordsToRetain") int samplingRecordsToRetain,
+      @JsonProperty("condition") String condition,
+      @JsonProperty("alertEnabled") boolean alertEnabled,
+      @JsonProperty("alertText") String alertText,
+      @JsonProperty("thresholdType") ThresholdTypeJson thresholdTypeJson,
+      @JsonProperty("thresholdValue") String thresholdValue,
+      @JsonProperty("minVolume") long minVolume,
+      @JsonProperty("meterEnabled") boolean meterEnabled,
+      @JsonProperty("sendEmail") boolean sendEmail,
+      @JsonProperty("enabled") boolean enabled,
+      @JsonProperty("timestamp") long timestamp
+  ) {
+    this.dataRuleDefinition = new com.streamsets.datacollector.config.DataRuleDefinition(
+        id,
+        label,
+        lane,
+        samplingPercentage,
+        samplingRecordsToRetain,
+        condition,
+        alertEnabled,
+        alertText,
+        BeanHelper.unwrapThresholdType(thresholdTypeJson),
+        thresholdValue,
+        minVolume,
+        meterEnabled,
+        sendEmail,
+        enabled,
+        timestamp);
   }
 
   public DataRuleDefinitionJson(com.streamsets.datacollector.config.DataRuleDefinition dataRuleDefinition) {
@@ -113,6 +129,10 @@ public class DataRuleDefinitionJson {
 
   public boolean isMeterEnabled() {
     return dataRuleDefinition.isMeterEnabled();
+  }
+
+  public long getTimestamp() {
+    return dataRuleDefinition.getTimestamp();
   }
 
   @JsonIgnore

@@ -47,6 +47,10 @@ public class Constants {
   public static final String MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_KEY = "observer.queue.offer.max.wait.time.ms";
   public static final int MAX_OBSERVER_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT = 1000;
   public static final String MESOS_JAR_URL = "mesos.jar.url";
+  public static final String STATS_AGGREGATOR_QUEUE_SIZE_KEY = "stats.queue.size";
+  public static final int STATS_AGGREGATOR_QUEUE_SIZE_DEFAULT = 1000;
+  public static final String MAX_STATS_REQUEST_OFFER_WAIT_TIME_MS_KEY = "stats.queue.offer.max.wait.time.ms";
+  public static final int MAX_STATS_REQUEST_OFFER_WAIT_TIME_MS_DEFAULT = 0;
 
   public static final String STOP_PIPELINE_MESSAGE = "Requested via REST API";
 

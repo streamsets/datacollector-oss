@@ -48,20 +48,25 @@ public class TestProductionObserver {
   @Before
   public void setUp() {
     productionObserver = new ProductionObserver(new Configuration(), null);
-    productionObserver.setObserveRequests(new ArrayBlockingQueue<Object>(10));
+    productionObserver.setObserveRequests(new ArrayBlockingQueue<>(10));
   }
 
   @Test
   public void testGetSampledRecords() {
+    long timestamp = System.currentTimeMillis();
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition(ID+1, "myRule", LANE + "::s", 100 /*Sampling %*/, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+2, "myRule", LANE + "::s", 50 /*Sampling %*/, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+3, "myRule", LANE + "::s", 25 /*Sampling %*/, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+4, "myRule", LANE + "::s", 10 /*Sampling %*/, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
 
     //Generates 100 records
     List<Record> allRecords = TestUtil.createRecords(500);
@@ -80,18 +85,23 @@ public class TestProductionObserver {
 
     //To get an idea of how sampling behaves vary the NUMBER_OF_BATCHES and NUMBER_OF_RECORDS_PER_BATCH variables
     //and print out the result by un commenting the following.
-
+    long timestamp = System.currentTimeMillis();
     List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
     dataRuleDefinitions.add(new DataRuleDefinition(ID+1, "myRule", LANE + "::s", 100 /*Sampling %*/, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+2, "myRule", LANE + "::s", 50 /*Sampling % */, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+3, "myRule", LANE + "::s", 25 /* Sampling % */, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+4, "myRule", LANE + "::s", 10 /* Sampling % */, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition(ID+5, "myRule", LANE + "::s", 5 /* Sampling % */, 5,
-      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true));
+      "${record:value(\"/name\")==null}", true, "alertText", ThresholdType.COUNT, "2", 5, true, false, true,
+      timestamp));
 
     //Generates 100 records
     List<Record> allRecords = TestUtil.createRecords(NUMBER_OF_RECORDS_PER_BATCH);

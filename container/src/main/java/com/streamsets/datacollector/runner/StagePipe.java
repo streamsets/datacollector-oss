@@ -36,6 +36,7 @@ import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.HistogramJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
@@ -73,6 +74,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private final String rev;
   private final Configuration configuration;
   private final MetricRegistryJson metricRegistryJson;
+  private Map<String, Object> batchMetrics;
 
   @VisibleForTesting
   StagePipe(StageRuntime stage, List<String> inputLanes, List<String> outputLanes) {
@@ -90,6 +92,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     this.scheduledExecutorService = scheduledExecutorService;
     this.memoryUsageCollectorResourceBundle = memoryUsageCollectorResourceBundle;
     this.metricRegistryJson = metricRegistryJson;
+    this.batchMetrics = new HashMap<>();
   }
 
   @Override
@@ -210,10 +213,13 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     if (isSource()) {
       pipeBatch.setNewOffset(newOffset);
     }
-    processingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
 
-    inputRecordsMeter.mark(batchImpl.getSize());
-    inputRecordsHistogram.update(batchImpl.getSize());
+    long processingTime = System.currentTimeMillis() - start;
+    processingTimer.update(processingTime, TimeUnit.MILLISECONDS);
+
+    int batchSize = batchImpl.getSize();
+    inputRecordsMeter.mark(batchSize);
+    inputRecordsHistogram.update(batchSize);
 
     int stageErrorRecordCount = errorSink.getErrorRecords(getStage().getInfo().getInstanceName()).size();
     errorRecordsMeter.mark(stageErrorRecordCount);
@@ -223,7 +229,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     if (isTarget()) {
       //Assumption is that the target will not drop any record.
       //Records are sent to destination or to the error sink.
-      outputRecordsCount = batchImpl.getSize() - stageErrorRecordCount;
+      outputRecordsCount = batchSize - stageErrorRecordCount;
     }
     outputRecordsMeter.mark(outputRecordsCount);
     outputRecordsHistogram.update(outputRecordsCount);
@@ -233,16 +239,29 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     stageErrorMeter.mark(stageErrorsCount);
     stageErrorsHistogram.update(stageErrorsCount);
 
+    Map<String, Integer> outputRecordsPerLane = new HashMap<>();
     if (getStage().getConfiguration().getOutputLanes().size() > 1) {
       for (String lane : getStage().getConfiguration().getOutputLanes()) {
-        outputRecordsPerLaneCounter.get(lane).inc(batchMaker.getSize(lane));
-        outputRecordsPerLaneMeter.get(lane).mark(batchMaker.getSize(lane));
+        int outputRecords = batchMaker.getSize(lane);
+        outputRecordsPerLane.put(lane, outputRecords);
+        outputRecordsPerLaneCounter.get(lane).inc(outputRecords);
+        outputRecordsPerLaneMeter.get(lane).mark(outputRecords);
       }
     }
+
+    // capture stage metrics for this batch
+    batchMetrics.clear();
+    batchMetrics.put(AggregatorUtil.PROCESSING_TIME, processingTime);
+    batchMetrics.put(AggregatorUtil.INPUT_RECORDS, batchSize);
+    batchMetrics.put(AggregatorUtil.ERROR_RECORDS, stageErrorRecordCount);
+    batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS, outputRecordsCount);
+    batchMetrics.put(AggregatorUtil.STAGE_ERROR, stageErrorsCount);
+    batchMetrics.put(AggregatorUtil.OUTPUT_RECORDS_PER_LANE, outputRecordsPerLane);
+
     pipeBatch.completeStage(batchMaker);
 
     //get records count to determine if this stage saw any record in this batch
-    int recordsCount = batchImpl.getSize();
+    int recordsCount = batchSize;
     if(isSource()) {
       //source does not have input records
       recordsCount = outputRecordsCount;
@@ -258,7 +277,11 @@ public class StagePipe extends Pipe<StagePipe.Context> {
 
   public long getMemoryConsumed() {
     return memoryConsumedCounter.getCount();
-}
+  }
+
+  public Map<String, Object> getBatchMetrics() {
+    return batchMetrics;
+  }
 
   private Gauge<Object> createRuntimeStatsGauge(MetricRegistry metricRegistry) {
     Gauge<Object> runtimeStatsGauge = MetricsConfigurator.getGauge(metricRegistry, RUNTIME_STATS_GAUGE);

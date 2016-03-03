@@ -25,9 +25,18 @@ public class MetricsRuleDefinition extends RuleDefinition {
   private final MetricType metricType;
   private final MetricElement metricElement;
 
-  public MetricsRuleDefinition(String id, String alertText,  String metricId, MetricType metricType,
-                               MetricElement metricElement, String condition,boolean sendEmail, boolean enabled) {
-    super("METRICS", id, condition, alertText, sendEmail, enabled);
+  public MetricsRuleDefinition(
+      String id,
+      String alertText,
+      String metricId,
+      MetricType metricType,
+      MetricElement metricElement,
+      String condition,
+      boolean sendEmail,
+      boolean enabled,
+      long timestamp
+  ) {
+    super("METRICS", id, condition, alertText, sendEmail, enabled, timestamp);
     this.metricId = metricId;
     this.metricType = metricType;
     this.metricElement = metricElement;

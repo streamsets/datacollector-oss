@@ -251,8 +251,11 @@ public class TestUtil {
 
   /*************** PipelineStore ***************/
   // TODO - Rename TestPipelineStoreModule after multi pipeline support
-  @Module(injects = PipelineStoreTask.class, library = true, includes = {TestRuntimeModule.class,
-    TestStageLibraryModule.class,  TestPipelineStateStoreModule.class })
+  @Module(
+      injects = {PipelineStoreTask.class, Configuration.class},
+      library = true,
+      includes = {TestRuntimeModule.class, TestStageLibraryModule.class,  TestPipelineStateStoreModule.class }
+  )
   public static class TestPipelineStoreModuleNew {
 
     public TestPipelineStoreModuleNew() {
@@ -282,6 +285,7 @@ public class TestUtil {
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineConf.setStatsAggregatorStage(mockPipelineConf.getStatsAggregatorStage());
           pipelineConf.getConfiguration().add(new Config("executionMode", ExecutionMode.STANDALONE.name()));
           pipelineConf.getConfiguration().add(new Config("retryAttempts", 3));
           pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description", pipelineConf);
@@ -289,7 +293,7 @@ public class TestUtil {
           // create a DataRuleDefinition for one of the stages
           DataRuleDefinition dataRuleDefinition =
             new DataRuleDefinition("myID", "myLabel", "s", 100, 10, "${record:value(\"/name\") != null}", true,
-              "alertText", ThresholdType.COUNT, "100", 100, true, false, true);
+              "alertText", ThresholdType.COUNT, "100", 100, true, false, true, System.currentTimeMillis());
           List<DataRuleDefinition> dataRuleDefinitions = new ArrayList<>();
           dataRuleDefinitions.add(dataRuleDefinition);
 
@@ -306,6 +310,7 @@ public class TestUtil {
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineConf.setStatsAggregatorStage(mockPipelineConf.getStatsAggregatorStage());
           pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, ZERO_REV, "description"
@@ -328,6 +333,7 @@ public class TestUtil {
           PipelineConfiguration mockPipelineConf = MockStages.createPipelineConfigurationSourceProcessorTarget();
           pipelineConf.setStages(mockPipelineConf.getStages());
           pipelineConf.setErrorStage(mockPipelineConf.getErrorStage());
+          pipelineConf.setStatsAggregatorStage(mockPipelineConf.getStatsAggregatorStage());
           pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineConf.getConfiguration().add(new Config("notifyOnTermination", true));

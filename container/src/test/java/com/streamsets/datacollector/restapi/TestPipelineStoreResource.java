@@ -149,21 +149,22 @@ public class TestPipelineStoreResource extends JerseyTest {
   @Test
   public void testSaveRules() {
 
+    long timestamp = System.currentTimeMillis();
     List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
     metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
-      MetricElementJson.COUNTER_COUNT, "p", false, true));
+      MetricElementJson.COUNTER_COUNT, "p", false, true, timestamp));
     metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m2", "m2", "a", MetricTypeJson.TIMER,
-      MetricElementJson.TIMER_M15_RATE, "p", false, true));
+      MetricElementJson.TIMER_M15_RATE, "p", false, true, timestamp));
     metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m3", "m3", "a", MetricTypeJson.HISTOGRAM,
-      MetricElementJson.HISTOGRAM_MEAN, "p", false, true));
+      MetricElementJson.HISTOGRAM_MEAN, "p", false, true, timestamp));
 
     List<DataRuleDefinitionJson> dataRuleDefinitionJsons = new ArrayList<>();
     dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("a", "a", "a", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("b", "b", "b", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "a", ThresholdTypeJson.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
 
     RuleDefinitionsJson ruleDefinitionsJson = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
         Collections.<DriftRuleDefinitionJson>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());
@@ -218,7 +219,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     public PipelineStoreTask provide() {
 
       com.streamsets.datacollector.util.TestUtil.captureStagesForProductionRun();
-
+      long timestamp = System.currentTimeMillis();
       pipelineStore = Mockito.mock(PipelineStoreTask.class);
       try {
         Mockito.when(pipelineStore.getPipelines()).thenReturn(ImmutableList.of(
@@ -245,19 +246,19 @@ public class TestPipelineStoreResource extends JerseyTest {
 
         List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
-          MetricElementJson.COUNTER_COUNT, "p", false, true));
+          MetricElementJson.COUNTER_COUNT, "p", false, true, timestamp));
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m2", "m2", "a", MetricTypeJson.TIMER,
-          MetricElementJson.TIMER_M15_RATE, "p", false, true));
+          MetricElementJson.TIMER_M15_RATE, "p", false, true, timestamp));
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m3", "m3", "a", MetricTypeJson.HISTOGRAM,
-          MetricElementJson.HISTOGRAM_MEAN, "p", false, true));
+          MetricElementJson.HISTOGRAM_MEAN, "p", false, true, timestamp));
 
         List<DataRuleDefinitionJson> dataRuleDefinitionJsons = new ArrayList<>();
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("a", "a", "a", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false,true));
+          1000, true, false,true, timestamp));
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("b", "b", "b", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false, true));
+          1000, true, false, true, timestamp));
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false, true));
+          1000, true, false, true, timestamp));
 
         RuleDefinitionsJson rules = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
             Collections.<DriftRuleDefinitionJson>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());

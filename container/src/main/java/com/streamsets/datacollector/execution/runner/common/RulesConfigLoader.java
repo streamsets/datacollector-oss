@@ -28,6 +28,9 @@ import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.AggregatorUtil;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.api.Record;
 
 import javax.inject.Named;
 
@@ -37,18 +40,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 
 public class RulesConfigLoader {
 
+  private final Configuration configuration;
   private final PipelineStoreTask pipelineStoreTask;
   private final String pipelineName;
   private final String revision;
   private RuleDefinitions previousRuleDefinitions;
+  private BlockingQueue<Record> statsQueue;
 
-  public RulesConfigLoader(@Named("name") String name, @Named("rev") String rev, PipelineStoreTask pipelineStoreTask) {
+  public RulesConfigLoader(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      PipelineStoreTask pipelineStoreTask,
+      Configuration configuration) {
     this.pipelineStoreTask = pipelineStoreTask;
     this.pipelineName = name;
     this.revision = rev;
+    this.configuration = configuration;
+  }
+
+  public void setStatsQueue(BlockingQueue<Record> statsQueue) {
+    this.statsQueue = statsQueue;
   }
 
   public RuleDefinitions load(Observer observer) throws InterruptedException, PipelineStoreException {
@@ -77,7 +92,10 @@ public class RulesConfigLoader {
       //detect metric rules to be removed
       detectMetricRuleChanges(previousRuleDefinitions.getMetricsRuleDefinitions(),
         newRuleDefinitions.getMetricsRuleDefinitions(), pipelineAlertsToRemove);
+    } else {
+      pushNewRulesToStatsQueue(newRuleDefinitions);
     }
+
     Map<String, List<DataRuleDefinition>> laneToDataRule = new HashMap<>();
     for (DataRuleDefinition dataRuleDefinition : newRuleDefinitions.getAllDataRuleDefinitions()) {
       String lane = LaneResolver.getPostFixedLaneForObserver(dataRuleDefinition.getLane());
@@ -96,6 +114,25 @@ public class RulesConfigLoader {
     return rulesConfigurationChangeRequest;
   }
 
+  private void pushNewRulesToStatsQueue(RuleDefinitions newRuleDefinitions) {
+    if (isStatAggregationEnabled()) {
+      for (DataRuleDefinition d : newRuleDefinitions.getAllDataRuleDefinitions()) {
+        AggregatorUtil.enqueStatsRecord(
+          AggregatorUtil.createDataRuleChangeRecord(d),
+          statsQueue,
+          configuration
+        );
+      }
+      for (MetricsRuleDefinition m : newRuleDefinitions.getMetricsRuleDefinitions()) {
+        AggregatorUtil.enqueStatsRecord(
+          AggregatorUtil.createMetricRuleChangeRecord(m),
+          statsQueue,
+          configuration
+        );
+      }
+    }
+  }
+
   private void detectMetricRuleChanges(List<MetricsRuleDefinition> oldMetricsRuleDefinitions,
                                               List<MetricsRuleDefinition> newMetricsRuleDefinitions,
                                               Set<String> alertsToRemove) {
@@ -107,14 +144,35 @@ public class RulesConfigLoader {
             found = true;
             if(oldMetricAlertDefinition.isEnabled() && !newMetricAlertDefinition.isEnabled()) {
               alertsToRemove.add(oldMetricAlertDefinition.getMetricId());
+              if (isStatAggregationEnabled()) {
+                AggregatorUtil.enqueStatsRecord(
+                  AggregatorUtil.createMetricRuleDisabledRecord(newMetricAlertDefinition),
+                  statsQueue,
+                  configuration
+                );
+              }
             }
             if(hasAlertChanged(oldMetricAlertDefinition, newMetricAlertDefinition)) {
               alertsToRemove.add(oldMetricAlertDefinition.getMetricId());
+              if (isStatAggregationEnabled()) {
+                AggregatorUtil.enqueStatsRecord(
+                  AggregatorUtil.createMetricRuleChangeRecord(newMetricAlertDefinition),
+                  statsQueue,
+                  configuration
+                );
+              }
             }
           }
         }
         if(!found) {
           alertsToRemove.add(oldMetricAlertDefinition.getMetricId());
+          if (isStatAggregationEnabled()) {
+            AggregatorUtil.enqueStatsRecord(
+              AggregatorUtil.createMetricRuleDisabledRecord(oldMetricAlertDefinition),
+              statsQueue,
+              configuration
+            );
+          }
         }
       }
     }
@@ -131,10 +189,24 @@ public class RulesConfigLoader {
             found = true;
             if(oldRuleDefinition.isEnabled() && !newRuleDefinition.isEnabled()) {
               rulesToRemove.add(oldRuleDefinition.getId());
+              if (isStatAggregationEnabled()) {
+                AggregatorUtil.enqueStatsRecord(
+                  AggregatorUtil.createDataRuleDisabledRecord(newRuleDefinition),
+                  statsQueue,
+                  configuration
+                );
+              }
             }
             if(hasRuleChanged(oldRuleDefinition, newRuleDefinition)) {
               if(oldRuleDefinition.isAlertEnabled() || oldRuleDefinition.isMeterEnabled()) {
                 rulesToRemove.add(oldRuleDefinition.getId());
+                if (isStatAggregationEnabled()) {
+                  AggregatorUtil.enqueStatsRecord(
+                    AggregatorUtil.createDataRuleChangeRecord(newRuleDefinition),
+                    statsQueue,
+                    configuration
+                  );
+                }
               }
             }
             if(hasSamplingSizeChanged(oldRuleDefinition, newRuleDefinition)) {
@@ -145,6 +217,13 @@ public class RulesConfigLoader {
         }
         if(!found) {
           rulesToRemove.add(oldRuleDefinition.getId());
+          if (isStatAggregationEnabled()) {
+            AggregatorUtil.enqueStatsRecord(
+              AggregatorUtil.createDataRuleDisabledRecord(oldRuleDefinition),
+              statsQueue,
+              configuration
+            );
+          }
         }
       }
     }
@@ -205,5 +284,9 @@ public class RulesConfigLoader {
 
   void setPreviousRuleDefinitions(RuleDefinitions previousRuleDefinitions) {
     this.previousRuleDefinitions = previousRuleDefinitions;
+  }
+
+  private boolean isStatAggregationEnabled() {
+    return null != statsQueue;
   }
 }

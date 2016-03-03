@@ -27,13 +27,16 @@ public abstract class RuleDefinition {
   private final boolean sendEmail;
   private final boolean enabled;
   private boolean valid = true;
+  private final long timestamp;
 
-  public RuleDefinition(String family,
-                        String id,
-                        String condition,
-                        String alertText,
-                        boolean sendEmail,
-                        boolean enabled
+  public RuleDefinition(
+      String family,
+      String id,
+      String condition,
+      String alertText,
+      boolean sendEmail,
+      boolean enabled,
+      long timestamp
   ) {
     this.family = family;
     this.id = id;
@@ -41,6 +44,7 @@ public abstract class RuleDefinition {
     this.condition = condition;
     this.sendEmail = sendEmail;
     this.enabled = enabled;
+    this.timestamp = timestamp;
   }
 
   public String getFamily() {
@@ -73,5 +77,9 @@ public abstract class RuleDefinition {
 
   public void setValid(boolean valid) {
     this.valid = valid;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
   }
 }

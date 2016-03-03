@@ -106,9 +106,13 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public RulesConfigLoader provideRulesConfigLoader(@Named("name") String name, @Named("rev") String rev,
-                                                    PipelineStoreTask pipelineStoreTask) {
-    return new RulesConfigLoader(name, rev, pipelineStoreTask);
+  public RulesConfigLoader provideRulesConfigLoader(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      PipelineStoreTask pipelineStoreTask,
+      Configuration configuration
+  ) {
+    return new RulesConfigLoader(name, rev, pipelineStoreTask, configuration);
   }
 
   @Provides @Singleton

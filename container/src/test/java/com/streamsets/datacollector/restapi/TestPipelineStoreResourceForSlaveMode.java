@@ -154,20 +154,21 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
           MockStages.createPipelineConfigurationSourceProcessorTarget());
 
         List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
+        long timestamp = System.currentTimeMillis();
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m1", "m1", "a", MetricTypeJson.COUNTER,
-          MetricElementJson.COUNTER_COUNT, "p", false, true));
+          MetricElementJson.COUNTER_COUNT, "p", false, true, timestamp));
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m2", "m2", "a", MetricTypeJson.TIMER,
-          MetricElementJson.TIMER_M15_RATE, "p", false, true));
+          MetricElementJson.TIMER_M15_RATE, "p", false, true, timestamp));
         metricsRuleDefinitionJsons.add(new MetricsRuleDefinitionJson("m3", "m3", "a", MetricTypeJson.HISTOGRAM,
-          MetricElementJson.HISTOGRAM_MEAN, "p", false, true));
+          MetricElementJson.HISTOGRAM_MEAN, "p", false, true, timestamp));
 
         List<DataRuleDefinitionJson> dataRuleDefinitionJsons = new ArrayList<>();
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("a", "a", "a", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false,true));
+          1000, true, false,true, timestamp));
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("b", "b", "b", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false, true));
+          1000, true, false, true, timestamp));
         dataRuleDefinitionJsons.add(new DataRuleDefinitionJson("c", "c", "c", 20, 300, "x", true, "c", ThresholdTypeJson.COUNT, "200",
-          1000, true, false, true));
+          1000, true, false, true, timestamp));
 
         RuleDefinitionsJson rules = new RuleDefinitionsJson(metricsRuleDefinitionJsons, dataRuleDefinitionJsons,
             Collections.<DriftRuleDefinitionJson>emptyList(), Collections.<String>emptyList(), UUID.randomUUID());

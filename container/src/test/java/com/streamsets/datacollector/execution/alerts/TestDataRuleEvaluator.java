@@ -80,10 +80,10 @@ public class TestDataRuleEvaluator {
     String lane = "testAlertEnabledMeterEnabled";
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertEnabledMeterEnabled",
       "testAlertEnabledMeterEnabled", lane, 100, 10, "${record:value(\"/name\")==null}", true,
-      "testAlertEnabledMeterEnabled", ThresholdType.COUNT, "2", 5, true, false, true);
+      "testAlertEnabledMeterEnabled", ThresholdType.COUNT, "2", 5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator("name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -102,10 +102,10 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertDisabledMeterEnabled",
       "testAlertDisabledMeterEnabled", lane,
       100, 10, "${record:value(\"/name\")==null}", false, null, ThresholdType.COUNT, "2", 5, true,
-      false, true);
+      false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -122,10 +122,10 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertEnabledMeterDisabled",
       "testAlertEnabledMeterDisabled", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertEnabledMeterDisabled", ThresholdType.COUNT, "2",
-      5, false, false, true);
+      5, false, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -143,10 +143,10 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertRaisedCountRuleDisabled",
       "testAlertRaisedCountRuleDisabled", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedCountRuleDisabled", ThresholdType.COUNT, "2",
-      5, true, false, false);
+      5, true, false, false, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -160,10 +160,10 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testNoExceptionInvalidExpression",
       "testNoExceptionInvalidExpression", lane,
       100, 10, "${record:value(\"/name\")==null", true, "testNoExceptionInvalidExpression", ThresholdType.COUNT, "2",
-      5, true, false, true);
+      5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, null), null, new HashMap<String, Object>(),
-        dataRuleDefinition, new Configuration(), null);
+        dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -177,10 +177,10 @@ public class TestDataRuleEvaluator {
     //Threshold value is set to 3 but the generated snapshot meets criteria 2. Therefore no alerts
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testNoAlertRaisedCount", "testNoAlertRaisedCount",
       lane, 100, 10, "${record:value(\"/name\")==null}", true, "testNoAlertRaisedCount", ThresholdType.COUNT, "3",
-      5, true, false, true);
+      5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -193,10 +193,10 @@ public class TestDataRuleEvaluator {
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testAlertRaisedPercentage",
       "testAlertRaisedPercentage", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testAlertRaisedPercentage", ThresholdType.PERCENTAGE, "40",
-      5, true, false, true);
+      5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -210,9 +210,9 @@ public class TestDataRuleEvaluator {
     String lane = "testNoAlertRaisedPercentage";
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testNoAlertRaisedPercentage",
       "testNoAlertRaisedPercentage", lane, 100, 10, "${record:value(\"/name\")==null}", true,
-      "testNoAlertRaisedPercentage", ThresholdType.PERCENTAGE, "60", 5, true, false, true);
+      "testNoAlertRaisedPercentage", ThresholdType.PERCENTAGE, "60", 5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,  null, null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
     evaluateRule(dataRuleEvaluator, lane);
     Gauge<Object> gauge = MetricsConfigurator.getGauge(metrics,
       AlertsUtil.getAlertGaugeName(dataRuleDefinition.getId()));
@@ -224,10 +224,10 @@ public class TestDataRuleEvaluator {
     String lane = "testGaugeChange";
     DataRuleDefinition dataRuleDefinition = new DataRuleDefinition("testGaugeChange", "testGaugeChange", lane,
       100, 10, "${record:value(\"/name\")==null}", true, "testGaugeChange", ThresholdType.COUNT, "2", 5, true,
-      false, true);
+      false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null);
+        new HashMap<String, Object>(), dataRuleDefinition, new Configuration(), null, null);
 
     evaluateRule(dataRuleEvaluator, lane);
 
@@ -252,10 +252,10 @@ public class TestDataRuleEvaluator {
 
     DataRuleDefinition nameNotNull = new DataRuleDefinition("nameNotNull",
       "nameNotNull", lane, 100, 10, "${record:value(\"/name\")==null}", true,
-      "nameNotNull", ThresholdType.COUNT, "2", 5, true, false, true);
+      "nameNotNull", ThresholdType.COUNT, "2", 5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), nameNotNull, new Configuration(), null);
+        new HashMap<String, Object>(), nameNotNull, new Configuration(), null, null);
 
     evaluateRule(dataRuleEvaluator, lane);
 
@@ -267,10 +267,10 @@ public class TestDataRuleEvaluator {
 
     DataRuleDefinition nameEqualsStreamSets = new DataRuleDefinition("nameEqualsStreamSets",
       "nameEqualsStreamSets", lane, 100, 10, "${record:value(\"/zip\")==94101}", true,
-      "nameEqualsStreamSets", ThresholdType.COUNT, "1", 5, true, false, true);
+      "nameEqualsStreamSets", ThresholdType.COUNT, "1", 5, true, false, true, System.currentTimeMillis());
     DataRuleEvaluator dataRuleEvaluator2 = new DataRuleEvaluator( "name", "0", metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null,
-        new HashMap<String, Object>(), nameEqualsStreamSets, new Configuration(), null);
+        new HashMap<String, Object>(), nameEqualsStreamSets, new Configuration(), null, null);
 
     evaluateRule(dataRuleEvaluator2, lane);
 
@@ -301,7 +301,8 @@ public class TestDataRuleEvaluator {
         "alert ${alert:info()}",
         true,
         false,
-        true
+        true,
+        System.currentTimeMillis()
     );
     AlertManager alertManager = Mockito.mock(AlertManager.class);
     DataRuleEvaluator dataRuleEvaluator = new DataRuleEvaluator(
@@ -313,6 +314,7 @@ public class TestDataRuleEvaluator {
         new HashMap<String, Object>(),
         def,
         new Configuration(),
+        null,
         null
     );
     ELVariables elVars = new ELVariables();

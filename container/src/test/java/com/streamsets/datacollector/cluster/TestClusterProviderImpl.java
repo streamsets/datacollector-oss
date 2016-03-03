@@ -125,7 +125,7 @@ public class TestClusterProviderImpl {
         null,
         new ArrayList<StageConfiguration>(),
         MockStages.getErrorStageConfig(),
-        null
+        MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
@@ -205,7 +205,7 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        null
+        MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
@@ -236,7 +236,7 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        null
+        MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));
@@ -267,7 +267,7 @@ public class TestClusterProviderImpl {
         null,
         MockStages.getSourceStageConfig(),
         MockStages.getErrorStageConfig(),
-        null
+        MockStages.getStatsAggregatorStageConfig()
     );
     pipelineConf.setPipelineInfo(new PipelineInfo("name", "desc", null, null,
       "aaa", null, null, null, true));

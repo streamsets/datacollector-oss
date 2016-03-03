@@ -269,21 +269,22 @@ public class TestFilePipelineStoreTask {
     Assert.assertTrue(ruleDefinitions.getDataRuleDefinitions().isEmpty());
     Assert.assertTrue(ruleDefinitions.getMetricsRuleDefinitions().isEmpty());
 
+    long timestamp = System.currentTimeMillis();
     List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions.getMetricsRuleDefinitions();
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", false, true));
+      MetricElement.COUNTER_COUNT, "p", false, true, timestamp));
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", false, true));
+      MetricElement.TIMER_M15_RATE, "p", false, true, timestamp));
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", false, true));
+      MetricElement.HISTOGRAM_MEAN, "p", false, true, timestamp));
 
     List<DataRuleDefinition> dataRuleDefinitions = ruleDefinitions.getDataRuleDefinitions();
     dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
 
     store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions);
 
@@ -310,21 +311,22 @@ public class TestFilePipelineStoreTask {
       tempRuleDef.getDataRuleDefinitions(), new ArrayList<DriftRuleDefinition>(), tempRuleDef.getEmailIds(),
         tempRuleDef.getUuid());
 
+    long timestamp = System.currentTimeMillis();
     List<MetricsRuleDefinition> metricsRuleDefinitions = ruleDefinitions1.getMetricsRuleDefinitions();
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m1", "m1", "a", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "p", false, true));
+      MetricElement.COUNTER_COUNT, "p", false, true, timestamp));
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m2", "m2", "a", MetricType.TIMER,
-      MetricElement.TIMER_M15_RATE, "p", false, true));
+      MetricElement.TIMER_M15_RATE, "p", false, true, timestamp));
     metricsRuleDefinitions.add(new MetricsRuleDefinition("m3", "m3", "a", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_MEAN, "p", false, true));
+      MetricElement.HISTOGRAM_MEAN, "p", false, true, timestamp));
 
     List<DataRuleDefinition> dataRuleDefinitions = ruleDefinitions2.getDataRuleDefinitions();
     dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
 
     //store ruleDefinition1
     store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions1);
@@ -342,11 +344,11 @@ public class TestFilePipelineStoreTask {
       FilePipelineStoreTask.REV);
     dataRuleDefinitions = ruleDefinitions2.getDataRuleDefinitions();
     dataRuleDefinitions.add(new DataRuleDefinition("a", "a", "a", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("b", "b", "b", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
     dataRuleDefinitions.add(new DataRuleDefinition("c", "c", "c", 20, 300, "x", true, "c", ThresholdType.COUNT, "200",
-      1000, true, false, true));
+      1000, true, false, true, timestamp));
 
     store.storeRules(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, ruleDefinitions2);
 

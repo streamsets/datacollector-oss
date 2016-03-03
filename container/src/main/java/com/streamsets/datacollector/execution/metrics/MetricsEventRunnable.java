@@ -33,8 +33,10 @@ import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -66,6 +69,8 @@ public class MetricsEventRunnable implements Runnable {
   private final String name;
   private final String rev;
   private final int scheduledDelay;
+  private final Configuration configuration;
+  private BlockingQueue<Record> statsQueue;
 
   @Inject
   public MetricsEventRunnable(@Named("name") String name, @Named("rev") String rev, Configuration configuration,
@@ -81,10 +86,15 @@ public class MetricsEventRunnable implements Runnable {
     this.name = name;
     this.rev = rev;
     this.scheduledDelay = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
+    this.configuration = configuration;
   }
 
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
     this.threadHealthReporter = threadHealthReporter;
+  }
+
+  public void setStatsQueue(BlockingQueue<Record> statsQueue) {
+    this.statsQueue = statsQueue;
   }
 
   @Override
@@ -97,9 +107,11 @@ public class MetricsEventRunnable implements Runnable {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
       }
+      ObjectMapper objectMapper = ObjectMapperFactory.get();
       PipelineState state = pipelineStateStore.getState(name, rev);
-      if (eventListenerManager.hasMetricEventListeners(name) && state.getStatus().isActive()) {
-        ObjectMapper objectMapper = ObjectMapperFactory.get();
+      if (hasMetricEventListeners(state) || isStatAggregationEnabled()) {
+        // compute aggregated metrics in case of cluster mode pipeline
+        // get individual pipeline metrics if non cluster mode pipeline
         String metricsJSONStr;
         if (state.getExecutionMode() == ExecutionMode.CLUSTER_BATCH
           || state.getExecutionMode() == ExecutionMode.CLUSTER_YARN_STREAMING
@@ -109,7 +121,16 @@ public class MetricsEventRunnable implements Runnable {
         } else {
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistry);
         }
-        eventListenerManager.broadcastMetrics(name, metricsJSONStr);
+        if (hasMetricEventListeners(state)) {
+          eventListenerManager.broadcastMetrics(name, metricsJSONStr);
+        }
+        if (isStatAggregationEnabled()) {
+          AggregatorUtil.enqueStatsRecord(
+            AggregatorUtil.createMetricJsonRecord(metricsJSONStr),
+            statsQueue,
+            configuration
+          );
+        }
       }
     } catch (IOException ex) {
       LOG.warn("Error while serializing metrics, {}", ex.toString(), ex);
@@ -216,4 +237,11 @@ public class MetricsEventRunnable implements Runnable {
     this.slaveMetrics.clear();
   }
 
+  private boolean isStatAggregationEnabled() {
+    return null != statsQueue;
+  }
+
+  private boolean hasMetricEventListeners(PipelineState state) {
+    return eventListenerManager.hasMetricEventListeners(name) && state.getStatus().isActive();
+  }
 }

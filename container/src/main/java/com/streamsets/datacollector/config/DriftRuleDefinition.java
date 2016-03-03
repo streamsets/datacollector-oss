@@ -34,7 +34,8 @@ public class DriftRuleDefinition extends DataRuleDefinition {
       String alertText,
       boolean meterEnabled,
       boolean sendEmail,
-      boolean enabled
+      boolean enabled,
+      long timestamp
   ) {
     super(
         RuleELRegistry.DRIFT,
@@ -51,7 +52,8 @@ public class DriftRuleDefinition extends DataRuleDefinition {
         1,
         meterEnabled,
         sendEmail,
-        enabled
+        enabled,
+        timestamp
     );
   }
 }

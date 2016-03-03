@@ -31,18 +31,27 @@ public class MetricsRuleDefinitionJson {
  private final com.streamsets.datacollector.config.MetricsRuleDefinition metricsRuleDefinition;
 
   @JsonCreator
-  public MetricsRuleDefinitionJson(@JsonProperty("id") String id,
-                                   @JsonProperty("alertText") String alertText,
-                                   @JsonProperty("metricId") String metricId,
-                                   @JsonProperty("metricType") MetricTypeJson metricType,
-                                   @JsonProperty("metricElement") MetricElementJson metricElementJson,
-                                   @JsonProperty("condition") String condition,
-                                   @JsonProperty("sendEmail") boolean sendEmail,
-                                   @JsonProperty("enabled") boolean enabled) {
-    this.metricsRuleDefinition = new com.streamsets.datacollector.config.MetricsRuleDefinition(id, alertText, metricId,
-      BeanHelper.unwrapMetricType(metricType), BeanHelper.unwrapMetricElement(metricElementJson), condition, sendEmail,
-      enabled);
-
+  public MetricsRuleDefinitionJson(
+    @JsonProperty("id") String id,
+    @JsonProperty("alertText") String alertText,
+    @JsonProperty("metricId") String metricId,
+    @JsonProperty("metricType") MetricTypeJson metricType,
+    @JsonProperty("metricElement") MetricElementJson metricElementJson,
+    @JsonProperty("condition") String condition,
+    @JsonProperty("sendEmail") boolean sendEmail,
+    @JsonProperty("enabled") boolean enabled,
+    @JsonProperty("timestamp") long timestamp
+  ) {
+    this.metricsRuleDefinition = new com.streamsets.datacollector.config.MetricsRuleDefinition(
+        id,
+        alertText,
+        metricId,
+        BeanHelper.unwrapMetricType(metricType),
+        BeanHelper.unwrapMetricElement(metricElementJson),
+        condition,
+        sendEmail,
+        enabled,
+        timestamp);
   }
 
   public MetricsRuleDefinitionJson(com.streamsets.datacollector.config.MetricsRuleDefinition metricsRuleDefinition) {
@@ -84,6 +93,10 @@ public class MetricsRuleDefinitionJson {
 
   public MetricTypeJson getMetricType() {
     return BeanHelper.wrapMetricType(metricsRuleDefinition.getMetricType());
+  }
+
+  public long getTimestamp() {
+    return metricsRuleDefinition.getTimestamp();
   }
 
   @JsonIgnore

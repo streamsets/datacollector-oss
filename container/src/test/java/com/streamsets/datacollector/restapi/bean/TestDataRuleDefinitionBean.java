@@ -19,13 +19,8 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.config.ThresholdType;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.DataRuleDefinitionJson;
-import com.streamsets.datacollector.restapi.bean.ThresholdTypeJson;
 
 public class TestDataRuleDefinitionBean {
 
@@ -44,7 +39,7 @@ public class TestDataRuleDefinitionBean {
     com.streamsets.datacollector.config.DataRuleDefinition dataRuleDefinition =
       new com.streamsets.datacollector.config.DataRuleDefinition("nameNotNull","nameNotNull", "lane", 100, 10,
         "${record:value(\"/name\")==null}", true, "nameNotNull", com.streamsets.datacollector.config.ThresholdType.COUNT,
-        "2", 5, true, false, true);
+        "2", 5, true, false, true, System.currentTimeMillis());
 
     DataRuleDefinitionJson dataRuleDefinitionJsonBean = new DataRuleDefinitionJson(dataRuleDefinition);
 
@@ -71,7 +66,7 @@ public class TestDataRuleDefinitionBean {
   public void testDriftRuleDefinitionBean() {
     com.streamsets.datacollector.config.DriftRuleDefinition driftRuleDefinition =
         new com.streamsets.datacollector.config.DriftRuleDefinition("nameNotNull","nameNotNull", "lane", 100, 10,
-            "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true);
+            "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true, System.currentTimeMillis());
 
     DriftRuleDefinitionJson driftRuleDefinitionJsonBean = new DriftRuleDefinitionJson(driftRuleDefinition);
 
@@ -95,10 +90,11 @@ public class TestDataRuleDefinitionBean {
     com.streamsets.datacollector.config.DataRuleDefinition dataRuleDefinition =
       new com.streamsets.datacollector.config.DataRuleDefinition("nameNotNull","nameNotNull", "lane", 100, 10,
         "${record:value(\"/name\")==null}", true, "nameNotNull", com.streamsets.datacollector.config.ThresholdType.COUNT,
-        "2", 5, true, false, true);
+        "2", 5, true, false, true, System.currentTimeMillis());
 
     DataRuleDefinitionJson dataRuleDefinitionJsonBean = new DataRuleDefinitionJson("nameNotNull","nameNotNull", "lane", 100, 10,
-      "${record:value(\"/name\")==null}", true, "nameNotNull", ThresholdTypeJson.COUNT, "2", 5, true, false, true);
+      "${record:value(\"/name\")==null}", true, "nameNotNull", ThresholdTypeJson.COUNT, "2", 5, true, false, true,
+      System.currentTimeMillis());
 
     Assert.assertEquals(dataRuleDefinition.getLabel(), dataRuleDefinitionJsonBean.getLabel());
     Assert.assertEquals(dataRuleDefinition.getLane(), dataRuleDefinitionJsonBean.getLane());
@@ -149,10 +145,10 @@ public class TestDataRuleDefinitionBean {
   public void testDriftRuleDefinitionBeanConstructorWithArgs() {
     com.streamsets.datacollector.config.DriftRuleDefinition DriftRuleDefinition =
         new com.streamsets.datacollector.config.DriftRuleDefinition("nameNotNull","nameNotNull", "lane", 100, 10,
-            "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true);
+            "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true, System.currentTimeMillis());
 
     DriftRuleDefinitionJson DriftRuleDefinitionJsonBean = new DriftRuleDefinitionJson("nameNotNull","nameNotNull", "lane", 100, 10,
-        "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true);
+        "${record:value(\"/name\")==null}", true, "nameNotNull", true, false, true, System.currentTimeMillis());
 
     Assert.assertEquals(DriftRuleDefinition.getLabel(), DriftRuleDefinitionJsonBean.getLabel());
     Assert.assertEquals(DriftRuleDefinition.getLane(), DriftRuleDefinitionJsonBean.getLane());

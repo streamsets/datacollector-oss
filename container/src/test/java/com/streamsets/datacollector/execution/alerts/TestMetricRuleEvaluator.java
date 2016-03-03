@@ -32,14 +32,11 @@ import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.el.ELEvaluator;
 import com.streamsets.datacollector.el.ELVariables;
 import com.streamsets.datacollector.execution.EventListenerManager;
-import com.streamsets.datacollector.execution.alerts.AlertManager;
-import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.StringEL;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -79,7 +76,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerMatch", "testTimerMatch",
       "testTimerMatch", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${value()>2}", false, true);
+      MetricElement.TIMER_COUNT, "${value()>2}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -101,7 +98,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerMatchDisabled",
       "testTimerMatchDisabled", "testTimerMatchDisabled", MetricType.TIMER, MetricElement.TIMER_COUNT,
-      "${value()>2}", false, false);
+      "${value()>2}", false, false, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -122,7 +119,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testTimerNoMatch", "testTimerNoMatch",
       "testTimerNoMatch", MetricType.TIMER,
-      MetricElement.TIMER_COUNT, "${value()>4}", false, true);
+      MetricElement.TIMER_COUNT, "${value()>4}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -142,7 +139,7 @@ public class TestMetricRuleEvaluator {
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testSoftErrorOnWrongCondition",
       "testSoftErrorOnWrongCondition", "testSoftErrorOnWrongCondition", MetricType.TIMER,
       //invalid condition
-      MetricElement.TIMER_COUNT, "${valu()>2", false, true);
+      MetricElement.TIMER_COUNT, "${valu()>2", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -162,7 +159,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterMatch", "testCounterMatch",
       "testCounterMatch", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "${value()>98}", false, true);
+      MetricElement.COUNTER_COUNT, "${value()>98}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -182,7 +179,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterDisabled",
       "testCounterDisabled", "testCounterDisabled", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "${value()>98}", false, false);
+      MetricElement.COUNTER_COUNT, "${value()>98}", false, false, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -201,7 +198,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testCounterNoMatch",
       "testCounterNoMatch", "testCounterNoMatch", MetricType.COUNTER,
-      MetricElement.COUNTER_COUNT, "${value()>100}", false, true);
+      MetricElement.COUNTER_COUNT, "${value()>100}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -220,7 +217,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterMatch", "testMeterMatch",
       "testMeterMatch", MetricType.METER,
-      MetricElement.METER_COUNT, "${value()>98}", false, true);
+      MetricElement.METER_COUNT, "${value()>98}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -240,7 +237,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterNoMatch", "testMeterNoMatch",
       "testMeterNoMatch", MetricType.METER,
-      MetricElement.METER_COUNT, "${value()>1001}", false, true);
+      MetricElement.METER_COUNT, "${value()>1001}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -259,7 +256,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testMeterDisabled", "testMeterDisabled",
       "testMeterDisabled", MetricType.METER,
-      MetricElement.METER_COUNT, "${value()>100}", false, false);
+      MetricElement.METER_COUNT, "${value()>100}", false, false, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -278,7 +275,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramMatch", "testHistogramMatch",
       "testHistogramMatch", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, true);
+      MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -298,7 +295,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramNoMatch",
       "testHistogramNoMatch", "testHistogramNoMatch", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_COUNT, "${value()>1}", false, true);
+      MetricElement.HISTOGRAM_COUNT, "${value()>1}", false, true, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();
@@ -317,7 +314,7 @@ public class TestMetricRuleEvaluator {
 
     MetricsRuleDefinition metricsRuleDefinition = new MetricsRuleDefinition("testHistogramDisabled",
       "testHistogramDisabled", "testHistogramDisabled", MetricType.HISTOGRAM,
-      MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, false);
+      MetricElement.HISTOGRAM_COUNT, "${value()==1}", false, false, System.currentTimeMillis());
     MetricRuleEvaluator metricRuleEvaluator = new MetricRuleEvaluator(metricsRuleDefinition, metrics,
       new AlertManager(PIPELINE_NAME, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), Collections.<String>emptyList());
     metricRuleEvaluator.checkForAlerts();

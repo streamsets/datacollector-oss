@@ -38,6 +38,7 @@ import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
+import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.ArrayList;
@@ -97,13 +98,21 @@ public class PreviewPipelineRunner implements PipelineRunner {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
-    run(pipes, badRecordsHandler, Collections.EMPTY_LIST);
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException {
+    run(pipes, badRecordsHandler, Collections.EMPTY_LIST, statsAggregationHandler);
   }
 
   @Override
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler, List<StageOutput> stageOutputsToOverride)
-      throws StageException, PipelineRuntimeException {
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      List<StageOutput> stageOutputsToOverride,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException {
     Map<String, StageOutput> stagesToSkip = new HashMap<>();
     for (StageOutput stageOutput : stageOutputsToOverride) {
       stagesToSkip.put(stageOutput.getInstanceName(), stageOutput);

@@ -55,6 +55,8 @@ import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
+import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
+import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.ErrorListener;
@@ -123,7 +125,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
   /**/
   private BlockingQueue<Object> observeRequests;
   private Observer observer;
-  private final List<BatchListener> batchListenerList = new CopyOnWriteArrayList<BatchListener>();
+  private BlockingQueue<Record> statsAggregatorRequests;
+  private final List<BatchListener> batchListenerList = new CopyOnWriteArrayList<>();
   private final Object errorRecordsMutex;
   private MemoryLimitConfiguration memoryLimitConfiguration;
   private long lastMemoryLimitNotification;
@@ -171,6 +174,10 @@ public class ProductionPipelineRunner implements PipelineRunner {
 
   public void setObserveRequests(BlockingQueue<Object> observeRequests) {
     this.observeRequests = observeRequests;
+  }
+
+  public void setStatsAggregatorRequests(BlockingQueue<Record> statsAggregatorRequests) {
+    this.statsAggregatorRequests = statsAggregatorRequests;
   }
 
   public void updateMetrics(MetricRegistryJson metricRegistryJson) {
@@ -239,7 +246,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException {
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException {
     while (!offsetTracker.isFinished() && !stop) {
       if (threadHealthReporter != null) {
         threadHealthReporter.reportHealth(ProductionPipelineRunnable.RUNNABLE_NAME, -1, System.currentTimeMillis());
@@ -248,7 +259,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
         for (BatchListener batchListener : batchListenerList) {
           batchListener.preBatch();
         }
-        runBatch(pipes, badRecordsHandler);
+        runBatch(pipes, badRecordsHandler, statsAggregationHandler);
         for (BatchListener batchListener : batchListenerList) {
           batchListener.postBatch();
         }
@@ -282,8 +293,12 @@ public class ProductionPipelineRunner implements PipelineRunner {
   }
 
   @Override
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler, List<StageOutput> stageOutputsToOverride)
-      throws StageException, PipelineRuntimeException {
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      List<StageOutput> stageOutputsToOverride,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException {
     throw new UnsupportedOperationException();
   }
 
@@ -337,7 +352,11 @@ public class ProductionPipelineRunner implements PipelineRunner {
     }
   }
 
-  private void runBatch(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws PipelineException, StageException {
+  private void runBatch(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws PipelineException, StageException {
     boolean committed = false;
     /*value true indicates that this batch is captured */
     boolean batchCaptured = false;
@@ -360,6 +379,7 @@ public class ProductionPipelineRunner implements PipelineRunner {
     sourceOffset = pipeBatch.getPreviousOffset();
     long lastBatchTime = offsetTracker.getLastBatchTime();
     Map<String, Long> memoryConsumedByStage = new HashMap<>();
+    Map<String, Object> stageBatchMetrics = new HashMap<>();
     for (Pipe pipe : pipes) {
       //set the last batch time in the stage context of each pipe
       ((StageContext)pipe.getStage().getContext()).setLastBatchTime(lastBatchTime);
@@ -372,6 +392,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
       pipe.process(pipeBatch);
       if (pipe instanceof StagePipe) {
         memoryConsumedByStage.put(pipe.getStage().getInfo().getInstanceName(), ((StagePipe)pipe).getMemoryConsumed());
+        if (isStatsAggregationEnabled()) {
+          stageBatchMetrics.put(pipe.getStage().getInfo().getInstanceName(), ((StagePipe) pipe).getBatchMetrics());
+        }
       }
     }
     enforceMemoryLimit(memoryConsumedByStage);
@@ -380,7 +403,8 @@ public class ProductionPipelineRunner implements PipelineRunner {
       offsetTracker.commitOffset();
     }
 
-    batchProcessingTimer.update(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    long batchDuration = System.currentTimeMillis() - start;
+    batchProcessingTimer.update(batchDuration, TimeUnit.MILLISECONDS);
     batchCountMeter.mark();
     batchInputRecordsHistogram.update(pipeBatch.getInputRecords());
     batchOutputRecordsHistogram.update(pipeBatch.getOutputRecords());
@@ -390,6 +414,23 @@ public class ProductionPipelineRunner implements PipelineRunner {
     batchOutputRecordsMeter.mark(pipeBatch.getOutputRecords());
     batchErrorRecordsMeter.mark(pipeBatch.getErrorRecords());
     batchErrorMessagesMeter.mark(pipeBatch.getErrorMessages());
+
+    if (isStatsAggregationEnabled()) {
+      Map<String, Object> pipelineBatchMetrics = new HashMap<>();
+      pipelineBatchMetrics.put(AggregatorUtil.PIPELINE_BATCH_DURATION, batchDuration);
+      pipelineBatchMetrics.put(AggregatorUtil.BATCH_COUNT, 1);
+      pipelineBatchMetrics.put(AggregatorUtil.BATCH_INPUT_RECORDS, pipeBatch.getInputRecords());
+      pipelineBatchMetrics.put(AggregatorUtil.BATCH_OUTPUT_RECORDS, pipeBatch.getOutputRecords());
+      pipelineBatchMetrics.put(AggregatorUtil.BATCH_ERROR_RECORDS, pipeBatch.getErrorRecords());
+      pipelineBatchMetrics.put(AggregatorUtil.BATCH_ERRORS, pipeBatch.getErrorMessages());
+      pipelineBatchMetrics.put(AggregatorUtil.STAGE_BATCH_METRICS, stageBatchMetrics);
+
+      AggregatorUtil.enqueStatsRecord(
+          AggregatorUtil.createMetricRecord(pipelineBatchMetrics),
+          statsAggregatorRequests,
+          configuration
+      );
+    }
 
     newSourceOffset = offsetTracker.getOffset();
 
@@ -419,6 +460,13 @@ public class ProductionPipelineRunner implements PipelineRunner {
     Map<String, List<Record>> errorRecords = pipeBatch.getErrorSink().getErrorRecords();
     Map<String, List<ErrorMessage>> errorMessages = pipeBatch.getErrorSink().getStageErrors();
     retainErrorsInMemory(errorRecords, errorMessages);
+
+    // Write Pipeline data rule and drift rule results to aggregator target
+    if (isStatsAggregationEnabled()) {
+      List<Record> stats = new ArrayList<>();
+      statsAggregatorRequests.drainTo(stats);
+      statsAggregationHandler.handle(sourceOffset, stats);
+    }
   }
 
   private RecordImpl getSourceRecord(Record record) {
@@ -556,5 +604,9 @@ public class ProductionPipelineRunner implements PipelineRunner {
   @Override
   public void registerListener(BatchListener batchListener) {
     batchListenerList.add(batchListener);
+  }
+
+  private boolean isStatsAggregationEnabled() {
+    return null != statsAggregatorRequests;
   }
 }

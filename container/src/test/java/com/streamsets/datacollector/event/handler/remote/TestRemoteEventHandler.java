@@ -158,7 +158,7 @@ public class TestRemoteEventHandler {
         List<MetricsRuleDefinition> metricRulesList = new ArrayList<MetricsRuleDefinition>();
         ;
         metricRulesList.add(new MetricsRuleDefinition("id", "alertText", "metricId", MetricType.GAUGE,
-          MetricElement.COUNTER_COUNT, "condition", false, true));
+          MetricElement.COUNTER_COUNT, "condition", false, true, System.currentTimeMillis()));
         RuleDefinitions ruleDefinitions =
           new RuleDefinitions(metricRulesList, new ArrayList<DataRuleDefinition>(), new ArrayList<DriftRuleDefinition>(),
             new ArrayList<String>(), id1);

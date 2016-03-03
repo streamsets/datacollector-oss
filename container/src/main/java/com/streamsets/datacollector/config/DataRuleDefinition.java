@@ -37,11 +37,26 @@ public class DataRuleDefinition extends RuleDefinition {
   /*create a meter to indicate rate of records matching the condition over time.*/
   private final boolean meterEnabled;
 
-  public DataRuleDefinition(String family, String id, String label, String lane, double samplingPercentage,
-                            int samplingRecordsToRetain, String condition, boolean alertEnabled, String alertText,
-                            ThresholdType thresholdType, String thresholdValue, long minVolume, boolean meterEnabled,
-                            boolean sendEmail, boolean enabled) {
-    super(family, id, condition, alertText, sendEmail, enabled);
+
+  public DataRuleDefinition(
+      String family,
+      String id,
+      String label,
+      String lane,
+      double samplingPercentage,
+      int samplingRecordsToRetain,
+      String condition,
+      boolean alertEnabled,
+      String alertText,
+      ThresholdType thresholdType,
+      String thresholdValue,
+      long minVolume,
+      boolean meterEnabled,
+      boolean sendEmail,
+      boolean enabled,
+      long timestamp
+  ) {
+    super(family, id, condition, alertText, sendEmail, enabled, timestamp);
     this.label = label;
     this.lane = lane;
     this.samplingPercentage = samplingPercentage;
@@ -67,7 +82,8 @@ public class DataRuleDefinition extends RuleDefinition {
       long minVolume,
       boolean meterEnabled,
       boolean sendEmail,
-      boolean enabled
+      boolean enabled,
+      long timestamp
   ) {
     this(
         RuleELRegistry.GENERAL,
@@ -84,7 +100,8 @@ public class DataRuleDefinition extends RuleDefinition {
         minVolume,
         meterEnabled,
         sendEmail,
-        enabled
+        enabled,
+        timestamp
     );
   }
 
@@ -123,5 +140,4 @@ public class DataRuleDefinition extends RuleDefinition {
   public boolean isMeterEnabled() {
     return meterEnabled;
   }
-
 }

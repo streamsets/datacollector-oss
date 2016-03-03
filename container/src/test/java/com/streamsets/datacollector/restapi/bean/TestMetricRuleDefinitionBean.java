@@ -21,11 +21,6 @@ package com.streamsets.datacollector.restapi.bean;
 
 import com.streamsets.datacollector.config.MetricElement;
 import com.streamsets.datacollector.config.MetricType;
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.MetricElementJson;
-import com.streamsets.datacollector.restapi.bean.MetricTypeJson;
-import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -40,7 +35,7 @@ public class TestMetricRuleDefinitionBean {
   public void testMetricRuleDefinitionBean() {
     com.streamsets.datacollector.config.MetricsRuleDefinition metricsRuleDefinition =
       new com.streamsets.datacollector.config.MetricsRuleDefinition("id", "Alert", "mId", MetricType.METER,
-        MetricElement.METER_H1_RATE, "condition", true, true);
+        MetricElement.METER_H1_RATE, "condition", true, true, System.currentTimeMillis());
 
     MetricsRuleDefinitionJson metricsRuleDefinitionJsonBean = new MetricsRuleDefinitionJson(metricsRuleDefinition);
 
@@ -62,11 +57,11 @@ public class TestMetricRuleDefinitionBean {
   public void testMetricRuleDefinitionBeanConstructorWithArgs() {
     com.streamsets.datacollector.config.MetricsRuleDefinition metricsRuleDefinition =
       new com.streamsets.datacollector.config.MetricsRuleDefinition("id", "Alert", "mId", MetricType.METER,
-        MetricElement.METER_H1_RATE, "condition", true, true);
+        MetricElement.METER_H1_RATE, "condition", true, true, System.currentTimeMillis());
 
     MetricsRuleDefinitionJson metricsRuleDefinitionJsonBean = new MetricsRuleDefinitionJson("id", "Alert", "mId",
       MetricTypeJson.METER,
-      MetricElementJson.METER_H1_RATE, "condition", true, true);
+      MetricElementJson.METER_H1_RATE, "condition", true, true, System.currentTimeMillis());
 
     Assert.assertEquals(metricsRuleDefinition.isEnabled(), metricsRuleDefinitionJsonBean.isEnabled());
     Assert.assertEquals(metricsRuleDefinition.isValid(), metricsRuleDefinitionJsonBean.isValid());

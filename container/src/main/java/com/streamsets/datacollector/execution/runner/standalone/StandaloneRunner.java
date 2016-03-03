@@ -33,6 +33,7 @@ import com.streamsets.datacollector.config.MemoryLimitExceeded;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinition;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JvmEL;
@@ -107,6 +108,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StandaloneRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneRunner.class);
+  public static final String STATS_NULL_TARGET = "com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget";
 
   @Inject PipelineStoreTask pipelineStoreTask;
   @Inject PipelineStateStore pipelineStateStore;
@@ -607,6 +609,17 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           new ArrayBlockingQueue<>(configuration.get(Constants.OBSERVER_QUEUE_SIZE_KEY,
             Constants.OBSERVER_QUEUE_SIZE_DEFAULT), true /* FIFO */);
 
+        BlockingQueue<Record> statsQueue = null;
+        if (isStatsAggregationEnabled(pipelineConfiguration)) {
+          statsQueue = new ArrayBlockingQueue<>(
+              configuration.get(
+                  Constants.STATS_AGGREGATOR_QUEUE_SIZE_KEY,
+                  Constants.STATS_AGGREGATOR_QUEUE_SIZE_DEFAULT
+              ),
+              true /* FIFO */
+          );
+        }
+
         //Need to augment the existing object graph with pipeline related modules.
         //This ensures that the singletons defined in those modules are singletons within the
         //scope of a pipeline.
@@ -645,6 +658,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         //This which are not injected as of now.
         productionObserver.setObserveRequests(productionObserveRequests);
         runner.setObserveRequests(productionObserveRequests);
+        runner.setStatsAggregatorRequests(statsQueue);
         runner.setDeliveryGuarantee(pipelineConfigBean.deliveryGuarantee);
         runner.setMemoryLimitConfiguration(memoryLimitConfiguration);
 
@@ -652,6 +666,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         prodPipeline.registerStatusListener(this);
 
         ScheduledFuture<?> metricsFuture = null;
+        metricsEventRunnable.setStatsQueue(statsQueue);
         int refreshInterval = configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
           MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
         if(refreshInterval > 0) {
@@ -660,6 +675,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
               TimeUnit.MILLISECONDS);
         }
         //Schedule Rules Config Loader
+        rulesConfigLoader.setStatsQueue(statsQueue);
         try {
           rulesConfigLoader.load(productionObserver);
         } catch (InterruptedException e) {
@@ -677,6 +693,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
 
         observerRunnable.setRequestQueue(productionObserveRequests);
+        observerRunnable.setStatsQueue(statsQueue);
         Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
 
         List<Future<?>> list;
@@ -698,6 +715,15 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       pipelineRunnable.run();
     }
 
+  }
+
+  private boolean isStatsAggregationEnabled(PipelineConfiguration pipelineConfiguration) {
+    boolean isEnabled = false;
+    StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
+    if (statsAggregatorStage != null && !statsAggregatorStage.getStageName().equals(STATS_NULL_TARGET)) {
+      isEnabled = true;
+    }
+    return isEnabled;
   }
 
   private void stopPipeline(boolean sdcShutting) throws PipelineException {

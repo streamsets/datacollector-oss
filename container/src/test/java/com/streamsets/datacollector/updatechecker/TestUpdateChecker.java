@@ -87,7 +87,7 @@ public class TestUpdateChecker {
     Assert.assertNotNull(uploadInfo.get("sdc.sha256"));
     Assert.assertEquals(UpdateChecker.getSha256("hello"), uploadInfo.get("sdc.sha256"));
     Assert.assertNotNull(uploadInfo.get("sdc.stages"));
-    Assert.assertEquals(9, ((List) uploadInfo.get("sdc.stages")).size());
+    Assert.assertEquals(10, ((List) uploadInfo.get("sdc.stages")).size());
     Assert.assertNotNull(((Map) ((List) uploadInfo.get("sdc.stages")).get(0)).get("name"));
     Assert.assertNotNull(((Map) ((List) uploadInfo.get("sdc.stages")).get(0)).get("version"));
     Assert.assertNotNull(((Map) ((List) uploadInfo.get("sdc.stages")).get(0)).get("library"));

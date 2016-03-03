@@ -26,7 +26,7 @@ import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 import com.streamsets.datacollector.util.Configuration;
-
+import com.streamsets.pipeline.api.Record;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,6 @@ public class DataObserverRunnable implements Runnable {
   private BlockingQueue<Object> requestQueue;
   private final DataObserverRunner dataObserverRunner;
   private final ThreadHealthReporter threadHealthReporter;
-  private MetricRegistryJson metricRegistryJson;
 
   public DataObserverRunnable(String name, String rev, ThreadHealthReporter threadHealthReporter,
                               MetricRegistry metrics, AlertManager alertManager, Configuration configuration) {
@@ -53,6 +52,10 @@ public class DataObserverRunnable implements Runnable {
 
   public void setRequestQueue(BlockingQueue<Object> requestQueue) {
     this.requestQueue = requestQueue;
+  }
+
+  public void setStatsQueue(BlockingQueue<Record> statsQueue) {
+    this.dataObserverRunner.setStatsQueue(statsQueue);
   }
 
   @Override

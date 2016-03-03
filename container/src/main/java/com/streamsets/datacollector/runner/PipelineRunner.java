@@ -23,6 +23,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
+import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.pipeline.api.StageException;
 
 import java.util.List;
@@ -35,10 +36,18 @@ public interface PipelineRunner {
 
   public MetricRegistry getMetrics();
 
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler) throws StageException, PipelineRuntimeException;
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException;
 
-  public void run(Pipe[] pipes, BadRecordsHandler badRecordsHandler, List<StageOutput> stageOutputsToOverride)
-      throws StageException, PipelineRuntimeException;
+  public void run(
+      Pipe[] pipes,
+      BadRecordsHandler badRecordsHandler,
+      List<StageOutput> stageOutputsToOverride,
+      StatsAggregationHandler statsAggregationHandler
+  ) throws StageException, PipelineRuntimeException;
 
   public List<List<StageOutput>> getBatchesOutput();
 
