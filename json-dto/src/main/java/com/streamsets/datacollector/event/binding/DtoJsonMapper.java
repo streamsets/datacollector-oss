@@ -19,18 +19,22 @@
  */
 package com.streamsets.datacollector.event.binding;
 
+import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
 import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
+import com.streamsets.datacollector.event.dto.SDCInfoEvent;
+import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.EventTypeJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
 import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 
 import fr.xebia.extras.selma.Mapper;
 import fr.xebia.extras.selma.Selma;
@@ -61,8 +65,15 @@ public abstract class DtoJsonMapper {
 
   abstract PipelineStatusEventJson toPipelineStatusEventJson(PipelineStatusEvent pipelineStatusEvent);
 
+  abstract AckEventJson toAckEventJson(AckEvent ackEvent);
+
+  abstract AckEvent asAckEventDto(AckEventJson ackEvent);
+
   abstract PipelineStatusEvent asPipelineStatusEventDto(PipelineStatusEventJson pipelineStatusEvent);
 
+  abstract SDCInfoEvent asSDCInfoEventDto(SDCInfoEventJson sdcInfoEventJson);
+
+  abstract SDCInfoEventJson toSDCInfoEventJson(SDCInfoEvent sdcInfoEvent);
 }
 
 

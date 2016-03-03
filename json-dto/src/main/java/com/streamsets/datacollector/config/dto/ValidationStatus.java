@@ -23,5 +23,6 @@ public enum ValidationStatus {
   VALIDATING,     // validating the configuration
   VALID,     // configuration is valid
   INVALID,       // configuration is invalid
-  VALIDATION_ERROR //validation failed with an exception, during validation
+  VALIDATION_ERROR, //validation failed with an exception, during validation
+  TIMED_OUT // validation timed out
 }

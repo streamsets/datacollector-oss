@@ -140,6 +140,10 @@ public enum ContainerError implements ErrorCode {
   //Email Notifier
   CONTAINER_01000("Error loading email template, reason : {}"),
 
+  // Remote Control pipelines
+  CONTAINER_01100("Cannot perform operation: '{}' on local pipeline '{}'"),
+  CONTAINER_01101("Cannot perform operation: '{}' on remote pipeline '{}'")
+
   ;
 
   private final String msg;

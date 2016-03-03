@@ -41,6 +41,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -191,8 +192,9 @@ public class PipelineStoreResource {
   public Response createPipeline(
       @PathParam("pipelineName") String name,
       @QueryParam("description") @DefaultValue("") String description)
-      throws PipelineStoreException, URISyntaxException {
+      throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "CREATE_PIPELINE");
     PipelineConfiguration pipeline = store.create(user, name, description);
 
     //Add predefined Metric Rules to the pipeline
@@ -238,8 +240,9 @@ public class PipelineStoreResource {
   @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
   public Response deletePipeline(
       @PathParam("pipelineName") String name)
-      throws PipelineStoreException, URISyntaxException {
+      throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "DELETE_PIPELINE");
     store.delete(name);
     store.deleteRules(name);
     return Response.ok().build();
@@ -257,8 +260,9 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("description") String description,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline)
-      throws PipelineStoreException, URISyntaxException {
+      throws URISyntaxException, PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "SAVE_PIPELINE");
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
@@ -310,8 +314,9 @@ public class PipelineStoreResource {
   public Response savePipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineStoreException {
+    @ApiParam(name="pipeline", required = true) RuleDefinitionsJson ruleDefinitionsJson) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "SAVE_RULES_PIPELINE");
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator();
     ruleDefinitionValidator.validateRuleDefinition(ruleDefs);

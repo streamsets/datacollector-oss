@@ -17,37 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config.json;
+package com.streamsets.datacollector.event.handler.remote;
 
-import java.util.List;
-import java.util.Map;
+public class RemotePipelineUtils {
 
-public class IssuesJson {
-  private List<IssueJson> issues;
-  private List<IssueJson> pipelineIssues;
-  private Map<String, List<IssueJson>> stageIssues;
-
-  public List<IssueJson> getIssues() {
-    return issues;
+  public static boolean isRemotePipeline(String name) {
+    return name.contains(":");
   }
 
-  public void setIssues(List<IssueJson> issues) {
-    this.issues = issues;
-  }
-
-  public List<IssueJson> getPipelineIssues() {
-    return pipelineIssues;
-  }
-
-  public void setPipelineIssues(List<IssueJson> pipelineIssues) {
-    this.pipelineIssues = pipelineIssues;
-  }
-
-  public Map<String, List<IssueJson>> getStageIssues() {
-    return stageIssues;
-  }
-
-  public void setStageIssues(Map<String, List<IssueJson>> stageIssues) {
-    this.stageIssues = stageIssues;
-  }
 }

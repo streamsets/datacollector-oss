@@ -28,6 +28,8 @@ public class ExecutorConstants {
   public static final int RUNNER_THREAD_POOL_SIZE_MULTIPLIER = 10;
   public static final String MANAGER_EXECUTOR_THREAD_POOL_SIZE_KEY = "manager.executor.thread.pool.size";
   public static final int MANAGER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 4;
+  public static final String EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY = "event.executor.thread.pool.size";
+  public static final int EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 2;
 
   private ExecutorConstants() {}
 }

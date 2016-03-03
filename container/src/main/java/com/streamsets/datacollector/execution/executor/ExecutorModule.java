@@ -64,6 +64,13 @@ public class ExecutorModule {
       "managerExecutor");
   }
 
+  @Provides @Singleton @Named("eventHandlerExecutor")
+  public SafeScheduledExecutorService provideEventExecutor(Configuration configuration) {
+    return new SafeScheduledExecutorService(
+      configuration.get(ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY, ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT),
+      "eventHandlerExecutor");
+  }
+
   @Provides @Singleton
   ResourceManager provideResourceManager(Configuration configuration) {
     return new ResourceManager(configuration);

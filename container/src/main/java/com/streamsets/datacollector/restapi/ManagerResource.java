@@ -44,9 +44,11 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +67,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,9 +133,10 @@ public class ManagerResource {
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
-    throws PipelineStoreException, PipelineRuntimeException, StageException, PipelineRunnerException, PipelineManagerException {
+    throws StageException, PipelineException {
     if(pipelineName != null) {
       RestAPIUtils.injectPipelineInMDC(pipelineName);
+      RestAPIUtils.validateNotRemote(pipelineName, "START_PIPELINE");
       try {
         Runner runner = manager.getRunner(user, pipelineName, rev);
         Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
@@ -162,6 +166,7 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
+    RestAPIUtils.validateNotRemote(pipelineName, "STOP_PIPELINE");
     Runner runner = manager.getRunner(user, pipelineName, rev);
     Utils.checkState(runner.getState().getExecutionMode() != ExecutionMode.SLAVE,
       "This operation is not supported in SLAVE mode");
@@ -176,9 +181,9 @@ public class ManagerResource {
   @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
   public Response resetOffset(
       @PathParam("pipelineName") String name,
-      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineStoreException,
-    PipelineRunnerException, PipelineRunnerException, PipelineManagerException {
+      @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "RESET_OFFSET_PIPELINE");
     Runner runner = manager.getRunner(user, name, rev);
     runner.resetOffset();
     return Response.ok().build();
@@ -345,6 +350,7 @@ public class ManagerResource {
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
+
     Runner runner = manager.getRunner(user, pipelineName, rev);
     if(runner != null) {
       runner.deleteHistory();
@@ -405,8 +411,9 @@ public class ManagerResource {
   public Response getHistory(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineStoreException, PipelineManagerException {
+    @QueryParam("fromBeginning") @DefaultValue("false") boolean fromBeginning) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(name);
+    RestAPIUtils.validateNotRemote(name, "DELETE_HISTORY_PIPELINE");
     Runner runner = manager.getRunner(user, name, rev);
     if(runner != null) {
       return Response.ok().type(MediaType.APPLICATION_JSON).entity(
@@ -466,9 +473,9 @@ public class ManagerResource {
   public Response deleteAlert(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
-    @QueryParam("alertId") String alertId) throws PipelineStoreException,
-    PipelineRunnerException, PipelineManagerException {
+    @QueryParam("alertId") String alertId) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC(pipelineName);
+    RestAPIUtils.validateNotRemote(pipelineName, "DELETE_ALERTS_PIPELINE");
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(
       manager.getRunner(user, pipelineName, rev).deleteAlert(alertId)).build();
   }

@@ -17,19 +17,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.dto;
+package com.streamsets.datacollector.event.handler;
 
-public enum EventType  {
-  VALIDATE_PIPELINE,
-  SAVE_PIPELINE,
-  SAVE_RULES_PIPELINE,
-  START_PIPELINE,
-  STOP_PIPELINE,
-  RESET_OFFSET_PIPELINE,
-  DELETE_PIPELINE,
-  DELETE_HISTORY_PIPELINE,
-  PING_FREQUENCY_ADJUSTMENT,
-  STATUS_PIPELINE,
-  ACK_EVENT,
-  SDC_INFO_EVENT
+import javax.inject.Inject;
+
+import com.streamsets.datacollector.task.AbstractTask;
+
+public class NoOpEventHandlerTask extends AbstractTask implements EventHandlerTask {
+
+  @Inject
+  public NoOpEventHandlerTask() {
+    super("NO_OP_HANDLER_TASK");
+  }
 }

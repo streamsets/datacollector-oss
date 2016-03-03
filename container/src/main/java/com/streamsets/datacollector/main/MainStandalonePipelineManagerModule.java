@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.event.handler.dagger.EventHandlerModule;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.manager.standalone.dagger.StandalonePipelineManagerModule;
@@ -70,8 +71,8 @@ public class MainStandalonePipelineManagerModule { //Need better name
     //This ensures that
     //1. PipelineTask references the above pipeline manager
     //2. Both PipelineTask and PipelineManager refer to the same instance of RuntimeInfo, PipelineStore which is
-    //  a sdc level singleton.
-    this.objectGraph = objectGraph.plus(new WebServerModule(m), PipelineTaskModule.class);
+    // "  a sdc level singleton.
+      this.objectGraph = objectGraph.plus(new WebServerModule(m), EventHandlerModule.class, PipelineTaskModule.class);
   }
 
   @Provides @Singleton

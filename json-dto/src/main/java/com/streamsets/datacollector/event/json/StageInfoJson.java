@@ -17,19 +17,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.dto;
+package com.streamsets.datacollector.event.json;
 
-public enum EventType  {
-  VALIDATE_PIPELINE,
-  SAVE_PIPELINE,
-  SAVE_RULES_PIPELINE,
-  START_PIPELINE,
-  STOP_PIPELINE,
-  RESET_OFFSET_PIPELINE,
-  DELETE_PIPELINE,
-  DELETE_HISTORY_PIPELINE,
-  PING_FREQUENCY_ADJUSTMENT,
-  STATUS_PIPELINE,
-  ACK_EVENT,
-  SDC_INFO_EVENT
+public class StageInfoJson {
+
+  private String stageName;
+  private int stageVersion;
+  private String libraryName;
+
+  public String getStageName() {
+    return stageName;
+  }
+
+  public void setStageName(String stageName) {
+    this.stageName = stageName;
+  }
+
+  public int getStageVersion() {
+    return stageVersion;
+  }
+
+  public void setStageVersion(int stageVersion) {
+    this.stageVersion = stageVersion;
+  }
+
+  public String getLibraryName() {
+    return libraryName;
+  }
+
+  public void setLibraryName(String libraryName) {
+    this.libraryName = libraryName;
+  }
+
 }

@@ -19,7 +19,11 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.event.handler.remote.RemotePipelineUtils;
+import com.streamsets.datacollector.util.ContainerError;
+import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.lib.log.LogConstants;
+
 import org.slf4j.MDC;
 
 public class RestAPIUtils {
@@ -27,6 +31,12 @@ public class RestAPIUtils {
 
   static void injectPipelineInMDC(String pipeline) {
     MDC.put(LogConstants.ENTITY, pipeline);
+  }
+
+  static void validateNotRemote(String name, String operation) throws PipelineException {
+    if (RemotePipelineUtils.isRemotePipeline(name)) {
+      throw new PipelineException(ContainerError.CONTAINER_01101, operation, name);
+    }
   }
 
 }

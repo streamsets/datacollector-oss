@@ -19,9 +19,8 @@
  */
 package com.streamsets.datacollector.event.dto;
 
-import com.streamsets.datacollector.config.dto.Issues;
-import com.streamsets.datacollector.config.dto.PipelineStatus;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.execution.PipelineStatus;
 
 public class PipelineStatusEvent implements Event {
 
@@ -30,19 +29,29 @@ public class PipelineStatusEvent implements Event {
   private PipelineStatus pipelineStatus;
   private String message;
   private ValidationStatus validationStatus;
-  private Issues issues;
+  private String issues;
+  private boolean isRemote;
 
   public PipelineStatusEvent() {
   }
 
-  public PipelineStatusEvent(String name, String rev, PipelineStatus pipelineStatus,
-    String message, ValidationStatus validationStatus, Issues issues) {
+  public PipelineStatusEvent(String name, String rev, boolean isRemote, PipelineStatus pipelineStatus,
+    String message, ValidationStatus validationStatus, String issues) {
     this.name = name;
     this.rev = rev;
     this.pipelineStatus = pipelineStatus;
     this.message = message;
     this.validationStatus = validationStatus;
     this.issues = issues;
+    this.isRemote = isRemote;
+  }
+
+  public boolean isRemote() {
+    return isRemote;
+  }
+
+  public void setRemote(boolean isRemote) {
+    this.isRemote = isRemote;
   }
 
   public String getName() {
@@ -86,11 +95,11 @@ public class PipelineStatusEvent implements Event {
     this.validationStatus = validationStatus;
   }
 
-  public Issues getIssues() {
+  public String getIssues() {
     return issues;
   }
 
-  public void setIssues(Issues issues) {
+  public void setIssues(String issues) {
     this.issues = issues;
   }
 

@@ -19,7 +19,6 @@
  */
 package com.streamsets.datacollector.event.json;
 
-import com.streamsets.datacollector.config.json.IssuesJson;
 import com.streamsets.datacollector.config.json.PipelineStatusJson;
 import com.streamsets.datacollector.config.json.ValidationStatusJson;
 
@@ -30,7 +29,8 @@ public class PipelineStatusEventJson implements EventJson {
   private PipelineStatusJson pipelineStatus;
   private String message;
   private ValidationStatusJson validationStatus;
-  private IssuesJson issues;
+  private String issues;
+  private boolean isRemote;
 
   public PipelineStatusJson getPipelineStatus() {
     return pipelineStatus;
@@ -52,15 +52,23 @@ public class PipelineStatusEventJson implements EventJson {
     return validationStatus;
   }
 
+  public boolean isRemote() {
+    return isRemote;
+  }
+
+  public void setRemote(boolean isRemote) {
+    this.isRemote = isRemote;
+  }
+
   public void setValidationStatus(ValidationStatusJson validationStatus) {
     this.validationStatus = validationStatus;
   }
 
-  public IssuesJson getIssues() {
+  public String getIssues() {
     return issues;
   }
 
-  public void setIssues(IssuesJson issues) {
+  public void setIssues(String issues) {
     this.issues = issues;
   }
 

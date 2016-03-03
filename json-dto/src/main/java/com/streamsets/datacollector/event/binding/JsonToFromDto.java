@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PingFrequencyAdjustmentEvent;
@@ -35,6 +36,8 @@ import com.streamsets.datacollector.event.dto.PipelineBaseEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveEvent;
 import com.streamsets.datacollector.event.dto.PipelineSaveRulesEvent;
 import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
+import com.streamsets.datacollector.event.dto.SDCInfoEvent;
+import com.streamsets.datacollector.event.json.AckEventJson;
 import com.streamsets.datacollector.event.json.EventJson;
 import com.streamsets.datacollector.event.json.EventTypeJson;
 import com.streamsets.datacollector.event.json.PingFrequencyAdjustmentEventJson;
@@ -42,6 +45,7 @@ import com.streamsets.datacollector.event.json.PipelineBaseEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveRulesEventJson;
 import com.streamsets.datacollector.event.json.PipelineStatusEventJson;
+import com.streamsets.datacollector.event.json.SDCInfoEventJson;
 
 public class JsonToFromDto {
 
@@ -67,8 +71,8 @@ public class JsonToFromDto {
     return mapper.readValue(body, type);
   }
 
-  public String serialize(Event event) throws JsonProcessingException {
-    return mapper.writeValueAsString(event);
+  public String serialize(Object object) throws JsonProcessingException {
+    return mapper.writeValueAsString(object);
   }
 
   public EventTypeJson toJson(EventType eventType) {
@@ -93,6 +97,12 @@ public class JsonToFromDto {
         break;
       case STATUS_PIPELINE:
         eventJson = DtoJsonMapper.INSTANCE.toPipelineStatusEventJson((PipelineStatusEvent) event);
+        break;
+      case ACK_EVENT:
+        eventJson = DtoJsonMapper.INSTANCE.toAckEventJson((AckEvent) event);
+        break;
+      case SDC_INFO_EVENT:
+        eventJson = DtoJsonMapper.INSTANCE.toSDCInfoEventJson((SDCInfoEvent) event);
         break;
       case START_PIPELINE:
       case STOP_PIPELINE:
@@ -122,6 +132,12 @@ public class JsonToFromDto {
         break;
       case STATUS_PIPELINE:
         event = DtoJsonMapper.INSTANCE.asPipelineStatusEventDto((PipelineStatusEventJson) eventJson);
+        break;
+      case ACK_EVENT:
+        event = DtoJsonMapper.INSTANCE.asAckEventDto((AckEventJson) eventJson);
+        break;
+      case SDC_INFO_EVENT:
+        event = DtoJsonMapper.INSTANCE.asSDCInfoEventDto((SDCInfoEventJson) eventJson);
         break;
       case START_PIPELINE:
       case STOP_PIPELINE:
