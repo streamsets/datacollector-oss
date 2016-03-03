@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinPartitioner implements StreamsPartitioner {
 
-  private final AtomicInteger counter = new AtomicInteger((new Random()).nextInt());
+  private final AtomicInteger counter = new AtomicInteger((new Random()).nextInt(Integer.MAX_VALUE));
 
   @Override
   public int partition(
@@ -39,8 +39,11 @@ public class RoundRobinPartitioner implements StreamsPartitioner {
       byte[] valueBytes,
       int numPartitions
   ) {
-    int partition = counter.getAndIncrement();
-    return partition % numPartitions;
+    int partition = counter.getAndIncrement() % numPartitions;
+    if(counter.get() == Integer.MAX_VALUE) {
+      counter.set(0);
+    }
+    return partition;
   }
 
   @Override
