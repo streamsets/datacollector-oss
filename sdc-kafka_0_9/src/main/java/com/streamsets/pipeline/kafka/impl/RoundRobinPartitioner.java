@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RoundRobinPartitioner implements Partitioner {
 
-  private final AtomicInteger counter = new AtomicInteger((new Random()).nextInt());
+  private final AtomicInteger counter = new AtomicInteger((new Random()).nextInt(Integer.MAX_VALUE));
 
   @Override
   public int partition(
@@ -41,8 +41,11 @@ public class RoundRobinPartitioner implements Partitioner {
       Cluster cluster
   ) {
     int availablePartitions = cluster.partitionCountForTopic(topic);
-    int partition = counter.getAndIncrement();
-    return partition % availablePartitions;
+    int partition = counter.getAndIncrement() % availablePartitions;
+    if (counter.get() == Integer.MAX_VALUE) {
+      counter.set(0);
+    }
+    return partition;
   }
 
   @Override
