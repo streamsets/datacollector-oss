@@ -882,6 +882,324 @@
                     </table>
                 </info>
             </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">ORIGIN STEPS used by matching
+                        producer</draft-comment>
+                </cmd>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta">The following steps are used in JDBC Consumer
+                        &amp; Producer config topics.</draft-comment>
+                </cmd>
+            </step>
+            <step id="JDBC-Credentials">
+                <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
+                    configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Credentials Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Username</entry>
+                                    <entry>User name for the JDBC connection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Password</entry>
+                                    <entry>Password for the JDBC account</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="JDBC-Legacy">
+                <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
+                        Drivers</uicontrol> tab, optionally configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Legacy Driver Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>JDBC Class Driver Name</entry>
+                                    <entry>Class name for the JDBC driver. Required for JDBC
+                                        versions older than version 4.0.</entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Health Test Query</entry>
+                                    <entry>Optional query to test the health of a connection.
+                                        Recommended only when the JDBC version is older than 4.0.
+                                    </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>RabbitMQ</uicontrol> - Entire step
+                        used by Consumer, rows used by Producer</draft-comment>
+                </cmd>
+            </step>
+            <step id="RabbitMQ">
+                <cmd>On the <wintitle>RabbitMQ</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>RabbitMQ Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row id="Rabbit-URI">
+                                    <entry>URI</entry>
+                                    <entry>RabbitMQ URI. <p>Typically uses the following format:
+                                                <codeph>amqp:&lt;host>:&lt;port>/&lt;virtualhost></codeph>.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Consumer Tag</entry>
+                                    <entry>RabbitMQ consumer tag. Leave empty to use an
+                                        automatically generated consumer tag. </entry>
+                                </row>
+                                <row id="Rabbit-AddConfig">
+                                    <entry>Additional Client Configuration</entry>
+                                    <entry>Additional RabbitMQ client configuration properties to
+                                        use. To add properties, click <uicontrol>Add</uicontrol> and
+                                        define the RabbitMQ client property name and value. <p>Use
+                                            the property names and values as expected by RabbitMQ.
+                                        </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MaxBatchSize">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/BatchWaitTime">
+                                    <entry/>
+                                </row>
+                                <row id="Rabbit-UseCreds">
+                                    <entry>Use Credentials</entry>
+                                    <entry>Enables the use of RabbitMQ credentials.</entry>
+                                </row>
+                                <row>
+                                    <entry>Data Format</entry>
+                                    <entry>Type of data to be read. Use one of the following data
+                                            formats:<ul id="ul_epm_gg4_q5">
+                                            <li>Avro</li>
+                                            <li>Binary</li>
+                                            <li>Delimited</li>
+                                            <li>JSON</li>
+                                            <li>Log</li>
+                                            <li>Protobuf</li>
+                                            <li>SDC Record</li>
+                                            <li>Text</li>
+                                            <li>XML</li>
+                                        </ul></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="Rabbit-CredentialsStep">
+                <cmd>On the <wintitle>Credentials</wintitle> tab, enter the RabbitMQ credentials to
+                    use if you enabled credentials.</cmd>
+            </step>
+            <step id="Rabbit-QueueStep">
+                <cmd>On the <wintitle>Queue</wintitle> tab, configure the following queue
+                    properties:</cmd>
+                <info>These properties directly correspond to RabbitMQ properties. For more
+                    information, see the RabbitMQ documentation. <draft-comment author="Loretta"
+                        >Check the wording - it's for Consumer. Does it work for Producer?
+                        Rewritable?</draft-comment><table frame="all" rowsep="1" colsep="1"
+                        id="table_sxy_wg4_q5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Queue Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Name of the queue to create.</entry>
+                                </row>
+                                <row>
+                                    <entry>Durable</entry>
+                                    <entry>Creates a durable queue when selected. <p>By default, the
+                                            origin creates a durable queue.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Exclusive</entry>
+                                    <entry>Creates an exclusive queue when selected. When exclusive,
+                                        the queue allows only the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> to use it.<p>By default, the origin creates an exclusive
+                                            queue.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Auto-Delete</entry>
+                                    <entry>Automatically deletes a queue after all consumers
+                                        unsubscribe. <p>When used with an exclusive queue, the queue
+                                            is automatically deleted when you stop the pipeline.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Declaration Properties</entry>
+                                    <entry>Additional queue declaration properties to use. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
+            <step id="Rabbit-ExchangeStep">
+                <cmd>On the <wintitle>Exchange</wintitle> tab, optionally configure the following
+                    binding properties for the bindings that you want to use. When no bindings are
+                    configured, the default exchange is used.</cmd>
+                <info>These properties directly correspond to RabbitMQ properties. For more
+                    information, see the RabbitMQ documentation. <table frame="all" rowsep="1"
+                        colsep="1" id="table_ufb_p34_q5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Exchange Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Name</entry>
+                                    <entry>Binding name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Type</entry>
+                                    <entry>Binding type.</entry>
+                                </row>
+                                <row>
+                                    <entry>Durable</entry>
+                                    <entry>Creates a durable exchange.</entry>
+                                </row>
+                                <row>
+                                    <entry>Auto-Delete</entry>
+                                    <entry>Automatically deletes an exchange when all queues are
+                                        finished using it.</entry>
+                                </row>
+                                <row>
+                                    <entry>Routing Key</entry>
+                                    <entry>Routing key. <p>Leave empty to default to the queue
+                                            name.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Declaration Properties</entry>
+                                    <entry>Additional exchange properties to use.</entry>
+                                </row>
+                                <row>
+                                    <entry>Binding Properties</entry>
+                                    <entry>Additional binding properties to use. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
+            <step id="Rabbit-AdvancedStep">
+                <cmd>Optionally configure advanced options on the <wintitle>Advanced</wintitle>
+                    tab.</cmd>
+                <info>These properties directly correspond to RabbitMQ properties. For more
+                    information, see the RabbitMQ documentation. </info>
+                <info>Generally, you should use the defaults for these properties:<table frame="all"
+                        rowsep="1" colsep="1" id="table_ebg_144_q5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Advanced Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Automatic Recovery Enabled</entry>
+                                    <entry>Determines whether to attempt to reestablish a
+                                        connection.</entry>
+                                </row>
+                                <row>
+                                    <entry>Network Recovery Interval</entry>
+                                    <entry>Milliseconds to wait before attempting to reestablish a
+                                        network connection. <p>Default is 5000.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Connection Timeout (ms)</entry>
+                                    <entry>Milliseconds for the connection to establish. Use 0 to
+                                        opt out of a connection timeout. <p>Default is
+                                        0.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Handshake Timeout (ms)</entry>
+                                    <entry>Milliseconds for the handshake to complete.</entry>
+                                </row>
+                                <row>
+                                    <entry>Shutdown Timeout (ms)</entry>
+                                    <entry>Milliseconds for the shutdown to complete. </entry>
+                                </row>
+                                <row>
+                                    <entry>Heartbeat Timeout (secs)</entry>
+                                    <entry>Seconds to wait for a heartbeat to verify that RabbitMQ
+                                        is up and the connection still available.<p>Use 0 to avoid
+                                            requesting heartbeats. Default is 0.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Maximum Frame Size (bytes)</entry>
+                                    <entry>Maximum frame size in bytes. Use for performance tuning.
+                                            <p>Setting a larger value can improve throughput.
+                                            Setting a smaller value can improve latency.</p><p>Use 0
+                                            for no limit. Default is 0.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Maximum Channel Number</entry>
+                                    <entry>Maximum number of channels allowed. </entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table></info>
+            </step>
             <step id="PROCESSORS">
                 <cmd>
                     <draft-comment author="Loretta"
@@ -999,72 +1317,6 @@
                                         to enter the stage for processing. Click
                                             <uicontrol>Add</uicontrol> to create additional
                                         preconditions. </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta">The following steps are used in JDBC Consumer
-                        &amp; Producer config topics.</draft-comment>
-                </cmd>
-            </step>
-            <step id="JDBC-Credentials">
-                <cmd>When using JDBC credentials, on the <uicontrol>Credentials</uicontrol> tab,
-                    configure the following properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ybf_v1w_ht">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Credentials Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Username</entry>
-                                    <entry>User name for the JDBC connection.</entry>
-                                </row>
-                                <row>
-                                    <entry>Password</entry>
-                                    <entry>Password for the JDBC account</entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step id="JDBC-Legacy">
-                <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
-                        Drivers</uicontrol> tab, optionally configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Legacy Driver Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>JDBC Class Driver Name</entry>
-                                    <entry>Class name for the JDBC driver. Required for JDBC
-                                        versions older than version 4.0.</entry>
-                                </row>
-                                <row>
-                                    <entry>Connection Health Test Query</entry>
-                                    <entry>Optional query to test the health of a connection.
-                                        Recommended only when the JDBC version is older than 4.0.
-                                    </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -1798,7 +2050,8 @@
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>KafkaConfig</uicontrol> - used for
                         the Kafka Producer - Kafka tab properties. Rows in the table are used for
-                        Configuring a Pipeline, error handling > Write to Kafka.</draft-comment>
+                        Configuring a Pipeline, error handling > Write to Kafka. -- Message per
+                        Batch also used by RabbitMQ Producer.</draft-comment>
                 </cmd>
             </step>
             <step id="KafkaConfig">
@@ -1920,6 +2173,9 @@
                         </table>
                     </p>
                 </info>
+            </step>
+            <step>
+                <cmd/>
             </step>
             <step>
                 <cmd>

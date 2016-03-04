@@ -23,6 +23,9 @@
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
             </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/RabbitMQ">
+                <cmd/>
+            </step>
             <step>
                 <cmd>On the <wintitle>RabbitMQ</wintitle> tab, configure the following
                     properties:</cmd>

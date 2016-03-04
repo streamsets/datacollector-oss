@@ -14,6 +14,8 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pxj_rvy_dv">
- <title>RabbitMQ Destination</title>
- <shortdesc>Information to come.</shortdesc>
+ <title>RabbitMQ Producer</title>
+ <shortdesc>RabbitMQ Producer writes messages from a single RabbitMQ queue. <draft-comment
+            author="Loretta">writes to a single queue? or multiple? see what else needs to be
+            doc'd.</draft-comment></shortdesc>
 </concept>
