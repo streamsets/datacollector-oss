@@ -25,6 +25,19 @@
   <p>
    <dl>
         <dlentry>
+          <dt>str:concat("&lt;string1>", "&lt;string2>")</dt>
+          <dd>Concatenates two strings together. </dd>
+          <dd>Uses the following arguments:<ul id="ul_w3w_w2t_2v">
+              <li>string1 - The first string to concatenate.</li>
+              <li>string2 - The second string to concatenate.</li>
+            </ul></dd>
+          <dd>Use the str:concat function to concatenate strings within an expression. For example,
+            to concatenate the FirstName field with the LastName field and then check if that result
+            matches a pattern, use the following expression:</dd>
+          <dd>${str:matches(str:concat(record:value("/FirstName") , record:value("/LastName")) ,
+            "[A-Z][a-z]+[A-Z][a-z]+")}</dd>
+        </dlentry>
+        <dlentry>
           <dt>str:contains("&lt;string>", "&lt;subset>")</dt>
           <dd>Returns a true or false based on whether the string contains the configured subset of
             characters.</dd>
@@ -45,6 +58,16 @@
           <dd>For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
         </dlentry>
         <dlentry>
+          <dt>str:matches("&lt;string>", &lt;regEx>)</dt>
+          <dd>Returns true or false based on whether a string matches a Java regex pattern.</dd>
+          <dd>Uses the following arguments:<ul id="ul_tf5_y4k_br">
+            <li>string - The string to evaluate.</li>
+            <li>regEx - Regular expression that describes the pattern of the string.</li>
+          </ul></dd>
+          <dd>For example, ${str:matches(record:value("/HostName"), ".*\.com$")} checks if the
+            string in the HostName field ends with the characters ".com".</dd>
+        </dlentry>
+     <dlentry>
           <dt>str:regExCapture("&lt;string>", &lt;regEx>, &lt;group>)</dt>
           <dd>Parses a complex string into groups based on a Java regex pattern and returns the
             specified group.</dd>

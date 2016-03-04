@@ -94,8 +94,10 @@
        <entry>
         <p>
          <ul id="ul_f15_xf2_gs">
+          <li>str:concat("&lt;string1>", "&lt;string2>")</li>
           <li>str:contains("&lt;string>", "&lt;subset>") </li>
           <li>str:endsWith("&lt;string>", "&lt;subset>")</li>
+          <li>str:matches("&lt;string>", &lt;regEx>)</li>
           <li>str:regexCapture("&lt;string>", &lt;regEx>, &lt;group>)</li>
           <li>str:replace("&lt;string>", "&lt;oldChar>", "&lt;newChar>")</li>
           <li>str:replaceAll("&lt;string>", "&lt;regEx>", "&lt;newString>")</li>
