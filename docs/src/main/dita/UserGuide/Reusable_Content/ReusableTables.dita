@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_wfr_rnw_yq">
  <title>Reusable Tables of Information</title>
- <shortdesc></shortdesc>
+ <shortdesc/>
  <conbody>
   <p>
    <draft-comment author="Loretta">The following IgnoreControlChar-row is used in Configuring a -
@@ -38,9 +38,10 @@
    </table>
   </p>
   <p>
-   <draft-comment author="Loretta">ORIGIN rows - The following MaxBatchSize and BatchWaitTime rows
-    are used in Configuring Kafka Consumer, JMS Consumer. See if they should go anywhere
-    else.</draft-comment>
+   <draft-comment author="Loretta">ORIGIN rows - <uicontrol>ProduceSingleRec</uicontrol> is used by
+    Kafka Consumer and MapR Streams Consumer. <uicontrol>MaxBatchSize</uicontrol> and
+     <uicontrol>BatchWaitTime</uicontrol> rows are used in Configuring Kafka Consumer, JMS Consumer.
+    See if they should go anywhere else.</draft-comment>
    <draft-comment author="Loretta">Charsets are used by message and file origins. But Directory
     Charset is standalone. </draft-comment>
    <table frame="all" rowsep="1" colsep="1" id="table_tft_4jk_dt">
@@ -48,6 +49,16 @@
      <colspec colname="c1" colnum="1" colwidth="1*"/>
      <colspec colname="c2" colnum="2" colwidth="3.5*"/>
      <tbody>
+      <row>
+       <entry/>
+       <entry/>
+      </row>
+      <row id="ProduceSingleRec">
+       <entry>Produce Single Record</entry>
+       <entry>For each partition, generates a single record for records that include multiple
+        objects. <p>When not selected, the origin generates multiple records when a record includes
+         multiple objects.</p></entry>
+      </row>
       <row id="MaxBatchSize">
        <entry>Max Batch Size (records)</entry>
        <entry>Maximum number of records processed at one time. Honors values up to the <ph

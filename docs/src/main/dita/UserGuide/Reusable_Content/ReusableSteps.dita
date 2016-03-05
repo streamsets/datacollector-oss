@@ -275,10 +275,10 @@
                 <cmd>
                     <draft-comment author="Loretta"
                             ><uicontrol>1stStep-StageLib-EHandling</uicontrol> - Use this step for
-                        origins with stage libraries.</draft-comment>
+                        non-cluster origins with stage libraries. </draft-comment>
                 </cmd>
             </step>
-            <step>
+            <step id="1stStep-StageLib-EHandling">
                 <cmd>In the Properties panel, on the <wintitle>General</wintitle> tab, configure the
                     following properties:</cmd>
                 <info>
@@ -427,6 +427,37 @@
                                             file.</p><p>You can optionally use the
                                             runtime:loadResource function to use a schema definition
                                             stored in a runtime resource file. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
+                    <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by Kafka
+                        and Kinesis Consumer</draft-comment>
+                </cmd>
+            </step>
+            <step id="O-Binary">
+                <cmd>For binary data, click the <wintitle>Binary</wintitle> tab and configure the
+                    following property:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Binary Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Data Size</entry>
+                                    <entry>Maximum number of bytes in the message. Larger messages
+                                        cannot be processed or written to error. </entry>
                                 </row>
                             </tbody>
                         </tgroup>
@@ -674,112 +705,6 @@
             </step>
             <step>
                 <cmd>
-                    <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
-                        Kafka Consumer, JMS Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
-                </cmd>
-            </step>
-            <step id="Text">
-                <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_LogData">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Text Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Max Line Length</entry>
-                                    <entry>Maximum number of characters allowed for a line. Longer
-                                        lines are truncated.<p>Adds a boolean field to the record to
-                                            indicate if it was truncated. The field name is
-                                            Truncated. </p></entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
-                        message and file based origins: JMS Consumer, Kafka Consumer, Hadoop FS,
-                        Kinesis Consumer, Directory, S3, HTTP Client, maybe more.</draft-comment>
-                </cmd>
-            </step>
-            <step id="XMLprops">
-                <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
-                    properties:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_nxh_bc2_2t">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>XML Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Delimiter Element</entry>
-                                    <entry>
-                                        <p>XML element that acts as a delimiter. Omit a delimiter to
-                                            treat the entire XML document as one record.</p>
-                                    </entry>
-                                </row>
-                                <row>
-                                    <entry>Max Record Length (chars)</entry>
-                                    <entry>
-                                        <p>The maximum number of characters in a record. Longer
-                                            records are diverted to the pipeline for error handling.
-                                        </p>
-                                    </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
-                    <draft-comment author="Loretta"><uicontrol>O-Binary </uicontrol>. Used by Kafka
-                        and Kinesis Consumer</draft-comment>
-                </cmd>
-            </step>
-            <step id="O-Binary">
-                <cmd>For binary data, on the <wintitle>Binary</wintitle> tab, configure the
-                    following property:</cmd>
-                <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_dpx_kdm_35">
-                        <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
-                            <thead>
-                                <row>
-                                    <entry>Binary Property</entry>
-                                    <entry>Description</entry>
-                                </row>
-                            </thead>
-                            <tbody>
-                                <row>
-                                    <entry>Max Data Size</entry>
-                                    <entry>Maximum number of bytes in the message. Larger messages
-                                        cannot be processed or written to error. </entry>
-                                </row>
-                            </tbody>
-                        </tgroup>
-                    </table>
-                </info>
-            </step>
-            <step>
-                <cmd>
                     <draft-comment author="Loretta"><uicontrol>O-PROTO-Mess</uicontrol>. Step used
                         by message-reading stages except for Kafka. Kafka conrefs the first two rows
                         of table. <p>NOTE: When making changes, make sure to update the file version
@@ -882,7 +807,81 @@
                     </table>
                 </info>
             </step>
-            <step>
+            <step > <cmd>                     
+                <draft-comment author="Loretta"><uicontrol>TEXT data</uicontrol> - Directory,
+                    Kafka Consumer, JMS Consumer, Hadoop FS, Kinesis Consumer</draft-comment>
+            </cmd>
+            </step>        
+                <step id="Text">
+                    <cmd>For text data, on the <uicontrol>Text</uicontrol> tab, configure the following properties:</cmd>
+                <info>
+                    <table frame="all" rowsep="1" colsep="1" id="table_ngy_vcc_fv">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Text Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Max Line Length</entry>
+                                    <entry>Maximum number of characters allowed for a line. Longer
+                                        lines are truncated.<p>Adds a boolean field to the record to
+                                            indicate if it was truncated. The field name is
+                                            Truncated. </p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+               
+            </step>
+            
+            
+            <step><cmd>
+                <draft-comment author="Loretta"><uicontrol>XML data </uicontrol>- step used by
+                    message and file based origins: JMS Consumer, Kafka Consumer, Hadoop FS,
+                    Kinesis Consumer, Directory, S3, HTTP Client, maybe more.</draft-comment>
+                    </cmd></step>
+            
+            <step id="XMLprops">
+                <cmd>For XML data, on the <wintitle>XML</wintitle> tab, configure the following
+                    properties:</cmd>      
+            <info>
+                <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                    <tgroup cols="2">
+                        <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                        <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                        <thead> <row>                         
+                            <entry>XML Property</entry>
+                            <entry>Description</entry></row>  
+                        </thead>
+       <tbody>                
+            <row>
+                <entry>Delimiter Element</entry>
+                <entry>
+                    <p>XML element that acts as a delimiter. Omit a delimiter to
+                        treat the entire XML document as one record.</p>
+                </entry>
+            </row>
+            <row>
+                <entry>Max Record Length (chars)</entry>
+                <entry>
+                    <p>The maximum number of characters in a record. Longer
+                        records are diverted to the pipeline for error handling.
+                    </p>
+                </entry>         
+            </row> 
+            </tbody>
+            </tgroup>
+                </table>
+            </info></step>
+                
+                
+           <step>     
                 <cmd>
                     <draft-comment author="Loretta">ORIGIN STEPS used by matching
                         producer</draft-comment>
@@ -922,19 +921,19 @@
                     </table>
                 </info>
             </step>
+            
             <step id="JDBC-Legacy">
                 <cmd>When using JDBC versions older than 4.0, on the <uicontrol>Legacy
                         Drivers</uicontrol> tab, optionally configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_ojq_d4s_bs">
+                    <table frame="all" rowsep="1" colsep="1" id="table_LogData">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Legacy Driver Property</entry>
-                                    <entry>Description</entry>
+                                    <entry>Legacy Driver Property</entry>                                                               <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
@@ -948,6 +947,7 @@
                                     <entry>Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </entry>
+                                    
                                 </row>
                             </tbody>
                         </tgroup>
@@ -964,7 +964,7 @@
                 <cmd>On the <wintitle>RabbitMQ</wintitle> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_pmz_mcj_45">
+                    <table frame="all" rowsep="1" colsep="1" id="table_sdq_nzn_2v">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -972,10 +972,9 @@
                                 <row>
                                     <entry>RabbitMQ Property</entry>
                                     <entry>Description</entry>
-                                </row>
-                            </thead>
+                                </row></thead>
                             <tbody>
-                                <row id="Rabbit-URI">
+                              <row id="Rabbit-URI">
                                     <entry>URI</entry>
                                     <entry>RabbitMQ URI. <p>Typically uses the following format:
                                                 <codeph>amqp:&lt;host>:&lt;port>/&lt;virtualhost></codeph>.</p></entry>
@@ -1027,6 +1026,7 @@
                                             <li>Text</li>
                                             <li>XML</li>
                                         </ul></entry>
+ 
                                 </row>
                             </tbody>
                         </tgroup>
@@ -2051,7 +2051,9 @@
                     <draft-comment author="Loretta"><uicontrol>KafkaConfig</uicontrol> - used for
                         the Kafka Producer - Kafka tab properties. Rows in the table are used for
                         Configuring a Pipeline, error handling > Write to Kafka. -- Message per
-                        Batch also used by RabbitMQ Producer.</draft-comment>
+                        Batch also used by RabbitMQ Producer. Some rows also used
+                        by MapR Streams Producer.</draft-comment>
+                   
                 </cmd>
             </step>
             <step id="KafkaConfig">
@@ -2089,8 +2091,8 @@
                                     </row>
                                     <row id="KPTopic">
                                         <entry>Topic</entry>
-                                        <entry>Kafka topic to use. <p>Not available when using
-                                                runtime topic resolution.</p></entry>
+                                        <entry>Topic to use. <p>Not available when using runtime
+                                                topic resolution.</p></entry>
                                     </row>
                                     <row id="KPTopicEx">
                                         <entry>Topic Expression</entry>
@@ -2148,10 +2150,9 @@
                                                   href="../Destinations/KProducer-EnablingSecurity.dita"
                                                 />.</p></entry>
                                     </row>
-                                    <row>
+                                    <row id="KP-DataFormats">
                                         <entry>Data Format</entry>
-                                        <entry>Data format for output messages:<ul
-                                                id="ul_wlj_353_br">
+                                        <entry>Data format for messages:<ul id="ul_wlj_353_br">
                                                 <li>Avro</li>
                                                 <li>Binary</li>
                                                 <li>Delimited</li>

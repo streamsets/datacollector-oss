@@ -30,6 +30,7 @@
         <li>JMS Consumer - Reads messages from JMS. </li>
         <li>Kafka Consumer - Reads messages from Kafka.</li>
         <li>Kinesis Consumer - Reads data from Kinesis.</li>
+        <li>MapR Streams Consumer - Reads messages from MapR.</li>
         <li>MongoDB - Reads documents from MongoDB.</li>
         <li>Omniture - Reads web usage reports from the Omniture reporting API.</li>
         <li>RabbitMQ Consumer - Reads messages from RabbitMQ.</li>

@@ -119,7 +119,25 @@
    <topicref href="../Destinations/LocalFS-LateRecordHandling.dita"/>
    <topicref href="../Destinations/LocalFS-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/RabbitMQ.dita" chunk="to-content">
+  <topicref href="../Destinations/MapRFS.dita" chunk="to-content"> 
+   <topicmeta>
+   <shortdesc/>
+  </topicmeta>
+   <topicref href="../Destinations/MapRFS-Kerberos.dita"/>
+   <topicref href="../Destinations/MapRFS-HDFSUser.dita"/>
+   <topicref href="../Destinations/MapRFS-DataFormats.dita"/>
+   <topicref href="../Destinations/MapRFS-DirectoryTemplates.dita"/></topicref>
+  <topicref href="../Destinations/MapRStreamsProd.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/MapRStreamsProd-DataFormats.dita"/>
+   <topicref href="../Destinations/MapRStreamsProd-RuntimeResolution.dita"/>
+   <topicref href="../Destinations/MapRStreamsProd-PartitionStrat.dita"/>
+   <topicref href="../Destinations/MapRStreamsProd-AddProps.dita"/>
+   <topicref href="../Destinations/MapRStreamsProd-Configuring.dita"/>
+  </topicref>
+  <topicref href="../Destinations/RabbitMQ.dita">
    <topicmeta>
     <shortdesc/>
    </topicmeta>

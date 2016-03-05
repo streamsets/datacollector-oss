@@ -13,70 +13,53 @@
   limitations under the License.
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
-<task id="task_npx_xgf_vq">
-    <title>Configuring a Kafka Consumer</title>
-    <shortdesc>Configure a Kafka Consumer to read data from a Kafka cluster. </shortdesc>
+<task id="task_bfz_gch_2v">
+    <title>Configuring a MapR Streams Consumer</title>
+    <shortdesc>Configure a MapR Streams Consumer to read messages from a MapR cluster. </shortdesc>
     <taskbody>
-        <context><indexterm>Kafka Consumer origin<indexterm>configuring</indexterm></indexterm>When
-            you configure the Kafka Consumer, you configure the general properties, including Kafka
-            and ZooKeeper details. Configure additional data format properties as needed. You can
-            optionally add custom Kafka properties. </context>
-        <steps id="steps_f3x_nhw_yq">
+        <context/>
+        <steps id="steps_i5h_xtl_2v">
             <step
-                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-StageLib-EHandling">
+                conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStepErrorHandling">
                 <cmd/>
-            </step><step>
-                <cmd>On the <uicontrol>Kafka</uicontrol> tab, configure the following
+            </step>
+            <step>
+                <cmd>On the <uicontrol>MapR Streams</uicontrol> tab, configure the following
                     properties:</cmd>
                 <info>
-                    <table frame="all" rowsep="1" colsep="1" id="table_v4j_qhw_yq">
+                    <table frame="all" rowsep="1" colsep="1" id="table_ptq_myl_2v">
                         <tgroup cols="2">
-                            <colspec colname="c1" colnum="1" colwidth="1.25*"/>
-                            <colspec colname="c2" colnum="2" colwidth="3.25*"/>
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
                             <thead>
                                 <row>
-                                    <entry>Kafka Property</entry>
+                                    <entry>MapR Streams Property</entry>
                                     <entry>Description</entry>
                                 </row>
                             </thead>
                             <tbody>
                                 <row>
-                                    <entry>Data Format <xref href="KConsumer-DataFormats.dita">
+                                    <entry>Data Format <xref href="MapRStreamsCons-DataFormats.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_bmy_h5q_ds"
                                         /></xref></entry>
                                     <entry>Type of data to be read. Use one of the following
-                                            options:<ul
+                                        options: <ul
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DataFormats-ALL"
-                                            id="ul_w22_2xl_2v">
+                                            id="ul_w5w_syl_2v">
                                             <li/>
                                         </ul></entry>
                                 </row>
                                 <row>
-                                    <entry>Broker URI</entry>
-                                    <entry>Connection string for the Kafka broker. Use the following
-                                        format: <codeph>&lt;host>:&lt;port></codeph>. <p>To ensure a
-                                            connection, enter a comma-separated list of additional
-                                            broker URI.</p></entry>
-                                </row>
-                                <row>
-                                    <entry>ZooKeeper URI</entry>
-                                    <entry>Connection string for the ZooKeeper of the Kafka cluster.
-                                        Use the following format:
-                                            <codeph>&lt;host>:&lt;port></codeph>. <p>To use a
-                                            ZooKeeper quorum, enter a comma-separated list.
-                                            </p><p>To use a ZooKeeper chroot path, add the path at
-                                            the end of the list as
-                                            follows:<codeblock>&lt;host>:&lt;port>, &lt;host2>:&lt;port2>, .../&lt;chroot_path></codeblock></p></entry>
-                                </row>  <row>
                                     <entry>Consumer Group</entry>
-                                    <entry>Kafka consumer group that the <ph
+                                    <entry>Consumer group that the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                         /> belongs to.</entry>
                                 </row>
                                 <row>
                                     <entry>Topic</entry>
-                                    <entry>Kafka topic to read.</entry>
+                                    <entry>Topic to be read. Use the following
+                                        format:<codeblock>&lt;path to stream>:&lt;topic></codeblock></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/ProduceSingleRec">
@@ -91,18 +74,17 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Kafka Configuration <xref
-                                            href="KConsumer_AdditionalKProp.dita#concept_d5f_n2g_vq">
+                                    <entry>MapR Streams Configuration <xref
+                                            href="MapRStreamsCons-AddProps.dita">
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
-                                                id="image_mwv_b52_zq"/></xref>
+                                                id="image_uht_pm4_2v"/></xref>
                                     </entry>
-                                    <entry>Additional Kafka configuration properties to use. To add
+                                    <entry>Additional configuration properties to use. To add
                                         properties, click <uicontrol>Add</uicontrol> and define the
-                                        Kafka property name and value. <p>Use the property names and
-                                            values as expected by Kafka.</p><p>For information about
-                                            enabling secure connections to Kafka, see <xref
-                                                href="KConsumer-EnablingSecurity.dita"
-                                        />.</p></entry>
+                                        property name and value. <p>Use the property names and
+                                            values as expected by MapR.</p><p>You can use MapR
+                                            Streams properties and set of Kafka properties supported
+                                            by MapR Streams. </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">
@@ -112,7 +94,6 @@
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/IgnoreControlChars-row">
                                     <entry/>
                                 </row>
-    
                             </tbody>
                         </tgroup>
                     </table>
@@ -144,7 +125,4 @@
             </step>
         </steps>
     </taskbody>
-    <related-links>
-        <link href="PreviewingRawSourceData.dita#task_jp5_ql1_tq"/>
-    </related-links>
 </task>

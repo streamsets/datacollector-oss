@@ -93,6 +93,26 @@
                   </xref>
             </p>
             <p>
+                  <draft-comment author="Loretta">DataFormats-ALL - used in Kafka Consumer, MapR
+                        Streams Consumer, possibly others.</draft-comment>
+            </p>
+            <p>
+                  <ul id="DataFormats-ALL">
+                        <li>Avro</li>
+                        <li>Binary</li>
+                        <li>Delimited</li>
+                        <li>JSON</li>
+                        <li>Log</li>
+                        <li>Text</li>
+                        <li>Protobuf</li>
+                        <li>SDC Record <xref
+                                    href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                    <image href="../Graphics/icon_moreInfo.png" scale="11"
+                                          id="image_wjh_ycl_br"/></xref></li>
+                        <li>XML</li>
+                  </ul>
+            </p>
+            <p>
                   <draft-comment author="Loretta">ORIGIN DATA FORMATS - from Directory. DLEntries
                         are conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3.
                         --- NOTE: Content copied to HTTP Client and altered. When making changes
@@ -650,5 +670,13 @@
             <draft-comment author="Loretta">UseDefaults: Using this phrase throughout the tutorial
                   as a disclaimer:</draft-comment>
             <p id="UseDefaults">Use the defaults for properties that aren't listed:</p>
+            <p>
+                  <draft-comment author="Loretta">MapR-Prereq - Using in all MapR stages to make
+                        sure they configure SDC.</draft-comment>
+            </p>
+            <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
+                  additional steps to enable the <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
+                  process MapR data. For more information, see <xref
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
       </conbody>
 </concept>
