@@ -103,6 +103,15 @@
    <topicref href="../Origins/KinConsumer-ReadInterval.dita"/>
    <topicref href="../Origins/KinConsumer-DataFormats.dita"/>
    <topicref href="../Origins/KinConsumer-Configuring.dita"/></topicref>
+  <topicref href="../Origins/MapRStreamsCons.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Origins/MapRStreamsCons-AddProps.dita"/>
+   <topicref href="../Destinations/MapRStreamsProd-DataFormats.dita">
+    <topicref href="../Origins/LogFormats.dita"/>
+   </topicref>
+   <topicref href="../Origins/MapRStreamsCons-AllData.dita"/>
+   <topicref href="../Origins/MapRStreamsCons-Configuring.dita"/>
+  </topicref>
   <topicref href="../Origins/MongoDB.dita" chunk="to-content">
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Origins/MongoDB-OffsetField.dita"/>

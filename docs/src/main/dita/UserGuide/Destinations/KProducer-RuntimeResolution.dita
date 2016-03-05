@@ -20,10 +20,12 @@
   record to the resulting topic. </shortdesc>
  <conbody>
   <p><indexterm>Kafka Producer destination<indexterm>runtime topic
-    resolution</indexterm></indexterm>When performing runtime topic resolution, Kafka Producer can
-   write to any topic by default. You can create a white list of topics to limit the number of Kafka
-   Producer attempts to use. When you create a white list, any record that resolves to an unlisted
-   topic is sent to the stage for error handling. Use a white list when record data might resolve to
-   invalid topic names.</p>
+        resolution</indexterm></indexterm>When performing runtime topic resolution, Kafka Producer
+      can write to any topic by default. You can create a white list of topics to limit the number
+      of topics Kafka Producer attempts to use. When you create a white list, any record that
+      resolves to an unlisted topic is sent to the stage for error handling. Use a white list when
+      record data might resolve to invalid topic names.<draft-comment author="Loretta">This topic
+        basically copied to MapR Streams Producer. Make sure changes here go there.
+      </draft-comment></p>
  </conbody>
 </concept>

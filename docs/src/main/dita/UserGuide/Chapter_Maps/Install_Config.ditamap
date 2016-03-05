@@ -80,5 +80,10 @@
    <topicref href="../Install_Config/BasicInstall-Step2.dita"/>
    <topicref href="../Install_Config/BasicInstall-LibList.dita"/>
   </topicref>
+  <topicref href="../Install_Config/MapR-Prerequisites.dita">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+  </topicref>
   </topicref>
 </map>

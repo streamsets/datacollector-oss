@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_jgs_qpg_2v">
+ <title>MapR Prerequisites</title>
+ <conbody>
+        <p><indexterm>MapR<indexterm>prerequisites</indexterm></indexterm>Due to licensing
+            restrictions, StreamSets cannot distribute MapR libraries with <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
+            As a result, you must perform additional steps to enable the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            machine to process MapR data.</p>
+        <p>To process data from a MapR cluster, install the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
+            a node in the cluster or on a client machine. Before using <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
+            process MapR data, perform the following steps:</p>
+        <ol id="ol_ghq_zrg_2v">
+            <li>In the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> configuration file, $SDC_CONF/sdc.properties, remove the MapR stage library that
+                you want to use from the <uicontrol>system.stagelibs.blacklist</uicontrol>
+                    property.<note>You can use one version of the MapR library at a time.
+                </note></li>
+            <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
+                    <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library>/lib/</uicontrol>.
+                            <p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the name
+                            of the MapR library to use. </p></li>
+                    <li><uicontrol>$MAPR_HOME/lib/maprfs-5.1.0-mapr-SNAPSHOT.jar</uicontrol> to
+                            <uicontrol>$SDC_DIST/root-lib/</uicontrol></li>
+                </ul></li>
+            <li>In the <ph
+                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                /> security policy file, $SDC_CONF/sdc-security.policy, add a new permissions block
+                for $MAPR_HOME.<p>For example:
+                    <codeblock>grant codebase "file:///opt/mapr/-" {
+  permission java.security.AllPermission;
+};</codeblock></p></li>
+        </ol>
+ </conbody>
+</concept>
