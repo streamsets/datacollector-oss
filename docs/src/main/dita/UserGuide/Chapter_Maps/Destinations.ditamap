@@ -126,7 +126,11 @@
    <topicref href="../Destinations/MapRFS-Kerberos.dita"/>
    <topicref href="../Destinations/MapRFS-HDFSUser.dita"/>
    <topicref href="../Destinations/MapRFS-DataFormats.dita"/>
-   <topicref href="../Destinations/MapRFS-DirectoryTemplates.dita"/></topicref>
+   <topicref href="../Destinations/MapRFS-DirectoryTemplates.dita"/>
+   <topicref href="../Destinations/MapRFS-TimeBasis.dita"/>
+   <topicref href="../Destinations/MapRFS-LateRecordHandling.dita"/>
+   <topicref href="../Destinations/MapRFS-HadoopProps.dita"/>
+   <topicref href="../Destinations/MapRFS-Configuring.dita"/></topicref>
   <topicref href="../Destinations/MapRStreamsProd.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

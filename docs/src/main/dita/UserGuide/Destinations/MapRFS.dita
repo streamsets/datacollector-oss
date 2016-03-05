@@ -28,5 +28,7 @@
             directory and what happens to late records. </p>
         <p>You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
             files. </p>
+        <draft-comment author="Loretta">These MapR topics are basically copied from Hadoop FS. Make
+            sure changes here go there. </draft-comment>
  </conbody>
 </concept>

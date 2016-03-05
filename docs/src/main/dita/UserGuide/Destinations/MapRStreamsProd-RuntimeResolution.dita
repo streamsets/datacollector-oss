@@ -24,8 +24,6 @@
             Streams Producer can write to any topic by default. You can create a white list of
             topics to limit the number of topics the destination attempts to use. When you create a
             white list, any record that resolves to an unlisted topic is sent to the stage for error
-            handling. Use a white list when record data might resolve to invalid topic
-                names.<draft-comment author="Loretta">This topic basically copied from Kafka. Make
-                sure changes here go there. </draft-comment></p>
+            handling. Use a white list when record data might resolve to invalid topic names.</p>
  </conbody>
 </concept>

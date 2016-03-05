@@ -1966,8 +1966,8 @@
                                 </row>
                                 <row>
                                     <entry>Sequence File Key</entry>
-                                    <entry>Record key for creating Hadoop sequence files. Use one of
-                                        the following options:<ul id="ul_v1q_dd1_s5">
+                                    <entry>Record key for creating sequence files. Use one of the
+                                        following options:<ul id="ul_v1q_dd1_s5">
                                             <li>${record:value("/&lt;field name>")}</li>
                                             <li>${uuid()}</li>
                                         </ul></entry>
