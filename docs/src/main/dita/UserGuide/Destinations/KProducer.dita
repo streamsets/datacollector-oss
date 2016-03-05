@@ -28,6 +28,7 @@
         <p>You can add additional Kafka configuration properties as needed. You can also configure
             the destination to use <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            security features.</p>
+            security features.<draft-comment author="Loretta">Make sure changes in Kafka Producer
+                topics go into MapR Producer. </draft-comment></p>
  </conbody>
 </concept>

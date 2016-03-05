@@ -24,5 +24,7 @@
             configure the data type and related properties, and you can optionally add additional
             MapR Streams properties and supported Kafka properties. </p>
         <p conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/MapRPrereq"/>
+        <draft-comment author="Loretta">These MapR topics are basically copied from Kafka. Make sure
+            changes here go there. </draft-comment>
  </conbody>
 </concept>
