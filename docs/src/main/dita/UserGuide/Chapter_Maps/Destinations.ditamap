@@ -79,6 +79,12 @@
    <topicref href="../Destinations/Hive-HiveProperties.dita"/>
    <topicref href="../Destinations/Hive-Configuring.dita"/>
   </topicref>
+  <topicref href="../Destinations/InfluxDB.dita" chunk="to-content">
+   <topicmeta>
+    <shortdesc/>
+   </topicmeta>
+   <topicref href="../Destinations/InfluxDB-Configuring.dita"/>
+  </topicref>
   <topicref href="../Destinations/JDBCProducer.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>

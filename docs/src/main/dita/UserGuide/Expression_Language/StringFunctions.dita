@@ -60,10 +60,10 @@
         <dlentry>
           <dt>str:matches("&lt;string>", &lt;regEx>)</dt>
           <dd>Returns true or false based on whether a string matches a Java regex pattern.</dd>
-          <dd>Uses the following arguments:<ul id="ul_tf5_y4k_br">
-            <li>string - The string to evaluate.</li>
-            <li>regEx - Regular expression that describes the pattern of the string.</li>
-          </ul></dd>
+          <dd>Uses the following arguments:<ul id="ul_yjb_wjq_fv">
+              <li>string - The string to evaluate.</li>
+              <li>regEx - Regular expression that describes the pattern of the string.</li>
+            </ul></dd>
           <dd>For example, ${str:matches(record:value("/HostName"), ".*\.com$")} checks if the
             string in the HostName field ends with the characters ".com".</dd>
         </dlentry>
