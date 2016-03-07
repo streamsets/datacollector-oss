@@ -1987,6 +1987,209 @@
             </step>
             <step>
                 <cmd>
+                    <draft-comment author="Loretta">Elasticsearch properties - used by Elasticsearch
+                        destination and Configuring a Pipeline > Error handling.</draft-comment>
+                </cmd>
+            </step>
+            <step id="ELASTICprops-Step">
+                <cmd>On the <wintitle>Elasticsearch</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info id="ElasticProps-Info">
+                    <table frame="all" rowsep="1" colsep="1" id="table_ht4_x5v_4r">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Elasticsearch Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Cluster Name</entry>
+                                    <entry>Elasticsearch cluster name.</entry>
+                                </row>
+                                <row>
+                                    <entry>Cluster URIs</entry>
+                                    <entry>URI of one or more nodes in the cluster. <p>To ensure a
+                                            connection, enter additional URIs.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Cluster HTTP URI</entry>
+                                    <entry>Use when the cluster uses a custom HTTP URI. <p>Unless
+                                            configured, the destination uses the default HTTP URI to
+                                            verify that the cluster version is compatible with the
+                                            destination libraries.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Use Shield</entry>
+                                    <entry>Enables access to a Shield-protected cluster.</entry>
+                                </row>
+                                <row>
+                                    <entry>Elastic Found Cluster</entry>
+                                    <entry>Enables access to a Found cluster. <p>Selecting this
+                                            property is the equivalent to setting the
+                                            action.bulk.compress Elasticsearch property to false,
+                                            and the request.headers.X-Found-Cluster to the cluster
+                                            name. </p><p>Found requires Shield. When enabling Found,
+                                            enable Shield and configure the additional Shield
+                                            properties. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Detect Additional Nodes in Cluster</entry>
+                                    <entry><p>Detects additional nodes in the cluster based on the
+                                            configured Cluster URI. </p>Selecting this property is
+                                        the equivalent to setting the client.transport.sniff
+                                        Elasticsearch property to true.<p>Use only when the <ph
+                                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                            /> shares the same network as the Elasticsearch cluster.
+                                            Do not use for Found or Docker clusters.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Additional Configuration</entry>
+                                    <entry>Additional Elasticsearch properties that you want to use.
+                                        Enter the exact property name and value expected by
+                                        Elasticsearch.</entry>
+                                </row>
+                                <row>
+                                    <entry>Time Basis <xref href="../Destinations/Elastic-TimeBasis.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_w4w_q3p_ht"/>
+                                        </xref></entry>
+                                    <entry>
+                                        <p>Time basis to use for writing to time-based indexes. Use
+                                            one of the following expressions:<ul id="ul_wbn_qdt_r5">
+                                                <li><codeph>${time:now()}</codeph> - Uses the
+                                                  processing time as the time basis. The processing
+                                                  time is the time associated with the <ph
+                                                  conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                                  /> running the pipeline. </li>
+                                                <li>An expression that calls a field and resolves to
+                                                  a datetime value, such as
+                                                  <codeph>${record:value('/&lt;date
+                                                  field>')}</codeph>. Uses the datetime result as
+                                                  the time basis. </li>
+                                            </ul></p>
+                                        <p>When the Index definition does not include datetime
+                                            variables, you can ignore this property. </p>
+                                        <p>Default is <codeph>${time:now()}</codeph>.</p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Data Time Zone</entry>
+                                    <entry>Time zone for the destination system. Used to resolve
+                                        datetimes in time-based indexes. </entry>
+                                </row>
+                                <row>
+                                    <entry>Index</entry>
+                                    <entry>Index information for the generated documents. You can
+                                        use a constant, datetime variables, a field that includes
+                                        the index information, or any valid combination. <p>When
+                                            using datetime variables, make sure to configure the
+                                            time basis appropriately. </p></entry>
+                                </row>
+                                <row>
+                                    <entry>Mapping</entry>
+                                    <entry>Mapping information for the generated documents. You can
+                                        use a constant or a field that includes the mapping
+                                        information. </entry>
+                                </row>
+                                <row>
+                                    <entry>Document ID</entry>
+                                    <entry>ID for the record. Use to specify the ID for the
+                                        generated documents. When you do not specify an ID,
+                                        Elasticsearch creates an ID for each document.<p>By default,
+                                            the destination allows Elasticsearch to create the
+                                            ID.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Data Charset</entry>
+                                    <entry>
+                                        <p>Character encoding of the data to be processed. </p>
+                                    </entry>
+                                </row>
+                                <row>
+                                    <entry>Enable Upsert <xref href="../Destinations/Elastic-DocIDandUpserts.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_r1f_ggg_z5"/>
+                                        </xref></entry>
+                                    <entry>Enables upserts to the cluster. When enabled, configure
+                                        the Document ID property.</entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step id="ElasticSHIELD-step">
+                <cmd>When writing to a Shield-protected cluster, on the <wintitle>Shield</wintitle>
+                    tab, configure the following properties:</cmd>
+                <info id="ElasticSHIELD-Info">
+                    <table frame="all" rowsep="1" colsep="1" id="table_jsk_fhg_z5">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>Shield Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row>
+                                    <entry>Shield Username/Password</entry>
+                                    <entry>Shield username and password. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.user Elasticsearch property.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Enable SSL</entry>
+                                    <entry>Enables SSL between the <ph
+                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                        /> and the Elasticsearch cluster.<p>Selecting this property
+                                            is the equivalent to setting the shield.transport.ssl
+                                            Elasticsearch property to true.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Keystore Path</entry>
+                                    <entry>Location of the keystore file. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.keystore.path Elasticsearch
+                                            property.</p><p>Not necessary for Found clusters.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Keystore Password</entry>
+                                    <entry>Password for the keystore file.<p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.keystore.password Elasticsearch
+                                            property.</p><p>Not necessary for Found
+                                        clusters.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Path</entry>
+                                    <entry>Location of the truststore file. <p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.truststore.path Elasticsearch
+                                            property.</p><p>Not necessary for Found clusters.
+                                        </p></entry>
+                                </row>
+                                <row>
+                                    <entry>SSL Truststore Password</entry>
+                                    <entry>Password for the truststore file.<p>Configuring this
+                                            property is the equivalent to configuring the
+                                            shield.ssl.truststore.password Elasticsearch
+                                            property.</p><p>Not necessary for Found
+                                        clusters.</p></entry>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
+            </step>
+            <step>
+                <cmd>
                     <draft-comment author="Loretta"><uicontrol>FS-LateRecords</uicontrol> - for
                         Hadoop FS and Local FS</draft-comment>
                 </cmd>
@@ -2176,7 +2379,80 @@
                 </info>
             </step>
             <step>
-                <cmd/>
+                <cmd>
+                    <draft-comment author="Loretta">MapRStreams-props - used by MapR Streams
+                        Producer and Info tag used by Configuring a Pipeline > Write to MapR
+                        Streams. </draft-comment>
+                </cmd>
+            </step>
+            <step id="MAPRStreams-Step">
+                <cmd>On the <wintitle>MapR Streams Producer</wintitle> tab, configure the following
+                    properties:</cmd>
+                <info id="MapRStreams-Info">
+                    <table frame="all" rowsep="1" colsep="1" id="table_izf_lxn_2v">
+                        <tgroup cols="2">
+                            <colspec colname="c1" colnum="1" colwidth="1.5*"/>
+                            <colspec colname="c2" colnum="2" colwidth="3.5*"/>
+                            <thead>
+                                <row>
+                                    <entry>MapR Streams Producer Property</entry>
+                                    <entry>Description</entry>
+                                </row>
+                            </thead>
+                            <tbody>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPRuntimeTopic">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopic">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopicEx">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPTopicWList">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartStrategy">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPPartExpr">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KPOneMessPBatch">
+                                    <entry/>
+                                </row>
+                                <row>
+                                    <entry>MapR Streams Configuration <xref
+                                            href="../Destinations/MapRStreamsProd-AddProps.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"
+                                                id="image_dgb_pns_2v"/></xref>
+                                    </entry>
+                                    <entry>Additional configuration properties to use. To add
+                                        properties, click <uicontrol>Add</uicontrol> and define the
+                                        property name and value. <p>Use the property names and
+                                            values as expected by MapR.</p><p>You can use MapR
+                                            Streams properties and set of Kafka properties supported
+                                            by MapR Streams. </p></entry>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/KP-DataFormats">
+                                    <entry/>
+                                </row>
+                                <row
+                                    conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
+                                    <entry/>
+                                </row>
+                            </tbody>
+                        </tgroup>
+                    </table>
+                </info>
             </step>
             <step>
                 <cmd>
