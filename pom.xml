@@ -119,6 +119,7 @@
     <module>dev-lib</module>
 
     <module>basic-lib</module>
+    <module>stats-lib</module>
 
     <module>omniture-lib</module>
 

@@ -82,7 +82,7 @@ public class RulesConfigLoader {
                                                         RuleDefinitions newRuleDefinitions)
     throws InterruptedException {
     //TODO: compute, detect changes etc and upload
-    Set<String> rulesToRemove = new HashSet<>();
+    Map<String, String> rulesToRemove = new HashMap<>();
     Set<String> pipelineAlertsToRemove = new HashSet<>();
     Map<String, Integer> rulesWithSampledRecordSizeChanges = new HashMap<>();
     if (previousRuleDefinitions != null) {
@@ -180,7 +180,7 @@ public class RulesConfigLoader {
 
   private void detectDataRuleChanges(List<DataRuleDefinition> oldRuleDefinitions,
                                      List<DataRuleDefinition> newRuleDefinitions,
-                                     Set<String> rulesToRemove, Map<String, Integer> rulesToResizeSamplingRecords) {
+                                     Map<String, String> rulesToRemove, Map<String, Integer> rulesToResizeSamplingRecords) {
     if(newRuleDefinitions != null && oldRuleDefinitions != null) {
       for(DataRuleDefinition oldRuleDefinition : oldRuleDefinitions) {
         boolean found = false;
@@ -188,7 +188,7 @@ public class RulesConfigLoader {
           if(oldRuleDefinition.getId().equals(newRuleDefinition.getId())) {
             found = true;
             if(oldRuleDefinition.isEnabled() && !newRuleDefinition.isEnabled()) {
-              rulesToRemove.add(oldRuleDefinition.getId());
+              rulesToRemove.put(oldRuleDefinition.getId(), oldRuleDefinition.getLane());
               if (isStatAggregationEnabled()) {
                 AggregatorUtil.enqueStatsRecord(
                   AggregatorUtil.createDataRuleDisabledRecord(newRuleDefinition),
@@ -199,7 +199,7 @@ public class RulesConfigLoader {
             }
             if(hasRuleChanged(oldRuleDefinition, newRuleDefinition)) {
               if(oldRuleDefinition.isAlertEnabled() || oldRuleDefinition.isMeterEnabled()) {
-                rulesToRemove.add(oldRuleDefinition.getId());
+                rulesToRemove.put(oldRuleDefinition.getId(), oldRuleDefinition.getLane());
                 if (isStatAggregationEnabled()) {
                   AggregatorUtil.enqueStatsRecord(
                     AggregatorUtil.createDataRuleChangeRecord(newRuleDefinition),
@@ -216,7 +216,7 @@ public class RulesConfigLoader {
           }
         }
         if(!found) {
-          rulesToRemove.add(oldRuleDefinition.getId());
+          rulesToRemove.put(oldRuleDefinition.getId(), oldRuleDefinition.getLane());
           if (isStatAggregationEnabled()) {
             AggregatorUtil.enqueStatsRecord(
               AggregatorUtil.createDataRuleDisabledRecord(oldRuleDefinition),

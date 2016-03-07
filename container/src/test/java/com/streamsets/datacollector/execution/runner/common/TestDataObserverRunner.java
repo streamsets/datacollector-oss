@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -143,7 +142,7 @@ public class TestDataObserverRunner {
     Map<String, Integer> ruleIdToSampledRecordsSize = new HashMap<>();
     laneToRuleDefinition.put(LANE + "::s", dataRuleDefinitions);
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(ruleDefinitions, new HashSet<String>(),
+      new RulesConfigurationChangeRequest(ruleDefinitions, new HashMap<String, String>(),
         Collections.<String>emptySet(), laneToRuleDefinition, ruleIdToSampledRecordsSize);
     return rulesConfigurationChangeRequest;
   }
@@ -169,7 +168,7 @@ public class TestDataObserverRunner {
     Assert.assertTrue(rulesConfigurationChangeRequest.getRulesToRemove().isEmpty());
     //Create rule configuration change request where the previous rule is removed.
     // This simulates user action - change/disable/delete rule
-    rulesConfigurationChangeRequest.getRulesToRemove().add("myId");
+    rulesConfigurationChangeRequest.getRulesToRemove().put("myId", "myLane");
     dataObserverRunner.handleConfigurationChangeRequest(rulesConfigurationChangeRequest);
 
     sampleRecords = dataObserverRunner.getSampledRecords("myId", 5);

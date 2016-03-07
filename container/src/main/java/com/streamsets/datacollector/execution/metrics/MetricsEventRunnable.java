@@ -145,6 +145,7 @@ public class MetricsEventRunnable implements Runnable {
             AggregatorUtil.createMetricJsonRecord(
                 runtimeInfo.getId(),
                 pipelineConfiguration.getMetadata(),
+                false, // isAggregated - no its not aggregated
                 metricsJSONStr
             ),
             statsQueue,

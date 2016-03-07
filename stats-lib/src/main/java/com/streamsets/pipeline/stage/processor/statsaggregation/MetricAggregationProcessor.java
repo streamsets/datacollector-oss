@@ -1,0 +1,261 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.stage.processor.statsaggregation;
+
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.MetricsRuleDefinition;
+import com.streamsets.datacollector.config.RuleDefinition;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
+import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.datacollector.util.AggregatorUtil;
+import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.impl.Utils;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+public class MetricAggregationProcessor extends SingleLaneProcessor {
+
+  // metric rule id to latest definition map
+  private final Map<String, RuleDefinition> ruleDefinitionMap;
+  private final String pipelineConfigJson;
+  private final String ruleDefinitionsJson;
+  private final String pipelineUrl;
+  private final String targetUrl;
+  private final String authToken;
+  private final String appComponentId;
+
+  // Tracks number of records seen per lane. It is shared by both MetricRuleHandler and DataRuleHandler
+  private Map<String, Counter> evaluatedRecordCounterMap;
+  // Metadata obtained from pipeline configuration
+  private Map<String, String> metadata;
+
+  private MetricRegistryJson metricRegistryJson;
+  private MetricRegistry metrics;
+  private DataRuleHandler dataRuleHandler;
+  private MetricRuleHandler metricRuleHandler;
+
+  public MetricAggregationProcessor(
+      String pipelineConfigJson,
+      String ruleDefinitionsJson,
+      String pipelineUrl,
+      String targetUrl,
+      String authToken,
+      String appComponentId
+  ) {
+    ruleDefinitionMap = new HashMap<>();
+    this.pipelineConfigJson = pipelineConfigJson;
+    this.ruleDefinitionsJson = ruleDefinitionsJson;
+    this.pipelineUrl = pipelineUrl;
+    this.targetUrl = targetUrl;
+    this.authToken = authToken;
+    this.appComponentId = appComponentId;
+    this.evaluatedRecordCounterMap = new HashMap<>();
+  }
+
+  @Override
+  protected List<ConfigIssue> init() {
+    List<ConfigIssue> issues =  super.init();
+    metrics = new MetricRegistry();
+
+    PipelineConfigurationJson pipelineConfigurationJson = ConfigHelper.readPipelineConfig(
+        pipelineConfigJson,
+        getContext(),
+        issues
+    );
+    RuleDefinitionsJson ruleDefJson = ConfigHelper.readRulesDefinition(
+        ruleDefinitionsJson,
+        getContext(),
+        issues
+    );
+
+    if (issues.isEmpty()) {
+      metadata = pipelineConfigurationJson.getMetadata();
+      metricRegistryJson = getLatestAggregatedMetrics(pipelineConfigurationJson, ruleDefJson, issues);
+    }
+
+    if (issues.isEmpty()) {
+      dataRuleHandler = new DataRuleHandler(
+          getContext(),
+          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
+          pipelineUrl,
+          pipelineConfigurationJson,
+          metrics,
+          metricRegistryJson,
+          evaluatedRecordCounterMap,
+          ruleDefinitionMap
+      );
+      metricRuleHandler = new MetricRuleHandler(
+          getContext(),
+          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+          metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION),
+          pipelineUrl,
+          metrics,
+          metricRegistryJson,
+          pipelineConfigurationJson,
+          evaluatedRecordCounterMap,
+          ruleDefinitionMap
+      );
+    }
+    return issues;
+  }
+
+  @Override
+  public void destroy() {
+    metrics = null;
+  }
+
+  @Override
+  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
+    Iterator<Record> it = batch.getRecords();
+    if (it.hasNext()) {
+      while (it.hasNext()) {
+        Record record = it.next();
+        switch (record.getHeader().getSourceId()) {
+          case AggregatorUtil.METRIC_RULE_DISABLED:
+            metricRuleHandler.handleRuleDisabledRecord(record);
+            break;
+          case AggregatorUtil.DATA_RULE_DISABLED:
+            dataRuleHandler.handleRuleDisabledRecord(record);
+            break;
+          case AggregatorUtil.METRIC_RULE_CHANGE:
+            metricRuleHandler.handleRuleChangeRecord(record);
+          case AggregatorUtil.DATA_RULE_CHANGE:
+            dataRuleHandler.handleRuleChangeRecord(record);
+            break;
+          case AggregatorUtil.METRIC_RULE_RECORD:
+            metricRuleHandler.handleMetricRuleRecord(record);
+            break;
+          case AggregatorUtil.DATA_RULE_RECORD:
+            dataRuleHandler.handleDataRuleRecord(record);
+            break;
+          case AggregatorUtil.CONFIGURATION_CHANGE:
+            metricRuleHandler.handleConfigChangeRecord(record);
+            dataRuleHandler.handleConfigChangeRecord(record);
+            break;
+          default:
+            throw new IllegalArgumentException(
+              Utils.format(
+                "Unknown record source id '{}'",
+                record.getHeader().getSourceId()
+              )
+            );
+        }
+      }
+      // for each metric rule, evaluate it against the counters/meters
+      evaluateRules();
+      // create a new record that needs to be persisted
+      publishMetricsRecord(batchMaker);
+    }
+  }
+
+  private void publishMetricsRecord(SingleLaneBatchMaker batchMaker) {
+    Record metricJsonRecord = null;
+    try {
+      String metricJsonString = ObjectMapperFactory.get().writeValueAsString(metrics);
+      metricJsonRecord = createMetricJsonRecord(
+          MetricAggregationConstants.AGGREGATOR,
+          metadata,
+          true,
+          metricJsonString
+      );
+      batchMaker.addRecord(metricJsonRecord);
+    } catch (JsonProcessingException e) {
+      getContext().toError(metricJsonRecord, e);
+    }
+  }
+
+  private Record createMetricJsonRecord(
+      String sdcId,
+      Map<String, String> metadata,
+      boolean isAggregated,
+      String metricJsonString
+  ) {
+    Record record = getContext().createRecord("MetricAggregationProcessor");
+    Map<String, Field> map = new HashMap<>();
+    map.put(AggregatorUtil.TIMESTAMP, Field.create(System.currentTimeMillis()));
+    map.put(AggregatorUtil.SDC_ID, Field.create(sdcId));
+    map.put(AggregatorUtil.IS_AGGREGATED, Field.create(isAggregated));
+    map.put(AggregatorUtil.METADATA, AggregatorUtil.getMetadataField(metadata));
+    map.put(AggregatorUtil.METRIC_JSON_STRING, Field.create(metricJsonString));
+    record.set(Field.create(map));
+    return record;
+  }
+
+  @VisibleForTesting
+  Map<String, RuleDefinition> getRuleDefinitionMap() {
+    return ruleDefinitionMap;
+  }
+
+  @VisibleForTesting
+  MetricRegistry getMetrics() {
+    return metrics;
+  }
+
+  private void evaluateRules() {
+    for(Map.Entry<String, RuleDefinition> e : ruleDefinitionMap.entrySet()) {
+      RuleDefinition ruleDefinition = e.getValue();
+      if (ruleDefinition instanceof MetricsRuleDefinition) {
+        metricRuleHandler.evaluateMetricRules((MetricsRuleDefinition)e.getValue());
+      } else if (ruleDefinition instanceof DataRuleDefinition) {
+        dataRuleHandler.evaluateDataRules((DataRuleDefinition) e.getValue());
+      }
+    }
+  }
+
+  private MetricRegistryJson getLatestAggregatedMetrics(
+    PipelineConfigurationJson pipelineConfigurationJson,
+    RuleDefinitionsJson ruleDefJson,
+    List<ConfigIssue> issues
+  ) {
+    MetricRegistryJson metricRegistryJson = null;
+    if (targetUrl != null) {
+      // fetch latest aggregated metrics from dpm time series app and reset state
+      AggregatedMetricsFetcher aggregatedMetricsFetcher = new AggregatedMetricsFetcher(
+        getContext(),
+        targetUrl,
+        authToken,
+        appComponentId,
+        metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_ID),
+        metadata.get(MetricAggregationConstants.METADATA_DPM_PIPELINE_VERSION)
+      );
+      metricRegistryJson = aggregatedMetricsFetcher.fetchLatestAggregatedMetrics(
+        pipelineConfigurationJson,
+        ruleDefJson,
+        issues
+      );
+    }
+    return metricRegistryJson;
+  }
+
+}

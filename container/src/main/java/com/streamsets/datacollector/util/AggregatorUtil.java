@@ -34,10 +34,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -45,11 +45,20 @@ public class AggregatorUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(AggregatorUtil.class);
 
-  public static final String METRIC_RULE_EVALUATOR = "MetricRuleEvaluator";
+  public static final String METRIC_RULE_RECORD = "MetricRuleRecord";
+  public static final String DATA_RULE_RECORD = "DataRuleRecord";
+  public static final String CONFIGURATION_CHANGE = "ConfigurationChange";
+  public static final String AGGREGATOR = "Aggregator";
+  public static final String METRIC_RULE_CHANGE = "MetricRuleChange";
+  public static final String DATA_RULE_CHANGE = "DataRuleChange";
+  public static final String DATA_RULE_DISABLED = "DataRuleDisabled";
+  public static final String METRIC_RULE_DISABLED = "MetricRuleDisabled";
+  public static final String STATS_AGGREGATOR_STAGE = "StatsAggregatorStage";
+  public static final String METRIC_JSON_STRING = "MetricJsonString";
+
   public static final String TIMESTAMP = "timestamp";
-  public static final String RECORD_TYPE = "record.type";
-  public static final String METRICS_RECORD = "MetricsRecord";
-  public static final String METRICS_JSON_RECORD = "MetricsJsonRecord";
+  public static final String RULE_ID = "ruleId";
+
   public static final String PIPELINE_BATCH_DURATION = "pipelineBatchDuration";
   public static final String BATCH_COUNT = "batchCount";
   public static final String BATCH_INPUT_RECORDS = "batchInputRecords";
@@ -63,42 +72,34 @@ public class AggregatorUtil {
   public static final String OUTPUT_RECORDS = "outputRecords";
   public static final String STAGE_ERROR = "stageError";
   public static final String OUTPUT_RECORDS_PER_LANE = "outputRecordsPerLane";
-  public static final String STREAM_NAME = "streamName";
-  public static final String RULE_ID = "ruleId";
-  public static final String EVALUATED_RECORDS = "evaluatedRecords";
-  public static final String MATCHED_RECORDS = "matchedRecords";
-  public static final String DATA_RULE_RECORD = "DataRuleRecord";
-  public static final String CONFIGURATION_CHANGE = "ConfigurationChange";
   public static final String METRIC_ALERTS_TO_REMOVE = "metricAlertsToRemove";
   public static final String RULES_TO_REMOVE = "rulesToRemove";
-  public static final String AGGREGATOR = "Aggregator";
-  public static final String STATS_AGGREGATOR_TARGET = "StatsAggregatorTarget";
-  public static final String METRIC_RULE_CHANGE = "MetricRuleChange";
-  public static final String ID = "id";
   public static final String METRIC_ID = "metricId";
   public static final String ALERT_TEXT = "alertText";
   public static final String CONDITION = "condition";
   public static final String FAMILY = "family";
   public static final String ENABLED = "enabled";
   public static final String SEND_MAIL = "sendMail";
+  public static final String EMAILS = "emails";
   public static final String VALID = "valid";
   public static final String METRIC_ELEMENT = "metricElement";
   public static final String METRIC_TYPE = "metricType";
-  public static final String METRIC_RULE_DISABLED = "MetricRuleDisabled";
+
   public static final String LANE = "lane";
   public static final String LABEL = "label";
   public static final String MIN_VOLUME = "minVolume";
+  public static final String STREAM_NAME = "streamName";
+  public static final String EVALUATED_RECORDS = "evaluatedRecords";
+  public static final String MATCHED_RECORDS = "matchedRecords";
   public static final String SAMPLING_PERCENTAGE = "samplingPercentage";
   public static final String SAMPLING_RECORDS_TO_RETAIN = "samplingRecordsToRetain";
   public static final String THRESHOLD_TYPE = "thresholdType";
   public static final String THRESHOLD_VALUE = "thresholdValue";
   public static final String ALERT_ENABLED = "alertEnabled";
   public static final String METER_ENABLED = "meterEnabled";
-  public static final String DATA_RULE_CHANGE = "DataRuleChange";
-  public static final String DATA_RULE_DISABLED = "DataRuleDisabled";
-  public static final String METRIC_JSON_STRING = "metricJsonString";
   public static final String ALERT_TEXTS = "alertTexts";
   public static final String DRIFT_RULE = "driftRule";
+
   public static final String IS_AGGREGATED = "isAggregated";
   public static final String METADATA = "metadata";
   public static final String SDC_ID = "sdcId";
@@ -108,10 +109,9 @@ public class AggregatorUtil {
   }
 
   public static Record createMetricRecord(Map<String, Object> pipelineBatchMetrics) {
-    Record record = createRecord(METRIC_RULE_EVALUATOR);
+    Record record = createRecord(METRIC_RULE_RECORD);
     Map<String, Field> map = new HashMap<>();
     map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
-    map.put(RECORD_TYPE, Field.create(METRICS_RECORD));
     map.put(PIPELINE_BATCH_DURATION, Field.create(Field.Type.LONG, pipelineBatchMetrics.get(PIPELINE_BATCH_DURATION)));
     map.put(BATCH_COUNT, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_COUNT)));
     map.put(BATCH_INPUT_RECORDS, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_INPUT_RECORDS)));
@@ -191,8 +191,16 @@ public class AggregatorUtil {
     map.put(
       RULES_TO_REMOVE,
       Field.create(
-        createListField(
+        createMapField(
           rulesConfigurationChangeRequest.getRulesToRemove()
+        )
+      )
+    );
+    map.put(
+      EMAILS,
+      Field.create(
+        createListField(
+          rulesConfigurationChangeRequest.getRuleDefinitions().getEmailIds()
         )
       )
     );
@@ -201,7 +209,7 @@ public class AggregatorUtil {
     return record;
   }
 
-  private static List<Field> createListField(Set<String> strings) {
+  private static List<Field> createListField(Collection<String> strings) {
     List<Field> fieldList = new ArrayList<>(strings.size());
     for(String s : strings) {
       fieldList.add(Field.create(s));
@@ -209,9 +217,17 @@ public class AggregatorUtil {
     return fieldList;
   }
 
+  private static Map<String, Field> createMapField(Map<String, String> map) {
+    Map<String, Field> mapField = new HashMap<>();
+    for (Map.Entry<String, String> e : map.entrySet()) {
+      mapField.put(e.getKey(), Field.create(e.getValue()));
+    }
+    return mapField;
+  }
+
   private static Record createRecord(String recordSourceId) {
     RecordImpl record = new RecordImpl(AGGREGATOR, recordSourceId, null, null);
-    record.addStageToStagePath(STATS_AGGREGATOR_TARGET);
+    record.addStageToStagePath(STATS_AGGREGATOR_STAGE);
     record.createTrackingId();
     return record;
   }
@@ -219,7 +235,7 @@ public class AggregatorUtil {
   public static Record createMetricRuleChangeRecord(MetricsRuleDefinition metricsRuleDefinition) {
     Record record = createRecord(METRIC_RULE_CHANGE);
     Map<String, Field> map = new HashMap<>();
-    map.put(ID, Field.create(metricsRuleDefinition.getId()));
+    map.put(RULE_ID, Field.create(metricsRuleDefinition.getId()));
     map.put(METRIC_ID, Field.create(metricsRuleDefinition.getMetricId()));
     map.put(ALERT_TEXT, Field.create(metricsRuleDefinition.getAlertText()));
     map.put(CONDITION, Field.create(metricsRuleDefinition.getCondition()));
@@ -230,7 +246,6 @@ public class AggregatorUtil {
     map.put(VALID, Field.create(metricsRuleDefinition.isValid()));
     map.put(METRIC_ELEMENT, Field.create(metricsRuleDefinition.getMetricElement().name()));
     map.put(METRIC_TYPE, Field.create(metricsRuleDefinition.getMetricType().name()));
-    map.put(RECORD_TYPE, Field.create(METRICS_RECORD));
     record.set(Field.create(map));
     return record;
   }
@@ -238,9 +253,8 @@ public class AggregatorUtil {
   public static Record createMetricRuleDisabledRecord(MetricsRuleDefinition metricsRuleDefinition) {
     Record record = createRecord(METRIC_RULE_DISABLED);
     Map<String, Field> map = new HashMap<>();
-    map.put(ID, Field.create(metricsRuleDefinition.getId()));
+    map.put(RULE_ID, Field.create(metricsRuleDefinition.getId()));
     map.put(TIMESTAMP, Field.create(metricsRuleDefinition.getTimestamp()));
-    map.put(RECORD_TYPE, Field.create(METRICS_RECORD));
     record.set(Field.create(map));
     return record;
   }
@@ -248,7 +262,7 @@ public class AggregatorUtil {
   public static Record createDataRuleChangeRecord(DataRuleDefinition dataRuleDefinition) {
     Record record = createRecord(DATA_RULE_CHANGE);
     Map<String, Field> map = new HashMap<>();
-    map.put(ID, Field.create(dataRuleDefinition.getId()));
+    map.put(RULE_ID, Field.create(dataRuleDefinition.getId()));
     map.put(ALERT_TEXT, Field.create(dataRuleDefinition.getAlertText()));
     map.put(CONDITION, Field.create(dataRuleDefinition.getCondition()));
     map.put(FAMILY, Field.create(dataRuleDefinition.getFamily()));
@@ -266,7 +280,6 @@ public class AggregatorUtil {
     map.put(ALERT_ENABLED, Field.create(dataRuleDefinition.isAlertEnabled()));
     map.put(METER_ENABLED, Field.create(dataRuleDefinition.isMeterEnabled()));
     map.put(DRIFT_RULE, Field.create(dataRuleDefinition instanceof DriftRuleDefinition));
-    map.put(RECORD_TYPE, Field.create(DATA_RULE_RECORD));
     record.set(Field.create(map));
     return record;
   }
@@ -274,20 +287,24 @@ public class AggregatorUtil {
   public static Record createDataRuleDisabledRecord(DataRuleDefinition dataRuleDefinition) {
     Record record = createRecord(DATA_RULE_DISABLED);
     Map<String, Field> map = new HashMap<>();
-    map.put(ID, Field.create(dataRuleDefinition.getId()));
+    map.put(RULE_ID, Field.create(dataRuleDefinition.getId()));
+    map.put(LANE, Field.create(dataRuleDefinition.getLane()));
     map.put(AggregatorUtil.TIMESTAMP, Field.create(dataRuleDefinition.getTimestamp()));
-    map.put(RECORD_TYPE, Field.create(DATA_RULE_RECORD));
     record.set(Field.create(map));
     return record;
   }
 
-  public static Record createMetricJsonRecord(String sdcId, Map<String, String> metadata, String metricsJSONStr) {
-    Record record = createRecord(METRIC_RULE_EVALUATOR);
+  public static Record createMetricJsonRecord(
+      String sdcId,
+      Map<String, String> metadata,
+      boolean isAggregated,
+      String metricsJSONStr
+  ) {
+    Record record = createRecord(METRIC_JSON_STRING);
     Map<String, Field> map = new HashMap<>();
-    map.put(RECORD_TYPE, Field.create(METRICS_JSON_RECORD));
     map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
     map.put(SDC_ID, Field.create(sdcId));
-    map.put(IS_AGGREGATED, Field.create(false));
+    map.put(IS_AGGREGATED, Field.create(isAggregated));
     map.put(METADATA, getMetadataField(metadata));
     map.put(METRIC_JSON_STRING, Field.create(metricsJSONStr));
     record.set(Field.create(map));
@@ -351,12 +368,15 @@ public class AggregatorUtil {
     }
   }
 
-  private static Field getMetadataField(Map<String, String> metadata) {
-    Map<String, Field> map = new HashMap<>(metadata.size());
-    for (Map.Entry<String, String> e : metadata.entrySet()) {
-      map.put(e.getKey(), Field.create(e.getValue()));
+  public static Field getMetadataField(Map<String, String> metadata) {
+    if (metadata != null && !metadata.isEmpty()) {
+      Map<String, Field> map = new HashMap<>(metadata.size());
+      for (Map.Entry<String, String> e : metadata.entrySet()) {
+        map.put(e.getKey(), Field.create(e.getValue()));
+      }
+      return Field.create(map);
     }
-    return Field.create(map);
+    return Field.create(Field.Type.MAP, null);
   }
 
 }

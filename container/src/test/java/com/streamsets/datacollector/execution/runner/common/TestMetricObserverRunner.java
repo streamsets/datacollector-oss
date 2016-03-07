@@ -93,7 +93,7 @@ public class TestMetricObserverRunner {
       Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
         Collections.<String>emptyList(), UUID.randomUUID());
     RulesConfigurationChangeRequest rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
+      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String, String>emptyMap(),
         Collections.<String>emptySet(), null, null);
 
     metricObserverRunner.setRulesConfigurationChangeRequest(rulesConfigurationChangeRequest);
@@ -110,7 +110,7 @@ public class TestMetricObserverRunner {
       Collections.<DataRuleDefinition>emptyList(), Collections.<DriftRuleDefinition>emptyList(),
         Collections.<String>emptyList(), UUID.randomUUID());
     rulesConfigurationChangeRequest =
-      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String>emptySet(),
+      new RulesConfigurationChangeRequest(ruleDefinitions, Collections.<String, String>emptyMap(),
         ImmutableSet.of(metricsRuleDefinition.getId()), null, null);
 
     metricObserverRunner.setRulesConfigurationChangeRequest(rulesConfigurationChangeRequest);

@@ -119,7 +119,7 @@ public class DataObserverRunner {
     this.rulesConfigurationChangeRequest = rulesConfigurationChangeRequest;
 
     //remove metrics for changed / deleted rules
-    for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove()) {
+    for(String ruleId : rulesConfigurationChangeRequest.getRulesToRemove().keySet()) {
       MetricsConfigurator.removeMeter(metrics, USER_PREFIX + ruleId, name, rev);
       MetricsConfigurator.removeCounter(metrics, USER_PREFIX + ruleId, name, rev);
       EvictingQueue<SampledRecord> records = ruleToSampledRecordsMap.get(ruleId);
