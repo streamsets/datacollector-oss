@@ -60,6 +60,8 @@ For Data Collector CLI, execute:
 
 `dist/target/streamsets-datacollector-1.3.0.0-SNAPSHOT/streamsets-datacollector-1.3.0.0-SNAPSHOT/bin/streamsets cli`
 
+To skip the RAT report during the build use the `-DskipRat` option.
+
 ## Release build
 
 From within the Data Collector directory, execute:
