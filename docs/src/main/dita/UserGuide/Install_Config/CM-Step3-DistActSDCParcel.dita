@@ -22,7 +22,7 @@
                 Cloudera Manager, you can download, distribute, and activate the StreamSets parcel
                 across the cluster.</p>
             <p>The StreamSets parcel repository is added to Cloudera Manager during the installation
-                of the CSD. However, if installing the parcel before the CSD, the the StreamSets
+                of the CSD. However, if installing the parcel before the CSD, the StreamSets
                 parcel repository URL is located
                 at:<codeblock>https://archives.streamsets.com/datacollector/latest/parcel/</codeblock></p>
             <p>When working with multiple clusters, perform the following steps for each

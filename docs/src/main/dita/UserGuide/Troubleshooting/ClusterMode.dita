@@ -60,7 +60,7 @@ Kerberos Error: No valid credentials provided (Mechanism level: Failed to find a
         </dlentry>
         <dlentry>
           <dt>My pipeline stopped unexpectedly.</dt>
-          <dd>Check the Spark Application Master logs in the YARN ResourceManager UI for more
+          <dd>Check the Spark Application Master logs in the YARN Resource Manager UI for more
             information about the problem.</dd>
         </dlentry>
         <dlentry>

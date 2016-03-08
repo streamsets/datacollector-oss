@@ -25,7 +25,7 @@
                     /> installation directory for the drivers. Use an external directory to enable
                     use of the drivers after <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> ugrades.<p>For example, if you installed <ph
+                    /> upgrades.<p>For example, if you installed <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> in the following directory: <codeblock>/opt/sdc/</codeblock></p><p>you
                         might create the driver directory at:
