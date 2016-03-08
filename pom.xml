@@ -419,6 +419,7 @@
         <cdh_5_3-lib>cdh_5_3-lib</cdh_5_3-lib>
         <cdh_5_4-lib>cdh_5_4-lib</cdh_5_4-lib>
         <hdp_2_2-lib>hdp_2_2-lib</hdp_2_2-lib>
+        <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
         <apache-kafka_0_8_1-lib>apache-kafka_0_8_1-lib</apache-kafka_0_8_1-lib>
         <apache-kafka_0_8_2-lib>apache-kafka_0_8_2-lib</apache-kafka_0_8_2-lib>
         <apache-kafka_0_9-lib>apache-kafka_0_9-lib</apache-kafka_0_9-lib>
@@ -438,6 +439,7 @@
         <module>cdh_5_3-lib</module>
         <module>cdh_5_4-lib</module>
         <module>hdp_2_2-lib</module>
+        <module>mapr_5_0-lib</module>
         <module>apache-kafka_0_8_1-lib</module>
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
@@ -464,6 +466,7 @@
       <properties>
         <hdp_2_3-lib>hdp_2_3-lib</hdp_2_3-lib>
         <cdh_5_5-lib>cdh_5_5-lib</cdh_5_5-lib>
+        <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
         <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
@@ -478,6 +481,7 @@
       <modules>
         <module>cdh_5_5-lib</module>
         <module>hdp_2_3-lib</module>
+        <module>mapr_5_1-lib</module>
         <module>jython_2_7-lib</module>
         <module>groovy_2_4-lib</module>
         <module>elasticsearch_2_2-lib</module>
