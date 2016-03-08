@@ -2306,9 +2306,9 @@
                                         <entry>List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
-                                            names are passed the stage for error handling. <p>Use an
-                                                asterisk (*) to allow writing to any topic name. By
-                                                default, all topic names are valid.</p></entry>
+                                            names are passed to the stage for error handling. <p>Use
+                                                an asterisk (*) to allow writing to any topic name.
+                                                By default, all topic names are valid.</p></entry>
                                     </row>
                                     <row id="KPPartStrategy">
                                         <entry>Partition Strategy </entry>

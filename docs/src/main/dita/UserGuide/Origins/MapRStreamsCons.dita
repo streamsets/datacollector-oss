@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cvy_xsf_2v">
  <title>MapR Streams Consumer</title>
- <shortdesc>The MapR Streams Consumer origin reads messages from a MapR cluster.</shortdesc>
+ <shortdesc>The MapR Streams Consumer origin reads messages from MapR Streams.</shortdesc>
  <conbody>
   <p><indexterm>MapR Streams Consumer
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>MapR

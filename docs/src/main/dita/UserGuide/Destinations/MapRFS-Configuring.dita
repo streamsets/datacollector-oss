@@ -18,7 +18,7 @@
     <taskbody>
         <context>
             <p><indexterm>MapR FS destination<indexterm>configuring</indexterm></indexterm>Configure
-                a MapR FS destination to write data to MapR.</p>
+                a MapR FS destination to write files to MapR FS.</p>
         </context>
         <steps id="steps_igm_3fj_fv">
             <step
@@ -49,11 +49,11 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_hqm_3fj_fv"
                                         /></xref></entry>
-                                    <entry>The HDFS user to use to connect to MapR. When using this
-                                        property, make sure MapR is configured appropriately.<p>By
-                                            default, the pipeline uses the <ph
+                                    <entry>The HDFS user to use to connect to MapR FS. When using
+                                        this property, make sure MapR FS is configured
+                                            appropriately.<p>By default, the pipeline uses the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> user to connect to MapR.</p></entry>
+                                            /> user to connect to MapR FS.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Kerberos Authentication<xref
@@ -61,7 +61,7 @@
                                             <image href="../Graphics/icon_moreInfo.png" scale="10"
                                                 placement="inline" id="image_kqm_3fj_fv"
                                         /></xref></entry>
-                                    <entry>Uses Kerberos credentials to connect to MapR. <p>When
+                                    <entry>Uses Kerberos credentials to connect to MapR FS. <p>When
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -89,7 +89,7 @@
                                     <entry>Additional HDFS properties to use. <p>To add properties,
                                             click <uicontrol>Add</uicontrol> and define the property
                                             name and value. Use the property names and values as
-                                            expected by MapR.</p></entry>
+                                            expected by MapR FS.</p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-file">

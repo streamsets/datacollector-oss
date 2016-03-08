@@ -33,7 +33,8 @@
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>
         <li>Local FS - Writes data to a local file system. </li>
         <li>Rabbit MQ Producer - Writes data to RabbitMQ.</li>
-        <li>MapR Streams Producer - Streams data to a MapR cluster.</li>
+        <li>MapR FS - Writes data to MapR FS.</li>
+        <li>MapR Streams Producer - Writes data to MapR Streams.</li>
         <li>SDC RPC - Passes data to an SDC RPC origin in an SDC RPC pipeline.</li>
         <li>Solr - Writes data to a Solr node or cluster.</li>
         <li>To Error - Passes records to the pipeline for error handling.</li>

@@ -15,7 +15,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_bfz_gch_2v">
     <title>Configuring a MapR Streams Consumer</title>
-    <shortdesc>Configure a MapR Streams Consumer to read messages from a MapR cluster. </shortdesc>
+    <shortdesc>Configure a MapR Streams Consumer to read messages from MapR Streams. </shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_i5h_xtl_2v">
@@ -82,9 +82,9 @@
                                     <entry>Additional configuration properties to use. To add
                                         properties, click <uicontrol>Add</uicontrol> and define the
                                         property name and value. <p>Use the property names and
-                                            values as expected by MapR.</p><p>You can use MapR
-                                            Streams properties and set of Kafka properties supported
-                                            by MapR Streams. </p></entry>
+                                            values as expected by MapR Streams.</p><p>You can use
+                                            MapR Streams properties and set of Kafka properties
+                                            supported by MapR Streams. </p></entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/MessagesCharset">

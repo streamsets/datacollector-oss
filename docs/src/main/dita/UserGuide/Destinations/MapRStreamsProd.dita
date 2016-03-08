@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_cfj_qbn_2v">
  <title>MapR Streams Producer</title>
- <shortdesc>The MapR Streams Producer destination writes messages to a MapR cluster.</shortdesc>
+ <shortdesc>The MapR Streams Producer destination writes messages to MapR Streams.</shortdesc>
  <conbody>
         <p><indexterm>MapR Streams Producer
                     destination<indexterm>overview</indexterm></indexterm><indexterm>destinations<indexterm>MapR

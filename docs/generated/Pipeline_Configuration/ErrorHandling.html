@@ -80,19 +80,6 @@
 
         
         
-          <dt class="dt dlterm">Write to File</dt>
-
-          <dd class="dd">The pipeline writes error records and related details to a local directory. <span class="ph">Data
-                  Collector</span>
-            includes the records in error record counts and metrics.</dd>
-
-          <dd class="dd">You define the directory to use and the maximum file size. Error files are named based
-            on the File Prefix pipeline property. </dd>
-
-          <dd class="dd">Write to file is not supported for cluster pipelines at this time.</dd>
-
-        
-        
           <dt class="dt dlterm">Write to Another Pipeline</dt>
 
           <dd class="dd">The pipeline writes error records to an SDC RPC pipeline. <span class="ph">Data
@@ -112,6 +99,29 @@
 
         
         
+          <dt class="dt dlterm">Write to Elasticsearch</dt>
+
+          <dd class="dd">The pipeline writes error records and related details to Elasticsearch. <span class="ph">Data
+                  Collector</span>
+            includes the records in error record counts and metrics.</dd>
+
+          <dd class="dd">You define the configuration properties for the Elasticsearch cluster to use. </dd>
+
+        
+        
+          <dt class="dt dlterm">Write to File</dt>
+
+          <dd class="dd">The pipeline writes error records and related details to a local directory. <span class="ph">Data
+                  Collector</span>
+            includes the records in error record counts and metrics.</dd>
+
+          <dd class="dd">You define the directory to use and the maximum file size. Error files are named based
+            on the File Prefix pipeline property. </dd>
+
+          <dd class="dd">Write to file is not supported for cluster pipelines at this time.</dd>
+
+        
+        
           <dt class="dt dlterm">Write to Kafka</dt>
 
           <dd class="dd">The pipeline writes error records and related details to Kafka. <span class="ph">Data
@@ -119,6 +129,16 @@
             includes the records in error record counts and metrics.</dd>
 
           <dd class="dd">You define the configuration properties for the Kafka cluster to use. </dd>
+
+        
+        
+          <dt class="dt dlterm">Write to MapR Streams</dt>
+
+          <dd class="dd">The pipeline writes error records and related details to MapR Streams. <span class="ph">Data
+                  Collector</span>
+            includes the records in error record counts and metrics.</dd>
+
+          <dd class="dd">You define the configuration properties for the MapR Streams to use. </dd>
 
         
       </dl>

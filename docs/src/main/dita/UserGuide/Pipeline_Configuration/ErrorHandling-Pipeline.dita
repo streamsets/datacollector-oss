@@ -68,10 +68,10 @@
         </dlentry>
         <dlentry>
           <dt>Write to MapR Streams</dt>
-          <dd>The pipeline writes error records and related details to a MapR cluster. <ph
+          <dd>The pipeline writes error records and related details to MapR Streams. <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             includes the records in error record counts and metrics.</dd>
-          <dd>You define the configuration properties for the MapR cluster to use. </dd>
+          <dd>You define the configuration properties for the MapR Streams to use. </dd>
         </dlentry>
       </dl></p>
   <p>When <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>

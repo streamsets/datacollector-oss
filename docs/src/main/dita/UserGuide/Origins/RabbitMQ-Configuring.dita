@@ -128,9 +128,9 @@
                                 <row>
                                     <entry>Exclusive</entry>
                                     <entry>Creates an exclusive queue when selected. When exclusive,
-                                        the queue allows only the <ph
+                                        the queue allows only <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> to use it.<p>By default, the origin creates an exclusive
+                                        />  to use it.<p>By default, the origin creates an exclusive
                                             queue.</p></entry>
                                 </row>
                                 <row>

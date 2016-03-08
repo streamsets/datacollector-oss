@@ -23,6 +23,6 @@
             valid configuration property. When you add a property, enter the exact property name and
             the value. MapR Streams Consumer does not validate the property names or values.</p>
         <p>You can use any MapR or Kafka property supported by MapR Streams. For more information,
-            see the MapR documentation. </p>
+            see the MapR Streams documentation. </p>
  </conbody>
 </concept>

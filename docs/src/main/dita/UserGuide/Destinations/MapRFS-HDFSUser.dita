@@ -15,17 +15,17 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_kls_lqc_fv">
  <title>Using an HDFS User</title>
- <shortdesc>You can configure the MapR FS destination to use an HDFS user to write data to
-        MapR.</shortdesc>
+ <shortdesc>You can configure the MapR FS destination to use an HDFS user to write data to MapR
+        FS.</shortdesc>
  <conbody>
-        <p><indexterm>MapR FS destination<indexterm>using an HDFS user to write to
-                MapR</indexterm></indexterm>By default, the <ph
+        <p><indexterm>MapR FS destination<indexterm>using an HDFS user to write to MapR
+                    FS</indexterm></indexterm>By default, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses the user account who started it to connect to external systems. When using
             Kerberos, the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             uses the Kerberos principal. </p>
-  <p>To use an HDFS user to connect to MapR, perform the following tasks:<ol id="ul_mb1_xpt_ls">
+  <p>To use an HDFS user to connect to MapR FS, perform the following tasks:<ol id="ul_mb1_xpt_ls">
                 <li>On MapR, configure the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> user as a proxy user and authorize the <ph

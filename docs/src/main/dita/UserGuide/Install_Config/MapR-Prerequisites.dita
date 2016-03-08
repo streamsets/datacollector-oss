@@ -22,9 +22,13 @@
             As a result, you must perform additional steps to enable the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             machine to process MapR data.</p>
-        <p>To process data from a MapR cluster, install the <ph
+        <p>To connect to MapR FS or MapR Streams, install the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a node in the cluster or on a client machine. Before using <ph
+            a node in the cluster or on a client machine. To use <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
+            a client machine, the MapR client package must be installed and configured on the
+            machine.</p>
+        <p>Before using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
             process MapR data, perform the following steps:</p>
         <ol id="ol_ghq_zrg_2v">
@@ -32,7 +36,7 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, $SDC_CONF/sdc.properties, remove the MapR stage library that
                 you want to use from the <uicontrol>system.stagelibs.blacklist</uicontrol>
-                    property.<note>You can use one version of the MapR library at a time.
+                    property.<note>You can use only one version of the MapR library at a time.
                 </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
                     <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to

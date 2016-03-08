@@ -18,8 +18,8 @@
  <conbody>
         <p><indexterm>MapR FS destination<indexterm>data
                 formats</indexterm></indexterm><indexterm>data formats<indexterm>MapR FS
-                    destination</indexterm></indexterm>MapR FS writes data to HDFS based on the data
-            format that you select. You can use the following data formats: <dl>
+                    destination</indexterm></indexterm>The MapR FS destination writes data to MapR
+            FS based on the data format that you select. You can use the following data formats: <dl>
                 <dlentry
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/DEST-DF-AvroFILE">
                     <dt/>
