@@ -16,7 +16,7 @@
 <concept id="concept_xh5_y4d_br">
  <title>Hive Properties and Configuration Files</title>
     <conbody>
-        <p><indexterm>Hive Streaming destination<indexterm>using configuration files or or adding
+        <p><indexterm>Hive Streaming destination<indexterm>using configuration files or adding
                     properties</indexterm></indexterm>You can configure Hive Streaming to use Hive
             and Hadoop configuration files and additional properties:<dl>
                 <dlentry>

@@ -110,9 +110,7 @@
                                 </row>
                                 <row>
                                     <entry>Timestamp</entry>
-                                    <entry>String to use as the timestamp for the
-                                            messages.<draft-comment author="Loretta">slacked
-                                            Santhosh.</draft-comment></entry>
+                                    <entry>String to use as the timestamp for the messages.</entry>
                                 </row>
                                 <row>
                                     <entry>Message Type</entry>

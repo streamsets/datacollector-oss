@@ -27,7 +27,7 @@
         <li>Hadoop FS - Writes data to the Hadoop Distributed File System (HDFS).</li>
         <li>HBase - Writes data to an HBase cluster.</li>
         <li>Hive Streaming - Writes data to Hive.</li>
-        <li>InfuxDB - Writes data to InfluxDB.</li>
+        <li>InfluxDB - Writes data to InfluxDB.</li>
         <li>JDBC Producer - Writes data to JDBC.</li>
         <li>Kafka Producer - Writes data to a Kafka cluster.</li>
         <li>Kinesis Producer - Writes data to a Kinesis cluster.</li>

@@ -270,7 +270,7 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>
-                            <entry>For MongoDB 3.0.2. <p>Includes the Mongo DB origin.</p></entry>
+                            <entry>For MongoDB 3.0.2. <p>Includes the MongoDB origin.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-omniture-lib </entry>

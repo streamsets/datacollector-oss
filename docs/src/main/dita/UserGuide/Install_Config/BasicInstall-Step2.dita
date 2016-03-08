@@ -86,7 +86,7 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                 </dlentry>
                 <dlentry>
                     <dt>To uninstall libraries when necessary:</dt>
-                    <dd>To unstall a library, use the following
+                    <dd>To uninstall a library, use the following
                         command:<codeblock>&lt;SDCinstalldir>/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
                     <dd>Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>

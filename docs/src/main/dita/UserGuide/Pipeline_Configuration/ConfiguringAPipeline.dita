@@ -389,7 +389,7 @@
                 </info>
             </step>
             <step>
-                <cmd>When writing data to a MapR Streams cluster, click the <wintitle>Erorr Records
+                <cmd>When writing data to a MapR Streams cluster, click the <wintitle>Error Records
                         - Write to MapR Streams</wintitle> tab and configure the following
                     properties:</cmd>
                 <info
