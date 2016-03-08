@@ -40,13 +40,29 @@
                                 <row>
                                     <entry>Instance Type</entry>
                                     <entry>Solr instance type to write to:<ul id="ul_ymy_ykr_wr">
-                                            <li>Single Node - Writes to single Solr node.</li>
-                                            <li>SolrCloud - Writes to Solr cluster.</li>
+                                            <li>Single Node - Writes to a single Solr node.</li>
+                                            <li>SolrCloud - Writes to a Solr cluster.</li>
                                         </ul></entry>
                                 </row>
                                 <row>
                                     <entry>Solr URI</entry>
-                                    <entry>URI for the node.</entry>
+                                    <entry>When writing to a single node, URI for the node. Use the
+                                        following
+                                        format:<codeblock>http://&lt;host>:&lt;port>/solr/&lt;core_name></codeblock></entry>
+                                </row>
+                                <row>
+                                    <entry>ZooKeeper Connection String</entry>
+                                    <entry>When writing to a Solr cluster, the ZooKeeper connection
+                                        string. Use the following
+                                            format:<codeblock>&lt;host>:&lt;port></codeblock><p>If
+                                            the cluster uses multiple ZooKeeper instances, enter a
+                                            comma-separated list of the connection
+                                        strings.</p></entry>
+                                </row>
+                                <row>
+                                    <entry>Default Collection Name</entry>
+                                    <entry>When writing to a Solr cluster, the default collection
+                                        name for the cluster.</entry>
                                 </row>
                                 <row>
                                     <entry>Record Indexing Mode</entry>
