@@ -97,7 +97,7 @@ public class InfluxConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Record Converter",
+      label = "Record Mapping",
       description = "Converters take incoming records and transform them to an InfluxDB measurement.",
       displayPosition = 80,
       group = "#0"
