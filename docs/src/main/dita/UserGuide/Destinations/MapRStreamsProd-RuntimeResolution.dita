@@ -20,7 +20,7 @@
         values and writes the record to the resulting topic. </shortdesc>
  <conbody>
   <p><indexterm>MapR Streams Producer destination<indexterm>runtime topic
-                resolution</indexterm></indexterm>When performing runtime topic resolution,MapR
+                resolution</indexterm></indexterm>When performing runtime topic resolution, MapR
             Streams Producer can write to any topic by default. You can create a white list of
             topics to limit the number of topics the destination attempts to use. When you create a
             white list, any record that resolves to an unlisted topic is sent to the stage for error

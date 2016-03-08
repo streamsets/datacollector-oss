@@ -45,9 +45,9 @@
      
      <thead class="thead" align="left">
       <tr class="row">
-       <th class="entry" valign="top" width="31.25%" id="d27894e40">Function Type</th>
+       <th class="entry" valign="top" width="31.25%" id="d34700e40">Function Type</th>
 
-       <th class="entry" valign="top" width="68.75%" id="d27894e43">Functions</th>
+       <th class="entry" valign="top" width="68.75%" id="d34700e43">Functions</th>
 
       </tr>
 
@@ -55,9 +55,9 @@
 
      <tbody class="tbody">
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_gdz_wb2_gs">
           <li class="li">record:attribute('&lt;attribute name&gt;') </li>
@@ -85,10 +85,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_s2c_q14_fs" title="Use delimited data record functions to process delimited data with the list root field type. If you configured an origin to process the delimited data with the list-map root field type, you can use standard record functions.">Delimited data record
          functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_z2x_jc2_gs">
          <li class="li">record:dExists('&lt;header&gt;') </li>
 
@@ -111,9 +111,9 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_hpn_xfk_p5" title="Use data drift functions to create alerts when data drift occurs. You can use these functions in data drift rules.">Data drift functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_wsq_kfk_p5">
          <li class="li">drift:names('&lt;field path&gt;', &lt;ignoreWhenMissing: true | false&gt;)</li>
 
@@ -130,10 +130,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_ndj_43v_1r" title="Error record functions provide information about error records. Use error functions to process error records.">Error record
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_n1v_z12_gs">
          <li class="li">record:errorCode()</li>
 
@@ -154,14 +154,18 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_ahp_f4v_1r" title="Use string functions to transform string data.">String functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <div class="p">
          <ul class="ul" id="concept_lhz_pyp_1r__ul_f15_xf2_gs">
+          <li class="li">str:concat("&lt;string1&gt;", "&lt;string2&gt;")</li>
+
           <li class="li">str:contains("&lt;string&gt;", "&lt;subset&gt;") </li>
 
           <li class="li">str:endsWith("&lt;string&gt;", "&lt;subset&gt;")</li>
+
+          <li class="li">str:matches("&lt;string&gt;", &lt;regEx&gt;)</li>
 
           <li class="li">str:regexCapture("&lt;string&gt;", &lt;regEx&gt;, &lt;group&gt;)</li>
 
@@ -190,10 +194,10 @@
       </tr>
 
       <tr class="row">
-       <td class="entry" valign="top" width="31.25%" headers="d27894e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
+       <td class="entry" valign="top" width="31.25%" headers="d34700e40 "><a class="xref" href="Functions.html#concept_ddw_ld1_1s">Miscellaneous
         functions</a></td>
 
-       <td class="entry" valign="top" width="68.75%" headers="d27894e43 ">
+       <td class="entry" valign="top" width="68.75%" headers="d34700e43 ">
         <ul class="ul" id="concept_lhz_pyp_1r__ul_xks_xg2_gs">
          <li class="li">alert:info()</li>
 
@@ -486,7 +490,7 @@
                         <p class="p">Use the ignoreWhenMissing flag to determine the behavior
                   when the field is missing. When set to "true", a missing field causes no errors.
                   When set to "false", a missing field generates an alert for the record missing the
-                  field, and for the next recod that includes the field field.</p>
+                  field, and for the next record that includes the field.</p>
 
                     </dd>
 
@@ -509,7 +513,7 @@
                         <p class="p">Use the ignoreWhenMissing flag to determine the behavior
                   when the field is missing. When set to "true", a missing field causes no errors.
                   When set to "false", a missing field generates an alert for the record missing the
-                  field, and for the next recod that includes the field field.</p>
+                  field, and for the next record that includes the field.</p>
 
                     </dd>
 
@@ -529,7 +533,7 @@
                         <p class="p">Use the ignoreWhenMissing flag to determine the behavior
                   when the field is missing. When set to "true", a missing field causes no errors.
                   When set to "false", a missing field generates an alert for the record missing the
-                  field, and for the next recod that includes the field field.</p>
+                  field, and for the next record that includes the field.</p>
 
                     </dd>
 
@@ -549,7 +553,7 @@
                         <p class="p">Use the ignoreWhenMissing flag to determine the behavior
                   when the field is missing. When set to "true", a missing field causes no errors.
                   When set to "false", a missing field generates an alert for the record missing the
-                  field, and for the next recod that includes the field field.</p>
+                  field, and for the next record that includes the field.</p>
 
                     </dd>
 
@@ -662,6 +666,27 @@
   <div class="p">
    <dl class="dl">
         
+          <dt class="dt dlterm">str:concat("&lt;string1&gt;", "&lt;string2&gt;")</dt>
+
+          <dd class="dd">Concatenates two strings together. </dd>
+
+          <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_w3w_w2t_2v">
+              <li class="li">string1 - The first string to concatenate.</li>
+
+              <li class="li">string2 - The second string to concatenate.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd">Use the str:concat function to concatenate strings within an expression. For example,
+            to concatenate the FirstName field with the LastName field and then check if that result
+            matches a pattern, use the following expression:</dd>
+
+          <dd class="dd">${str:matches(str:concat(record:value("/FirstName") , record:value("/LastName")) ,
+            "[A-Z][a-z]+[A-Z][a-z]+")}</dd>
+
+        
+        
           <dt class="dt dlterm">str:contains("&lt;string&gt;", "&lt;subset&gt;")</dt>
 
           <dd class="dd">Returns a true or false based on whether the string contains the configured subset of
@@ -696,6 +721,23 @@
 
         
         
+          <dt class="dt dlterm">str:matches("&lt;string&gt;", &lt;regEx&gt;)</dt>
+
+          <dd class="dd">Returns true or false based on whether a string matches a Java regex pattern.</dd>
+
+          <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_yjb_wjq_fv">
+              <li class="li">string - The string to evaluate.</li>
+
+              <li class="li">regEx - Regular expression that describes the pattern of the string.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd">For example, ${str:matches(record:value("/HostName"), ".*\.com$")} checks if the
+            string in the HostName field ends with the characters ".com".</dd>
+
+        
+     
           <dt class="dt dlterm">str:regExCapture("&lt;string&gt;", &lt;regEx&gt;, &lt;group&gt;)</dt>
 
           <dd class="dd">Parses a complex string into groups based on a Java regex pattern and returns the
@@ -961,7 +1003,7 @@
           </ul>
 </dd>
 
-        <dd class="dd">For more information about runtime resources, see <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime properties to load sensitive information from files at runtime.">Runtime Resources</a>.</dd>
+        <dd class="dd">For more information about runtime resources, see <a class="xref" href="../Advanced_Config/RuntimeResources.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure sensitive information. Use runtime resources to load sensitive information from files at runtime.">Runtime Resources</a>.</dd>
 
       
       

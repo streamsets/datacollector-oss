@@ -31,6 +31,7 @@
         <li>JMS Consumer</li>
     <li>Kafka Consumer</li>
         <li>Kinesis Consumer</li>
+                <li>MapR Streams Consumer</li>
                 <li>RabbitMQ Consumer</li>
    </ul></p>
   <p>You can use the following destinations to write SDC Record data:<ul id="ul_l1m_52b_wr">
@@ -38,6 +39,8 @@
         <li>Flume</li>
     <li>Kafka Producer</li>
         <li>Kinesis Producer</li>
+                <li>MapR Streams Producer</li>
+                <li>RabbitMQ Producer</li>
    </ul></p>
  </conbody>
 </concept>

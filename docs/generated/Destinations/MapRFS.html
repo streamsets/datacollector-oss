@@ -1,0 +1,1159 @@
+
+<!DOCTYPE html
+  SYSTEM "about:legacy-compat">
+<html xml:lang="en-us" lang="en-us">
+<head><meta name="description" content="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files. When you configure a MapR FS destination, you define the output directory ..."></meta><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><meta name="copyright" content="(C) Copyright 2005"></meta><meta name="DC.rights.owner" content="(C) Copyright 2005"></meta><meta name="DC.Type" content="concept"></meta><meta name="DC.Title" content="MapR FS"></meta><meta name="abstract" content="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files."></meta><meta name="description" content="The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat files or Hadoop sequence files."></meta><meta name="DC.Relation" scheme="URI" content="../Destinations/Destinations-title.html"></meta><meta name="DC.Format" content="XHTML"></meta><meta name="DC.Identifier" content="concept_spv_xlc_fv"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/commonltr.css"><!----></link><title>MapR FS</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/css/webhelp_topic.css"><!----></link><link rel="stylesheet" type="text/css" href="../oxygen-webhelp/resources/skins/skin.css"><!----></link><link rel="stylesheet" type="text/css" href="../skin.css"></link><script type="text/javascript"><!--
+          
+          var prefix = "../index.html";
+          
+          --></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-1.8.2.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.cookie.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery-ui.custom.min.js"><!----></script><script type="text/javascript" src="../oxygen-webhelp/resources/js/jquery.highlight-3.js"><!----></script><script type="text/javascript" charset="utf-8" src="../oxygen-webhelp/resources/js/webhelp_topic.js"><!----></script><!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+--></head>
+<body onload="highlightSearchTerm()" class="frmBody"><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+​
+  ga('create', 'UA-53969024-1', 'auto');
+  ga('send', 'pageview');
+​
+</script>
+<table class="nav"><tbody><tr><td colspan="2"><div id="printlink"><a href="javascript:window.print();" title="Print this page"></a></div><div id="permalink"><a href="#" title="Link to this page"></a></div></td></tr><tr><td width="75%"><a class="navheader_parent_path" href="../Destinations/Destinations-title.html" title="Destinations">Destinations</a></td><td><div class="navheader">
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div></td></tr></tbody></table>
+<div class="nested0" id="concept_spv_xlc_fv">
+ <h1 class="title topictitle1">MapR FS </h1>
+
+ 
+ <div class="body conbody"><p class="shortdesc">The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat
+        files or Hadoop sequence files. </p>
+
+        <p class="p">When you configure a MapR FS destination, you define
+            the output directory template. The destination creates output directories based on the
+            template and the time basis. The destination writes records to the directories based on
+            the time basis as well.</p>
+
+        <p class="p">You can specify the amount of time that a record can be written to its associated
+            directory and what happens to late records. </p>
+
+        <p class="p">You can use Gzip, Bzip2, Snappy, LZ4, and other compression formats to write output
+            files. </p>
+
+        
+ </div>
+
+<div class="related-links"></div>
+<div class="topic concept nested1" id="concept_ch4_zpc_fv">
+ <h2 class="title topictitle2">Kerberos Authentication</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">You can use Kerberos authentication to connect to MapR. When you use Kerberos
+        authentication, the <span class="ph">Data
+                  Collector</span> uses
+        the Kerberos principal and keytab to connect to MapR. </p>
+
+        <p class="p">The Kerberos principal and keytab are defined in the
+                <span class="ph">Data
+                  Collector</span> configuration file. To use Kerberos authentication, configure all Kerberos properties
+            in the <span class="ph">Data
+                  Collector</span>
+            configuration file, and then enable Kerberos in the MapR FS destination.</p>
+
+    </div>
+
+    <div class="related-links"><div class="relinfo relconcepts"><strong>Related concepts</strong><br></br>
+<div class="related_link"><a class="navheader_parent_path" href="../Install_Config/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to origin and destination systems, as well as YARN clusters.">Enabling Kerberos Authentication</a></div>
+</div>
+</div>
+</div>
+<div class="topic concept nested1" id="concept_kls_lqc_fv">
+ <h2 class="title topictitle2">Using an HDFS User</h2>
+
+ 
+ <div class="body conbody"><p class="shortdesc">You can configure the MapR FS destination to use an HDFS user to write data to MapR
+        FS.</p>
+
+        <p class="p">By default, the <span class="ph">Data
+                  Collector</span>
+            uses the user account who started it to connect to external systems. When using
+            Kerberos, the <span class="ph">Data
+                  Collector</span>
+            uses the Kerberos principal. </p>
+
+  <div class="p">To use an HDFS user to connect to MapR FS, perform the following tasks:<ol class="ol" id="concept_kls_lqc_fv__ul_mb1_xpt_ls">
+                <li class="li">On MapR, configure the <span class="ph">Data
+                  Collector</span> user as a proxy user and authorize the <span class="ph">Data
+                  Collector</span> user to impersonate the HDFS user. <p class="p">For more information, see the HDFS
+                        documentation. </p>
+</li>
+
+                <li class="li">In the MapR FS destination, enter the HDFS user name.</li>
+
+            </ol>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_yr4_tqc_fv">
+ <h2 class="title topictitle2">Data Formats</h2>
+
+ <div class="body conbody">
+        <div class="p">The MapR FS destination writes data to MapR
+            FS based on the data format that you select. You can use the following data formats: <dl class="dl">
+                
+                              <dt class="dt dlterm">Avro</dt>
+
+                              <dd class="dd">The destination writes records based on the Avro schema that you
+                                    provide. The schema definition is included in each file.</dd>
+
+                              <dd class="dd">You can also compress data with an Avro compression codec. When
+                                    using Avro compression, do not use other compression available
+                                    in the destination. </dd>
+
+                        
+                
+                              <dt class="dt dlterm">Delimited</dt>
+
+                              <dd class="dd">The destination writes records as delimited data. When you use
+                                    this data format, you must ensure that the data uses the
+                                    following data structure:<ul class="ul" id="concept_yr4_tqc_fv__d1332e643">
+                                          <li class="li">A root field that contains an array of maps.</li>
+
+                                          <li class="li">Each map includes a <dfn class="term">value</dfn> element and an
+                                                optional <dfn class="term">header</dfn> element.</li>
+
+                                    </ul>
+</dd>
+
+                        
+                
+                              <dt class="dt dlterm">JSON</dt>
+
+                              <dd class="dd">The destination writes records as JSON data. You can use one of
+                                    the following formats:<ul class="ul" id="concept_yr4_tqc_fv__d1332e626">
+                                          <li class="li">Array - Each file includes a single array. In the
+                                                array, each element is a JSON representation of each
+                                                record.</li>
+
+                                          <li class="li">Multiple objects - Each file includes multiple JSON
+                                                objects. Each object is a JSON representation of a
+                                                record. </li>
+
+                                    </ul>
+</dd>
+
+                        
+                
+                        <dt class="dt dlterm">Protobuf</dt>
+
+                        <dd class="dd">Writes a batch of messages in each file. </dd>
+
+                        <dd class="dd">Uses the user-defined message type and the definition of the message
+                              type in the descriptor file to generate the messages in the file. </dd>
+
+                        <dd class="dd">For information about generating the descriptor file, see <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</dd>
+
+                  
+                
+                              <dt class="dt dlterm">Text</dt>
+
+                              <dd class="dd">The destination writes a single text field of a record. When you
+                                    configure the stage, you select the field to use. When
+                                    necessary, merge record data into the field earlier in the
+                                    pipeline. </dd>
+
+                        
+            </dl>
+</div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_rwm_yqc_fv">
+ <h2 class="title topictitle2">Directory Templates</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">The MapR FS destination uses directory templates to create output and late record
+        directories. The destination writes records to the directories based on the configured time
+        basis.</p>
+
+        <p class="p">You can use a mix of constants, field values, and
+            datetime variables in a directory template. You can use the <samp class="ph codeph">every</samp>
+            function to create new directories at regular intervals based on seconds or minutes. You
+            can also use the <samp class="ph codeph">record:valueOrDefault</samp> function to use field values or
+            a default in the directory template. </p>
+
+        <div class="p">For example, the following directory template creates output directories for event data
+            based on the state and timestamp of a record with hours as the smallest unit of measure,
+            creating a new directory every twelve
+            hours:<pre class="pre codeblock"> /outputfiles/${record:valueOrDefault("/State", "unknown")}/${YY()}-${MM()}-${DD()}-${every(12,hh())}</pre>
+</div>
+
+        <div class="p">You can use the following elements in a directory template:<dl class="dl">
+                
+                    <dt class="dt dlterm">Constants</dt>
+
+                    <dd class="dd">You can use any constant, such as "output" or "lateRecords."</dd>
+
+                
+                
+                    <dt class="dt dlterm">Datetime Variables</dt>
+
+                    <dd class="dd">MapR FS creates directories as needed, based on the smallest datetime
+                        variable that you use. For example, if the smallest variable is hours, then
+                        the directories are created for every hour of the day that receives output
+                        records.</dd>
+
+                    <dd class="dd">You can use the following datetime variables in a directory template:<ul class="ul" id="concept_rwm_yqc_fv__ul_s2x_5qq_1r">
+                            <li class="li">${YYYY()} - four digit year</li>
+
+                            <li class="li">${YY()} - two digit year</li>
+
+                            <li class="li">${MM()} - two digit month</li>
+
+                            <li class="li">${DD()} - two digit date</li>
+
+                            <li class="li">${hh()} - two digit hour</li>
+
+                            <li class="li">${mm()} - two digit minute</li>
+
+                            <li class="li">${ss()} - two digit second</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd">When you define a directory template, use all of the datetime variables
+                        between one of the year variables and the smallest variable that you want to
+                        use. For example, to create directories on a daily basis, you might use one
+                        of the following datetime variable progressions:</dd>
+
+                    <dd class="dd">
+                        <pre class="pre codeblock">${YYYY()}-${MM()}-${DD()}
+${YY()}_${MM()}_${DD()}</pre>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">every() function</dt>
+
+                    <dd class="dd">You can use the <samp class="ph codeph">every()</samp> function in a directory template to
+                        create directories at regular intervals based on minutes or seconds. The
+                        intervals should be a submultiple or integer factor of 60. For example, you
+                        can create directories every 15 minutes or 30 seconds. </dd>
+
+                    <dd class="dd">Use the <samp class="ph codeph">every()</samp> function to replace the smallest datetime
+                        variable used in the template.</dd>
+
+                    <dd class="dd">For example, the following directory template creates directories every 5
+                        minutes:<pre class="pre codeblock">/HDFS_output/${YYYY()}-${MM()}-${DD()}-${hh()}-${every(5,mm())}</pre>
+</dd>
+
+                    <dd class="dd">For details about the <samp class="ph codeph">every()</samp> function, see <a class="xref" href="../Expression_Language/Functions.html#concept_ddw_ld1_1s">Miscellaneous Functions</a>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">record:valueOrDefault function</dt>
+
+                    <dd class="dd">You can use the following expression to use the value of a field and the
+                        specified default value if the field does not exist:
+                        <pre class="pre codeblock">${record:valueOrDefault("/&lt;field name&gt;", &lt;default value&gt;)}</pre>
+</dd>
+
+                    <dd class="dd">For example, the following directory template creates a directory based on
+                        the product field every day, and if the product field is empty, uses Misc in
+                        the directory path:
+                        <pre class="pre codeblock">/${record:valueOrDefault("/Product", "Misc")}/${YY()}-${MM()}-${DD()}</pre>
+</dd>
+
+                    <dd class="dd">This template might create the following
+                        paths:<pre class="pre codeblock">/Shirts/2015-07-31 
+/Misc/2015-07-31</pre>
+</dd>
+
+                    <dd class="dd">For a tip on how to replace null values, see <a class="xref" href="../Expression_Language/Functions.html#concept_p1z_ggv_1r" title="Use record functions to determine information about a record, such as the stage that created it or whether a field exists in the record.">Record Functions</a>.</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic concept nested1" id="concept_zwq_1dj_fv">
+ <h2 class="title topictitle2">Time Basis</h2>
+
+ <div class="body conbody">
+        <p class="p">The time basis helps determine when directories are
+            created and which directory MapR FS uses when writing a record. You can use the
+            following times as the time basis: </p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Processing Time</dt>
+
+                    <dd class="dd">When you use processing time as the time basis, MapR FS creates directories
+                        based on the processing time and the directory template, and writes records
+                        to the directories based on when they are processed.</dd>
+
+                    <dd class="dd">For example, say a directory template creates directories every minute and
+                        the time basis is the time of processing. Then, directories are created for
+                        every minute that MapR FS writes output records. And the output records are
+                        written to the directory for that minute of processing. </dd>
+
+                    <dd class="dd">To use the processing time as the time basis, use the following expression:
+                            <samp class="ph codeph">${time:now()}</samp>. This is the default time basis. </dd>
+
+                
+                
+                    <dt class="dt dlterm">Record Time</dt>
+
+                    <dd class="dd">When you use the time associated with a record as the time basis, you
+                        specify a Date field in the record. MapR FS creates directories based on the
+                        datetimes associated with the records and writes the records to the
+                        appropriate directories. </dd>
+
+                    <dd class="dd">For example, say a directory template creates directories every hour and the
+                        time basis is based on the record. Then, directories are created for every
+                        hour associated with output records and MapR FS writes the records to the
+                        related output directory. </dd>
+
+                    <dd class="dd">To use a time associated with the record, use an expression that calls a
+                        field and resolves to a datetime value, such as
+                            <samp class="ph codeph">${record:value("/Timestamp")}</samp>. </dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_xby_tdj_fv">
+ <h2 class="title topictitle2">Late Records and Late Record Handling</h2>
+
+    
+ <div class="body conbody"><p class="shortdesc">You can define a time limit for records to be written to its associated output
+        directory. Any record that arrives past this limit is considered late. This limit is
+        appropriate when you use the time of the record as the time basis. </p>
+
+        <p class="p">For example, a MapR FS destination writes event data
+            to hourly output directories based on the timestamp of the event, and it has a time
+            limit of one day. Any records that arrive more than a day after the hourly output
+            directory window are considered late. </p>
+
+        <p class="p">You can send late records to a late records file or to the stage for error handling. When
+            you send records to a late records file, you define a late records directory template.
+        </p>
+
+    </div>
+
+</div>
+<div class="topic concept nested1" id="concept_ovb_f2j_fv">
+ <h2 class="title topictitle2">HDFS Properties and Configuration Files</h2>
+
+ <div class="body conbody">
+  <div class="p">You can configure the MapR FS destination to
+            use individual HDFS properties or HDFS configuration files:<dl class="dl">
+                
+                    <dt class="dt dlterm">HDFS configuration files</dt>
+
+                    <dd class="dd">You can use the following HDFS configuration files with the MapR FS
+                            destination:<ul class="ul" id="concept_ovb_f2j_fv__ul_qhn_ytr_bt">
+                        <li class="li">core-site.xml</li>
+
+                        <li class="li">hdfs-site.xml </li>
+
+                  </ul>
+</dd>
+
+                    <dd class="dd">To use HDFS configuration files: <ol class="ol" id="concept_ovb_f2j_fv__ol_rb2_2nr_bt">
+                            <li class="li">Store the files or a symlink to the files in the <span class="ph">Data
+                  Collector</span> resources directory. </li>
+
+                            <li class="li">In the MapR FS destination, specify the location of the files. </li>
+
+                        </ol>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Individual properties</dt>
+
+                    <dd class="dd">You can configure individual HDFS properties in the destination. To add an
+                        HDFS property, you specify the exact property name and the value. The MapR
+                        FS destination does not validate the property names or
+                            values.<div class="note note"><span class="notetitle">Note:</span> Individual properties override properties defined in the
+                            HDFS configuration file. </div>
+</dd>
+
+                
+            </dl>
+</div>
+
+ </div>
+
+</div>
+<div class="topic task nested1" id="task_spl_1fj_fv">
+    <h2 class="title topictitle2">Configuring a MapR FS Destination</h2>
+
+    <div class="body taskbody">
+        <div class="section context">
+            <p class="p">Configure
+                a MapR FS destination to write files to MapR FS.</p>
+
+        </div>
+
+        <ol class="ol steps" id="task_spl_1fj_fv__steps_igm_3fj_fv"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e2548" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e611">General Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e614">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">Name</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">Description</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">Stage Library</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">Required Fields <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq" title="A required field is a field that must exist in a record to allow it into the stage for processing. When a record does not include a required field, the record is diverted to the pipeline for error handling. You can define required fields for any processor and most destination stages.">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e2603" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Fields that must include data to be passed into the
+                                        stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include
+                                            fields that the stage uses.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">Preconditions <a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs" title="Preconditions are conditions that a record must satisfy to enter the stage for processing. Like required fields, if a record does not meet a precondition, it is diverted to the pipeline for error handling. You can define preconditions for any processor and most destination stages.">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e2617" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e611 ">On Record Error</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e614 ">Error record handling for the stage: <ul class="ul" id="task_spl_1fj_fv__d1250e2634">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Hadoop FS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__table_x4m_3fj_fv" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="33.33333333333333%" id="d26652e733">Hadoop FS Property</th>
+
+                                    <th class="entry" valign="top" width="66.66666666666666%" id="d26652e736">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">Hadoop FS URI</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">HDFS URI.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">HDFS User <a class="xref" href="HadoopFS-destination.html#concept_u4h_lwt_ls" title="You can configure the Hadoop FS destination to use an HDFS user to write data to HDFS.">
+                                            <img class="image" id="task_spl_1fj_fv__image_hqm_3fj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">The HDFS user to use to connect to MapR FS. When using
+                                        this property, make sure MapR FS is configured
+                                            appropriately.<p class="p">By default, the pipeline uses the <span class="ph">Data
+                  Collector</span> user to connect to MapR FS.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">Kerberos Authentication<a class="xref" href="HadoopFS-destination.html#concept_xy5_4tm_vs" title="You can use Kerberos authentication to connect to HDFS. When you use Kerberos authentication, the Data Collector uses the Kerberos principal and keytab to connect to HDFS.">
+                                            <img class="image" id="task_spl_1fj_fv__image_kqm_3fj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">Uses Kerberos credentials to connect to MapR FS. <p class="p">When
+                                            selected, uses the Kerberos principal and keytab defined
+                                            in the <span class="ph">Data
+                  Collector</span> configuration file. </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">Hadoop FS Configuration Directory <a class="xref" href="HadoopFS-destination.html#concept_xh5_y4d_br">
+                                            <img class="image" id="task_spl_1fj_fv__image_nqm_3fj_fv" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">Location of the HDFS configuration files.<p class="p">Use a
+                                            directory or symlink within the <span class="ph">Data
+                  Collector</span> resources directory.</p>
+<div class="p">You can use the following
+                                            files with the MapR FS destination:<ul class="ul" id="task_spl_1fj_fv__ul_qqm_3fj_fv">
+                        <li class="li">core-site.xml</li>
+
+                        <li class="li">hdfs-site.xml </li>
+
+                  </ul>
+</div>
+<div class="note note"><span class="notetitle">Note:</span> Properties in the configuration files are
+                                            overridden by individual properties defined in the
+                                            stage.</div>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">Hadoop FS Configuration</td>
+
+                                    <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">Additional HDFS properties to use. <p class="p">To add properties,
+                                            click <span class="ph uicontrol">Add</span> and define the property
+                                            name and value. Use the property names and values as
+                                            expected by MapR FS.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+       <td class="entry" valign="top" width="33.33333333333333%" headers="d26652e733 ">Charset</td>
+
+       <td class="entry" valign="top" width="66.66666666666666%" headers="d26652e736 ">Character set to use when writing files. <p class="p">Not used with all data
+        formats.</p>
+</td>
+
+      </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Output Files</span> tab, configure the following
+                    options:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e3388" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e880">Output Files Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e883">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">File Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Output file type:<ul class="ul" id="task_spl_1fj_fv__d1250e3417">
+                                            <li class="li">Text files</li>
+
+                                            <li class="li">Sequence files</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3427" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Data Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Format of data to be written. Use one of the following
+                                            options:<ul class="ul" id="task_spl_1fj_fv__d1250e3434">
+                                            <li class="li">Avro</li>
+
+                                            <li class="li">Delimited</li>
+
+                                            <li class="li">JSON</li>
+
+                                            <li class="li">Protobuf</li>
+
+                                            <li class="li">Text</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3453" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">File Prefix</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Prefix to use for output files. Use when writing to a
+                                        directory that receives files from other sources.<p class="p">Uses the
+                                            prefix sdc-${sdc:id()} by default. The prefix evaluates
+                                            to sdc-&lt;Data Collector ID&gt;. </p>
+<p class="p">The Data Collector
+                                            ID is stored in the following file:
+                                                <span class="ph filepath">&lt;SDCinstalldir&gt;/data/sdc.id</span>.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3469" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and late record directories. Hadoop FS writes records to the directories based on the configured time basis.">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e3475" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Template for creating output directories. You can use
+                                        constants, field values, and datetime variables. <p class="p">Output
+                                            directories are created based on the smallest datetime
+                                            variable in the template.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3483" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Data Time Zone</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Time zone for the destination system. Used to resolve
+                                        datetimes in the directory template and evaluate where
+                                        records are written.</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3493" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Time Basis <a class="xref" href="HadoopFS-destination.html#concept_gkz_smd_br">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e3499" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Time basis to use for creating output directories and
+                                        writing records to the directories. Use one of the following
+                                            expressions:<ul class="ul" id="task_spl_1fj_fv__d1250e3503">
+                                            <li class="li">${time:now()} - Uses the processing time as the time
+                                                basis. </li>
+
+                                            <li class="li">${record:value("/&lt;date field&gt;")} - Uses the time
+                                                associated with the record as the time basis.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3513" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Max Records in a File</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Maximum number of records to be written to an output
+                                        file. Additional records are written to a new file. <p class="p">Use 0
+                                            to opt out of this property.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3524" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Max File Size (MB)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Maximum size of an output file. Additional records are
+                                        written to a new file. <p class="p">Use 0 to opt out of this
+                                            property.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3535" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Compression type for output files:<ul class="ul" id="task_spl_1fj_fv__d1250e3542">
+                                            <li class="li">None </li>
+
+                                            <li class="li">gzip</li>
+
+                                            <li class="li">bzip2</li>
+
+                                            <li class="li">Snappy</li>
+
+                                            <li class="li">LZ4</li>
+
+                                            <li class="li">Other</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr id="task_spl_1fj_fv__d1250e3565" class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Compression Codec Class</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Full class name of the other compression codec that you
+                                        want to use. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Sequence File Key</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Record key for creating sequence files. Use one of the
+                                        following options:<ul class="ul" id="task_spl_1fj_fv__d1250e3581">
+                                            <li class="li">${record:value("/&lt;field name&gt;")}</li>
+
+                                            <li class="li">${uuid()}</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e880 ">Compression Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e883 ">Compression type for sequence files when using a
+                                        compression codec:<ul class="ul" id="task_spl_1fj_fv__d1250e3599">
+                                            <li class="li">Block Compression</li>
+
+                                            <li class="li">Record Compression</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Late Records</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    <div class="note note"><span class="notetitle">Note:</span> These properties are only relevant for a time basis based on the time of a
+                        record.</div>
+
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e3983" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1124">Late Records Property <a class="xref" href="HadoopFS-destination.html#concept_xgm_g4d_br" title="You can define a time limit for records to be written to its associated output directory. Any record that arrives past this limit is considered late. This limit is appropriate when you use the time of the record as the time basis.">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e3999" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        </a>
+                                    </th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1136">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1124 ">Late Record Time Limit (secs)</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1136 ">Time limit for output directories to accept data. <p class="p">You
+                                            can enter a time in seconds, or use the expression to
+                                            enter a time in hours. You can also use MINUTES in the
+                                            default expression to define the time in minutes.
+                                        </p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1124 ">Late Record Handling</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1136 ">Determines how to handle late records:<ul class="ul" id="task_spl_1fj_fv__d1250e4028">
+                                            <li class="li">Send to error - Sends the record to the stage for
+                                                error handling. </li>
+
+                                            <li class="li">Send to late records file - Sends the record to a
+                                                late records file.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1124 ">Late Record Directory Template <a class="xref" href="HadoopFS-destination.html#concept_cvc_skd_br" title="The Hadoop FS destination uses directory templates to create output and late record directories. Hadoop FS writes records to the directories based on the configured time basis.">
+                                            <img class="image" id="task_spl_1fj_fv__d1250e4044" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1136 ">Template for creating late record directories. You can
+                                        use constants, field values, and datetime variables.
+                                            <p class="p">Output directories are created based on the smallest
+                                            datetime variable in the template.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For Avro data, on the <span class="keyword wintitle">Avro</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e2810" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1216">Avro Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1219">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1216 ">Avro Schema</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1219 ">Schema definition to use when writing data. The
+                                        destination includes the schema definition in each generated
+                                        file. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1216 ">Avro Compression Codec</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1219 ">The Avro compression type to use. <p class="p">When using Avro
+                                            compression, do not enable other compression available
+                                            in the destination. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For delimited data, on the <span class="keyword wintitle">Delimited</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e2958" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1274">Delimited Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1277">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Delimiter Format</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Format for delimited data:<ul class="ul" id="task_spl_1fj_fv__ul_k3j_vvf_jr">
+                        <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
+                              values. Ignores empty lines in the file.</li>
+
+                        <li class="li"><span class="ph uicontrol">RFC4180 CSV</span> - Comma-separated file that strictly
+                              follows RFC4180 guidelines.</li>
+
+                        <li class="li"><span class="ph uicontrol">MS Excel CSV</span> - Microsoft Excel comma-separated
+                              file.</li>
+
+                        <li class="li"><span class="ph uicontrol">MySQL CSV</span> - MySQL comma separated file.</li>
+
+                        <li class="li"><span class="ph uicontrol">Tab-Separated Values</span> - File that includes
+                              tab-separated values.</li>
+
+                        <li class="li"><span class="ph uicontrol">Custom</span> - File that uses user-defined delimiter,
+                              escape, and quote characters.</li>
+
+                  </ul>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Header Line</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Indicates whether to create a header line.</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Remove New Line Characters</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Removes new line characters from within a record.
+                                            <p class="p">Recommended when writing data as a single line of
+                                            text.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Delimiter Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Delimiter character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the pipe character ( |
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Escape Character </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Escape character for a custom delimiter format. Select
+                                        one of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the backslash character ( \
+                                        ).</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1274 ">Quote Character</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1277 ">Quote character for a custom delimiter format. Select one
+                                        of the available options or use Other to enter a custom
+                                        character. <p class="p">Default is the quotation mark character ( "
+                                            ).</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For JSON data, on the <span class="ph uicontrol">JSON</span> tab, configure the following
+                    property:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e3073" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1407">JSON Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1410">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1407 ">JSON Content</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1410 ">Determines how JSON data is written:<ul class="ul" id="task_spl_1fj_fv__d1250e3102">
+                                            <li class="li">JSON Array of Objects - Each file includes a single
+                                                array. In the array, each element is a JSON
+                                                representation of each record.</li>
+
+                                            <li class="li">Multiple JSON Objects - Each file includes multiple
+                                                JSON objects. Each object is a JSON representation
+                                                of a record.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For protobuf data, on the <span class="keyword wintitle">Protobuf</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e3209" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1461">Protobuf Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1464">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1461 ">Protobuf Descriptor File </td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1464 ">Descriptor file (.desc) to use. The descriptor file must
+                                        be in the <span class="ph">Data
+                  Collector</span> resources directory: &lt;SDCinstalldir&gt;/resources. <p class="p">For
+                                            information about generating the descriptor file, see
+                                                <a class="xref" href="../Pipeline_Design/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>.</p>
+</td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1461 ">Message Type</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1464 ">The fully-qualified name for the message type to use when
+                                        reading data.<p class="p">Use the following format:
+                                                <samp class="ph codeph">&lt;package name&gt;.&lt;message
+                                            type&gt;</samp>. </p>
+Use a message type defined in the
+                                        descriptor file.</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For text data, on the <span class="ph uicontrol">Text</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_spl_1fj_fv__d1250e3138" class="table" frame="border" border="1" rules="all">
+                            
+                            
+                            <thead class="thead" align="left">
+                                <tr class="row">
+                                    <th class="entry" valign="top" width="30%" id="d26652e1534">Text Property</th>
+
+                                    <th class="entry" valign="top" width="70%" id="d26652e1537">Description</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody class="tbody">
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1534 ">Text Field Path</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1537 ">Field that contains the text data to be written. All data
+                                        must be incorporated into the specified field. </td>
+
+                                </tr>
+
+                                <tr class="row">
+                                    <td class="entry" valign="top" width="30%" headers="d26652e1534 ">Empty Line If No Text</td>
+
+                                    <td class="entry" valign="top" width="70%" headers="d26652e1537 ">Creates an empty line when a record does not include the
+                                        text field specified above. <p class="p">When not selected, records
+                                            without the specified text field are
+                                        discarded.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</div>
+</div>
+<div class="navfooter"><!---->
+<span class="navparent"><a class="link" href="../Destinations/Destinations-title.html" title="Destinations"><span class="navheader_label">Parent topic</span><span class="navheader_separator">: </span><span class="navheader_linktext">Destinations</span></a></span>  </div><div class="footer"></div>
+</body>
+</html>

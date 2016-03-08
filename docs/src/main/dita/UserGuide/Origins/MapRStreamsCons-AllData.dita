@@ -21,11 +21,11 @@
  <conbody>
         <p><indexterm>MapR Streams Consumer origin<indexterm>processing all
                 data</indexterm></indexterm>To read all unread data in the topic, add the
-                <uicontrol>auto.offset.reset</uicontrol> Kafka configuration property. Set the
-            property to <uicontrol>smallest</uicontrol> for versions before <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>.
-            Set it to <uicontrol>earliest</uicontrol> for <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/KafkaSecure"/>
-            and later. For more information about this property, see the Apache Kafka documentation. </p>
+                <uicontrol>auto.offset.reset</uicontrol> Kafka configuration property and set it to
+                <uicontrol>earliest</uicontrol>. For more information about this property, see the
+            MapR Streams documentation. <draft-comment author="Loretta">Doc reminder: earliest is
+                for Kafka 0.9.0.0. smallest is for earlier versions, but we don't support earlier
+                versions at this time. - we can delete this note if it seems we won't support
+                earlier versions.</draft-comment></p>
  </conbody>
 </concept>

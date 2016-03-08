@@ -39,6 +39,7 @@
         <li>JMS Consumer origin</li>
         <li>Kafka Consumer origin</li>
         <li>Kinesis Consumer origin</li>
+        <li>MapR Streams Consumer origin</li>
         <li>RabbitMQ Consumer origin</li>
         <li>JSON Parser processor</li>
         <li>Log Parser processor</li>

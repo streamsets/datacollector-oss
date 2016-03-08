@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_spv_xlc_fv">
  <title>MapR FS </title>
- <shortdesc>The MapR FS destination writes data to MapR. You can write the data to MapR as flat
+ <shortdesc>The MapR FS destination writes files to MapR FS. You can write the data to MapR as flat
         files or Hadoop sequence files. </shortdesc>
  <conbody>
         <p><indexterm>MapR FS

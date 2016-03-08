@@ -47,7 +47,8 @@
                         <row>
                             <entry>streamsets-datacollector-aws-lib </entry>
                             <entry>For Amazon Web Services 1.10.20. <p>Includes the Amazon S3 origin
-                                    and destination.</p></entry>
+                                    and destination, the Kinesis Consumer and Kinesis
+                                Producer.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-basic-lib</entry>
@@ -205,6 +206,11 @@
                                     destination.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-groovy_2_4-lib</entry>
+                            <entry>For Groovy version 2.4.6.  Installs with the basic installation.
+                                    <p>Includes the Groovy Evaluator processor.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-hdp_2_2-lib</entry>
                             <entry>For the Hortonworks version 2.2.x distribution of Apache Hadoop.
                                         <p>Includes:<ul id="ul_j4w_kqm_s5">
@@ -216,8 +222,7 @@
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
                                         <li>Hive Streaming destination</li>
-                                        <li>Kafka Producer</li>
-                                        <li>Solr </li>
+                                        <li>Kafka Producer </li>
                                     </ul></p></entry>
                         </row>
                         <row>
@@ -232,9 +237,13 @@
                                         <li>Hadoop FS destination </li>
                                         <li>HBase destination </li>
                                         <li>Hive Streaming destination</li>
-                                        <li>Kafka Producer</li>
-                                        <li>Solr </li>
+                                        <li>Kafka Producer </li>
                                     </ul></p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-influxdb-0_9-lib</entry>
+                            <entry>For InfluxDB version 0.9 or greater.<p>Includes the InfluxDB
+                                    destination.</p></entry>
                         </row>
                         <row>
                             <entry>streamsets-datacollector-jdbc-lib</entry>
@@ -250,6 +259,16 @@
                                     <p>Includes the Jython Evaluator processor.</p></entry>
                         </row>
                         <row>
+                            <entry>streamsets-datacollector-mapr_5_0-lib</entry>
+                            <entry>For MapR version 5.0.<p>Includes the MapR Streams Consumer, MapR
+                                    Streams Producer, and MapR FS.</p></entry>
+                        </row>
+                        <row>
+                            <entry>streamsets-datacollector-mapr_5_1-lib</entry>
+                            <entry>For MapR version 5.1.<p>Includes the MapR Streams Consumer, MapR
+                                    Streams Producer, and MapR FS.</p></entry>
+                        </row>
+                        <row>
                             <entry>streamsets-datacollector-mongodb_3-lib</entry>
                             <entry>For MongoDB 3.0.2. <p>Includes the Mongo DB origin.</p></entry>
                         </row>
@@ -259,8 +278,8 @@
                         </row>
                         <row>
                             <entry>streamsets-datacollector-rabbitmq-lib </entry>
-                            <entry>For RabbitMQ version 3.5.6.<p>Includes the RabbitMQ
-                                Consumer.</p></entry>
+                            <entry>For RabbitMQ version 3.5.6.<p>Includes the RabbitMQ Consumer and
+                                    RabbitMQ Producer.</p></entry>
                         </row>
                     </tbody>
                 </tgroup>

@@ -157,15 +157,14 @@
 </div>
 
         <p class="p">Data drift functions include an ignoreWhenMissing flag to determine the behavior when the
-            specified field does not exist. ignore a record if the specified field is missing. When
-            the specified field is missing and ignoreWhenMissing is set to true, an alert is not
-            triggered.</p>
+            specified field does not exist. When the specified field is missing and
+            ignoreWhenMissing is set to true, an alert is not triggered.</p>
 
         <p class="p">When the specified field is missing and the ignoreWhenMissing flag is set to false, the
             expression triggers an alert for the missing field, and again for the next record when
             the field is present. </p>
 
-        <div class="p">For example, the expression that checks the datatype of the ID column with
+        <div class="p">For example, the following expression checks the datatype of the ID column with
             ignoreWhenMissing set to false:
             <pre class="pre codeblock">${drift:type('/UserID'), false}</pre>
 </div>

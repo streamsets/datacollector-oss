@@ -15,7 +15,7 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_tbh_nbn_2v">
     <title>Configuring a MapR Streams Producer</title>
-    <shortdesc>The MapR Streams Producer destination writes messages to a MapR cluster.</shortdesc>
+    <shortdesc>The MapR Streams Producer destination writes messages to MapR Streams.</shortdesc>
     <taskbody>
         <context/>
         <steps id="steps_kss_cxn_2v">
