@@ -376,22 +376,26 @@ public class JdbcSource extends BaseSource {
   }
 
   private String getClobString(Clob data) throws IOException, SQLException {
+    if (data == null) {
+      return "";
+    }
+
     StringBuilder sb = new StringBuilder();
     int bufLen = 1024;
     char[] cbuf = new char[bufLen];
 
     // Read up to max clob length
-    long available = maxClobSize;
-    int c = 0;
+    long maxRemaining = maxClobSize;
+    int count;
     Reader r = data.getCharacterStream();
-    while ((c = r.read(cbuf)) > -1 && available > 0) {
+    while ((count = r.read(cbuf)) > -1 && maxRemaining > 0) {
       // If c is more then the remaining chars we want to read, read only as many are available
-      if (c > available) {
-        c = (int)available;
+      if (count > maxRemaining) {
+        count = (int) maxRemaining;
       }
-      sb.append(cbuf, 0, c);
+      sb.append(cbuf, 0, count);
       // decrement available according to the number of chars we've read
-      available -= c;
+      maxRemaining -= count;
     }
     return sb.toString();
   }
@@ -408,8 +412,7 @@ public class JdbcSource extends BaseSource {
       try {
         // Convert clob to string by truncating it to maxClobSize.
         if (value instanceof Clob) {
-          // The first character is at position 1.
-          Clob clobValue = (Clob)value;
+          Clob clobValue = (Clob) value;
           value = getClobString(clobValue);
         }
         fields.put(md.getColumnName(i), JsonUtil.jsonToField(value));
