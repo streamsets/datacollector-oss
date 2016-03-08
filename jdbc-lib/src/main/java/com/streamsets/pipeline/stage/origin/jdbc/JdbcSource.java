@@ -421,6 +421,7 @@ public class JdbcSource extends BaseSource {
     }
 
     if (fields.size() != numColumns) {
+      errorRecordHandler.onError(Errors.JDBC_14, fields.size(), numColumns);
       return null; // Don't output this record.
     }
 

@@ -40,6 +40,7 @@ public enum Errors implements ErrorCode {
   JDBC_12("The JDBC driver for this database does not support scrollable cursors, " +
       "which are required when Transaction ID Column Name is specified."),
   JDBC_13("Failed to convert CLOB to string: {}"),
+  JDBC_14("Parsed record had {} columns but SDC expected {}."),
   ;
   private final String msg;
 
