@@ -63,7 +63,7 @@ public class AdminResource {
   @Path("/shutdown")
   @ApiOperation(value = "Shutdown SDC", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed(AuthzRole.ADMIN)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response shutdown() throws PipelineStoreException {
     Thread thread = new Thread("Shutdown Request") {
       @Override
@@ -83,7 +83,7 @@ public class AdminResource {
   @ApiOperation(value = "Returns Thread Dump along with stack trace", response = Map.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed(AuthzRole.ADMIN)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response getThreadsDump() throws IOException {
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
     ThreadInfo[] threads = threadMXBean.dumpAllThreads(true, true);
@@ -103,7 +103,7 @@ public class AdminResource {
   @Path("/directories")
   @ApiOperation(value = "Returns SDC Directories", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed(AuthzRole.ADMIN)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response getSDCDirectories() throws IOException {
     Map<String, Object> map = new LinkedHashMap<>();
     map.put("runtimeDir", runtimeInfo.getRuntimeDir());

@@ -89,7 +89,9 @@ public class PreviewResource {
   @ApiOperation(value = "Run Pipeline preview",
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response previewWithOverride(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") String rev,
@@ -131,7 +133,9 @@ public class PreviewResource {
   @ApiOperation(value = "Return Preview status by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response getPreviewStatus(@PathParam("pipelineName") String pipelineName,
                                    @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
@@ -149,7 +153,9 @@ public class PreviewResource {
   @ApiOperation(value = "Return Preview Data by previewer ID", response = PreviewOutputJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response getPreviewData(@PathParam("pipelineName") String pipelineName,
                                  @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
@@ -167,7 +173,9 @@ public class PreviewResource {
   @ApiOperation(value = "Stop Preview by previewer ID", response = PreviewInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response stopPreview(@PathParam("pipelineName") String pipelineName,
                               @PathParam("previewerId") String previewerId)
     throws PipelineException, StageException {
@@ -186,7 +194,9 @@ public class PreviewResource {
   @ApiOperation(value = "Get raw source preview data for pipeline name and revision", response = RawPreview.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response rawSourcePreview(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") String rev,
@@ -205,7 +215,14 @@ public class PreviewResource {
   @ApiOperation(value = "Validate pipeline configuration and return validation status and issues",
     response = PreviewInfoJson.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response validateConfigs(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") String rev,

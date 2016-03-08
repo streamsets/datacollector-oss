@@ -25,7 +25,14 @@ public class AuthzRole {
   public static final String CREATOR = "creator";
   public static final String ADMIN = "admin";
 
-  public static final String[] ALL_ROLES = { ADMIN, CREATOR, MANAGER, GUEST};
+  public static final String GUEST_REMOTE = "datacollector:guest";
+  public static final String MANAGER_REMOTE = "datacollector:manager";
+  public static final String CREATOR_REMOTE = "datacollector:creator";
+  public static final String ADMIN_REMOTE = "datacollector:admin";
+
+  public static final String[] ALL_ROLES = {
+      ADMIN, CREATOR, MANAGER, GUEST
+  };
 
   private AuthzRole() {}
 }

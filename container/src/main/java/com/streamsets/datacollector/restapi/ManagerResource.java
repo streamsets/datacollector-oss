@@ -129,7 +129,12 @@ public class ManagerResource {
   @ApiOperation(value = "Start Pipeline", response = PipelineStateJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response startPipeline(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev)
@@ -161,7 +166,12 @@ public class ManagerResource {
   @ApiOperation(value = "Stop Pipeline", response = PipelineStateJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response stopPipeline(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
@@ -178,7 +188,12 @@ public class ManagerResource {
   @POST
   @ApiOperation(value = "Reset Origin Offset", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response resetOffset(
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
@@ -217,7 +232,7 @@ public class ManagerResource {
   @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}")
   @PUT
   @ApiOperation(value = "Capture Snapshot", authorizations = @Authorization(value = "basic"))
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN, AuthzRole.MANAGER_REMOTE, AuthzRole.ADMIN_REMOTE })
   public Response captureSnapshot(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
@@ -239,7 +254,7 @@ public class ManagerResource {
   @Path("/pipeline/{pipelineName}/snapshot/{snapshotName}")
   @POST
   @ApiOperation(value = "Capture Snapshot", authorizations = @Authorization(value = "basic"))
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN, AuthzRole.MANAGER_REMOTE, AuthzRole.ADMIN_REMOTE })
   public Response updateSnapshotLabel(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
@@ -255,7 +270,14 @@ public class ManagerResource {
   @GET
   @ApiOperation(value = "Returns all Snapshot Info", response = SnapshotInfoJson.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getAllSnapshotsInfo()
     throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -274,7 +296,14 @@ public class ManagerResource {
   @GET
   @ApiOperation(value = "Returns Snapshot Info for the given pipeline", response = SnapshotInfoJson.class,
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getSnapshotsInfo(@PathParam("pipelineName") String pipelineName,
                                    @QueryParam("rev") @DefaultValue("0") String rev)
     throws PipelineException {
@@ -292,7 +321,12 @@ public class ManagerResource {
   @ApiOperation(value = "Return Snapshot status", response = SnapshotInfoJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getSnapshotStatus(
     @PathParam("pipelineName") String pipelineName,
     @PathParam("snapshotName") String snapshotName,
@@ -311,7 +345,14 @@ public class ManagerResource {
   @ApiOperation(value = "Return Snapshot data", response = SnapshotDataJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.CREATOR,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getSnapshot(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
@@ -328,7 +369,12 @@ public class ManagerResource {
   @DELETE
   @ApiOperation(value = "Delete Snapshot data", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response deleteSnapshot(
       @PathParam("pipelineName") String pipelineName,
       @PathParam("snapshotName") String snapshotName,
@@ -345,7 +391,12 @@ public class ManagerResource {
   @DELETE
   @ApiOperation(value = "Delete history by pipeline name", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response deleteHistory(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev) throws PipelineException {
@@ -364,7 +415,12 @@ public class ManagerResource {
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getErrorRecords(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev,
@@ -385,7 +441,12 @@ public class ManagerResource {
   @ApiOperation(value = "Returns error messages by stage instance name and size", response = ErrorMessageJson.class,
    responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getErrorMessages(
       @PathParam("pipelineName") String pipelineName,
       @QueryParam("rev") @DefaultValue("0") String rev,
@@ -427,7 +488,12 @@ public class ManagerResource {
   @ApiOperation(value = "Returns Sampled records by sample ID and size", response = SampledRecordJson.class,
     responseContainer = "List", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response getSampledRecords(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,
@@ -469,7 +535,12 @@ public class ManagerResource {
   @ApiOperation(value = "Delete alert by Pipeline name, revision and Alert ID", response = Boolean.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response deleteAlert(
     @PathParam("pipelineName") String pipelineName,
     @QueryParam("rev") @DefaultValue("0") String rev,

@@ -75,7 +75,14 @@ public class LogResource {
   @Path("/logs")
   @ApiOperation(value= "Return latest log file contents")
   @Produces(MediaType.TEXT_PLAIN)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
   public Response currentLog(@QueryParam("endingOffset") @DefaultValue("-1") long offset,
                              @QueryParam("extraMessage") String extraMessage,
                              @QueryParam("pipeline") String pipeline,
@@ -146,7 +153,14 @@ public class LogResource {
   @ApiOperation(value = "Returns all available SDC Log files", response = Map.class, responseContainer = "List",
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
   @SuppressWarnings("unchecked")
   public Response listLogFiles() throws IOException {
     File[] logFiles = getLogFiles();
@@ -165,7 +179,14 @@ public class LogResource {
   @ApiOperation(value = "Returns SDC Log File Content", response = String.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.TEXT_PLAIN)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.CREATOR, AuthzRole.MANAGER})
+  @RolesAllowed({
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN_REMOTE,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE
+  })
   public Response getLogFile(@PathParam("logName") String logName,
                              @QueryParam("attachment") @DefaultValue("false") Boolean attachment) throws IOException {
     Response response;

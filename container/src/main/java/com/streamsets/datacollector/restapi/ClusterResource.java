@@ -84,16 +84,16 @@ public class ClusterResource {
 
       if(principal != null) {
         user = principal.getName();
-        if (context.isUserInRole(AuthzRole.GUEST)) {
+        if (context.isUserInRole(AuthzRole.GUEST) || context.isUserInRole(AuthzRole.GUEST_REMOTE)) {
           authTokens.add(slaveCallbackInfo.getGuestToken());
         }
-        if (context.isUserInRole(AuthzRole.MANAGER)) {
+        if (context.isUserInRole(AuthzRole.MANAGER) || context.isUserInRole(AuthzRole.MANAGER_REMOTE)) {
           authTokens.add(slaveCallbackInfo.getManagerToken());
         }
-        if (context.isUserInRole(AuthzRole.CREATOR)) {
+        if (context.isUserInRole(AuthzRole.CREATOR) || context.isUserInRole(AuthzRole.CREATOR_REMOTE)) {
           authTokens.add(slaveCallbackInfo.getCreatorToken());
         }
-        if (context.isUserInRole(AuthzRole.ADMIN)) {
+        if (context.isUserInRole(AuthzRole.ADMIN) || context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
           authTokens.add(slaveCallbackInfo.getAdminToken());
         }
       } else {

@@ -173,7 +173,10 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
         case LogMessageWebSocket.TYPE:
           if (request.isUserInRole(AuthzRole.ADMIN) ||
             request.isUserInRole(AuthzRole.MANAGER) ||
-            request.isUserInRole(AuthzRole.CREATOR)) {
+            request.isUserInRole(AuthzRole.CREATOR) ||
+            request.isUserInRole(AuthzRole.ADMIN_REMOTE) ||
+            request.isUserInRole(AuthzRole.MANAGER_REMOTE) ||
+            request.isUserInRole(AuthzRole.CREATOR_REMOTE)) {
             super.service(request, response);
           } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);

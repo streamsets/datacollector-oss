@@ -187,7 +187,9 @@ public class PipelineStoreResource {
   @ApiOperation(value = "Add a new Pipeline Configuration to the store", response = PipelineConfigurationJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response createPipeline(
       @PathParam("pipelineName") String name,
       @QueryParam("description") @DefaultValue("") String description)
@@ -236,7 +238,9 @@ public class PipelineStoreResource {
   @DELETE
   @ApiOperation(value = "Delete Pipeline Configuration by name", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response deletePipeline(
       @PathParam("pipelineName") String name)
       throws URISyntaxException, PipelineException {
@@ -253,7 +257,9 @@ public class PipelineStoreResource {
     authorizations = @Authorization(value = "basic"))
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   public Response savePipeline(
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
@@ -274,7 +280,9 @@ public class PipelineStoreResource {
   @ApiOperation(value ="", hidden = true)
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
   @SuppressWarnings("unchecked")
   public Response saveUiInfo(
       @PathParam("pipelineName") String name,
@@ -309,7 +317,14 @@ public class PipelineStoreResource {
   @ApiOperation(value = "Update an existing Pipeline Rules by name", response = RuleDefinitionsJson.class,
     authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({ AuthzRole.CREATOR, AuthzRole.MANAGER, AuthzRole.ADMIN })
+  @RolesAllowed({
+      AuthzRole.CREATOR,
+      AuthzRole.MANAGER,
+      AuthzRole.ADMIN,
+      AuthzRole.CREATOR_REMOTE,
+      AuthzRole.MANAGER_REMOTE,
+      AuthzRole.ADMIN_REMOTE
+  })
   public Response savePipelineRules(
     @PathParam("pipelineName") String name,
     @QueryParam("rev") @DefaultValue("0") String rev,
