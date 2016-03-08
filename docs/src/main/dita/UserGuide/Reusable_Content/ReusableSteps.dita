@@ -1041,10 +1041,8 @@
                 <cmd>On the <wintitle>Queue</wintitle> tab, configure the following queue
                     properties:</cmd>
                 <info>These properties directly correspond to RabbitMQ properties. For more
-                    information, see the RabbitMQ documentation. <draft-comment author="Loretta"
-                        >Check the wording - it's for Consumer. Does it work for Producer?
-                        Rewritable?</draft-comment><table frame="all" rowsep="1" colsep="1"
-                        id="table_sxy_wg4_q5">
+                    information, see the RabbitMQ documentation. <table frame="all" rowsep="1"
+                        colsep="1" id="table_sxy_wg4_q5">
                         <tgroup cols="2">
                             <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                             <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -1057,20 +1055,20 @@
                             <tbody>
                                 <row>
                                     <entry>Name</entry>
-                                    <entry>Name of the queue to create.</entry>
+                                    <entry>Name of the queue to use or create.</entry>
                                 </row>
                                 <row>
                                     <entry>Durable</entry>
-                                    <entry>Creates a durable queue when selected. <p>By default, the
-                                            origin creates a durable queue.</p></entry>
+                                    <entry>Creates a durable queue when selected. <p>The stage
+                                            creates a durable queue by default.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Exclusive</entry>
                                     <entry>Creates an exclusive queue when selected. When exclusive,
                                         the queue allows only the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> to use it.<p>By default, the origin creates an exclusive
-                                            queue.</p></entry>
+                                        /> to use it.<p>The stage creates an exclusive queue by
+                                            default.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Auto-Delete</entry>

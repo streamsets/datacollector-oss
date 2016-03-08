@@ -15,7 +15,7 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dyg_lq1_h5">
  <title>RabbitMQ Consumer</title>
- <shortdesc>RabbitMQ Consumer reads messages from a single RabbitMQ queue.</shortdesc>
+ <shortdesc>RabbitMQ Consumer reads AMQP messages from a single RabbitMQ queue.</shortdesc>
  <conbody>
   <p><indexterm>RabbitMQ Consumer
                     origin<indexterm>overview</indexterm></indexterm><indexterm>origins<indexterm>RabbitMQ
