@@ -147,10 +147,11 @@
    <topicref href="../Destinations/MapRStreamsProd-AddProps.dita"/>
    <topicref href="../Destinations/MapRStreamsProd-Configuring.dita"/>
   </topicref>
-  <topicref href="../Destinations/RabbitMQ.dita">
+  <topicref href="../Destinations/RabbitMQ.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Destinations/RabbitMQ-DataFormats.dita"/>
    <topicref href="../Destinations/RabbitMQ-Configuring.dita"/>
   </topicref>
   <topicref href="../Destinations/SDC_RPCdest.dita" chunk="to-content"> 

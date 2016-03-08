@@ -15,10 +15,11 @@
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_rwy_wn5_2v">
     <title>Configuring a RabbitMQ Producer</title>
-    <shortdesc/>
     <taskbody>
         <context>
-            <p></p>
+            <p><indexterm>RabbitMQ Producer
+                    destination<indexterm>configuring</indexterm></indexterm>Configure a RabbitMQ
+                Producer to write messages to RabbitMQ.</p>
         </context>
         <steps id="steps_qgb_b45_2v">
             <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/1stStep-NoStageLib">
@@ -53,23 +54,79 @@
                                 </row>
                                 <row>
                                     <entry>Mandatory</entry>
-                                    <entry/>
+                                    <entry>Requires at least one active consumer subscribed to the
+                                        queue. <p>When selected, if the queue has no active
+                                            consumers, RabbitMQ returns an error that can stop the
+                                            pipeline. </p></entry>
                                 </row>
                                 <row>
                                     <entry>Set AMQP Message Properties</entry>
-                                    <entry/>
+                                    <entry>Enables RabbitMQ AMQP message properties configuration.
+                                        When not selected, the destination uses the default RabbitMQ
+                                        properties. <p>For more information about AMQP message
+                                            properties, see the RabbitMQ documentation.</p></entry>
                                 </row>
                                 <row>
                                     <entry>Content Type</entry>
-                                    <entry/>
+                                    <entry>MIME content type.</entry>
                                 </row>
                                 <row>
                                     <entry>Content Encoding</entry>
-                                    <entry/>
+                                    <entry>MIME content encoding.</entry>
                                 </row>
                                 <row>
                                     <entry>Headers</entry>
-                                    <entry/>
+                                    <entry>Message headers.</entry>
+                                </row>
+                                <row>
+                                    <entry>Delivery Mode</entry>
+                                    <entry>Determines if the messages are saved to disk. To save
+                                        messages to disk, select Persistent.</entry>
+                                </row>
+                                <row>
+                                    <entry>Priority</entry>
+                                    <entry>Message priority. Select a value from 1 to 9.</entry>
+                                </row>
+                                <row>
+                                    <entry>Correlation ID</entry>
+                                    <entry>Correlation ID.</entry>
+                                </row>
+                                <row>
+                                    <entry>Reply To</entry>
+                                    <entry>Queue name for responses.</entry>
+                                </row>
+                                <row>
+                                    <entry>Expiration</entry>
+                                    <entry>Time before deleting messages.</entry>
+                                </row>
+                                <row>
+                                    <entry>Message ID</entry>
+                                    <entry>Message identifier string.</entry>
+                                </row>
+                                <row>
+                                    <entry>Set Current Time</entry>
+                                    <entry>Uses the current time as the timestamp associated with
+                                        the message. </entry>
+                                </row>
+                                <row>
+                                    <entry>Timestamp</entry>
+                                    <entry>String to use as the timestamp for the
+                                            messages.<draft-comment author="Loretta">slacked
+                                            Santhosh.</draft-comment></entry>
+                                </row>
+                                <row>
+                                    <entry>Message Type</entry>
+                                    <entry>Type of event or command that the message
+                                        represents.</entry>
+                                </row>
+                                <row>
+                                    <entry>User ID</entry>
+                                    <entry>User ID. When used, the user ID must be defined with
+                                        RabbitMQ.</entry>
+                                </row>
+                                <row>
+                                    <entry>App ID</entry>
+                                    <entry>Application ID.</entry>
                                 </row>
                                 <row
                                     conref="../Reusable_Content/ReusableTables.dita#concept_wfr_rnw_yq/D-CHARSET-other">
@@ -80,10 +137,21 @@
                                     <entry/>
                                 </row>
                                 <row>
-                                    <entry>Data Format</entry>
+                                    <entry>Data Format <xref
+                                            href="RabbitMQ-DataFormats.dita">
+                                            <image href="../Graphics/icon_moreInfo.png" scale="10"/></xref></entry>
                                     <entry>
                                         <p>Data format for messages: <ul id="ul_xs3_3fv_2v">
-                                                <li/>
+                                                <li>Avro</li>
+                                                <li>Binary</li>
+                                                <li>Delimited</li>
+                                                <li>JSON</li>
+                                                <li>Protobuf</li>
+                                                <li>SDC Record <xref
+                                                  href="../Pipeline_Design/SDCRecordFormat.dita#concept_qkk_mwk_br">
+                                                  <image href="../Graphics/icon_moreInfo.png"
+                                                  scale="10" id="image_wjh_ycl_br"/></xref></li>
+                                                <li>Text</li>
                                             </ul></p>
                                     </entry>
                                 </row>
@@ -105,6 +173,24 @@
             </step>
             <step
                 conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/Rabbit-AdvancedStep">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-AVRO-Mess">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-Binary">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/DelimProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/JSONProps">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/D-PROTO-props">
+                <cmd/>
+            </step>
+            <step conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/TextProps">
                 <cmd/>
             </step>
         </steps>

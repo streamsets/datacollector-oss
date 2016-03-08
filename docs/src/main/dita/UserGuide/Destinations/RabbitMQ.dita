@@ -15,7 +15,15 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_pxj_rvy_dv">
  <title>RabbitMQ Producer</title>
- <shortdesc>RabbitMQ Producer writes messages from a single RabbitMQ queue. <draft-comment
-            author="Loretta">writes to a single queue? or multiple? see what else needs to be
-            doc'd.</draft-comment></shortdesc>
+ <shortdesc>RabbitMQ Producer writes AMQP messages to a single RabbitMQ queue. </shortdesc>
+    <conbody>
+        <p><indexterm>destinations<indexterm>RabbitMQ
+                Producer</indexterm></indexterm><indexterm>RabbitMQ Producer
+                    destinations<indexterm>overview</indexterm></indexterm>When you configure the
+            destination, you specify the information needed to connect to RabbitMQ client. You also
+            define a queue and the bindings to use. You can use multiple bindings to write messages
+            to one or more exchanges. You can optionally configure AMQP message properties.</p>
+        <p>You can add custom configuration options and define connection credentials as needed.
+        </p>
+    </conbody>
 </concept>
