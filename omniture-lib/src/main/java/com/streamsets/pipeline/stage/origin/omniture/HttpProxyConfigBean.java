@@ -31,7 +31,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true"
   )
-  public String proxyUri;
+  public String proxyUri = "";
 
   @ConfigDef(
       required = false,
@@ -42,7 +42,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true"
   )
-  public String username;
+  public String username = "";
 
   @ConfigDef(
       required = false,
@@ -53,5 +53,5 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true"
   )
-  public String password;
+  public String password = "";
 }

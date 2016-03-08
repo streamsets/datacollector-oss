@@ -22,7 +22,6 @@ package com.streamsets.pipeline.stage.origin.http;
 import com.streamsets.pipeline.api.ConfigDef;
 
 public class HttpProxyConfigBean {
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
@@ -37,7 +36,7 @@ public class HttpProxyConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Proxy URI",
+      label = "Username",
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 20,
@@ -48,7 +47,7 @@ public class HttpProxyConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
-      label = "Proxy URI",
+      label = "Password",
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 30,
