@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
   icon = "mapr.png",
-  onlineHelpRefUrl = "index.html#Destinations/KProducer.html#task_q4d_4yl_zq"
+  onlineHelpRefUrl = "index.html#Destinations/MapRStreamsProd.html#task_tbh_nbn_2v"
 )
 @ConfigGroups(value = MapRStreamsTargetGroups.class)
 @GenerateResourceBundle

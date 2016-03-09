@@ -41,7 +41,7 @@ import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
   execution = {ExecutionMode.STANDALONE},
   icon = "mapr.png",
   recordsByRef = true,
-  onlineHelpRefUrl = "index.html#Origins/KConsumer.html#task_npx_xgf_vq"
+  onlineHelpRefUrl = "index.html#Origins/MapRStreamsCons.html#task_bfz_gch_2v"
 )
 @ConfigGroups(value = MapRStreamsSourceGroups.class)
 @HideConfigs(value = {"maprstreamsSourceConfigBean.dataFormatConfig.compression"})
