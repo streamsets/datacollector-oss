@@ -304,6 +304,11 @@
           <artifactId>streamsets-datacollector-aws-lib</artifactId>
           <scope>provided</scope>
         </dependency>
+        <dependency>
+          <groupId>com.streamsets</groupId>
+          <artifactId>streamsets-datacollector-mapr_5_0-lib</artifactId>
+          <scope>provided</scope>
+        </dependency>
       </dependencies>
     </profile>
     <profile>
