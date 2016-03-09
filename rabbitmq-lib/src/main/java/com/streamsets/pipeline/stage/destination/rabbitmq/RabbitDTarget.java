@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.configurablestage.DTarget;
@@ -36,7 +35,7 @@ import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
     icon = "rabbitmq.png",
     execution = ExecutionMode.STANDALONE,
     recordsByRef = true,
-    onlineHelpRefUrl = "index.html#Destinations/RabbitMQ.html#"
+    onlineHelpRefUrl = "index.html#Destinations/RabbitMQ.html#task_rwy_wn5_2v"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

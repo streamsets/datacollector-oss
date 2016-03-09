@@ -31,7 +31,7 @@ import com.streamsets.pipeline.stage.destination.hdfs.HdfsDTarget;
     description = "Writes to a MapR filesystem",
     icon = "mapr.png",
     privateClassLoader = false,
-    onlineHelpRefUrl = ""
+    onlineHelpRefUrl = "index.html#Destinations/MapRFS.html#task_spl_1fj_fv"
 )
 @HideConfigs(
     value = {
