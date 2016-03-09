@@ -30,13 +30,11 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.configurablestage.DStage;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.hdfs.util.HdfsTargetUtil;
 import com.streamsets.pipeline.stage.destination.hdfs.writer.RecordWriter;
-
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
@@ -97,6 +95,7 @@ public class TestBaseHdfsTarget {
     conf.set("hadoop.proxyuser." + System.getProperty("user.name") + ".groups", "*");
     fooUgi = UserGroupInformation.createUserForTesting("foo", new String[]{ "all"});
     EditLogFileOutputStream.setShouldSkipFsyncForTesting(true);
+    FileSystem.closeAll();
     miniDFS = new MiniDFSCluster.Builder(conf).build();
     miniDFS.getFileSystem().setPermission(new Path("/"), FsPermission.createImmutable((short)0777));
   }
