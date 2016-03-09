@@ -264,17 +264,14 @@
                                                 SDC RPC destination pipeline to process the error
                                                 records. </li>
 
-                                            <li class="li">Write to Elasticsearch - Writes error records to the
-                                                specified Elasticsearch cluster.</li>
-
                                             <li class="li">Write to File - Writes error records to a file in
                                                 the specified directory. </li>
 
                                             <li class="li">Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
 
-                                            <li class="li">Write to MapR Streams - Writes error records to the
-                                                specified MapR cluster.</li>
+                                            <li class="li">Write to MapR Streams - Writes error records to MapR
+                                                Streams.</li>
 
                                         </ul>
 <p class="p">For cluster mode, Write to File is not supported at
@@ -301,9 +298,9 @@
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d71228e410">Write to Pipeline Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71228e406">Write to Pipeline Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d71228e413">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71228e409">Description</th>
 
                                 </tr>
 
@@ -311,10 +308,10 @@
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">RPC Connection  <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">RPC Connection  <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">
                                             <img class="image" id="task_xlv_jdw_kq__d8385e4433" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Connection information for the destination pipeline to
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Connection information for the destination pipeline to
                                         continue processing data. Use the following format:
                                             <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>. <p class="p">Use a single
                                             RPC connection for each destination pipeline. Add
@@ -327,19 +324,19 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">RPC ID</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">RPC ID</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">User-defined ID to allow the destination to pass data to
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">TLS Enabled <a class="xref" href="../RPC_Pipelines/EnablingEncryption.html" title="You can enable SDC RPC pipelines to transfer data securely using TLS. To use TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.">
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">TLS Enabled <a class="xref" href="../RPC_Pipelines/EnablingEncryption.html" title="You can enable SDC RPC pipelines to transfer data securely using TLS. To use TLS, enable TLS in both the SDC RPC destination and the SDC RPC origin.">
                                             <img class="image" id="task_xlv_jdw_kq__d8385e4461" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Enables the secure transfer of data using TLS. <p class="p">To use
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Enables the secure transfer of data using TLS. <p class="p">To use
                                             encryption, both the SDC RPC origin and SDC RPC
                                             destination must be enabled for TLS.</p>
 </td>
@@ -347,9 +344,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Truststore File</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Truststore File</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Truststore file for TLS. Required if the keystore file is
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p class="p">Must be stored in the <span class="ph">Data
                   Collector</span> resources directory:
                                                 <span class="ph filepath">&lt;SDCinstalldir&gt;/resources</span>.</p>
@@ -358,24 +355,24 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Truststore Password</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Truststore Password</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Password for the truststore file.</td>
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Password for the truststore file.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Verify Host in Server Certificate</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Verify Host in Server Certificate</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Verifies the host in the SDC RPC origin keystore
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Verifies the host in the SDC RPC origin keystore
                                         file.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Retries Per Batch</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Retries Per Batch</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Number of times the destination tries to write a batch to
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Number of times the destination tries to write a batch to
                                         the SDC RPC origin. <p class="p">When the destination cannot write the
                                             batch within the configured number of retries, it fails
                                             the batch.</p>
@@ -385,9 +382,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Connection Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Milliseconds to establish a connection to the SDC RPC
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Milliseconds to establish a connection to the SDC RPC
                                         origin. <p class="p">The destination retries the connection based on
                                             the Retries Per Batch property.</p>
 <p class="p">Default is 5000
@@ -397,9 +394,9 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Read Timeout (ms)</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Read Timeout (ms)</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Milliseconds to wait for the SDC RPC origin to read data
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Milliseconds to wait for the SDC RPC origin to read data
                                         from a batch. <p class="p">The destination retries the write based on
                                             the Retries Per Batch property.</p>
 <p class="p">Default is 2000
@@ -409,298 +406,11 @@
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e410 ">Use Compression  <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
+                                    <td class="entry" valign="top" width="30%" headers="d71228e406 ">Use Compression  <a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">
                                             <img class="image" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e413 ">Enables the destination to use compression to pass data
+                                    <td class="entry" valign="top" width="70%" headers="d71228e409 ">Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-            </li>
-<li class="li step stepexpand">
-                <span class="ph cmd">When writing error records to Elasticsearch, click the <span class="ph uicontrol">Error Records
-                        - Write to Elasticsearch</span> tab and configure the following
-                    properties:</span>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d8385e3634" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d71228e589">Elasticsearch Property</th>
-
-                                    <th class="entry" valign="top" width="70%" id="d71228e592">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Cluster Name</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Elasticsearch cluster name.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Cluster URIs</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">URI of one or more nodes in the cluster. <p class="p">To ensure a
-                                            connection, enter additional URIs.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Cluster HTTP URI</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Use when the cluster uses a custom HTTP URI. <p class="p">Unless
-                                            configured, the destination uses the default HTTP URI to
-                                            verify that the cluster version is compatible with the
-                                            destination libraries.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Use Shield</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Enables access to a Shield-protected cluster.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Elastic Found Cluster</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Enables access to a Found cluster. <p class="p">Selecting this
-                                            property is the equivalent to setting the
-                                            action.bulk.compress Elasticsearch property to false,
-                                            and the request.headers.X-Found-Cluster to the cluster
-                                            name. </p>
-<p class="p">Found requires Shield. When enabling Found,
-                                            enable Shield and configure the additional Shield
-                                            properties. </p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Detect Additional Nodes in Cluster</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 "><p class="p">Detects additional nodes in the cluster based on the
-                                            configured Cluster URI. </p>
-Selecting this property is
-                                        the equivalent to setting the client.transport.sniff
-                                        Elasticsearch property to true.<p class="p">Use only when the <span class="ph">Data
-                  Collector</span> shares the same network as the Elasticsearch cluster.
-                                            Do not use for Found or Docker clusters.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Additional Configuration</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Additional Elasticsearch properties that you want to use.
-                                        Enter the exact property name and value expected by
-                                        Elasticsearch.</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Time Basis <a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">
-                                            <img class="image" id="task_xlv_jdw_kq__d8385e3740" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
-                                        </a></td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">
-                                        <div class="p">Time basis to use for writing to time-based indexes. Use
-                                            one of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d8385e3747">
-                                                <li class="li"><samp class="ph codeph">${time:now()}</samp> - Uses the
-                                                  processing time as the time basis. The processing
-                                                  time is the time associated with the <span class="ph">Data
-                  Collector</span> running the pipeline. </li>
-
-                                                <li class="li">An expression that calls a field and resolves to
-                                                  a datetime value, such as
-                                                  <samp class="ph codeph">${record:value('/&lt;date
-                                                  field&gt;')}</samp>. Uses the datetime result as
-                                                  the time basis. </li>
-
-                                            </ul>
-</div>
-
-                                        <p class="p">When the Index definition does not include datetime
-                                            variables, you can ignore this property. </p>
-
-                                        <p class="p">Default is <samp class="ph codeph">${time:now()}</samp>.</p>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Data Time Zone</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Time zone for the destination system. Used to resolve
-                                        datetimes in time-based indexes. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Index</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Index information for the generated documents. You can
-                                        use a constant, datetime variables, a field that includes
-                                        the index information, or any valid combination. <p class="p">When
-                                            using datetime variables, make sure to configure the
-                                            time basis appropriately. </p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Mapping</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Mapping information for the generated documents. You can
-                                        use a constant or a field that includes the mapping
-                                        information. </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Document ID</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">ID for the record. Use to specify the ID for the
-                                        generated documents. When you do not specify an ID,
-                                        Elasticsearch creates an ID for each document.<p class="p">By default,
-                                            the destination allows Elasticsearch to create the
-                                            ID.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Data Charset</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">
-                                        <p class="p">Character encoding of the data to be processed. </p>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e589 ">Enable Upsert <a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify the expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">
-                                            <img class="image" id="task_xlv_jdw_kq__d8385e3833" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
-                                        </a></td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e592 ">Enables upserts to the cluster. When enabled, configure
-                                        the Document ID property.</td>
-
-                                </tr>
-
-                            </tbody>
-
-                        </table>
-</div>
-
-                </div>
-                <div class="itemgroup info">If you enabled Shield, configure the following Shield properties:</div>
-                <div class="itemgroup info">
-                    
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d8385e3855" class="table" frame="border" border="1" rules="all">
-                            
-                            
-                            <thead class="thead" align="left">
-                                <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d71228e814">Shield Property</th>
-
-                                    <th class="entry" valign="top" width="70%" id="d71228e817">Description</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody class="tbody">
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">Shield Username/Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Shield username and password. <p class="p">Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.user Elasticsearch property.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">Enable SSL</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Enables SSL between the <span class="ph">Data
-                  Collector</span> and the Elasticsearch cluster.<p class="p">Selecting this property
-                                            is the equivalent to setting the shield.transport.ssl
-                                            Elasticsearch property to true.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">SSL Keystore Path</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Location of the keystore file. <p class="p">Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.keystore.path Elasticsearch
-                                            property.</p>
-<p class="p">Not necessary for Found clusters.
-                                        </p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">SSL Keystore Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Password for the keystore file.<p class="p">Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.keystore.password Elasticsearch
-                                            property.</p>
-<p class="p">Not necessary for Found
-                                        clusters.</p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">SSL Truststore Path</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Location of the truststore file. <p class="p">Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.truststore.path Elasticsearch
-                                            property.</p>
-<p class="p">Not necessary for Found clusters.
-                                        </p>
-</td>
-
-                                </tr>
-
-                                <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e814 ">SSL Truststore Password</td>
-
-                                    <td class="entry" valign="top" width="70%" headers="d71228e817 ">Password for the truststore file.<p class="p">Configuring this
-                                            property is the equivalent to configuring the
-                                            shield.ssl.truststore.password Elasticsearch
-                                            property.</p>
-<p class="p">Not necessary for Found
-                                        clusters.</p>
-</td>
 
                                 </tr>
 
@@ -721,9 +431,9 @@ Selecting this property is
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71228e929">Write to File Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71228e585">Write to File Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71228e932">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71228e588">Description</th>
 
                                 </tr>
 
@@ -731,16 +441,16 @@ Selecting this property is
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e929 ">Directory</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e585 ">Directory</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e932 ">Local directory for error record files. </td>
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e588 ">Local directory for error record files. </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e929 ">File Prefix</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e585 ">File Prefix</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e932 ">Prefix used for error record files. Use to differentiate
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e588 ">Prefix used for error record files. Use to differentiate
                                         error record files from other files in the directory.<p class="p">Uses
                                             the prefix sdc-${sdc:id()} by default. The prefix
                                             evaluates to sdc-&lt;<span class="ph">Data
@@ -755,9 +465,9 @@ Selecting this property is
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e929 ">File Wait Time (secs)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e585 ">File Wait Time (secs)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e932 ">Number of seconds <span class="ph">Data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e588 ">Number of seconds <span class="ph">Data
                   Collector</span> waits for error records. After that time, it creates a
                                         new error record file. <p class="p">You can enter a number of seconds
                                             or use the default expression to enter the time in
@@ -767,9 +477,9 @@ Selecting this property is
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e929 ">Max File Size (MB)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e585 ">Max File Size (MB)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e932 ">Maximum size for error files. Exceeding this size creates
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e588 ">Maximum size for error files. Exceeding this size creates
                                         a new error file. <p class="p">Use 0 to avoid using this
                                         property.</p>
 </td>
@@ -793,9 +503,9 @@ Selecting this property is
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="27.77777777777778%" id="d71228e1025">Write to Kafka Property</th>
+                                    <th class="entry" valign="top" width="27.77777777777778%" id="d71228e681">Write to Kafka Property</th>
 
-                                    <th class="entry" valign="top" width="72.22222222222221%" id="d71228e1028">Description</th>
+                                    <th class="entry" valign="top" width="72.22222222222221%" id="d71228e684">Description</th>
 
                                 </tr>
 
@@ -803,9 +513,9 @@ Selecting this property is
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Broker URI</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Broker URI</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <samp class="ph codeph">&lt;host&gt;:&lt;port&gt;</samp>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -815,27 +525,27 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d8385e4122" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d8385e4122" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Evaluates an expression at runtime to determine the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Evaluates an expression at runtime to determine the
                                             topic to use for each record.</td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -846,18 +556,18 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Topic</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d8385e4168">
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d8385e4168">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -872,10 +582,10 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
                                                 <img class="image" id="task_xlv_jdw_kq__d8385e4187" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Expression to use when using the expression partition
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Expression to use when using the expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
                                                 partition where you want each record written.
                                                 Partition numbers start with 0.</p>
@@ -886,17 +596,17 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e1025 ">Kafka Configuration</td>
+                                        <td class="entry" valign="top" width="27.77777777777778%" headers="d71228e681 ">Kafka Configuration</td>
 
-                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e1028 ">Additional Kafka properties to use. Click the
+                                        <td class="entry" valign="top" width="72.22222222222221%" headers="d71228e684 ">Additional Kafka properties to use. Click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -928,9 +638,9 @@ Selecting this property is
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d71228e1204">MapR Streams Producer Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71228e860">MapR Streams Producer Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d71228e1207">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71228e863">Description</th>
 
                                 </tr>
 
@@ -938,36 +648,36 @@ Selecting this property is
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d8385e4122" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Runtime Topic Resolution <a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic."><img class="image" id="task_xlv_jdw_kq__d8385e4122" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img>
                                             </a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Evaluates an expression at runtime to determine the
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Evaluates an expression at runtime to determine the
                                             topic to use for each record.</td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Topic</td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Topic</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Topic Expression</td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Topic Expression</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Expression used to determine where each record is
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Topic White List</td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Topic White List</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">List of valid topic names to write to when using
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -978,9 +688,9 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Partition Strategy </td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Partition Strategy </td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d8385e4168">
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d8385e4168">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -995,10 +705,10 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Partition Expression <a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">
                                                 <img class="image" id="task_xlv_jdw_kq__d8385e4187" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Expression to use when using the expression partition
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Expression to use when using the expression partition
                                             strategy. <p class="p">Define the expression to evaluate to the
                                                 partition where you want each record written.
                                                 Partition numbers start with 0.</p>
@@ -1009,19 +719,19 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">One Message per Batch</td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">One Message per Batch</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">For each batch, writes the records to each partition
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e1204 ">MapR Streams Configuration <a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
+                                    <td class="entry" valign="top" width="30%" headers="d71228e860 ">MapR Streams Configuration <a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">
                                             <img class="image" id="task_xlv_jdw_kq__d8385e4355" src="../Reusable_Content/../Graphics/icon_moreInfo.png" height="12" width="12"></img></a>
                                     </td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Additional configuration properties to use. To add
+                                    <td class="entry" valign="top" width="70%" headers="d71228e863 ">Additional configuration properties to use. To add
                                         properties, click <span class="ph uicontrol">Add</span> and define the
                                         property name and value. <p class="p">Use the property names and
                                             values as expected by MapR.</p>
@@ -1033,9 +743,9 @@ Selecting this property is
                                 </tr>
 
                                 <tr class="row">
-                                        <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Data Format</td>
+                                        <td class="entry" valign="top" width="30%" headers="d71228e860 ">Data Format</td>
 
-                                        <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Data format for messages:<ul class="ul" id="task_xlv_jdw_kq__d8385e4232">
+                                        <td class="entry" valign="top" width="70%" headers="d71228e863 ">Data format for messages:<ul class="ul" id="task_xlv_jdw_kq__d8385e4232">
                                                 <li class="li">Avro</li>
 
                                                 <li class="li">Binary</li>
@@ -1057,9 +767,9 @@ Selecting this property is
                                     </tr>
 
                                 <tr class="row">
-       <td class="entry" valign="top" width="30%" headers="d71228e1204 ">Charset</td>
+       <td class="entry" valign="top" width="30%" headers="d71228e860 ">Charset</td>
 
-       <td class="entry" valign="top" width="70%" headers="d71228e1207 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
+       <td class="entry" valign="top" width="70%" headers="d71228e863 ">Character set to use when writing data. <p class="p">Not used with all data formats.</p>
 </td>
 
       </tr>
@@ -1080,9 +790,9 @@ Selecting this property is
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="30%" id="d71228e1422">Mesos Cluster Property</th>
+                                    <th class="entry" valign="top" width="30%" id="d71228e1078">Mesos Cluster Property</th>
 
-                                    <th class="entry" valign="top" width="70%" id="d71228e1425">Description</th>
+                                    <th class="entry" valign="top" width="70%" id="d71228e1081">Description</th>
 
                                 </tr>
 
@@ -1090,18 +800,18 @@ Selecting this property is
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e1422 ">Dispatcher URL</td>
+                                    <td class="entry" valign="top" width="30%" headers="d71228e1078 ">Dispatcher URL</td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e1425 ">Master URL of the Mesos dispatcher. For example,
+                                    <td class="entry" valign="top" width="70%" headers="d71228e1081 ">Master URL of the Mesos dispatcher. For example,
                                         mesos://dispatcher:7077.</td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="30%" headers="d71228e1422 ">Hadoop/S3 Checkpoint Configuration Directory <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_cs4_lcg_j5" title="When the Data Collector runs a cluster streaming pipeline, on either Mesos or YARN, the Data Collector generates and stores checkpoint metadata. The checkpoint metadata provides the offset for the origin.">
+                                    <td class="entry" valign="top" width="30%" headers="d71228e1078 ">Hadoop/S3 Checkpoint Configuration Directory <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_cs4_lcg_j5" title="When the Data Collector runs a cluster streaming pipeline, on either Mesos or YARN, the Data Collector generates and stores checkpoint metadata. The checkpoint metadata provides the offset for the origin.">
                                             <img class="image" src="../Graphics/icon_moreInfo.png" height="12" width="12"></img></a></td>
 
-                                    <td class="entry" valign="top" width="70%" headers="d71228e1425 ">Location of the HDFS configuration files that specify
+                                    <td class="entry" valign="top" width="70%" headers="d71228e1081 ">Location of the HDFS configuration files that specify
                                         whether to write checkpoint metadata to HDFS or Amazon
                                             S3.<p class="p">Use a directory or symlink within the <span class="ph">Data
                   Collector</span> resources directory.</p>
@@ -1129,9 +839,9 @@ Selecting this property is
                             
                             <thead class="thead" align="left">
                                 <tr class="row">
-                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71228e1495">Yarn Cluster Property</th>
+                                    <th class="entry" valign="top" width="22.22222222222222%" id="d71228e1151">Yarn Cluster Property</th>
 
-                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71228e1498">Description</th>
+                                    <th class="entry" valign="top" width="77.77777777777779%" id="d71228e1154">Description</th>
 
                                 </tr>
 
@@ -1139,18 +849,18 @@ Selecting this property is
 
                             <tbody class="tbody">
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1495 ">Worker Memory (MB)</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1151 ">Worker Memory (MB)</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1498 ">Maximum amount of memory allocated to each <span class="ph">Data
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1154 ">Maximum amount of memory allocated to each <span class="ph">Data
                   Collector</span> worker in the cluster.<p class="p">Default is 1024 MB.</p>
 </td>
 
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1495 ">Worker Java Options</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1151 ">Worker Java Options</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1498 ">Additional Java properties for the pipeline. Separate
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1154 ">Additional Java properties for the pipeline. Separate
                                         properties with a space.<p class="p">The following properties are set
                                             by default. </p>
 <div class="p">
@@ -1174,9 +884,9 @@ Selecting this property is
                                 </tr>
 
                                 <tr class="row">
-                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1495 ">Launcher Env Configuration</td>
+                                    <td class="entry" valign="top" width="22.22222222222222%" headers="d71228e1151 ">Launcher Env Configuration</td>
 
-                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1498 ">
+                                    <td class="entry" valign="top" width="77.77777777777779%" headers="d71228e1154 ">
                                         <p class="p">Additional configuration properties for the cluster
                                             launcher. Click the <span class="ph uicontrol">Add</span> icon and
                                             define the property name and value. </p>

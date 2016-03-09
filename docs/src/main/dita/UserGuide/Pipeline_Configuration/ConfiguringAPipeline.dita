@@ -190,14 +190,12 @@
                                                 another pipeline. To use this option, you need an
                                                 SDC RPC destination pipeline to process the error
                                                 records. </li>
-                                            <li>Write to Elasticsearch - Writes error records to the
-                                                specified Elasticsearch cluster.</li>
                                             <li>Write to File - Writes error records to a file in
                                                 the specified directory. </li>
                                             <li>Write to Kafka - Writes error records to the
                                                 specified Kafka cluster.</li>
-                                            <li>Write to MapR Streams - Writes error records to the
-                                                specified MapR cluster.</li>
+                                            <li>Write to MapR Streams - Writes error records to MapR
+                                                Streams.</li>
                                         </ul><p>For cluster mode, Write to File is not supported at
                                             this time. </p></entry>
                                 </row>
@@ -266,17 +264,6 @@
                         </tgroup>
                     </table>
                 </info>
-            </step>
-            <step>
-                <cmd>When writing error records to Elasticsearch, click the <uicontrol>Error Records
-                        - Write to Elasticsearch</uicontrol> tab and configure the following
-                    properties:</cmd>
-                <info
-                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticProps-Info"/>
-                <info>If you enabled Shield, configure the following Shield properties:</info>
-                <info
-                    conref="../Reusable_Content/ReusableSteps.dita#task_kzs_5vz_sq/ElasticSHIELD-Info"
-                />
             </step>
             <step>
                 <cmd>When writing error records to file, click the <wintitle>Error Records - Write
