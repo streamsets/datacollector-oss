@@ -21,16 +21,26 @@
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>.
             As a result, you must perform additional steps to enable the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-            machine to process MapR data.</p>
-        <p>To connect to MapR FS or MapR Streams, install the <ph
+            machine to connect to MapR.</p>
+        <p>To connect to MapR FS or MapR Streams, install <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a node in the cluster or on a client machine. To use <ph
-                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> on
-            a client machine, the MapR client package must be installed and configured on the
-            machine.</p>
+            a node in the cluster or on a client machine. </p>
+        <p>To run the Data Collector on a client machine - outside the cluster or on your local
+            machine - the MapR client package must be installed and configured on the machine. To
+            install the client package, you need to download the following files:<ul
+                id="ul_qcz_x1m_gv">
+                <li>MapR client library - Typically named
+                        <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can download the
+                        files for your operating system
+                        here:<codeblock><xref href="http://package.mapr.com/releases/v5.1.0/" format="html" scope="external"/></codeblock></p></li>
+                <li>Kafka client library - Typically named
+                        <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can download the
+                        files for your operating system here:
+                        <codeblock><xref href="http://package.mapr.com/releases/ecosystem-5.x/" format="html" scope="external"/></codeblock></p></li>
+            </ul></p>
         <p>Before using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
-            process MapR data, perform the following steps:</p>
+            connect to MapR Streams or MapR FS, perform the following steps:</p>
         <ol id="ol_ghq_zrg_2v">
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
@@ -48,8 +58,8 @@
                 </ul></li>
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> security policy file, $SDC_CONF/sdc-security.policy, add a new permissions block
-                for $MAPR_HOME.<p>For example:
+                /> security policy file, <codeph>$SDC_CONF/sdc-security.policy</codeph>, add a new
+                permissions block for $MAPR_HOME.<p>For example:
                     <codeblock>grant codebase "file:///opt/mapr/-" {
   permission java.security.AllPermission;
 };</codeblock></p></li>
