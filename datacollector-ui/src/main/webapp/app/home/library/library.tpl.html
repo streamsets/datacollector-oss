@@ -71,11 +71,19 @@
             </li>
 
             <li role="presentation">
-              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, $event)">
+              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, false, $event)">
                 <i class="glyphicon glyphicon-export"></i>
                 <span>{{'global.form.export' | translate}}</span>
               </a>
             </li>
+
+            <li role="presentation">
+              <a href="#" dropdown-toggle ng-click="exportPipelineConfig(pipeline, true, $event)">
+                <i class="glyphicon glyphicon-export"></i>
+                <span>{{'global.form.exportWithDefinitions' | translate}}</span>
+              </a>
+            </li>
+
           </ul>
         </div>
 

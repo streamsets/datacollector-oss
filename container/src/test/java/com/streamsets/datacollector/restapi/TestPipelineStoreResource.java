@@ -29,6 +29,7 @@ import com.streamsets.datacollector.restapi.bean.MetricElementJson;
 import com.streamsets.datacollector.restapi.bean.MetricTypeJson;
 import com.streamsets.datacollector.restapi.bean.MetricsRuleDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRevInfoJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
@@ -63,6 +64,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestPipelineStoreResource extends JerseyTest {
@@ -266,6 +268,8 @@ public class TestPipelineStoreResource extends JerseyTest {
 
         try {
           Mockito.when(pipelineStore.retrieveRules("myPipeline", "tag")).thenReturn(rules.getRuleDefinitions());
+          Mockito.when(pipelineStore.retrieveRules("xyz", "1")).thenReturn(rules.getRuleDefinitions());
+          Mockito.when(pipelineStore.retrieveRules("newFromImport", "1")).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {
           e.printStackTrace();
         }
@@ -276,6 +280,9 @@ public class TestPipelineStoreResource extends JerseyTest {
         } catch (PipelineStoreException e) {
           e.printStackTrace();
         }
+
+        Mockito.when(pipelineStore.create("nobody", "newFromImport", null)).thenReturn(
+            MockStages.createPipelineConfigurationSourceProcessorTarget());
 
       } catch (PipelineStoreException e) {
         e.printStackTrace();
@@ -303,6 +310,52 @@ public class TestPipelineStoreResource extends JerseyTest {
     Mockito.verify(pipelineStore, Mockito.times(1)).saveUiInfo(Mockito.anyString(), Mockito.anyString(),
                                                                Mockito.anyMap());
 
+  }
+
+  @Test
+  public void testExportPipeline() {
+    Response response = target("/v1/pipeline/xyz/export").queryParam("rev", "1").request().get();
+    PipelineEnvelopeJson pipelineEnvelope = response.readEntity(PipelineEnvelopeJson.class);
+    Assert.assertNotNull(pipelineEnvelope);
+    Assert.assertNotNull(pipelineEnvelope.getPipelineConfig());
+    Assert.assertNotNull(pipelineEnvelope.getPipelineRules());
+    Assert.assertNull(pipelineEnvelope.getDefinitions());
+  }
+
+  @Test
+  public void testExportPipelineWithDefinitions() {
+    Response response = target("/v1/pipeline/xyz/export").queryParam("rev", "1")
+        .queryParam("includeDefinitions", true).request().get();
+    // Reading as  PipelineEnvelopeJson ignores the definitions, so reading as Map
+    Map pipelineEnvelope = response.readEntity(Map.class);
+    Assert.assertNotNull(pipelineEnvelope);
+
+    Assert.assertTrue(pipelineEnvelope.containsKey("pipelineConfig"));
+    Assert.assertNotNull(pipelineEnvelope.get("pipelineConfig"));
+
+    Assert.assertTrue(pipelineEnvelope.containsKey("pipelineRules"));
+    Assert.assertNotNull(pipelineEnvelope.get("pipelineRules"));
+
+    Assert.assertTrue(pipelineEnvelope.containsKey("definitions"));
+    Assert.assertNotNull(pipelineEnvelope.get("definitions"));
+  }
+
+
+  @Test
+  public void testImportPipeline() {
+    Response response = target("/v1/pipeline/xyz/export").queryParam("rev", "1").request().get();
+    PipelineEnvelopeJson pipelineEnvelope = response.readEntity(PipelineEnvelopeJson.class);
+
+    response = target("/v1/pipeline/newFromImport/import")
+        .queryParam("rev", "1")
+        .request()
+        .post(Entity.json(pipelineEnvelope));
+    pipelineEnvelope = response.readEntity(PipelineEnvelopeJson.class);
+
+    Assert.assertNotNull(pipelineEnvelope);
+    Assert.assertNotNull(pipelineEnvelope.getPipelineConfig());
+    Assert.assertNotNull(pipelineEnvelope.getPipelineRules());
+    Assert.assertNull(pipelineEnvelope.getDefinitions());
   }
 
 }

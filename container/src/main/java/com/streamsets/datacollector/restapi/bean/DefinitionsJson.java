@@ -29,6 +29,7 @@ public class DefinitionsJson {
   Map<String,Map<String, List<String>>> rulesDefinitions;
   Map<String, Object> elCatalog;
   Set<Object> runtimeConfigs;
+  Map<String, String> stageIcons;
 
   public List<PipelineDefinitionJson> getPipeline() {
     return pipeline;
@@ -68,5 +69,13 @@ public class DefinitionsJson {
 
   public void setRuntimeConfigs(Set<Object> runtimeConfigs) {
     this.runtimeConfigs = runtimeConfigs;
+  }
+
+  public Map<String, String> getStageIcons() {
+    return stageIcons;
+  }
+
+  public void setStageIcons(Map<String, String> stageIcons) {
+    this.stageIcons = stageIcons;
   }
 }

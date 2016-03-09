@@ -81,9 +81,9 @@ angular
       /**
        * Export link command handler
        */
-      exportPipelineConfig: function(pipelineInfo, $event) {
+      exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $event.stopPropagation();
-        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
+        api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
       }
 
     });

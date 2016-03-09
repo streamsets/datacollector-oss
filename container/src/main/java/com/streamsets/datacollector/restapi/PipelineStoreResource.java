@@ -26,11 +26,17 @@ import com.streamsets.datacollector.config.MetricType;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -38,11 +44,13 @@ import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.RuleDefinitionValidator;
 import com.streamsets.pipeline.api.impl.Utils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -61,11 +69,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +108,8 @@ public class PipelineStoreResource {
   private static final String MEMORY_LIMIt_TEXT = "Memory limit for pipeline exceeded";
   private static final String MEMORY_LIMIt_METRIC_ID = "pipeline.memoryConsumed.counter";
   private static final String MEMORY_LIMIt_CONDITION = "${value() > (jvm:maxMemoryMB() * 0.65)}";
+
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineStoreResource.class);
 
 
   private final RuntimeInfo runtimeInfo;
@@ -156,7 +167,7 @@ public class PipelineStoreResource {
       throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));
     }
 
-    if(attachment) {
+    if (attachment) {
       Map<String, Object> envelope = new HashMap<String, Object>();
       envelope.put("pipelineConfig", data);
 
@@ -308,4 +319,124 @@ public class PipelineStoreResource {
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(BeanHelper.wrapRuleDefinitions(ruleDefs)).build();
   }
 
+
+  @Path("/pipeline/{pipelineName}/export")
+  @GET
+  @ApiOperation(value = "Export Pipeline Configuration & Rules by name and revision",
+      response = PipelineEnvelopeJson.class, authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response exportPipeline(
+      @PathParam("pipelineName") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
+      @QueryParam("includeDefinitions") @DefaultValue("false") boolean includeDefinitions
+  ) throws PipelineStoreException, URISyntaxException {
+    RestAPIUtils.injectPipelineInMDC(name);
+    PipelineConfiguration pipelineConfig = store.load(name, rev);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    pipelineConfig = validator.validate();
+
+    RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
+
+    PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
+    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
+    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+
+    if (includeDefinitions) {
+      DefinitionsJson definitions = new DefinitionsJson();
+
+      // Add only stage definitions for stages present in pipeline config
+      List<StageDefinition> stageDefinitions = new ArrayList<>();
+      Map<String, String> stageIcons = new HashMap<>();
+
+      for (StageConfiguration conf : pipelineConfig.getStages()) {
+        String key = conf.getLibrary() + ":"  + conf.getStageName();
+        if (!stageIcons.containsKey(key)) {
+          StageDefinition stageDefinition = stageLibrary.getStage(conf.getLibrary(), conf.getStageName(), false);
+          if (stageDefinition != null) {
+            stageDefinitions.add(stageDefinition);
+            String iconFile = stageDefinition.getIcon();
+            try {
+              String base64String = Base64.getEncoder().encodeToString(
+                  IOUtils.toByteArray(stageDefinition.getStageClassLoader().getResourceAsStream(iconFile)));
+              stageIcons.put(key, base64String);
+            } catch (IOException e) {
+              LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
+              stageIcons.put(key, null);
+            }
+          }
+        }
+      }
+
+      definitions.setStageIcons(stageIcons);
+
+      List<StageDefinitionJson> stages = new ArrayList<>();
+      stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
+      definitions.setStages(stages);
+
+      //Populate the definitions with the PipelineDefinition
+      List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
+      pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
+      definitions.setPipeline(pipeline);
+
+      pipelineEnvelope.setDefinitions(definitions);
+    }
+
+    if (attachment) {
+      return Response.ok().
+          header("Content-Disposition", "attachment; filename=" + name + ".json").
+          type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+    } else {
+      return Response.ok().
+          type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+    }
+  }
+
+  @Path("/pipeline/{pipelineName}/import")
+  @POST
+  @ApiOperation(value = "Import Pipeline Configuration & Rules", response = PipelineEnvelopeJson.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response importPipeline(
+      @PathParam("pipelineName") String name,
+      @QueryParam("rev") @DefaultValue("0") String rev,
+      @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
+      @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
+  ) throws PipelineStoreException, URISyntaxException {
+    RestAPIUtils.injectPipelineInMDC(name);
+
+    PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
+    PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
+
+    RuleDefinitionsJson ruleDefinitionsJson = pipelineEnvelope.getPipelineRules();
+    RuleDefinitions ruleDefinitions = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
+
+    PipelineConfiguration newPipelineConfig;
+    RuleDefinitions newRuleDefinitions;
+
+    if (overwrite) {
+      if (store.hasPipeline(name)) {
+        newPipelineConfig = store.load(name, rev);
+      } else {
+        newPipelineConfig = store.create(user, name, pipelineConfig.getDescription());
+      }
+    } else {
+      newPipelineConfig = store.create(user, name, pipelineConfig.getDescription());
+    }
+
+    newRuleDefinitions = store.retrieveRules(name, rev);
+
+    pipelineConfig.setUuid(newPipelineConfig.getUuid());
+    pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
+
+    ruleDefinitions.setUuid(newRuleDefinitions.getUuid());
+    ruleDefinitions = store.storeRules(name, rev, ruleDefinitions);
+
+    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
+    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+    return Response.ok().
+        type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+  }
 }

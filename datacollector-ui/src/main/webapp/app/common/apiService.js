@@ -355,16 +355,13 @@ angular.module('dataCollectorApp.common')
        * Export Pipeline Configuration.
        *
        * @param name
+       * @param includeDefinitions
        */
-      exportPipelineConfig: function(name) {
-        var url;
-
-        if(!name) {
-          name = 'xyz';
+      exportPipelineConfig: function(name, includeDefinitions) {
+        var url = apiBase + '/pipeline/' + name + '/export?attachment=true';
+        if (includeDefinitions) {
+          url += '&includeDefinitions=true'
         }
-
-        url = apiBase + '/pipeline/' + name + '?attachment=true';
-
         window.open(url, '_blank', '');
       },
 

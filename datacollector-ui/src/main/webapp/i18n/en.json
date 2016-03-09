@@ -58,6 +58,7 @@
       "errorRecord": "Error",
       "errors": "Errors",
       "export": "Export",
+      "exportWithDefinitions": "Export With Definitions",
       "fieldName": "Field Name",
       "fieldName.placeholder": "New Field Name",
       "fromStage": "From Stage",
