@@ -165,6 +165,8 @@
 
           <li class="li">str:endsWith("&lt;string&gt;", "&lt;subset&gt;")</li>
 
+          <li class="li">str:length("&lt;string&gt;")</li>
+
           <li class="li">str:matches("&lt;string&gt;", &lt;regEx&gt;)</li>
 
           <li class="li">str:regexCapture("&lt;string&gt;", &lt;regEx&gt;, &lt;group&gt;)</li>
@@ -689,7 +691,7 @@
         
           <dt class="dt dlterm">str:contains("&lt;string&gt;", "&lt;subset&gt;")</dt>
 
-          <dd class="dd">Returns a true or false based on whether the string contains the configured subset of
+          <dd class="dd">Returns true or false based on whether the string contains the configured subset of
             characters.</dd>
 
           <dd class="dd">Uses the following arguments:<ul class="ul" id="concept_ahp_f4v_1r__ul_fwp_p4k_br">
@@ -718,6 +720,22 @@
 </dd>
 
           <dd class="dd">For example, ${str:endsWith("32403-1001", "1001")} returns: true.</dd>
+
+        
+        
+          <dt class="dt dlterm">str:length("&lt;string&gt;")</dt>
+
+          <dd class="dd">Returns the length of a string.</dd>
+
+          <dd class="dd">Return type: Integer.</dd>
+
+          <dd class="dd">Uses the following argument:<ul class="ul" id="concept_ahp_f4v_1r__ul_mdj_5hm_gv">
+              <li class="li">string - The string to return the length for.</li>
+
+            </ul>
+</dd>
+
+          <dd class="dd">For example, ${str:length("tomorrow")} returns: 8.</dd>
 
         
         
