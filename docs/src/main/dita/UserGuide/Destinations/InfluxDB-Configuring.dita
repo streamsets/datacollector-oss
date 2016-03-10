@@ -78,8 +78,7 @@
                                         consistency level, see the InfluxDB documentation.</p></entry>
                                 </row>
                                 <row>
-                                    <entry>Record Converter<draft-comment author="alisontaylor"
-                                            >rename to Record Mapping?</draft-comment></entry>
+                                    <entry>Record Mapping</entry>
                                     <entry>Map records to points in the InfluxDB database. Select
                                         one of the following options:<ul id="ul_qlr_w5q_fv">
                                             <li>collectd - Select if using the UDP Source origin to
