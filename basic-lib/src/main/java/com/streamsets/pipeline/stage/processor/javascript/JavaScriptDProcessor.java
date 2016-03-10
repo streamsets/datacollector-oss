@@ -69,9 +69,9 @@ public class JavaScriptDProcessor extends DProcessor {
     " *  log.<loglevel>(msg, obj...): use instead of print to send log messages to the log4j log instead of stdout.\n" +
     " *                               loglevel is any log4j level: e.g. info, error, warn, trace.\n" +
     " *\n" +
-    " *  out.write(record): writes a record to processor output\n" +
+    " *  output.write(record): writes a record to processor output\n" +
     " *\n" +
-    " *  err.write(record, message): sends a record to error\n" +
+    " *  error.write(record, message): sends a record to error\n" +
     " *\n" +
     " */\n" +
     "\n" +
@@ -100,10 +100,10 @@ public class JavaScriptDProcessor extends DProcessor {
     "    //records[i].value.A[0] = 100;\n" +
     "\n" +
     "    // Write record to procesor output\n" +
-    "    out.write(records[i]);\n" +
+    "    output.write(records[i]);\n" +
     "  } catch (e) {\n" +
     "    // Send record to error\n" +
-    "    err.write(records[i], e);\n" +
+    "    error.write(records[i], e);\n" +
     "  }\n" +
     "}\n";
 
