@@ -24,9 +24,7 @@
             </p><draft-comment author="Loretta">verify the link</draft-comment><p><xref
               href="https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv"
               format="html" scope="external">
-              https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv</xref></p><p>You'll
-            need a login to the password-protected section of the site - it just takes a moment to
-            set up an account.</p></li>
+              https://www.streamsets.com/documentation/datacollector/sample_data/tutorial/nyc_taxi_data.csv</xref></p></li>
         <li>Create directories local to the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
             />.<p>Let's use the same root directory for the origin, destination, and error files as
