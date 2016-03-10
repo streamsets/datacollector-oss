@@ -45,6 +45,7 @@
       </includes>
       <excludes>
         <exclude>streamsets-libs/*hdp*/**</exclude>
+        <exclude>streamsets-libs/*mapr*/**</exclude>
       </excludes>
     </fileSet>
 
