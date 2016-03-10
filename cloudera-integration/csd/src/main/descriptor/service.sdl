@@ -121,17 +121,6 @@
                 "value" : "streamsets.keytab"
               }
             ]
-          },
-          {
-            "filename": "stagelibswhitelist.properties",
-            "configFormat": "properties",
-            "includeParams": [
-              "system.stagelibs.whitelist",
-              "user.stagelibs.whitelist"
-            ],
-            "excludeParams": [
-              "datacollector.users"
-            ]
           }
         ],
         "auxConfigGenerators": [
