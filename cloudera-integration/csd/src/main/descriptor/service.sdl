@@ -259,20 +259,6 @@
           "description": "The max number of errors per pipeline that will be retained in memory when the pipeline is running. If set to zero, error records will not be retained in memory. If the specified limit is reached the oldest records will be discarded to make room for the newest one.The maximum size that the error output file is allowed to reach before being rolled over to backup files",
           "type": "long",
           "default": 100
-        },
-        {
-          "name": "system.stagelibs.whitelist",
-          "label": "System Stage Library Whitelist",
-          "description": "StreamSets libraries to load in the data collector, specify the library directory names separated by commas, use * for all",
-          "type": "string",
-          "default": "*"
-        },
-        {
-          "name": "user.stagelibs.whitelist",
-          "label": "User Stage Library Whitelist",
-          "description": "User libraries to load in the data collector, specify the library directory names separated by commas, use * for all",
-          "type": "string",
-          "default": "*"
         }
       ]
     }
