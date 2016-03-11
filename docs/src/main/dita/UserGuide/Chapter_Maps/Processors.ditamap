@@ -62,6 +62,13 @@
   </topicmeta>
    <topicref href="../Processors/GeoIP-DatabaseFileLocation.dita"/>
    <topicref href="../Processors/GeoIP-Configuring.dita"/></topicref>
+  <topicref href="../Processors/Groovy.dita" chunk="to-content">
+   <topicmeta><shortdesc></shortdesc></topicmeta>
+   <topicref href="../Processors/Groovy_ProcessingMode.dita"/>
+   <topicref href="../Processors/Groovy-ScriptingObjects.dita"/>
+   <topicref href="../Processors/Groovy-DelimData.dita"/>
+   <topicref href="../Processors/Groovy-Configuring.dita"/>
+   </topicref>
   <topicref href="../Processors/JavaScript.dita" chunk="to-content"> 
    <topicmeta><shortdesc></shortdesc></topicmeta>
    <topicref href="../Processors/JavaScript_ProcessingMode.dita"/>

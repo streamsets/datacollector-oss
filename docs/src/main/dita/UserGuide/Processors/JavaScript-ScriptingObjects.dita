@@ -20,43 +20,49 @@
         objects</indexterm></indexterm><indexterm>scripting objects<indexterm>JavaScript
           Evaluator</indexterm></indexterm>You can use the following scripting objects in the
       JavaScript Evaluator:<draft-comment author="Loretta">port changes over to Jython Scripting
-        Objects</draft-comment><dl>
+        Objects and Groovy Scripting Objects</draft-comment><dl>
         <dlentry>
-          <dt>records array</dt>
-          <dd>An array of records to process. The records object includes different elements based
-            on the processing mode that you use:<ul id="ul_fdm_5yk_sr">
-              <li>Record by Record - The records array includes one record element.</li>
-              <li>Batch by Batch - The records array includes all records in the batch.</li>
+          <dt>records</dt>
+          <dd>A collection of records to process. The
+            records object includes different elements based on the
+            processing mode that you use:<ul id="ul_fdm_5yk_sr">
+              <li>Record by Record - The records array includes one
+                record element. A record includes a single
+                <codeph>value</codeph> element. The
+                <codeph>value</codeph> element contains the data
+                for the record.</li>
+              <li>Batch by Batch - The records array includes all
+                records in the batch.</li>
             </ul></dd>
+          <dd>Map and list record fields are mapped to JavaScript maps and arrays, respectively.</dd>
         </dlentry>
-        <dlentry>
-          <dt>record</dt>
-          <dd>An object that represents a single record. Includes a single <codeph>value</codeph>
-            element. The <codeph>value</codeph> element contains the data for the record. </dd>
-          <dd>Map and list record fields are mapped to JavaScript maps and arrays,
-            respectively.</dd>
-        </dlentry>
-        <dlentry>
-          <dt>log</dt>
-          <dd>An object to write messages to the log. Includes four methods:
-            <codeph>info()</codeph>, <codeph>warn()</codeph>, <codeph>debug()</codeph>, and
+          <dlentry>
+            <dt>state</dt>
+            <dd>An object to store information between invocations of this script. A state is a map
+              object that includes a collection of key/value pairs. You can use the state object to
+              cache data such as a counter.</dd>
+          </dlentry>
+          <dlentry>
+            <dt>log</dt>
+            <dd>An object to write messages to the log. Includes four methods:
+              <codeph>info()</codeph>, <codeph>warn()</codeph>, <codeph>debug()</codeph>, and
               <codeph>trace()</codeph>. </dd>
-          <dd>The signature of the 4 methods is as follows:
-            <codeblock>(message-template, arguments…) </codeblock>The message template can have
-            positional variables denoted by curly brackets: { }. The arguments are replaced in the
-            message template curly brackets in positional manner, i.e., this is the first argument
-            in the first { } occurrence, and so on.</dd>
-        </dlentry>
-        <dlentry>
-          <dt>out</dt>
-          <dd>An object that writes the record to the output batch. Includes a
+            <dd>The signature of the four methods is as follows:
+              <codeblock>(message-template, arguments…) </codeblock>The message template can have
+              positional variables denoted by curly brackets: { }. The arguments are replaced in the
+              message template curly brackets in positional manner, i.e., this is the first argument in
+              the first { } occurrence, and so on.</dd>
+          </dlentry>
+          <dlentry>
+            <dt>output</dt>
+            <dd>An object that writes the record to the output batch. Includes a
               <codeph>write(Record)</codeph> method.</dd>
-        </dlentry>
-        <dlentry>
-          <dt>err</dt>
-          <dd>An object that passes error records to the processor for error handling. Includes a
+          </dlentry>
+          <dlentry>
+            <dt>error</dt>
+            <dd>An object that passes error records to the processor for error handling. Includes a
               <codeph>write(Record, message)</codeph> method.</dd>
-        </dlentry>
+          </dlentry>
       </dl></p>
  </conbody>
 </concept>
