@@ -10,6 +10,7 @@ $(document).ready(function () {
     /**
      * @description Split page in leftPane and rightPane
      */
+    if ( $("html").attr("dir") != "rtl") {
     $("#splitterContainer").splitter({
         minAsize: 0,
         maxAsize: 600,
@@ -19,6 +20,17 @@ $(document).ready(function () {
         closeableto: 0,
         animSpeed: 100
     });
+    } else {
+        $("#splitterContainer").splitter({
+            minBsize: 0,
+            maxBsize: 600,
+            splitVertical: true,
+            A: $('#rightPane'),
+            B: $('#leftPane'),
+            closeableto: 100,
+            animSpeed: 100
+        });
+    }
 
     /**
      * @description Action to take on iframe unload
@@ -29,14 +41,6 @@ $(document).ready(function () {
     });
     loaded = true;
 
-    showMenu('content');
-
-
-    $('#iList a').each(function () {
-        var old = $(this).attr('href');
-        $(this).attr('href', '#' + normalizeLink(old));
-        $(this).removeAttr('target');
-    });
     if (!notLocalChrome) {
         var warningMsg = 'Chrome limits JavaScript functionality when a page is loaded from the local disk. This prevents the normal help viewer from loading.\nYou will be redirected to the frameset version of the help.';
         if (confirm(warningMsg)) {
@@ -54,11 +58,47 @@ $(document).ready(function () {
             });
             var warning = '<div id="warning">Not all features will be enabled using Google Chrome for webhelp loaded from local file system!</div>';
             $('#productTitle .framesLink').append(warning);
-        };
+	    }
     }
 
-//    toggleLeft();
+    $('#textToSearch').on('focus', function(){
+        try {
+        loadSearchResources();
+        } catch (e) {
+            if ( $('#loadingError').length < 1 ) {
+                $('#searchResults').prepend('<span id="loadingError">' + e + '</span>');
+            }
+            $('#search').trigger( 'click' );
+        }
+    });
+    
+    $("#oldFrames").click(function(){
+        var newLink = "";
+        try {
+            var currentLink = parseUri(window.location);
+        } catch (e) {
+            debug(e);
+        }
+
+        newLink = $(this).attr("href") + "?q=" + wh.directory + currentLink.anchor;
+        $(this).attr("href", newLink);
+    });
 });
+
+/**
+ * @description Dynamically load resources needed when search function is called.
+ */
+function loadSearchResources() {
+    if (typeof window.indexerLanguage == 'undefined') {
+        var scripts = ["oxygen-webhelp/search/htmlFileInfoList.js", "oxygen-webhelp/search/index-1.js", "oxygen-webhelp/search/index-2.js", "oxygen-webhelp/search/index-3.js", "oxygen-webhelp/search/htmlFileList.js"];
+        scripts.forEach(function(entry) {
+            var scriptTag = document.createElement("script");
+            scriptTag.type = "text/javascript";
+            scriptTag.src = entry;
+            document.head.appendChild(scriptTag);
+        });
+    }
+}
 
 /**
  * @description Print iframe content
@@ -75,7 +115,7 @@ function printFrame(id) {
 /**
  * @description If CGI contains the q param will redirect the user to the topic specified in the param value
  */
-if (location.search.indexOf("?q=") == 0) {
+if (location.search.indexOf("q=") != -1) {
     debug('search:' + location.search + ' hwDir:' + wh.directory);
     var pos = 0;
     var newLink = whUrl + pageName;
@@ -108,9 +148,20 @@ function showDivs() {
  * @param dynamicURL - URL to be loaded
  */
 function loadIframe(dynamicURL) {
-dynamicURL = dynamicURL.replace(/%23/g,'#');
     debug('loadIframe(' + dynamicURL + ')');
+    dynamicURL = dynamicURL.replace(/%23/g,'#');
     var anchor = "";
+    
+    try {
+        var parsedUri = parseUri(dynamicURL);
+        if (parsedUri.protocol != "") {
+            debug("Cross-site redirect security exception!");
+            return false;
+        }
+    } catch (e) {
+        debug(e);
+    }
+
     if (dynamicURL.indexOf("#") > 0) {
         //anchor
         anchor = dynamicURL.substr(dynamicURL.indexOf("#"));
@@ -133,6 +184,8 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
     var iframeHeaderCell = document.getElementById('rightPane');
     var iframeHeader = document.createElement('IFRAME');
     iframeHeader.id = 'frm';
+	iframeHeader.name = 'frm';
+	dynamicURL = whUrl + encodeURI(dynamicURL);
     iframeHeader.src = dynamicURL;
     iframeHeader.frameBorder = 0;
     iframeHeader.align = 'center';
@@ -150,7 +203,6 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
             tocWidth = parseInt($('#tocMenu').css('width'));
             navLinksWidth = parseInt($('#navigationLinks').css('width'));
             breadCrumbWidth = parseInt($('#breadcrumbLinks').css('width'));
-            var withFrames = window.parent.frames.length>1?true:false;
             var navLinks = withFrames?$(top.frames[ "contentwin"].document).find(".navparent a,.navprev a,.navnext a"):$(".navparent a,.navprev a,.navnext a");
             navLinks.hide();
             navLinksWidthMin = parseInt($('#navigationLinks').css('width'));
@@ -165,9 +217,12 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
             if(currentLocation.indexOf('#')>0) {
                 currentLocation = currentLocation.substring(0, currentLocation.indexOf('#'));
             }
+            while (currentLocation.indexOf("/")!=-1) {
+                currentLocation = currentLocation.substring(currentLocation.indexOf("/")+1);
+            }
             $.each(links, function(){
                 var link = $(this).attr('href');
-                if(link.indexOf('#')==0) {
+                if(link!==undefined && link.indexOf('#')==0) {
                     $(this).attr('href', currentLocation+link);
                 }
             });
@@ -175,6 +230,7 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
         debug('#frm.load');
         if (notLocalChrome) {
             debug('#frm.load 1');
+            try {
             $('#frm').contents().find('.navfooter').before('<div class="footer_separator" style="border-top: 1px solid #EEE;"><!-- --></div>').hide();
             $('#frm').contents().find('.frames').hide();
             
@@ -199,9 +255,15 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
                 } else {
                     // EXM-27800 Decide to ignore or keep iframeDir in the path
                     // of the target of the <a> link based on ID of parent div element.
-                    var newUrl = pageName + location.search + '#' +
-                    processHref(hrf, $(this).closest("div").attr("id"));
-                    window.location.href = whUrl + newUrl;
+                    var topicRelativePath = '#' + processHref(hrf, $(this).closest("div").attr("id"));
+                    var currentTopicRelativePath = window.location.href.substr(window.location.href.indexOf("#"));
+                    if (currentTopicRelativePath==topicRelativePath) {
+                        return;
+                    } else {
+                        var newUrl = pageName + location.search + topicRelativePath;
+                        window.location.href = whUrl + newUrl;
+                    }
+
                     ev.preventDefault();
                 }
                 return false;
@@ -242,6 +304,9 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
             } else {
 
             }
+            } catch (e) {
+                debug(e);
+        }
         }
         $('#frm').show();
         $('div.tooltip').remove();
@@ -269,6 +334,9 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
 	    $('.navparent,.navprev,.navnext').unbind('click').bind('click', function(){
 	        $(this).find('a').trigger('click');
 	    });
+
+
+        scrollToVisibleItem();
     });
 }
 
@@ -280,6 +348,8 @@ dynamicURL = dynamicURL.replace(/%23/g,'#');
  */
 function markSelectItem(hrl, startWithMatch) {
     debug("hrl: " + hrl);
+    $("#contentBlock ul").css("background-color", $("#splitterContainer #leftPane").css('background-color'));
+    $("#contentBlock li").css("background-color", "transparent");
     
     if ($.cookie("wh_pn") !== undefined && parseInt($.cookie("wh_pn")) > -1 && $.cookie("wh_pn") != "") {
         currentTOCSelection = parseInt($.cookie("wh_pn"));
@@ -313,7 +383,8 @@ function markSelectItem(hrl, startWithMatch) {
                 $('#contentBlock li span').removeClass('menuItemSelected');
                 var item = $(loc).first();
                 item.parent('li span').addClass('menuItemSelected');
-                $.cookie("wh_pn", $(loc).first().parents('li').index('li'));
+                var findIndexOf = $(loc).first().closest('li');
+                $.cookie("wh_pn", $('#contentBlock li').index(findIndexOf));
             }
             toReturn = true;
         } else {
@@ -334,13 +405,16 @@ function markSelectItem(hrl, startWithMatch) {
                     $('#contentBlock li span').removeClass('menuItemSelected');
                     var item = $(loc).first();
                     item.parent('li span').addClass('menuItemSelected');
-                    $.cookie("wh_pn", $(loc).first().parents('li').index('li'));
+                    var findIndexOf = $(loc).first().closest('li');
+                    $.cookie("wh_pn", $('#contentBlock li').index(findIndexOf));
                 }
                 toReturn = true;
             }
         }
     }
     debug('markSelectItem(...) =' + toReturn);
+    $('#contentBlock .menuItemSelected').parent('li').first().css('background-color', $('#contentBlock .menuItemSelected').css('background-color'));
+
     return toReturn;
 }
 
@@ -450,6 +524,31 @@ function load(link) {
 }
 
 /**
+ * @description Resolves relative links (if needed)
+ *      e.g: ../../path1/../file_path.html => ../../file_path.html
+ *      e.g: path1/file_path.html => path1.file_path.html
+ * @param link Link that needs to be resolved
+ * @return {string} Resolved link
+ */
+function resolveRelativeLinks(link) {
+    debug("resolveRelativeLinks("+link+")");
+    var oldLink = link;
+    while (link.indexOf("..")>0) {
+    var arrayHRF = link.split("/");
+        for (var i = 0; i < arrayHRF.length; i++) {
+            if (arrayHRF[i] == ".." && i > 0) {
+            if (arrayHRF[i - 1] != "" && arrayHRF[i - 1] != "..") {
+                arrayHRF.splice(i - 1, 2);
+            }
+                link = resolveRelativeLinks(arrayHRF.join("/"));
+        }
+    }
+}
+    debug("resolveRelativeLinks: " + oldLink + " is " + link);
+    return link;
+}
+
+/**
  * @description Remove "../" from hrf
  * @example processHref(../../concepts/glossaryGenus.html)=concepts/glossaryGenus.html
  * @param hrf - the link hash
@@ -468,28 +567,17 @@ function processHref(hrf, idName) {
         if(pp.host=="") {
             pp.host = parseUri((location.hash).substring(1)).file;
         }
-        var toReturn = pp.host + pp.directory + pp.file;
+        toReturn = pp.host + pp.directory + pp.file;
 
         debug('parseUri(' + hrf + ')=' + pp.host + '+' + pp.directory + '+' + pp.file);
         debug('iframeDir=' + iframeDir);
-        count = (hrf.match(new RegExp("\\.\\.\\/", "g")) ||[]).length;
-        toReturn = toReturn.replace(new RegExp("\\.\\.\\/", "g"), '');
-        var dirParts = iframeDir.split("/");
-        for (i = 0; i < dirParts.length; i++) {
-            if (dirParts[i] == "") {
-                dirParts.splice(i, 1);
-            }
-        }
         
-        var dir = "";
-        for (i = 0; i <(dirParts.length - count);
-        i++) {
-            dir += dirParts[i] + "/";
-        }
+        toReturn = iframeDir + toReturn;
 
-        toReturn = dir + toReturn;
-        if (pp.anchor != "") {
-            toReturn = toReturn + "#" + pp.anchor;
+        toReturn = resolveRelativeLinks(toReturn);
+
+        if (pp.anchor!="") {
+            toReturn += "#" + pp.anchor;
         }
     }
 
@@ -501,7 +589,11 @@ var currentHref = window.location.href;
 $(function () {
     $(window).on("hashchange", function(e) {
         var newHref = window.location.href;
+        try {
         var textAreaContent = $("#frm").contents().find(".cleditorMain").find("iframe").contents().find("body").html();
+        } catch (e) {
+            debug(e);
+        }
 
         if(textAreaContent!='' && textAreaContent!==undefined && $("#frm").contents().find("#newComment").is(":visible") && currentHref!=newHref) {
             if (confirm(getLocalization("label.Unsaved"))) {
@@ -510,7 +602,6 @@ $(function () {
             } else {
                 window.location.href = currentHref;
             }
-
         } else {
             currentHref = window.location.href;
             load(window.location.href);

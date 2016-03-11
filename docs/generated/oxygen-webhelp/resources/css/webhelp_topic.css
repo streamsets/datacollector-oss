@@ -1,7 +1,7 @@
 /*
 
 Oxygen Webhelp plugin
-Copyright (c) 1998-2014 Syncro Soft SRL, Romania.  All rights reserved.
+Copyright (c) 1998-2015 Syncro Soft SRL, Romania.  All rights reserved.
 Licensed under the terms stated in the license file EULA_Webhelp.txt 
 available in the base directory of this Oxygen Webhelp plugin.
 
@@ -9,9 +9,38 @@ available in the base directory of this Oxygen Webhelp plugin.
 
 @import "print.css";
 
+/* Start RTL */
+html[dir="rtl"] .navnext {
+    float: left;
+    background-image: url('../img/nav_left16.png');
+    background-position: right;
+    padding-bottom: 1px;
+}
+
+html[dir="rtl"] .navfooter .navnext {
+    float: none;
+}
+
+html[dir="rtl"] .navprev {
+    float: right;
+    background-image: url('../img/nav_right16.png');
+    background-position: right;
+    padding-bottom: 1px;
+}
+
+html[dir="rtl"] .navparent {
+    background-position: right;
+    padding-bottom: 1px;
+}
+
+html[dir="rtl"] div.footer{
+    float: left;
+}
+/* End RTL */
+
 body {
   background-color:transparent;
-  font-family: arial, helvetica, sans-serif;
+  font-family: arial, helvetica, "Lucida Grande", Verdana, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
   line-height:18px;
   font-size:12px;
 }
@@ -168,7 +197,7 @@ div.footer{
   color:#444;
   font-size:0.9em
 }
-div.footer a{text-decoration:none; color:#444}
+a.oxyFooter{text-decoration:none; color:#444}
 
 .navfooter .navnext{
     float:none;
@@ -358,6 +387,14 @@ div[class="caution"]>h3 {
     padding:4px 4px 4px 23px;
 }
 
+.troubletitle,
+div[class="trouble"]>h3 {
+    background-image:url("../img/troubleshooting.png") !important;
+    background-repeat:no-repeat;
+    padding:4px 4px 4px 23px;
+}
+
+
 .importanttitle,
 div[class="important"]>h3,
 .attentiontitle,
@@ -455,6 +492,7 @@ div.fignone img {
 }
 /* OXYGEN PATCH END EXM-17248 */
 
+
 /* IE6 & IE7 style */
 @media screen\9 {
     .navheader{
@@ -466,3 +504,13 @@ div.fignone img {
         float:none;
     }
 }
+
+div.loadingError {
+  color:red;
+  font-weight:bold;
+}
+
+.italic {
+    font-style:italic; 	 
+}	 
+	 
