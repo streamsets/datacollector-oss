@@ -111,21 +111,18 @@ public class UDPSource extends BaseSource {
         }
       }
     }
+
     Charset charset;
-    try {
-      charset = Charset.forName(parserConfig.getString(CHARSET));
-    } catch (UnsupportedCharsetException ex) {
-      charset = StandardCharsets.UTF_8;
-      issues.add(getContext().createConfigIssue(Groups.SYSLOG.name(), "charset", Errors.UDP_04, charset));
-    }
     switch (dataFormat) {
       case NETFLOW:
         parser = new NetflowParser(getContext());
         break;
       case SYSLOG:
+        charset = validateCharset(Groups.SYSLOG.name(), issues);
         parser = new SyslogParser(getContext(), charset);
         break;
       case COLLECTD:
+        charset = validateCharset(Groups.COLLECTD.name(), issues);
         checkCollectdParserConfigs(issues);
         if (issues.size() == 0) {
           parser = new CollectdParser(
@@ -158,6 +155,17 @@ public class UDPSource extends BaseSource {
       }
     }
     return issues;
+  }
+
+  private Charset validateCharset(String groupName, List<ConfigIssue> issues) {
+    Charset charset;
+    try {
+      charset = Charset.forName(parserConfig.getString(CHARSET));
+    } catch (UnsupportedCharsetException ex) {
+      charset = StandardCharsets.UTF_8;
+      issues.add(getContext().createConfigIssue(groupName, "charset", Errors.UDP_04, charset));
+    }
+    return charset;
   }
 
   private void checkCollectdParserConfigs(List<ConfigIssue> issues) {
