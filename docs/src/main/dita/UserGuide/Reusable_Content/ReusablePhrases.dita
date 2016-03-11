@@ -677,6 +677,7 @@
             <p id="MapRPrereq">Before you use any MapR stage in a pipeline, you must perform
                   additional steps to enable the <ph conref="#concept_vhs_5tz_xp/pName-long"/> to
                   process MapR data. For more information, see <xref
-                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>. </p>
+                        href="../Install_Config/MapR-Prerequisites.dita#concept_jgs_qpg_2v"/>.
+</p>
       </conbody>
 </concept>

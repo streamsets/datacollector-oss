@@ -19,6 +19,7 @@
     same script in each processing mode. However, you should include error handling in the script
     before you run in batch mode.</shortdesc>
  <conbody>
+   <draft-comment author="alisontaylor">port changes over to JavaScript Processing Mode and Groovy Processing Mode</draft-comment>
     <p><indexterm>Jython Evaluator processor<indexterm>processing
         mode</indexterm></indexterm><indexterm>processing modes<indexterm>Jython
           Evaluator</indexterm></indexterm>The Jython Evaluator provides the following processing modes:<dl>
@@ -37,7 +38,7 @@
           <dd>The processor calls the script for each batch. The processor passes the batch to the
             script as a list and processes the batch at one time. </dd>
           <dd>Include error handling logic in the script. Without error handling logic, a single
-            error records sends the entire batch to the processor for error handling. The processor
+            error record sends the entire batch to the processor for error handling. The processor
             handles error records based on the On Record Error property.</dd>
           <dd>Use this mode to improve performance by processing a batch of data at a time.</dd>
         </dlentry>
