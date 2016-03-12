@@ -32,7 +32,7 @@ public class PipelineEnvelopeJson {
   private PipelineConfigurationJson pipelineConfig;
   private RuleDefinitionsJson pipelineRules;
   @JsonIgnore
-  private DefinitionsJson definitions;
+  private DefinitionsJson libraryDefinitions;
 
   public PipelineConfigurationJson getPipelineConfig() {
     return pipelineConfig;
@@ -50,13 +50,13 @@ public class PipelineEnvelopeJson {
     this.pipelineRules = pipelineRules;
   }
 
-  @JsonProperty("definitions")
-  public DefinitionsJson getDefinitions() {
-    return definitions;
+  @JsonProperty("libraryDefinitions")
+  public DefinitionsJson getLibraryDefinitions() {
+    return libraryDefinitions;
   }
 
   @JsonIgnore
-  public void setDefinitions(DefinitionsJson definitions) {
-    this.definitions = definitions;
+  public void setLibraryDefinitions(DefinitionsJson libraryDefinitions) {
+    this.libraryDefinitions = libraryDefinitions;
   }
 }

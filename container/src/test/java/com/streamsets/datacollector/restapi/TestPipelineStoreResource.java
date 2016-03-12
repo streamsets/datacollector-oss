@@ -319,13 +319,13 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertNotNull(pipelineEnvelope);
     Assert.assertNotNull(pipelineEnvelope.getPipelineConfig());
     Assert.assertNotNull(pipelineEnvelope.getPipelineRules());
-    Assert.assertNull(pipelineEnvelope.getDefinitions());
+    Assert.assertNull(pipelineEnvelope.getLibraryDefinitions());
   }
 
   @Test
   public void testExportPipelineWithDefinitions() {
     Response response = target("/v1/pipeline/xyz/export").queryParam("rev", "1")
-        .queryParam("includeDefinitions", true).request().get();
+        .queryParam("includeLibraryDefinitions", true).request().get();
     // Reading as  PipelineEnvelopeJson ignores the definitions, so reading as Map
     Map pipelineEnvelope = response.readEntity(Map.class);
     Assert.assertNotNull(pipelineEnvelope);
@@ -336,8 +336,8 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertTrue(pipelineEnvelope.containsKey("pipelineRules"));
     Assert.assertNotNull(pipelineEnvelope.get("pipelineRules"));
 
-    Assert.assertTrue(pipelineEnvelope.containsKey("definitions"));
-    Assert.assertNotNull(pipelineEnvelope.get("definitions"));
+    Assert.assertTrue(pipelineEnvelope.containsKey("libraryDefinitions"));
+    Assert.assertNotNull(pipelineEnvelope.get("libraryDefinitions"));
   }
 
 
@@ -355,7 +355,7 @@ public class TestPipelineStoreResource extends JerseyTest {
     Assert.assertNotNull(pipelineEnvelope);
     Assert.assertNotNull(pipelineEnvelope.getPipelineConfig());
     Assert.assertNotNull(pipelineEnvelope.getPipelineRules());
-    Assert.assertNull(pipelineEnvelope.getDefinitions());
+    Assert.assertNull(pipelineEnvelope.getLibraryDefinitions());
   }
 
 }

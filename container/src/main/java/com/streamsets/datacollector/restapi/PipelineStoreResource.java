@@ -335,7 +335,7 @@ public class PipelineStoreResource {
       @PathParam("pipelineName") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
-      @QueryParam("includeDefinitions") @DefaultValue("false") boolean includeDefinitions
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions
   ) throws PipelineStoreException, URISyntaxException {
     RestAPIUtils.injectPipelineInMDC(name);
     PipelineConfiguration pipelineConfig = store.load(name, rev);
@@ -348,7 +348,7 @@ public class PipelineStoreResource {
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
     pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
 
-    if (includeDefinitions) {
+    if (includeLibraryDefinitions) {
       DefinitionsJson definitions = new DefinitionsJson();
 
       // Add only stage definitions for stages present in pipeline config
@@ -385,7 +385,7 @@ public class PipelineStoreResource {
       pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
       definitions.setPipeline(pipeline);
 
-      pipelineEnvelope.setDefinitions(definitions);
+      pipelineEnvelope.setLibraryDefinitions(definitions);
     }
 
     if (attachment) {
