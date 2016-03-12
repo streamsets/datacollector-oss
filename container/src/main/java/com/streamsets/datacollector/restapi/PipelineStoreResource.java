@@ -70,7 +70,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
@@ -356,31 +355,20 @@ public class PipelineStoreResource {
       Map<String, String> stageIcons = new HashMap<>();
 
       for (StageConfiguration conf : pipelineConfig.getStages()) {
-        String key = conf.getLibrary() + ":"  + conf.getStageName();
-        if (!stageIcons.containsKey(key)) {
-          StageDefinition stageDefinition = stageLibrary.getStage(conf.getLibrary(), conf.getStageName(), false);
-          if (stageDefinition != null) {
-            stageDefinitions.add(stageDefinition);
-            String iconFile = stageDefinition.getIcon();
-            try {
-              String base64String = Base64.getEncoder().encodeToString(
-                  IOUtils.toByteArray(stageDefinition.getStageClassLoader().getResourceAsStream(iconFile)));
-              stageIcons.put(key, base64String);
-            } catch (IOException e) {
-              LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
-              stageIcons.put(key, null);
-            }
-          }
-        }
+        fetchStageDefinition(conf, stageDefinitions, stageIcons);
       }
 
-      definitions.setStageIcons(stageIcons);
+      StageConfiguration errorStageConfig = pipelineConfig.getErrorStage();
+      if (errorStageConfig != null) {
+        fetchStageDefinition(errorStageConfig, stageDefinitions, stageIcons);
+      }
 
       List<StageDefinitionJson> stages = new ArrayList<>();
       stages.addAll(BeanHelper.wrapStageDefinitions(stageDefinitions));
       definitions.setStages(stages);
 
-      //Populate the definitions with the PipelineDefinition
+      definitions.setStageIcons(stageIcons);
+
       List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
       pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
       definitions.setPipeline(pipeline);
@@ -395,6 +383,31 @@ public class PipelineStoreResource {
     } else {
       return Response.ok().
           type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
+    }
+  }
+
+  private void fetchStageDefinition(StageConfiguration conf,
+                                    List<StageDefinition> stageDefinitions,
+                                    Map<String, String> stageIcons) {
+    String key = conf.getLibrary() + ":"  + conf.getStageName();
+    if (!stageIcons.containsKey(key)) {
+      StageDefinition stageDefinition = stageLibrary.getStage(conf.getLibrary(),
+          conf.getStageName(), false);
+      if (stageDefinition != null) {
+        stageDefinitions.add(stageDefinition);
+        String iconFile = stageDefinition.getIcon();
+        if (iconFile != null && iconFile.trim().length() > 0) {
+          try {
+            stageIcons.put(key, Base64.getEncoder().encodeToString(
+                IOUtils.toByteArray(stageDefinition.getStageClassLoader().getResourceAsStream(iconFile))));
+          } catch (Exception e) {
+            LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
+            stageIcons.put(key, null);
+          }
+        } else {
+          stageIcons.put(key, null);
+        }
+      }
     }
   }
 
