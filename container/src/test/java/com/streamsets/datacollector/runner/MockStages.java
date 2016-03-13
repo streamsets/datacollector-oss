@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
@@ -831,8 +832,17 @@ public class MockStages {
       Collections.<Config>emptyList(), null, ImmutableList.of("p"), Collections.<String>emptyList());
     stages.add(target);
 
-    return new PipelineConfiguration(schemaVersion, PipelineConfigBean.VERSION, UUID.randomUUID(), null,
-                                     createPipelineConfigs(), null, stages, getErrorStageConfig());
+    PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(schemaVersion,
+        PipelineConfigBean.VERSION,
+        UUID.randomUUID(),
+        null,
+        createPipelineConfigs(),
+        null,
+        stages,
+        getErrorStageConfig()
+    );
+    pipelineConfiguration.setMetadata(ImmutableMap.of("a", "A"));
+    return pipelineConfiguration;
   }
 
 

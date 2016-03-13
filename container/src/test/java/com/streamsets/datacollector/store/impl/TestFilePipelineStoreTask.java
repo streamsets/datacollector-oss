@@ -20,6 +20,7 @@
 package com.streamsets.datacollector.store.impl;
 
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import static org.junit.Assert.assertEquals;
 
@@ -207,6 +208,7 @@ public class TestFilePipelineStoreTask {
 
   private PipelineConfiguration createPipeline(UUID uuid) {
     PipelineConfiguration pc = MockStages.createPipelineConfigurationSourceTarget();
+    pc.setMetadata(ImmutableMap.of("a", "A"));
     pc.setUuid(uuid);
     return pc;
   }
@@ -250,6 +252,8 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(pc.getUuid(), pc2.getUuid());
       PipelineInfo info = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(pc.getUuid(), info.getUuid());
+      Assert.assertNotNull(pc2.getMetadata());
+      Assert.assertEquals(pc.getMetadata(), pc2.getMetadata());
     } finally {
       store.stop();
     }

@@ -44,13 +44,16 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("uiInfo") Map<String, Object> uiInfo,
     @JsonProperty("stages") List<StageConfigurationJson> stages,
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
-    @JsonProperty("info") PipelineInfoJson pipelineInfo) {
+    @JsonProperty("info") PipelineInfoJson pipelineInfo,
+    @JsonProperty("metadata") Map<String, String> metadata
+  ) {
     version = (version == 0) ? 1 : version;
     this.pipelineConfiguration = new com.streamsets.datacollector.config.PipelineConfiguration(schemaVersion, version,
       uuid, description,
       BeanHelper.unwrapConfigConfiguration(configuration), uiInfo, BeanHelper.unwrapStageConfigurations(stages),
       BeanHelper.unwrapStageConfiguration(errorStage));
     this.pipelineConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
+    this.pipelineConfiguration.setMetadata(metadata);
   }
 
   public PipelineConfigurationJson(com.streamsets.datacollector.config.PipelineConfiguration pipelineConfiguration) {
@@ -104,6 +107,10 @@ public class PipelineConfigurationJson implements Serializable{
 
   public Map<String, Object> getUiInfo() {
     return pipelineConfiguration.getUiInfo();
+  }
+
+  public Map<String, String> getMetadata() {
+    return pipelineConfiguration.getMetadata();
   }
 
   @JsonIgnore

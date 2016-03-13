@@ -49,6 +49,7 @@ public class PipelineConfiguration implements Serializable{
   private Issues issues;
   private boolean previewable;
   private MemoryLimitConfiguration memoryLimitConfiguration;
+  private Map<String, String> metadata;
 
   @SuppressWarnings("unchecked")
   public PipelineConfiguration(int schemaVersion, int version, UUID uuid, String description, List<Config> configuration,
@@ -215,4 +216,13 @@ public class PipelineConfiguration implements Serializable{
     return new PipelineConfiguration(schemaVersion, version, uuid, description, newConfigurations, uiInfo, stages,
       errorStage);
   }
+
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
+  public void setMetadata(Map<String, String> metadata) {
+    this.metadata = metadata;
+  }
+
 }

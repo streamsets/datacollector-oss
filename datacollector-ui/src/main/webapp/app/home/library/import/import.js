@@ -120,6 +120,7 @@ angular
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
                     newPipelineObject.stages = jsonConfigObj.stages;
                     newPipelineObject.version = jsonConfigObj.version;
+                    newPipelineObject.metadata = jsonConfigObj.metadata;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
