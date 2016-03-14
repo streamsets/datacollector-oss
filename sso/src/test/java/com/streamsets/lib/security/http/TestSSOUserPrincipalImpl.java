@@ -46,7 +46,7 @@ public class TestSSOUserPrincipalImpl {
     return userInfo;
   }
 
-  public static SSOUserPrincipal createToken() {
+  public static SSOUserPrincipal createPrincipal() {
     return SSOUserPrincipalImpl.fromMap("", createPayload());
   }
 

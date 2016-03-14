@@ -26,7 +26,7 @@ public class TestSSOAuthenticationUser {
 
   @Test
   public void testUser() {
-    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createToken();
+    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createPrincipal();
     SSOAuthenticationUser user = new SSOAuthenticationUser(principal);
     Assert.assertEquals(SSOConstants.AUTHENTICATION_METHOD, user.getAuthMethod());
     Assert.assertEquals(principal, user.getToken());
@@ -46,10 +46,6 @@ public class TestSSOAuthenticationUser {
     Assert.assertFalse(user.isValid());
 
     Assert.assertEquals(principal, user.getUserIdentity().getUserPrincipal());
-
-    SSOAuthenticationUser idUser = SSOAuthenticationUser.createForInvalidation(user.getToken().getTokenId());
-    Assert.assertTrue(user.equals(idUser));
-    Assert.assertEquals(user.hashCode(), idUser.hashCode());
   }
 
 

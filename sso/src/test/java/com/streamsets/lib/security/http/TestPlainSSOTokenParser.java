@@ -79,7 +79,7 @@ public class TestPlainSSOTokenParser {
   @Test
   public void testValidToken() throws Exception {
     SSOTokenParser parser = createParser();
-    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createToken();
+    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createPrincipal();
     String tokenStr = createTokenStr(principal);
     SSOUserPrincipal got = parser.parse(tokenStr);
     Assert.assertNotNull(got);

@@ -22,16 +22,15 @@ package com.streamsets.lib.security.http;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.util.Configuration;
-import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URLEncoder;
@@ -47,6 +46,7 @@ public class TestSSOAuthenticator {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void testGetRequestUrl() {
     SSOService ssoService = Mockito.mock(SSOService.class);
     SSOAuthenticator authenticator = new SSOAuthenticator("a", ssoService);
@@ -73,12 +73,12 @@ public class TestSSOAuthenticator {
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer("http://foo/bar"));
     Mockito.when(req.getQueryString()).thenReturn("a=A&b=B&c=C");
 
-    Assert.assertEquals("http://foo/bar?a=A&b=B&c=C", authenticator.getRequestUrl(req).toString());
+    Assert.assertEquals("http://foo/bar?a=A&b=B&c=C", authenticator.getRequestUrl(req));
 
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer("http://foo/bar"));
     Mockito.when(req.getQueryString()).thenReturn("a=A&b=B&" + SSOConstants.USER_AUTH_TOKEN_PARAM + "=token");
 
-    Assert.assertEquals("http://foo/bar?a=A&b=B", authenticator.getRequestUrlWithoutToken(req).toString());
+    Assert.assertEquals("http://foo/bar?a=A&b=B", authenticator.getRequestUrlWithoutToken(req));
   }
 
   @Test
@@ -230,7 +230,7 @@ public class TestSSOAuthenticator {
   public void testHandleRequestWithoutUserAuthHeaderWithUserAuthParamPageWithGET() throws Exception {
     SSOService ssoService = Mockito.spy(new RemoteSSOService(new Configuration()));
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
-    Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalImpl.createToken());
+    Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalImpl.createPrincipal());
     Mockito.when(ssoService.getTokenParser()).thenReturn(parser);
     SSOAuthenticator authenticator = new SSOAuthenticator("a", ssoService);
 
@@ -239,7 +239,6 @@ public class TestSSOAuthenticator {
     Mockito.when(req.getQueryString()).thenReturn("a=A&b=B&" + SSOConstants.USER_AUTH_TOKEN_PARAM + "=token");
     Mockito.when(req.getParameter(Mockito.eq(SSOConstants.USER_AUTH_TOKEN_PARAM))).thenReturn("token");
     Mockito.when(req.getMethod()).thenReturn("GET");
-    Mockito.when(req.getSession(Mockito.eq(true))).thenReturn(Mockito.mock(HttpSession.class));
 
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
 
@@ -288,23 +287,18 @@ public class TestSSOAuthenticator {
   public void testProcessTokenOK() throws Exception {
     SSOService ssoService = Mockito.spy(new RemoteSSOService(new Configuration()));
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
-    Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalImpl.createToken());
+    Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalImpl.createPrincipal());
     Mockito.when(ssoService.getTokenParser()).thenReturn(parser);
     SSOAuthenticator authenticator = new SSOAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(req.getSession(Mockito.eq(true))).thenReturn(session);
 
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
 
-    Assert.assertFalse(authenticator.isKnownToken(SSOAuthenticationUser.createForInvalidation(TestSSOUserPrincipalImpl.TOKEN_ID)));
-    Authentication user = authenticator.processToken("token", req, res);
+    Assert.assertFalse(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
+    Authentication user = authenticator.processToken(TestSSOUserPrincipalImpl.TOKEN_ID, req, res);
     Assert.assertTrue(user instanceof SSOAuthenticationUser);
-    Assert.assertTrue(authenticator.isKnownToken(SSOAuthenticationUser.createForInvalidation(TestSSOUserPrincipalImpl.TOKEN_ID)));
-    ArgumentCaptor<Object> capture = ArgumentCaptor.forClass(Object.class);
-    Mockito.verify(session).setAttribute(Mockito.eq(SessionAuthentication.__J_AUTHENTICATED), capture.capture());
-    Assert.assertEquals(user, capture.getValue());
+    Assert.assertTrue(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
   }
 
   @Test
@@ -320,36 +314,13 @@ public class TestSSOAuthenticator {
 
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
 
-    Assert.assertFalse(authenticator.isKnownToken(SSOAuthenticationUser.createForInvalidation(TestSSOUserPrincipalImpl.TOKEN_ID)));
+    Assert.assertFalse(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
     Authentication user = authenticator.processToken("token", req, res);
-    Assert.assertFalse(authenticator.isKnownToken(SSOAuthenticationUser.createForInvalidation(TestSSOUserPrincipalImpl.TOKEN_ID)));
+    Assert.assertFalse(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
     ArgumentCaptor<Integer> error = ArgumentCaptor.forClass(Integer.class);
     Mockito.verify(res).sendError(error.capture());
     Assert.assertEquals(HttpServletResponse.SC_FORBIDDEN, error.getValue().intValue());
     Assert.assertEquals(Authentication.SEND_FAILURE, user);
-  }
-
-  @Test
-  public void testSetGetAuthenticationUser() {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
-    SSOAuthenticator authenticator = new SSOAuthenticator("a", ssoService);
-
-    HttpSession session = Mockito.mock(HttpSession.class);
-    SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
-
-    authenticator.setAuthenticationUser(session, user);
-
-    // set
-    Mockito.verify(session).setAttribute(Mockito.eq(SessionAuthentication.__J_AUTHENTICATED), Mockito.eq(user));
-
-    // get null session
-    Assert.assertNull(authenticator.getAuthenticationUser(null));
-
-    // get not-null session
-    session = Mockito.mock(HttpSession.class);
-    Mockito.when(session.getAttribute(Mockito.eq(SessionAuthentication.__J_AUTHENTICATED))).thenReturn(user);
-
-    Assert.assertEquals(user, authenticator.getAuthenticationUser(session));
   }
 
   @Test
@@ -360,8 +331,8 @@ public class TestSSOAuthenticator {
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
+    Mockito.when(req.getCookies()).thenReturn(null);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(null).when(authenticator).getAuthenticationUser(Mockito.<HttpSession>any());
 
     Assert.assertEquals(Authentication.NOT_CHECKED, authenticator.validateRequest(req, res, false));
 
@@ -378,8 +349,8 @@ public class TestSSOAuthenticator {
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
+    Mockito.when(req.getCookies()).thenReturn(null);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(null).when(authenticator).getAuthenticationUser(Mockito.<HttpSession>any());
     Mockito.doReturn(dummyAuth)
         .when(authenticator)
         .handleRequestWithoutUserAuthHeader(Mockito.eq(req), Mockito.eq(res));
@@ -400,12 +371,49 @@ public class TestSSOAuthenticator {
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("token");
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(null).when(authenticator).getAuthenticationUser(Mockito.<HttpSession>any());
     Mockito.doReturn(dummyAuth)
         .when(authenticator)
         .processToken(Mockito.eq("token"), Mockito.eq(req), Mockito.eq(res));
 
     Assert.assertEquals(dummyAuth, authenticator.validateRequest(req, res, true));
+  }
+
+  @Test
+  public void testGetAuthCookieName() throws Exception {
+    SSOService ssoService = Mockito.spy(SSOService.class);
+    SSOAuthenticator authenticator = Mockito.spy(new SSOAuthenticator("a", ssoService));
+
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getServerPort()).thenReturn(1);
+
+    Assert.assertEquals(SSOConstants.AUTHENTICATION_COOKIE_PREFIX + "1", authenticator.getAuthCookieName(req));
+  }
+
+    @Test
+  public void testGetAuthTokenFromRequest() throws Exception {
+    SSOService ssoService = Mockito.spy(SSOService.class);
+    SSOAuthenticator authenticator = Mockito.spy(new SSOAuthenticator("a", ssoService));
+    Mockito.doReturn("XXX").when(authenticator).getAuthCookieName(Mockito.<HttpServletRequest>any());
+
+    // in header
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("token");
+    Assert.assertEquals("token", authenticator.getAuthTokenFromRequest(req));
+
+    // in cookie
+    req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn(null);
+    Cookie cookie = new Cookie("XXX", "token");
+    Mockito.when(req.getCookies()).thenReturn(new Cookie[] { cookie });
+    Assert.assertEquals("token", authenticator.getAuthTokenFromRequest(req));
+
+    // in both header and cookie
+
+    req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("tokenH");
+    cookie = new Cookie("XXX", "tokenC");
+    Mockito.when(req.getCookies()).thenReturn(new Cookie[] { cookie });
+    Assert.assertEquals("tokenH", authenticator.getAuthTokenFromRequest(req));
   }
 
   @Test
@@ -419,9 +427,11 @@ public class TestSSOAuthenticator {
     Mockito.when(user.getToken()).thenReturn(token);
     Mockito.when(user.isValid()).thenReturn(true);
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("token");
+    Mockito.when(req.getCookies()).thenReturn(null);
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(user).when(authenticator).getAuthenticationUser(Mockito.<HttpSession>any());
+    Mockito.doReturn(user).when(authenticator).getFromCache(Mockito.eq("token"));
 
     Assert.assertEquals(user, authenticator.validateRequest(req, res, true));
   }
@@ -437,19 +447,21 @@ public class TestSSOAuthenticator {
     Mockito.when(user.getToken()).thenReturn(token);
     Mockito.when(user.isValid()).thenReturn(false);
 
+    Mockito.doReturn(user).when(authenticator).getFromCache(Mockito.eq("token"));
     Authentication dummyAuth = new Authentication() {
     };
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("token");
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(req.getSession(Mockito.eq(false))).thenReturn(session);
+    Mockito.when(req.getCookies()).thenReturn(null);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(user).when(authenticator).getAuthenticationUser(Mockito.eq(session));
     Mockito.doReturn(dummyAuth).when(authenticator).handleRequiresAuthentication(Mockito.eq(req), Mockito.eq(res));
 
     Assert.assertEquals(dummyAuth, authenticator.validateRequest(req, res, true));
-    Mockito.verify(session).invalidate();
+    Mockito.verify(authenticator).invalidateToken(Mockito.eq("token"));
+    Mockito.verify(authenticator).createAuthCookie(Mockito.eq(req), Mockito.eq(""), Mockito.eq(0));
+    Mockito.verify(res).addCookie(Mockito.any(Cookie.class));
   }
 
   @Test
@@ -465,10 +477,6 @@ public class TestSSOAuthenticator {
     Mockito.when(token.getTokenStr()).thenReturn("bar");
     SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
     Mockito.when(user.getToken()).thenReturn(token);
-    HttpSession session = Mockito.mock(HttpSession.class);
-    Mockito.when(req.getSession(Mockito.eq(false))).thenReturn(session);
-    Mockito.doReturn(user).when(authenticator).getAuthenticationUser(Mockito.eq(session));
-
 
     Mockito.doNothing().when(authenticator).invalidateToken(Mockito.anyString());
 
@@ -513,18 +521,14 @@ public class TestSSOAuthenticator {
     SSOAuthenticator authenticator = new SSOAuthenticator("a", ssoService);
     Assert.assertNotNull(invalidationListener);
 
-    HttpSession session = Mockito.mock(HttpSession.class);
-    SSOAuthenticationUser user = SSOAuthenticationUser.createForInvalidation("a");
+    SSOAuthenticationUser user = new SSOAuthenticationUser(TestSSOUserPrincipalImpl.createPrincipal());
 
-    Assert.assertFalse(authenticator.isKnownToken(user));
-    authenticator.registerToken(session, user);
-    Assert.assertTrue(authenticator.isKnownToken(user));
+    Assert.assertFalse(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
+    authenticator.registerToken(TestSSOUserPrincipalImpl.TOKEN_ID, user);
+    Assert.assertTrue(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
 
-    Mockito.verify(session, Mockito.never()).invalidate();
-
-    invalidationListener.invalidate(ImmutableList.of("a"));
-    Assert.assertFalse(authenticator.isKnownToken(user));
-    Mockito.verify(session).invalidate();
+    invalidationListener.invalidate(ImmutableList.of(TestSSOUserPrincipalImpl.TOKEN_ID));
+    Assert.assertFalse(authenticator.isKnownToken(TestSSOUserPrincipalImpl.TOKEN_ID));
   }
 
   @Test
@@ -557,8 +561,10 @@ public class TestSSOAuthenticator {
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
-    Mockito.doReturn(user).when(authenticator).getAuthenticationUser(Mockito.<HttpSession>any());
+    Mockito.doReturn(user).when(authenticator).getFromCache(Mockito.eq("foo"));
 
+    Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("foo");
+    Mockito.when(req.getCookies()).thenReturn(null);
     Mockito.when(req.getContextPath()).thenReturn("/foo");
     Mockito.when(req.getMethod()).thenReturn("POST");
     Mockito.when(req.getRequestURI()).thenReturn("/foo/logout");

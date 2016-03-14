@@ -21,28 +21,28 @@ package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ServerAuthException;
-import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class SSOAuthenticator implements Authenticator {
   private static final Logger LOG = LoggerFactory.getLogger(SSOAuthenticator.class);
@@ -66,8 +66,7 @@ public class SSOAuthenticator implements Authenticator {
 
   private final SSOService ssoService;
 
-  // crossreference to support invalidation requests from login service
-  private final Map<SSOAuthenticationUser, HttpSession> knownTokens;
+  private final Cache<String, SSOAuthenticationUser> knownTokens;
 
   public SSOAuthenticator(String appContext, SSOService ssoService) {
     LOG.debug("App context '{}' using SSO Service '{}'", appContext, ssoService);
@@ -81,8 +80,19 @@ public class SSOAuthenticator implements Authenticator {
       }
     });
 
-    // using a weak reference map so we don't worry about purging the map because of session invalidation
-    knownTokens = Collections.synchronizedMap(new WeakHashMap<SSOAuthenticationUser, HttpSession>());
+    knownTokens = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.MINUTES).build();
+  }
+
+  void registerToken(String authToken, SSOAuthenticationUser user) {
+    knownTokens.put(authToken, user);
+  }
+
+  SSOAuthenticationUser getFromCache(String token) {
+    return knownTokens.getIfPresent(token);
+  }
+
+  boolean isKnownToken(String token) {
+    return getFromCache(token) != null;
   }
 
   void invalidate(List<String> tokenIds) {
@@ -92,16 +102,11 @@ public class SSOAuthenticator implements Authenticator {
   }
 
   void invalidateToken(String id) {
-    HttpSession session = knownTokens.remove(SSOAuthenticationUser.createForInvalidation(id));
-    if (session != null) {
-      LOG.debug("Token '{}' and its session invalidated", id);
-      try {
-        session.invalidate();
-      } catch (IllegalStateException ex) {
-        // ignoring
-      }
+    if (isKnownToken(id)) {
+      knownTokens.invalidate(id);
+      LOG.debug("Token '{}' invalidated", id);
     } else {
-      LOG.debug("Token '{}' not found, session gone", id);
+      LOG.debug("Token '{}' not found", id);
     }
   }
 
@@ -192,7 +197,7 @@ public class SSOAuthenticator implements Authenticator {
         httpRes.getWriter().println(FORBIDDEN_JSON_STR);
       }
     } catch (IOException ex) {
-      throw new ServerAuthException(Utils.format("Could send a FORBIDDEN (403) response: {}", ex.toString(), ex));
+      throw new ServerAuthException(Utils.format("Could not send a FORBIDDEN (403) response: {}", ex.toString(), ex));
     }
     return Authentication.SEND_FAILURE;
   }
@@ -236,12 +241,12 @@ public class SSOAuthenticator implements Authenticator {
     return ret;
   }
 
-  void registerToken(HttpSession session, SSOAuthenticationUser user) {
-    knownTokens.put(user, session);
-  }
-
-  boolean isKnownToken(SSOAuthenticationUser user) {
-    return knownTokens.containsKey(user);
+  Cookie createAuthCookie(HttpServletRequest httpReq, String authToken, int secondsToLive) {
+    Cookie authCookie = new Cookie(getAuthCookieName(httpReq), authToken);
+    authCookie.setPath("/");
+    authCookie.setMaxAge(secondsToLive);
+    authCookie.setSecure(httpReq.isSecure());
+    return authCookie;
   }
 
   Authentication processToken(String authToken, HttpServletRequest httpReq, HttpServletResponse httpRes)
@@ -255,12 +260,12 @@ public class SSOAuthenticator implements Authenticator {
           LOG.debug("Token '{}' valid, user '{}'", authToken, user.getToken().getName());
 
           // caching the authenticated user info
-          HttpSession session = httpReq.getSession(true);
-          setAuthenticationUser(session, user);
-
-          // registering crossreference to be able to invalidate the session if the token is invalidated
-          registerToken(session, user);
-
+          knownTokens.put(authToken, user);
+          httpRes.addCookie(createAuthCookie(
+              httpReq,
+              authToken,
+              (int) (user.getToken().getExpires() - System.currentTimeMillis()) / 1000)
+          );
           ret = user;
         } else {
           ret = returnForbidden(httpReq, httpRes, "Request '{}', token not valid");
@@ -275,19 +280,29 @@ public class SSOAuthenticator implements Authenticator {
     return ret;
   }
 
-  void setAuthenticationUser(HttpSession session, SSOAuthenticationUser user) {
-    session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, user);
-  }
-
-  SSOAuthenticationUser getAuthenticationUser(HttpSession session) {
-    return (session != null)
-        ? (SSOAuthenticationUser) session.getAttribute(SessionAuthentication.__J_AUTHENTICATED)
-        : null;
-  }
-
   boolean isLogoutRequest( HttpServletRequest httpReq) {
     String logoutPath = httpReq.getContextPath() + "/logout";
     return httpReq.getMethod().equals("POST") && httpReq.getRequestURI().equals(logoutPath);
+  }
+
+  String getAuthCookieName(HttpServletRequest httpReq) {
+    return SSOConstants.AUTHENTICATION_COOKIE_PREFIX + httpReq.getServerPort();
+  }
+
+  String getAuthTokenFromRequest(HttpServletRequest httpReq) {
+    String authToken = httpReq.getHeader(SSOConstants.X_USER_AUTH_TOKEN);
+    if (authToken == null) {
+      Cookie[] cookies = httpReq.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          if (cookie.getName().equals(getAuthCookieName(httpReq))) {
+            authToken = cookie.getValue();
+            break;
+          }
+        }
+      }
+    }
+    return authToken;
   }
 
   @Override
@@ -296,24 +311,9 @@ public class SSOAuthenticator implements Authenticator {
     HttpServletRequest httpReq = (HttpServletRequest) request;
     HttpServletResponse httpRes = (HttpServletResponse) response;
     ssoService.refresh();
-    HttpSession session = httpReq.getSession(false);
-    SSOAuthenticationUser user = getAuthenticationUser(session);
+    String authToken = getAuthTokenFromRequest(httpReq);
+    SSOAuthenticationUser user = (authToken == null) ? null : getFromCache(authToken);
     Authentication ret = user;
-    if (ret != null) {
-      // cached token found
-
-      // if authentication header is present, verify it matches the cached token
-      String authToken = httpReq.getHeader(SSOConstants.X_USER_AUTH_TOKEN);
-      if (authToken != null && !authToken.equals(user.getToken().getTokenStr())) {
-        LOG.debug(
-            "Request authentication token does not match cached token for '{}', re-validating",
-            user.getToken().getName()
-        );
-        invalidateToken(user.getToken().getTokenId());
-        ret = null;
-      }
-    }
-
     if (isLogoutRequest(httpReq)) {
       // trapping logout requests to return always OK
       if (ret != null) {
@@ -326,12 +326,13 @@ public class SSOAuthenticator implements Authenticator {
       if (ret != null) {
         // cached token matches authentication header
         if (!(user).isValid()) {
-          // cached token is invalid, invalidate session and forget token to trigger new authentication
+          // cached token is invalid, invalidate cache and delete auth cookie
+          invalidateToken(authToken);
 
           LOG.debug("User '{}' authentication token '{}' expired", user.getToken().getName(),
               user.getToken().getTokenStr()
           );
-          session.invalidate();
+          httpRes.addCookie(createAuthCookie(httpReq, "", 0));
 
           ret = handleRequiresAuthentication(httpReq, httpRes);
         } else {
@@ -348,7 +349,6 @@ public class SSOAuthenticator implements Authenticator {
         if (mandatory) {
           // the request needs authentication
 
-          String authToken = httpReq.getHeader(SSOConstants.X_USER_AUTH_TOKEN);
           if (authToken == null) {
             // token not present in header
 

@@ -68,7 +68,7 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
     SignedSSOTokenParser parser = new SignedSSOTokenParser();
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
-    String tokenWithFirstKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
+    String tokenWithFirstKey = createTokenStr(TestSSOUserPrincipalImpl.createPrincipal());
     SSOUserPrincipal got = parser.parse(tokenWithFirstKey);
     Assert.assertNotNull(got);
 
@@ -76,7 +76,7 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
     parser.setVerificationData(DataSignature.get().encodePublicKey(getKeyPair().getPublic()));
     got = parser.parse(tokenWithFirstKey);
     Assert.assertNotNull(got);
-    String tokenWithSecondtKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
+    String tokenWithSecondtKey = createTokenStr(TestSSOUserPrincipalImpl.createPrincipal());
     got = parser.parse(tokenWithSecondtKey);
     Assert.assertNotNull(got);
 
@@ -86,7 +86,7 @@ public class TestSignedSSOTokenParser extends TestPlainSSOTokenParser {
     Assert.assertNull(got);
     got = parser.parse(tokenWithSecondtKey);
     Assert.assertNotNull(got);
-    String tokenWithThirdKey = createTokenStr(TestSSOUserPrincipalImpl.createToken());
+    String tokenWithThirdKey = createTokenStr(TestSSOUserPrincipalImpl.createPrincipal());
     got = parser.parse(tokenWithThirdKey);
     Assert.assertNotNull(got);
   }

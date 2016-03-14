@@ -28,6 +28,8 @@ public interface  SSOConstants {
    */
   String AUTHENTICATION_METHOD = "SS-SSO";
 
+  String AUTHENTICATION_COOKIE_PREFIX = "SS-SSO-";
+
   /**
    * Header to indicate the requester is making a REST call (as opposed to a page view).
    */

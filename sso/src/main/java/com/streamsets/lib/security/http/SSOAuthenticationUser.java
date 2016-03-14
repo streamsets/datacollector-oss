@@ -33,12 +33,6 @@ public class SSOAuthenticationUser implements Authentication.User {
   private final String id;
   private volatile boolean valid;
 
-  private SSOAuthenticationUser(String id) {
-    principal = null;
-    this.id = id;
-    valid = false;
-  }
-
   public SSOAuthenticationUser(final SSOUserPrincipal principal) {
     Utils.checkNotNull(principal, "principal");
     this.principal = principal;
@@ -101,10 +95,6 @@ public class SSOAuthenticationUser implements Authentication.User {
       eq = id.equals(((SSOAuthenticationUser) obj).id);
     }
     return eq;
-  }
-
-  public static SSOAuthenticationUser createForInvalidation(String id) {
-    return new SSOAuthenticationUser(id);
   }
 
 }
