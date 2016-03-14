@@ -30,6 +30,15 @@ public class DataParserFactoryBuilder extends
   }
 
   @Override
+  /**
+   * Creates the DataParserFactory instance.
+   *
+   * The DataParserFactory instance is not thread safe.
+   * To improve performance the DataParserFactory instance may share a buffer among the data parser instances that
+   * it creates.
+   *
+   * @return
+   */
   public DataParserFactory build() {
     return new WrapperDataParserFactory(super.build());
   }

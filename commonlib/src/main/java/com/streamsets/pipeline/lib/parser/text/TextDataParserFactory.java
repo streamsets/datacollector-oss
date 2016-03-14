@@ -42,10 +42,14 @@ public class TextDataParserFactory extends DataParserFactory {
 
   static final String TEXT_FIELD_NAME = "text";
   static final String TRUNCATED_FIELD_NAME = "truncated";
+  public static final int DEFAULT_MAX_RECORD_LENGTH = 1024;
 
+  private StringBuilder stringBuilder = null;
 
   public TextDataParserFactory(Settings settings) {
     super(settings);
+    int maxRecordLen = getSettings().getMaxRecordLen();
+    stringBuilder = new StringBuilder(maxRecordLen > 0 ? maxRecordLen : DEFAULT_MAX_RECORD_LENGTH);
   }
 
   @Override
@@ -62,9 +66,18 @@ public class TextDataParserFactory extends DataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
       reader.getPos()));
     try {
-      return new TextCharDataParser(getSettings().getContext(), id, (boolean) getSettings().getConfig(MULTI_LINE_KEY),
-                                    reader, offset, getSettings().getMaxRecordLen(), TEXT_FIELD_NAME,
-                                    TRUNCATED_FIELD_NAME);
+
+      return new TextCharDataParser(
+          getSettings().getContext(),
+          id,
+          (boolean) getSettings().getConfig(MULTI_LINE_KEY),
+          reader,
+          offset,
+          getSettings().getMaxRecordLen(),
+          TEXT_FIELD_NAME,
+          TRUNCATED_FIELD_NAME,
+          stringBuilder
+      );
     } catch (IOException ex) {
       throw new DataParserException(Errors.TEXT_PARSER_00, id, offset, ex.toString(), ex);
     }

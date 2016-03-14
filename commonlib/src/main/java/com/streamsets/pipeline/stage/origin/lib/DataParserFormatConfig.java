@@ -861,6 +861,15 @@ public class DataParserFormatConfig implements DataFormatConfig{
     return valid;
   }
 
+  /**
+   * Returns the DataParserFactory instance.
+   *
+   * The DataParserFactory instance is not thread safe.
+   * To improve performance the DataParserFactory instance may share a buffer among the data parser instances that
+   * it creates.
+   *
+   * @return
+   */
   public DataParserFactory getParserFactory() {
     return parserFactory;
   }

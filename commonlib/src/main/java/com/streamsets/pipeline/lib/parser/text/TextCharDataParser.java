@@ -42,12 +42,20 @@ public class TextCharDataParser extends AbstractDataParser {
   private final String fieldTruncatedName;
   private final StringBuilder recordIdSb;
   private final int recordIdOffset;
-  private final StringBuilder sb;
+  private final StringBuilder stringBuilder;
   private boolean eof;
 
-  public TextCharDataParser(Stage.Context context, String readerId, boolean collapseAllLines, OverrunReader reader,
-      long readerOffset, int maxObjectLen, String fieldTextName, String fieldTruncatedName)
-    throws IOException {
+  public TextCharDataParser(
+      Stage.Context context,
+        String readerId,
+        boolean collapseAllLines,
+        OverrunReader reader,
+        long readerOffset,
+        int maxObjectLen,
+        String fieldTextName,
+        String fieldTruncatedName,
+        StringBuilder stringBuilder
+  ) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.collapseAllLines = collapseAllLines;
@@ -58,7 +66,7 @@ public class TextCharDataParser extends AbstractDataParser {
     reader.setEnabled(false);
     IOUtils.skipFully(reader, readerOffset);
     reader.setEnabled(true);
-    sb = new StringBuilder(maxObjectLen > 0 ? maxObjectLen : 1024);
+    this.stringBuilder = stringBuilder;
     recordIdSb = new StringBuilder(readerId.length() + 15);
     recordIdSb.append(readerId).append("::");
     recordIdOffset = recordIdSb.length();
@@ -87,15 +95,15 @@ public class TextCharDataParser extends AbstractDataParser {
     Record record = null;
     reader.resetCount();
     long offset = reader.getPos();
-    sb.setLength(0);
-    while (reader.readLine(sb) > -1) {
-      sb.append('\n');
+    stringBuilder.setLength(0);
+    while (reader.readLine(stringBuilder) > -1) {
+      stringBuilder.append('\n');
     }
-    if (sb.length() > 0) {
+    if (stringBuilder.length() > 0) {
       record = context.createRecord(readerId + "::" + offset);
       Map<String, Field> map = new HashMap<>();
-      map.put(fieldTextName, Field.create(sb.toString()));
-      if (isTruncated(sb.length())) {
+      map.put(fieldTextName, Field.create(stringBuilder.toString()));
+      if (isTruncated(stringBuilder.length())) {
         map.put(fieldTruncatedName, Field.create(true));
       }
       record.set(Field.create(map));
@@ -107,15 +115,15 @@ public class TextCharDataParser extends AbstractDataParser {
   public Record parseLine() throws IOException, DataParserException {
     reader.resetCount();
     long offset = reader.getPos();
-    sb.setLength(0);
-    int read = reader.readLine(sb);
+    stringBuilder.setLength(0);
+    int read = reader.readLine(stringBuilder);
     Record record = null;
     if (read > -1) {
       recordIdSb.setLength(recordIdOffset);
       recordIdSb.append(offset);
       record = context.createRecord(recordIdSb.toString());
       Map<String, Field> map = new HashMap<>();
-      map.put(fieldTextName, Field.create(sb.toString()));
+      map.put(fieldTextName, Field.create(stringBuilder.toString()));
       if (isTruncated(read)) {
         map.put(fieldTruncatedName, Field.create(true));
       }
