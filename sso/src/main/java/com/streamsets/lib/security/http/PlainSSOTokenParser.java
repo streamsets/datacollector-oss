@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class PlainSSOTokenParser implements SSOTokenParser {
   private static final Logger LOG = LoggerFactory.getLogger(PlainSSOTokenParser.class);
@@ -57,15 +56,16 @@ public class PlainSSOTokenParser implements SSOTokenParser {
 
   @SuppressWarnings("unchecked")
   protected SSOUserPrincipal parsePrincipal(String tokenStr, String dataB64) throws IOException {
-    SSOUserPrincipal token = null;
+    SSOUserPrincipalJson principal = null;
     try {
       byte[] data = Base64.decodeBase64(dataB64);
-      Map<String, ?> map = OBJECT_MAPPER.readValue(data, Map.class);
-      token = SSOUserPrincipalImpl.fromMap(tokenStr, map);
+      principal = OBJECT_MAPPER.readValue(data, SSOUserPrincipalJson.class);
+      principal.setTokenStr(tokenStr);
+      principal.lock();
     } catch (IOException ex) {
-      LOG.warn("Could not parse token payload: {}", ex.toString(), ex);
+      LOG.warn("Could not parse principal payload: {}", ex.toString(), ex);
     }
-    return token;
+    return principal;
   }
 
   @Override
@@ -76,22 +76,22 @@ public class PlainSSOTokenParser implements SSOTokenParser {
   @Override
   public SSOUserPrincipal parse(String tokenStr) throws IOException {
     Utils.checkNotNull(tokenStr, "tokenStr");
-    SSOUserPrincipal token = null;
+    SSOUserPrincipal principal = null;
     String type = getHead(tokenStr);
     if (type == null) {
-      getLog().warn("Invalid token '{}', cannot get type for token", tokenStr);
+      getLog().warn("Invalid token '{}', cannot get token type", tokenStr);
     } else {
       if (getType().equals(type)) {
         String payload = getTail(tokenStr);
         if (payload == null) {
           getLog().warn("Invalid token '{}', cannot get payload", tokenStr);
         }
-        token = parsePrincipal(tokenStr, payload);
+        principal = parsePrincipal(tokenStr, payload);
       } else {
         getLog().warn("Invalid token type '{}', parser expects type '{}'", type, getType());
       }
     }
-    return token;
+    return principal;
   }
 
 }

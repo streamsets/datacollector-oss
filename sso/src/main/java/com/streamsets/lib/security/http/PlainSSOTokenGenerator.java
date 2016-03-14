@@ -42,7 +42,7 @@ public class PlainSSOTokenGenerator implements SSOTokenGenerator {
 
   protected String generateData(SSOUserPrincipal principal) {
     try {
-      String data = OBJECT_MAPPER.writeValueAsString(SSOUserPrincipalImpl.toMap(principal));
+      String data = OBJECT_MAPPER.writeValueAsString(principal);
       return Base64.encodeBase64String(data.getBytes());
     } catch (IOException ex) {
       throw new RuntimeException(Utils.format("Should never happen: {}", ex.toString(), ex));

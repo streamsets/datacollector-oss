@@ -39,7 +39,7 @@ public class RemoteSSOService implements SSOService {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  public static final String CONFIG_PREFIX = SSOAuthenticator.CONFIG_PREFIX + "service.";
+  public static final String CONFIG_PREFIX = SSOUserAuthenticator.CONFIG_PREFIX + "service.";
 
   public static final String SECURITY_SERVICE_BASE_URL_CONFIG = CONFIG_PREFIX + "url";
   public static final String SECURITY_SERVICE_BASE_URL_DEFAULT = "http://localhost:18631/security";

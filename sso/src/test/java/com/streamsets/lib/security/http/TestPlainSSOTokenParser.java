@@ -20,13 +20,9 @@
 package com.streamsets.lib.security.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Joiner;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestPlainSSOTokenParser {
 
@@ -63,31 +59,21 @@ public class TestPlainSSOTokenParser {
   }
 
   protected String encodeToken(SSOUserPrincipal principal) throws Exception {
-    Map tokenJson = new HashMap();
-    tokenJson.put(SSOUserPrincipalImpl.USER_ID, principal.getName());
-    tokenJson.put(SSOUserPrincipalImpl.USER_NAME, principal.getUserFullName());
-    tokenJson.put(SSOUserPrincipalImpl.ORG_ID, principal.getOrganization());
-    tokenJson.put(SSOUserPrincipalImpl.ORG_NAME, principal.getOrganizationFullName());
-    tokenJson.put(SSOUserPrincipalImpl.ROLES, Joiner.on(",").join(principal.getRoles()));
-    tokenJson.put(SSOUserPrincipalImpl.USER_EMAIL, principal.getEmail());
-    tokenJson.put(SSOUserPrincipalImpl.TOKEN_ID, principal.getTokenId());
-    tokenJson.put(SSOUserPrincipalImpl.EXPIRES, Long.toString(principal.getExpires()));
-    tokenJson.put(SSOUserPrincipalImpl.ISSUER_URL, principal.getIssuerUrl());
-    return Base64.encodeBase64String(new ObjectMapper().writeValueAsString(tokenJson).getBytes());
+    return Base64.encodeBase64String(new ObjectMapper().writeValueAsString(principal).getBytes());
   }
 
   @Test
   public void testValidToken() throws Exception {
     SSOTokenParser parser = createParser();
-    SSOUserPrincipal principal = TestSSOUserPrincipalImpl.createPrincipal();
+    SSOUserPrincipal principal = TestSSOUserPrincipalJson.createPrincipal();
     String tokenStr = createTokenStr(principal);
     SSOUserPrincipal got = parser.parse(tokenStr);
     Assert.assertNotNull(got);
     Assert.assertEquals(tokenStr, got.getTokenStr());
     Assert.assertEquals(principal.getTokenId(), got.getTokenId());
     Assert.assertEquals(principal.getName(), got.getName());
-    Assert.assertEquals(principal.getUserFullName(), got.getUserFullName());
-    Assert.assertEquals(principal.getOrganization(), got.getOrganization());
+    Assert.assertEquals(principal.getPrincipalName(), got.getPrincipalName());
+    Assert.assertEquals(principal.getOrganizationId(), got.getOrganizationId());
     Assert.assertEquals(principal.getRoles(), got.getRoles());
     Assert.assertEquals(principal.getExpires(), got.getExpires());
   }

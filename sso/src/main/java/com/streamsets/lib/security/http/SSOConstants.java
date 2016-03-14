@@ -36,11 +36,18 @@ public interface  SSOConstants {
   String X_REST_CALL = "X-Requested-By";
 
   /**
-   * Header with the user authentication token. This header is returned to the client by the {@link SSOAuthenticator}
+   * Header with the user authentication token. This header is returned to the client by the {@link SSOUserAuthenticator}
    * and
    * the client should include it in all REST calls to StreamSets services.
    */
   String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
+
+  /**
+   * Header with the app authentication token. This header is returned to the client by the {@link SSOAppAuthenticator}
+   * and
+   * the client should include it in all REST calls to StreamSets services.
+   */
+  String X_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
 
   /**
    * Query string parameter with the user authentication token. The parameter contains the authentication token for

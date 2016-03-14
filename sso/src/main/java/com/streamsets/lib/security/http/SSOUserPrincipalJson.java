@@ -1,0 +1,191 @@
+/**
+ * Copyright 2016 StreamSets Inc.
+ *
+ * Licensed under the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.lib.security.http;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.impl.Utils;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+@SuppressWarnings("squid:S1845")
+public class SSOUserPrincipalJson implements SSOUserPrincipal {
+  private String tokenStr;
+  private String tokenId;
+  private String issuerUrl;
+  private long expires;
+  private String principalId;
+  private String principalName;
+  private String organizationId;
+  private String organizationName;
+  private String email;
+  private Set<String> roles = new HashSet<>();
+  private boolean app;
+  private Map<String, String> attributes = new HashMap<>();
+  private boolean locked;
+
+  @Override
+  public String getTokenStr() {
+    return tokenStr;
+  }
+
+  public void setTokenStr(String tokenStr) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.tokenStr = tokenStr;
+  }
+
+  @Override
+  public String getTokenId() {
+    return tokenId;
+  }
+
+  public void setTokenId(String tokenId) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.tokenId = tokenId;
+  }
+
+  @Override
+  public long getExpires() {
+    return expires;
+  }
+
+  public void setExpires(long expires) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.expires = expires;
+  }
+
+  @Override
+  public String getIssuerUrl() {
+    return issuerUrl;
+  }
+
+  public void setIssuerUrl(String issuerUrl) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.issuerUrl = issuerUrl;
+  }
+
+  @Override
+  @JsonIgnore
+  public String getName() {
+    return getPrincipalId();
+  }
+
+  @Override
+  public String getPrincipalId() {
+    return principalId;
+  }
+
+  public void setPrincipalId(String userId) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.principalId = userId;
+  }
+
+  @Override
+  public String getPrincipalName() {
+    return principalName;
+  }
+
+  public void setPrincipalName(String principalName) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.principalName = principalName;
+  }
+
+  public String getOrganizationId() {
+    return organizationId;
+  }
+
+  public void setOrganizationId(String organizationId) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.organizationId = organizationId;
+  }
+
+  @Override
+  public String getOrganizationName() {
+    return organizationName;
+  }
+
+  public void setOrganizationName(String organizationName) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.organizationName = organizationName;
+  }
+
+  @Override
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.email = email;
+  }
+
+  @Override
+  public Set<String> getRoles() {
+    return roles;
+  }
+
+  @Override
+  public boolean isApp() {
+    return app;
+  }
+
+  public void setApp(boolean app) {
+    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
+    this.app = app;
+  }
+
+  @Override
+  public Map<String, String> getAttributes() {
+    return attributes;
+  }
+
+  public void lock() {
+    locked = true;
+    roles = (roles == null) ? Collections.<String>emptySet() : ImmutableSet.copyOf(roles);
+    attributes = (attributes == null) ? Collections.<String, String>emptyMap() : ImmutableMap.copyOf(attributes);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null) {
+      return false;
+    }
+    if (o instanceof SSOUserPrincipalJson) {
+      SSOUserPrincipalJson that = (SSOUserPrincipalJson) o;
+      return getName().equals(that.getName());
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return (getName() == null) ? 0 : getName().hashCode();
+  }
+
+}

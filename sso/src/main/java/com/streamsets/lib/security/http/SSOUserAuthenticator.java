@@ -44,8 +44,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class SSOAuthenticator implements Authenticator {
-  private static final Logger LOG = LoggerFactory.getLogger(SSOAuthenticator.class);
+public class SSOUserAuthenticator implements Authenticator {
+  private static final Logger LOG = LoggerFactory.getLogger(SSOUserAuthenticator.class);
 
   private final static Set<String> TOKEN_PARAM_SET = ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM);
 
@@ -68,15 +68,15 @@ public class SSOAuthenticator implements Authenticator {
 
   private final Cache<String, SSOAuthenticationUser> knownTokens;
 
-  public SSOAuthenticator(String appContext, SSOService ssoService) {
-    LOG.debug("App context '{}' using SSO Service '{}'", appContext, ssoService);
+  public SSOUserAuthenticator(String appContext, SSOService ssoService) {
+    LOG.debug("App context '{}' using SSO for users '{}'", appContext, ssoService);
     this.ssoService = ssoService;
 
     // register a listener with the SSOService to listen to invalidations from the security service
     ssoService.setListener(new SSOService.Listener() {
       @Override
       public void invalidate(List<String> tokenIds) {
-        SSOAuthenticator.this.invalidate(tokenIds);
+        SSOUserAuthenticator.this.invalidate(tokenIds);
       }
     });
 
@@ -191,10 +191,13 @@ public class SSOAuthenticator implements Authenticator {
       LOG.debug(logMessageTemplate, getRequestUrl(httpReq));
     }
     try {
-      httpRes.sendError(HttpServletResponse.SC_FORBIDDEN);
+      httpRes.addCookie(createAuthCookie(httpReq, "", 0));
       if (httpReq.getHeader(SSOConstants.X_REST_CALL) != null) {
+        httpRes.sendError(HttpServletResponse.SC_FORBIDDEN);
         httpRes.setContentType("application/json");
         httpRes.getWriter().println(FORBIDDEN_JSON_STR);
+      } else {
+        redirectToLogin(httpReq, httpRes);
       }
     } catch (IOException ex) {
       throw new ServerAuthException(Utils.format("Could not send a FORBIDDEN (403) response: {}", ex.toString(), ex));

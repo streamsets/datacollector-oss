@@ -20,8 +20,6 @@
 
 package com.streamsets.lib.security.http;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -37,9 +35,7 @@ public class TestPlainSSOTokenGenerator {
 
   @Test
   public void testGeneratorToParser() throws Exception {
-    SSOUserPrincipalImpl
-        expected = new SSOUserPrincipalImpl("tid", System.currentTimeMillis() + 10000, "url", "uid", "oId",
-        "uname", "oname", "email", ImmutableSet.of("role"), ImmutableMap.of("a", "A"));
+    SSOUserPrincipal expected = TestSSOUserPrincipalJson.createPrincipal();
     SSOTokenGenerator generator = getGenerator();
     String verificationData = generator.getVerificationData();
     String str = generator.generate(expected);
@@ -51,9 +47,9 @@ public class TestPlainSSOTokenGenerator {
     Assert.assertEquals(expected.getExpires(), parsed.getExpires());
     Assert.assertEquals(expected.getIssuerUrl(), parsed.getIssuerUrl());
     Assert.assertEquals(expected.getName(), parsed.getName());
-    Assert.assertEquals(expected.getOrganization(), parsed.getOrganization());
-    Assert.assertEquals(expected.getUserFullName(), parsed.getUserFullName());
-    Assert.assertEquals(expected.getOrganizationFullName(), parsed.getOrganizationFullName());
+    Assert.assertEquals(expected.getOrganizationId(), parsed.getOrganizationId());
+    Assert.assertEquals(expected.getPrincipalName(), parsed.getPrincipalName());
+    Assert.assertEquals(expected.getOrganizationName(), parsed.getOrganizationName());
     Assert.assertEquals(expected.getEmail(), parsed.getEmail());
     Assert.assertEquals(expected.getRoles(), parsed.getRoles());
     Assert.assertEquals(expected.getAttributes(), parsed.getAttributes());

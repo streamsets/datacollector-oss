@@ -33,13 +33,13 @@ public interface SSOUserPrincipal extends Principal {
   long getExpires();
 
   // synonyms of getName(), to avoid confusion we should use this value when referring to the uid
-  String getUser();
+  String getPrincipalId();
 
-  String getUserFullName();
+  String getPrincipalName();
 
-  String getOrganization();
+  String getOrganizationId();
 
-  String getOrganizationFullName();
+  String getOrganizationName();
 
   String getEmail();
 
@@ -47,4 +47,5 @@ public interface SSOUserPrincipal extends Principal {
 
   Map<String, String> getAttributes();
 
+  boolean isApp();
 }
