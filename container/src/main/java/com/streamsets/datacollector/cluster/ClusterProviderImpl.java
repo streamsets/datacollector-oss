@@ -615,7 +615,7 @@ public class ClusterProviderImpl implements ClusterProvider {
       resourcesDir = createDirectoryClone(resourcesDir, "resources", stagingDir);
       TarFileCreator.createTarGz(resourcesDir, resourcesTarGz);
     } catch (Exception ex) {
-      String msg = errorString("Serializing resources directory: '{}'", resourcesDir.getName(), ex);
+      String msg = errorString("Serializing resources directory: '{}': {}", resourcesDir.getName(), ex);
       throw new RuntimeException(msg, ex);
     }
     File etcTarGz = new File(stagingDir, "etc.tar.gz");
