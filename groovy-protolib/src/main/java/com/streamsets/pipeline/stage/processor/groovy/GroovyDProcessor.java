@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.processor.scripting.ProcessingModeChooserVa
     label = "Groovy Evaluator",
     description = "Processes records using Groovy",
     icon="groovy.png",
-    onlineHelpRefUrl = "index.html#Processors/Groovy.html"
+    onlineHelpRefUrl = "index.html#Processors/Groovy.html#task_asl_bpt_gv"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
