@@ -329,8 +329,7 @@ public class WebServerTask extends AbstractTask {
 
   private ConstraintSecurityHandler configureSSO(String appContext) {
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    Configuration ssoConf = conf.getSubSetConfiguration("sso");
-    final SSOService ssoService = new RemoteSSOService(ssoConf);
+    final SSOService ssoService = new RemoteSSOService(conf);
     addToPostStart(new Runnable() {
       @Override
       public void run() {
