@@ -19,30 +19,27 @@
  */
 package com.streamsets.lib.security.http;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public interface SSOService {
+public class ComponentAuthJson {
+  private String authToken;
+  private String componentId;
 
-  interface Listener {
-
-    void invalidate(List<String> tokenIds);
-
+  public String getAuthToken() {
+    return authToken;
   }
 
-  void init();
+  public void setAuthToken(String authToken) {
+    this.authToken = authToken;
+  }
 
-  String createRedirectToLoginURL(String requestUrl);
+  public String getComponentId() {
+    return componentId;
+  }
 
-  SSOTokenParser getTokenParser();
-
-  boolean isAppAuthenticationEnabled();
-
-  SSOUserPrincipal validateAppToken(String authToken, String componentId);
-
-  long getValidateAppTokenFrequency();
-
-  void setListener(Listener listener);
-
-  void refresh();
+  public void setComponentId(String componentId) {
+    this.componentId = componentId;
+  }
 
 }

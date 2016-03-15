@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -44,14 +45,24 @@ public class RemoteSSOService implements SSOService {
   public static final String SECURITY_SERVICE_BASE_URL_CONFIG = CONFIG_PREFIX + "url";
   public static final String SECURITY_SERVICE_BASE_URL_DEFAULT = "http://localhost:18631/security";
 
+  public static final String SECURITY_SERVICE_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "authToken";
+
+  public static final String SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG =
+      CONFIG_PREFIX + "validateAuthToken.secs";
+
+  public static final long SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT = 10 * 60;
+
   public static final int INITIAL_FETCH_INFO_FREQUENCY = 10 * 60;
 
   private String loginPageUrl;
   private String forServicesUrl;
+  private String appAuthUrl;
   private volatile SSOTokenParser tokenParser;
   private Listener listener;
   private volatile long securityInfoFetchFrequency;
   private volatile long lastSecurityInfoFetchTime;
+  private String ownAuthToken;
+  private long validateAppTokenFrequency;
 
   public RemoteSSOService(Configuration conf) {
     String baseUrl = conf.get(SECURITY_SERVICE_BASE_URL_CONFIG, SECURITY_SERVICE_BASE_URL_DEFAULT);
@@ -64,6 +75,14 @@ public class RemoteSSOService implements SSOService {
     }
     loginPageUrl = baseUrl + "/login";
     forServicesUrl = baseUrl + "/public-rest/v1/for-client-services";
+    appAuthUrl = baseUrl + "/rest/v1/componentAuth";
+    ownAuthToken = conf.get(SECURITY_SERVICE_AUTH_TOKEN_CONFIG, null);
+    if (ownAuthToken == null) {
+      LOG.info("The '{}' property is not set, apps authentication is disabled", SECURITY_SERVICE_AUTH_TOKEN_CONFIG);
+    }
+    validateAppTokenFrequency =
+        conf.get(SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT);
+
     securityInfoFetchFrequency = INITIAL_FETCH_INFO_FREQUENCY;
   }
 
@@ -82,6 +101,10 @@ public class RemoteSSOService implements SSOService {
 
   long getSecurityInfoFetchFrequency() {
     return securityInfoFetchFrequency;
+  }
+
+  boolean hasAuthToken() {
+    return ownAuthToken != null;
   }
 
   @Override
@@ -119,6 +142,9 @@ public class RemoteSSOService implements SSOService {
     LOG.debug("Fetching info for client services");
     try {
       HttpURLConnection conn = getSecurityInfoConnection();
+      conn.setUseCaches(false);
+      conn.setConnectTimeout(1000);
+      conn.setReadTimeout(1000);
       conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
       if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
         Map map = OBJECT_MAPPER.readValue(conn.getInputStream(), Map.class);
@@ -188,5 +214,62 @@ public class RemoteSSOService implements SSOService {
     }
   }
 
+  HttpURLConnection getAuthTokeValidationConnection() throws IOException {
+    URL url = new URL(appAuthUrl);
+    return (HttpURLConnection) url.openConnection();
+  }
+
+  @Override
+  public boolean isAppAuthenticationEnabled() {
+    return ownAuthToken != null;
+  }
+
+  @Override
+  public SSOUserPrincipal validateAppToken(String authToken, String componentId) {
+    SSOUserPrincipalJson principal;
+    Utils.checkState(hasAuthToken(), "App token validation is disabled");
+    try {
+      HttpURLConnection conn = getAuthTokeValidationConnection();
+      conn.setRequestMethod("POST");
+      conn.setDoOutput(true);
+      conn.setDoInput(true);
+      conn.setUseCaches(false);
+      conn.setConnectTimeout(1000);
+      conn.setReadTimeout(1000);
+      conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
+      conn.setRequestProperty(SSOConstants.X_APP_AUTH_TOKEN, ownAuthToken);
+      ComponentAuthJson authTokenJson = new ComponentAuthJson();
+      authTokenJson.setComponentId(componentId);
+      authTokenJson.setAuthToken(authToken);
+      OutputStream os = conn.getOutputStream();
+      OBJECT_MAPPER.writeValue(os, authTokenJson);
+      if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+        principal = OBJECT_MAPPER.readValue(conn.getInputStream(), SSOUserPrincipalJson.class);
+        principal.setTokenStr(authToken);
+        principal.lock();
+        LOG.debug(
+            "Validated app auth token for '{}' from '{}' organization",
+            principal.getPrincipalId(),
+            principal.getOrganizationId()
+        );
+      } else {
+        LOG.warn(
+            "Security service HTTP error '{}': {}",
+            conn.getResponseCode(),
+            conn.getResponseMessage()
+        );
+        principal = null;
+      }
+    } catch (IOException ex) {
+      LOG.warn("Failed to validate app auth token: {}", ex.toString(), ex);
+      principal = null;
+    }
+    return principal;
+  }
+
+  @Override
+  public long getValidateAppTokenFrequency() {
+    return validateAppTokenFrequency;
+  }
 
 }

@@ -167,6 +167,11 @@ public class SSOUserPrincipalJson implements SSOUserPrincipal {
     attributes = (attributes == null) ? Collections.<String, String>emptyMap() : ImmutableMap.copyOf(attributes);
   }
 
+  @JsonIgnore
+  public boolean isLocked() {
+    return locked;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

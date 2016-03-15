@@ -23,6 +23,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.SSOAppAuthenticator;
+import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOUserAuthenticator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -337,7 +339,12 @@ public class WebServerTask extends AbstractTask {
         ssoService.init();
       }
     });
-    security.setAuthenticator(new SSOUserAuthenticator(appContext, ssoService));
+    SSOUserAuthenticator userAuthenticator = new SSOUserAuthenticator(appContext, ssoService);
+    SSOAppAuthenticator appAuthenticator = null;
+    if (ssoService.isAppAuthenticationEnabled()) {
+      appAuthenticator = new SSOAppAuthenticator(appContext, ssoService);
+    }
+    security.setAuthenticator(new SSOAuthenticator(userAuthenticator, appAuthenticator));
     return security;
   }
 

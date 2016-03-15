@@ -32,12 +32,14 @@ public class SSOAuthenticationUser implements Authentication.User {
   private final SSOUserPrincipal principal;
   private final String id;
   private volatile boolean valid;
+  private long validationTime;
 
   public SSOAuthenticationUser(final SSOUserPrincipal principal) {
     Utils.checkNotNull(principal, "principal");
     this.principal = principal;
     id = principal.getTokenId();
     valid = true;
+    validationTime = System.currentTimeMillis();
   }
 
   @Override
@@ -75,12 +77,16 @@ public class SSOAuthenticationUser implements Authentication.User {
     valid = false;
   }
 
-  public SSOUserPrincipal getToken() {
+  public SSOUserPrincipal getSSOUserPrincipal() {
     return principal;
   }
 
   public boolean isValid() {
     return valid && System.currentTimeMillis() < principal.getExpires();
+  }
+
+  public long getValidationTime() {
+    return validationTime;
   }
 
   @Override

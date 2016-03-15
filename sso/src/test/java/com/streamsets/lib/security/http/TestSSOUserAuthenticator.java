@@ -434,7 +434,7 @@ public class TestSSOUserAuthenticator {
 
     SSOUserPrincipal token = Mockito.mock(SSOUserPrincipal.class);
     SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
-    Mockito.when(user.getToken()).thenReturn(token);
+    Mockito.when(user.getSSOUserPrincipal()).thenReturn(token);
     Mockito.when(user.isValid()).thenReturn(true);
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_USER_AUTH_TOKEN))).thenReturn("token");
@@ -454,7 +454,7 @@ public class TestSSOUserAuthenticator {
 
     SSOUserPrincipal token = Mockito.mock(SSOUserPrincipal.class);
     SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
-    Mockito.when(user.getToken()).thenReturn(token);
+    Mockito.when(user.getSSOUserPrincipal()).thenReturn(token);
     Mockito.when(user.isValid()).thenReturn(false);
 
     Mockito.doReturn(user).when(authenticator).getFromCache(Mockito.eq("token"));
@@ -486,7 +486,7 @@ public class TestSSOUserAuthenticator {
     SSOUserPrincipal token = Mockito.mock(SSOUserPrincipal.class);
     Mockito.when(token.getTokenStr()).thenReturn("bar");
     SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
-    Mockito.when(user.getToken()).thenReturn(token);
+    Mockito.when(user.getSSOUserPrincipal()).thenReturn(token);
 
     Mockito.doNothing().when(authenticator).invalidateToken(Mockito.anyString());
 
@@ -524,6 +524,21 @@ public class TestSSOUserAuthenticator {
       @Override
       public void refresh() {
 
+      }
+
+      @Override
+      public boolean isAppAuthenticationEnabled() {
+        return false;
+      }
+
+      @Override
+      public SSOUserPrincipal validateAppToken(String authToken, String componentId) {
+        return null;
+      }
+
+      @Override
+      public long getValidateAppTokenFrequency() {
+        return 0;
       }
     };
 
@@ -566,7 +581,7 @@ public class TestSSOUserAuthenticator {
 
     SSOUserPrincipal token = Mockito.mock(SSOUserPrincipal.class);
     SSOAuthenticationUser user = Mockito.mock(SSOAuthenticationUser.class);
-    Mockito.when(user.getToken()).thenReturn(token);
+    Mockito.when(user.getSSOUserPrincipal()).thenReturn(token);
     Mockito.when(user.isValid()).thenReturn(true);
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getRequestURL()).thenReturn(new StringBuffer());

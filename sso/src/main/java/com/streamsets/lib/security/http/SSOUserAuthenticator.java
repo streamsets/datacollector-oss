@@ -260,14 +260,14 @@ public class SSOUserAuthenticator implements Authenticator {
         SSOUserPrincipal userToken = ssoService.getTokenParser().parse(authToken);
         if (userToken != null) {
           SSOAuthenticationUser user = new SSOAuthenticationUser(userToken);
-          LOG.debug("Token '{}' valid, user '{}'", authToken, user.getToken().getName());
+          LOG.debug("Token '{}' valid, user '{}'", authToken, user.getSSOUserPrincipal().getName());
 
           // caching the authenticated user info
           knownTokens.put(authToken, user);
           httpRes.addCookie(createAuthCookie(
               httpReq,
               authToken,
-              (int) (user.getToken().getExpires() - System.currentTimeMillis()) / 1000)
+              (int) (user.getSSOUserPrincipal().getExpires() - System.currentTimeMillis()) / 1000)
           );
           ret = user;
         } else {
@@ -320,8 +320,8 @@ public class SSOUserAuthenticator implements Authenticator {
     if (isLogoutRequest(httpReq)) {
       // trapping logout requests to return always OK
       if (ret != null) {
-        LOG.debug("Logout request for '{}'", user.getToken().getName());
-        invalidateToken(user.getToken().getTokenId());
+        LOG.debug("Logout request for '{}'", user.getSSOUserPrincipal().getName());
+        invalidateToken(user.getSSOUserPrincipal().getTokenId());
       }
       httpRes.setStatus(HttpServletResponse.SC_OK);
       ret = Authentication.SEND_SUCCESS;
@@ -332,8 +332,8 @@ public class SSOUserAuthenticator implements Authenticator {
           // cached token is invalid, invalidate cache and delete auth cookie
           invalidateToken(authToken);
 
-          LOG.debug("User '{}' authentication token '{}' expired", user.getToken().getName(),
-              user.getToken().getTokenStr()
+          LOG.debug("User '{}' authentication token '{}' expired", user.getSSOUserPrincipal().getName(),
+              user.getSSOUserPrincipal().getTokenStr()
           );
           httpRes.addCookie(createAuthCookie(httpReq, "", 0));
 
@@ -344,7 +344,7 @@ public class SSOUserAuthenticator implements Authenticator {
           if (LOG.isDebugEnabled()) {
             LOG.debug("Request '{}' cached authentication '{}'",
                 getRequestUrl(httpReq),
-                ((SSOAuthenticationUser) ret).getToken().getName()
+                ((SSOAuthenticationUser) ret).getSSOUserPrincipal().getName()
             );
           }
         }

@@ -29,7 +29,7 @@ public class TestSSOAuthenticationUser {
     SSOUserPrincipal principal = TestSSOUserPrincipalJson.createPrincipal();
     SSOAuthenticationUser user = new SSOAuthenticationUser(principal);
     Assert.assertEquals(SSOConstants.AUTHENTICATION_METHOD, user.getAuthMethod());
-    Assert.assertEquals(principal, user.getToken());
+    Assert.assertEquals(principal, user.getSSOUserPrincipal());
     Assert.assertEquals(principal.getName(), user.getUserIdentity().getUserPrincipal().getName());
     Assert.assertEquals(1, user.getUserIdentity().getSubject().getPrincipals().size());
     Assert.assertEquals(
