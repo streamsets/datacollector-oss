@@ -42,7 +42,7 @@ angular.module('dataCollectorApp.common')
     this.config = undefined;
 
     this.init = function() {
-      if(!self.initializeDefer) {
+      if (!self.initializeDefer) {
         self.initializeDefer = $q.defer();
         api.pipelineAgent.getConfiguration().then(function(res) {
           self.config = res.data;
@@ -59,7 +59,7 @@ angular.module('dataCollectorApp.common')
      */
 
     this.getConfiguration = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config;
       }
 
@@ -72,7 +72,7 @@ angular.module('dataCollectorApp.common')
      * @returns number
      */
     this.getRefreshInterval = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[REFRESH_INTERVAL];
       }
       return 2000;
@@ -84,7 +84,7 @@ angular.module('dataCollectorApp.common')
      * @returns number
      */
     this.getJVMMetricsRefreshInterval = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[JVM_METRICS_REFRESH_INTERVAL];
       }
       return 4000;
@@ -96,7 +96,7 @@ angular.module('dataCollectorApp.common')
      * @returns string
      */
     this.getUILocalHelpBaseURL = function() {
-      if(self.config) {
+      if (self.config && self.config[UI_LOCAL_HELP_BASE_URL]) {
         return self.config[UI_LOCAL_HELP_BASE_URL];
       }
       return '/docs';
@@ -108,10 +108,10 @@ angular.module('dataCollectorApp.common')
      * @returns string
      */
     this.getUIHostedHelpBaseURL = function() {
-      if(self.config) {
+      if (self.config && self.config[UI_HOSTED_HELP_BASE_URL]) {
         return self.config[UI_HOSTED_HELP_BASE_URL];
       }
-      return '/docs';
+      return 'https://streamsets.com/documentation/datacollector/latest/help/';
     };
 
     /**
@@ -119,7 +119,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.isAnalyticsEnabled = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[UI_ENABLE_USAGE_DATA_COLLECTION] === 'true';
       }
       return false;
@@ -130,7 +130,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getAuthenticationType = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[HTTP_AUTHENTICATION];
       }
       return 'form';
@@ -161,7 +161,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.isWebSocketUseEnabled = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[UI_ENABLE_WEB_SOCKET] === 'true';
       }
       return true;
@@ -172,7 +172,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getUndoLimit = function() {
-      if(self.config && self.config[UI_UNDO_LIMIT] !== undefined) {
+      if (self.config && self.config[UI_UNDO_LIMIT] !== undefined) {
         return self.config[UI_UNDO_LIMIT];
       }
       return 10;
@@ -183,7 +183,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.isMetricsTimeSeriesEnabled = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[METRICS_TIME_SERIES_ENABLE] === 'true';
       }
       return true;
@@ -193,7 +193,7 @@ angular.module('dataCollectorApp.common')
      * Returns monitor.memory flag value
      */
     this.isMonitorMemoryEnabled = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[MONITOR_MEMORY] === 'true';
       }
       return false;
@@ -204,7 +204,7 @@ angular.module('dataCollectorApp.common')
      * @returns {*}
      */
     this.getUIHeaderTitle = function() {
-      if(self.config) {
+      if (self.config) {
         return self.config[UI_HEADER_TITLE];
       }
       return '';

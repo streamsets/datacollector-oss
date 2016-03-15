@@ -360,7 +360,7 @@ angular.module('dataCollectorApp.common')
       exportPipelineConfig: function(name, includeLibraryDefinitions) {
         var url = apiBase + '/pipeline/' + name + '/export?attachment=true';
         if (includeLibraryDefinitions) {
-          url += '&includeLibraryDefinitions=true'
+          url += '&includeLibraryDefinitions=true';
         }
         window.open(url, '_blank', '');
       },
