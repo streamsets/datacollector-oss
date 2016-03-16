@@ -20,5 +20,15 @@
           processor<indexterm>overview</indexterm></indexterm><indexterm>processors<indexterm>Field
           Remover</indexterm></indexterm>The Field Remover removes fields from records. Use the
       Field Remover to discard field data that you do not need in the pipeline. </p>
+        <p>You configure the Field Remover to complete one of the following actions:<ul
+                id="ul_ak2_qdx_hv">
+                <li>Keep listed fields - You list the fields that you want to keep, and the Field
+                    Remover removes the remaining fields.</li>
+                <li>Remove listed fields - You list the fields that you want to remove, and the
+                    Field Remover removes all of the listed fields.</li>
+                <li>Remove listed fields if their values are null - You list the fields that you
+                    want to remove, and the Field Remover removes the listed fields when they
+                    contain null values.</li>
+            </ul></p>
  </conbody>
 </concept>
