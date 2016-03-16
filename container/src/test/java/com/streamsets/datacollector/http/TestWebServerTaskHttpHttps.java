@@ -25,6 +25,9 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
+import com.streamsets.lib.security.http.SSOService;
+import com.streamsets.lib.security.http.SSOTokenParser;
+import com.streamsets.lib.security.http.SSOUserPrincipal;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -39,6 +42,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -388,6 +393,101 @@ public class TestWebServerTaskHttpHttps {
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
       conn = (HttpURLConnection) new URL("http://127.0.0.1:" + httpPort + "/webapp/ping").openConnection();
       Assert.assertEquals(HttpURLConnection.HTTP_OK, conn.getResponseCode());
+    } finally {
+      ws.stopTask();
+    }
+  }
+
+  private static class DummySSOService implements SSOService {
+    boolean inited;
+
+    @Override
+    public void setDelegateTo(SSOService ssoService) {
+
+    }
+
+    @Override
+    public void setConfiguration(Configuration configuration) {
+      inited = true;
+    }
+
+    @Override
+    public String createRedirectToLoginURL(String requestUrl) {
+      return null;
+    }
+
+    @Override
+    public SSOTokenParser getTokenParser() {
+      return null;
+    }
+
+    @Override
+    public boolean isAppAuthenticationEnabled() {
+      return false;
+    }
+
+    @Override
+    public SSOUserPrincipal validateAppToken(
+        String authToken, String componentId
+    ) {
+      return null;
+    }
+
+    @Override
+    public long getValidateAppTokenFrequency() {
+      return 0;
+    }
+
+    @Override
+    public void setListener(Listener listener) {
+
+    }
+
+    @Override
+    public void refresh() {
+
+    }
+  }
+  @Test
+  public void testWebAppSSOServiceDelegation() throws Exception {
+    final DummySSOService delegatedTo = new DummySSOService();
+    WebAppProvider webAppProvider = new WebAppProvider() {
+      @Override
+      public ServletContextHandler get() {
+        ServletContextHandler handler = new ServletContextHandler();
+        handler.setContextPath("/webapp");
+        handler.addEventListener(new ServletContextListener() {
+          @Override
+          public void contextInitialized(ServletContextEvent sce) {
+            SSOService ssoService = (SSOService) sce.getServletContext().getAttribute(SSOService.SSO_SERVICE_KEY);
+            ssoService.setDelegateTo(delegatedTo);
+          }
+
+          @Override
+          public void contextDestroyed(ServletContextEvent sce) {
+
+          }
+        });
+        handler.addServlet(new ServletHolder(new PingServlet()), "/ping");
+        return handler;
+      }
+    };
+    Configuration conf = new Configuration();
+    int httpPort = getRandomPort();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "sso");
+    conf.set(WebServerTask.HTTP_PORT_KEY, httpPort);
+    final WebServerTask ws = createWebServerTask(createTestDir(), conf, ImmutableSet.of(webAppProvider));
+    try {
+      ws.initTask();
+      new Thread() {
+        @Override
+        public void run() {
+          ws.runTask();
+        }
+      }.start();
+      Thread.sleep(1000);
+
+      Assert.assertTrue(delegatedTo.inited);
     } finally {
       ws.stopTask();
     }

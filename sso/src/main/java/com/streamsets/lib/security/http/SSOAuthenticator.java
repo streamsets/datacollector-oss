@@ -32,19 +32,14 @@ import javax.servlet.http.HttpServletRequest;
 public class SSOAuthenticator implements Authenticator {
   private static final Logger LOG = LoggerFactory.getLogger(SSOAuthenticator.class);
 
+  private final SSOService ssoService;
   private final SSOUserAuthenticator userAuthenticator;
   private final SSOAppAuthenticator appAuthenticator;
 
-  public SSOAuthenticator(
-      SSOUserAuthenticator userAuthenticator, SSOAppAuthenticator appAuthenticator
-  ) {
-    this.userAuthenticator = userAuthenticator;
-    this.appAuthenticator = appAuthenticator;
-    if (appAuthenticator == null) {
-      LOG.info("SSO authentication is enabld for users only");
-    } else {
-      LOG.info("SSO authentication is enabld for users and apps");
-    }
+  public SSOAuthenticator(String appContext, SSOService ssoService) {
+    this.ssoService = ssoService;
+    userAuthenticator = new SSOUserAuthenticator(appContext, ssoService);
+    appAuthenticator = new SSOAppAuthenticator(appContext, ssoService);
   }
 
   @Override
@@ -66,7 +61,7 @@ public class SSOAuthenticator implements Authenticator {
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
       throws ServerAuthException {
     Authenticator auth = userAuthenticator;
-    if (appAuthenticator != null) {
+    if (ssoService.isAppAuthenticationEnabled()) {
       HttpServletRequest httpReq = (HttpServletRequest) request;
       boolean isRestCall = httpReq.getHeader(SSOConstants.X_REST_CALL) != null;
       boolean isAppCall = httpReq.getHeader(SSOConstants.X_APP_AUTH_TOKEN) != null ||

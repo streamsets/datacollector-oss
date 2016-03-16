@@ -64,7 +64,13 @@ public class RemoteSSOService implements SSOService {
   private String ownAuthToken;
   private long validateAppTokenFrequency;
 
-  public RemoteSSOService(Configuration conf) {
+  @Override
+  public void setDelegateTo(SSOService ssoService) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setConfiguration(Configuration conf) {
     String baseUrl = conf.get(SECURITY_SERVICE_BASE_URL_CONFIG, SECURITY_SERVICE_BASE_URL_DEFAULT);
     Utils.checkArgument(
         baseUrl.toLowerCase().startsWith("http:") || baseUrl.toLowerCase().startsWith("https:"),
@@ -84,10 +90,6 @@ public class RemoteSSOService implements SSOService {
         conf.get(SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT);
 
     securityInfoFetchFrequency = INITIAL_FETCH_INFO_FREQUENCY;
-  }
-
-  @Override
-  public void init() {
     fetchInfoForClientServices();
   }
 

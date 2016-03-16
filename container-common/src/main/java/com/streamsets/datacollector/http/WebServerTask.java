@@ -22,6 +22,7 @@ package com.streamsets.datacollector.http;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.lib.security.http.ProxySSOService;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOAppAuthenticator;
 import com.streamsets.lib.security.http.SSOAuthenticator;
@@ -183,13 +184,13 @@ public class WebServerTask extends AbstractTask {
       // all webapps must have a session manager
       appHandler.setSessionHandler(new SessionHandler(hashSessionManager));
 
-      appHandler.setSecurityHandler(createSecurityHandler(server, contextPath));
+      appHandler.setSecurityHandler(createSecurityHandler(server, appHandler, contextPath));
       contextPaths.add(contextPath);
       appHandlers.addHandler(appHandler);
     }
 
     ServletContextHandler appHandler = configureRootContext(new SessionHandler(hashSessionManager));
-    appHandler.setSecurityHandler(createSecurityHandler(server, "/"));
+    appHandler.setSecurityHandler(createSecurityHandler(server, appHandler, "/"));
     Handler handler = configureRedirectionRules(appHandler);
     appHandlers.addHandler(handler);
 
@@ -271,7 +272,7 @@ public class WebServerTask extends AbstractTask {
   }
 
 
-  private SecurityHandler createSecurityHandler(Server server, String appContext) {
+  private SecurityHandler createSecurityHandler(Server server, ServletContextHandler appHandler, String appContext) {
     ConstraintSecurityHandler securityHandler;
     String auth = conf.get(AUTHENTICATION_KEY, AUTHENTICATION_DEFAULT);
     switch (auth) {
@@ -286,7 +287,7 @@ public class WebServerTask extends AbstractTask {
         securityHandler = configureForm(server, auth);
         break;
       case "sso":
-        securityHandler = configureSSO(appContext);
+        securityHandler = configureSSO(appHandler, appContext);
         break;
       default:
         throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
@@ -329,22 +330,18 @@ public class WebServerTask extends AbstractTask {
     }
   }
 
-  private ConstraintSecurityHandler configureSSO(String appContext) {
+  private ConstraintSecurityHandler configureSSO(ServletContextHandler appHandler, String appContext) {
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-    final SSOService ssoService = new RemoteSSOService(conf);
+    final SSOService ssoService = new ProxySSOService(new RemoteSSOService());
+    appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, ssoService);
     addToPostStart(new Runnable() {
       @Override
       public void run() {
         LOG.debug("Initializing SSO service");
-        ssoService.init();
+        ssoService.setConfiguration(conf);
       }
     });
-    SSOUserAuthenticator userAuthenticator = new SSOUserAuthenticator(appContext, ssoService);
-    SSOAppAuthenticator appAuthenticator = null;
-    if (ssoService.isAppAuthenticationEnabled()) {
-      appAuthenticator = new SSOAppAuthenticator(appContext, ssoService);
-    }
-    security.setAuthenticator(new SSOAuthenticator(userAuthenticator, appAuthenticator));
+    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService));
     return security;
   }
 

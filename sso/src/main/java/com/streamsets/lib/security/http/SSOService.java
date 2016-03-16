@@ -19,9 +19,12 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.streamsets.datacollector.util.Configuration;
+
 import java.util.List;
 
 public interface SSOService {
+  String SSO_SERVICE_KEY = "ssoService";
 
   interface Listener {
 
@@ -29,7 +32,9 @@ public interface SSOService {
 
   }
 
-  void init();
+  void setDelegateTo(SSOService ssoService);
+
+  void setConfiguration(Configuration configuration);
 
   String createRedirectToLoginURL(String requestUrl);
 

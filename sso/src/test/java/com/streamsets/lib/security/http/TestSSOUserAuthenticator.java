@@ -85,7 +85,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testGetLoginUrl() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -118,7 +119,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testRedirectToLogin() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -137,7 +139,8 @@ public class TestSSOUserAuthenticator {
   }
 
   private void testReturnForbidden(boolean rest) throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -186,7 +189,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequestWithoutUserAuthHeaderOtherThanGET() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -202,7 +206,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequestWithoutUserAuthHeaderPageWithGET() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -218,7 +223,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequestWithoutUserAuthHeaderRESTWithGET() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -238,7 +244,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequestWithoutUserAuthHeaderWithUserAuthParamPageWithGET() throws Exception {
-    SSOService ssoService = Mockito.spy(new RemoteSSOService(new Configuration()));
+    RemoteSSOService ssoService = Mockito.spy(new RemoteSSOService());
+    ssoService.setConfiguration(new Configuration());
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
     Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalJson.createPrincipal());
     Mockito.when(ssoService.getTokenParser()).thenReturn(parser);
@@ -258,7 +265,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequiresAuthenticationPage() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -274,7 +282,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testHandleRequiresAuthenticationRest() throws Exception {
-    SSOService ssoService = new RemoteSSOService(new Configuration());
+    RemoteSSOService ssoService = new RemoteSSOService();
+    ssoService.setConfiguration(new Configuration());
     SSOUserAuthenticator authenticator = new SSOUserAuthenticator("a", ssoService);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -297,7 +306,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testProcessTokenOK() throws Exception {
-    SSOService ssoService = Mockito.spy(new RemoteSSOService(new Configuration()));
+    SSOService ssoService = Mockito.spy(new RemoteSSOService());
+    ssoService.setConfiguration(new Configuration());
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
     Mockito.when(parser.parse(Mockito.anyString())).thenReturn(TestSSOUserPrincipalJson.createPrincipal());
     Mockito.when(ssoService.getTokenParser()).thenReturn(parser);
@@ -315,7 +325,8 @@ public class TestSSOUserAuthenticator {
 
   @Test
   public void testProcessTokenFail() throws Exception {
-    SSOService ssoService = Mockito.spy(new RemoteSSOService(new Configuration()));
+    SSOService ssoService = Mockito.spy(new RemoteSSOService());
+    ssoService.setConfiguration(new Configuration());
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
     Mockito.when(parser.parse(Mockito.anyString())).thenReturn(null);
     Mockito.when(ssoService.getTokenParser()).thenReturn(parser);
@@ -503,7 +514,11 @@ public class TestSSOUserAuthenticator {
     SSOService ssoService = new SSOService() {
 
       @Override
-      public void init() {
+      public void setDelegateTo(SSOService ssoService) {
+      }
+
+      @Override
+      public void setConfiguration(Configuration conf) {
       }
 
       @Override
