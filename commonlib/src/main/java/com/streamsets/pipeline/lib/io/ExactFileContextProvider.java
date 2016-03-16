@@ -43,14 +43,14 @@ public class ExactFileContextProvider implements FileContextProvider {
   private int loopIdx;
 
   public ExactFileContextProvider(List<MultiFileInfo> fileInfos, Charset charset, int maxLineLength,
-      PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
+                                  PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
     fileContexts = new ArrayList<>();
     fileKeys = new LinkedHashSet<>();
     for (MultiFileInfo dirInfo : fileInfos) {
       fileContexts.add(new FileContext(dirInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
       if (fileKeys.contains(dirInfo.getFileKey())) {
         throw new IOException(Utils.format("File '{}' already specified, it cannot be added more than once",
-                                           dirInfo.getFileKey()));
+            dirInfo.getFileKey()));
       }
       fileKeys.add(dirInfo.getFileKey());
     }
@@ -89,7 +89,7 @@ public class ExactFileContextProvider implements FileContextProvider {
       fileContext.setStartingOffset(fileOffset);
       if (LOG.isTraceEnabled()) {
         LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'",
-                  fileContext.getMultiFileInfo().getFileFullPath(), file, fileOffset);
+            fileContext.getMultiFileInfo().getFileFullPath(), file, fileOffset);
       }
     }
     currentIdx = startingIdx;
@@ -122,10 +122,10 @@ public class ExactFileContextProvider implements FileContextProvider {
       map.put(fileContext.getMultiFileInfo().getFileKey(), offset);
       if (LOG.isTraceEnabled()) {
         LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
-                  fileContext.getMultiFileInfo().getFileFullPath(),
-                  fileContext.getRollMode().getPattern(),
-                  file,
-                  fileOffset
+            fileContext.getMultiFileInfo().getFileFullPath(),
+            fileContext.getRollMode().getPattern(),
+            file,
+            fileOffset
         );
       }
     }

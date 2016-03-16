@@ -55,10 +55,16 @@ public class TestGlobFileContextProvider {
       }
     };
 
-    GlobFileContextProvider provider =
-        new GlobFileContextProvider(Arrays.asList(di1, di2, di3), 1, StandardCharsets.UTF_8, 1024,
-                                    PostProcessingOptions.NONE, null, eventPublisher);
-
+    GlobFileContextProvider provider = new GlobFileContextProvider(
+        false,
+        Arrays.asList(di1, di2, di3),
+        1,
+        StandardCharsets.UTF_8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        eventPublisher
+    );
 
     // do full loop with no files
     provider.setOffsets(new HashMap<String, String>());

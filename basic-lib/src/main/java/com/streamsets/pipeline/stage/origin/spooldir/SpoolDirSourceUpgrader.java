@@ -34,6 +34,7 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
   private static final String CONF = "conf";
   private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
   private static final String FILE_COMPRESSION = "fileCompression";
+  private static final String VALIDATE_PATH = "validatePath";
   private static final Joiner joiner = Joiner.on(".");
 
   private final List<Config> configsToRemove = new ArrayList<>();
@@ -51,11 +52,17 @@ public class SpoolDirSourceUpgrader implements StageUpgrader {
         upgradeV3ToV4(configs);
       case 4:
         upgradeV4ToV5(configs);
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF,VALIDATE_PATH), true));
   }
 
   private void upgradeV4ToV5(List<Config> configs) {

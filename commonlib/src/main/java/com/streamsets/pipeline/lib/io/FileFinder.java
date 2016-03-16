@@ -39,26 +39,4 @@ public abstract class FileFinder {
 
   public abstract void close();
 
-  public static boolean hasGlobWildcard(String name) {
-    boolean escaped = false;
-    for (char c: name.toCharArray()) {
-      if (c == '\\') {
-        escaped = true;
-      } else {
-        if (!escaped) {
-          switch (c) {
-            case '*':
-            case '?':
-            case '{':
-            case '[':
-              return true;
-          }
-        } else {
-          escaped = false;
-        }
-      }
-    }
-    return false;
-  }
-
 }

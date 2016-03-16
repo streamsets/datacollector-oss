@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.logtail;
 
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
@@ -34,6 +35,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
@@ -163,7 +165,7 @@ public class TestFileTailSource {
     Assert.assertTrue(runner.runValidateConfigs().get(0).toString().contains("TAIL_04"));
   }
 
-    @Test
+  @Test
   public void testTailLogMultipleDirs() throws Exception {
     File testDataDir1 = new File("target", UUID.randomUUID().toString());
     File testDataDir2 = new File("target", UUID.randomUUID().toString());
@@ -216,13 +218,13 @@ public class TestFileTailSource {
       Assert.assertEquals(2, output.getRecords().get("metadata").size());
       Record metadata = output.getRecords().get("metadata").get(0);
       Assert.assertEquals(new File(fileInfo1.fileFullPath).getAbsolutePath(),
-                          metadata.get("/fileName").getValueAsString());
+          metadata.get("/fileName").getValueAsString());
       Assert.assertEquals("START", metadata.get("/event").getValueAsString());
       Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
       Assert.assertTrue(metadata.has("/inode"));
       metadata = output.getRecords().get("metadata").get(1);
       Assert.assertEquals(new File(fileInfo2.fileFullPath).getAbsolutePath(),
-                          metadata.get("/fileName").getValueAsString());
+          metadata.get("/fileName").getValueAsString());
       Assert.assertEquals("START", metadata.get("/event").getValueAsString());
       Assert.assertTrue(now.compareTo(metadata.get("/time").getValueAsDate()) < 0);
       Assert.assertTrue(metadata.has("/inode"));
@@ -310,8 +312,8 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-      .addOutputLane("lane").addOutputLane("metadata")
-      .build();
+        .addOutputLane("lane").addOutputLane("metadata")
+        .build();
     runner.runInit();
     try {
       StageRunner.Output output = runner.runProduce(null, 1000);
@@ -391,81 +393,81 @@ public class TestFileTailSource {
   }
 
   private final static String LINE1 = "2015-03-20 15:53:31,161 DEBUG PipelineConfigurationValidator - " +
-    "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0";
+      "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0";
   private final static String LINE2 = "2015-03-21 15:53:31,161 DEBUG PipelineConfigurationValidator - " +
-    "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=1";
+      "Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=1";
   public static final String DATE_LEVEL_CLASS =
-    "2015-03-24 17:49:16,808 ERROR ExceptionToHttpErrorProvider - ";
+      "2015-03-24 17:49:16,808 ERROR ExceptionToHttpErrorProvider - ";
 
   public static final String ERROR_MSG_WITH_STACK_TRACE = "REST API call error: LOG_PARSER_01 - Error parsing log line '2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties', reason : 'LOG_PARSER_03 - Log line 2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties does not confirm to Log4j Log Format'\n" +
-    "com.streamsets.pipeline.lib.parser.DataParserException: LOG_PARSER_01 - Error parsing log line '2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties', reason : 'LOG_PARSER_03 - Log line 2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties does not confirm to Log4j Log Format'\n" +
-    "\tat com.streamsets.pipeline.lib.parser.log.LogDataParser.parse(LogDataParser.java:69)\n" +
-    "\tat com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.produce(SpoolDirSource.java:566)\n" +
-    "\tat com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.produce(SpoolDirSource.java:535)\n" +
-    "\tat com.streamsets.pipeline.configurablestage.DSource.produce(DSource.java:24)\n" +
-    "\tat com.streamsets.pipeline.runner.StageRuntime.execute(StageRuntime.java:149)\n" +
-    "\tat com.streamsets.pipeline.runner.StagePipe.process(StagePipe.java:106)\n" +
-    "\tat com.streamsets.pipeline.runner.preview.PreviewPipelineRunner.run(PreviewPipelineRunner.java:85)\n" +
-    "\tat com.streamsets.pipeline.runner.Pipeline.run(Pipeline.java:98)\n" +
-    "\tat com.streamsets.pipeline.runner.preview.PreviewPipeline.run(PreviewPipeline.java:38)\n" +
-    "\tat com.streamsets.pipeline.restapi.PreviewResource.previewWithOverride(PreviewResource.java:105)\n" +
-    "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
-    "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\n" +
-    "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
-    "\tat java.lang.reflect.Method.invoke(Method.java:606)\n" +
-    "\tat org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory$1.invoke(ResourceMethodInvocationHandlerFactory.java:81)\n" +
-    "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:151)\n" +
-    "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:171)\n" +
-    "\tat org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:152)\n" +
-    "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:104)\n" +
-    "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:384)\n" +
-    "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:342)\n" +
-    "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:101)\n" +
-    "\tat org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:271)\n" +
-    "\tat org.glassfish.jersey.internal.Errors$1.call(Errors.java:271)\n" +
-    "\tat org.glassfish.jersey.internal.Errors$1.call(Errors.java:267)\n" +
-    "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:315)\n" +
-    "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:297)\n" +
-    "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:267)\n" +
-    "\tat org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:297)\n" +
-    "\tat org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:254)\n" +
-    "\tat org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:1030)\n" +
-    "\tat org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:373)\n" +
-    "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:381)\n" +
-    "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:344)\n" +
-    "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:221)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:769)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1667)\n" +
-    "\tat com.streamsets.pipeline.http.LocaleDetectorFilter.doFilter(LocaleDetectorFilter.java:29)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1650)\n" +
-    "\tat org.eclipse.jetty.servlets.UserAgentFilter.doFilter(UserAgentFilter.java:83)\n" +
-    "\tat org.eclipse.jetty.servlets.GzipFilter.doFilter(GzipFilter.java:300)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1650)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:583)\n" +
-    "\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)\n" +
-    "\tat org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:542)\n" +
-    "\tat org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:223)\n" +
-    "\tat org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1125)\n" +
-    "\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:515)\n" +
-    "\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)\n" +
-    "\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1059)\n" +
-    "\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)\n" +
-    "\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n" +
-    "\tat org.eclipse.jetty.rewrite.handler.RewriteHandler.handle(RewriteHandler.java:309)\n" +
-    "\tat org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:110)\n" +
-    "\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n" +
-    "\tat org.eclipse.jetty.server.Server.handle(Server.java:497)\n" +
-    "\tat org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:311)\n" +
-    "\tat org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:248)\n" +
-    "\tat org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:540)\n" +
-    "\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:610)\n" +
-    "\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:539)\n" +
-    "\tat java.lang.Thread.run(Thread.java:745)\n" +
-    "Caused by: com.streamsets.pipeline.lib.parser.DataParserException: LOG_PARSER_03 - Log line 2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties does not confirm to Log4j Log Format\n" +
-    "\tat com.streamsets.pipeline.lib.parser.log.Log4jParser.handleNoMatch(Log4jParser.java:30)\n" +
-    "\tat com.streamsets.pipeline.lib.parser.log.GrokParser.parseLogLine(GrokParser.java:51)\n" +
-    "\tat com.streamsets.pipeline.lib.parser.log.LogDataParser.parse(LogDataParser.java:67)\n" +
-    "\t... 61 more";
+      "com.streamsets.pipeline.lib.parser.DataParserException: LOG_PARSER_01 - Error parsing log line '2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties', reason : 'LOG_PARSER_03 - Log line 2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties does not confirm to Log4j Log Format'\n" +
+      "\tat com.streamsets.pipeline.lib.parser.log.LogDataParser.parse(LogDataParser.java:69)\n" +
+      "\tat com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.produce(SpoolDirSource.java:566)\n" +
+      "\tat com.streamsets.pipeline.stage.origin.spooldir.SpoolDirSource.produce(SpoolDirSource.java:535)\n" +
+      "\tat com.streamsets.pipeline.configurablestage.DSource.produce(DSource.java:24)\n" +
+      "\tat com.streamsets.pipeline.runner.StageRuntime.execute(StageRuntime.java:149)\n" +
+      "\tat com.streamsets.pipeline.runner.StagePipe.process(StagePipe.java:106)\n" +
+      "\tat com.streamsets.pipeline.runner.preview.PreviewPipelineRunner.run(PreviewPipelineRunner.java:85)\n" +
+      "\tat com.streamsets.pipeline.runner.Pipeline.run(Pipeline.java:98)\n" +
+      "\tat com.streamsets.pipeline.runner.preview.PreviewPipeline.run(PreviewPipeline.java:38)\n" +
+      "\tat com.streamsets.pipeline.restapi.PreviewResource.previewWithOverride(PreviewResource.java:105)\n" +
+      "\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n" +
+      "\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)\n" +
+      "\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n" +
+      "\tat java.lang.reflect.Method.invoke(Method.java:606)\n" +
+      "\tat org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory$1.invoke(ResourceMethodInvocationHandlerFactory.java:81)\n" +
+      "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:151)\n" +
+      "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:171)\n" +
+      "\tat org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$ResponseOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:152)\n" +
+      "\tat org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:104)\n" +
+      "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:384)\n" +
+      "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:342)\n" +
+      "\tat org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:101)\n" +
+      "\tat org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:271)\n" +
+      "\tat org.glassfish.jersey.internal.Errors$1.call(Errors.java:271)\n" +
+      "\tat org.glassfish.jersey.internal.Errors$1.call(Errors.java:267)\n" +
+      "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:315)\n" +
+      "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:297)\n" +
+      "\tat org.glassfish.jersey.internal.Errors.process(Errors.java:267)\n" +
+      "\tat org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:297)\n" +
+      "\tat org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:254)\n" +
+      "\tat org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:1030)\n" +
+      "\tat org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:373)\n" +
+      "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:381)\n" +
+      "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:344)\n" +
+      "\tat org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:221)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:769)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1667)\n" +
+      "\tat com.streamsets.pipeline.http.LocaleDetectorFilter.doFilter(LocaleDetectorFilter.java:29)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1650)\n" +
+      "\tat org.eclipse.jetty.servlets.UserAgentFilter.doFilter(UserAgentFilter.java:83)\n" +
+      "\tat org.eclipse.jetty.servlets.GzipFilter.doFilter(GzipFilter.java:300)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1650)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:583)\n" +
+      "\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:143)\n" +
+      "\tat org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:542)\n" +
+      "\tat org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:223)\n" +
+      "\tat org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1125)\n" +
+      "\tat org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:515)\n" +
+      "\tat org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:185)\n" +
+      "\tat org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1059)\n" +
+      "\tat org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141)\n" +
+      "\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n" +
+      "\tat org.eclipse.jetty.rewrite.handler.RewriteHandler.handle(RewriteHandler.java:309)\n" +
+      "\tat org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:110)\n" +
+      "\tat org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:97)\n" +
+      "\tat org.eclipse.jetty.server.Server.handle(Server.java:497)\n" +
+      "\tat org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:311)\n" +
+      "\tat org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:248)\n" +
+      "\tat org.eclipse.jetty.io.AbstractConnection$2.run(AbstractConnection.java:540)\n" +
+      "\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:610)\n" +
+      "\tat org.eclipse.jetty.util.thread.QueuedThreadPool$3.run(QueuedThreadPool.java:539)\n" +
+      "\tat java.lang.Thread.run(Thread.java:745)\n" +
+      "Caused by: com.streamsets.pipeline.lib.parser.DataParserException: LOG_PARSER_03 - Log line 2015-03-24 12:38:05,206 DEBUG LogConfigurator - Log starting, from configuration: /Users/harikiran/Documents/workspace/streamsets/dev/dist/target/streamsets-datacollector-1.0.0b2-SNAPSHOT/streamsets-datacollector-1.0.0b2-SNAPSHOT/etc/log4j.properties does not confirm to Log4j Log Format\n" +
+      "\tat com.streamsets.pipeline.lib.parser.log.Log4jParser.handleNoMatch(Log4jParser.java:30)\n" +
+      "\tat com.streamsets.pipeline.lib.parser.log.GrokParser.parseLogLine(GrokParser.java:51)\n" +
+      "\tat com.streamsets.pipeline.lib.parser.log.LogDataParser.parse(LogDataParser.java:67)\n" +
+      "\t... 61 more";
 
   public static final String LOG_LINE_WITH_STACK_TRACE = DATE_LEVEL_CLASS + ERROR_MSG_WITH_STACK_TRACE;
 
@@ -497,8 +499,8 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-      .addOutputLane("lane").addOutputLane("metadata")
-      .build();
+        .addOutputLane("lane").addOutputLane("metadata")
+        .build();
     runner.runInit();
     Files.write(logFile.toPath(), Arrays.asList(LINE1, LINE2), StandardCharsets.UTF_8);
     try {
@@ -528,7 +530,7 @@ public class TestFileTailSource {
 
       Assert.assertTrue(record.has("/" + Constants.MESSAGE));
       Assert.assertEquals("Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=0",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
+          record.get("/" + Constants.MESSAGE).getValueAsString());
 
       record = records.get(1);
 
@@ -546,7 +548,7 @@ public class TestFileTailSource {
 
       Assert.assertTrue(record.has("/" + Constants.MESSAGE));
       Assert.assertEquals("Pipeline 'test:preview' validation. valid=true, canPreview=true, issuesCount=1",
-        record.get("/" + Constants.MESSAGE).getValueAsString());
+          record.get("/" + Constants.MESSAGE).getValueAsString());
 
     } finally {
       runner.runDestroy();
@@ -576,8 +578,8 @@ public class TestFileTailSource {
 
     FileTailSource source = new FileTailSource(conf, SCAN_INTERVAL);
     SourceRunner runner = new SourceRunner.Builder(FileTailDSource.class, source)
-      .addOutputLane("lane").addOutputLane("metadata")
-      .build();
+        .addOutputLane("lane").addOutputLane("metadata")
+        .build();
     runner.runInit();
     Files.write(logFile.toPath(), Arrays.asList(LINE1, LOG_LINE_WITH_STACK_TRACE, LINE2), StandardCharsets.UTF_8);
     try {
@@ -835,6 +837,65 @@ public class TestFileTailSource {
 
       output = runner.runProduce(output.getNewOffset(), 10);
       Assert.assertEquals(2, output.getRecords().get("lane").size());
+
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private void writeFileInDirectoryStructure(File baseDir, String suffixDirPath, int times) throws IOException{
+    for (int i= 1; i<=times; i++) {
+      //Create ${baseDir}/${uuid}/dir/indx_${i}/${suffixDir}/file.txt-1
+      File fullTestIndxDirPath = new File(baseDir.getAbsolutePath() +"/dir/indx_" + i + "/" + suffixDirPath);
+      Assert.assertTrue(
+          Utils.format("Unable to create test folder :{}", fullTestIndxDirPath.getAbsolutePath()),
+          fullTestIndxDirPath.mkdirs()
+      );
+      File file = new File(fullTestIndxDirPath, "file.txt-1");
+      Files.write(file.toPath(), Arrays.asList("A", "B", "C"), StandardCharsets.UTF_8);
+    }
+  }
+
+  @Test
+  public void testCreationOfLateDirectories() throws Exception {
+    File testDataDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    String suffixDirPath = "data";
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/dir/*/"+ suffixDirPath + "/file.txt-1";
+    fileInfo.fileRollMode = FileRollMode.ALPHABETICAL;
+    fileInfo.firstFile = "";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+    conf.validatePath = false;
+
+
+    Source source = new FileTailSource(conf, SCAN_INTERVAL);
+
+    SourceRunner runner = createRunner(source);
+    try {
+      // run till current end and stop pipeline
+      runner.runInit();
+      StageRunner.Output output = runner.runProduce(null, 10);
+
+      Assert.assertEquals(0, output.getRecords().get("lane").size());
+
+      writeFileInDirectoryStructure(testDataDir, suffixDirPath, 3);
+
+      //Give about 10 secs for the directory watcher and FileFinder thread to detect the file appearance.
+      Thread.sleep(10000);
+
+      output = runner.runProduce(output.getNewOffset(), 10);
+      Assert.assertEquals(3 * 3, output.getRecords().get("lane").size());
 
     } finally {
       runner.runDestroy();

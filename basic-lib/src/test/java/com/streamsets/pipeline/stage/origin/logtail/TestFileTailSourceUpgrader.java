@@ -34,7 +34,7 @@ import java.util.List;
 public class TestFileTailSourceUpgrader {
 
   @Test
-  public void testUpgradeV1toV2() throws StageException {
+  public void testUpgradeV1toV3() throws StageException {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("dataFormat", DataFormat.LOG));
     configs.add(new Config("multiLineMainPattern", ""));
@@ -57,10 +57,11 @@ public class TestFileTailSourceUpgrader {
     configs.add(new Config("log4jCustomLogFormat", null));
 
     FileTailSourceUpgrader fileTailSourceUpgrader = new FileTailSourceUpgrader();
-    fileTailSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
+    fileTailSourceUpgrader.upgrade("a", "b", "c", 1, 3, configs);
 
     // maxLineLength is converted to 3 configs: textMaxLineLen, jsonMaxObjectLen, logMaxObjectLen.
-    Assert.assertEquals(19 - 1 + 3, configs.size());
+    // validatePath is added.
+    Assert.assertEquals(19 - 1 + 3 + 1, configs.size());
 
     HashMap<String, Object> configValues = new HashMap<>();
     for (Config c : configs) {
@@ -123,6 +124,9 @@ public class TestFileTailSourceUpgrader {
 
     Assert.assertTrue(configValues.containsKey("conf.dataFormatConfig.log4jCustomLogFormat"));
     Assert.assertEquals(null, configValues.get("conf.dataFormatConfig.log4jCustomLogFormat"));
+
+    Assert.assertTrue(configValues.containsKey("conf.validatePath"));
+    Assert.assertEquals(true, configValues.get("conf.validatePath"));
   }
 
 }

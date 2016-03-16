@@ -41,6 +41,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +71,11 @@ public class SpoolDirSource extends BaseSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    validateDir(conf.spoolDir, Groups.FILES.name(), SPOOLDIR_CONFIG_BEAN_PREFIX + "spoolDir", issues);
+    boolean waitForPathToBePresent = !validateDir(
+        conf.spoolDir, Groups.FILES.name(),
+        SPOOLDIR_CONFIG_BEAN_PREFIX + "spoolDir",
+        issues, conf.validatePath
+    );
 
     // Whether overrunLimit is less than max limit is validated by DataParserFormatConfig.
     if (conf.overrunLimit * 1024 < MIN_OVERRUN_LIMIT) {
@@ -122,8 +127,8 @@ public class SpoolDirSource extends BaseSource {
           conf.errorArchiveDir,
           Groups.POST_PROCESSING.name(),
           SPOOLDIR_CONFIG_BEAN_PREFIX + "errorArchiveDir",
-          issues
-      );
+          issues,
+          true);
     }
 
     if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
@@ -132,8 +137,8 @@ public class SpoolDirSource extends BaseSource {
             conf.archiveDir,
             Groups.POST_PROCESSING.name(),
             SPOOLDIR_CONFIG_BEAN_PREFIX + "archiveDir",
-            issues
-        );
+            issues,
+            true);
       } else {
         issues.add(
             getContext().createConfigIssue(
@@ -172,8 +177,9 @@ public class SpoolDirSource extends BaseSource {
 
       DirectorySpooler.Builder builder =
           DirectorySpooler.builder().setDir(conf.spoolDir).setFilePattern(conf.filePattern)
-                          .setMaxSpoolFiles(conf.maxSpoolFiles)
-                          .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()));
+              .setMaxSpoolFiles(conf.maxSpoolFiles)
+              .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()))
+              .waitForPathAppearance(waitForPathToBePresent);
       if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
         builder.setArchiveDir(conf.archiveDir);
         builder.setArchiveRetention(conf.retentionTimeMins);
@@ -189,18 +195,40 @@ public class SpoolDirSource extends BaseSource {
     return issues;
   }
 
-  private void validateDir(String dir, String group, String config, List<ConfigIssue> issues) {
+  private boolean validateDir(
+      String dir,
+      String group,
+      String config,
+      List<ConfigIssue> issues,
+      boolean addDirPresenceIssues
+  ) {
     if (dir.isEmpty()) {
       issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_11));
     }
+    return validateDirPresence(dir, group, config, issues, addDirPresenceIssues);
+  }
+
+  private boolean validateDirPresence(
+      String dir,
+      String group,
+      String config,
+      List<ConfigIssue> issues,
+      boolean addDirPresenceIssues
+  ) {
     File fDir = new File(dir);
+    List<ConfigIssue> issuesToBeAdded = new ArrayList<ConfigIssue>();
+    boolean isValid = true;
     if (!fDir.exists()) {
-      issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
-    } else {
-      if (!fDir.isDirectory()) {
-        issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
-      }
+      issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
+      isValid = false;
+    } else if (!fDir.isDirectory()) {
+      issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
+      isValid = false;
     }
+    if (addDirPresenceIssues) {
+      issues.addAll(issuesToBeAdded);
+    }
+    return isValid;
   }
 
   private void validateFilePattern(List<ConfigIssue> issues) {
@@ -298,13 +326,13 @@ public class SpoolDirSource extends BaseSource {
     return
         // we don't have a current file half way processed in the current agent execution
         currentFile == null ||
-        // we don't have a file half way processed from a previous agent execution via offset tracking
-        file == null ||
-        // the current file is lexicographically lesser than the one reported via offset tracking
-        // this can happen if somebody drop
-        currentFile.getName().compareTo(file) < 0 ||
-        // the current file has been fully processed
-        MINUS_ONE.equals(offset);
+            // we don't have a file half way processed from a previous agent execution via offset tracking
+            file == null ||
+            // the current file is lexicographically lesser than the one reported via offset tracking
+            // this can happen if somebody drop
+            currentFile.getName().compareTo(file) < 0 ||
+            // the current file has been fully processed
+            MINUS_ONE.equals(offset);
   }
 
   private boolean isFileFromSpoolerEligible(File spoolerFile, String offsetFile, String offsetInFile) {
@@ -342,7 +370,7 @@ public class SpoolDirSource extends BaseSource {
         do {
           if (nextAvailFile != null) {
             LOG.warn("Ignoring file '{}' in spool directory as is lesser than offset file '{}'",
-                     nextAvailFile.getName(), file);
+                nextAvailFile.getName(), file);
           }
           nextAvailFile = getSpooler().poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
         } while (!isFileFromSpoolerEligible(nextAvailFile, file, offset));
@@ -350,7 +378,7 @@ public class SpoolDirSource extends BaseSource {
         if (nextAvailFile == null) {
           // no file to process
           LOG.debug("No new file available in spool directory after '{}' secs, producing empty batch",
-                    conf.poolingTimeoutSecs);
+              conf.poolingTimeoutSecs);
         } else {
           // file to process
           currentFile = nextAvailFile;
@@ -433,7 +461,7 @@ public class SpoolDirSource extends BaseSource {
               throw new StageException(Errors.SPOOLDIR_02, sourceFile, exOffset);
             default:
               throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-                                                           getContext().getOnErrorRecord(), ex));
+                  getContext().getOnErrorRecord(), ex));
           }
         }
       }
@@ -467,7 +495,7 @@ public class SpoolDirSource extends BaseSource {
             throw new StageException(Errors.SPOOLDIR_04, sourceFile, exOffset, ex.toString());
           default:
             throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-              getContext().getOnErrorRecord(), ex));
+                getContext().getOnErrorRecord(), ex));
         }
       }
     } finally {

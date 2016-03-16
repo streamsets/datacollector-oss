@@ -32,6 +32,7 @@ public class FileTailSourceUpgrader implements StageUpgrader {
 
   private static final String CONF = "conf";
   private static final String DATA_FORMAT_CONFIG= "dataFormatConfig";
+  private static final String VALIDATE_PATH = "validatePath";
   private static final Joiner joiner = Joiner.on(".");
 
   private final List<Config> configsToRemove = new ArrayList<>();
@@ -43,6 +44,9 @@ public class FileTailSourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1ToV2(configs);
+        //fall through
+      case 2:
+        upgradeV2ToV3(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -90,6 +94,10 @@ public class FileTailSourceUpgrader implements StageUpgrader {
     }
     configs.addAll(configsToAdd);
     configs.removeAll(configsToRemove);
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    configs.add(new Config(joiner.join(CONF,VALIDATE_PATH), true));
   }
 
 }

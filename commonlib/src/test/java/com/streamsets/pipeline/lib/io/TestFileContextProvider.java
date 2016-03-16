@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,9 +50,14 @@ public class TestFileContextProvider {
       }
     };
 
-    FileContextProvider
-        provider = new ExactFileContextProvider(Arrays.asList(di1, di2, di3), StandardCharsets.UTF_8, 1024,
-                                                           PostProcessingOptions.NONE, null, eventPublisher);
+    ExactFileContextProvider provider = new ExactFileContextProvider(
+        Arrays.asList(di1, di2, di3),
+        StandardCharsets.UTF_8,
+        1024,
+        PostProcessingOptions.NONE,
+        null,
+        eventPublisher
+    );
 
 
     // do full loop

@@ -20,6 +20,7 @@
 package com.streamsets.pipeline.lib.io;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,8 +54,8 @@ public class SynchronousFileFinder extends FileFinder {
     Utils.checkNotNull(globPath, "path");
     Utils.checkArgument(globPath.isAbsolute(), Utils.formatL("Path '{}' must be absolute", globPath));
     this.globPath = globPath;
-    pivotPath = getPivotPath(globPath);
-    wildcardPath = getWildcardPath(globPath);
+    pivotPath = GlobFilePathUtil.getPivotPath(globPath);
+    wildcardPath = GlobFilePathUtil.getWildcardPath(globPath);
     Utils.checkArgument(!DOUBLE_WILDCARD.matcher(globPath.toString()).matches(),
                         Utils.formatL("Path '{}' canot have double '*' wildcard", globPath));
     foundPaths = Collections.synchronizedSet(new HashSet<Path>());
@@ -77,35 +78,6 @@ public class SynchronousFileFinder extends FileFinder {
     LOG.trace("<init>(globPath={})", globPath);
   }
 
-  private Path getSubPath(Path path, int from, int to, boolean isPivot) {
-    Path subPath = null;
-    if (to - from > 0) {
-      String baseName = path.getName(from).toString();
-      baseName = (from == 0 && isPivot) ? "/" + baseName : baseName;
-      String[] extraNames = new String[to - from -1];
-      for (int i = from + 1; i < to; i++) {
-        extraNames[i - from - 1] = path.getName(i).toString();
-      }
-      subPath = Paths.get(baseName, extraNames);
-    } else if (isPivot) {
-      subPath = Paths.get("/");
-    }
-    return subPath;
-  }
-
-  private Path getPivotPath(Path path) {
-    int nameCount = path.getNameCount();
-    int wildcardIdx = 0;
-    for (; wildcardIdx < nameCount && !hasGlobWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
-    return getSubPath(path, 0, wildcardIdx, true);
-  }
-
-  private Path getWildcardPath(Path path) {
-    int nameCount = path.getNameCount();
-    int wildcardIdx = 0;
-    for (; wildcardIdx < nameCount && !hasGlobWildcard(path.getName(wildcardIdx).toString()); wildcardIdx++);
-    return getSubPath(path, wildcardIdx, nameCount, false);
-  }
 
   Path getPivotPath() {
     return pivotPath;

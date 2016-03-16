@@ -34,7 +34,7 @@ public class TestSpoolDirSourceUpgrader {
     SpoolDirSourceUpgrader spoolDirSourceUpgrader = new SpoolDirSourceUpgrader();
 
     List<Config> upgrade = spoolDirSourceUpgrader.upgrade("x", "y", "z", 1, 5, new ArrayList<Config>());
-    Assert.assertEquals(7, upgrade.size());
+    Assert.assertEquals(8, upgrade.size());
     Assert.assertEquals("conf.dataFormatConfig.compression", upgrade.get(0).getName());
     Assert.assertEquals("NONE", upgrade.get(0).getValue());
     Assert.assertEquals("conf.dataFormatConfig.csvCustomDelimiter", upgrade.get(1).getName());
@@ -49,6 +49,8 @@ public class TestSpoolDirSourceUpgrader {
     Assert.assertEquals("*", upgrade.get(5).getValue());
     Assert.assertEquals("conf.dataFormatConfig.csvSkipStartLines", upgrade.get(6).getName());
     Assert.assertEquals(0, upgrade.get(6).getValue());
+    Assert.assertEquals("conf.validatePath", upgrade.get(7).getName());
+    Assert.assertEquals(true, upgrade.get(7).getValue());
   }
 
 }

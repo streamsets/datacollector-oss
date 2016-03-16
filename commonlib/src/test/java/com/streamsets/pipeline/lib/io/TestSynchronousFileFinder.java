@@ -38,23 +38,6 @@ public class TestSynchronousFileFinder {
     new SynchronousFileFinder(Paths.get("/foo/**/x.txt"));
   }
 
-    @Test
-  public void testHasWildcard() {
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard(""));
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a"));
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("\\*"));
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a\\?"));
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("\\[z"));
-    Assert.assertFalse(SynchronousFileFinder.hasGlobWildcard("a\\{z"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("*"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("?"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("["));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("{"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("a*"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("*z"));
-    Assert.assertTrue(SynchronousFileFinder.hasGlobWildcard("a*z"));
-  }
-
   @Test
   public void testPivotAndWildcardDetection() {
     Path path = Paths.get("/file.log");

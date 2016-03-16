@@ -23,12 +23,15 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.util.DirectoryPathCreationWatcher;
+import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class GlobFileContextProvider implements FileContextProvider {
@@ -52,7 +56,7 @@ public class GlobFileContextProvider implements FileContextProvider {
       this.globFileInfo = globFileInfo;
       finderPath = Paths.get(globFileInfo.getFileFullPath());
       this.fileFinder = (scanIntervalSecs == 0) ? new SynchronousFileFinder(finderPath)
-                                                : new AsynchronousFileFinder(finderPath, scanIntervalSecs, executor);
+          : new AsynchronousFileFinder(finderPath, scanIntervalSecs, executor);
     }
 
     public MultiFileInfo getFileInfo(Path path) {
@@ -79,7 +83,6 @@ public class GlobFileContextProvider implements FileContextProvider {
   }
 
   private final List<GlobFileInfo> globFileInfos;
-  private final ScheduledExecutorService executor;
   private final Charset charset;
   private final int maxLineLength;
   private final PostProcessingOptions postProcessing;
@@ -90,21 +93,43 @@ public class GlobFileContextProvider implements FileContextProvider {
   private int startingIdx;
   private int currentIdx;
   private int loopIdx;
+  private int scanIntervalSecs;
+  private ScheduledExecutorService executor;
 
-  public GlobFileContextProvider(List<MultiFileInfo> fileInfos, int scanIntervalSecs, Charset charset, int maxLineLength,
-      PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
+
+
+  private boolean allowForLateDirectoryCreation;
+  private Map<Path, MultiFileInfo> nonExistingPaths = new HashMap<Path, MultiFileInfo>();
+  DirectoryPathCreationWatcher directoryWatcher;
+
+  public GlobFileContextProvider(boolean allowForLateDirectoryCreation, List<MultiFileInfo> fileInfos, int scanIntervalSecs, Charset charset, int maxLineLength,
+                                 PostProcessingOptions postProcessing, String archiveDir, FileEventPublisher eventPublisher) throws IOException {
     // if scan interval is zero the GlobFileInfo will work synchronously and it won't require an executor
-    executor = (scanIntervalSecs == 0) ? null : new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
-    globFileInfos = new ArrayList<>(fileInfos.size());
+    globFileInfos = new CopyOnWriteArrayList<GlobFileInfo>();
     fileContexts = new ArrayList<>();
+    executor = (scanIntervalSecs == 0) ? null : new SafeScheduledExecutorService(fileInfos.size() / 3 + 1, "FileFinder");
+    this.allowForLateDirectoryCreation = allowForLateDirectoryCreation;
+    this.scanIntervalSecs = scanIntervalSecs;
+
     for (MultiFileInfo fileInfo : fileInfos) {
-      if (fileInfo.getFileRollMode() == FileRollMode.PATTERN) {
-        // for periodic pattern roll mode we don't support wildcards
-        fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
-      } else {
-        globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+      if (!checkForNonExistingPath(fileInfo)) {
+        if (fileInfo.getFileRollMode() == FileRollMode.PATTERN) {
+          // for periodic pattern roll mode we don't support wildcards
+          fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
+        } else {
+          globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+        }
       }
     }
+
+    if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
+      directoryWatcher = new DirectoryPathCreationWatcher(nonExistingPaths.keySet());
+      if (executor == null) {
+        executor = new SafeScheduledExecutorService(1, "Directory Creation Watcher");
+      }
+      executor.submit(directoryWatcher);
+    }
+
     this.charset = charset;
     this.maxLineLength = maxLineLength;
     this.postProcessing = postProcessing;
@@ -115,14 +140,51 @@ public class GlobFileContextProvider implements FileContextProvider {
     LOG.debug("Created");
   }
 
+  private boolean checkForNonExistingPath(MultiFileInfo multiFileInfo) {
+    if (allowForLateDirectoryCreation) {
+      Path parentPath = Paths.get(multiFileInfo.getFileFullPath()).getParent();
+      Path pathToSearchFor = parentPath;
+      if (multiFileInfo.getFileRollMode() != FileRollMode.PATTERN) {
+        pathToSearchFor = GlobFilePathUtil.getPivotPath(parentPath);
+      }
+      if (!Files.exists(pathToSearchFor)) {
+        nonExistingPaths.put(pathToSearchFor, multiFileInfo);
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  private void findCreatedDirectories() throws IOException{
+    if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
+      Path processingPath;
+      while ((processingPath = directoryWatcher.getCompletedPaths().poll()) != null) {
+        MultiFileInfo fileInfo = nonExistingPaths.get(processingPath);
+        if (fileInfo.getFileRollMode() != FileRollMode.PATTERN) {
+          Path fileParentPath = Paths.get(fileInfo.getFileFullPath()).getParent();
+          Path pathToSearchFor = GlobFilePathUtil.getPivotPath(fileParentPath);
+          if (processingPath.equals(pathToSearchFor)) {
+            globFileInfos.add(new GlobFileInfo(fileInfo, executor, scanIntervalSecs));
+          }
+        } else {
+          fileContexts.add(new FileContext(fileInfo, charset, maxLineLength, postProcessing, archiveDir, eventPublisher));
+        }
+        nonExistingPaths.remove(processingPath);
+      }
+    }
+  }
+
   private Map<FileContext, GlobFileInfo> fileToGlobFile = new HashMap<>();
 
   private void findNewFileContexts() throws IOException {
-    for (GlobFileInfo globfileInfo : globFileInfos) {
+    //Thread fail safe
+    Iterator<GlobFileInfo> iterator = globFileInfos.iterator();
+    while (iterator.hasNext()) {
+      GlobFileInfo globfileInfo = iterator.next();
       Set<Path> found = globfileInfo.find();
       for (Path path : found) {
         FileContext fileContext = new FileContext(globfileInfo.getFileInfo(path), charset, maxLineLength,
-                                                  postProcessing, archiveDir, eventPublisher);
+            postProcessing, archiveDir, eventPublisher);
         fileContexts.add(fileContext);
         fileToGlobFile.put(fileContext, globfileInfo);
         LOG.debug("Found '{}'", fileContext);
@@ -169,8 +231,12 @@ public class GlobFileContextProvider implements FileContextProvider {
     Utils.checkNotNull(offsets, "offsets");
     LOG.trace("setOffsets()");
 
+    // We look for created directory paths here
+    findCreatedDirectories();
+
     // we look for new files only here
     findNewFileContexts();
+
     // we purge file only here
     purge();
 
@@ -188,7 +254,7 @@ public class GlobFileContextProvider implements FileContextProvider {
       fileContext.setStartingOffset(fileOffset);
       if (LOG.isTraceEnabled()) {
         LOG.trace("Setting offset: directory '{}', file '{}', offset '{}'",
-                  fileContext.getMultiFileInfo().getFileFullPath(), file, fileOffset);
+            fileContext.getMultiFileInfo().getFileFullPath(), file, fileOffset);
       }
     }
     currentIdx = startingIdx;
@@ -223,10 +289,10 @@ public class GlobFileContextProvider implements FileContextProvider {
       map.put(fileContext.getMultiFileInfo().getFileKey(), offset);
       if (LOG.isTraceEnabled()) {
         LOG.trace("Reporting offset: directory '{}', pattern: '{}', file '{}', offset '{}'",
-                  fileContext.getMultiFileInfo().getFileFullPath(),
-                  fileContext.getRollMode().getPattern(),
-                  file,
-                  fileOffset
+            fileContext.getMultiFileInfo().getFileFullPath(),
+            fileContext.getRollMode().getPattern(),
+            file,
+            fileOffset
         );
       }
     }

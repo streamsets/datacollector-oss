@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.util.DirectoryPathCreationWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -60,6 +62,7 @@ public class DirectorySpooler {
     private String archiveDir;
     private long archiveRetentionMillis;
     private String errorArchiveDir;
+    private boolean waitForPathAppearance;
 
     private Builder() {
       postProcessing = FilePostProcessing.NONE;
@@ -116,6 +119,11 @@ public class DirectorySpooler {
       return this;
     }
 
+    public Builder waitForPathAppearance(boolean waitForPathAppearance) {
+      this.waitForPathAppearance = waitForPathAppearance;
+      return this;
+    }
+
     public DirectorySpooler build() {
       Preconditions.checkArgument(context != null, "context not specified");
       Preconditions.checkArgument(spoolDir != null, "spool dir not specified");
@@ -125,7 +133,7 @@ public class DirectorySpooler {
         Preconditions.checkArgument(archiveDir != null, "archive dir not specified");
       }
       return new DirectorySpooler(context, spoolDir, maxSpoolFiles, pattern, postProcessing, archiveDir,
-                                  archiveRetentionMillis, errorArchiveDir);
+          archiveRetentionMillis, errorArchiveDir, waitForPathAppearance);
     }
   }
 
@@ -139,8 +147,24 @@ public class DirectorySpooler {
   private final String errorArchiveDir;
 
   public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
-      FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
-      String errorArchiveDir) {
+                          FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
+                          String errorArchiveDir) {
+    this(
+        context,
+        spoolDir,
+        maxSpoolFiles,
+        pattern,
+        postProcessing,
+        archiveDir,
+        archiveRetentionMillis,
+        errorArchiveDir,
+        true
+    );
+  }
+
+  public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
+                          FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
+                          String errorArchiveDir, boolean waitForPathAppearance) {
     this.context = context;
     this.spoolDir = spoolDir;
     this.maxSpoolFiles = maxSpoolFiles;
@@ -149,6 +173,7 @@ public class DirectorySpooler {
     this.archiveDir = archiveDir;
     this.archiveRetentionMillis = archiveRetentionMillis;
     this.errorArchiveDir = errorArchiveDir;
+    this.waitForPathAppearance = waitForPathAppearance;
   }
 
   private volatile String currentFile;
@@ -159,6 +184,7 @@ public class DirectorySpooler {
   private PriorityBlockingQueue<Path> filesQueue;
   private Path previousFile;
   private ScheduledExecutorService scheduledExecutor;
+  private boolean waitForPathAppearance;
 
   private Meter spoolQueueMeter;
 
@@ -182,7 +208,10 @@ public class DirectorySpooler {
     try {
       FileSystem fs = FileSystems.getDefault();
       spoolDirPath = fs.getPath(spoolDir).toAbsolutePath();
-      checkBaseDir(spoolDirPath);
+
+      if (!waitForPathAppearance) {
+        checkBaseDir(spoolDirPath);
+      }
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         archiveDirPath = fs.getPath(archiveDir).toAbsolutePath();
         checkBaseDir(archiveDirPath);
@@ -196,7 +225,7 @@ public class DirectorySpooler {
       String extraInfo = "";
       if (postProcessing == FilePostProcessing.ARCHIVE) {
         extraInfo = Utils.format(", archive directory '{}', retention '{}' minutes", archiveDirPath ,
-                                 archiveRetentionMillis / 60 / 1000);
+            archiveRetentionMillis / 60 / 1000);
       }
       LOG.debug("Post processing mode '{}'{}", postProcessing, extraInfo);
 
@@ -206,16 +235,9 @@ public class DirectorySpooler {
 
       spoolQueueMeter = context.createMeter("spoolQueue");
 
-      running = true;
-
-      handleOlderFiles(currentFile);
-      String lastFound = findAndQueueFiles(currentFile, true, false);
-      LOG.debug("Last file found '{}' on startup", lastFound);
-
-      scheduledExecutor = new SafeScheduledExecutorService(1, "directory-spooler");
-
-      finder = new FileFinder(lastFound);
-      scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
+      if (!waitForPathAppearance) {
+        startSpooling(currentFile);
+      }
 
       if (postProcessing == FilePostProcessing.ARCHIVE && archiveRetentionMillis > 0) {
         // create and schedule file purger only if the retention time is > 0
@@ -227,6 +249,21 @@ public class DirectorySpooler {
       destroy();
       throw new RuntimeException(ex);
     }
+  }
+
+  private void startSpooling(String currentFile) throws IOException {
+    running = true;
+
+    handleOlderFiles(currentFile);
+
+    String lastFound = findAndQueueFiles(currentFile, true, false);
+
+    LOG.debug("Last file found '{}' on startup", lastFound);
+
+    scheduledExecutor = new SafeScheduledExecutorService(1, "directory-spooler");
+
+    finder = new FileFinder(lastFound);
+    scheduledExecutor.scheduleAtFixedRate(finder, 5, 5, TimeUnit.SECONDS);
   }
 
   public void destroy() {
@@ -293,9 +330,26 @@ public class DirectorySpooler {
     }
   }
 
+  private void waitTillPathApperance() throws InterruptedException {
+    if (waitForPathAppearance) {
+      try {
+        DirectoryPathCreationWatcher watcher = new DirectoryPathCreationWatcher(Arrays.asList(spoolDirPath));
+        watcher.waitForDirectoryCreation();
+        waitForPathAppearance = false;
+        startSpooling(this.currentFile);
+      } catch (IOException e) {
+        throw new RuntimeException(Utils.format("Some Problem with the file system: {}", e.toString(), e));
+      }
+    }
+  }
+
+
   public File poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
+
+    waitTillPathApperance();
+
     Preconditions.checkState(running, "Spool directory watcher not running");
     synchronized (this) {
       if (previousFile != null) {
@@ -309,7 +363,7 @@ public class DirectorySpooler {
               Files.delete(previousFile);
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not delete file '{}', {}", previousFile, ex.toString(),
-                                                      ex));
+                  ex));
             }
             break;
           case ARCHIVE:
@@ -320,7 +374,7 @@ public class DirectorySpooler {
               }
             } catch (IOException ex) {
               throw new RuntimeException(Utils.format("Could not move file '{}' to archive dir {}, {}", previousFile,
-                                                      archiveDirPath, ex.toString(), ex));
+                  archiveDirPath, ex.toString(), ex));
             }
             break;
         }
@@ -384,7 +438,7 @@ public class DirectorySpooler {
         foundFiles.add(file);
         if (foundFiles.size() > maxSpoolFiles) {
           throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
-                                                       maxSpoolFiles));
+              maxSpoolFiles));
         }
       }
     }
@@ -393,7 +447,7 @@ public class DirectorySpooler {
       addFileToQueue(file, checkCurrent);
       if (filesQueue.size() > maxSpoolFiles) {
         throw new IllegalStateException(Utils.format("Exceeded max number '{}' of spool files in directory",
-                                                     maxSpoolFiles));
+            maxSpoolFiles));
       }
     }
     spoolQueueMeter.mark(filesQueue.size());
@@ -407,7 +461,7 @@ public class DirectorySpooler {
         @Override
         public boolean accept(Path entry) throws IOException {
           return entry != null && fileMatcher.matches(entry.getFileName()) &&
-                 (startingFile != null && entry.getFileName().toString().compareTo(startingFile) < 0);
+              (startingFile != null && entry.getFileName().toString().compareTo(startingFile) < 0);
         }
       };
       try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(spoolDirPath, filter)) {
@@ -447,7 +501,7 @@ public class DirectorySpooler {
         lastFound = findAndQueueFiles(currentFile, false, true);
       } catch (Exception ex) {
         LOG.warn("Error while scanning directory '{}' for files newer than '{}': {}", archiveDirPath, lastFound,
-                 ex.toString(), ex);
+            ex.toString(), ex);
       }
       LOG.debug("Finished file finder at '{}'", lastFound);
     }
@@ -464,7 +518,7 @@ public class DirectorySpooler {
         @Override
         public boolean accept(Path entry) throws IOException {
           return fileMatcher.matches(entry.getFileName()) &&
-                 (timeThreshold - Files.getLastModifiedTime(entry).toMillis() > 0);
+              (timeThreshold - Files.getLastModifiedTime(entry).toMillis() > 0);
         }
       };
       int purged = 0;
@@ -485,7 +539,7 @@ public class DirectorySpooler {
         }
       } catch (IOException ex) {
         LOG.warn("Error while scanning directory '{}' for archived files purging: {}", archiveDirPath, ex.toString(),
-                 ex);
+            ex);
       }
       LOG.debug("Finished archived files purging, deleted '{}' files", purged);
     }

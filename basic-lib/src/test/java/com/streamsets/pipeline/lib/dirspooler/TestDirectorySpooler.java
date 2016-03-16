@@ -23,6 +23,7 @@ import com.codahale.metrics.Meter;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,6 +32,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class TestDirectorySpooler {
@@ -48,7 +53,7 @@ public class TestDirectorySpooler {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testNoSpoolDir() {
+  public void testNoSpoolDirWithoutWaiting() {
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
     DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
         setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
@@ -57,10 +62,45 @@ public class TestDirectorySpooler {
   }
 
   @Test
+  public void testNoSpoolDirWithWaiting() throws Exception{
+    DirectorySpooler.Builder builder = DirectorySpooler.builder();
+    final DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+        setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).waitForPathAppearance(true).build();
+    spooler.init("x2");
+    ScheduledExecutorService schedService = new SafeScheduledExecutorService(1, "One Time pooler");
+    boolean test_passed = false;
+    try {
+      Callable<Boolean> task = new Callable<Boolean>(){
+        public Boolean call() {
+          try {
+            return (spooler.poolForFile(0, TimeUnit.MILLISECONDS) != null);
+          }
+          catch (InterruptedException e) {
+            //Task Interrupted as it did not finish the task.
+          }
+          return false;
+        }
+      };
+      ScheduledFuture<Boolean> test_status = schedService.schedule(task, 0, TimeUnit.MILLISECONDS);
+      Assert.assertTrue(spoolDir.mkdirs());
+
+      File logFile = new File(spoolDir, "x2.log").getAbsoluteFile();
+      new FileWriter(logFile).close();
+      //Wait for 10 secs at max and then report false;
+      test_passed = test_status.get(10000, TimeUnit.MILLISECONDS);
+
+    } finally {
+      schedService.shutdownNow();
+    }
+    Assert.assertTrue("Test did not pass, Spooler did not find files", test_passed);
+  }
+
+
+  @Test
   public void testEmptySpoolDir() throws Exception {
     Assert.assertTrue(spoolDir.mkdirs());
     DirectorySpooler.Builder builder = DirectorySpooler.builder();
-    DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
+    final DirectorySpooler spooler = builder.setContext(context).setDir(spoolDir.getAbsolutePath()).
         setFilePattern("x[0-9]*.log").setMaxSpoolFiles(1).build();
     spooler.init("x2");
     Assert.assertNull(spooler.poolForFile(0, TimeUnit.MILLISECONDS));

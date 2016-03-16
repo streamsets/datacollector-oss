@@ -43,6 +43,7 @@ import com.streamsets.pipeline.lib.io.RollMode;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,7 +164,7 @@ public class FileTailSource extends BaseSource {
     ELEval elEval = getContext().createELEval("fileFullPath");
     try {
       String pathWithoutPattern = elEval.eval(elVars, fileInfo.fileFullPath, String.class);
-      if (FileFinder.hasGlobWildcard(pathWithoutPattern)) {
+      if (GlobFilePathUtil.hasGlobWildcard(pathWithoutPattern)) {
         issues.add(
             getContext().createConfigIssue(
                 Groups.FILES.name(),
@@ -327,7 +328,8 @@ public class FileTailSource extends BaseSource {
               conf.postProcessing,
               conf.archiveDir,
               true,
-              scanIntervalSecs
+              scanIntervalSecs,
+              !conf.validatePath
           );
         } catch (IOException ex) {
           issues.add(

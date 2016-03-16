@@ -100,6 +100,17 @@ public class FileTailConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Validate Path",
+      description = "Whether to validate the path of spool directory.",
+      displayPosition = 12,
+      group = "FILES",
+      defaultValue = "true"
+  )
+  public boolean validatePath = true;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",
       label = "File Post Processing",
