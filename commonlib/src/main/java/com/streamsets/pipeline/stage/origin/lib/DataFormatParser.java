@@ -295,7 +295,9 @@ public class DataFormatParser {
         record = parser.parse();
       }
     } catch (IOException |DataParserException ex) {
-      handleException(context, messageId, ex);
+      Record record = context.createRecord(messageId);
+      record.set(Field.create(payload));
+      handleException(context, messageId, ex, record);
     }
     if (messageConfig != null && messageConfig.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
@@ -310,12 +312,13 @@ public class DataFormatParser {
     return records;
   }
 
-  private void handleException(Source.Context context, String messageId, Exception ex) throws StageException {
+  private void handleException(Source.Context context, String messageId, Exception ex, Record record)
+    throws StageException {
     switch (context.getOnErrorRecord()) {
       case DISCARD:
         break;
       case TO_ERROR:
-        context.reportError(ParserErrors.PARSER_03, messageId, ex.toString(), ex);
+        context.toError(record, ParserErrors.PARSER_03, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {

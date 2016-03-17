@@ -20,12 +20,14 @@
 package com.streamsets.pipeline.stage.origin.jms;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataFormatParser;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
@@ -35,6 +37,9 @@ import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.TextMessage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -55,14 +60,17 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
   }
 
   @Override
-  public int convert(BatchMaker batchMaker, Source.Context context, String messageId, Message message) throws StageException {
+  public int convert(BatchMaker batchMaker, Source.Context context, String messageId, Message message)
+    throws StageException {
     byte[] payload = null;
     if (message instanceof TextMessage) {
       TextMessage textMessage = (TextMessage) message;
       try {
         payload = textMessage.getText().getBytes(parser.getCharset());
       } catch (JMSException ex) {
-        handleException(context, messageId, ex);
+        Record record = context.createRecord(messageId);
+        record.set(Field.create(attemptSerializationUnderErrorCondition(messageId, message, ex)));
+        handleException(context, messageId, ex, record);
       }
     } else if (message instanceof BytesMessage) {
       BytesMessage bytesMessage = (BytesMessage) message;
@@ -81,7 +89,9 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
           }
         }
       } catch (JMSException ex) {
-        handleException(context, messageId, ex);
+        Record record = context.createRecord(messageId);
+        record.set(Field.create(attemptSerializationUnderErrorCondition(messageId, message, ex)));
+        handleException(context, messageId, ex, record);
       }
 //      TODO handle ObjectMessage's which are Java Serialized objects
 //    } else if (message instanceof ObjectMessage) {
@@ -99,7 +109,10 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
 //        handleException(context, messageId, ex);
 //      }
     } else {
-      handleException(context, messageId, new StageException(JmsErrors.JMS_10, message.getClass().getName()));
+      StageException ex = new StageException(JmsErrors.JMS_10, message.getClass().getName());
+      Record record = context.createRecord(messageId);
+      record.set(Field.create(attemptSerializationUnderErrorCondition(messageId, message, ex)));
+      handleException(context, messageId, ex, record);
     }
     int count = 0;
     if (payload != null) {
@@ -114,14 +127,38 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
           batchMaker.addRecord(record);
           count++;
         }
-      } catch (JMSException ex) {
-        handleException(context, messageId, ex);
+      } catch (JMSException | StageException ex) {
+        Record record = context.createRecord(messageId);
+        record.set(Field.create(payload));
+        handleException(context, messageId, ex, record);
       }
     }
     return count;
   }
 
-  private void handleException(Source.Context context, String messageId, Exception ex) throws StageException {
+  private byte[] attemptSerializationUnderErrorCondition(String messageId, Message message, Exception originalEx)
+  throws StageException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    ObjectOutputStream out = null;
+    try {
+      out = new ObjectOutputStream(bos);
+      out.writeObject(message);
+      return bos.toByteArray();
+    } catch (IOException e) {
+      throw new StageException(ParserErrors.PARSER_08, originalEx.toString(), e.toString(),
+        messageId, message.getClass().getName(), e);
+    } finally {
+      if (out != null) {
+        try { out.close(); } catch (IOException e) {}
+      }
+      if (bos != null) {
+        try { bos.close(); } catch (IOException e) {}
+      }
+    }
+  }
+
+  private void handleException(Source.Context context, String messageId, Exception ex, Record record)
+    throws StageException {
     switch (context.getOnErrorRecord()) {
       case DISCARD:
         break;

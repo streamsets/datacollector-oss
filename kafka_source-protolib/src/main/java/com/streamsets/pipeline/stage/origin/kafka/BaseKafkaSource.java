@@ -216,7 +216,9 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         record = parser.parse();
       }
     } catch (IOException|DataParserException ex) {
-      handleException(messageId, ex);
+      Record record = getContext().createRecord(messageId);
+      record.set(Field.create(payload));
+      handleException(messageId, ex, record);
     }
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
@@ -231,12 +233,12 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     return records;
   }
 
-  private void handleException(String messageId, Exception ex) throws StageException {
+  private void handleException(String messageId, Exception ex, Record record) throws StageException {
     switch (getContext().getOnErrorRecord()) {
       case DISCARD:
         break;
       case TO_ERROR:
-        getContext().reportError(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
+        getContext().toError(record, KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
         break;
       case STOP_PIPELINE:
         if (ex instanceof StageException) {

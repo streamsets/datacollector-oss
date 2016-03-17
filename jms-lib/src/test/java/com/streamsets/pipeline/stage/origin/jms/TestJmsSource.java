@@ -21,6 +21,7 @@ package com.streamsets.pipeline.stage.origin.jms;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -112,7 +113,7 @@ public class TestJmsSource {
     credentialsConfig.useCredentials = true;
     credentialsConfig.username = USERNAME;
     credentialsConfig.password = PASSWORD;
-    dataFormat = DataFormat.TEXT;
+    dataFormat = DataFormat.JSON;
     dataFormatConfig.removeCtrlChars = true;
     jmsConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
     jmsConfig.connectionFactory = CONNECTION_FACTORY;
@@ -166,6 +167,7 @@ public class TestJmsSource {
       new InitialContextFactory());
     SourceRunner runner = new SourceRunner.Builder(JmsSource.class, origin)
       .addOutputLane("lane")
+      .setOnRecordError(OnRecordError.TO_ERROR)
       .build();
     return runner;
   }
@@ -216,9 +218,15 @@ public class TestJmsSource {
   public void testSuccess() throws Exception {
     int numRecords = 20;
     List<String> expected = Lists.newArrayList();
+    List<String> expectedErrors = Lists.newArrayList();
     for (int i = 0; i < numRecords; i++) {
-      expected.add(String.valueOf(i));
+      if (i == 0) {
+        expectedErrors.add(String.format("{ \"i\" == %d}", i)); // invalid
+      } else {
+        expected.add(String.format("{ \"i\": %d}", i));
+      }
     }
+    putQueue(expectedErrors);
     putQueue(expected);
     SourceRunner runner = createRunner();
     runner.runInit();
@@ -227,10 +235,10 @@ public class TestJmsSource {
       StageRunner.Output output = runner.runProduce(null, numRecords * 2);
       Map<String, List<Record>> recordMap = output.getRecords();
       List<Record> parsedRecords = recordMap.get("lane");
-      Assert.assertEquals(numRecords, parsedRecords.size());
+      Assert.assertEquals(numRecords - 1, parsedRecords.size());
       List<String> actual = Lists.newArrayList();
       for (Record record : parsedRecords) {
-        actual.add(record.get("/text").getValueAsString());
+        actual.add(String.format("{ \"i\": %d}", record.get("/i").getValueAsInteger()));
       }
       Assert.assertEquals(expected, actual);
     } finally {
