@@ -259,6 +259,15 @@ public class WebServerTask extends AbstractTask {
     restMapping.setPathSpec("/rest/*");
     restMapping.setConstraint(restConstraint);
 
+    // /logout is restricted
+    Constraint logoutConstraint = new Constraint();
+    logoutConstraint.setName("auth");
+    logoutConstraint.setAuthenticate(true);
+    logoutConstraint.setRoles(new String[] { "user"});
+    ConstraintMapping logoutMapping = new ConstraintMapping();
+    logoutMapping.setPathSpec("/logout");
+    logoutMapping.setConstraint(logoutConstraint);
+
     // index page is restricted to trigger login correctly when using form authentication
     Constraint indexConstraint = new Constraint();
     indexConstraint.setName("auth");
@@ -268,7 +277,7 @@ public class WebServerTask extends AbstractTask {
     indexMapping.setPathSpec("");
     indexMapping.setConstraint(indexConstraint);
 
-    return ImmutableList.of(restMapping, indexMapping, noAuthMapping, publicRestMapping);
+    return ImmutableList.of(restMapping, indexMapping, logoutMapping, noAuthMapping, publicRestMapping);
   }
 
 

@@ -37,7 +37,7 @@ public class SSOAuthenticationUser implements Authentication.User {
   public SSOAuthenticationUser(final SSOUserPrincipal principal) {
     Utils.checkNotNull(principal, "principal");
     this.principal = principal;
-    id = principal.getTokenId();
+    this.id = Utils.checkNotNull(principal.getTokenStr(), "principal.tokenStr");
     valid = true;
     validationTime = System.currentTimeMillis();
   }

@@ -29,57 +29,44 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-public class SSOAuthenticator implements Authenticator {
+public class SSOAuthenticator extends AbstractSSOAuthenticator {
   private static final Logger LOG = LoggerFactory.getLogger(SSOAuthenticator.class);
 
-  private final SSOService ssoService;
   private final SSOUserAuthenticator userAuthenticator;
   private final SSOAppAuthenticator appAuthenticator;
 
   public SSOAuthenticator(String appContext, SSOService ssoService) {
-    this.ssoService = ssoService;
-    userAuthenticator = new SSOUserAuthenticator(appContext, ssoService);
-    appAuthenticator = new SSOAppAuthenticator(appContext, ssoService);
+    super(ssoService);
+    userAuthenticator = new SSOUserAuthenticator(getSsoService());
+    appAuthenticator = new SSOAppAuthenticator(getSsoService());
   }
 
   @Override
-  public void setConfiguration(AuthConfiguration configuration) {
-    //NOP
-  }
-
-  @Override
-  public String getAuthMethod() {
-    return SSOConstants.AUTHENTICATION_METHOD;
-  }
-
-  @Override
-  public void prepareRequest(ServletRequest request) {
-    //NOP
+  protected Logger getLog() {
+    return LOG;
   }
 
   @Override
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory)
       throws ServerAuthException {
     Authenticator auth = userAuthenticator;
-    if (ssoService.isAppAuthenticationEnabled()) {
+    if (getSsoService().isAppAuthenticationEnabled()) {
       HttpServletRequest httpReq = (HttpServletRequest) request;
       boolean isRestCall = httpReq.getHeader(SSOConstants.X_REST_CALL) != null;
       boolean isAppCall = httpReq.getHeader(SSOConstants.X_APP_AUTH_TOKEN) != null ||
           httpReq.getHeader(SSOConstants.X_APP_COMPONENT_ID) != null;
       if (isAppCall && isRestCall) {
         auth = appAuthenticator;
-        LOG.debug("App request '{}'", httpReq.getRequestURL());
+        if (getLog().isTraceEnabled()) {
+          getLog().trace("App request '{}'", getRequestInfoForLogging(httpReq, "?"));
+        }
       } else {
-        LOG.debug("User request '{}'", httpReq.getRequestURL());
+        if (getLog().isTraceEnabled()) {
+          getLog().trace("User request '{}'", getRequestInfoForLogging(httpReq, "?"));
+        }
       }
     }
     return auth.validateRequest(request, response, mandatory);
   }
 
-  @Override
-  public boolean secureResponse(
-      ServletRequest request, ServletResponse response, boolean mandatory, Authentication.User validatedUser
-  ) throws ServerAuthException {
-    return true;
-  }
 }

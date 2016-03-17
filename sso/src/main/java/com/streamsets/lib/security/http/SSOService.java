@@ -28,7 +28,7 @@ public interface SSOService {
 
   interface Listener {
 
-    void invalidate(List<String> tokenIds);
+    void invalidate(List<String> tokenStr);
 
   }
 
@@ -36,17 +36,19 @@ public interface SSOService {
 
   void setConfiguration(Configuration configuration);
 
-  String createRedirectToLoginURL(String requestUrl);
+  String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect);
 
-  SSOTokenParser getTokenParser();
+  String getLogoutUrl();
 
   boolean isAppAuthenticationEnabled();
 
+  SSOUserPrincipal validateUserToken(String authToken);
+
+  boolean invalidateUserToken(String authToken);
+
   SSOUserPrincipal validateAppToken(String authToken, String componentId);
 
-  long getValidateAppTokenFrequency();
-
-  void setListener(Listener listener);
+  boolean invalidateAppToken(String authToken);
 
   void refresh();
 

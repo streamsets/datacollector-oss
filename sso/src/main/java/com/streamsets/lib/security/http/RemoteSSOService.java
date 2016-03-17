@@ -34,18 +34,20 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class RemoteSSOService implements SSOService {
   private static final Logger LOG = LoggerFactory.getLogger(RemoteSSOService.class);
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  public static final String CONFIG_PREFIX = SSOUserAuthenticator.CONFIG_PREFIX + "service.";
+  public static final String CONFIG_PREFIX = "http.authentication.sso.service.";
 
   public static final String SECURITY_SERVICE_BASE_URL_CONFIG = CONFIG_PREFIX + "url";
   public static final String SECURITY_SERVICE_BASE_URL_DEFAULT = "http://localhost:18631/security";
 
   public static final String SECURITY_SERVICE_AUTH_TOKEN_CONFIG = CONFIG_PREFIX + "authToken";
+  public static final String SECURITY_SERVICE_COMPONENT_ID_CONFIG = CONFIG_PREFIX + "componentId";
 
   public static final String SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG =
       CONFIG_PREFIX + "validateAuthToken.secs";
@@ -55,14 +57,17 @@ public class RemoteSSOService implements SSOService {
   public static final int INITIAL_FETCH_INFO_FREQUENCY = 10 * 60;
 
   private String loginPageUrl;
+  private String logoutUrl;
   private String forServicesUrl;
   private String appAuthUrl;
   private volatile SSOTokenParser tokenParser;
-  private Listener listener;
   private volatile long securityInfoFetchFrequency;
   private volatile long lastSecurityInfoFetchTime;
   private String ownAuthToken;
-  private long validateAppTokenFrequency;
+  private String ownComponentId;
+  private PrincipalCache userPrincipalCache;
+  private PrincipalCache appPrincipalCache;
+
 
   @Override
   public void setDelegateTo(SSOService ssoService) {
@@ -80,20 +85,31 @@ public class RemoteSSOService implements SSOService {
       LOG.warn("Security service base URL is not secure '{}'", baseUrl);
     }
     loginPageUrl = baseUrl + "/login";
+    logoutUrl = baseUrl + "/_logout";
     forServicesUrl = baseUrl + "/public-rest/v1/for-client-services";
     appAuthUrl = baseUrl + "/rest/v1/componentAuth";
     ownAuthToken = conf.get(SECURITY_SERVICE_AUTH_TOKEN_CONFIG, null);
     if (ownAuthToken == null) {
       LOG.info("The '{}' property is not set, apps authentication is disabled", SECURITY_SERVICE_AUTH_TOKEN_CONFIG);
     }
-    validateAppTokenFrequency =
+    ownComponentId = conf.get(SECURITY_SERVICE_COMPONENT_ID_CONFIG, null);
+    if (ownComponentId == null) {
+      LOG.info("The '{}' property is not set, apps authentication is disabled", SECURITY_SERVICE_COMPONENT_ID_CONFIG);
+    }
+    long validateAppTokenFrequencySecs =
         conf.get(SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT);
 
     securityInfoFetchFrequency = INITIAL_FETCH_INFO_FREQUENCY;
+
+    userPrincipalCache = new PrincipalCache();
+    appPrincipalCache = new PrincipalCache(
+        TimeUnit.SECONDS.toMillis(validateAppTokenFrequencySecs),
+        TimeUnit.SECONDS.toMillis(validateAppTokenFrequencySecs)
+    );
     fetchInfoForClientServices();
   }
 
-  String getLoginPageUrl() {
+  String getLoginUrl() {
     return loginPageUrl;
   }
 
@@ -106,26 +122,59 @@ public class RemoteSSOService implements SSOService {
   }
 
   boolean hasAuthToken() {
-    return ownAuthToken != null;
+    return ownAuthToken != null && ownComponentId != null;
   }
 
   @Override
-  public String createRedirectToLoginURL(String requestUrl) {
+  public String createRedirectToLoginUrl(String requestUrl, boolean repeatedRedirect) {
     try {
-      return loginPageUrl + "?" + SSOConstants.REQUESTED_URL_PARAM + "=" + URLEncoder.encode(requestUrl, "UTF-8");
+      String url = loginPageUrl + "?" + SSOConstants.REQUESTED_URL_PARAM + "=" + URLEncoder.encode(requestUrl, "UTF-8");
+      if (repeatedRedirect) {
+        url = url + "&" + SSOConstants.REPEATED_REDIRECT_PARAM + "=";
+      }
+      return url;
     } catch (UnsupportedEncodingException ex) {
       throw new RuntimeException(Utils.format("Should not happen: {}", ex.toString()), ex);
     }
   }
 
   @Override
-  public SSOTokenParser getTokenParser() {
+  public String getLogoutUrl() {
+    return logoutUrl;
+  }
+
+  SSOTokenParser getTokenParser() {
     return tokenParser;
   }
 
   @Override
-  public void setListener(Listener listener) {
-    this.listener = listener;
+  public SSOUserPrincipal validateUserToken(String authToken) {
+    SSOUserPrincipal principal = userPrincipalCache.get(authToken);
+    if (principal == null) {
+      if (userPrincipalCache.isInvalid(authToken)) {
+        LOG.debug("Token invalid '{}'", authToken);
+      } else {
+        if (tokenParser != null) {
+          try {
+            principal = tokenParser.parse(authToken);
+            if (principal != null) {
+              LOG.debug("Token parsed, user '{}'", principal.getPrincipalId());
+              userPrincipalCache.put(authToken, principal);
+            } else {
+              userPrincipalCache.invalidate(authToken);
+            }
+          } catch (IOException ex) {
+            LOG.debug("Could not parser token: {}", ex.toString(), ex);
+          }
+        }
+      }
+    }
+    return principal;
+  }
+
+  @Override
+  public boolean invalidateUserToken(String authToken) {
+    return userPrincipalCache.invalidate(authToken);
   }
 
   boolean isTimeToRefresh() {
@@ -180,13 +229,11 @@ public class RemoteSSOService implements SSOService {
             LOG.error("Got token verification data but there is no parser available");
           }
         }
-        List<String> invalidateTokenIds = (List<String>) map.get(SSOConstants.INVALIDATE_TOKEN_IDS);
-        if (invalidateTokenIds != null) {
-          LOG.debug("Got '{}' tokens to invalidate", invalidateTokenIds.size());
-          if (listener != null) {
-            listener.invalidate(invalidateTokenIds);
-          } else {
-            LOG.warn("No listener set to invalidate tokens");
+        List<String> invalidateTokens = (List<String>) map.get(SSOConstants.INVALIDATE_USER_AUTH_TOKENS);
+        if (invalidateTokens != null) {
+          LOG.debug("Got '{}' tokens to invalidate", invalidateTokens.size());
+          for (String invalidatedToken : invalidateTokens) {
+            invalidateUserToken(invalidatedToken);
           }
         }
         if (map.containsKey(SSOConstants.FETCH_INFO_FREQUENCY)) {
@@ -228,6 +275,30 @@ public class RemoteSSOService implements SSOService {
 
   @Override
   public SSOUserPrincipal validateAppToken(String authToken, String componentId) {
+    SSOUserPrincipal principal = appPrincipalCache.get(authToken);
+    if (principal == null) {
+      if (appPrincipalCache.isInvalid(authToken)) {
+        LOG.debug("Token invalid '{}'", authToken);
+      } else {
+        principal = validateAppTokenWithSecurityService(authToken, componentId);
+        if (principal != null) {
+          appPrincipalCache.put(authToken, principal);
+        }
+      }
+    } else {
+      if (!principal.getPrincipalId().equals(componentId)) {
+        principal = null;
+      }
+    }
+    return principal;
+  }
+
+  @Override
+  public boolean invalidateAppToken(String authToken) {
+    return appPrincipalCache.invalidate(authToken);
+  }
+
+  SSOUserPrincipal validateAppTokenWithSecurityService(String authToken, String componentId) {
     SSOUserPrincipalJson principal;
     Utils.checkState(hasAuthToken(), "App token validation is disabled");
     try {
@@ -240,6 +311,7 @@ public class RemoteSSOService implements SSOService {
       conn.setReadTimeout(1000);
       conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
       conn.setRequestProperty(SSOConstants.X_APP_AUTH_TOKEN, ownAuthToken);
+      conn.setRequestProperty(SSOConstants.X_APP_COMPONENT_ID, ownComponentId);
       ComponentAuthJson authTokenJson = new ComponentAuthJson();
       authTokenJson.setComponentId(componentId);
       authTokenJson.setAuthToken(authToken);
@@ -267,11 +339,6 @@ public class RemoteSSOService implements SSOService {
       principal = null;
     }
     return principal;
-  }
-
-  @Override
-  public long getValidateAppTokenFrequency() {
-    return validateAppTokenFrequency;
   }
 
 }

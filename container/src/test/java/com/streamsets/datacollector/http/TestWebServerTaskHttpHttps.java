@@ -26,7 +26,6 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.lib.security.http.SSOService;
-import com.streamsets.lib.security.http.SSOTokenParser;
 import com.streamsets.lib.security.http.SSOUserPrincipal;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -412,19 +411,31 @@ public class TestWebServerTaskHttpHttps {
     }
 
     @Override
-    public String createRedirectToLoginURL(String requestUrl) {
+    public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
       return null;
     }
 
     @Override
-    public SSOTokenParser getTokenParser() {
+    public String getLogoutUrl() {
       return null;
+    }
+
+
+    @Override
+    public SSOUserPrincipal validateUserToken(String authToken) {
+      return null;
+    }
+
+    @Override
+    public boolean invalidateUserToken(String authToken) {
+      return false;
     }
 
     @Override
     public boolean isAppAuthenticationEnabled() {
       return false;
     }
+
 
     @Override
     public SSOUserPrincipal validateAppToken(
@@ -434,13 +445,8 @@ public class TestWebServerTaskHttpHttps {
     }
 
     @Override
-    public long getValidateAppTokenFrequency() {
-      return 0;
-    }
-
-    @Override
-    public void setListener(Listener listener) {
-
+    public boolean invalidateAppToken(String authToken) {
+      return false;
     }
 
     @Override

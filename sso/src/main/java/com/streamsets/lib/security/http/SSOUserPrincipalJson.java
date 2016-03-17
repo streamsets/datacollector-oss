@@ -33,7 +33,6 @@ import java.util.Set;
 @SuppressWarnings("squid:S1845")
 public class SSOUserPrincipalJson implements SSOUserPrincipal {
   private String tokenStr;
-  private String tokenId;
   private String issuerUrl;
   private long expires;
   private String principalId;
@@ -54,16 +53,6 @@ public class SSOUserPrincipalJson implements SSOUserPrincipal {
   public void setTokenStr(String tokenStr) {
     Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
     this.tokenStr = tokenStr;
-  }
-
-  @Override
-  public String getTokenId() {
-    return tokenId;
-  }
-
-  public void setTokenId(String tokenId) {
-    Utils.checkState(!locked, Utils.formatL("Principal '{}' already locked"));
-    this.tokenId = tokenId;
   }
 
   @Override

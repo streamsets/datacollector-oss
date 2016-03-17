@@ -39,8 +39,23 @@ public class ProxySSOService implements SSOService {
   }
 
   @Override
-  public String createRedirectToLoginURL(String requestUrl) {
-    return ssoService.createRedirectToLoginURL(requestUrl);
+  public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
+    return ssoService.createRedirectToLoginUrl(requestUrl, duplicateRedirect);
+  }
+
+  @Override
+  public String getLogoutUrl() {
+    return ssoService.getLogoutUrl();
+  }
+
+  @Override
+  public boolean invalidateUserToken(String authToken) {
+    return ssoService.invalidateUserToken(authToken);
+  }
+
+  @Override
+  public SSOUserPrincipal validateUserToken(String authToken) {
+    return ssoService.validateUserToken(authToken);
   }
 
   @Override
@@ -49,13 +64,8 @@ public class ProxySSOService implements SSOService {
   }
 
   @Override
-  public SSOTokenParser getTokenParser() {
-    return ssoService.getTokenParser();
-  }
-
-  @Override
-  public void setListener(SSOService.Listener listener) {
-    ssoService.setListener(listener);
+  public boolean invalidateAppToken(String authToken) {
+    return ssoService.invalidateAppToken(authToken);
   }
 
   @Override
@@ -66,11 +76,6 @@ public class ProxySSOService implements SSOService {
   @Override
   public boolean isAppAuthenticationEnabled() {
     return ssoService.isAppAuthenticationEnabled();
-  }
-
-  @Override
-  public long getValidateAppTokenFrequency() {
-    return ssoService.getValidateAppTokenFrequency();
   }
 
 }

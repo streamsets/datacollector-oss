@@ -70,7 +70,6 @@ public class TestPlainSSOTokenParser {
     SSOUserPrincipal got = parser.parse(tokenStr);
     Assert.assertNotNull(got);
     Assert.assertEquals(tokenStr, got.getTokenStr());
-    Assert.assertEquals(principal.getTokenId(), got.getTokenId());
     Assert.assertEquals(principal.getName(), got.getName());
     Assert.assertEquals(principal.getPrincipalName(), got.getPrincipalName());
     Assert.assertEquals(principal.getOrganizationId(), got.getOrganizationId());

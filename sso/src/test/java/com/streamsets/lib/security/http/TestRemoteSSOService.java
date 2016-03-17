@@ -45,16 +45,13 @@ public class TestRemoteSSOService {
     Mockito.doNothing().when(service).fetchInfoForClientServices();
 
     service.setConfiguration(new Configuration());
-    Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT + "/login", service.getLoginPageUrl());
+    Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT + "/login", service.getLoginUrl());
+    Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT + "/_logout", service.getLogoutUrl());
     Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT + "/public-rest/v1/for-client-services",
         service.getForServicesUrl()
     );
     Assert.assertEquals(RemoteSSOService.INITIAL_FETCH_INFO_FREQUENCY, service.getSecurityInfoFetchFrequency());
-    Assert.assertNull(service.getTokenParser());
     Assert.assertFalse(service.hasAuthToken());
-    Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT,
-        service.getValidateAppTokenFrequency()
-    );
   }
 
 
@@ -66,14 +63,14 @@ public class TestRemoteSSOService {
     Configuration conf = new Configuration();
     conf.set(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, "authToken");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
     service.setConfiguration(conf);
-    Assert.assertEquals("http://foo/login", service.getLoginPageUrl());
+    Assert.assertEquals("http://foo/login", service.getLoginUrl());
+    Assert.assertEquals("http://foo/_logout", service.getLogoutUrl());
     Assert.assertEquals("http://foo/public-rest/v1/for-client-services", service.getForServicesUrl());
     Assert.assertEquals(RemoteSSOService.INITIAL_FETCH_INFO_FREQUENCY, service.getSecurityInfoFetchFrequency());
-    Assert.assertNull(service.getTokenParser());
     Assert.assertTrue(service.hasAuthToken());
-    Assert.assertEquals(1, service.getValidateAppTokenFrequency());
   }
 
   @Test
@@ -82,11 +79,22 @@ public class TestRemoteSSOService {
     Mockito.doNothing().when(service).fetchInfoForClientServices();
 
     service.setConfiguration(new Configuration());
-    Assert.assertEquals(RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT +
-        "/login?" +
-        SSOConstants.REQUESTED_URL_PARAM +
-        "=" +
-        "http%3A%2F%2Ffoo", service.createRedirectToLoginURL("http://foo"));
+    Assert.assertEquals(
+        RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT +
+            "/login?" +
+            SSOConstants.REQUESTED_URL_PARAM +
+            "=" +
+            "http%3A%2F%2Ffoo",
+        service.createRedirectToLoginUrl("http://foo", false)
+    );
+    Assert.assertEquals(
+        RemoteSSOService.SECURITY_SERVICE_BASE_URL_DEFAULT +
+            "/login?" +
+            SSOConstants.REQUESTED_URL_PARAM +
+            "=" +
+            "http%3A%2F%2Ffoo&" + SSOConstants.REPEATED_REDIRECT_PARAM + "=",
+        service.createRedirectToLoginUrl("http://foo", true)
+    );
   }
 
   @Test
@@ -106,7 +114,7 @@ public class TestRemoteSSOService {
     Map dummyData = new HashMap();
     dummyData.put(SSOConstants.TOKEN_VERIFICATION_TYPE, type);
     dummyData.put(SSOConstants.FETCH_INFO_FREQUENCY, 1);
-    dummyData.put(SSOConstants.INVALIDATE_TOKEN_IDS, ImmutableList.of("a"));
+    dummyData.put(SSOConstants.INVALIDATE_USER_AUTH_TOKENS, ImmutableList.of("a"));
     dummyData.put(SSOConstants.TOKEN_VERIFICATION_DATA, "pk");
     String dummyJson = new ObjectMapper().writeValueAsString(dummyData);
     InputStream dummyInput = new ByteArrayInputStream(dummyJson.getBytes());
@@ -163,7 +171,7 @@ public class TestRemoteSSOService {
     Map dummyData = new HashMap();
     dummyData.put(SSOConstants.TOKEN_VERIFICATION_TYPE, PlainSSOTokenParser.TYPE);
     dummyData.put(SSOConstants.FETCH_INFO_FREQUENCY, 1);
-    dummyData.put(SSOConstants.INVALIDATE_TOKEN_IDS, ImmutableList.of("a"));
+    dummyData.put(SSOConstants.INVALIDATE_USER_AUTH_TOKENS, ImmutableList.of("a"));
     dummyData.put(SSOConstants.TOKEN_VERIFICATION_DATA, "pk");
     String dummyJson = new ObjectMapper().writeValueAsString(dummyData);
     InputStream dummyInput = new ByteArrayInputStream(dummyJson.getBytes());
@@ -175,9 +183,6 @@ public class TestRemoteSSOService {
     SSOTokenParser parser = Mockito.mock(SSOTokenParser.class);
     Mockito.doReturn(parser).when(service).getTokenParser();
 
-    SSOService.Listener listener = Mockito.mock(SSOService.Listener.class);
-    service.setListener(listener);
-
     service.fetchInfoForClientServices();
 
     Mockito.verify(conn).setUseCaches(Mockito.eq(false));
@@ -188,27 +193,15 @@ public class TestRemoteSSOService {
     Mockito.verify(parser).setVerificationData(publicKey.capture());
     Assert.assertEquals("pk", publicKey.getValue());
 
-    ArgumentCaptor<List> invalidate = ArgumentCaptor.forClass(List.class);
-    Mockito.verify(listener).invalidate(invalidate.capture());
-    Assert.assertEquals(ImmutableList.of("a"), invalidate.getValue());
-
     Assert.assertEquals(1, service.getSecurityInfoFetchFrequency());
   }
-
-  @Test(expected = IllegalStateException.class)
-  public void testValidateAppTokenDisabled() throws Exception {
-    RemoteSSOService service = Mockito.spy(new RemoteSSOService());
-    Mockito.doNothing().when(service).fetchInfoForClientServices();
-    service.setConfiguration(new Configuration());
-    service.validateAppToken(null, null);
-  }
-
 
   @Test
   public void testValidateAppTokenOK() throws Exception {
     Configuration conf = new Configuration();
     conf.set(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, "serviceToken");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     Mockito.doNothing().when(service).fetchInfoForClientServices();
@@ -260,6 +253,7 @@ public class TestRemoteSSOService {
     Configuration conf = new Configuration();
     conf.set(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, "serviceToken");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     Mockito.doNothing().when(service).fetchInfoForClientServices();
@@ -294,6 +288,7 @@ public class TestRemoteSSOService {
     Configuration conf = new Configuration();
     conf.set(RemoteSSOService.SECURITY_SERVICE_BASE_URL_CONFIG, "http://foo");
     conf.set(RemoteSSOService.SECURITY_SERVICE_AUTH_TOKEN_CONFIG, "serviceToken");
+    conf.set(RemoteSSOService.SECURITY_SERVICE_COMPONENT_ID_CONFIG, "serviceComponentId");
     conf.set(RemoteSSOService.SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG, 1);
     RemoteSSOService service = Mockito.spy(new RemoteSSOService());
     Mockito.doNothing().when(service).fetchInfoForClientServices();

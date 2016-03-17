@@ -74,6 +74,7 @@ public interface  SSOConstants {
    */
   String TOKEN_PART_SEPARATOR = ":";
 
+  String REPEATED_REDIRECT_PARAM = "ss-repeated-redirect";
 
   // for-client-services
 
@@ -81,7 +82,7 @@ public interface  SSOConstants {
 
   String TOKEN_VERIFICATION_DATA = "token.verification.data";
 
-  String INVALIDATE_TOKEN_IDS = "invalidate.token.ids";
+  String INVALIDATE_USER_AUTH_TOKENS = "invalidate.user.auth.tokens";
 
   String FETCH_INFO_FREQUENCY = "fetch.info.frequency.secs";
 

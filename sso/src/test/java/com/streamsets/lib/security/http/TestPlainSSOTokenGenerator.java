@@ -43,7 +43,6 @@ public class TestPlainSSOTokenGenerator {
     parser.setVerificationData(verificationData);
     SSOUserPrincipal parsed = parser.parse(str);
     Assert.assertNotNull(parsed);
-    Assert.assertEquals(expected.getTokenId(), parsed.getTokenId());
     Assert.assertEquals(expected.getExpires(), parsed.getExpires());
     Assert.assertEquals(expected.getIssuerUrl(), parsed.getIssuerUrl());
     Assert.assertEquals(expected.getName(), parsed.getName());

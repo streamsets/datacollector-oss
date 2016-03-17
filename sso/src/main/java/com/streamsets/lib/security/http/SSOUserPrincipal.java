@@ -24,9 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 public interface SSOUserPrincipal extends Principal {
-  String getTokenStr();
 
-  String getTokenId();
+  String getTokenStr();
 
   String getIssuerUrl();
 

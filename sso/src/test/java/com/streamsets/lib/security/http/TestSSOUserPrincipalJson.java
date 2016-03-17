@@ -33,7 +33,6 @@ public class TestSSOUserPrincipalJson {
   public static SSOUserPrincipal createPrincipal(long expires) {
     SSOUserPrincipalJson p = new SSOUserPrincipalJson();
     p.setTokenStr("tokenStr");
-    p.setTokenId("tokenId");
     p.setExpires(expires);
     p.setIssuerUrl("issuerUrl");
     p.setPrincipalId("userId");
@@ -50,7 +49,6 @@ public class TestSSOUserPrincipalJson {
   public void testValid() {
     SSOUserPrincipal principal =  createPrincipal(1);
     Assert.assertEquals("tokenStr", principal.getTokenStr());
-    Assert.assertEquals("tokenId", principal.getTokenId());
     Assert.assertEquals(1L, principal.getExpires());
     Assert.assertEquals("issuerUrl", principal.getIssuerUrl());
     Assert.assertEquals("userId", principal.getPrincipalId());
