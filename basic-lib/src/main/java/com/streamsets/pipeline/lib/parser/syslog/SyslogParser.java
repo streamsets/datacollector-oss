@@ -205,6 +205,7 @@ public class SyslogParser extends AbstractParser {
    */
   protected long parseRfc5424Date(String recordIdentifer, String msg) throws OnRecordErrorException {
 
+    boolean includesTimezone = true;
     long ts;
     int curPos = 0;
     int msgLen = msg.length();
@@ -234,13 +235,17 @@ public class SyslogParser extends AbstractParser {
         throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_06, msg);
       }
       // FIXME: TODO: ensure we handle all bad formatting cases
-      while (!foundEnd) {
+      while (!foundEnd && endMillisPos < msgLen) {
         char curDigit = msg.charAt(endMillisPos);
         if (curDigit >= '0' && curDigit <= '9') {
           endMillisPos++;
         } else {
           foundEnd = true;
         }
+      }
+      includesTimezone = foundEnd;
+      if (!includesTimezone) {
+        endMillisPos--;
       }
       // if they had a valid fractional second, append it rounded to millis
       final int fractionalPositions = endMillisPos - (curPos + 1);
@@ -258,40 +263,42 @@ public class SyslogParser extends AbstractParser {
       curPos = endMillisPos;
     }
     // look for timezone
-    char tzFirst = msg.charAt(curPos);
-    // UTC
-    if (tzFirst == 'Z') {
-      // no-op
-    } else if (tzFirst == '+' || tzFirst == '-') {
-      if (msgLen <= curPos + 5) {
-        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
-      }
-      int polarity;
-      if (tzFirst == '+') {
-        polarity = +1;
-      } else {
-        polarity = -1;
-      }
-
-      char[] h = new char[5];
-      for (int i = 0; i < 5; i++) {
-        h[i] = msg.charAt(curPos + 1 + i);
-      }
-
-      if (h[0] >= '0' && h[0] <= '9'
-        && h[1] >= '0' && h[1] <= '9'
-        && h[2] == ':'
-        && h[3] >= '0' && h[3] <= '9'
-        && h[4] >= '0' && h[4] <= '9') {
-        try {
-          int hourOffset = Integer.parseInt(msg.substring(curPos + 1, curPos + 3));
-          int minOffset = Integer.parseInt(msg.substring(curPos + 4, curPos + 6));
-          ts -= polarity * ((hourOffset * 60L) + minOffset) * 60000L;
-        } catch (NumberFormatException nfe) {
-          throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg, nfe);
+    if (includesTimezone) {
+      char tzFirst = msg.charAt(curPos);
+      // UTC
+      if (tzFirst == 'Z') {
+        // no-op
+      } else if (tzFirst == '+' || tzFirst == '-') {
+        if (msgLen <= curPos + 5) {
+          throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
         }
-      } else {
-        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
+        int polarity;
+        if (tzFirst == '+') {
+          polarity = +1;
+        } else {
+          polarity = -1;
+        }
+
+        char[] h = new char[5];
+        for (int i = 0; i < 5; i++) {
+          h[i] = msg.charAt(curPos + 1 + i);
+        }
+
+        if (h[0] >= '0' && h[0] <= '9'
+          && h[1] >= '0' && h[1] <= '9'
+          && h[2] == ':'
+          && h[3] >= '0' && h[3] <= '9'
+          && h[4] >= '0' && h[4] <= '9') {
+          try {
+            int hourOffset = Integer.parseInt(msg.substring(curPos + 1, curPos + 3));
+            int minOffset = Integer.parseInt(msg.substring(curPos + 4, curPos + 6));
+            ts -= polarity * ((hourOffset * 60L) + minOffset) * 60000L;
+          } catch (NumberFormatException nfe) {
+            throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg, nfe);
+          }
+        } else {
+          throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
+        }
       }
     }
     return ts;
