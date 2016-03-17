@@ -17,12 +17,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv.local;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.stage.processor.kv.Store;
+import com.streamsets.pipeline.stage.processor.kv.LookupProcessorConfig;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class LocalLookupConfig extends LookupProcessorConfig {
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Values",
+      displayPosition = 20,
+      group = "LOCAL"
+  )
+  public Map<String, String> values = new HashMap<>();
+
+  @Override
+  public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    // no-op
+  }
+
+  @Override
+  public Store createStore() {
+    return new LocalStore(this);
   }
 }

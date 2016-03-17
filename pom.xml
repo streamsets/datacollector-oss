@@ -86,7 +86,7 @@
     <cassandra_2-lib>none</cassandra_2-lib>
     <mongodb_3-lib>none</mongodb_3-lib>
     <influxdb_0_9-lib>none</influxdb_0_9-lib>
-
+    <redis-lib>none</redis-lib>
   </properties>
 
   <!-- StreamSets Data Collector API being used -->
@@ -125,6 +125,9 @@
     <module>dev-lib</module>
 
     <module>basic-lib</module>
+
+    <module>lookup-protolib</module>
+
     <module>stats-lib</module>
 
     <module>omniture-lib</module>
@@ -262,7 +265,6 @@
           </excludes>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 
@@ -494,7 +496,8 @@
         <cdh_5_7-lib>cdh_5_7-lib</cdh_5_7-lib>
         <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
         <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
-        <cdh_kafka_2_0-lib>cdh_kafka_2_0-lib</cdh_kafka_2_0-lib>
+        <redis-lib>redis-lib</redis-lib>
+        <cdh_kafka_1_3-lib>cdh_kafka_1_3-lib</cdh_kafka_1_3-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
         <elasticsearch_2_3-lib>elasticsearch_2_3-lib</elasticsearch_2_3-lib>
@@ -519,6 +522,7 @@
         <module>apache-kafka_0_8_2-lib</module>
         <module>apache-kafka_0_9-lib</module>
         <module>influxdb_0_9-lib</module>
+        <module>redis-lib</module>
       </modules>
     </profile>
 

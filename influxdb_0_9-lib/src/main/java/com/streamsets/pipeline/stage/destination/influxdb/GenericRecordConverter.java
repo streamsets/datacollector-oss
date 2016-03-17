@@ -27,8 +27,6 @@ import org.influxdb.dto.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.streamsets.pipeline.stage.destination.influxdb.CollectdRecordConverter.stripPathPrefix;
-
 public class GenericRecordConverter implements RecordConverter {
   private final GenericRecordConverterConfigBean conf;
 
@@ -51,7 +49,7 @@ public class GenericRecordConverter implements RecordConverter {
       Point.Builder point = Point
           .measurement(measurementName)
           .tag(RecordConverterUtil.getTags(conf.tagFields, record))
-          .field(stripPathPrefix(fieldPath), record.get(fieldPath).getValue());
+          .field(CollectdRecordConverter.stripPathPrefix(fieldPath), record.get(fieldPath).getValue());
 
       if (!conf.timeField.isEmpty()) {
         point.time(getTime(record), conf.timeUnit);

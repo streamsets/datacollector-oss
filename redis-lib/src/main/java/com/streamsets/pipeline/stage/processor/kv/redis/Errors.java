@@ -17,12 +17,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv.redis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  REDIS_LOOKUP_01("Failed to connect to Redis on '{}' : {}'"),
+  REDIS_LOOKUP_02("Failed to parse URI '{}' : {}"),
+  REDIS_LOOKUP_03("Failed to operate against a key '{}' : {}"),
+  REDIS_LOOKUP_04("Unsupported operation type '{}' found in record {}"),
+  LOOKUP_01("Failed to evaluate expression: '{}'"),
+  LOOKUP_02("Failed to fetch values for batch: '{}'"),
+  ;
+
+  private final String msg;
+
+  Errors(String msg) {
+    this.msg = msg;
+  }
+
+  @Override
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }

@@ -17,12 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+@GenerateResourceBundle
+public enum LookupMode implements Label {
+  RECORD("Per Record"),
+  BATCH("Per Batch")
+  ;
+
+  private final String label;
+
+  LookupMode(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

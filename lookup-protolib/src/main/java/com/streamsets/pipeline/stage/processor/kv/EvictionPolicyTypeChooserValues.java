@@ -17,12 +17,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+public class EvictionPolicyTypeChooserValues extends BaseEnumChooserValues<EvictionPolicyType> {
+  public EvictionPolicyTypeChooserValues() {
+    super(EvictionPolicyType.class);
   }
 }

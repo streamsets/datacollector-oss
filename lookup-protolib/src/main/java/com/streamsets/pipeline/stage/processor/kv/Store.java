@@ -17,12 +17,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.google.common.base.Optional;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
-  }
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+public interface Store extends AutoCloseable {
+  Optional<String> get(String key);
+  List<Optional<String>> get(Collection<String> keys);
+  void put(String key, String value);
+  void putAll(Map<String, String> entries);
 }

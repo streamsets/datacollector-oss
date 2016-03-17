@@ -299,6 +299,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- Redis -->
+    <fileSet>
+      <directory>${basedir}/../redis-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- CDH5 Kafka libs -->
     <fileSet>
       <directory>${basedir}/../${cdh_kafka_1_2-lib}/target/streamsets-libs/</directory>

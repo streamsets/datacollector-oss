@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.streamsets.pipeline.stage.destination.influxdb.CollectdRecordConverter.stripPathPrefix;
-
 public class RecordConverterUtil {
   private RecordConverterUtil() {}
 
@@ -52,7 +50,7 @@ public class RecordConverterUtil {
         case LIST:
           throw new OnRecordErrorException(Errors.INFLUX_08, fieldPath);
         default:
-          tags.put(stripPathPrefix(fieldPath), tagField.getValueAsString());
+          tags.put(CollectdRecordConverter.stripPathPrefix(fieldPath), tagField.getValueAsString());
           break;
       }
     }

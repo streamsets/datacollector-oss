@@ -17,12 +17,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv.redis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+public class LookupValue{
+  private DataType type;
+  private Object value;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+  public LookupValue(Object value, DataType type) {
+    this.value = value;
+    this.type = type;
+  }
+
+  public DataType getType() {
+    return type;
+  }
+
+  public Object getValue() {
+    return value;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    boolean result = false;
+    if(other instanceof LookupValue) {
+      LookupValue that = (LookupValue)other;
+      result = (this.type.equals(that.getType()) && ((this.value == null && that.getValue() == null) || this.value.equals(that.getValue())));
+    }
+    return result;
   }
 }

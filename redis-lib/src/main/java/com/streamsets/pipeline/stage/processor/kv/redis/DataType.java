@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 StreamSets Inc.
+ * Copyright 2015 StreamSets Inc.
  *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,12 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+package com.streamsets.pipeline.stage.processor.kv.redis;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
+
+@GenerateResourceBundle
+public enum DataType implements Label {
+  STRING("String"), LIST("List"), HASH("Hash"), SET("Set");
+
+  private String label;
+
+  DataType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }
+

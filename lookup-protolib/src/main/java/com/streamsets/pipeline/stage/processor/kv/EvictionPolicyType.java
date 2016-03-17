@@ -17,12 +17,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+public enum EvictionPolicyType implements Label {
+  EXPIRE_AFTER_ACCESS("Expire After Last Access"),
+  EXPIRE_AFTER_WRITE("Expire After Last Write");
+
+  private final String label;
+
+  EvictionPolicyType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

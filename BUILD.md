@@ -19,7 +19,8 @@
 To build the Data Collector you will need the following software :
 
 - Git 1.9+
-- JDK 1.7.*
+- JDK 1.8.x       (JDK 1.7.x if not running integration tests)
+- Docker 1.10+    (required only if running integration tests, older verisons may work but are not tested.)
 - Maven 3.2.3+
 - Node 0.10.32+1  (OSX, brew install nodejs       : Linux, curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash OR sudo apt-get install -y nodejs)
  - npm            (OSX, brew install npm          : Linux, sudo install npm)
@@ -30,7 +31,8 @@ To build the Data Collector you will need the following software :
 Prerequisites for Data Collector :
 
 If you're building master branch, then you need to install API module to your maven cache first before compiling Data Collector. Released versions
-are published to public maven repositories and for them this step can be skipped.
+are published to public maven repositories and for them this step can be skipped. While Data Collector runs on Java 7, Java 8 is required for
+running integration tests.
 
 - You can do that by getting the latest code from github
 

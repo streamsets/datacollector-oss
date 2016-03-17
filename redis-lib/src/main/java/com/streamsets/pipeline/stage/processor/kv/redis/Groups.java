@@ -17,12 +17,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv.redis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+@GenerateResourceBundle
+public enum Groups implements Label {
+  LOOKUP("K/V Lookup"),
+  REDIS("Redis"),
+  ;
+
+  private final String label;
+
+  private Groups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
   }
 }

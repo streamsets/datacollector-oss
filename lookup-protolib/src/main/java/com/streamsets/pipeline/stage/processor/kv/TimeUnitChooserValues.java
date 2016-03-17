@@ -17,12 +17,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.influxdb;
+package com.streamsets.pipeline.stage.processor.kv;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class RecordConverterChooserValues extends BaseEnumChooserValues {
-  public RecordConverterChooserValues() {
-    super(RecordConverterType.class);
+import java.util.concurrent.TimeUnit;
+
+public class TimeUnitChooserValues extends BaseEnumChooserValues<TimeUnit> {
+  public TimeUnitChooserValues() {
+    super(TimeUnit.class);
   }
 }
