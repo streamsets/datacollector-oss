@@ -88,34 +88,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         }
         PreparedStatement statement = statementsForBatch.getInsertFor(columnsToParameters);
 
-        int i = 1;
-        for (String column : columnsToParameters.keySet()) {
-
-          Field field = record.get(getColumnsToFields().get(column));
-          Field.Type fieldType = field.getType();
-          Object value = field.getValue();
-
-          switch (fieldType) {
-            case LIST:
-              List<Object> unpackedList = new ArrayList<>();
-              for (Field item : (List<Field>) value) {
-                unpackedList.add(item.getValue());
-              }
-              Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-              statement.setArray(i, array);
-              break;
-            case DATE:
-            case DATETIME:
-              // Java Date types are not accepted by JDBC drivers, so we need to convert ot java.sql.Timestamp
-              statement.setTimestamp(i, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
-              break;
-            default:
-              statement.setObject(i, value);
-              break;
-          }
-          ++i;
+        if (setParameters(columnsToParameters, record, connection, statement, errorRecords)) {
+          statement.addBatch();
         }
-        statement.addBatch();
       }
 
       for (PreparedStatement statement : statementsForBatch.getStatements()) {
@@ -141,6 +116,59 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       }
     }
     return errorRecords;
+  }
+
+  @SuppressWarnings("unchecked")
+  private boolean setParameters(
+      Map<String, String> columnsToParameters,
+      Record record,
+      Connection connection,
+      PreparedStatement statement,
+      List<OnRecordErrorException> errorRecords
+  ) {
+    boolean isOk = true;
+    int i = 1;
+    for (String column : columnsToParameters.keySet()) {
+      Field field = record.get(getColumnsToFields().get(column));
+      Field.Type fieldType = field.getType();
+      Object value = field.getValue();
+
+      try {
+        switch (fieldType) {
+          case LIST:
+            List<Object> unpackedList = unpackList((List<Field>) value);
+            Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
+            statement.setArray(i, array);
+            break;
+          case DATE:
+          case DATETIME:
+            // Java Date types are not accepted by JDBC drivers, so we need to convert ot java.sql.Timestamp
+            statement.setTimestamp(i, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
+            break;
+          default:
+            statement.setObject(i, value, getColumnType(column));
+            break;
+        }
+      } catch (SQLException e) {
+        LOG.error(Errors.JDBCDEST_23.getMessage(), column, fieldType.toString(), e);
+        errorRecords.add(new OnRecordErrorException(record, Errors.JDBCDEST_23, column, fieldType.toString()));
+        isOk = false;
+      } catch (OnRecordErrorException e) {
+        LOG.error(e.toString(), e);
+        errorRecords.add(e);
+        isOk = false;
+      }
+      ++i;
+    }
+    return isOk;
+  }
+
+  private List<Object> unpackList(List<Field> value) {
+    List<Object> unpackedList = new ArrayList<>();
+    for (Field item : value) {
+      unpackedList.add(item.getValue());
+    }
+    return unpackedList;
   }
 
   /**

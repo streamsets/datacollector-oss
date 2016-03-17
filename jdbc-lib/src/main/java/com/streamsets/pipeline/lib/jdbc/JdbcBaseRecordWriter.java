@@ -47,6 +47,12 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private Map<String, String> columnsToFields = new HashMap<>();
   private Map<String, String> columnsToParameters = new HashMap<>();
 
+  public int getColumnType(String columnName) {
+    return columnType.get(columnName);
+  }
+
+  private Map<String, Integer> columnType = new HashMap<>();
+
   public JdbcBaseRecordWriter(
       String connectionString,
       DataSource dataSource,
@@ -64,13 +70,15 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     createCustomFieldMappings();
   }
 
-  protected void createDefaultFieldMappings() throws StageException {
+  private void createDefaultFieldMappings() throws StageException {
     try (Connection connection = dataSource.getConnection()) {
-      ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableName);
-      while (columns.next()) {
-        String columnName = columns.getString(4);
-        columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings
-        columnsToParameters.put(columnName, "?");
+      try (ResultSet columns = JdbcUtil.getColumnMetadata(connection, tableName)) {
+        while (columns.next()) {
+          String columnName = columns.getString(4);
+          columnsToFields.put(columnName, "/" + columnName); // Default implicit field mappings
+          columnsToParameters.put(columnName, "?");
+          columnType.put(columnName, columns.getInt(5));
+        }
       }
     } catch (SQLException e) {
       String errorMessage = JdbcUtil.formatSqlException(e);
@@ -80,7 +88,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     }
   }
 
-  protected void createCustomFieldMappings() {
+  private void createCustomFieldMappings() {
     for (JdbcFieldMappingConfig mapping : customMappings) {
       LOG.debug("Custom mapping field {} to column {}", mapping.field, mapping.columnName);
       if (columnsToFields.containsKey(mapping.columnName)) {

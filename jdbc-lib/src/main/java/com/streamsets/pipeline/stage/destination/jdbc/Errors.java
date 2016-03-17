@@ -48,6 +48,7 @@ public enum Errors implements ErrorCode {
   JDBCDEST_20("Could not parse the table name template expression: {}"),
   JDBCDEST_21("Could not evaluate the table name template expression: {}"),
   JDBCDEST_22("The record had no fields that matched the columns in the destination table."),
+  JDBCDEST_23("The field '{}' of type '{}' doesn't match the destination column's type."),
   ;
   private final String msg;
 

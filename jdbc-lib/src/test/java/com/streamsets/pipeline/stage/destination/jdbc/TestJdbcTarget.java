@@ -382,7 +382,8 @@ public class TestJdbcTarget {
     List<Field> fields2 = new ArrayList<>();
     fields2.add(Field.create(2));
     fields2.add(Field.create("Jon"));
-    fields2.add(Field.create("Natkins"));
+    // Nulls will be interpreted as the a null of the target schema type regardless of Field.Type.
+    fields2.add(Field.create(Field.Type.INTEGER, null));
     fields2.add(Field.createDatetime(new Instant().toDate()));
     record2.set(Field.create(fields2));
 
