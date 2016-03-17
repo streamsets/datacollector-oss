@@ -64,6 +64,13 @@ public class TestSyslogParser {
         parser.parseRfc5424Date("", ex));
     }
   }
+
+  @Test
+  public void testRfc5424DateParsingNoTimeZone() throws Exception {
+    SyslogParser parser = new SyslogParser(getContext(), StandardCharsets.UTF_8);
+    Assert.assertEquals(1458161275889L, parser.parseRfc5424Date("", "2016-03-16T20:47:55.889893")); // SDC-2605
+  }
+
   @Test
   public void testParseFailure() throws Exception {
     SyslogParser parser = new SyslogParser(getContext(), StandardCharsets.UTF_8);
