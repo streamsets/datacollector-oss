@@ -97,7 +97,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV4ToV5(List<Config> configs) {
-    configs.add(new Config("statsAggregatorTarget", null));
+    configs.add(new Config("statsAggregatorStage", null));
   }
 
 }

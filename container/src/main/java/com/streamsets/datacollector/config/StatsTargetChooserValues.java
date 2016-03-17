@@ -46,7 +46,7 @@ public class StatsTargetChooserValues implements ChooserValues {
   public static void setStatsTargetOptions(StageLibraryTask stageLibraryTask) {
     List<StageDefinition> stageDefinitions = new ArrayList<>();
     for (StageDefinition def : stageLibraryTask.getStages()) {
-      if (def.getType() == StageType.TARGET && def.isStatsAggregatorTarget()) {
+      if (def.getType() == StageType.TARGET && def.isStatsAggregatorStage()) {
         stageDefinitions.add(def);
       }
     }

@@ -99,7 +99,7 @@ public abstract class PipelineBeanCreator {
         }
       }
 
-      StageConfiguration statsStageConf = pipelineConf.getStatsAggregatorTarget();
+      StageConfiguration statsStageConf = pipelineConf.getStatsAggregatorStage();
       if (statsStageConf != null) {
         statsStageBean = createStageBean(
             forExecution,

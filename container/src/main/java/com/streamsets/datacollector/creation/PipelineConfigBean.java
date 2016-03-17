@@ -176,7 +176,7 @@ public class PipelineConfigBean implements Stage {
     group = "STATS"
   )
   @ValueChooserModel(StatsTargetChooserValues.class)
-  public String statsAggregatorTarget;
+  public String statsAggregatorStage;
 
   @ConfigDef(
       required = true,

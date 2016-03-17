@@ -46,7 +46,7 @@ public class PipelineConfiguration implements Serializable{
   private final Map<String, Object> uiInfo;
   private List<StageConfiguration> stages;
   private StageConfiguration errorStage;
-  private StageConfiguration statsAggregatorTarget;
+  private StageConfiguration statsAggregatorStage;
   private Issues issues;
   private boolean previewable;
   private MemoryLimitConfiguration memoryLimitConfiguration;
@@ -62,7 +62,7 @@ public class PipelineConfiguration implements Serializable{
       Map<String, Object> uiInfo,
       List<StageConfiguration> stages,
       StageConfiguration errorStage,
-      StageConfiguration statsAggregatorTarget
+      StageConfiguration statsAggregatorStage
   ) {
     this.schemaVersion = schemaVersion;
     this.version = version;
@@ -72,7 +72,7 @@ public class PipelineConfiguration implements Serializable{
     this.uiInfo = (uiInfo != null) ? new HashMap<>(uiInfo) : new HashMap<String, Object>();
     this.stages = (stages != null) ? stages : Collections.<StageConfiguration>emptyList();
     this.errorStage = errorStage;
-    this.statsAggregatorTarget = statsAggregatorTarget;
+    this.statsAggregatorStage = statsAggregatorStage;
     issues = new Issues();
     memoryLimitConfiguration = new MemoryLimitConfiguration();
   }
@@ -123,8 +123,8 @@ public class PipelineConfiguration implements Serializable{
     this.errorStage = errorStage;
   }
 
-  public void setStatsAggregatorTarget(StageConfiguration statsAggregatorTarget) {
-    this.statsAggregatorTarget = statsAggregatorTarget;
+  public void setStatsAggregatorStage(StageConfiguration statsAggregatorStage) {
+    this.statsAggregatorStage = statsAggregatorStage;
   }
 
   public StageConfiguration getErrorStage() {
@@ -184,8 +184,8 @@ public class PipelineConfiguration implements Serializable{
     return null;
   }
 
-  public StageConfiguration getStatsAggregatorTarget() {
-    return statsAggregatorTarget;
+  public StageConfiguration getStatsAggregatorStage() {
+    return statsAggregatorStage;
   }
 
   public void addConfiguration(Config config) {
@@ -241,7 +241,7 @@ public class PipelineConfiguration implements Serializable{
         uiInfo,
         stages,
         errorStage,
-        statsAggregatorTarget
+        statsAggregatorStage
     );
   }
 

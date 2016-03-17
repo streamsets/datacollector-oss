@@ -188,7 +188,7 @@ public abstract class StageDefinitionExtractor {
         String icon = sDef.icon();
         StageType type = extractStageType(klass);
         boolean errorStage = klass.getAnnotation(ErrorStage.class) != null;
-        boolean statsAggregatorTarget = klass.getAnnotation(StatsAggregatorStage.class) != null;
+        boolean statsAggregatorStage = klass.getAnnotation(StatsAggregatorStage.class) != null;
         HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
@@ -277,7 +277,7 @@ public abstract class StageDefinitionExtractor {
             libJarsRegex,
             resetOffset,
             onlineHelpRefUrl,
-            statsAggregatorTarget
+            statsAggregatorStage
         );
       } catch (Exception e) {
         throw new IllegalStateException("Exception while extracting stage definition for " + getStageName(klass), e);

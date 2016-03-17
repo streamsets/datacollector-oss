@@ -200,8 +200,8 @@ public class PipelineConfigurationValidator {
 
   boolean resolveLibraryAliases() {
     List<StageConfiguration> stageConfigurations = new ArrayList<>();
-    if(pipelineConfiguration.getStatsAggregatorTarget() != null) {
-      stageConfigurations.add(pipelineConfiguration.getStatsAggregatorTarget());
+    if(pipelineConfiguration.getStatsAggregatorStage() != null) {
+      stageConfigurations.add(pipelineConfiguration.getStatsAggregatorStage());
     }
     if(pipelineConfiguration.getErrorStage() != null) {
       stageConfigurations.add(pipelineConfiguration.getErrorStage());
@@ -1126,10 +1126,10 @@ public class PipelineConfigurationValidator {
   @VisibleForTesting
   boolean validateStatsAggregatorStage() {
     boolean preview = true;
-    StageConfiguration statsAggregatorTarget = pipelineConfiguration.getStatsAggregatorTarget();
-    if (statsAggregatorTarget != null) {
-      IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorTarget.getInstanceName());
-      preview = validateStageConfiguration(false, statsAggregatorTarget, false, errorStageCreator);
+    StageConfiguration statsAggregatorStage = pipelineConfiguration.getStatsAggregatorStage();
+    if (statsAggregatorStage != null) {
+      IssueCreator errorStageCreator = IssueCreator.getStage(statsAggregatorStage.getInstanceName());
+      preview = validateStageConfiguration(false, statsAggregatorStage, false, errorStageCreator);
     }
     return preview;
   }

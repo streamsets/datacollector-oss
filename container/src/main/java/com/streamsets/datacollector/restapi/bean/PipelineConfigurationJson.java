@@ -46,7 +46,7 @@ public class PipelineConfigurationJson implements Serializable{
     @JsonProperty("errorStage") StageConfigurationJson errorStage,
     @JsonProperty("info") PipelineInfoJson pipelineInfo,
     @JsonProperty("metadata") Map<String, String> metadata,
-    @JsonProperty("statsAggregatorTarget") StageConfigurationJson statsAggregatorTarget) {
+    @JsonProperty("statsAggregatorStage") StageConfigurationJson statsAggregatorStage) {
     version = (version == 0) ? 1 : version;
     this.pipelineConfiguration = new com.streamsets.datacollector.config.PipelineConfiguration(
         schemaVersion,
@@ -57,7 +57,7 @@ public class PipelineConfigurationJson implements Serializable{
         uiInfo,
         BeanHelper.unwrapStageConfigurations(stages),
         BeanHelper.unwrapStageConfiguration(errorStage),
-        BeanHelper.unwrapStageConfiguration(statsAggregatorTarget)
+        BeanHelper.unwrapStageConfiguration(statsAggregatorStage)
     );
     this.pipelineConfiguration.setPipelineInfo(BeanHelper.unwrapPipelineInfo(pipelineInfo));
     this.pipelineConfiguration.setMetadata(metadata);
@@ -92,8 +92,8 @@ public class PipelineConfigurationJson implements Serializable{
     return BeanHelper.wrapStageConfiguration(pipelineConfiguration.getErrorStage());
   }
 
-  public StageConfigurationJson getStatsAggregatorTarget() {
-    return BeanHelper.wrapStageConfiguration(pipelineConfiguration.getStatsAggregatorTarget());
+  public StageConfigurationJson getStatsAggregatorStage() {
+    return BeanHelper.wrapStageConfiguration(pipelineConfiguration.getStatsAggregatorStage());
   }
 
   public UUID getUuid() {

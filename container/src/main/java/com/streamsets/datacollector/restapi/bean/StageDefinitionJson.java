@@ -78,6 +78,10 @@ public class StageDefinitionJson {
     return stageDefinition.isErrorStage();
   }
 
+  public boolean isStatsAggregatorStage() {
+    return stageDefinition.isStatsAggregatorStage();
+  }
+
   @JsonProperty("preconditions")
   public boolean hasRequiredFields() {
     return stageDefinition.hasPreconditions();

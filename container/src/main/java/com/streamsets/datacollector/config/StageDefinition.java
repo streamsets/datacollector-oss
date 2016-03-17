@@ -51,7 +51,7 @@ public class StageDefinition {
   private final String description;
   private final StageType type;
   private final boolean errorStage;
-  private final boolean statsAggregatorTarget;
+  private final boolean statsAggregatorStage;
   private final boolean preconditions;
   private final boolean onRecordError;
   private final RawSourceDefinition rawSourceDefinition;
@@ -97,7 +97,7 @@ public class StageDefinition {
       List<String> libJarsRegex,
       boolean resetOffset,
       String onlineHelpRefUrl,
-      boolean statsAggregatorTarget
+      boolean statsAggregatorStage
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -114,7 +114,7 @@ public class StageDefinition {
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
     this.onlineHelpRefUrl = onlineHelpRefUrl;
-    this.statsAggregatorTarget = statsAggregatorTarget;
+    this.statsAggregatorStage = statsAggregatorStage;
     configDefinitionsMap = new HashMap<>();
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
@@ -174,7 +174,7 @@ public class StageDefinition {
     libJarsRegex = def.libJarsRegex;
     resetOffset = def.resetOffset;
     onlineHelpRefUrl = def.onlineHelpRefUrl;
-    statsAggregatorTarget = def.statsAggregatorTarget;
+    statsAggregatorStage = def.statsAggregatorStage;
   }
 
   public StageDefinition(
@@ -202,7 +202,7 @@ public class StageDefinition {
       List<String> libJarsRegex,
       boolean resetOffset,
       String onlineHelpRefUrl,
-      boolean statsAggregatorTarget
+      boolean statsAggregatorStage
   ) {
     this.libraryDefinition = libraryDefinition;
     this.privateClassLoader = privateClassLoader;
@@ -242,7 +242,7 @@ public class StageDefinition {
     this.upgrader = upgrader;
     this.libJarsRegex = libJarsRegex;
     this.resetOffset = resetOffset;
-    this.statsAggregatorTarget = statsAggregatorTarget;
+    this.statsAggregatorStage = statsAggregatorStage;
   }
 
   public List<ExecutionMode> getLibraryExecutionModes() {
@@ -313,8 +313,8 @@ public class StageDefinition {
     return onRecordError;
   }
 
-  public boolean isStatsAggregatorTarget() {
-    return statsAggregatorTarget;
+  public boolean isStatsAggregatorStage() {
+    return statsAggregatorStage;
   }
 
   public void addConfiguration(ConfigDefinition confDef) {
@@ -508,7 +508,7 @@ public class StageDefinition {
         libJarsRegex,
         resetOffset,
         onlineHelpRefUrl,
-        statsAggregatorTarget
+      statsAggregatorStage
     );
   }
 

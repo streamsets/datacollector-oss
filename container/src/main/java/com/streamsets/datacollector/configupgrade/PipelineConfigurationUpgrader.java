@@ -73,7 +73,7 @@ public class PipelineConfigurationUpgrader {
     upgrade = needsUpgrade(getPipelineDefinition(), pipelineConfs, issues);
 
     // pipeline aggregating sink stage confs
-    StageConfiguration statsAggTargetConf = pipelineConf.getStatsAggregatorTarget();
+    StageConfiguration statsAggTargetConf = pipelineConf.getStatsAggregatorStage();
     if (statsAggTargetConf != null) {
       StageDefinition def = library.getStage(statsAggTargetConf.getLibrary(), statsAggTargetConf.getStageName(), false);
       upgrade |= needsUpgrade(def, statsAggTargetConf, issues);
@@ -152,11 +152,11 @@ public class PipelineConfigurationUpgrader {
 
 
     // upgrade aggregating stage if present and if necessary
-    StageConfiguration statsAggTargetConf = pipelineConf.getStatsAggregatorTarget();
-    if (statsAggTargetConf != null) {
-      StageDefinition def = library.getStage(statsAggTargetConf.getLibrary(), statsAggTargetConf.getStageName(), false);
-      if (needsUpgrade(def, statsAggTargetConf, ownIssues)) {
-        statsAggTargetConf = upgrade(def, statsAggTargetConf, ownIssues);
+    StageConfiguration statsAggregatorStageConf = pipelineConf.getStatsAggregatorStage();
+    if (statsAggregatorStageConf != null) {
+      StageDefinition def = library.getStage(statsAggregatorStageConf.getLibrary(), statsAggregatorStageConf.getStageName(), false);
+      if (needsUpgrade(def, statsAggregatorStageConf, ownIssues)) {
+        statsAggregatorStageConf = upgrade(def, statsAggregatorStageConf, ownIssues);
       }
     }
 
@@ -185,7 +185,7 @@ public class PipelineConfigurationUpgrader {
       pipelineConf.setConfiguration(pipelineConfs.getConfiguration());
       pipelineConf.setVersion(pipelineConfs.getStageVersion());
       pipelineConf.setErrorStage(errorStageConf);
-      pipelineConf.setStatsAggregatorTarget(statsAggTargetConf);
+      pipelineConf.setStatsAggregatorStage(statsAggregatorStageConf);
       pipelineConf.setStages(stageConfs);
     } else {
       issues.addAll(ownIssues);

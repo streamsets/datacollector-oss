@@ -44,7 +44,7 @@ public class TestPipelineConfigUpgrader {
     Assert.assertNotNull(upgrade.get(3).getValue());
     Assert.assertNotNull(upgrade.get(4).getValue());
 
-    Assert.assertEquals("statsAggregatorTarget", upgrade.get(5).getName());
+    Assert.assertEquals("statsAggregatorStage", upgrade.get(5).getName());
     Assert.assertNull(upgrade.get(5).getValue());
   }
 
