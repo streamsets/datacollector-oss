@@ -32,6 +32,8 @@ public enum ParserErrors implements ErrorCode {
   PARSER_05("Unsupported data format '{}'"),
   PARSER_06("Messages with XML data cannot have multiple XML documents in a single message"),
   PARSER_07("Avro Schema must be specified"),
+  PARSER_08("After error '{}' parsing message, another error '{}' was encountered while trying to " +
+    "serialize message '{}' of container '{}'"),
   ;
   private final String msg;
 

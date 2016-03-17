@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -91,23 +92,31 @@ public class SyslogParser extends AbstractParser {
   public List<Record> parse(ByteBuf buf, InetSocketAddress recipient, InetSocketAddress sender)
     throws OnRecordErrorException {
     Map<String, Field> fields = new HashMap<>();
+    String senderHost = sender.getHostString();
+    if (senderHost == null) {
+      senderHost = sender.toString();
+    }
+    Field senderAddr = Field.create(senderHost + ":" + sender.getPort());
+    fields.put(SENDER_ADDR, senderAddr);
+    fields.put(SENDER_PORT, Field.create(sender.getPort()));
+    final String recordIdentifer = senderAddr.getValueAsString() + "::" + recordId++;
     final String msg = buf.toString(charset);
     int msgLen = msg.length();
     int curPos = 0;
     fields.put(RAW, Field.create(msg));
     if (msg.charAt(curPos) != '<') {
-      throw new OnRecordErrorException(Errors.SYSLOG_01, "cannot find open bracket '<'", msg);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_01, "cannot find open bracket '<'", msg);
     }
     int endBracketPos = msg.indexOf('>');
     if (endBracketPos <= 0 || endBracketPos > 6) {
-      throw new OnRecordErrorException(Errors.SYSLOG_01, "cannot find end bracket '>'", msg);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_01, "cannot find end bracket '>'", msg);
     }
     String priority = msg.substring(1, endBracketPos);
     int pri;
     try {
       pri = Integer.parseInt(priority);
     } catch (NumberFormatException nfe) {
-      throw new OnRecordErrorException(Errors.SYSLOG_01, nfe, msg, nfe);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_01, nfe, msg, nfe);
     }
     int facility = pri / 8;
     int severity = pri % 8;
@@ -120,7 +129,7 @@ public class SyslogParser extends AbstractParser {
     fields.put(SYSLOG_SEVERITY, Field.create(severity));
 
     if (msgLen <= endBracketPos + 1) {
-      throw new OnRecordErrorException(Errors.SYSLOG_02, msg);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_02, msg);
     }
     // update parsing position
     curPos = endBracketPos + 1;
@@ -142,32 +151,32 @@ public class SyslogParser extends AbstractParser {
     if (dateStartChar == '-') {
       ts = System.currentTimeMillis();
       if (msgLen <= curPos + 2) {
-        throw new OnRecordErrorException(Errors.SYSLOG_03, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_03, msg);
       }
       curPos += 2; // assume we skip past a space to get to the hostname
       // rfc3164 timestamp
     } else if (dateStartChar >= 'A' && dateStartChar <= 'Z') {
       if (msgLen <= curPos + RFC3164_LEN) {
-        throw new OnRecordErrorException(Errors.SYSLOG_04, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_04, msg);
       }
       tsString = msg.substring(curPos, curPos + RFC3164_LEN);
-      ts = parseRfc3164Time(tsString);
+      ts = parseRfc3164Time(recordIdentifer, msg, tsString);
       curPos += RFC3164_LEN + 1;
       // rfc 5424 timestamp
     } else {
       int nextSpace = msg.indexOf(' ', curPos);
       if (nextSpace == -1) {
-        throw new OnRecordErrorException(Errors.SYSLOG_04, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_04, msg);
       }
       tsString = msg.substring(curPos, nextSpace);
-      ts = parseRfc5424Date(tsString);
+      ts = parseRfc5424Date(recordIdentifer, tsString);
       curPos = nextSpace + 1;
     }
     fields.put(TIMESTAMP, Field.create(ts));
     // parse out hostname
     int nextSpace = msg.indexOf(' ', curPos);
     if (nextSpace == -1) {
-      throw new OnRecordErrorException(Errors.SYSLOG_03, msg);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_03, msg);
     }
     fields.put(HOST, Field.create(msg.substring(curPos, nextSpace)));
     if (msgLen > nextSpace + 1) {
@@ -183,13 +192,6 @@ public class SyslogParser extends AbstractParser {
     Field receiverAddr = Field.create(receiverHost + ":" + recipient.getPort());
     fields.put(RECEIVER_ADDR, receiverAddr);
     fields.put(RECEIVER_PORT, Field.create(recipient.getPort()));
-    String senderHost = sender.getHostString();
-    if (senderHost == null) {
-      senderHost = sender.toString();
-    }
-    Field senderAddr = Field.create(senderHost + ":" + sender.getPort());
-    fields.put(SENDER_ADDR, senderAddr);
-    fields.put(SENDER_PORT, Field.create(sender.getPort()));
     Record record = context.createRecord(senderAddr.getValueAsString() + "::" + recordId++);
     record.set(Field.create(fields));
     return Arrays.asList(record);
@@ -201,13 +203,13 @@ public class SyslogParser extends AbstractParser {
    * @param msg
    * @return Typical (for Java) milliseconds since UNIX epoch
    */
-  protected long parseRfc5424Date(String msg) throws OnRecordErrorException {
+  protected long parseRfc5424Date(String recordIdentifer, String msg) throws OnRecordErrorException {
 
     long ts;
     int curPos = 0;
     int msgLen = msg.length();
     if (msgLen <= RFC5424_PREFIX_LEN) {
-      throw new OnRecordErrorException(Errors.SYSLOG_09, msg);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_09, msg);
     }
     String timestampPrefix = msg.substring(curPos, RFC5424_PREFIX_LEN);
     try {
@@ -215,7 +217,7 @@ public class SyslogParser extends AbstractParser {
     } catch (ExecutionException ex) {
       Throwable cause = Throwables.getRootCause(ex);
       if (cause instanceof IllegalArgumentException) {
-        throw new OnRecordErrorException(Errors.SYSLOG_05, cause, timestampPrefix, cause);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_05, cause, timestampPrefix, cause);
       } else {
         // I don't believe this will ever occur
         throw new IllegalStateException(Utils.format(Errors.SYSLOG_05.getMessage(), cause, timestampPrefix),
@@ -229,7 +231,7 @@ public class SyslogParser extends AbstractParser {
       boolean foundEnd = false;
       int endMillisPos = curPos + 1;
       if (msgLen <= endMillisPos) {
-        throw new OnRecordErrorException(Errors.SYSLOG_06, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_06, msg);
       }
       // FIXME: TODO: ensure we handle all bad formatting cases
       while (!foundEnd) {
@@ -251,7 +253,7 @@ public class SyslogParser extends AbstractParser {
         }
         ts += milliseconds;
       } else {
-        throw new OnRecordErrorException(Errors.SYSLOG_07, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_07, msg);
       }
       curPos = endMillisPos;
     }
@@ -262,7 +264,7 @@ public class SyslogParser extends AbstractParser {
       // no-op
     } else if (tzFirst == '+' || tzFirst == '-') {
       if (msgLen <= curPos + 5) {
-        throw new OnRecordErrorException(Errors.SYSLOG_08, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
       }
       int polarity;
       if (tzFirst == '+') {
@@ -286,10 +288,10 @@ public class SyslogParser extends AbstractParser {
           int minOffset = Integer.parseInt(msg.substring(curPos + 4, curPos + 6));
           ts -= polarity * ((hourOffset * 60L) + minOffset) * 60000L;
         } catch (NumberFormatException nfe) {
-          throw new OnRecordErrorException(Errors.SYSLOG_08, msg, nfe);
+          throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg, nfe);
         }
       } else {
-        throw new OnRecordErrorException(Errors.SYSLOG_08, msg);
+        throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_08, msg);
       }
     }
     return ts;
@@ -302,7 +304,7 @@ public class SyslogParser extends AbstractParser {
    * @param ts RFC3164-compatible timestamp to be parsed
    * @return Typical (for Java) milliseconds since the UNIX epoch
    */
-  protected long parseRfc3164Time(String ts) throws OnRecordErrorException {
+  protected long parseRfc3164Time(String recordIdentifer, String msg, String ts) throws OnRecordErrorException {
     DateTime now = DateTime.now();
     int year = now.getYear();
     ts = TWO_SPACES.matcher(ts).replaceFirst(" ");
@@ -310,7 +312,7 @@ public class SyslogParser extends AbstractParser {
     try {
       date = rfc3164Format.parseDateTime(ts);
     } catch (IllegalArgumentException e) {
-      throw new OnRecordErrorException(Errors.SYSLOG_10, ts, e);
+      throw throwOnRecordErrorException(recordIdentifer, msg, Errors.SYSLOG_10, ts, e);
     }
     // try to deal with boundary cases, i.e. new year's eve.
     // rfc3164 dates are really dumb.
@@ -325,5 +327,13 @@ public class SyslogParser extends AbstractParser {
     }
     date = fixed;
     return date.getMillis();
+  }
+
+  private OnRecordErrorException throwOnRecordErrorException(String recordIdentifer, String msg,
+                                                             ErrorCode errorCode, Object... params)
+  throws OnRecordErrorException {
+    Record record = context.createRecord(recordIdentifer);
+    record.set(Field.create(msg));
+    throw new OnRecordErrorException(record, errorCode, params);
   }
 }

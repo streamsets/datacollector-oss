@@ -31,6 +31,7 @@ import java.util.List;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
@@ -60,7 +61,24 @@ public class TestSyslogParser {
       Assert.assertEquals(
         "Problem parsing date string: " + ex,
         jodaParser.parseMillis(ex),
-        parser.parseRfc5424Date(ex));
+        parser.parseRfc5424Date("", ex));
+    }
+  }
+  @Test
+  public void testParseFailure() throws Exception {
+    SyslogParser parser = new SyslogParser(getContext(), StandardCharsets.UTF_8);
+    String msg = "total junk bs";
+    byte[] bytes = msg.getBytes(StandardCharsets.UTF_8);
+    UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
+    ByteBuf buffer = allocator.buffer(bytes.length);
+    buffer.writeBytes(bytes);
+    try {
+      parser.parse(buffer, InetSocketAddress.createUnresolved("localhost", 5000),
+        InetSocketAddress.createUnresolved("localhost", 50000));
+      Assert.fail("Expected OnRecordErrorException");
+    } catch (OnRecordErrorException ex) {
+      Record record = ex.getRecord();
+      Assert.assertEquals(msg, record.get().getValueAsString());
     }
   }
 
