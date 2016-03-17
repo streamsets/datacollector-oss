@@ -46,7 +46,9 @@ public class RuntimeEL {
   private static final String RUNTIME_CONF_LOCATION_KEY = "runtime.conf.location";
   private static final String RUNTIME_CONF_LOCATION_DEFAULT = "embedded";
   private static final String RUNTIME_CONF_PREFIX = "runtime.conf_";
+  private static final String DPM_APPLICATION_TOKEN = "dpm.applicationToken";
   private static Properties RUNTIME_CONF_PROPS = null;
+  private static String AUTH_TOKEN = null;
   private static RuntimeInfo runtimeInfo;
 
   @ElConstant(name = "NULL", description = "NULL value")
@@ -128,6 +130,8 @@ public class RuntimeEL {
       LOG.error("Could not read '{}' from classpath: {}", SDC_PROPERTIES, e.toString(), e);
     }
 
+    AUTH_TOKEN = sdcProps.getProperty(DPM_APPLICATION_TOKEN);
+
     RUNTIME_CONF_PROPS = new Properties();
     String runtimeConfLocation = sdcProps.getProperty(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
     if(runtimeConfLocation.equals(RUNTIME_CONF_LOCATION_DEFAULT)) {
@@ -147,6 +151,14 @@ public class RuntimeEL {
         throw e;
       }
     }
+  }
+
+  @ElFunction(
+    prefix = "sdc",
+    name = "authToken",
+    description = "Returns the auth token of this data collector")
+  public static String authToken() {
+    return AUTH_TOKEN;
   }
 
   public static Set<Object> getRuntimeConfKeys() {
