@@ -18,9 +18,16 @@
  <conbody>
   <dl>
       <dlentry>
+        <dt>batch</dt>
+        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>A set of
+          records that passes through a pipeline. <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          processes data in batches.</dd>
+      </dlentry>
+      <dlentry>
         <dt>cluster execution mode</dt>
-        <dd><indexterm>glossary<indexterm>Data Collector terms</indexterm></indexterm>Pipeline
-          execution mode that allows you to process large volumes of data from Kafka or HDFS.</dd>
+        <dd>Pipeline execution mode that allows you to process large volumes of data from Kafka or
+          HDFS.</dd>
       </dlentry>
       <dlentry>
         <dt>cluster pipeline, cluster mode pipeline</dt>
@@ -35,6 +42,14 @@
         <dt>data alerts</dt>
         <dd>Alerts based on rules that gather information about the data that passes between two
           stages.</dd>
+      </dlentry>
+      <dlentry>
+        <dt><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          configuration file</dt>
+        <dd>Cofiguration file with most <ph
+            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+          properties. Found in the following location:<draft-comment author="Loretta">add new path
+            to sdc.properties.</draft-comment></dd>
       </dlentry>
       <dlentry>
         <dt>data drift alerts</dt>
@@ -57,6 +72,11 @@
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> writes
      processed data.</dd>
    </dlentry>
+      <dlentry>
+        <dt>development stages, dev stages</dt>
+        <dd>Stages such as the Dev Data Generator origin and the Dev Random Error processor that
+          enable pipeline development and testing. Not meant for use in production pipelines.</dd>
+      </dlentry>
       <dlentry>
         <dt>explicit validation</dt>
         <dd>A semantic validation that checks all configured values for validity and verifies
@@ -102,6 +122,11 @@
         <dt>required fields</dt>
         <dd>A required field is a field that must exist in a record to allow it into the stage for
           processing. </dd>
+      </dlentry>
+      <dlentry>
+        <dt>RPC ID</dt>
+        <dd>A user-defined identifier configured in the SDC RPC origin and destination to allow the
+          destination to write to the origin.</dd>
       </dlentry>
       <dlentry>
         <dt>runtime properties</dt>
