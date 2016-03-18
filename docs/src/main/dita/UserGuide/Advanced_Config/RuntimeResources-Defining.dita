@@ -18,10 +18,9 @@
  <conbody>
   <p><indexterm>runtime resources<indexterm>defining</indexterm></indexterm>Use the following steps
       to define runtime resources:<ol id="ol_j2q_ftm_2s">
-        <li>For each resource, create a text file and save it in the following
-            directory:<codeblock>&lt;SDCinstalldir>/resources</codeblock><p>A file must contain one
-            piece of information to be used when the resource is called. </p><note>When you call a
-            runtime resource, the <ph
+        <li>For each resource, create a text file and save it in the <codeph>$SDC_RESOURCES</codeph>
+            directory.<p>A file must contain one piece of information to be used when the resource
+            is called. </p><note>When you call a runtime resource, the <ph
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             replaces the expression with the entire contents of the file. Avoid including
             unnecessary characters such as spaces or carriage returns. Many text editors add
@@ -35,4 +34,7 @@
             restricted.</p></li>
       </ol></p>
  </conbody>
+  <related-links>
+    <link href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+  </related-links>
 </concept>
