@@ -537,7 +537,9 @@ angular.module('dataCollectorApp.common')
       var label = stage.label;
 
       if(options.errorStage) {
-        return 'Bad Records - ' + label;
+        return 'Error Records - ' + label;
+      } else if(options.statsAggregatorStage) {
+        return 'Stats Aggregator - ' + label;
       } else {
         var similarStageInstances = _.filter(pipelineConfig.stages, function(stageInstance) {
           return stageInstance.uiInfo.label.indexOf(label) !== -1;
@@ -560,6 +562,8 @@ angular.module('dataCollectorApp.common')
 
       if(options.errorStage) {
         return stageName + '_ErrorStage';
+      } else if(options.statsAggregatorStage) {
+        return stageName + '_StatsAggregatorStage';
       } else {
         var similarStageInstancesNumber = [];
         angular.forEach(pipelineConfig.stages, function(stageInstance) {

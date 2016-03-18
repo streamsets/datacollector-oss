@@ -345,6 +345,7 @@
         "timer": "Timer",
         "valuePlaceholder": "Value"
       },
+      "statsAggregator": "Stats Aggregator",
       "summary": "Summary",
       "summaryTab": {
         "alertsTitle": "Alerts",

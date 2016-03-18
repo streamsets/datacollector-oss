@@ -278,6 +278,9 @@ angular
 
             if(config.errorStage && issuesMap.stageIssues && issuesMap.stageIssues[config.errorStage.instanceName]) {
               issues.push.apply(issues, issuesMap.stageIssues[config.errorStage.instanceName]);
+            } else if(config.statsAggregatorStage && issuesMap.stageIssues && 
+              issuesMap.stageIssues[config.statsAggregatorStage.instanceName]) {
+              issues.push.apply(issues, issuesMap.stageIssues[config.statsAggregatorStage.instanceName]);
             }
           }
         }

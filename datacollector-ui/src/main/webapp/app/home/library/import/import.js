@@ -117,6 +117,7 @@ angular
                     newPipelineObject = res.data;
                     newPipelineObject.configuration = jsonConfigObj.configuration;
                     newPipelineObject.errorStage = jsonConfigObj.errorStage;
+                    newPipelineObject.statsAggregatorStage = jsonConfigObj.statsAggregatorStage;
                     newPipelineObject.uiInfo = jsonConfigObj.uiInfo;
                     newPipelineObject.stages = jsonConfigObj.stages;
                     newPipelineObject.version = jsonConfigObj.version;

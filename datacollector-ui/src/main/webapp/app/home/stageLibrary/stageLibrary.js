@@ -54,7 +54,7 @@ angular
         $scope.filteredStageLibraries = [];
         angular.forEach($scope.stageLibraries, function(stageLibrary) {
           if(libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
-            regex.test(stageLibrary.label) && !stageLibrary.errorStage) {
+            regex.test(stageLibrary.label) && !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage) {
             stageNameList.push(stageLibrary.name);
             $scope.filteredStageLibraries.push(stageLibrary);
           }

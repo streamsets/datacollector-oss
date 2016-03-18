@@ -474,7 +474,8 @@ angular
        */
       getStageInstanceLabel: function (stageInstanceName) {
         var instance,
-          errorStage = $scope.pipelineConfig.errorStage;
+          errorStage = $scope.pipelineConfig.errorStage,
+          statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
 
         angular.forEach($scope.pipelineConfig.stages, function (stageInstance) {
           if (stageInstance.instanceName === stageInstanceName) {
@@ -484,6 +485,10 @@ angular
 
         if(!instance && errorStage && errorStage.instanceName === stageInstanceName) {
           instance = errorStage;
+        }
+
+        if(!instance && statsAggregatorStage && statsAggregatorStage.instanceName === stageInstanceName) {
+          instance = statsAggregatorStage;
         }
 
         return (instance && instance.uiInfo) ? instance.uiInfo.label : undefined;
@@ -546,6 +551,18 @@ angular
               configGroup: issue.configGroup,
               configName: issue.configName,
               errorStage: true
+            });
+          } else if(pipelineConfig.statsAggregatorStage &&
+            pipelineConfig.statsAggregatorStage.instanceName === instanceName){
+            //StatsAggregator Stage Configuration Issue
+            $scope.$broadcast('selectNode');
+            $scope.changeStageSelection({
+              selectedObject: undefined,
+              type: pipelineConstant.PIPELINE,
+              detailTabName: 'configuration',
+              configGroup: issue.configGroup,
+              configName: issue.configName,
+              statsAggregatorStage: true
             });
           }
 
@@ -699,7 +716,8 @@ angular
         });
 
         $scope.targets = _.filter($scope.stageLibraries, function (stageLibrary) {
-          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE && !stageLibrary.errorStage);
+          return (stageLibrary.type === pipelineConstant.TARGET_STAGE_TYPE &&
+          !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage);
         });
 
         //Pipelines
@@ -935,6 +953,7 @@ angular
               res.uiInfo = config.uiInfo;
               res.stages = config.stages;
               res.errorStage = config.errorStage;
+              res.statsAggregatorStage = config.statsAggregatorStage;
 
               saveUpdates(config);
             }
@@ -1112,6 +1131,20 @@ angular
           $scope.errorStageConfig = undefined;
           $scope.errorStageConfigDefn = undefined;
         }
+
+        var statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage;
+        if(statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
+          $scope.statsAggregatorStageConfig = statsAggregatorStage;
+          $scope.statsAggregatorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === statsAggregatorStage.library &&
+              stageLibrary.name === statsAggregatorStage.stageName &&
+              stageLibrary.version === statsAggregatorStage.stageVersion;
+          });
+        } else {
+          $scope.statsAggregatorStageConfig = undefined;
+          $scope.statsAggregatorStageConfigDefn = undefined;
+        }
+
       }
 
       if(!ignoreArchive) {
@@ -1143,6 +1176,7 @@ angular
           pipelineRules: $scope.pipelineRules,
           triggeredAlerts: $scope.isPipelineRunning ? $scope.triggeredAlerts : [],
           errorStage: $scope.pipelineConfig.errorStage,
+          statsAggregatorStage: $scope.pipelineConfig.statsAggregatorStage,
           fitToBounds: fitToBounds
         });
       });
@@ -1158,6 +1192,7 @@ angular
       var selectedObject = options.selectedObject,
         type = options.type,
         errorStage = $scope.pipelineConfig.errorStage,
+        statsAggregatorStage = $scope.pipelineConfig.statsAggregatorStage,
         stageLibraryList = [],
         optionsLength = Object.keys(options).length;
 
@@ -1171,7 +1206,8 @@ angular
       $scope.selectedType = type;
       $scope.errorStageConfig = undefined;
       $scope.errorStageConfigDefn = undefined;
-
+      $scope.statsAggregatorStageConfig = undefined;
+      $scope.statsAggregatorStageConfigDefn = undefined;
 
       if(options.configName) {
         $scope.$storage.maximizeDetailPane = false;
@@ -1230,6 +1266,15 @@ angular
             return stageLibrary.library === errorStage.library &&
             stageLibrary.name === errorStage.stageName &&
             stageLibrary.version === errorStage.stageVersion;
+          });
+        }
+
+        if(statsAggregatorStage && statsAggregatorStage.configuration && statsAggregatorStage.configuration.length) {
+          $scope.statsAggregatorStageConfig = statsAggregatorStage;
+          $scope.statsAggregatorStageConfigDefn =  _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === statsAggregatorStage.library &&
+              stageLibrary.name === statsAggregatorStage.stageName &&
+              stageLibrary.version === statsAggregatorStage.stageVersion;
           });
         }
 
@@ -1555,6 +1600,43 @@ angular
             });
           }
         }
+
+
+        //statsAggregatorStage check
+        var statsAggregatorStageConfig = _.find(newValue.configuration, function(c) {
+            return c.name === 'statsAggregatorStage';
+          }),
+          statsAggregatorStageConfigArr = (statsAggregatorStageConfig && statsAggregatorStageConfig.value) ?
+            (statsAggregatorStageConfig.value).split('::') : undefined,
+          statsAggregatorStageInst = newValue.statsAggregatorStage;
+
+        if((statsAggregatorStageConfigArr && statsAggregatorStageConfigArr.length === 3) &&
+          (!statsAggregatorStageInst || statsAggregatorStageInst.library !== statsAggregatorStageConfigArr[0] ||
+          statsAggregatorStageInst.stageName !== statsAggregatorStageConfigArr[1] ||
+          statsAggregatorStageInst.stageVersion !== statsAggregatorStageConfigArr[2])) {
+
+          var statsAggregatorStage = _.find($scope.stageLibraries, function (stageLibrary) {
+            return stageLibrary.library === statsAggregatorStageConfigArr[0] &&
+              stageLibrary.name === statsAggregatorStageConfigArr[1] &&
+              stageLibrary.version === statsAggregatorStageConfigArr[2];
+          });
+
+          if(statsAggregatorStage) {
+            var saConfig;
+            if(statsAggregatorStageInst && statsAggregatorStageInst.stageName == statsAggregatorStage.name  &&
+              statsAggregatorStageInst.stageVersion == statsAggregatorStage.version) {
+              saConfig = statsAggregatorStageInst.configuration;
+            }
+            newValue.statsAggregatorStage = pipelineService.getNewStageInstance({
+              stage: statsAggregatorStage,
+              pipelineConfig: $scope.pipelineConfig,
+              statsAggregatorStage: true,
+              configuration: saConfig
+            });
+          }
+        }
+
+
 
         if(configTimeout) {
           $timeout.cancel(configTimeout);
