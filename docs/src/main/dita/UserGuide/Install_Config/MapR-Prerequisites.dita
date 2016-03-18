@@ -27,16 +27,16 @@
             a node in the cluster or on a client machine. </p>
         <p>To run the Data Collector on a client machine - outside the cluster or on your local
             machine - the MapR client package must be installed and configured on the machine. To
-            install the client package, you need to download the following files:<ul
+            install the MapR client package, you need to download the following files:<ul
                 id="ul_qcz_x1m_gv">
                 <li>MapR client library - Typically named
                         <codeph>mapr-client_&lt;version>.&lt;ext></codeph>.<p>You can download the
                         files for your operating system
-                        here:<codeblock><xref href="http://package.mapr.com/releases/v5.1.0/" format="html" scope="external"/></codeblock></p></li>
+                        here:<codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>&lt;version>/</codeblock></p></li>
                 <li>Kafka client library - Typically named
                         <codeph>mapr-kafka-&lt;version>.&lt;ext></codeph>. <p>You can download the
                         files for your operating system here:
-                        <codeblock><xref href="http://package.mapr.com/releases/ecosystem-5.x/" format="html" scope="external"/></codeblock></p></li>
+                        <codeblock><xref href="http://package.mapr.com/releases/" format="html" scope="external"/>ecosystem-&lt;version>/</codeblock></p></li>
             </ul></p>
         <p>Before using <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> to
@@ -46,15 +46,26 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file, $SDC_CONF/sdc.properties, remove the MapR stage library that
                 you want to use from the <uicontrol>system.stagelibs.blacklist</uicontrol>
-                    property.<note>You can use only one version of the MapR library at a time.
-                </note></li>
+                    property.<note type="warning">You can use only one version of the MapR library
+                    at a time. </note></li>
             <li>Create the following symlinks:<ul id="ul_yhl_bsg_2v">
                     <li><uicontrol>$MAPR_HOME/lib/*</uicontrol> to
-                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library>/lib/</uicontrol>.
-                            <p>$MAPR_HOME is usually /opt/mapr. </p><p>&lt;MapR library> is the name
-                            of the MapR library to use. </p></li>
-                    <li><uicontrol>$MAPR_HOME/lib/maprfs-5.1.0-mapr-SNAPSHOT.jar</uicontrol> to
-                            <uicontrol>$SDC_DIST/root-lib/</uicontrol></li>
+                            <uicontrol>$SDC_DIST/streamsets-libs/&lt;MapR library
+                            version>/lib/</uicontrol>. <p>$MAPR_HOME is usually /opt/mapr.
+                            </p><p>&lt;MapR library version> is the version of the StreamSets MapR
+                            library to use. </p><p>For example, for the
+                            streamsets-datacollector-mapr_5_1-lib library, the MapR library version
+                            is mapr_5_1-lib. </p><p>So to use MapR version 5.1.0 with <ph
+                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                            />, you would create a symlink from $MAPR_HOME/lib/* to
+                            $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/ as
+                            follows:<codeblock>ln -s $MAPR_HOME/lib/* $SDC_DIST/streamsets-libs/mapr_5_1-lib/lib/</codeblock></p></li>
+                    <li><uicontrol>$MAPR_HOME/lib/maprfs-&lt;version>-mapr.jar</uicontrol> to
+                            <uicontrol>$SDC_DIST/root-lib/</uicontrol><p>&lt;version> is the MapR
+                            version. </p><p>For example, when using MapR version 5.1.0, you would
+                            create a symlink from $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar to
+                            $SDC_DIST/root-lib/ as
+                            follows:<codeblock>ln -s $MAPR_HOME/lib/maprfs-5.1.0-mapr.jar $SDC_DIST/root-lib/</codeblock></p></li>
                 </ul></li>
             <li>In the <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
