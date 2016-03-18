@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
@@ -407,6 +408,63 @@ public class TestJdbcTarget {
     }
 
     assertEquals(1, targetRunner.getErrorRecords().size());
+  }
+
+  @Test
+  public void testMultiRowRecordWriterWithDataTypeException() throws Exception {
+    thrown.expect(OnRecordErrorException.class);
+
+    List<JdbcFieldMappingConfig> fieldMappings = ImmutableList.of(
+        new JdbcFieldMappingConfig("[0]", "P_ID"),
+        new JdbcFieldMappingConfig("[1]", "FIRST_NAME"),
+        new JdbcFieldMappingConfig("[2]", "LAST_NAME"),
+        new JdbcFieldMappingConfig("[3]", "TS")
+    );
+
+    Target target = new JdbcTarget(
+        tableName,
+        fieldMappings,
+        false,
+        true,
+        -1,
+        ChangeLogFormat.NONE,
+        createConfigBean(h2ConnectionString, username, password)
+    );
+    TargetRunner targetRunner = new TargetRunner.Builder(JdbcDTarget.class, target)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .build();
+
+    Record record1 = RecordCreator.create();
+    List<Field> fields1 = new ArrayList<>();
+    fields1.add(Field.create(1));
+    fields1.add(Field.create("Adam"));
+    fields1.add(Field.create("Kunicki"));
+    fields1.add(Field.createDatetime(new Instant().toDate()));
+    record1.set(Field.create(fields1));
+
+    Record record2 = RecordCreator.create();
+    List<Field> fields2 = new ArrayList<>();
+    fields2.add(Field.create(2));
+    fields2.add(Field.create("Jon"));
+    // Nulls will be interpreted as the a null of the target schema type regardless of Field.Type.
+    fields2.add(Field.create(Field.Type.INTEGER, null));
+    fields2.add(Field.createDatetime(new Instant().toDate()));
+    record2.set(Field.create(fields2));
+
+    Record record3 = RecordCreator.create();
+    List<Field> fields3 = new ArrayList<>();
+    fields3.add(Field.create(3));
+    fields3.add(Field.create("Jon"));
+    fields3.add(Field.create("Daulton"));
+    fields3.add(Field.create("2015011705:30:00"));
+    record3.set(Field.create(fields3));
+
+    List<Record> records = ImmutableList.of(record1, record2, record3);
+    targetRunner.runInit();
+    targetRunner.runWrite(records);
+
+    // Currently for MultiInsert we will have to hard stop until
+    // the MultiRowRecordWriter can be refactored to regenerate the insert statement.
   }
 
   @Test

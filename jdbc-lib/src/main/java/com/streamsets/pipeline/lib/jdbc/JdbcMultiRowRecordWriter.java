@@ -43,7 +43,6 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +104,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       Multimap<Long, Record> partitions = partitionBatch(batch);
 
       for (Long partitionKey : partitions.keySet()) {
-        processPartition(connection, partitions, partitionKey);
+        processPartition(connection, partitions, partitionKey, errorRecords);
       }
     } catch (SQLException e) {
       handleSqlException(e);
@@ -122,9 +121,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     return errorRecords;
   }
 
-  private void processPartition(Connection connection, Multimap<Long, Record> partitions, Long partitionKey)
-      throws SQLException, OnRecordErrorException
-  {
+  @SuppressWarnings("unchecked")
+  private void processPartition(
+      Connection connection,
+      Multimap<Long, Record> partitions,
+      Long partitionKey,
+      List<OnRecordErrorException> errorRecords
+  ) throws SQLException, OnRecordErrorException {
     Collection<Record> partition = partitions.get(partitionKey);
     // Fetch the base insert query for this partition.
     SortedMap<String, String> columnsToParameters = getFilteredColumnsToParameters(
@@ -159,30 +162,32 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       }
 
       // process the next record into the current statement
-      Record r = queue.removeFirst();
+      Record record = queue.removeFirst();
       for (String column : columnsToParameters.keySet()) {
-        Field field = r.get(getColumnsToFields().get(column));
+        Field field = record.get(getColumnsToFields().get(column));
         Field.Type fieldType = field.getType();
         Object value = field.getValue();
 
-        switch (fieldType) {
-          case LIST:
-            List<Object> unpackedList = new ArrayList<>();
-            for (Field item : (List<Field>) value) {
-              unpackedList.add(item.getValue());
-            }
-            Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-            statement.setArray(paramIdx, array);
-            break;
-          case DATE:
-          case DATETIME:
-            // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Date
-            java.util.Date date = field.getValueAsDatetime();
-            statement.setObject(paramIdx, new java.sql.Date(date.getTime()));
-            break;
-          default:
-            statement.setObject(paramIdx, value);
-            break;
+        try {
+          switch (fieldType) {
+            case LIST:
+              List<Object> unpackedList = unpackList((List<Field>) value);
+              Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
+              statement.setArray(paramIdx, array);
+              break;
+            case DATE:
+            case DATETIME:
+              // Java Date types are not accepted by JDBC drivers, so we need to convert to java.sql.Date
+              java.util.Date date = field.getValueAsDatetime();
+              statement.setObject(paramIdx, new java.sql.Date(date.getTime()));
+              break;
+            default:
+              statement.setObject(paramIdx, value, getColumnType(column));
+              break;
+          }
+        } catch (SQLException e) {
+          LOG.error(Errors.JDBCDEST_23.getMessage(), column, fieldType.toString(), e);
+          throw new OnRecordErrorException(record, Errors.JDBCDEST_23, column, fieldType.toString());
         }
         ++paramIdx;
       }

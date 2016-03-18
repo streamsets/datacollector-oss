@@ -34,7 +34,6 @@ import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -127,7 +126,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       List<OnRecordErrorException> errorRecords
   ) {
     boolean isOk = true;
-    int i = 1;
+    int paramIdx = 1;
     for (String column : columnsToParameters.keySet()) {
       Field field = record.get(getColumnsToFields().get(column));
       Field.Type fieldType = field.getType();
@@ -138,15 +137,15 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           case LIST:
             List<Object> unpackedList = unpackList((List<Field>) value);
             Array array = connection.createArrayOf(getSQLTypeName(fieldType), unpackedList.toArray());
-            statement.setArray(i, array);
+            statement.setArray(paramIdx, array);
             break;
           case DATE:
           case DATETIME:
             // Java Date types are not accepted by JDBC drivers, so we need to convert ot java.sql.Timestamp
-            statement.setTimestamp(i, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
+            statement.setTimestamp(paramIdx, new java.sql.Timestamp(field.getValueAsDatetime().getTime()));
             break;
           default:
-            statement.setObject(i, value, getColumnType(column));
+            statement.setObject(paramIdx, value, getColumnType(column));
             break;
         }
       } catch (SQLException e) {
@@ -158,17 +157,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         errorRecords.add(e);
         isOk = false;
       }
-      ++i;
+      ++paramIdx;
     }
     return isOk;
-  }
-
-  private List<Object> unpackList(List<Field> value) {
-    List<Object> unpackedList = new ArrayList<>();
-    for (Field item : value) {
-      unpackedList.add(item.getValue());
-    }
-    return unpackedList;
   }
 
   /**

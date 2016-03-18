@@ -31,6 +31,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +159,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * JDBC DataSource used for writing.
    * @return JDBC DataSource
    */
-  protected DataSource getDataSource() {
+  DataSource getDataSource() {
     return dataSource;
   }
 
@@ -166,7 +167,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * SQL Table to SDC Field mappings
    * @return map of the mappings
    */
-  protected Map<String, String> getColumnsToFields() {
+  Map<String, String> getColumnsToFields() {
     return columnsToFields;
   }
 
@@ -175,7 +176,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * an INSERT statement
    * @return map of the mappings
    */
-  protected Map<String, String> getColumnsToParameters() {
+  Map<String, String> getColumnsToParameters() {
     return columnsToParameters;
   }
 
@@ -183,7 +184,16 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
    * Whether or not to try to perform a transaction rollback on error.
    * @return whether to rollback the transaction
    */
-  protected boolean getRollbackOnError() {
+  boolean getRollbackOnError() {
     return rollbackOnError;
   }
+
+  static List<Object> unpackList(List<Field> value) {
+    List<Object> unpackedList = new ArrayList<>();
+    for (Field item : value) {
+      unpackedList.add(item.getValue());
+    }
+    return unpackedList;
+  }
+
 }
