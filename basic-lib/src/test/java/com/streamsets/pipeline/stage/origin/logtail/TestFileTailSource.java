@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
+import com.codahale.metrics.Counter;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -32,22 +33,33 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+@RunWith(PowerMockRunner.class)
 public class TestFileTailSource {
   private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery
 
@@ -902,4 +914,75 @@ public class TestFileTailSource {
     }
   }
 
+  @PrepareForTest(FileTailSource.class)
+  @Test
+  public void testOffsetLagMetric() throws Exception {
+    final File testDataDir = new File("target", UUID.randomUUID().toString());
+
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    final File file = new File(testDataDir, "file.txt-1");
+
+    Files.write(file.toPath(), Arrays.asList("A", "B", "C"), StandardCharsets.UTF_8);
+
+    FileInfo fileInfo = new FileInfo();
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/file.txt-1";
+    fileInfo.fileRollMode = FileRollMode.ALPHABETICAL;
+    fileInfo.firstFile = "";
+    fileInfo.patternForToken = ".*";
+
+    FileTailConfigBean conf = new FileTailConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.multiLineMainPattern = "";
+    conf.batchSize = 25;
+    conf.maxWaitTimeSecs = 1;
+    conf.fileInfos = Arrays.asList(fileInfo);
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.dataFormatConfig.textMaxLineLen = 1024;
+    conf.validatePath = false;
+
+
+    FileTailSource source = PowerMockito.spy(new FileTailSource(conf, SCAN_INTERVAL));
+
+    //Intercept getOffsetsLag private method which calculates the offsetLag
+    //in the files and write some data to file so there is an offset lag.
+    PowerMockito.replace(
+        MemberMatcher.method(
+            FileTailSource.class,
+            "getOffsetsLag",
+            Map.class
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            //This will add 6 more (D, E, F) to the file and move the file size to 12 bytes
+            //but we would have read just 6 bytes (A, B, C).
+            Files.write(
+                file.toPath(),
+                Arrays.asList("D", "E", "F"),
+                StandardCharsets.UTF_8,
+                StandardOpenOption.APPEND
+            );
+            //call the real getOffsetsLag private method
+            return method.invoke(proxy, args);
+          }
+        }
+    );
+
+    SourceRunner runner = createRunner(source);
+    try {
+      runner.runInit();
+
+      StageRunner.Output output = runner.runProduce(null, 10);
+
+      // Make sure there are only three records.
+      Assert.assertEquals(3, output.getRecords().get("lane").size());
+
+      Map<String, Counter> offsetLag = (Map<String, Counter>) Whitebox.getInternalState(source, "offsetLagMetric");
+      Assert.assertEquals(6L, offsetLag.get(file.getAbsolutePath() + "||" + ".*").getCount());
+    } finally {
+      runner.runDestroy();
+    }
+  }
 }

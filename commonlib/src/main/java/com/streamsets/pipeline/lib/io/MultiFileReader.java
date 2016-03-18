@@ -120,6 +120,7 @@ public class MultiFileReader implements Closeable {
         archiveDir,
         eventPublisher
     );
+
     open = true;
   }
 
@@ -243,6 +244,10 @@ public class MultiFileReader implements Closeable {
       }
     }
     return chunk;
+  }
+
+  public Map<String, Long> getOffsetsLag(Map<String, String> offsetMap) throws IOException{
+    return fileContextProvider.getOffsetsLag(offsetMap);
   }
 
   /**

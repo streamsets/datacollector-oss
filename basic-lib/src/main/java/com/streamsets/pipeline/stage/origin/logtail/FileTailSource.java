@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.origin.logtail;
 
+import com.codahale.metrics.Counter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
@@ -33,16 +34,16 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.FileEvent;
-import com.streamsets.pipeline.lib.io.FileFinder;
 import com.streamsets.pipeline.lib.io.FileLine;
 import com.streamsets.pipeline.lib.io.LiveFile;
 import com.streamsets.pipeline.lib.io.LiveFileChunk;
 import com.streamsets.pipeline.lib.io.MultiFileInfo;
 import com.streamsets.pipeline.lib.io.MultiFileReader;
 import com.streamsets.pipeline.lib.io.RollMode;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.util.FileContextProviderUtil;
 import com.streamsets.pipeline.lib.util.GlobFilePathUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -66,6 +67,7 @@ public class FileTailSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(FileTailSource.class);
   public static final String FILE_TAIL_CONF_PREFIX = "conf.";
   public static final String FILE_TAIL_DATA_FORMAT_CONFIG_PREFIX = FILE_TAIL_CONF_PREFIX + "dataFormatConfig.";
+  private static final String OFFSETS_LAG = "offsets.lag";
 
 
   private final FileTailConfigBean conf;
@@ -87,6 +89,7 @@ public class FileTailSource extends BaseSource {
   private DataParserFactory parserFactory;
   private String outputLane;
   private String metadataLane;
+  private Map<String, Counter> offsetLagMetric;
 
   private boolean validateFileInfo(FileInfo fileInfo, List<ConfigIssue> issues) {
     boolean ok = true;
@@ -358,6 +361,7 @@ public class FileTailSource extends BaseSource {
     maxWaitTimeMillis = conf.maxWaitTimeSecs * 1000;
     outputLane = getContext().getOutputLanes().get(0);
     metadataLane = getContext().getOutputLanes().get(1);
+    offsetLagMetric = new HashMap<String, Counter>();
 
     return issues;
   }
@@ -509,8 +513,36 @@ public class FileTailSource extends BaseSource {
       }
     }
 
+    //Calculate Offset lag Metric.
+    calculateOffsetLagMetric(offsetMap);
+
     // serializing offsets of all directories
     return serializeOffsetMap(offsetMap);
+  }
+
+  private void calculateOffsetLagMetric(Map<String, String> offsetMap) {
+    try {
+      Map<String, Long> offsetLagMap = getOffsetsLag(offsetMap);
+      for (Map.Entry<String, Long> offsetLagMapEntry : offsetLagMap.entrySet()) {
+        String fileKey = offsetLagMapEntry.getKey();
+        Long offsetLag = offsetLagMapEntry.getValue();
+        Counter counter = offsetLagMetric.get(fileKey);
+        LiveFile file = FileContextProviderUtil.getLiveFileFromFileOffset(offsetMap.get(fileKey));
+        if (counter == null) {
+          //Using iNode in the name for metric as iNode will not change, whereas the file name can change
+          counter = getContext().createCounter(file.getINode() + "_" + OFFSETS_LAG);
+        }
+        //Counter only supports inc/dec by a number from an existing count value.
+        counter.inc(offsetLag - counter.getCount());
+        offsetLagMetric.put(fileKey, counter);
+      }
+    } catch (IOException ex) {
+      LOG.warn("Error while Calculating Offset Lag {}", ex.toString(), ex);
+    }
+  }
+
+  private Map<String, Long> getOffsetsLag(Map<String, String> offsetMap) throws IOException {
+    return multiDirReader.getOffsetsLag(offsetMap);
   }
 
   private void handleException(String sourceId, Exception ex) throws StageException {
@@ -528,7 +560,7 @@ public class FileTailSource extends BaseSource {
         }
       default:
         throw new IllegalStateException(Utils.format("Unknown OnError value '{}'",
-          getContext().getOnErrorRecord(), ex));
+            getContext().getOnErrorRecord(), ex));
     }
   }
 
