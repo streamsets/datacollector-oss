@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
@@ -44,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class TestHdfsTarget {
   private static String testDir;
@@ -212,6 +215,9 @@ public class TestHdfsTarget {
     }
   }
 
+  /**
+    If directory path is relative path, it raises an issue with error code HADOOPFS_40
+   */
   @Test
   public void testInvalidDirValidation() throws Exception {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
@@ -224,7 +230,7 @@ public class TestHdfsTarget {
         new HashMap<String, String>(),
         "foo",
         "UTC",
-        "nonabsolutedir",
+        "nonabsolutedir",   // relative path
         HdfsFileType.TEXT,
         "${uuid()}",
         CompressionMode.NONE,
@@ -243,17 +249,19 @@ public class TestHdfsTarget {
       .setOnRecordError(OnRecordError.STOP_PIPELINE)
       .build();
 
-    Assert.assertFalse(runner.runValidateConfigs().isEmpty());
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_40.name()));
   }
 
+
+  /**
+    If late record directory is "SEND TO ERROR", we don't do validation on late record directory.
+    This test should't raise an config issue.
+  */
   @Test
   public void testNoLateRecordsDirValidation() throws Exception {
     DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
-
-    // Create a read-only dir for late records. If this dir path is validated, a permission error will be thrown.
-    File readOnlyBaseDir = new File(testDir + "/readOnly");
-    readOnlyBaseDir.mkdirs();
-    readOnlyBaseDir.setReadOnly();
 
     HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
         "file:///",
@@ -272,8 +280,8 @@ public class TestHdfsTarget {
         0,
         "${record:value('/time')}",
         "${30 * MINUTES}",
-        LateRecordsAction.SEND_TO_ERROR, // action is not SEND_TO_LATE_RECORDS_FILE
-        getTestDir() + "/readOnly/${YYYY()}", // lateRecordsDirPathTemplate is not empty
+        LateRecordsAction.SEND_TO_ERROR, // action should be SEND_TO_ERROR to skip validation
+        "relative_path", // lateRecordsDirPathTemplate is relative path
         DataFormat.SDC_JSON,
         dataGeneratorFormatConfig
     );
@@ -283,6 +291,138 @@ public class TestHdfsTarget {
         .build();
 
     Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+  }
+
+
+  /**
+    If late record action is SEND_TO_LATE_RECORDS_FILE, we should do validation on the directory path.
+  */
+  @Test
+  public void testLateRecordsDirValidation() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        getTestDir() + "/hdfs",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
+        getTestDir() + "/late_record/${TEST}", // lateRecordsDirPathTemplate contains constant that we don't know
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(1, configIssues.size());
+    // since ${TEST} cannot be resolved, this test should raise ELException
+    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_20.name()));
+  }
+
+  /**
+    Test validation on both output and late record directory. Testing ELs and relative path, and
+    both should fail.
+  */
+  @Test
+  public void testDirValidationFailure() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        getTestDir() + "${TEST}", // output dir contains constant that we don't know
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
+        "relative/late_record",  // creating this dir should fail
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    List<Stage.ConfigIssue> configIssues = runner.runValidateConfigs();
+    Assert.assertEquals(2, configIssues.size());
+    // output directory should cause HADOOPFS_20 since we didn't set constant value for ${TEST}
+    Assert.assertTrue(configIssues.get(0).toString().contains(Errors.HADOOPFS_20.name()));
+    // late record directory should cause HADOOPFS_40 since it is relative path
+    Assert.assertTrue(configIssues.get(1).toString().contains(Errors.HADOOPFS_40.name()));
+  }
+
+  /**
+    If dirPathTemplate(output directory) and late record directory contain Els,
+    we first convert Els to constant values, and do the path validation.
+  */
+  @Test
+  public void testDirWithELsValidation() throws Exception {
+    DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+    HdfsTarget hdfsTarget = HdfsTargetUtil.createHdfsTarget(
+        "file:///",
+        "foo",
+        false,
+        null,
+        new HashMap<String, String>(),
+        "foo",
+        "UTC",
+        getTestDir() + "/hdfs/${YYYY()}-${MM()}/out",
+        HdfsFileType.TEXT,
+        "${uuid()}",
+        CompressionMode.NONE,
+        HdfsSequenceFileCompressionType.BLOCK,
+        5,
+        0,
+        "${record:value('/time')}",
+        "${30 * MINUTES}",
+        LateRecordsAction.SEND_TO_LATE_RECORDS_FILE, // action should be SEND_TO_LATE_RECORDS_FILE
+        getTestDir() + "/late_record/${YYYY()}-${MM()}", // lateRecordsDirPathTemplate contains Els
+        DataFormat.SDC_JSON,
+        dataGeneratorFormatConfig
+    );
+
+    TargetRunner runner = new TargetRunner.Builder(HdfsDTarget.class, hdfsTarget)
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    Assert.assertTrue(runner.runValidateConfigs().isEmpty());
+    // Check if output dir and late record dir are created with the right path
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+    String date_format = dateFormat.format(new Date());
+    File outDir = new File(testDir + "/hdfs/" + date_format + "/out");
+    File lateRecordDir = new File(testDir + "/late_record/" + date_format);
+    // Check if the output dir is created
+    Assert.assertTrue(outDir.exists());
+    // Check if the late record dir is created
+    Assert.assertTrue(lateRecordDir.exists());
   }
 
   @Test

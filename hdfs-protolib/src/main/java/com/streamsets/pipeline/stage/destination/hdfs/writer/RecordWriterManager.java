@@ -142,6 +142,10 @@ public class RecordWriterManager {
     return "_tmp_" + uniquePrefix + getExtension();
   }
 
+  public String getDirPath(Date date) throws StageException {
+    return pathResolver.resolvePath(date, null);
+  }
+
   public Path getPath(Date recordDate, Record record) throws StageException {
     // runUuid is fixed for the current pipeline run. it avoids collisions with other SDCs running the same/similar
     // pipeline

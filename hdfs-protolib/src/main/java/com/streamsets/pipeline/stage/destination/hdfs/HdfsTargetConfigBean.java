@@ -349,25 +349,8 @@ public class HdfsTargetConfigBean {
   //public API
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
+    boolean hadoopFSValidated = validateHadoopFS(context, issues);
 
-    boolean validHadoopDir = false;
-    if (validateHadoopFS(context, issues)) {
-      validHadoopDir = validateHadoopDir(
-          context,
-          HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
-          Groups.OUTPUT_FILES.name(),
-          dirPathTemplate, issues
-      );
-      if (lateRecordsAction == LateRecordsAction.SEND_TO_LATE_RECORDS_FILE &&
-          lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-        validHadoopDir &= validateHadoopDir(
-            context,
-            HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
-            Groups.LATE_RECORDS.name(),
-            lateRecordsDirPathTemplate, issues
-        );
-      }
-    }
     try {
       lateRecordsLimitEvaluator = context.createELEval("lateRecordsLimit");
       context.parseEL(lateRecordsLimit);
@@ -445,7 +428,12 @@ public class HdfsTargetConfigBean {
         case NONE:
           break;
         default:
-          compressionCodec = compression.getCodec().newInstance();
+          try {
+            compressionCodec = compression.getCodec().newInstance();
+          } catch (IllegalAccessException | InstantiationException ex) {
+            LOG.info("Error: " + ex.getMessage(), ex.toString(), ex);
+            issues.add(context.createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_48, ex.toString(), ex));
+          }
           break;
       }
       if (compressionCodec != null) {
@@ -453,58 +441,82 @@ public class HdfsTargetConfigBean {
           ((Configurable) compressionCodec).setConf(hdfsConfiguration);
         }
       }
-      if(validHadoopDir) {
-        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
-          dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize * MEGA_BYTE,
-          maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
-          dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
+    } catch (StageException ex) {
+      LOG.info("Validation Error: " + ex.getMessage(), ex.toString(), ex);
+      issues.add(context.createConfigIssue(Groups.OUTPUT_FILES.name(), null, ex.getErrorCode(), ex.toString(), ex));
+    }
 
+    if(hadoopFSValidated){
+      try {
+        // Creating RecordWriterManager for dirPathTemplate
+        RecordWriterManager mgr = new RecordWriterManager(new URI(hdfsUri), hdfsConfiguration, uniquePrefix,
+                dirPathTemplate, TimeZone.getTimeZone(timeZoneID), lateRecordsLimitSecs, maxFileSize * MEGA_BYTE,
+                maxRecordsPerFile, fileType, compressionCodec, compressionType, keyEl,
+                dataGeneratorFormatConfig.getDataGeneratorFactory(), (Target.Context) context, "dirPathTemplate");
+        // validate if the dirPathTemplate can be resolved by Els constants
         if (mgr.validateDirTemplate(
             Groups.OUTPUT_FILES.name(),
             "dirPathTemplate",
             HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
             issues
         )) {
-          currentWriters = new ActiveRecordWriters(mgr);
+          String newDirPath = mgr.getDirPath(new Date()).toString();
+          if (validateHadoopDir(       // permission check on the output directory
+              context,
+              HDFS_TARGET_CONFIG_BEAN_PREFIX + "dirPathTemplate",
+              Groups.OUTPUT_FILES.name(),
+              newDirPath, issues
+          )) {
+            currentWriters = new ActiveRecordWriters(mgr);
+          }
         }
+      }  catch (Exception ex) {
+        LOG.info("Validation Error: " + Errors.HADOOPFS_11.getMessage(), ex.toString(), ex);
+        issues.add(context.createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.toString(), ex));
       }
-    } catch (Exception ex) {
-      LOG.info("Validation Error: " + Errors.HADOOPFS_11.getMessage(), ex.toString(), ex);
-      issues.add(context.createConfigIssue(Groups.OUTPUT_FILES.name(), null, Errors.HADOOPFS_11, ex.toString(),
-        ex));
-    }
 
-    if (lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
-      if(validHadoopDir) {
+      // Creating RecordWriterManager for Late Records
+      if(lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty()) {
         try {
           RecordWriterManager mgr = new RecordWriterManager(
-              new URI(hdfsUri),
-              hdfsConfiguration,
-              uniquePrefix,
-              lateRecordsDirPathTemplate,
-              TimeZone.getTimeZone(timeZoneID),
-              lateRecordsLimitSecs,
-              maxFileSize * MEGA_BYTE,
-              maxRecordsPerFile,
-              fileType,
-              compressionCodec,
-              compressionType,
-              keyEl,
-              dataGeneratorFormatConfig.getDataGeneratorFactory(),
-              (Target.Context)context, "lateRecordsDirPathTemplate"
+                  new URI(hdfsUri),
+                  hdfsConfiguration,
+                  uniquePrefix,
+                  lateRecordsDirPathTemplate,
+                  TimeZone.getTimeZone(timeZoneID),
+                  lateRecordsLimitSecs,
+                  maxFileSize * MEGA_BYTE,
+                  maxRecordsPerFile,
+                  fileType,
+                  compressionCodec,
+                  compressionType,
+                  keyEl,
+                  dataGeneratorFormatConfig.getDataGeneratorFactory(),
+                  (Target.Context) context, "lateRecordsDirPathTemplate"
           );
 
+          // validate if the lateRecordsDirPathTemplate can be resolved by Els constants
           if (mgr.validateDirTemplate(
               Groups.OUTPUT_FILES.name(),
               "lateRecordsDirPathTemplate",
               HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
               issues
           )) {
-            lateWriters = new ActiveRecordWriters(mgr);
+            String newLateRecordPath = mgr.getDirPath(new Date()).toString();
+            if (lateRecordsAction == LateRecordsAction.SEND_TO_LATE_RECORDS_FILE &&
+                lateRecordsDirPathTemplate != null && !lateRecordsDirPathTemplate.isEmpty() &&
+                validateHadoopDir(       // permission check on the late record directory
+                    context,
+                    HDFS_TARGET_CONFIG_BEAN_PREFIX + "lateRecordsDirPathTemplate",
+                    Groups.LATE_RECORDS.name(),
+                    newLateRecordPath, issues
+            )) {
+              lateWriters = new ActiveRecordWriters(mgr);
+            }
           }
         } catch (Exception ex) {
           issues.add(context.createConfigIssue(Groups.LATE_RECORDS.name(), null, Errors.HADOOPFS_17,
-            ex.toString(), ex));
+              ex.toString(), ex));
         }
       }
     }
@@ -792,11 +804,6 @@ public class HdfsTargetConfigBean {
       issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_40));
       ok = false;
     } else {
-      int firstEL = dirPathTemplate.indexOf("$");
-      if (firstEL > -1) {
-        int lastDir = dirPathTemplate.lastIndexOf("/", firstEL);
-        dirPathTemplate = dirPathTemplate.substring(0, lastDir);
-      }
       dirPathTemplate = (dirPathTemplate.isEmpty()) ? "/" : dirPathTemplate;
       try {
         Path dir = new Path(dirPathTemplate);
@@ -827,7 +834,6 @@ public class HdfsTargetConfigBean {
           }
         }
       } catch (Exception ex) {
-        LOG.info("Validation Error: " + Errors.HADOOPFS_44.getMessage(), ex.toString(), ex);
         issues.add(context.createConfigIssue(configGroup, configName, Errors.HADOOPFS_44,
           ex.toString()));
         ok = false;
