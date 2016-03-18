@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.config.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
 
@@ -54,7 +53,7 @@ public class FirehoseConfigBean extends KinesisConfigBean {
       displayPosition = 20,
       group = "#0"
   )
-  @ValueChooserModel(DataFormatChooserValues.class)
+  @ValueChooserModel(FirehoseDataFormatChooserValues.class)
   public DataFormat dataFormat;
 
   @ConfigDef(
