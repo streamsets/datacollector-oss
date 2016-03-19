@@ -144,12 +144,14 @@ public class Pipeline {
       issues.add(IssueCreator.getStage(badRecordsHandler.getInstanceName()).create(ContainerError.CONTAINER_0700,
         ex.toString()));
     }
-    try {
-      issues.addAll(statsAggregationHandler.init(pipeContext));
-    } catch (Exception ex) {
-      LOG.warn(ContainerError.CONTAINER_0703.getMessage(), ex.toString(), ex);
-      issues.add(IssueCreator.getStage(statsAggregationHandler.getInstanceName()).create(ContainerError.CONTAINER_0703,
-        ex.toString()));
+    if (statsAggregationHandler != null) {
+      try {
+        issues.addAll(statsAggregationHandler.init(pipeContext));
+      } catch (Exception ex) {
+        LOG.warn(ContainerError.CONTAINER_0703.getMessage(), ex.toString(), ex);
+        issues.add(IssueCreator.getStage(statsAggregationHandler.getInstanceName()).create(ContainerError.CONTAINER_0703,
+          ex.toString()));
+      }
     }
     for (Pipe pipe : pipes) {
       try {
@@ -172,7 +174,9 @@ public class Pipeline {
       LOG.warn(msg, ex);
     }
     try {
-      statsAggregationHandler.destroy();
+      if (statsAggregationHandler != null) {
+        statsAggregationHandler.destroy();
+      }
     } catch (Exception ex) {
       String msg = Utils.format("Exception thrown during Stats Aggregator handler destroy: {}", ex);
       LOG.warn(msg, ex);
