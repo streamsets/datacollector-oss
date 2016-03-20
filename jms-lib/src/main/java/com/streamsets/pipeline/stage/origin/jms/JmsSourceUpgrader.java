@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.Compression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JmsSourceUpgrader implements StageUpgrader {
@@ -36,6 +37,8 @@ public class JmsSourceUpgrader implements StageUpgrader {
         upgradeV1ToV2(configs);
       case 2:
         upgradeV2ToV3(configs);
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -50,5 +53,12 @@ public class JmsSourceUpgrader implements StageUpgrader {
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("jmsConfig.destinationType", "UNKNOWN"));
     configs.add(new Config("dataFormatConfig.csvSkipStartLines", 0));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    // This looks weird, but it's correct. Despite the fact that contextProperties
+    // is a MAP config, the UI renders it as a list of maps, so new ArrayList gets
+    // us what we want.
+    configs.add(new Config("jmsConfig.contextProperties", new ArrayList<>()));
   }
 }

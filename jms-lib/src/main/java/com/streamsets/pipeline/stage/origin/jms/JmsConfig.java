@@ -22,6 +22,9 @@ package com.streamsets.pipeline.stage.origin.jms;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JmsConfig {
   @ConfigDef(
     required = true,
@@ -83,4 +86,15 @@ public class JmsConfig {
   )
   @ValueChooserModel(DestinationTypeChooserValues.class)
   public DestinationType destinationType = DestinationType.UNKNOWN; // NOTE: same as above
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Additional JMS Configuration Properties",
+      description = "Additional properties to pass to the underlying JMS context.",
+      displayPosition = 999,
+      group = "JMS"
+  )
+  public Map<String, String> contextProperties = new HashMap<>();
 }
