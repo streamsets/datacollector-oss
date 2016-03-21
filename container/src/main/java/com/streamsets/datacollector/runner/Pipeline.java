@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.memory.MemoryUsageCollectorResourceBundle;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -304,19 +305,48 @@ public class Pipeline {
       return errors;
     }
 
-    private void setStagesContext(StageRuntime[] stages, StageRuntime errorStage, StageRuntime statsAggregatorStage, PipelineRunner runner) {
+    private void setStagesContext(
+        StageRuntime[] stages,
+        StageRuntime errorStage,
+        StageRuntime statsAggregatorStage,
+        PipelineRunner runner
+    ) {
       List<Stage.Info> infos = new ArrayList<>(stages.length);
       List<Stage.Info> infosUnmodifiable = Collections.unmodifiableList(infos);
       ExecutionMode executionMode = getExecutionMode(pipelineConf);
       for (StageRuntime stage : stages) {
         infos.add(stage.getInfo());
-        stage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, stage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), stage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), executionMode,
-          runner.getRuntimeInfo().getResourcesDir()));
+        stage.setContext(
+            new StageContext(
+                pipelineName,
+                rev,
+                infosUnmodifiable,
+                stage.getDefinition().getType(),
+                runner.isPreview(),
+                runner.getMetrics(),
+                stage,
+                pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
+                executionMode,
+                runner.getRuntimeInfo().getResourcesDir(),
+                new EmailSender(configuration)
+            )
+        );
       }
-      errorStage.setContext(new StageContext(pipelineName, rev, infosUnmodifiable, errorStage.getDefinition().getType(), runner.isPreview(),
-          runner.getMetrics(), errorStage, pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(), executionMode,
-          runner.getRuntimeInfo().getResourcesDir()));
+      errorStage.setContext(
+          new StageContext(
+              pipelineName,
+              rev,
+              infosUnmodifiable,
+              errorStage.getDefinition().getType(),
+              runner.isPreview(),
+              runner.getMetrics(),
+              errorStage,
+              pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
+              executionMode,
+              runner.getRuntimeInfo().getResourcesDir(),
+              new EmailSender(configuration)
+          )
+      );
       if (statsAggregatorStage != null) {
         statsAggregatorStage.setContext(
             new StageContext(
@@ -329,7 +359,8 @@ public class Pipeline {
                 statsAggregatorStage,
                 pipelineConf.getMemoryLimitConfiguration().getMemoryLimit(),
                 executionMode,
-                runner.getRuntimeInfo().getResourcesDir()
+                runner.getRuntimeInfo().getResourcesDir(),
+                new EmailSender(configuration)
             )
         );
       }

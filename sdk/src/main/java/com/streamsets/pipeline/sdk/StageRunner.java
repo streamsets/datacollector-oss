@@ -24,9 +24,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.StageType;
 import com.streamsets.datacollector.el.RuntimeEL;
+import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -235,8 +237,18 @@ public abstract class StageRunner<S extends Stage> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    context = new StageContext(instanceName, stageType ,isPreview, onRecordError, outputLanes, configToElDefMap,
-      constants, executionMode, resourcesDir);
+    context = new StageContext(
+        instanceName,
+        stageType,
+        isPreview,
+        onRecordError,
+        outputLanes,
+        configToElDefMap,
+        constants,
+        executionMode,
+        resourcesDir,
+        new EmailSender(new Configuration())
+    );
     status = Status.CREATED;
   }
 

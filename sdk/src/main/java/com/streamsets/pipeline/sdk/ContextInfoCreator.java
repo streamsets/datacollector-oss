@@ -20,7 +20,9 @@
 package com.streamsets.pipeline.sdk;
 
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
@@ -55,8 +57,14 @@ public class ContextInfoCreator {
     };
   }
 
-  private static StageContext createContext(Class<?> stageClass, String instanceName, boolean isPreview,
-                                            OnRecordError onRecordError, List<String> outputLanes, String resourcesDir) {
+  private static StageContext createContext(
+      Class<?> stageClass,
+      String instanceName,
+      boolean isPreview,
+      OnRecordError onRecordError,
+      List<String> outputLanes,
+      String resourcesDir
+  ) {
     Map<String, Class<?>[]> configToElDefMap;
     if(stageClass == null) {
       configToElDefMap = Collections.emptyMap();
@@ -67,8 +75,18 @@ public class ContextInfoCreator {
         throw new RuntimeException(e);
       }
     }
-    return new StageContext(instanceName, StageType.SOURCE, isPreview, onRecordError, outputLanes, configToElDefMap,
-      new HashMap<String, Object>(), ExecutionMode.STANDALONE, resourcesDir);
+    return new StageContext(
+        instanceName,
+        StageType.SOURCE,
+        isPreview,
+        onRecordError,
+        outputLanes,
+        configToElDefMap,
+        new HashMap<String, Object>(),
+        ExecutionMode.STANDALONE,
+        resourcesDir,
+        new EmailSender(new Configuration())
+    );
   }
 
   public static Source.Context createSourceContext(Class<?> stageClass, String instanceName, boolean isPreview,

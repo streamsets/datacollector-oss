@@ -19,10 +19,18 @@
  */
 package com.streamsets.datacollector.runner;
 
+import com.google.common.collect.ImmutableList;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.config.StageType;
+import com.streamsets.datacollector.email.EmailException;
+import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
 import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.OnRecordError;
@@ -31,7 +39,11 @@ import com.streamsets.pipeline.api.StageException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class TestStageContext {
@@ -53,9 +65,18 @@ public class TestStageContext {
 
   @Test
   public void testToErrorNonStageException() throws Exception {
-    StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -73,9 +94,18 @@ public class TestStageContext {
 
   @Test
   public void testToErrorString() throws Exception {
-    StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -91,9 +121,18 @@ public class TestStageContext {
 
   @Test
   public void testToErrorMessage() throws Exception {
-    StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -109,9 +148,18 @@ public class TestStageContext {
 
   @Test
   public void testToErrorStageException() throws Exception {
-    StageContext context = new StageContext("stage", StageType.SOURCE, false, OnRecordError.TO_ERROR,
-                                            Collections.EMPTY_LIST, Collections.EMPTY_MAP,
-      Collections.<String, Object> emptyMap(), ExecutionMode.STANDALONE, null);
+    StageContext context = new StageContext(
+        "stage",
+        StageType.SOURCE,
+        false,
+        OnRecordError.TO_ERROR,
+        Collections.EMPTY_LIST,
+        Collections.EMPTY_MAP,
+        Collections.<String, Object> emptyMap(),
+        ExecutionMode.STANDALONE,
+        null,
+        new EmailSender(new Configuration())
+    );
 
     ErrorSink errorSink = new ErrorSink();
     context.setErrorSink(errorSink);
@@ -124,6 +172,62 @@ public class TestStageContext {
     Assert.assertEquals(record.getHeader().getSourceId(), eRecord.getHeader().getSourceId());
     Assert.assertEquals("TEST", eRecord.getHeader().getErrorCode());
     Assert.assertEquals("TEST - FOO:BAR", eRecord.getHeader().getErrorMessage());
+  }
+
+  @Test
+  public void testNotifyException() throws EmailException {
+
+    EmailSender sender = Mockito.mock(EmailSender.class);
+    Mockito.doThrow(StageException.class)
+        .when(sender)
+        .send(Mockito.anyList(), Mockito.anyString(), Mockito.anyString());
+
+    StageContext context = new StageContext(
+      "stage",
+      StageType.SOURCE,
+      false,
+      OnRecordError.TO_ERROR,
+      Collections.EMPTY_LIST,
+      Collections.EMPTY_MAP,
+      Collections.<String, Object> emptyMap(),
+      ExecutionMode.STANDALONE,
+      null,
+      sender
+    );
+
+    try {
+      context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
+      Assert.fail("Expected StageException");
+    } catch (StageException e) {
+
+    }
+
+  }
+
+  @Test
+  public void testNotify() throws StageException, EmailException {
+
+    EmailSender sender = Mockito.mock(EmailSender.class);
+
+    StageContext context = new StageContext(
+      "stage",
+      StageType.SOURCE,
+      false,
+      OnRecordError.TO_ERROR,
+      Collections.EMPTY_LIST,
+      Collections.EMPTY_MAP,
+      Collections.<String, Object> emptyMap(),
+      ExecutionMode.STANDALONE,
+      null,
+      sender
+    );
+
+    context.notify(ImmutableList.of("foo", "bar"), "SUBJECT", "BODY");
+    Mockito.verify(sender, Mockito.times(1)).send(
+        Mockito.eq(ImmutableList.of("foo", "bar")),
+        Mockito.eq("SUBJECT"),
+        Mockito.eq("BODY"));
+
   }
 
 }
