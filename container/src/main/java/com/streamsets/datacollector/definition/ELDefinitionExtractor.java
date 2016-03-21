@@ -25,6 +25,7 @@ import com.streamsets.datacollector.el.ElFunctionArgumentDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.el.JvmEL;
 import com.streamsets.datacollector.el.RuntimeEL;
+import com.streamsets.datacollector.el.VaultEL;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
@@ -45,9 +46,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
-public abstract class
-    ELDefinitionExtractor {
-  static final Class[] DEFAULT_EL_DEFS = {RuntimeEL.class, StringEL.class, JvmEL.class, Base64EL.class};
+public abstract class ELDefinitionExtractor {
+  static final Class[] DEFAULT_EL_DEFS = {
+      Base64EL.class, JvmEL.class, RuntimeEL.class, StringEL.class, VaultEL.class
+  };
 
   private static final ELDefinitionExtractor EXTRACTOR = new ELDefinitionExtractor() {};
 

@@ -61,6 +61,8 @@
     <surefire.version>2.19.1</surefire.version>
     <surefireArgLine>-Xmx2G -XX:MaxPermSize=256M</surefireArgLine>
     <failsafeArgLine>-Xmx2G -XX:MaxPermSize=256M</failsafeArgLine>
+    <testcontainers.version>1.0.5</testcontainers.version>
+
     <!-- Platform encoding override -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -395,7 +397,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-           <!--Sets the VM argument line used when unit tests are run.-->
+          <!-- Sets the VM argument line used when unit tests are run. -->
           <argLine>${surefireArgLine}</argLine>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
@@ -493,7 +495,7 @@
           </execution>
         </executions>
         <configuration>
-           <!--Sets the VM argument line used when integration tests are run.-->
+          <!-- Sets the VM argument line used when integration tests are run. -->
           <argLine>${failsafeArgLine}</argLine>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>

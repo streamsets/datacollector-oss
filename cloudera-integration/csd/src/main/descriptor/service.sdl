@@ -670,6 +670,119 @@
           "description": "Email address to send alert email.",
           "type": "string",
           "default": "sdc@localhost"
+        },
+        {
+          "name": "vault.addr",
+          "type": "string",
+          "label": "Vault Address",
+          "description": "Vault server URL.",
+          "required": "false"
+        },
+        {
+          "name": "vault.app.id",
+          "type": "string",
+          "label": "Vault App ID",
+          "description": "App ID to use for authentication",
+          "required": "false"
+        },
+        {
+          "name": "vault.ssl.enabled.protocols",
+          "type":  "string",
+          "label": "Vault App ID",
+          "description": "App ID to use for authentication",
+          "default": "TLSv1.2,TLSv1.3",
+          "required": "false"
+        },
+        {
+          "name": "vault.ssl.truststore.file",
+          "type": "string",
+          "label": "Vault Trust Store",
+          "description": "Trust Store to load for use when connecting to Vault over TLS",
+          "required": "false"
+        },
+        {
+          "name": "vault.ssl.truststore.password",
+          "type": "password",
+          "label": "Vault Trust Store Password",
+          "description": "Password for the Vault Trust Store",
+          "required": "false"
+        },
+        {
+          "name": "vault.ssl.verify",
+          "type": "boolean",
+          "label": "Verify Vault TLS Connections",
+          "description": "Disabling will not verify certificate validity when connecting to Vault over TLS",
+          "required": "false"
+        },
+        {
+          "name": "vault.ssl.timeout",
+          "type": "long",
+          "label": "Vault SSL/TLS Connection Timeout",
+          "description": "Vault SSL/TLS Connection Timeout",
+          "required": "false"
+        },
+        {
+          "name": "vault.timeout",
+          "type": "long",
+          "label": "Vault Timeout",
+          "description": "Vault Timeout",
+          "required": "false"
+        },
+        {
+          "name": "vault.lease.renewal.interval.sec",
+          "type": "long",
+          "label": "Vault Lease Renewal Interval (seconds)",
+          "description": "How often to check whether a lease needs to be renewed",
+          "required": "false"
+        },
+        {
+          "name": "vault.lease.expiration.buffer.sec",
+          "type": "long",
+          "label": "Vault Lease Expiration Buffer (seconds)",
+          "description": "Threshold for when SDC will renew a lease that will expire soon.",
+          "required": "false"
+        },
+        {
+          "name": "vault.open.timeout",
+          "type": "long",
+          "label": "Vault Connection Open Timeout",
+          "description": "Vault Connection Open Timeout",
+          "required": "false"
+        },
+        {
+          "name": "vault.proxy.address",
+          "type": "string",
+          "label": "Vault Proxy Address",
+          "description": "Proxy to use with connections to Vault.",
+          "required": "false"
+        },
+        {
+          "name": "vault.proxy.port",
+          "type": "port",
+          "label": "Vault Proxy Port",
+          "description": "Vault Proxy Port",
+          "required": "false"
+        },
+        {
+          "name": "vault.proxy.username",
+          "type": "string",
+          "label": "Vault Proxy Username",
+          "description": "Vault Proxy Username",
+          "required": "false"
+        },
+        {
+          "name": "vault.proxy.password",
+          "type": "password",
+          "label": "Vault Proxy Password",
+          "description": "Vault Proxy Password",
+          "required": "false"
+        },
+        {
+          "name": "vault.read.timeout",
+          "type": "long",
+          "label": "Vault HTTP Read Timeout (secs)",
+          "description": "Vault HTTP Read Timeout (secs)",
+          "required": "false"
         }
       ]
     }
