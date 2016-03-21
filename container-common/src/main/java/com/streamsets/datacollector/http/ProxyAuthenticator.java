@@ -20,6 +20,8 @@
 package com.streamsets.datacollector.http;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.CORSConstants;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
@@ -44,13 +46,16 @@ import java.util.Map;
 public class ProxyAuthenticator extends LoginAuthenticator {
   private final RuntimeInfo runtimeInfo;
   private final LoginAuthenticator authenticator;
+  private final Configuration conf;
   public final static String AUTH_TOKEN = "auth_token";
   public final static String AUTH_USER = "auth_user";
   private final static String TOKEN_AUTHENTICATION_USER_NAME = "admin";
 
-  public ProxyAuthenticator(LoginAuthenticator authenticator, RuntimeInfo runtimeInfo) {
+
+  public ProxyAuthenticator(LoginAuthenticator authenticator, RuntimeInfo runtimeInfo, Configuration conf) {
     this.authenticator = authenticator;
     this.runtimeInfo = runtimeInfo;
+    this.conf = conf;
   }
 
   @Override
@@ -80,14 +85,18 @@ public class ProxyAuthenticator extends LoginAuthenticator {
     return super.renewSession(request, response);
   }
 
-
   @Override
   public String getAuthMethod() {
     return authenticator.getAuthMethod();
   }
 
   @Override
-  public boolean secureResponse(ServletRequest request, ServletResponse response, boolean mandatory, Authentication.User validatedUser) throws ServerAuthException {
+  public boolean secureResponse(
+      ServletRequest request,
+      ServletResponse response,
+      boolean mandatory,
+      Authentication.User validatedUser
+  ) throws ServerAuthException {
     return authenticator.secureResponse(request, response, mandatory, validatedUser);
   }
 
@@ -100,20 +109,31 @@ public class ProxyAuthenticator extends LoginAuthenticator {
     HttpSession session = request.getSession(true);
     Authentication authentication = (Authentication) session.getAttribute(SessionAuthentication.__J_AUTHENTICATED);
 
+    // handle CORS Options
+    if ("OPTIONS".equals(request.getMethod())) {
+      response.setHeader("Access-Control-Allow-Origin", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT));
+      response.setHeader("Access-Control-Allow-Headers", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT));
+      response.setHeader("Access-Control-Allow-Methods", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS_DEFAULT));
+      return Authentication.SEND_SUCCESS;
+    }
+
     if (authentication == null) {
       String authToken = request.getHeader(AUTH_TOKEN);
       String authUser = request.getHeader(AUTH_USER);
 
-      if(authToken == null) {
+      if (authToken == null) {
         authToken = request.getParameter(AUTH_TOKEN);
         authUser = request.getParameter(AUTH_USER);
 
-        if(authUser == null) {
+        if (authUser == null) {
           authUser = TOKEN_AUTHENTICATION_USER_NAME;
         }
       }
 
-      if(authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
+      if (authToken != null && runtimeInfo.isValidAuthenticationToken(authToken)) {
         HashLoginService loginService = (HashLoginService)getLoginService();
         Map<String, UserIdentity> usersMap = loginService.getUsers();
         UserIdentity userIdentity = usersMap.get(authUser);
@@ -122,7 +142,7 @@ public class ProxyAuthenticator extends LoginAuthenticator {
         session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, cached);
       }
 
-      if(this.authenticator instanceof FormAuthenticator) {
+      if (this.authenticator instanceof FormAuthenticator) {
         String credentials = request.getHeader(HttpHeader.AUTHORIZATION.asString());
         if (credentials != null) {
           //Support User name and password as part of Authorization Header for Form & Digest Authenticator
@@ -157,15 +177,16 @@ public class ProxyAuthenticator extends LoginAuthenticator {
         } else {
           //Handle redirecting to home page instead of REST API page & setting reverse proxy base path
           String pathInfo = request.getPathInfo();
-          if("/j_security_check".equals(pathInfo)) {
+          if ("/j_security_check".equals(pathInfo)) {
             String basePath = request.getParameter("basePath");
 
-            if(basePath == null || basePath.trim().length() == 0) {
+            if (basePath == null || basePath.trim().length() == 0) {
               basePath = "/";
             }
 
             String redirectURL = (String)session.getAttribute(FormAuthenticator.__J_URI);
-            if((redirectURL != null && (redirectURL.contains("rest/v1/") || redirectURL.contains("jmx"))) || !basePath.equals("/")) {
+            if ((redirectURL != null && (redirectURL.contains("rest/v1/") || redirectURL.contains("jmx"))) ||
+                !basePath.equals("/")) {
               session.setAttribute(FormAuthenticator.__J_URI, basePath);
             }
           }

@@ -22,14 +22,12 @@ package com.streamsets.datacollector.http;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.lib.security.http.ProxySSOService;
-import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.lib.security.http.SSOAppAuthenticator;
-import com.streamsets.lib.security.http.SSOAuthenticator;
-import com.streamsets.lib.security.http.SSOUserAuthenticator;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.ProxySSOService;
+import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.jaas.JAASLoginService;
@@ -81,12 +79,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -350,7 +348,7 @@ public class WebServerTask extends AbstractTask {
         ssoService.setConfiguration(conf);
       }
     });
-    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService));
+    security.setAuthenticator(new SSOAuthenticator(appContext, ssoService, conf));
     return security;
   }
 
@@ -361,10 +359,10 @@ public class WebServerTask extends AbstractTask {
     ConstraintSecurityHandler security = new ConstraintSecurityHandler();
     switch (mode) {
       case "digest":
-        security.setAuthenticator(new ProxyAuthenticator(new DigestAuthenticator(), runtimeInfo));
+        security.setAuthenticator(new ProxyAuthenticator(new DigestAuthenticator(), runtimeInfo, conf));
         break;
       case "basic":
-        security.setAuthenticator(new ProxyAuthenticator(new BasicAuthenticator(), runtimeInfo));
+        security.setAuthenticator(new ProxyAuthenticator(new BasicAuthenticator(), runtimeInfo, conf));
         break;
       default:
         // no action
@@ -382,7 +380,7 @@ public class WebServerTask extends AbstractTask {
     securityHandler.setLoginService(loginService);
 
     FormAuthenticator authenticator = new FormAuthenticator("/login.html", "/login.html?error=true", true);
-    securityHandler.setAuthenticator(new ProxyAuthenticator(authenticator, runtimeInfo));
+    securityHandler.setAuthenticator(new ProxyAuthenticator(authenticator, runtimeInfo, conf));
     return securityHandler;
   }
 

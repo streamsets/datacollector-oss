@@ -19,6 +19,7 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.streamsets.datacollector.util.Configuration;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
@@ -35,9 +36,9 @@ public class SSOAuthenticator extends AbstractSSOAuthenticator {
   private final SSOUserAuthenticator userAuthenticator;
   private final SSOAppAuthenticator appAuthenticator;
 
-  public SSOAuthenticator(String appContext, SSOService ssoService) {
+  public SSOAuthenticator(String appContext, SSOService ssoService, Configuration configuration) {
     super(ssoService);
-    userAuthenticator = new SSOUserAuthenticator(getSsoService());
+    userAuthenticator = new SSOUserAuthenticator(getSsoService(), configuration);
     appAuthenticator = new SSOAppAuthenticator(getSsoService());
   }
 

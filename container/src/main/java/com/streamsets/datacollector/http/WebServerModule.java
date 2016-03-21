@@ -40,6 +40,7 @@ import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.websockets.SDCWebSocketServlet;
 
+import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.pipeline.http.MDCFilter;
 import dagger.Module;
 import dagger.Provides;
@@ -49,6 +50,7 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.servlets.GzipFilter;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -58,6 +60,8 @@ import javax.servlet.DispatcherType;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Module(injects = {TaskWrapper.class, Manager.class}, library = true, complete = false)
@@ -177,6 +181,32 @@ public class WebServerModule {
       public void init(ServletContextHandler context) {
         ServletHolder holderEvents = new ServletHolder(new LoginServlet());
         context.addServlet(holderEvents, "/login");
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideCrossOriginFilter(final Configuration conf) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder crossOriginFilter = new FilterHolder(CrossOriginFilter.class);
+        Map<String, String> params = new HashMap<>();
+
+        params.put(CrossOriginFilter.ALLOWED_ORIGINS_PARAM,
+            conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN,
+                CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT));
+
+        params.put(CrossOriginFilter.ALLOWED_METHODS_PARAM,
+            conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS,
+                CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS_DEFAULT));
+
+        params.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM,
+            conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS,
+                CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT));
+
+        crossOriginFilter.setInitParameters(params);
+        context.addFilter(crossOriginFilter, "/*", EnumSet.of(DispatcherType.REQUEST));
       }
     };
   }

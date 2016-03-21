@@ -21,6 +21,7 @@ package com.streamsets.lib.security.http;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
@@ -42,8 +43,11 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   private final static Set<String> TOKEN_PARAM_SET =
       ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM, SSOConstants.REPEATED_REDIRECT_PARAM);
 
-  public SSOUserAuthenticator(SSOService ssoService) {
+  private Configuration conf;
+
+  public SSOUserAuthenticator(SSOService ssoService, Configuration conf) {
     super(ssoService);
+    this.conf = conf;
   }
 
   @Override
@@ -158,6 +162,10 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     return httpReq.getMethod().equals("GET") && httpReq.getRequestURI().equals(logoutPath);
   }
 
+  private boolean isCORSOptionsRequest(HttpServletRequest httpReq) {
+    return "OPTIONS".equals(httpReq.getMethod());
+  }
+
   String getAuthCookieName(HttpServletRequest httpReq) {
     return SSOConstants.AUTHENTICATION_COOKIE_PREFIX + httpReq.getServerPort();
   }
@@ -206,10 +214,22 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     HttpServletRequest httpReq = (HttpServletRequest) request;
     HttpServletResponse httpRes = (HttpServletResponse) response;
     String authToken = getAuthTokenFromRequest(httpReq);
+
     Authentication ret;
 
     if (LOG.isTraceEnabled()) {
       LOG.trace("Request: {}", getRequestInfoForLogging(httpReq, getAuthTokenForLogging(authToken)));
+    }
+
+    if (isCORSOptionsRequest(httpReq)) {
+      httpRes.setStatus(HttpServletResponse.SC_OK);
+      httpRes.setHeader("Access-Control-Allow-Origin", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT));
+      httpRes.setHeader("Access-Control-Allow-Headers", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT));
+      httpRes.setHeader("Access-Control-Allow-Methods", conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS,
+          CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_METHODS_DEFAULT));
+      return Authentication.SEND_SUCCESS;
     }
 
     if (!mandatory) {
