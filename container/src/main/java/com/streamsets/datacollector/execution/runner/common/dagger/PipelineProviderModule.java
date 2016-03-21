@@ -168,14 +168,27 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public MetricsEventRunnable provideMetricsEventRunnable(@Named("name") String name, @Named("rev") String rev,
-                                                          Configuration configuration,
-                                                          PipelineStateStore pipelineStateStore,
-                                                          MetricRegistry metricRegistry,
-                                                          ThreadHealthReporter threadHealthReporter,
-                                                          EventListenerManager eventListenerManager) {
-    return new MetricsEventRunnable(name, rev, configuration, pipelineStateStore, threadHealthReporter,
-      eventListenerManager, metricRegistry, null);
+  public MetricsEventRunnable provideMetricsEventRunnable(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      Configuration configuration,
+      PipelineStateStore pipelineStateStore,
+      MetricRegistry metricRegistry,
+      ThreadHealthReporter threadHealthReporter,
+      EventListenerManager eventListenerManager,
+      RuntimeInfo runtimeInfo
+  ) {
+    return new MetricsEventRunnable(
+        name,
+        rev,
+        configuration,
+        pipelineStateStore,
+        threadHealthReporter,
+        eventListenerManager,
+        metricRegistry,
+        null,
+        runtimeInfo
+    );
   }
 
 }

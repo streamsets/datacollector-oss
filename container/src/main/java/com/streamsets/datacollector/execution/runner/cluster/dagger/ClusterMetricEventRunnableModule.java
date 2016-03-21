@@ -23,6 +23,7 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.cluster.SlaveCallbackManager;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import dagger.Module;
 import dagger.Provides;
@@ -41,12 +42,24 @@ public class ClusterMetricEventRunnableModule {
   }
 
   @Provides @Singleton
-  public MetricsEventRunnable provideMetricsEventRunnable(Configuration configuration,
-                                                          PipelineStateStore pipelineStateStore,
-                                                          EventListenerManager eventListenerManager,
-                                                          SlaveCallbackManager slaveCallbackManager) {
-    return new MetricsEventRunnable(name, rev, configuration, pipelineStateStore, null, eventListenerManager, null,
-      slaveCallbackManager);
+  public MetricsEventRunnable provideMetricsEventRunnable(
+      Configuration configuration,
+      PipelineStateStore pipelineStateStore,
+      EventListenerManager eventListenerManager,
+      SlaveCallbackManager slaveCallbackManager,
+      RuntimeInfo runtimeInfo
+  ) {
+    return new MetricsEventRunnable(
+        name,
+        rev,
+        configuration,
+        pipelineStateStore,
+        null,
+        eventListenerManager,
+        null,
+        slaveCallbackManager,
+        runtimeInfo
+    );
   }
 
 }

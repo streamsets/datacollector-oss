@@ -23,12 +23,14 @@ package com.streamsets.datacollector.execution.metrics;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.runner.cluster.SlaveCallbackManager;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.CounterJson;
 import com.streamsets.datacollector.restapi.bean.MeterJson;
 import com.streamsets.datacollector.restapi.bean.MetricRegistryJson;
@@ -70,13 +72,22 @@ public class MetricsEventRunnable implements Runnable {
   private final String rev;
   private final int scheduledDelay;
   private final Configuration configuration;
+  private final RuntimeInfo runtimeInfo;
   private BlockingQueue<Record> statsQueue;
+  private PipelineConfiguration pipelineConfiguration;
 
   @Inject
-  public MetricsEventRunnable(@Named("name") String name, @Named("rev") String rev, Configuration configuration,
-                              PipelineStateStore pipelineStateStore, ThreadHealthReporter threadHealthReporter,
-                              EventListenerManager eventListenerManager, MetricRegistry metricRegistry,
-                              SlaveCallbackManager slaveCallbackManager) {
+  public MetricsEventRunnable(
+      @Named("name") String name,
+      @Named("rev") String rev,
+      Configuration configuration,
+      PipelineStateStore pipelineStateStore,
+      ThreadHealthReporter threadHealthReporter,
+      EventListenerManager eventListenerManager,
+      MetricRegistry metricRegistry,
+      SlaveCallbackManager slaveCallbackManager,
+      RuntimeInfo runtimeInfo
+  ) {
     slaveMetrics = new ConcurrentHashMap<>();
     this.threadHealthReporter = threadHealthReporter;
     this.eventListenerManager = eventListenerManager;
@@ -87,6 +98,7 @@ public class MetricsEventRunnable implements Runnable {
     this.rev = rev;
     this.scheduledDelay = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     this.configuration = configuration;
+    this.runtimeInfo = runtimeInfo;
   }
 
   public void setThreadHealthReporter(ThreadHealthReporter threadHealthReporter) {
@@ -95,6 +107,10 @@ public class MetricsEventRunnable implements Runnable {
 
   public void setStatsQueue(BlockingQueue<Record> statsQueue) {
     this.statsQueue = statsQueue;
+  }
+
+  public void setPipelineConfiguration(PipelineConfiguration pipelineConfiguration) {
+    this.pipelineConfiguration = pipelineConfiguration;
   }
 
   @Override
@@ -126,7 +142,11 @@ public class MetricsEventRunnable implements Runnable {
         }
         if (isStatAggregationEnabled()) {
           AggregatorUtil.enqueStatsRecord(
-            AggregatorUtil.createMetricJsonRecord(metricsJSONStr),
+            AggregatorUtil.createMetricJsonRecord(
+                runtimeInfo.getId(),
+                pipelineConfiguration.getMetadata(),
+                metricsJSONStr
+            ),
             statsQueue,
             configuration
           );

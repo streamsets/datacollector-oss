@@ -91,9 +91,17 @@ public class TestMetricsAggregation {
 
   @Test
   public void testAggregatedMetrics() {
-    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable("a", "0", new Configuration(), pipelineStateStore
-      , Mockito.mock(ThreadHealthReporter.class), new EventListenerManager(),
-      null, slaveCallbackManager);
+    MetricsEventRunnable metricsEventRunnable = new MetricsEventRunnable(
+        "a",
+        "0",
+        new Configuration(),
+        pipelineStateStore,
+        Mockito.mock(ThreadHealthReporter.class),
+        new EventListenerManager(),
+        null,
+        slaveCallbackManager,
+        null
+    );
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
     validateAggregatedResults(aggregatedMetrics);
 

@@ -46,7 +46,6 @@ public class AggregatorUtil {
   private static final Logger LOG = LoggerFactory.getLogger(AggregatorUtil.class);
 
   public static final String METRIC_RULE_EVALUATOR = "MetricRuleEvaluator";
-  public static final String PIPELINE_ID = "pipelineId";
   public static final String TIMESTAMP = "timestamp";
   public static final String RECORD_TYPE = "record.type";
   public static final String METRICS_RECORD = "MetricsRecord";
@@ -64,7 +63,6 @@ public class AggregatorUtil {
   public static final String OUTPUT_RECORDS = "outputRecords";
   public static final String STAGE_ERROR = "stageError";
   public static final String OUTPUT_RECORDS_PER_LANE = "outputRecordsPerLane";
-  public static final String STAGE_BATCH_METRICS_MAP = "stageBatchMetricsMap";
   public static final String STREAM_NAME = "streamName";
   public static final String RULE_ID = "ruleId";
   public static final String EVALUATED_RECORDS = "evaluatedRecords";
@@ -101,6 +99,9 @@ public class AggregatorUtil {
   public static final String METRIC_JSON_STRING = "metricJsonString";
   public static final String ALERT_TEXTS = "alertTexts";
   public static final String DRIFT_RULE = "driftRule";
+  public static final String IS_AGGREGATED = "isAggregated";
+  public static final String METADATA = "metadata";
+  public static final String SDC_ID = "sdcId";
 
   private AggregatorUtil() {
 
@@ -109,17 +110,14 @@ public class AggregatorUtil {
   public static Record createMetricRecord(Map<String, Object> pipelineBatchMetrics) {
     Record record = createRecord(METRIC_RULE_EVALUATOR);
     Map<String, Field> map = new HashMap<>();
-    map.put(PIPELINE_ID, Field.create("pipelineId"));
     map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
     map.put(RECORD_TYPE, Field.create(METRICS_RECORD));
-
     map.put(PIPELINE_BATCH_DURATION, Field.create(Field.Type.LONG, pipelineBatchMetrics.get(PIPELINE_BATCH_DURATION)));
     map.put(BATCH_COUNT, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_COUNT)));
     map.put(BATCH_INPUT_RECORDS, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_INPUT_RECORDS)));
     map.put(BATCH_OUTPUT_RECORDS, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_OUTPUT_RECORDS)));
     map.put(BATCH_ERROR_RECORDS, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_ERROR_RECORDS)));
     map.put(BATCH_ERRORS, Field.create(Field.Type.INTEGER, pipelineBatchMetrics.get(BATCH_ERRORS)));
-
 
     Map<String, Object> stageBatchMetrics = (Map<String, Object>)pipelineBatchMetrics.get(STAGE_BATCH_METRICS);
     // This is stage instance name vs stage metrics
@@ -161,7 +159,6 @@ public class AggregatorUtil {
   ) {
     Record record = createRecord(DATA_RULE_RECORD);
     Map<String, Field> map = new HashMap<>();
-    map.put(PIPELINE_ID, Field.create("pipelineId"));
     map.put(STREAM_NAME, Field.create(lane));
     map.put(RULE_ID, Field.create(ruleId));
     map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
@@ -183,7 +180,6 @@ public class AggregatorUtil {
   ) {
     Record record = createRecord(CONFIGURATION_CHANGE);
     Map<String, Field> map = new HashMap<>();
-    map.put(PIPELINE_ID, Field.create("pipelineId"));
     map.put(
       METRIC_ALERTS_TO_REMOVE,
         Field.create(
@@ -285,12 +281,14 @@ public class AggregatorUtil {
     return record;
   }
 
-  public static Record createMetricJsonRecord(String metricsJSONStr) {
+  public static Record createMetricJsonRecord(String sdcId, Map<String, String> metadata, String metricsJSONStr) {
     Record record = createRecord(METRIC_RULE_EVALUATOR);
     Map<String, Field> map = new HashMap<>();
-    map.put(PIPELINE_ID, Field.create("pipelineId"));
-    map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
     map.put(RECORD_TYPE, Field.create(METRICS_JSON_RECORD));
+    map.put(TIMESTAMP, Field.create(System.currentTimeMillis()));
+    map.put(SDC_ID, Field.create(sdcId));
+    map.put(IS_AGGREGATED, Field.create(false));
+    map.put(METADATA, getMetadataField(metadata));
     map.put(METRIC_JSON_STRING, Field.create(metricsJSONStr));
     record.set(Field.create(map));
     return record;
@@ -331,7 +329,9 @@ public class AggregatorUtil {
     );
   }
 
-  public static void enqueStatsRecord(Record record, BlockingQueue<Record> statsQueue, Configuration configuration) {
+  public static void enqueStatsRecord(
+      Record record,
+      BlockingQueue<Record> statsQueue, Configuration configuration) {
     boolean offered;
     try {
       offered = statsQueue.offer(
@@ -349,6 +349,14 @@ public class AggregatorUtil {
       LOG.error("Dropping Stats Aggregator Request records as stats aggregator queue is full. " +
         "Please resize the stats aggregator queue.");
     }
+  }
+
+  private static Field getMetadataField(Map<String, String> metadata) {
+    Map<String, Field> map = new HashMap<>(metadata.size());
+    for (Map.Entry<String, String> e : metadata.entrySet()) {
+      map.put(e.getKey(), Field.create(e.getValue()));
+    }
+    return Field.create(map);
   }
 
 }
