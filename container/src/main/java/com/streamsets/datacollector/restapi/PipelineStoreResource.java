@@ -19,6 +19,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.io.BaseEncoding;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -74,7 +75,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -415,7 +415,7 @@ public class PipelineStoreResource {
         String iconFile = stageDefinition.getIcon();
         if (iconFile != null && iconFile.trim().length() > 0) {
           try {
-            stageIcons.put(key, Base64.getEncoder().encodeToString(
+            stageIcons.put(key, BaseEncoding.base64().encode(
                 IOUtils.toByteArray(stageDefinition.getStageClassLoader().getResourceAsStream(iconFile))));
           } catch (Exception e) {
             LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
