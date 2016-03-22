@@ -468,6 +468,41 @@ public class TestRecordWriterManager {
   }
 
   @Test
+  public void testThresholdOverflow() throws Exception {
+    URI uri = new URI("file:///");
+    Configuration conf = new HdfsConfiguration();
+    String prefix = "prefix";
+    String template = getTestDir().toString() + "/${YYYY()}/${MM()}/${DD()}/${hh()}/${mm()}/${ss()}/${record:value('/')}";
+    TimeZone timeZone = TimeZone.getTimeZone("UTC");
+    long cutOffSecs = Long.MAX_VALUE;
+    long cutOffSize = 4;
+    long cutOffRecords = 20;
+    HdfsFileType fileType = HdfsFileType.TEXT;
+    DefaultCodec compressionCodec = new DefaultCodec();
+    compressionCodec.setConf(conf);
+    SequenceFile.CompressionType compressionType = null;
+    String keyEL = null;
+    DataGeneratorFactory generatorFactory = new DummyDataGeneratorFactory(null);
+    RecordWriterManager mgr = new RecordWriterManager(uri, conf, prefix, template, timeZone, cutOffSecs, cutOffSize,
+        cutOffRecords, fileType, compressionCodec , compressionType, keyEL, generatorFactory, targetContext, "dirPathTemplate");
+    Assert.assertTrue(mgr.validateDirTemplate("g", "dirPathTemplate", "dirPathTemplate", new ArrayList<Stage.ConfigIssue>()));
+    Date now = getFixedDate();
+
+    Date recordDate = now;
+    Record record = RecordCreator.create();
+    record.set(Field.create("a"));
+    RecordWriter writer = mgr.getWriter(now, recordDate, record);
+    Assert.assertNotNull(writer);
+    for (int i = 0; i < 2; i++) {
+      Assert.assertFalse(mgr.isOverThresholds(writer));
+      writer.write(record);
+      writer.flush();
+    }
+    Assert.assertTrue(mgr.isOverThresholds(writer));
+    mgr.commitWriter(writer);
+  }
+
+  @Test
   public void testNoThreshold() throws Exception {
     URI uri = new URI("file:///");
     Configuration conf = new HdfsConfiguration();

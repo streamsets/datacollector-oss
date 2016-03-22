@@ -87,7 +87,7 @@ public class RecordWriterManager {
     this.uniquePrefix = uniquePrefix;
     this.dirPathTemplate = dirPathTemplate;
     this.timeZone = timeZone;
-    this.cutOffMillis = cutOffSecs * 1000;
+    this.cutOffMillis = preventOverflow(cutOffSecs * 1000);
     this.cutOffSize = cutOffSizeBytes;
     this.cutOffRecords = cutOffRecords;
     this.fileType = fileType;
@@ -168,7 +168,11 @@ public class RecordWriterManager {
   long getTimeToLiveMillis(Date now, Date recordDate) {
     // we up the record date to the greatest one based on the template
     recordDate = pathResolver.getCeilingDate(recordDate);
-    return (recordDate != null) ? recordDate.getTime() + cutOffMillis - now.getTime() : Long.MAX_VALUE;
+    if (recordDate != null) {
+      return preventOverflow(recordDate.getTime() + cutOffMillis) - now.getTime();
+    } else {
+      return Long.MAX_VALUE;
+    }
   }
 
   RecordWriter createWriter(FileSystem fs, Path path, long timeToLiveMillis) throws StageException, IOException {
@@ -307,6 +311,10 @@ public class RecordWriterManager {
         }
       }
     }
+  }
+
+  private long preventOverflow(long valueToVerify) {
+    return (valueToVerify > 0) ? valueToVerify : Long.MAX_VALUE;
   }
 
 
