@@ -156,7 +156,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
     }
     return false;
   }
-  
+
   private void findCreatedDirectories() throws IOException{
     if (allowForLateDirectoryCreation && !nonExistingPaths.isEmpty()) {
       Path processingPath;
@@ -245,7 +245,7 @@ public class GlobFileContextProvider extends BaseFileContextProvider {
 
     startNewLoop();
   }
-
+  
   @Override
   public void close() {
     LOG.debug("Closed");

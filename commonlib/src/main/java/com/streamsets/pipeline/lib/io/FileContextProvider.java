@@ -51,6 +51,8 @@ public interface FileContextProvider extends Closeable {
 
   Map<String, Long> getOffsetsLag(Map<String, String> offsetMap) throws IOException;
 
+  Map<String, Long> getPendingFiles() throws IOException;
+
   void purge();
 
 }

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.FileRollMode;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.lib.io.MultiFileReader;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -60,6 +61,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(FileTailSource.class)
 public class TestFileTailSource {
   private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery
 
@@ -855,10 +857,10 @@ public class TestFileTailSource {
     }
   }
 
-  private void writeFileInDirectoryStructure(File baseDir, String suffixDirPath, int times) throws IOException{
-    for (int i= 1; i<=times; i++) {
+  private void writeFileInDirectoryStructure(File baseDir, String suffixDirPath, int times) throws IOException {
+    for (int i = 1; i <= times; i++) {
       //Create ${baseDir}/${uuid}/dir/indx_${i}/${suffixDir}/file.txt-1
-      File fullTestIndxDirPath = new File(baseDir.getAbsolutePath() +"/dir/indx_" + i + "/" + suffixDirPath);
+      File fullTestIndxDirPath = new File(baseDir.getAbsolutePath() + "/dir/indx_" + i + "/" + suffixDirPath);
       Assert.assertTrue(
           Utils.format("Unable to create test folder :{}", fullTestIndxDirPath.getAbsolutePath()),
           fullTestIndxDirPath.mkdirs()
@@ -876,7 +878,7 @@ public class TestFileTailSource {
     String suffixDirPath = "data";
 
     FileInfo fileInfo = new FileInfo();
-    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/dir/*/"+ suffixDirPath + "/file.txt-1";
+    fileInfo.fileFullPath = testDataDir.getAbsolutePath() + "/dir/*/" + suffixDirPath + "/file.txt-1";
     fileInfo.fileRollMode = FileRollMode.ALPHABETICAL;
     fileInfo.firstFile = "";
 
@@ -914,7 +916,6 @@ public class TestFileTailSource {
     }
   }
 
-  @PrepareForTest(FileTailSource.class)
   @Test
   public void testOffsetLagMetric() throws Exception {
     final File testDataDir = new File("target", UUID.randomUUID().toString());
@@ -939,8 +940,6 @@ public class TestFileTailSource {
     conf.fileInfos = Arrays.asList(fileInfo);
     conf.postProcessing = PostProcessingOptions.NONE;
     conf.dataFormatConfig.textMaxLineLen = 1024;
-    conf.validatePath = false;
-
 
     FileTailSource source = PowerMockito.spy(new FileTailSource(conf, SCAN_INTERVAL));
 
@@ -949,7 +948,7 @@ public class TestFileTailSource {
     PowerMockito.replace(
         MemberMatcher.method(
             FileTailSource.class,
-            "getOffsetsLag",
+            "calculateOffsetLagMetric",
             Map.class
         )
     ).with(
@@ -981,6 +980,95 @@ public class TestFileTailSource {
 
       Map<String, Counter> offsetLag = (Map<String, Counter>) Whitebox.getInternalState(source, "offsetLagMetric");
       Assert.assertEquals(6L, offsetLag.get(file.getAbsolutePath() + "||" + ".*").getCount());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testPendingFilesMetric() throws Exception {
+    final File testDataDir = new File("target", UUID.randomUUID().toString());
+
+    Assert.assertTrue(testDataDir.mkdirs());
+
+    final List<File> files = Arrays.asList(
+        new File(testDataDir, "file.txt-1"),
+        new File(testDataDir, "file.txt-2"),
+        new File(testDataDir, "file.txt-3"),
+        new File(testDataDir, "file.txt-4"),
+        new File(testDataDir, "file.txt-5"),
+        new File(testDataDir, "file.txt-6"),
+        new File(testDataDir, "file.txt-7"),
+        new File(testDataDir, "file.txt-8")
+    );
+
+    //We will create first 4 files here. Rest of the four files will be created
+    //before we calculate the pending files metric.
+    for (int i = 0; i < 4; i++) {
+      File file = files.get(i);
+      Files.write(
+          file.toPath(),
+          Arrays.asList("A", "B", "C"),
+          StandardCharsets.UTF_8,
+          StandardOpenOption.CREATE_NEW
+      );
+    }
+
+    FileTailSource source = PowerMockito.spy(
+        (FileTailSource) createSourceForPeriodicFile(
+            testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}",
+            "[0-9]"
+        )
+    );
+
+    //Intercept calculatePendingFilesMetric private method which calculates the pendingFiles
+    //and create new files.
+    PowerMockito.replace(
+        MemberMatcher.method(
+            FileTailSource.class,
+            "calculatePendingFilesMetric"
+        )
+    ).with(
+        new InvocationHandler() {
+          @Override
+          public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            //Create the remaining 4 files so as to have files which are pending and not being started for processing.
+            for (int i = 4; i < 8; i++) {
+              File file = files.get(i);
+              Files.write(
+                  file.toPath(),
+                  Arrays.asList("A", "B", "C"),
+                  StandardCharsets.UTF_8,
+                  StandardOpenOption.CREATE_NEW
+              );
+            }
+            //call the real getOffsetsLag private method
+            return method.invoke(proxy, args);
+          }
+        }
+    );
+
+    SourceRunner runner = createRunner(source);
+    try {
+      runner.runInit();
+
+      StageRunner.Output output = runner.runProduce(null, 36);
+
+      // Make sure there are only 12 (3 for each file we read).
+      Assert.assertEquals(12, output.getRecords().get("lane").size());
+
+      Map<String, Counter> pendingFilesMetric =
+          (Map<String, Counter>) Whitebox.getInternalState(
+              source,
+              "pendingFilesMetric"
+          );
+      Assert.assertEquals(
+          4L,
+          pendingFilesMetric.get(
+              testDataDir.getAbsolutePath() + "/file.txt-${PATTERN}||[0-9]"
+          ).getCount()
+      );
+
     } finally {
       runner.runDestroy();
     }

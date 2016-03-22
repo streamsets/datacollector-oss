@@ -68,6 +68,7 @@ public class FileTailSource extends BaseSource {
   public static final String FILE_TAIL_CONF_PREFIX = "conf.";
   public static final String FILE_TAIL_DATA_FORMAT_CONFIG_PREFIX = FILE_TAIL_CONF_PREFIX + "dataFormatConfig.";
   private static final String OFFSETS_LAG = "offsets.lag";
+  private static final String PENDING_FILES = "pending.files";
 
 
   private final FileTailConfigBean conf;
@@ -90,6 +91,7 @@ public class FileTailSource extends BaseSource {
   private String outputLane;
   private String metadataLane;
   private Map<String, Counter> offsetLagMetric;
+  private Map<String, Counter> pendingFilesMetric;
 
   private boolean validateFileInfo(FileInfo fileInfo, List<ConfigIssue> issues) {
     boolean ok = true;
@@ -362,6 +364,7 @@ public class FileTailSource extends BaseSource {
     outputLane = getContext().getOutputLanes().get(0);
     metadataLane = getContext().getOutputLanes().get(1);
     offsetLagMetric = new HashMap<String, Counter>();
+    pendingFilesMetric = new HashMap<String, Counter>();
 
     return issues;
   }
@@ -516,33 +519,42 @@ public class FileTailSource extends BaseSource {
     //Calculate Offset lag Metric.
     calculateOffsetLagMetric(offsetMap);
 
+    //Calculate Pending Files Metric
+    calculatePendingFilesMetric();
+
     // serializing offsets of all directories
     return serializeOffsetMap(offsetMap);
   }
 
+
+  private void calibrateMetric(Map<String, Long> resultMap, Map<String, Counter> metricMap, String metricPrefix) {
+    for (Map.Entry<String, Long> mapEntry : resultMap.entrySet()) {
+      String fileKey = mapEntry.getKey();
+      Long currValue = mapEntry.getValue();
+      Counter counter = metricMap.get(fileKey);
+      if (counter == null) {
+        counter = getContext().createCounter(metricPrefix + "." + fileKey);
+      }
+      //Counter only supports inc/dec by a number from an existing count value.
+      counter.inc(currValue - counter.getCount());
+      metricMap.put(fileKey, counter);
+    }
+  }
+
   private void calculateOffsetLagMetric(Map<String, String> offsetMap) {
     try {
-      Map<String, Long> offsetLagMap = getOffsetsLag(offsetMap);
-      for (Map.Entry<String, Long> offsetLagMapEntry : offsetLagMap.entrySet()) {
-        String fileKey = offsetLagMapEntry.getKey();
-        Long offsetLag = offsetLagMapEntry.getValue();
-        Counter counter = offsetLagMetric.get(fileKey);
-        LiveFile file = FileContextProviderUtil.getLiveFileFromFileOffset(offsetMap.get(fileKey));
-        if (counter == null) {
-          //Using iNode in the name for metric as iNode will not change, whereas the file name can change
-          counter = getContext().createCounter(file.getINode() + "_" + OFFSETS_LAG);
-        }
-        //Counter only supports inc/dec by a number from an existing count value.
-        counter.inc(offsetLag - counter.getCount());
-        offsetLagMetric.put(fileKey, counter);
-      }
+      calibrateMetric(multiDirReader.getOffsetsLag(offsetMap), offsetLagMetric, OFFSETS_LAG);
     } catch (IOException ex) {
       LOG.warn("Error while Calculating Offset Lag {}", ex.toString(), ex);
     }
   }
 
-  private Map<String, Long> getOffsetsLag(Map<String, String> offsetMap) throws IOException {
-    return multiDirReader.getOffsetsLag(offsetMap);
+  private void calculatePendingFilesMetric() {
+    try {
+      calibrateMetric(multiDirReader.getPendingFiles(), pendingFilesMetric, PENDING_FILES);
+    } catch (IOException ex) {
+      LOG.warn("Error while Calculating Pending Files Metric {}", ex.toString(), ex);
+    }
   }
 
   private void handleException(String sourceId, Exception ex) throws StageException {
@@ -563,5 +575,4 @@ public class FileTailSource extends BaseSource {
             getContext().getOnErrorRecord(), ex));
     }
   }
-
 }

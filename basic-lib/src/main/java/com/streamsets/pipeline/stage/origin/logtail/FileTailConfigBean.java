@@ -103,7 +103,7 @@ public class FileTailConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       label = "Validate Path",
       description = "Whether to validate the path of spool directory.",
-      displayPosition = 12,
+      displayPosition = 70,
       group = "FILES",
       defaultValue = "true"
   )

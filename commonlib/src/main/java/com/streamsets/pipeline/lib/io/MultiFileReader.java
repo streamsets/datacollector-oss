@@ -246,8 +246,23 @@ public class MultiFileReader implements Closeable {
     return chunk;
   }
 
+  /**
+   * Determines the offset lag for each active file being read.
+   *
+   * @param offsetMap the current Offset for file keys.
+   * @return map of fileKey to offset.
+   */
   public Map<String, Long> getOffsetsLag(Map<String, String> offsetMap) throws IOException{
     return fileContextProvider.getOffsetsLag(offsetMap);
+  }
+
+  /**
+   * Determines the number of files yet to be processed.
+   *
+   * @return map of file key (One per directory where files are located) to the number of files
+   */
+  public Map<String, Long> getPendingFiles() throws IOException{
+    return fileContextProvider.getPendingFiles();
   }
 
   /**

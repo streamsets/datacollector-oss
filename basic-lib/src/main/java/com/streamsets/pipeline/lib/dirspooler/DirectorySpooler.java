@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.lib.dirspooler;
 
+import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.Source;
@@ -146,6 +147,8 @@ public class DirectorySpooler {
   private final long archiveRetentionMillis;
   private final String errorArchiveDir;
 
+  private static final String PENDING_FILES = "pending.files";
+
   public DirectorySpooler(Source.Context context, String spoolDir, int maxSpoolFiles, String pattern,
                           FilePostProcessing postProcessing, String archiveDir, long archiveRetentionMillis,
                           String errorArchiveDir) {
@@ -187,6 +190,7 @@ public class DirectorySpooler {
   private boolean waitForPathAppearance;
 
   private Meter spoolQueueMeter;
+  private Counter pendingFilesCounter;
 
   private volatile boolean running;
 
@@ -234,6 +238,8 @@ public class DirectorySpooler {
       filesQueue = new PriorityBlockingQueue<>();
 
       spoolQueueMeter = context.createMeter("spoolQueue");
+
+      pendingFilesCounter = context.createCounter(PENDING_FILES);
 
       if (!waitForPathAppearance) {
         startSpooling(currentFile);
@@ -394,6 +400,7 @@ public class DirectorySpooler {
         previousFile = next;
       }
     }
+    pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     return (next != null) ? next.toFile() : null;
   }
 
@@ -451,6 +458,7 @@ public class DirectorySpooler {
       }
     }
     spoolQueueMeter.mark(filesQueue.size());
+    pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     LOG.debug("Found '{}' files", filesQueue.size());
     return (foundFiles.isEmpty()) ? startingFile : foundFiles.get(foundFiles.size() - 1).getFileName().toString();
   }

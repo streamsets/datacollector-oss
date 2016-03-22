@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,15 @@ public class BaseFileContextProvider implements FileContextProvider{
       }
     }
     return offsetLagMap;
+  }
+
+  @Override
+  public Map<String, Long> getPendingFiles() throws IOException{
+    Map<String, Long> pendingFiles = new HashMap<String, Long>();
+    for (FileContext context : fileContexts) {
+      pendingFiles.put(context.getMultiFileInfo().getFileKey(), context.getPendingFiles());
+    }
+    return pendingFiles;
   }
 
 

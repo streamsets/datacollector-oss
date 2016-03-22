@@ -98,14 +98,13 @@ public class LiveDirectoryScanner {
 
     // firstFileName needs to be verified by roll mode
     Utils.checkArgument(this.rollMode.isFirstAcceptable(firstFileName),
-                        Utils.formatL("firstFileName '{}' is not an acceptable file name", firstFileName));
+        Utils.formatL("firstFileName '{}' is not an acceptable file name", firstFileName));
     this.firstFile = (firstFileName == null || firstFileName.isEmpty()) ? null : new File(dir, firstFileName).toPath();
 
     pathComparator = this.rollMode.getComparator();
 
     //TODO check if we need to escape liveFileName
     fileMatcher = FileSystems.getDefault().getPathMatcher(this.rollMode.getPattern());
-
   }
 
   private class FileFilter implements DirectoryStream.Filter<Path> {
@@ -156,31 +155,30 @@ public class LiveDirectoryScanner {
     }
   }
 
+  /**
+   * Scans the directory for number of files yet to be processed.
+   *
+   * @param current the last 'rolled' file processed. Use <code>null</code> to look for the first one. The provided
+   *                file cannot be the 'live' file.
+   * @return the number of rolled files yet to be processed.
+   * @throws IOException thrown if the directory could not be scanned.
+   */
+  public long getPendingFiles(LiveFile current) throws IOException{
+    return findToBeProcessedMatchingFiles(current).size();
+  }
+
   private LiveFile scanInternal(LiveFile current) throws IOException {
     Utils.checkArgument(current == null || rollMode.isCurrentAcceptable(
-                            current.getPath().getFileName().toString()),
-                        Utils.formatL("Current file '{}' is not acceptable for live file '{}' using '{}'",
-                                      current, liveFileName, rollMode));
-    FileFilter filter ;
-    if (current == null) {
-      // we don't have current file,
-      // let scan from the configured first file and include the first file itself if found
-      filter = new FileFilter(firstFile, true, pathComparator);
-    } else {
-      // we do have a current file, we need to find the next file
-      filter = new FileFilter(current.getPath(), false, pathComparator);
-    }
-    List<Path> matchingFiles = new ArrayList<>();
-    try (DirectoryStream<Path> matches = Files.newDirectoryStream(dir.toPath(), filter)) {
-      for (Path file : matches) {
-        matchingFiles.add(file);
-      }
-    }
+        current.getPath().getFileName().toString()),
+        Utils.formatL("Current file '{}' is not acceptable for live file '{}' using '{}'",
+            current, liveFileName, rollMode));
+    List<Path> matchingFiles = findToBeProcessedMatchingFiles(current);
     LOG.debug("Scanned '{}' matching files", matchingFiles.size());
     if (matchingFiles.size() > 0) {
       // sort all matching files (they don't necessary come in order from the OS)
       // we sort them using the comparator of the NonLivePostfix
       Collections.sort(matchingFiles, pathComparator);
+
       // we found a rolled file, create it as such
       current = new LiveFile(matchingFiles.get(0));
     } else {
@@ -200,4 +198,22 @@ public class LiveDirectoryScanner {
     return current;
   }
 
+  private List<Path> findToBeProcessedMatchingFiles(LiveFile current) throws IOException {
+    FileFilter filter ;
+    if (current == null) {
+      // we don't have current file,
+      // let scan from the configured first file and include the first file itself if found
+      filter = new FileFilter(firstFile, true, pathComparator);
+    } else {
+      // we do have a current file, we need to find the next file
+      filter = new FileFilter(current.getPath(), false, pathComparator);
+    }
+    List<Path> matchingFiles = new ArrayList<>();
+    try (DirectoryStream<Path> matches = Files.newDirectoryStream(dir.toPath(), filter)) {
+      for (Path file : matches) {
+        matchingFiles.add(file);
+      }
+    }
+    return matchingFiles;
+  }
 }
