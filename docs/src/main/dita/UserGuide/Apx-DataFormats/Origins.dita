@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+      http://www.apache.org/licenses/LICENSE-2.0
+      
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="concept_kgd_11c_kv">
+ <title>Origins</title>
+ <shortdesc>The following table lists the data formats supported by each origin.</shortdesc>
+ <conbody>
+  <p>
+            <table frame="all" rowsep="1" colsep="1" id="table_crn_f1c_kv">
+                <tgroup cols="10">
+                    <colspec colname="c1" colnum="1" colwidth="1.0*"/>
+                    <colspec colname="c2" colnum="2" colwidth="1.0*"/>
+                    <colspec colname="c3" colnum="3" colwidth="1.0*"/>
+                    <colspec colname="c4" colnum="4" colwidth="1.0*"/>
+                    <colspec colname="c5" colnum="5" colwidth="1.0*"/>
+                    <colspec colname="c6" colnum="6" colwidth="1.0*"/>
+                    <colspec colname="c7" colnum="7" colwidth="1.0*"/>
+                    <colspec colname="c8" colnum="8" colwidth="1.0*"/>
+                    <colspec colname="c9" colnum="9" colwidth="1.0*"/>
+                    <colspec colname="newCol10" colnum="10" colwidth="1*"/>
+                    <thead>
+                        <row>
+                            <entry>Origin</entry>
+                            <entry>Avro</entry>
+                            <entry>Binary</entry>
+                            <entry>Delimited</entry>
+                            <entry>JSON</entry>
+                            <entry>Log</entry>
+                            <entry>Protobuf</entry>
+                            <entry>SDC Record</entry>
+                            <entry>Text</entry>
+                            <entry>XML</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Amazon S3</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" id="image_c1h_ddc_kv"
+                                    scale="30"/></entry>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gfm_fdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_nwn_fdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_jgp_fdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_r11_gdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_acr_fdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_kt2_gdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_svf_gdc_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>Directory</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gtg_qdc_kv"/></entry>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_wv3_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_xxj_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_kkp_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_khq_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ll5_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_erv_qdc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_r31_rdc_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>File Tail</entry>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_lsy_m2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_utz_m2c_kv"/></entry>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_mbc_n2c_kv"/></entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>Hadoop FS</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_j5s_p2c_kv"/></entry>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_mg5_p2c_kv"/></entry>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gjw_p2c_kv"/></entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>HTTP Client</entry>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_vwy_q2c_kv"/></entry>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_fw1_r2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_xxb_r2c_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>JDBC Consumer</entry>
+                            <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+                        </row>
+                        <row>
+                            <entry>JMS Consumer</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_xx2_52c_kv"/></entry>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_dv3_52c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gwn_52c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_qdw_52c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_pbx_52c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_bqb_v2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_dvc_v2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_pdg_v2c_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>Kafka Consumer</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gth_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_k43_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gkj_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ljk_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ajl_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_blm_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_okn_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_kk4_w2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_smp_w2c_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>Kinesis Consumer</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_mhp_x2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_g2q_x2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_qzv_x2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_m4x_x2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_cty_x2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_eb1_y2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_xfb_y2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ckc_y2c_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ntd_y2c_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>MapR Streams Consumer</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_rp1_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_rpc_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_tqd_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_bx2_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_tgg_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_gkh_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_jl3_2gc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_knj_2gc_kv"/></entry>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>Mongo DB</entry>
+                            <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+                        </row>
+                        <row>
+                            <entry>Omniture</entry>
+                            <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+                        </row>
+                        <row>
+                            <entry>RabbitMQ Consumer</entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_lvv_4qc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_dyw_4qc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_rxx_4qc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_ztd_pqc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_xt2_pqc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_t4j_pqc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_lmk_pqc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_dkl_pqc_kv"/></entry>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_jlp_pqc_kv"/></entry>
+                        </row>
+                        <row>
+                            <entry>SDC RPC</entry>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry/>
+                            <entry><image href="../Graphics/CheckIcon.png" scale="30"
+                                    id="image_fwg_zzc_kv"/></entry>
+                            <entry/>
+                            <entry/>
+                        </row>
+                        <row>
+                            <entry>UDP Source</entry>
+                            <entry namest="c2" nameend="newCol10">* * * Not Applicable * * *</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </p>
+ </conbody>
+</concept>
