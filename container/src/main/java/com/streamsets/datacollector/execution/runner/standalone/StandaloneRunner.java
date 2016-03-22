@@ -555,6 +555,10 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void prepareForStart() throws PipelineStoreException, PipelineRunnerException {
+    PipelineState fromState = getState();
+    checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(PipelineStatus.STARTING), ContainerError.CONTAINER_0102,
+        fromState.getStatus(), PipelineStatus.STARTING);
+
     if(!resourceManager.requestRunnerResources(ThreadUsage.STANDALONE)) {
       throw new PipelineRunnerException(ContainerError.CONTAINER_0166, name);
     }

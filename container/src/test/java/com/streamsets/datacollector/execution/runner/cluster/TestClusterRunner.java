@@ -328,6 +328,25 @@ public class TestClusterRunner {
   }
 
   @Test
+  public void testPipelineStartMultipleTimes() throws Exception {
+    setState(PipelineStatus.EDITED);
+    Runner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStart();
+    clusterRunner.start();
+    Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
+
+    // call start on the already running pipeline and make sure it doesn't request new resource each time
+    for (int counter =0; counter < 10; counter++) {
+      try {
+        clusterRunner.prepareForStart();
+        Assert.fail("Expected exception but didn't get any");
+      } catch (PipelineRunnerException ex) {
+        Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
+      }
+    }
+  }
+
+  @Test
   public void testPipelineStatusStartError() throws Exception {
     setState(PipelineStatus.EDITED);
     Runner clusterRunner = createClusterRunner();

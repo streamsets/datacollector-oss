@@ -184,6 +184,25 @@ public class TestStandaloneRunner {
   }
 
   @Test(timeout = 20000)
+  public void testPipelineStartMultipleTimes() throws Exception {
+    Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
+    runner.start();
+    waitAndAssertState(runner, PipelineStatus.RUNNING);
+    // call start on the already running pipeline and make sure it doesn't request new resource each time
+    for (int counter =0; counter < 10; counter++) {
+      try {
+        runner.start();
+        Assert.fail("Expected exception but didn't get any");
+      } catch (PipelineRunnerException ex) {
+        Assert.assertTrue(ex.getMessage().contains("CONTAINER_0102"));
+      }
+    }
+    ((AsyncRunner)runner).getRunner().prepareForStop();
+    ((AsyncRunner)runner).getRunner().stop();
+    waitAndAssertState(runner, PipelineStatus.STOPPED);
+  }
+
+  @Test(timeout = 20000)
   public void testPipelineFinish() throws Exception {
     Runner runner = pipelineManager.getRunner("admin", TestUtil.MY_PIPELINE, "0");
     runner.start();
