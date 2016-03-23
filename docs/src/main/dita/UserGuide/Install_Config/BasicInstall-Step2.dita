@@ -24,26 +24,22 @@
             additional libraries:<dl>
                 <dlentry>
                     <dt>To view the list of available libraries:</dt>
-                    <dd>From the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> installation directory, use the following
-                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -list</codeblock></dd>
+                    <dd>Use the following
+                        command:<codeblock>$SDC_DIST/bin/streamsets stagelibs -list</codeblock></dd>
                     <dd>This provides a list of all available stage libraries and whether they are
                         already installed. For more information about the stages installed with each
                         stage library, see <xref href="BasicInstall-LibList.dita"/>.</dd>
                 </dlentry>
                 <dlentry>
                     <dt>To install one or more stage libraries:</dt>
-                    <dd>From the <ph
-                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> installation directory, use the following
-                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -install=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
+                    <dd>Use the following
+                        command:<codeblock>$SDC_DIST/bin/streamsets stagelibs -install=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
                     <dd>Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>
                     <dd>For example, to install the Amazon S3 origin and destination, as well as the
                         Cassandra destination and Elasticsearch destination for Elasticsearch 1.6.2,
                         use the following command:
-                        <codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -install\
+                        <codeblock>$SDC_DIST/bin/streamsets stagelibs -install\
 =streamsets-datacollector-aws-lib,streamsets-datacollector-cassandra_2-lib,\
 streamsets-datacollector-elasticsearch_1_6-lib </codeblock></dd>
                     <dd>When successful, the command line indicates that the stage libraries have
@@ -75,7 +71,7 @@ Stage library streamsets-datacollector-rabbitmq-lib installed</codeblock></dd>
                     <dd>To generate an installation script based on the current <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> installation, use the following
-                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets stagelibs -installScript</codeblock></dd>
+                        command:<codeblock>$SDC_DIST/bin/streamsets stagelibs -installScript</codeblock></dd>
                     <dd>The command returns an install command, such as the following:
                         <codeblock>=================================================================================
 streamsets stagelibs -install=streamsets-datacollector-apache-kafka_0_8_1-lib,\
@@ -87,7 +83,7 @@ streamsets-datacollector-jython_2_7-lib,streamsets-datacollector-rabbitmq-lib
                 <dlentry>
                     <dt>To uninstall libraries when necessary:</dt>
                     <dd>To uninstall a library, use the following
-                        command:<codeblock>&lt;SDCinstalldir>/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
+                        command:<codeblock>$SDC_DIST/bin/streamsets -uninstall=&lt;libraryID>,&lt;libraryID>,...</codeblock></dd>
                     <dd>Use the full name of the libraries that you want to install, separating them
                         with commas. Do not include spaces in the command. </dd>
                 </dlentry>

@@ -18,7 +18,8 @@
  <shortdesc>For increased security you can store sensitive information, such as a password, in
     separate files and reference the files in the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    configuration file as follows: @<codeph>&lt;filename></codeph>@.</shortdesc>
+   configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, as follows:
+    @<codeph>&lt;filename></codeph>@.</shortdesc>
  <conbody>
   <p><indexterm>Data Collector configuration file<indexterm>storing passwords and other sensitive
           values</indexterm></indexterm><indexterm>passwords<indexterm>storing in
@@ -29,20 +30,21 @@
       the email password and keystore file password to be stored in files. </p>
     <p>For example, if you configure xmail.username as follows, <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> checks the
-      email_username.txt file for the user
+      <codeph>email_username.txt</codeph> file for the user
       name:<codeblock><b>xmail.username</b>=@email_username.txt@</codeblock></p>
     <p>To store and reference sensitive information: <ol id="ol_vws_tbt_zr">
         <li>Create a text file for each configuration value that you want to safeguard.</li>
         <li>Include only one configuration value in each file. <p>You can store any configuration
             value in a separate file, but do not include more than one configuration value in a
             file.</p></li>
-        <li>Save the file in the same directory as the <ph
+        <li>Save the file in the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          configuration file: <codeblock>&lt;SDC_installdir>/etc</codeblock></li>
+          configuration directory, <codeph>$SDC_CONF</codeph>. </li>
         <li>In the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          configuration file, set the relevant value to the appropriate file name. Surround the file
-          name with @ symbols as follows:<codeblock>@&lt;filename>@</codeblock></li>
+          configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, set the relevant value to
+          the appropriate file name. Surround the file name with @ symbols as
+          follows:<codeblock>@&lt;filename>@</codeblock></li>
       </ol></p>
  </conbody>
 </concept>

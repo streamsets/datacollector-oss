@@ -28,7 +28,7 @@
         <p>To enable LDAP authentication, perform the following tasks:<ol id="ol_b11_nxl_55">
                 <li>Configure the LDAP properties in the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> configuration file:<p>
+                    /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>:<p>
                         <ul id="ul_tqz_224_s5">
                             <li>To enable LDAP authentication, set
                                     <uicontrol>http.authentication.login.module</uicontrol> to
@@ -50,11 +50,10 @@
                                     manager:<codeblock>DEV:creator;OPS:manager,SUPER:creator,manager</codeblock></p></li>
                         </ul>
                     </p></li>
-                <li>Configure LDAP connection information in the <codeph>ldap-login.conf</codeph>
-                    file. <p>The file is in the following
-                        location:<codeblock>&lt;SDCInstallDir>/etc/ldap-login.conf</codeblock></p><p>In
-                        the file, configure the following properties:<table frame="all" rowsep="1"
-                            colsep="1" id="table_g4g_hx4_s5">
+                <li>Configure LDAP connection information in the
+                        <codeph>$SDC_CONF/ldap-login.conf</codeph> file. <p>In the file, configure
+                        the following properties:<table frame="all" rowsep="1" colsep="1"
+                            id="table_g4g_hx4_s5">
                             <tgroup cols="2">
                                 <colspec colname="c1" colnum="1" colwidth="1.5*"/>
                                 <colspec colname="c2" colnum="2" colwidth="3.5*"/>
@@ -97,11 +96,11 @@
                                         <entry>bindPassword</entry>
                                         <entry>Password for the connection. For additional security,
                                             save the password in the
-                                            &lt;SDCinstalldir>/etc/ldap-bind-password.txt file
-                                            without additional characters, spaces, or line breaks.
-                                                <p>Default is @ldap-bind-password.txt@, which points
-                                                to the ldap-bind-password.txt file for the
-                                                password.</p></entry>
+                                            <codeph>$SDC_CONF/ldap-bind-password.txt</codeph> file without additional
+                                            characters, spaces, or line breaks. <p>Default is
+                                                @ldap-bind-password.txt@, which points to the
+                                                <codeph>ldap-bind-password.txt</codeph> file for the
+                                            password.</p></entry>
                                     </row>
                                     <row>
                                         <entry>authenticationMethod</entry>
@@ -175,7 +174,7 @@
                                     </row>
                                 </tbody>
                             </tgroup>
-                        </table></p><p>The following example shows the ldap-login.conf file for an
+                        </table></p><p>The following example shows the <codeph>ldap-login.conf</codeph> file for an
                         Active Directory
                         server:<codeblock>ldap {
   com.streamsets.datacollector.http.LdapLoginModule required
@@ -200,4 +199,7 @@
 };</codeblock></p></li>
             </ol></p>
     </conbody>
+    <related-links>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
 </concept>

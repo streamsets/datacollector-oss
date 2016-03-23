@@ -21,13 +21,13 @@
      <p><indexterm>command line interface<indexterm>help command</indexterm></indexterm>For
             additional information for each command, including the available arguments, use the help
             command as follows:
-            <codeblock>&lt;SDCinstalldir&gt;/bin/streamsets cli \
+            <codeblock>$SDC_DIST/bin/streamsets cli \
 (-U &lt;sdcURL> | --url &lt;sdcURL>) \
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \
 [(-p &lt;sdcPassword> | --password &lt;sdcPassword>)] \
 <b>help &lt;command></b></codeblock></p>
      <p>For example, the following command displays the details for the manager command:
-         <codeblock>&lt;SDCinstalldir>/bin/streamsets cli -U http://localhost:18630 help manager</codeblock></p>
+            <codeblock>$SDC_DIST/bin/streamsets cli -U http://localhost:18630 help manager</codeblock></p>
  </conbody>
 </concept>

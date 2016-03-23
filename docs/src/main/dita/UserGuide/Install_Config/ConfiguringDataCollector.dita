@@ -19,7 +19,7 @@
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> by
         editing the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file. </shortdesc>
+        configuration file, <codeph>sdc.properties</codeph>. </shortdesc>
     <taskbody>
         <context><p><indexterm>Data Collector configuration
                     file<indexterm>configuring</indexterm></indexterm><indexterm>sdc.properties
@@ -27,13 +27,10 @@
                         Collector configuration</indexterm></indexterm>Use a text editor to edit the
                     <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file. To enable the changes, restart <ph
+                /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To enable the
+                changes, restart <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 />. </p><p>The <ph
-                    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                /> configuration file, <filepath>sdc.properties</filepath>, is located in the
-                following
-                location:<codeblock>&lt;SDCinstalldir>/etc/sdc.properties</codeblock></p><p>The <ph
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> configuration file includes the following general properties:<table frame="all"
                     rowsep="1" colsep="1" id="table_eyq_gkw_1r">
@@ -65,27 +62,24 @@
                                 <entry>https.keystore.path</entry>
                                 <entry>Keystore path and file name. <p>By default, the file name is
                                             <filepath>sdc-keystore.jks</filepath> and expected in
-                                        the same directory as the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration file.</p></entry>
+                                        the <codeph>$SDC_CONF</codeph> directory.</p></entry>
                             </row>
                             <row>
                                 <entry>https.keystore.password</entry>
                                 <entry>File that contains the password to the keystore file. <p>By
                                         default, the file name is
-                                            <filepath>keystore-password.txt</filepath> and expected
-                                        in the same directory as the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration file.</p><p>When appropriate, you can
-                                        replace the default file name.</p></entry>
+                                            <filepath>keystore-password.txt</filepath> and expected in the <codeph>$SDC_CONF</codeph> directory.</p><p>When
+                                        appropriate, you can replace the default file
+                                    name.</p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication</entry>
                                 <entry>HTTP authentication. Use none, basic, digest, or form.<p>When
                                         using basic, digest, or form, use the associated
                                         realm.properties file to define user accounts. The
-                                        realm.properties files are located in &lt;SDCinstall>/etc
-                                        directory.</p><p>Default is form. </p></entry>
+                                        realm.properties files are located in the
+                                            <codeph>$SDC_CONF</codeph> directory.</p><p>Default is
+                                        form. </p></entry>
                             </row>
                             <row>
                                 <entry>http.authentication.login.module</entry>
@@ -136,9 +130,8 @@
                                 <entry>kerberos.client.keytab</entry>
                                 <entry>Location of the Kerberos keytab file that contains the
                                     credentials for the Kerberos principal. <p>Use a fully-qualified
-                                        directory or a directory relative to the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration directory.</p></entry>
+                                        directory or a directory relative to the
+                                            <codeph>$SDC_CONF</codeph> directory.</p></entry>
                             </row>
                             <row>
                                 <entry>preview.maxBatchSize</entry>
@@ -286,10 +279,9 @@
                                 <entry>File that contains the password for the email account.<p>By
                                         default, the file name is
                                             <filepath>email-password.txt</filepath> and expected in
-                                        the same directory as the <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> configuration file.</p><p>When appropriate, you can
-                                        replace the default file name.</p></entry>
+                                        the <codeph>$SDC_CONF</codeph> directory.</p><p>When
+                                        appropriate, you can replace the default file
+                                    name.</p></entry>
                             </row>
                             <row>
                                 <entry>xmail.from.address</entry>
@@ -326,9 +318,8 @@
                                             name>.</p></li>
                                     <li>&lt;file path> - The directory and file name where runtime
                                         properties are defined. The runtime properties file must be
-                                        local to <ph
-                                            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        />. <p>When you define runtime properties in a separate
+                                        relative to the <codeph>$SDC_CONF</codeph> directory.
+                                            <p>When you define runtime properties in a separate
                                             file, do not prefix the property names with
                                             runtime.conf_ .</p></li>
                                 </ul></entry>
@@ -337,4 +328,7 @@
                 </tgroup>
             </table></context>
     </taskbody>
+    <related-links>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
 </task>

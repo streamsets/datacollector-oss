@@ -26,9 +26,10 @@
             authentication, you can use Basic, Digest, or Form. Form is the default file
             authentication type. </p>
         <p>To configure file authentication, edit the authentication realm.properties file for the
-            authentication type. For example, to use Form, edit the <codeph>form-realm.properties
-                file</codeph>.</p>
-        <p>The realm.properties files are in the following directory:
-                <codeph>&lt;SDCinstalldir>/etc</codeph>.</p>
+            authentication type. For example, to use Form, edit the
+                <codeph>form-realm.properties</codeph> file.</p>
+        <p>The realm.properties files are in the <ph
+                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration directory, <codeph>$SDC_CONF</codeph>.</p>
  </conbody>
 </concept>

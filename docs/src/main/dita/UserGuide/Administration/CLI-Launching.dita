@@ -20,10 +20,10 @@
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> command
       line interface from the following location:</p>
     <p>
-      <codeblock>$ &lt;SDCinstalldir>/bin/</codeblock>
+      <codeblock>$SDC_DIST/bin/</codeblock>
     </p>
     <p>Use the following command as the base for all CLI
-      commands:<codeblock>$ &lt;SDCinstalldir>/bin/streamsets cli \
+      commands:<codeblock>$SDC_DIST/bin/streamsets cli \
 (-U &lt;sdcURL> | --url &lt;sdcURL>) \
 [(-a &lt;sdcAuthType> | --auth-type &lt;sdcAuthType>)] \
 [(-u &lt;sdcUser> | --user &lt;sdcUser>)] \

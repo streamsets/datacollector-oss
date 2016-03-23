@@ -731,11 +731,11 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
-                                            information about generating the descriptor file, see
-                                                <xref
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>.<p>For information
+                                            about generating the descriptor file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
-                                            />.</p></entry>
+                                            />. For more information about environment variables, see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
                                 </row>
                                 <row id="row-MessageType">
                                     <entry>Message Type</entry>
@@ -783,9 +783,9 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
-                                            information about generating the descriptor file, see
-                                                <xref
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>. <p>For more information about environment variables, see <xref
+                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>. For information
+                                            about generating the descriptor file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -1783,9 +1783,9 @@
                                     <entry>Descriptor file (.desc) to use. The descriptor file must
                                         be in the <ph
                                             conref="ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory: &lt;SDCinstalldir>/resources. <p>For
-                                            information about generating the descriptor file, see
-                                                <xref
+                                        /> resources directory, <codeph>$SDC_RESOURCES</codeph>. <p>For more information about environment variables, see <xref
+                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>. For information
+                                            about generating the descriptor file, see <xref
                                                 href="../Pipeline_Design/Protobuf-Prerequisites.dita"
                                             />.</p></entry>
                                 </row>
@@ -1901,8 +1901,8 @@
                                             prefix sdc-${sdc:id()} by default. The prefix evaluates
                                             to sdc-&lt;Data Collector ID>. </p><p>The Data Collector
                                             ID is stored in the following file:
-                                                <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.
-                                        </p></entry>
+                                                <filepath>$SDC_DATA/sdc.id</filepath>. For more information about environment variables, see <xref
+                                                    href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
                                 </row>
                                 <row id="row-DirectoryTemplate">
                                     <entry>Directory Template <xref
@@ -2507,8 +2507,9 @@
                                     <entry>Truststore file for TLS. Required if the keystore file is
                                         a self-signed certificate.<p>Must be stored in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> resources directory:
-                                                <filepath>&lt;SDCinstalldir>/resources</filepath>.</p></entry>
+                                            /> resources directory,
+                                            <filepath>$SDC_RESOURCES</filepath>. For more information about environment variables, see <xref
+                                                href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p></entry>
                                 </row>
                                 <row id="row-TSpass">
                                     <entry>Truststore Password</entry>

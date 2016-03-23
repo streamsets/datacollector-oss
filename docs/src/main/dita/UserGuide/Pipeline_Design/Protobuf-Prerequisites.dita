@@ -48,9 +48,9 @@
                 <dt>Store the descriptor file in the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> resources directory</dt>
-                <dd>Save the generated descriptor file in the <ph
-                        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> resources directory: <codeblock>&lt;SDCinstalldir>/resources</codeblock></dd>
+                <dd>Save the generated descriptor file in the <codeph>$SDC_RESOURCES</codeph>
+                    directory. For more information about environment variables, see <xref
+                        href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</dd>
             </dlentry>
         </dl>
         <p>After completing the prerequisites, you can use the following origins to read protobuf

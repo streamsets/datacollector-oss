@@ -24,8 +24,9 @@
         size<indexterm>configuring</indexterm></indexterm>The PermGen size determines the amount of
       memory that the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> web
-      application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS property in the
-        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+    application server uses. Define the PermGen size as part of the SDC_JAVA_OPTS environment
+      variable in the <ph
+        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file.</p>
   <p>Use the following properties to define the PermGen size:<ul id="ul_qjd_33m_sr">
         <li>MaxPermSize - Set to 1/4 of the Java heap size, with a minimum of 128 MB.</li>

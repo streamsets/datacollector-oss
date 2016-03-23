@@ -39,7 +39,7 @@
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                         /> port number in the <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> configuration file, use that number instead. </p>
+                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, use that number instead. </p>
                 </info>
             </step>
             <step id="LoginDC">
@@ -63,6 +63,7 @@
                 >3 in "Configuring a Pipeline"</xref>.</postreq>
     </taskbody>
     <related-links>
-        <link href="../Pipeline_Design/What_isa_Pipeline.dita#concept_isl_w44_kq"/>
+        <link href="../Pipeline_Design/What_isa_Pipeline.dita#concept_isl_w44_kq" type="topic"/>
+        <link href="../Install_Config/DCConfig.dita#concept_pq5_xjq_kr" type="topic"/>
     </related-links>
 </task>

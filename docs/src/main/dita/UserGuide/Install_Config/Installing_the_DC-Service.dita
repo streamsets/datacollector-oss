@@ -22,12 +22,17 @@
                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                 /> as a service requires sudo privileges on the root directory.</p>
             <p>This procedure walks through setting the default directories, but you can
-                alternatively use the <filepath>&lt;SDCinstalldir>/libexec/sdcd-env.sh</filepath>
-                script.</p></context>
+                alternatively use the <filepath>$SDC_DIST/libexec/sdcd-env.sh</filepath> file to
+                modify the environment variables that define directories.</p></context>
         <steps id="steps_wnx_444_1r">
             <step>
-                <cmd>Download the StreamSets SDC tarball and extract it to the desired location,
-                        typically<codeph> /opt/local/</codeph>.</cmd>
+                <cmd>Use the following URL to download the StreamSets SDC tarball from the
+                    StreamSets website: <xref href="http://www.streamsets.com/opensource"
+                        format="html" scope="external"/>.</cmd>
+            </step>
+            <step>
+                <cmd>Extract the tarball to the desired location, typically<codeph>
+                        /opt/local/</codeph>.</cmd>
             </step>
             <step>
                 <cmd>Copy <filepath>initd/_sdcinitd_prototype</filepath> to the
@@ -40,7 +45,7 @@
             <step>
                 <cmd>Use the following command to make the sdc file executable:</cmd>
                 <info>
-                    <codeblock>$ sudo chmod 755 /etc/init.d/sdc</codeblock>
+                    <codeblock>sudo chmod 755 /etc/init.d/sdc</codeblock>
                 </info>
             </step>
             <step>
@@ -58,25 +63,28 @@
                     owner to sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC data directory at /<codeph>var/lib/sdc</codeph> and change the
+                <cmd>Create the SDC data directory at <codeph>/var/lib/sdc</codeph> and change the
                     owner to sdc:sdc.</cmd>
             </step>
             <step>
-                <cmd>Create the SDC data directory at <codeph>/var/lib/sdc-resources</codeph> and
-                    change the owner to sdc:sdc.</cmd>
+                <cmd>Create the SDC resources directory at <codeph>/var/lib/sdc-resources</codeph>
+                    and change the owner to sdc:sdc.</cmd>
             </step>
             <step>
                 <cmd>To start <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                     /> as a service, use the following command: </cmd>
                 <info>
-                    <codeblock>$ service sdc start  </codeblock>
+                    <codeblock>service sdc start  </codeblock>
                     <p>For CentOS, use the following
-                        command:<codeblock>$ chkconfig --add sdc</codeblock></p>
+                        command:<codeblock>chkconfig --add sdc</codeblock></p>
                     <p>For Ubuntu, use the following
-                        command:<codeblock>$ update-rc.d sdc defaults 97 03</codeblock></p>
+                        command:<codeblock>update-rc.d sdc defaults 97 03</codeblock></p>
                 </info>
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
 </task>

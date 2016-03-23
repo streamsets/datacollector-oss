@@ -30,7 +30,7 @@
               conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file:<ol id="ol_l2b_jq1_1s">
               <li>In the <codeph>$SDC_CONF/sdc.properties</codeph> file, configure the
-                  <codeph>runtime.conf.location</codeph> property as
+                  <b>runtime.conf.location</b> property as
                 follows:<codeblock>runtime.conf.location=embedded</codeblock></li>
               <li>Define the runtime properties in the <codeph>$SDC_CONF/sdc.properties</codeph>
                 file using the following format:
@@ -56,7 +56,7 @@
               <li>In the <ph
                   conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
                 configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, configure the
-                  <codeph>runtime.conf.location</codeph> property to point to the relative location
+                  <b>runtime.conf.location</b> property to point to the relative location
                 of the separate runtime properties file. <p>For example, the following separate
                   runtime properties file is located in a <codeph>runtime</codeph> directory that is
                   relative to the <codeph>$SDC_CONF</codeph>

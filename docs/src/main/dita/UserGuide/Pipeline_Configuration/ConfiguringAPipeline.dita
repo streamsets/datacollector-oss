@@ -310,7 +310,9 @@
                                             />s write to the same directory. </p><p>The <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                                             /> ID is stored in the following file:
-                                                <filepath>&lt;SDCinstalldir>/data/sdc.id</filepath>.</p></entry>
+                                                <filepath>$SDC_DATA/sdc.id</filepath> file. For more information about environment variables, see <xref
+                                                    href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.
+                                        </p></entry>
                                 </row>
                                 <row>
                                     <entry>File Wait Time (secs)</entry>

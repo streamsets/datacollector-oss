@@ -20,6 +20,9 @@
   check the directories being used to access a file in the directory or to increase the amount of
   available space for a directory. </shortdesc>
  <conbody>
+  <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+   directories are defined in environment variables. For more information, see <xref
+    href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</p>
   <p>To view <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
    directories, click <menucascade>
     <uicontrol>Administration</uicontrol>
@@ -36,7 +39,7 @@
       <row>
        <entry>Directory </entry>
        <entry>Includes</entry>
-       <entry>Default Location</entry>
+       <entry>Environment Variable</entry>
       </row>
      </thead>
      <tbody>
@@ -45,31 +48,31 @@
        <entry>Base directory for <ph
          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         executables and related files.</entry>
-       <entry>&lt;SDCinstalldir></entry>
+       <entry>SDC_DIST</entry>
       </row>
       <row>
        <entry>Configuration</entry>
        <entry>The <ph
          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        configuration file (sdc.properties), and related help realm properties files and keystore
-        files. <p>Also includes the logj4 properties file.</p></entry>
-       <entry>&lt;SDCinstalldir>/etc</entry>
+        configuration file, <codeph>sdc.properties</codeph>, and related realm properties files and
+        keystore files. <p>Also includes the logj4 properties file.</p></entry>
+       <entry>SDC_CONF</entry>
       </row>
       <row>
        <entry>Data</entry>
        <entry>Pipeline configuration and run details. </entry>
-       <entry>&lt;SDCinstalldir>/data</entry>
+       <entry>SDC_DATA</entry>
       </row>
       <row>
        <entry>Log</entry>
        <entry><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        log file, sdc.log.</entry>
-       <entry>&lt;SDCinstalldir>/log</entry>
+        log file, <codeph>sdc.log</codeph>.</entry>
+       <entry>SDC_LOG</entry>
       </row>
       <row>
        <entry>Resources</entry>
        <entry>Directory for runtime resource files. </entry>
-       <entry>&lt;SDCinstalldir>/resources</entry>
+       <entry>SDC_RESOURCES</entry>
       </row>
      </tbody>
     </tgroup>

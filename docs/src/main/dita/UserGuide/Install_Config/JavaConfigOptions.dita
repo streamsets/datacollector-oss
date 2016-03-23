@@ -22,6 +22,6 @@
           variable</indexterm></indexterm><indexterm>SDC_JAVA_OPTS<indexterm>Java environment
           variable</indexterm></indexterm>You can edit the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      environment file to add or update Java configuration options. </p>
+      environment configuration file to add or update Java configuration options. </p>
  </conbody>
 </concept>

@@ -38,9 +38,9 @@
                         <codeblock>/opt/sdc-extras/streamsets-datacollector-jms-lib/lib/</codeblock></p></li>
                 <li>In the <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> environment file, sdc-env.sh or sdcd-env.sh, add the
-                    STREAMSETS_LIBRARIES_EXTRA_DIR environment variable and point it to the driver
-                    directory, as
+                /> environment configuration file, <codeph>sdc-env.sh</codeph> or <codeph>sdcd-env.sh</codeph> located in the
+                    <codeph>$SDC_DIST/libexec</codeph> directory, add the STREAMSETS_LIBRARIES_EXTRA_DIR environment
+                    variable and point it to the driver directory, as
                         follows:<codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="&lt;driver directory>"</codeblock><p>For
                         example:
                     </p><codeblock>export STREAMSETS_LIBRARIES_EXTRA_DIR="/opt/sdc-extras/"</codeblock></li>
@@ -52,7 +52,7 @@
                         <li>In the <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> configuration directory, edit the security
-                            policy:<codeblock>&lt;SDCinstalldir>/etc/sdc-security.policy</codeblock></li>
+                            policy:<codeblock>$SDC_CONF/sdc-security.policy</codeblock></li>
                         <li>Add the following lines to the file:
                             <codeblock>// user-defined additional driver directory
 grant codebase "file://&lt;driver directory>-" {
@@ -69,4 +69,7 @@ grant codebase "file:///opt/sdc-extras/-" {
             </ol><p>The drivers in the directory become available to their respective
             stages.</p></context>
     </taskbody>
+    <related-links>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
 </task>

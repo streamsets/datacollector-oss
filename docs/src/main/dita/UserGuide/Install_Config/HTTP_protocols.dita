@@ -38,16 +38,18 @@
           <dt>keystore file</dt>
           <dd>A file that contains the private key and self-signed certificates for the web server.
             You can create your own keystore file or use the provided keystore file. </dd>
-          <dd>Store the keystore file in the following
-            location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
+          <dd>Store the keystore file in the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration directory, <codeph>$SDC_CONF</codeph>.</dd>
           <dd>The default keystore file is <filepath>keystore.jks</filepath>.</dd>
         </dlentry>
         <dlentry>
           <dt>keystore password file</dt>
           <dd>A file that contains the password to open the Java keystore file. You can create your
             own keystore password file or use the provided file. </dd>
-          <dd>Store the keystore password file in the following
-            location:<codeblock>&lt;SDCinstalldir>/etc</codeblock></dd>
+          <dd>Store the keystore password file in the <ph
+              conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
+            configuration directory, <codeph>$SDC_CONF</codeph>.</dd>
           <dd>The default keystore file is <filepath>keystore-password.txt</filepath>.</dd>
         </dlentry>
       </dl></p>

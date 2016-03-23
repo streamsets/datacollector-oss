@@ -25,7 +25,7 @@
                     authentication<indexterm>using for MapR FS
             destination</indexterm></indexterm>The Kerberos principal and keytab are defined in the
                 <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-            /> configuration file. To use Kerberos authentication, configure all Kerberos properties
+                /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. To use Kerberos authentication, configure all Kerberos properties
             in the <ph
                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
             configuration file, and then enable Kerberos in the MapR FS destination.</p>

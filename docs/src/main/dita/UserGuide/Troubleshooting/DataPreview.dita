@@ -43,9 +43,9 @@
       10 records. </dd>
      <dd>When you request data preview, you can request up to the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> preview
-      batch size, or you can increase the <codeph>preview.maxBatchSize</codeph> property in the <ph
+       batch size, or you can increase the <b>preview.maxBatchSize</b> property in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file. </dd>
+       configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>
     </dlentry>
         <dlentry>
           <dt>In data preview, I edited stage configuration and clicked Run with Changes, but I

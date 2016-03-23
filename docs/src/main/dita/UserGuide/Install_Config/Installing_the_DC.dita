@@ -20,15 +20,19 @@
         <steps id="steps_g53_l3p_kq">
             <step>
                 <cmd><indexterm>installation<indexterm>manual
-                        start</indexterm></indexterm><indexterm>launch Data
-                            Collector<indexterm>manual start</indexterm></indexterm>Download the
-                    full StreamSets <ph
+                    start</indexterm></indexterm><indexterm>launch Data
+                        Collector<indexterm>manual start</indexterm></indexterm>Use the following URL to download the full StreamSets <ph
                         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                    /> tarball and extract it to the desired location.</cmd>
+                    /> tarball  from the StreamSets website: <xref
+                    href="http://www.streamsets.com/opensource" format="html" scope="external"
+                    />.</cmd>
             </step>
             <step>
-                <cmd>Optionally, in the <codeph>&lt;SDCinstalldir>/libexec/sdc-env.sh</codeph> file,
-                    set the following environment variables:</cmd>
+                <cmd>Extract the tarball to the desired location.</cmd>
+            </step>
+            <step>
+                <cmd>Optionally, in the <codeph>$SDC_DIST/libexec/sdc-env.sh</codeph> file, set the
+                    following environment variables:</cmd>
                 <info>
                     <ul id="ul_vbv_b44_1r">
                         <li>SDC_CONF - The <ph
@@ -39,32 +43,33 @@
                             /> directory for pipeline state and configuration information.</li>
                         <li>SDC_LOG - The <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> directory for <ph
-                                conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                            /> logs.</li>
+                            /> directory for logs.</li>
                         <li>SDC_RESOURCES - The <ph
                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
                             /> directory for runtime resource files. </li>
                     </ul>
-                    <note>If these variables are not set, the directories are created in the <ph
+                    <note>If these variables are not set, the directories are created in
+                            <codeph>$SDC_DIST</codeph>, the base <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> installation directory. If this is the case, make sure the user who
-                        starts the <ph
+                        /> runtime directory. If this is the case, make sure the user who starts <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> has write permission for the <ph
+                        /> has write permission for the base <ph
                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                        /> installation directory.</note>
+                        /> runtime directory.</note>
                 </info>
             </step>
             <step>
                 <cmd>Use the following command to launch <ph>Data Collector</ph>:</cmd>
                 <info>
-                    <codeblock>$ &lt;SDCinstalldir>/bin/streamsets dc</codeblock>
+                    <codeblock>$SDC_DIST/bin/streamsets dc</codeblock>
                 </info>
                 <info>Or, use the following command to launch <ph>Data Collector</ph> and run it in
                     the
-                    background:<codeblock>$ nohup &lt;SDCinstalldir>/bin/streamsets dc &amp;</codeblock></info>
+                    background:<codeblock>nohup $SDC_DIST/bin/streamsets dc &amp;</codeblock></info>
             </step>
         </steps>
     </taskbody>
+    <related-links>
+        <link href="DCEnvironmentConfig.dita#concept_rng_qym_qr" type="topic"/>
+    </related-links>
 </task>

@@ -631,7 +631,7 @@
                                     format="html" scope="external"/>.</li>
                         <li id="KafkaKERBsdcprops">In the <ph
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                              /> configuration file, make sure the following Kerberos properties are
+                        /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>, make sure the following Kerberos properties are
                                     configured:<ul
                                     conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/ul-KERBprops"
                                     id="ul_gyj_jpf_55">

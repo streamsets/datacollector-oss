@@ -24,7 +24,7 @@
    <topicref href="../Install_Config/Installing_the_DC.dita"/>
    <topicref href="../Install_Config/Installing_the_DC-Service.dita"/>
   </topicref>
-  <topicref href="../Install_Config/AdditionalDrivers.dita"  chunk="to-content">
+  <topicref href="../Install_Config/AdditionalDrivers.dita" chunk="to-content">
    <topicmeta>
     <shortdesc/>
    </topicmeta>
@@ -52,13 +52,15 @@
    <topicmeta>
     <shortdesc/>
    </topicmeta>
+   <topicref href="../Install_Config/DCDirectories.dita"/>
+   <topicref href="../Install_Config/DCUserGroupServiceStart.dita"/>
    <topicref href="../Install_Config/JavaConfigOptions.dita">
     <topicref href="../Install_Config/JavaHeapSize.dita"/>
     <topicref href="../Install_Config/PermGenSize.dita"/>
     <topicref href="../Install_Config/EnablingJMXTools.dita"/>
    </topicref>
    <topicref href="../Install_Config/JavaSecurityManager.dita"/>
-   <topicref href="../Install_Config/ConfiguringDCEnvironment.dita"/>
+   <topicref href="../Install_Config/RootClassloader.dita"/>
   </topicref>
   <topicref href="../Install_Config/CMInstall-Overview.dita" chunk="to-content">
    <topicmeta>

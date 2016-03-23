@@ -48,8 +48,8 @@
           configuration file</dt>
         <dd>Cofiguration file with most <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-          properties. Found in the following location:<draft-comment author="Loretta">add new path
-            to sdc.properties.</draft-comment></dd>
+          properties. Found in the following location:
+          <codeblock>$SDC_CONF/sdc.properties</codeblock></dd>
       </dlentry>
       <dlentry>
         <dt>data drift alerts</dt>

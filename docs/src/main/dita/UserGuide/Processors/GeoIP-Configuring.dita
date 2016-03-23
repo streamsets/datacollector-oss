@@ -43,8 +43,8 @@
                                     <entry>Directory where the GeoIP2 database file is located.
                                         Enter a fully-qualified location or the <ph
                                             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                        /> resources directory:
-                                            <filepath>&lt;SDCinstalldir>/resources</filepath>.</entry>
+                                        /> resources directory, <filepath>$SDC_RESOURCES</filepath>. For more information about environment variables, see <xref
+                                            href="../Install_Config/DCEnvironmentConfig.dita#concept_rng_qym_qr"/>.</entry>
                                 </row>
                                 <row>
                                     <entry>Input Field Name</entry>

@@ -27,7 +27,7 @@
       affects the amount of memory <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can use
       when it runs a pipeline. Running a pipeline can use up to 65% of the allocated heap size. </p>
-    <p>Define the heap size as part of the SDC_JAVA_OPTS property in the <ph
+   <p>Define the heap size as part of the SDC_JAVA_OPTS environment variable in the <ph
         conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
       environment configuration file. Increase or decrease the heap size as necessary, based on the
       resources available on the host machine.</p>

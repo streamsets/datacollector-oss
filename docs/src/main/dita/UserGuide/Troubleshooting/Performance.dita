@@ -26,9 +26,9 @@
       1000 records. </dd>
      <dd>When you configure the origin batch size, you can request up to the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> maximum
-      batch size, or you can increase the <codeph>production.maxBatchSize</codeph> property in the
+      batch size, or you can increase the <b>production.maxBatchSize</b> property in the
        <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file. </dd>
+       configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>
     </dlentry>
     <dlentry>
      <dt>How can I tell what's slowing down my pipeline?</dt>
@@ -54,9 +54,9 @@
       increase the processing speed. Or if the records are small and arrive quickly, you might
       increase the batch size.</dd>
      <dd>Experiment with the batch size and review the results in Monitor mode. </dd>
-     <dd>To change the batch size, configure the production.maxBatchSize property in the <ph
+     <dd>To change the batch size, configure the <b>production.maxBatchSize</b> property in the <ph
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-      configuration file. </dd>
+       configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </dd>
     </dlentry>
    </dl></p>
  </conbody>

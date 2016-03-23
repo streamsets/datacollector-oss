@@ -90,7 +90,7 @@
                                             selected, uses the Kerberos principal and keytab defined
                                             in the <ph
                                                 conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                            /> configuration file. </p></entry>
+                                            /> configuration file, <codeph>$SDC_CONF/sdc.properties</codeph>. </p></entry>
                                 </row>
                                 <row>
                                     <entry>HBase User <xref href="HBase-HBaseUser.dita">
