@@ -52,7 +52,7 @@
   for record in records:
     cc = record.value['credit_card']
     if cc == '':
-      err.write(record, "Payment type was CRD, but credit card was null")
+      error.write(record, "Payment type was CRD, but credit card was null")
       continue
 
     cc_type = ''
@@ -73,9 +73,9 @@
 
     record.value['credit_card_type'] = cc_type
 
-    out.write(record)
+    output.write(record)
 except Exception as e:
-  err.write(record, e.message)</codeblock>
+  error.write(record, e.message)</codeblock>
                     <note>Incorrect indentation can cause Jython validation errors. For best
                         results, copy the script from the online help. Copying the script from the
                         PDF can result in incorrect indentation.<p>To launch context-sensitive help,
