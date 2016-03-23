@@ -14,8 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_gwn_wf4_yr">
- <title>Viewing <ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-  /> Directories</title>
+ <title>Viewing Data Collector Directories</title>
  <shortdesc>You can view the directories that the <ph
    conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> uses. You might
   check the directories being used to access a file in the directory or to increase the amount of

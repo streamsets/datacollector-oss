@@ -14,9 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_jyk_vgk_br">
-    <title>Viewing <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        Configuration Properties</title>
+    <title>Viewing Data Collector Configuration Properties</title>
     <taskbody>
         <context><indexterm>Data Collector<indexterm>viewing configuration
                 properties</indexterm></indexterm>To view <ph

@@ -14,9 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_ugz_41n_qr">
-    <title>Configuring the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        Environment</title>
+    <title>Configuring the Data Collector Environment</title>
     <shortdesc>You can customize the <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
         environment by editing the <ph

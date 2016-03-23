@@ -14,8 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_dns_dvg_h5">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-        Authentication</title>
+ <title>Data Collector Authentication</title>
  <shortdesc>StreamSets <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> can
         authenticate user accounts based on files or LDAP. Best practice is to use LDAP if your

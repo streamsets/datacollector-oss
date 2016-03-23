@@ -15,9 +15,13 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_vhs_5tz_xp">
       <title>Reusable phrases for the book</title>
-      <shortdesc>Use the following reusable phrases for conrefs in the book:<draft-comment
+      <shortdesc>Use the following reusable phrases for conrefs in the book. <draft-comment
                   author="Loretta">Company name - not really using this</draft-comment></shortdesc>
       <conbody>
+            <p>
+                  <note>Do NOT use conrefs in headings - it causes problems in the webhelp
+                        navigation panel.</note>
+            </p>
             <p>Company name: <ph id="company">StreamSets</ph></p>
             <draft-comment author="Loretta">product name: trying to consistently use
                   this</draft-comment>

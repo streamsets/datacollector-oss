@@ -14,8 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_rng_qym_qr">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    Environment Variables</title>
+ <title>Data Collector Environment Variables</title>
  <conbody>
   <p><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> provides
       two environment configuration files:<ul id="ul_v4w_fph_1t">
