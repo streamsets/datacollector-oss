@@ -18,6 +18,10 @@
       <shortdesc>Use the following reusable phrases for conrefs in the book:<draft-comment
                   author="Loretta">Company name - not really using this</draft-comment></shortdesc>
       <conbody>
+            <p>
+                  <note>Do not use phrase conrefs in headings - causes a problem with webhelp
+                        navigation.</note>
+            </p>
             <p>Company name: <ph id="company">StreamSets</ph></p>
             <draft-comment author="Loretta">product name: trying to consistently use
                   this</draft-comment>

@@ -14,9 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_zn4_qrn_25">
-    <title>Configuring <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
-        Cloudera Manager</title>
+    <title>Configuring Data Collector with Cloudera Manager</title>
     <shortdesc>When administering <ph
             conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> with
         Cloudera Manager, configure all <ph

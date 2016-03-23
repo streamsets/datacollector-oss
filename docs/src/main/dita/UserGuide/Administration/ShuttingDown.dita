@@ -14,9 +14,7 @@
 -->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA General Task//EN" "generalTask.dtd">
 <task id="task_uvg_bjk_br">
-    <title>Shutting Down the <ph
-            conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-        /></title>
+    <title>Shutting Down Data Collector</title>
     <taskbody>
         <context><indexterm>Data Collector<indexterm>shutting down</indexterm></indexterm>Shut down
             and restart the <ph

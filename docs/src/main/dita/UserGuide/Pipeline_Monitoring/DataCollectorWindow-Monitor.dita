@@ -14,8 +14,7 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
 <concept id="concept_t1c_mf4_tq">
- <title><ph conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>
-    Console - Monitor Mode</title>
+ <title>Data Collector Console - Monitor Mode</title>
  <shortdesc>In Monitor mode, you can use the <ph
       conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/> console to
     view data as it passes through the pipeline.</shortdesc>
