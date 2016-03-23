@@ -19,6 +19,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
@@ -42,6 +43,27 @@ public class AWSUtil {
       credentialsProvider = new DefaultAWSCredentialsProviderChain();
     }
     return credentialsProvider;
+  }
+
+  public static ClientConfiguration getClientConfiguration(AWSConfig awsConfig) {
+    ClientConfiguration clientConfig = new ClientConfiguration();
+
+    // Optional proxy settings
+    if (awsConfig.useProxy) {
+      if (awsConfig.proxyHost != null && !awsConfig.proxyHost.isEmpty()) {
+        clientConfig.setProxyHost(awsConfig.proxyHost);
+        clientConfig.setProxyPort(awsConfig.proxyPort);
+
+        if (awsConfig.proxyUser != null && !awsConfig.proxyUser.isEmpty()) {
+          clientConfig.setProxyUsername(awsConfig.proxyUser);
+        }
+
+        if (awsConfig.proxyPassword != null) {
+          clientConfig.setProxyPassword(awsConfig.proxyPassword);
+        }
+      }
+    }
+    return clientConfig;
   }
 
   public static void renameAWSCredentialsConfigs(List<Config> configs) {

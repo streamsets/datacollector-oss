@@ -102,10 +102,9 @@ public class S3Config {
   public void init(
       Stage.Context context,
       String configPrefix,
-      S3AdvancedConfig advancedConfig,
       List<Stage.ConfigIssue> issues
   ) {
-    validateConnection(context, configPrefix, advancedConfig, issues);
+    validateConnection(context, configPrefix, issues);
     //if the folder does not end with delimiter, add one
     if(folder != null && !folder.isEmpty() && !folder.endsWith(delimiter)) {
       folder = folder + delimiter;
@@ -127,27 +126,10 @@ public class S3Config {
   private void validateConnection(
       Stage.Context context,
       String configPrefix,
-      S3AdvancedConfig advancedConfig,
       List<Stage.ConfigIssue> issues
   ) {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
-    ClientConfiguration clientConfig = new ClientConfiguration();
-
-    // Optional proxy settings
-    if (advancedConfig.useProxy) {
-      if (advancedConfig.proxyHost != null && !advancedConfig.proxyHost.isEmpty()) {
-        clientConfig.setProxyHost(advancedConfig.proxyHost);
-        clientConfig.setProxyPort(advancedConfig.proxyPort);
-
-        if (advancedConfig.proxyUser != null && !advancedConfig.proxyUser.isEmpty()) {
-          clientConfig.setProxyUsername(advancedConfig.proxyUser);
-        }
-
-        if (advancedConfig.proxyPassword != null) {
-          clientConfig.setProxyPassword(advancedConfig.proxyPassword);
-        }
-      }
-    }
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(awsConfig);
 
     s3Client = new AmazonS3Client(credentials, clientConfig);
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));

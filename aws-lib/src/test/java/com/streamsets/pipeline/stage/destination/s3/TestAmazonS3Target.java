@@ -200,7 +200,6 @@ public class TestAmazonS3Target {
     advancedConfig.useProxy = false;
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
-    s3TargetConfigBean.advancedConfig = advancedConfig;
     s3TargetConfigBean.compress = useCompression;
     s3TargetConfigBean.dataFormat = DataFormat.TEXT;
     s3TargetConfigBean.fileNamePrefix = "sdc-";

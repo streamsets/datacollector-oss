@@ -73,11 +73,8 @@ public class S3TargetConfigBean {
   @ConfigDefBean(groups = {"S3"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
-  @ConfigDefBean(groups = {"ADVANCED"})
-  public S3AdvancedConfig advancedConfig;
-
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, issues);
 
     if(s3Config.bucket == null || s3Config.bucket.isEmpty()) {
       issues.add(

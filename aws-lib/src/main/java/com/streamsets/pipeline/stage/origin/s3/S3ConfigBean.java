@@ -66,9 +66,6 @@ public class S3ConfigBean {
   @ConfigDefBean(groups = {"POST_PROCESSING"})
   public S3PostProcessingConfig postProcessingConfig;
 
-  @ConfigDefBean(groups = {"ADVANCED"})
-  public S3AdvancedConfig advancedConfig;
-
   @ConfigDefBean(groups = {"S3"})
   public S3FileConfig s3FileConfig;
 
@@ -89,7 +86,7 @@ public class S3ConfigBean {
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
-    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, issues);
 
     if(errorConfig.errorFolder != null && !errorConfig.errorFolder.isEmpty() &&
       !errorConfig.errorFolder.endsWith(s3Config.delimiter)) {
