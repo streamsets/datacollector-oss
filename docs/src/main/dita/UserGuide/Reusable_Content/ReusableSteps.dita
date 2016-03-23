@@ -1536,7 +1536,8 @@
             <step>
                 <cmd>
                     <draft-comment author="Loretta"><uicontrol>D-AVRO-File</uicontrol> - used in
-                        Hadoop FS and Amazon S3.</draft-comment>
+                        Amazon S3, Hadoop FS and any other file-based destinations that write
+                        avro.</draft-comment>
                 </cmd>
             </step>
             <step id="D-AVRO-File">
@@ -1562,9 +1563,9 @@
                                 </row>
                                 <row>
                                     <entry>Avro Compression Codec</entry>
-                                    <entry>The Avro compression type to use. <p>When using Avro
-                                            compression, do not enable other compression available
-                                            in the destination. </p></entry>
+                                    <entry>The Avro-supported compression type to use. <p>When you
+                                            enable Avro compression, do not enable other compression
+                                            available in the destination. </p></entry>
                                 </row>
                             </tbody>
                         </tgroup>

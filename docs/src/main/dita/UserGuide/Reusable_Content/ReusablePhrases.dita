@@ -117,51 +117,84 @@
                   </ul>
             </p>
             <p>
-                  <draft-comment author="Loretta">ORIGIN DATA FORMATS - from Directory. DLEntries
-                        are conrefed by Kafka Consumer and Hadoop FS when possible. Also Amazon S3.
-                        --- NOTE: Content copied to HTTP Client and altered. When making changes
-                        here, check there as well.</draft-comment>
+                  <draft-comment author="Loretta">ORIGIN DATA FORMATS</draft-comment>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer, and Kinesis
+                        Consumer and other message origins</draft-comment>
+                  <dl>
+                        <dlentry id="OriginDF-AVRO">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every message. </dd>
+                              <dd>To ensure proper data processing, indicate if the message includes
+                                    an Avro schema. </dd>
+                              <dd>You can use the schema associated with the message or provide an
+                                    alternate schema definition. Providing an alternate schema can
+                                    improve performance.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">AVRO-Files - used by Directory and Amazon S3 and
+                        other file origins except Hadoop FS</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="OriginDF-AVROfiles">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every record. </dd>
+                              <dd>The origin assumes each file includes an Avro schema definition.
+                                    But you can optionally provide an alternate schema. </dd>
+                              <dd>The origin reads files compressed by Avro-supported compression
+                                    codecs without requiring additional configuration. To enable the
+                                    origin to read files compressed by other codecs, use the
+                                    compression format property in the stage.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin -
+                        MapReduce doesn't allow getting the schema from the files. Not adding the
+                        avro-compression-codec </draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="AVRO-HadoopFS">
+                              <dt>Avro</dt>
+                              <dd>Generates a record for every record. </dd>
+                              <dd>The origin uses the specified schema definition to process Avro
+                                    data.</dd>
+                              <dd>The origin reads files compressed by Avro-supported compression
+                                    codecs without requiring additional configuration.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">OriginDF-Binary - used by Kafka Consumer and
+                        Kinesis Consumer</draft-comment>
+            </p>
+            <p>
+                  <dl>
+                        <dlentry id="OriginDF-Binary">
+                              <dt>Binary</dt>
+                              <dd>Generates a record with a single byte array field at the root of
+                                    the record. </dd>
+                              <dd>When the data exceeds the user-defined maximum data size, the
+                                    origin cannot process the data. Because the record is not
+                                    created, the origin cannot pass the record to the pipeline to be
+                                    written as an error record. Instead, the origin generates a
+                                    stage error. </dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta"> - from Directory. DLEntries are conrefed by all
+                        origins except HTTP Client. <note> Content for JSON, Text, and HTML copied
+                              to HTTP Client and altered. When making changes here, check there as
+                              well.</note></draft-comment>
             </p>
             <p>
                   <dl id="ORIGIN-DFormats">
-                        <dlentry id="OriginDF-TEXT">
-                              <dt>Text</dt>
-                              <dd>Generates a record for each line of text. </dd>
-                              <dd>When a line exceeds the maximum line length defined for the
-                                    origin, the origin truncates the line. The origin adds a boolean
-                                    field named Truncated to indicate if the line was
-                                    truncated.</dd>
-                        </dlentry>
-                        <dlentry id="OriginDF-JSON">
-                              <dt>JSON</dt>
-                              <dd>Generates a record for each JSON object. You can process JSON
-                                    files that include multiple JSON objects or a single JSON
-                                    array.</dd>
-                              <dd>When an object exceeds the maximum object length defined for the
-                                    origin, the origin processes the object based on the error
-                                    handling configured for the stage. </dd>
-                        </dlentry>
-                        <dlentry id="OriginDF-JSONFILE">
-                              <dt>JSON</dt>
-                              <dd>Generates a record for each JSON object. You can process JSON
-                                    files that include multiple JSON objects or a single JSON
-                                    array.</dd>
-                              <dd>When an object exceeds the maximum object length defined for the
-                                    origin, the origin cannot continue processing data in the file.
-                                    Records already processed from the file are passed to the
-                                    pipeline. The behavior of the origin is then based on the error
-                                    handling configured for the stage:<ul id="ul_sjn_fxf_ht">
-                                          <li>Discard - The origin continues processing with the
-                                                next file, leaving the partially-processed file in
-                                                the directory. </li>
-                                          <li>To Error - The origin continues processing with the
-                                                next file. If a post-processing error directory is
-                                                configured for the stage, the origin moves the
-                                                partially-processed file to the error directory.
-                                                Otherwise, it leaves the file in the directory.</li>
-                                          <li>Stop Pipeline - The origin stops the pipeline. </li>
-                                    </ul></dd>
-                        </dlentry>
                         <dlentry id="OriginDF-DELIM">
                               <dt>Delimited</dt>
                               <dd>Generates a record for each delimited line. You can use the
@@ -230,6 +263,105 @@
                                           href="../Pipeline_Design/DelimitedDataRootFieldTypes.dita#concept_zcg_bm4_fs"
                                     />.</dd>
                         </dlentry>
+                        <dlentry id="OriginDF-JSON">
+                              <dt>JSON</dt>
+                              <dd>Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+                              <dd>When an object exceeds the maximum object length defined for the
+                                    origin, the origin processes the object based on the error
+                                    handling configured for the stage. </dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-JSONFILE">
+                              <dt>JSON</dt>
+                              <dd>Generates a record for each JSON object. You can process JSON
+                                    files that include multiple JSON objects or a single JSON
+                                    array.</dd>
+                              <dd>When an object exceeds the maximum object length defined for the
+                                    origin, the origin cannot continue processing data in the file.
+                                    Records already processed from the file are passed to the
+                                    pipeline. The behavior of the origin is then based on the error
+                                    handling configured for the stage:<ul id="ul_sjn_fxf_ht">
+                                          <li>Discard - The origin continues processing with the
+                                                next file, leaving the partially-processed file in
+                                                the directory. </li>
+                                          <li>To Error - The origin continues processing with the
+                                                next file. If a post-processing error directory is
+                                                configured for the stage, the origin moves the
+                                                partially-processed file to the error directory.
+                                                Otherwise, it leaves the file in the directory.</li>
+                                          <li>Stop Pipeline - The origin stops the pipeline. </li>
+                                    </ul></dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-LOG">
+                              <dt>Log</dt>
+                              <dd>Generates a record for every log line. </dd>
+                              <dd>When a line exceeds the user-defined maximum line length, the
+                                    origin truncates longer lines. </dd>
+                              <dd>You can include the processed log line as a field in the record.
+                                    If the log line is truncated, and you request the log line in
+                                    the record, the origin includes the truncated line.</dd>
+                              <dd>You can define the log format or type to be read.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <p>
+                  <draft-comment author="Loretta">OriginDF-ProtoMessage - JMS Consumer, Kinesis
+                        Consumer, Kafka Consumer, RabbitMQ</draft-comment>
+                  <dl>
+                        <dlentry id="OriginDF-ProtoMessage">
+                              <dt>Protobuf</dt>
+                              <dd>Generates a record for every protobuf message. By default, the
+                                    origin assumes messages contain multiple protobuf messages.</dd>
+                              <dd>Protobuf messages must match the specified message type and be
+                                    described in the descriptor file. </dd>
+                              <dd>When the data for a record exceeds 1 MB, the origin cannot
+                                    continue processing data in the message. The origin handles the
+                                    message based on the stage error handling property and continues
+                                    reading the next message. </dd>
+                              <dd>For information about generating the descriptor file, see <xref
+                                          href="../Pipeline_Design/Protobuf-Prerequisites.dita"
+                                    />.</dd>
+                        </dlentry>
+                  </dl>
+            </p>
+            <draft-comment author="Loretta">OriginDF-ProtoFile - Amazon S3, Directory? Hadoop
+                  FS?</draft-comment>
+            <dl>
+                  <dlentry id="OriginDF-ProtoFile">
+                        <dt>Protobuf</dt>
+                        <dd>Generates a record for every protobuf message. </dd>
+                        <dd>Protobuf messages must match the specified message type and be described
+                              in the descriptor file. </dd>
+                        <dd>When the data for a record exceeds 1 MB, the origin cannot continue
+                              processing data in the file. The origin handles the file based on file
+                              error handling properties and continues reading the next file. </dd>
+                        <dd>For information about generating the descriptor file, see <xref
+                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
+                  </dlentry>
+            </dl>
+            <p>
+                  <dl>
+                        <dlentry id="OriginDF-SDC">
+                              <dt>SDC Record</dt>
+                              <dd>Generates a record for every record. Use to process records
+                                    generated by a <ph
+                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
+                                    /> pipeline using the SDC Record data format.</dd>
+                              <dd>For error records, the origin provides the original record as read
+                                    from the origin in the original pipeline, as well as error
+                                    information that you can use to correct the record. </dd>
+                              <dd>When processing error records, the origin expects the error file
+                                    names and contents as generated by the original pipeline.</dd>
+                        </dlentry>
+                        <dlentry id="OriginDF-TEXT">
+                              <dt>Text</dt>
+                              <dd>Generates a record for each line of text. </dd>
+                              <dd>When a line exceeds the maximum line length defined for the
+                                    origin, the origin truncates the line. The origin adds a boolean
+                                    field named Truncated to indicate if the line was
+                                    truncated.</dd>
+                        </dlentry>
                         <dlentry id="OriginDF-XML">
                               <dt>XML</dt>
                               <dd>Generates records based on the location of the XML element that
@@ -263,126 +395,8 @@
                                           <li>Stop Pipeline - The origin stops the pipeline. </li>
                                     </ul></dd>
                         </dlentry>
-                        <dlentry id="OriginDF-SDC">
-                              <dt>SDC Record</dt>
-                              <dd>Generates a record for every record. Use to process records
-                                    generated by a <ph
-                                          conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"
-                                    /> pipeline using the SDC Record data format.</dd>
-                              <dd>For error records, the origin  provides the original record as
-                                    read from the origin in the original pipeline, as well as error
-                                    information that you can use to correct the record. </dd>
-                              <dd>When processing error records, the origin expects the error file
-                                    names and contents as generated by the original pipeline.</dd>
-                        </dlentry>
-                        <dlentry id="OriginDF-LOG">
-                              <dt>Log</dt>
-                              <dd>Generates a record for every log line. </dd>
-                              <dd>When a line exceeds the user-defined maximum line length, the
-                                    origin truncates longer lines. </dd>
-                              <dd>You can include the processed log line as a field in the record.
-                                    If the log line is truncated, and you request the log line in
-                                    the record, the origin includes the truncated line.</dd>
-                              <dd>You can define the log format or type to be read.</dd>
-                        </dlentry>
                   </dl>
             </p>
-            <p>
-                  <draft-comment author="Loretta">AVRO - Used by Kafka Consumer and Hadoop FS, and
-                        Kinesis Consumer</draft-comment>
-                  <dl>
-                        <dlentry id="OriginDF-AVRO">
-                              <dt>Avro</dt>
-                              <dd>Generates a record for every message. </dd>
-                              <dd>To ensure proper data processing, indicate if the message includes
-                                    an Avro schema. </dd>
-                              <dd>You can use the schema associated with the message or provide an
-                                    alternate schema definition. Providing an alternate schema can
-                                    improve performance.</dd>
-                        </dlentry>
-                  </dl>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">AVRO-Files - used by Directory and Amazon
-                        S3.</draft-comment>
-            </p>
-            <p>
-                  <dl>
-                        <dlentry id="OriginDF-AVROfiles">
-                              <dt>Avro</dt>
-                              <dd>Generates a record for every record. </dd>
-                              <dd>The origin assumes each file includes an Avro schema definition.
-                                    But you can optionally provide an alternate schema. </dd>
-                        </dlentry>
-                  </dl>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">AVRO-HadoopFS - used by Hadoop FS origin -
-                        MapReduce doesn't allow getting the schema from the files.</draft-comment>
-            </p>
-            <p>
-                  <dl>
-                        <dlentry id="AVRO-HadoopFS">
-                              <dt>Avro</dt>
-                              <dd>Generates a record for every record. </dd>
-                              <dd>The origin uses the specified schema definition to process Avro
-                                    data.</dd>
-                        </dlentry>
-                  </dl>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">OriginDF-Binary - used by Kafka Consumer and
-                        Kinesis Consumer</draft-comment>
-            </p>
-            <p>
-                  <dl>
-                        <dlentry id="OriginDF-Binary">
-                              <dt>Binary</dt>
-                              <dd>Generates a record with a single byte array field at the root of
-                                    the record. </dd>
-                              <dd>When the data exceeds the user-defined maximum data size, the
-                                    origin cannot process the data. Because the record is not
-                                    created, the origin cannot pass the record to the pipeline to be
-                                    written as an error record. Instead, the origin generates a
-                                    stage error. </dd>
-                        </dlentry>
-                  </dl>
-            </p>
-            <p>
-                  <draft-comment author="Loretta">OriginDF-ProtoMessage -  JMS Consumer, Kinesis
-                        Consumer, Kafka Consumer, RabbitMQ</draft-comment>
-                  <dl>
-                        <dlentry id="OriginDF-ProtoMessage">
-                              <dt>Protobuf</dt>
-                              <dd>Generates a record for every protobuf message. By default, the
-                                    origin assumes messages contain multiple protobuf messages.</dd>
-                              <dd>Protobuf messages must match the specified message type and be
-                                    described in the descriptor file. </dd>
-                              <dd>When the data for a record exceeds 1 MB, the origin cannot
-                                    continue processing data in the message. The origin handles the
-                                    message based on the stage error handling property and continues
-                                    reading the next message.  </dd>
-                              <dd>For information about generating the descriptor file, see <xref
-                                          href="../Pipeline_Design/Protobuf-Prerequisites.dita"
-                                    />.</dd>
-                        </dlentry>
-                  </dl>
-            </p>
-            <draft-comment author="Loretta">OriginDF-ProtoFile - Amazon S3, Directory? Hadoop
-                  FS?</draft-comment>
-            <dl>
-                  <dlentry id="OriginDF-ProtoFile">
-                        <dt>Protobuf</dt>
-                        <dd>Generates a record for every protobuf message. </dd>
-                        <dd>Protobuf messages must match the specified message type and be described
-                              in the descriptor file. </dd>
-                        <dd>When the data for a record exceeds 1 MB, the origin cannot continue
-                              processing data in the file. The origin handles the file based on file
-                              error handling properties and continues reading the next file. </dd>
-                        <dd>For information about generating the descriptor file, see <xref
-                                    href="../Pipeline_Design/Protobuf-Prerequisites.dita"/>.</dd>
-                  </dlentry>
-            </dl>
             <p>
                   <draft-comment author="Loretta">DESTINATION DATA FORMATS. Used by Kafka and Flume.
                         They also have additional data formats specific to each destination. Hadoop
@@ -436,9 +450,9 @@
                               <dt>Avro</dt>
                               <dd>The destination writes records based on the Avro schema that you
                                     provide. The schema definition is included in each file.</dd>
-                              <dd>You can also compress data with an Avro compression codec. When
-                                    using Avro compression, do not use other compression available
-                                    in the destination. </dd>
+                              <dd>You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, do not use other compression
+                                    available in the destination. </dd>
                         </dlentry>
                         <dlentry id="D-DF-AvroMess">
                               <dt>Avro</dt>
@@ -448,9 +462,9 @@
                                     message. Omitting the schema definition can improve performance,
                                     but requires the appropriate schema management to avoid losing
                                     track of the schema associated with the data.</dd>
-                              <dd>You can also compress data with an Avro compression codec. When
-                                    using Avro compression, do not use other compression available
-                                    in the destination. </dd>
+                              <dd>You can compress data with an Avro-supported compression codec.
+                                    When using Avro compression, do not use other compression
+                                    available in the destination. </dd>
                         </dlentry>
                         <dlentry id="DEST-DataF-SDC">
                               <dt>SDC Record</dt>
