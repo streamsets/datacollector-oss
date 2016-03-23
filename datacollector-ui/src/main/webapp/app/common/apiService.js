@@ -135,12 +135,21 @@ angular.module('dataCollectorApp.common')
       /**
        * logout
        */
-      logout: function() {
-        var url = apiBase + '/authentication/logout';
-        return $http({
-          method: 'POST',
-          url: url
-        });
+      logout: function(authenticationType) {
+        var url;
+        if (authenticationType && authenticationType === 'sso') {
+          url = 'logout';
+          return $http({
+            method: 'GET',
+            url: url
+          });
+        } else {
+          url = apiBase + '/authentication/logout';
+          return $http({
+            method: 'POST',
+            url: url
+          });
+        }
       },
 
       /**

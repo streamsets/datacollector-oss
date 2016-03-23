@@ -171,7 +171,7 @@ angular.module('dataCollectorApp')
          * Logout header link command handler
          */
         logout: function() {
-          api.admin.logout()
+          api.admin.logout($rootScope.common.authenticationType)
             .success(function() {
               location.reload();
             })
