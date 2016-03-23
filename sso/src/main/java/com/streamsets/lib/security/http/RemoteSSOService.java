@@ -55,6 +55,9 @@ public class RemoteSSOService implements SSOService {
   public static final long SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT = 10 * 60;
 
   public static final int INITIAL_FETCH_INFO_FREQUENCY = 10 * 60;
+  public static final String CONTENT_TYPE = "Content-Type";
+  public static final String ACCEPT = "Accept";
+  public static final String APPLICATION_JSON = "application/json";
 
   private String loginPageUrl;
   private String logoutUrl;
@@ -309,6 +312,8 @@ public class RemoteSSOService implements SSOService {
       conn.setUseCaches(false);
       conn.setConnectTimeout(1000);
       conn.setReadTimeout(1000);
+      conn.setRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
+      conn.setRequestProperty(ACCEPT, APPLICATION_JSON);
       conn.setRequestProperty(SSOConstants.X_REST_CALL, "-");
       conn.setRequestProperty(SSOConstants.X_APP_AUTH_TOKEN, ownAuthToken);
       conn.setRequestProperty(SSOConstants.X_APP_COMPONENT_ID, ownComponentId);
