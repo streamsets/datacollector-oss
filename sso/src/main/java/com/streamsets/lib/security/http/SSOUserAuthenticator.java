@@ -43,11 +43,17 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   private final static Set<String> TOKEN_PARAM_SET =
       ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM, SSOConstants.REPEATED_REDIRECT_PARAM);
 
+  public static final String HTTP_LOAD_BALANCER_URL = "http.load.balancer.url";
+
   private Configuration conf;
+  private String loadBalancerURL;
 
   public SSOUserAuthenticator(SSOService ssoService, Configuration conf) {
     super(ssoService);
     this.conf = conf;
+    if (this.conf != null) {
+      this.loadBalancerURL = conf.get(HTTP_LOAD_BALANCER_URL, null);
+    }
   }
 
   @Override
@@ -56,7 +62,15 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   }
 
   StringBuffer getRequestUrl(HttpServletRequest request, Set<String> queryStringParamsToRemove) {
-    StringBuffer requestUrl = request.getRequestURL();
+    StringBuffer requestUrl;
+
+    if (this.loadBalancerURL != null) {
+      requestUrl = new StringBuffer(this.loadBalancerURL);
+      requestUrl.append(request.getRequestURI());
+    } else {
+      requestUrl = new StringBuffer(request.getRequestURL());
+    }
+
     String qs = request.getQueryString();
     if (qs != null) {
       String qsSeparator = "?";
