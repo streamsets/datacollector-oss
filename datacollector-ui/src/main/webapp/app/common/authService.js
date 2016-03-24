@@ -29,7 +29,7 @@ angular.module('dataCollectorApp.common')
     manager: 'manager',
     guest: 'guest'
   })
-  .service('authService', function($rootScope, $q, api) {
+  .service('authService', function($rootScope, $q, $cookies, api, configuration) {
     var self = this;
 
     this.initializeDefer = undefined;
@@ -88,5 +88,33 @@ angular.module('dataCollectorApp.common')
      */
     this.getUserRoles = function() {
       return self.userInfo ? self.userInfo.roles : [''];
+    };
+
+    /**
+     * Return Remote Store Base URL
+     */
+    this.getRemoteBaseUrl = function() {
+      var remoteBaseURL = '';
+      var ssoServiceURL = configuration.getSSOServiceURL();
+
+      if (ssoServiceURL) {
+        remoteBaseURL = ssoServiceURL.replace('security', '');
+      }
+
+      return remoteBaseURL;
+    };
+
+    /**
+     * Return SSO token by extracting it from Cookie
+     */
+    this.getSSOToken = function() {
+      var cookies = $cookies.getAll();
+      var ssoToken;
+      angular.forEach(cookies, function(value, cookieName) {
+        if (cookieName.indexOf('SS-SSO-') != -1) {
+          ssoToken = value;
+        }
+      });
+      return ssoToken;
     };
   });

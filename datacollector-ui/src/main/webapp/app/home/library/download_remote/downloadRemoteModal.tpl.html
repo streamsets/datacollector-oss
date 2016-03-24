@@ -1,0 +1,42 @@
+<form class="download-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.downloadRemote.headerLabel">Publish Pipeline</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th translate="home.downloadRemote.pipelineName">Pipeline Name</th>
+        <th translate="home.downloadRemote.pipelineId">Pipeline ID</th>
+        <th translate="home.downloadRemote.version">Version</th>
+        <th translate="home.downloadRemote.commitMessage">Commit Message</th>
+        <th translate="home.downloadRemote.actions">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="remotePipeline in remotePipelines | orderBy:sortColumn:sortReverse">
+        <td>{{remotePipeline.name}}</td>
+        <td>{{remotePipeline.pipelineId}}</td>
+        <td>{{remotePipeline.version}}</td>
+        <td>{{remotePipeline.commitMessage}}</td>
+        <td>
+          <a href="javascript:;" translate="global.form.download"
+             ng-click="downloadRemotePipeline(remotePipeline, $index); $event.stopPropagation()">Download</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">close</button>
+  </div>
+</form>

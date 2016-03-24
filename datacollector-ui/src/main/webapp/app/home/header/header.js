@@ -309,15 +309,31 @@ angular
       exportPipelineConfig: function(pipelineInfo, $event) {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Export Pipeline', 1);
         api.pipelineAgent.exportPipelineConfig(pipelineInfo.name);
+      },
+
+      publishPipeline: function (pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Publish Pipeline', 1);
+
+        pipelineService.publishPipelineCommand(pipelineInfo, $event)
+          .then(
+            function(metadata) {
+              console.log(metadata);
+              $scope.pipelineConfig.metadata = metadata;
+              $rootScope.common.successList.push({
+                message: 'Successfully Published Pipeline.'
+              });
+            });
+      },
+
+      showCommitHistory: function (pipelineInfo, $event) {
+        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Show Commit History', 1);
+        pipelineService.showCommitHistoryCommand(pipelineInfo, $event);
       }
     });
-
 
     $scope.$on('bodyDeleteKeyPressed', function() {
       $scope.deleteSelection();
     });
-
-
 
     /**
      * Check for Validate Config Status for every 1 seconds, once done open the snapshot view.

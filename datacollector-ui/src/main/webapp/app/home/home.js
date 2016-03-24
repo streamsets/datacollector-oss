@@ -40,7 +40,7 @@ angular
       });
   }])
   .controller('HomeController', function ($scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api,
-                                          configuration, pipelineConstant, Analytics) {
+                                          configuration, pipelineConstant, Analytics, $route) {
 
     $location.search('auth_token', null);
     $location.search('auth_user', null);
@@ -108,6 +108,16 @@ angular
       exportPipelineConfig: function(pipelineInfo, includeDefinitions, $event) {
         $event.stopPropagation();
         api.pipelineAgent.exportPipelineConfig(pipelineInfo.name, includeDefinitions);
+      },
+
+      /**
+       * Download Remote Pipeline Configuration
+       */
+      downloadRemotePipelineConfig: function($event) {
+        pipelineService.downloadRemotePipelineConfigCommand($event)
+          .then(function() {
+            $route.reload();
+          });
       },
 
       /**

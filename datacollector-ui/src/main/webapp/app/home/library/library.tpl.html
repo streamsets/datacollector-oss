@@ -24,6 +24,11 @@
         <li>
           <a href="#" ng-click="importPipelineConfig()"translate="home.header.importPipeline">Import Pipeline</a>
         </li>
+        <li>
+          <a href="#"
+             ng-if="common.authenticationType === 'sso'"
+             ng-click="downloadRemotePipelineConfig()"translate="home.downloadRemotePipeline">Download Remote Pipeline</a>
+        </li>
       </ul>
     </div>
 

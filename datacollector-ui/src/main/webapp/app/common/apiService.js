@@ -23,7 +23,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('api', function($rootScope, $http, $q) {
+  .factory('api', function($rootScope, $http, $q, $cookies) {
     var apiVersion = 'v1',
       apiBase = 'rest/' + apiVersion,
       api = {
@@ -373,6 +373,26 @@ angular.module('dataCollectorApp.common')
           url += '&includeLibraryDefinitions=true';
         }
         window.open(url, '_blank', '');
+      },
+
+      /**
+       * Import Pipeline Configuration.
+       *
+       * @param pipelineName
+       * @param pipelineEnvelope
+       * @param overwrite
+       */
+      importPipelineConfig: function(pipelineName, pipelineEnvelope, overwrite) {
+        var url = apiBase + '/pipeline/' + pipelineName + '/import';
+        if (overwrite) {
+          url += '?overwrite=' + overwrite;
+        }
+
+        return $http({
+          method: 'POST',
+          url: url,
+          data: pipelineEnvelope
+        });
       },
 
       /**
@@ -834,7 +854,6 @@ angular.module('dataCollectorApp.common')
       }
     };
 
-
     api.timeSeries = {
       /**
        * Fetch Time Series Data
@@ -848,6 +867,99 @@ angular.module('dataCollectorApp.common')
           url: url
         });
       }
+    };
+
+    api.remote = {
+
+      publishPipeline: function(remoteBaseURL, ssoToken, name, commitPipelineModel) {
+        var deferred = $q.defer();
+        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
+        var url = apiBase + '/pipeline/' + name + '/export?includeLibraryDefinitions=true';
+
+        $http({
+          method: 'GET',
+          url: url
+        }).then(function(res) {
+          console.log(res.data);
+          var pipeline = res.data;
+
+          commitPipelineModel.pipelineDefinition = JSON.stringify(pipeline.pipelineConfig);
+          commitPipelineModel.libraryDefinitions = JSON.stringify(pipeline.libraryDefinitions);
+          commitPipelineModel.rulesDefinition = JSON.stringify(pipeline.pipelineRules);
+
+          return $http({
+            method: 'PUT',
+            url: remoteURL,
+            data: commitPipelineModel,
+            useXDomain: true,
+            withCredentials : false,
+            headers:  {
+              'Content-Type': 'application/json; charset=utf-8',
+              'X-SS-User-Auth-Token': ssoToken
+            }
+          });
+        }).then(function(result) {
+          console.log(result);
+          var remoteStorePipeline = result.data;
+          var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
+          deferred.resolve(pipelineDefinition.metadata);
+        }, function(err) {
+          console.log(err);
+          deferred.reject(err);
+        });
+
+        return deferred.promise;
+      },
+
+      fetchPipelines: function(remoteBaseURL, ssoToken) {
+        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
+        return $http({
+          method: 'GET',
+          url: remoteURL,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      },
+
+      getPipeline: function(remoteBaseURL, ssoToken, remotePipeline) {
+        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelineCommit/' + remotePipeline.commitId;
+        return $http({
+          method: 'GET',
+          url: remoteURL,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      },
+
+      getPipelineCommitHistory: function(remoteBaseURL, ssoToken, pipelineId, offset, len, order) {
+        if (offset === undefined) {
+          offset = 0;
+        }
+        if (len === undefined) {
+          len = -1;
+        }
+        if (order === undefined) {
+          order = 'DESC';
+        }
+        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipeline/' + pipelineId + '/log?' +
+          'offset=' + offset +
+          '&len=' + len +
+          '&order=' + order;
+
+        return $http({
+          method: 'GET',
+          url: remoteURL,
+          headers:  {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-SS-User-Auth-Token': ssoToken
+          }
+        });
+      }
+
     };
 
     return api;

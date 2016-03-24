@@ -34,18 +34,30 @@
   }
 
   .create-pipeline-btn-group {
-    margin: 250px 0 0 38%;
+    height: 70%;
+    display: table;
+    margin: auto;
     color: #ffffff;
 
-    h2 {
-      padding-left: @defaultPadding * 6;
-      padding-bottom: @defaultPadding * 2;
-      font-style: italic;
-      font-family: serif;
-    }
+    .create-pipeline-btn-group-cell {
+      display: table-cell;
+      vertical-align: middle;
 
-    .btn {
-      margin-right: @defaultPadding;
+      h2 {
+        padding-left: @defaultPadding * 9;
+        padding-bottom: @defaultPadding * 2;
+        font-style: italic;
+        font-family: serif;
+      }
+
+      .btn {
+        margin-right: @defaultPadding;
+      }
+
+      .download-pipeline-btn {
+        margin-top: 30px;
+        margin-left: 54px;
+      }
     }
   }
 

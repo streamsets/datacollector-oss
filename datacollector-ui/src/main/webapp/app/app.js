@@ -57,7 +57,7 @@ angular.module('dataCollectorApp')
           if(response && response.data && typeof response.data.indexOf == 'function' &&
             response.data.indexOf('container login-container') !== -1) {
             //Return response is login.html page content due to invalid session
-            window.location.reload();
+            //window.location.reload();
             return;
           }
           return response;

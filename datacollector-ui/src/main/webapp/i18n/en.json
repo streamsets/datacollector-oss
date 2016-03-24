@@ -50,6 +50,7 @@
       "done": "Done",
       "duplicate": "Duplicate",
       "duplicateStage": "Duplicate Stage",
+      "download": "Download",
       "edit": "Edit",
       "error": "Error",
       "errorCode": "Error Code",
@@ -64,6 +65,7 @@
       "fromStage": "From Stage",
       "fromStageLane": "From Stage Stream",
       "fromStageLanePredicate": "From Stage Stream Condition",
+      "getThisVersion": "Get",
       "help": "Help",
       "histogram": "Records Per Batch Histogram (5 minutes decay)",
       "import": "Import",
@@ -86,12 +88,14 @@
       "previousStage": "Previous Stage",
       "processor": "Processor",
       "processors": "Processors",
+      "publish": "Publish Pipeline",
       "record": "Record",
       "recordHeader": "Record Header",
       "records": "Records",
       "redo": "Redo",
       "refresh": "Refresh",
       "required": "Required",
+      "remotePipelineMetadata": "Remote Pipeline Metadata",
       "revertChanges": "Revert Data Changes",
       "sampleRecords": "Sample Records",
       "sampleValue": "Sample Value",
@@ -142,6 +146,21 @@
   "home": {
     "ago": "ago",
     "createPipeline": "Create New Pipeline",
+    "commitPipelineHistory": {
+      "headerLabel": "Pipeline Commit History",
+      "committer": "Committed By",
+      "commitTime": "Committed On"
+    },
+    "downloadRemotePipeline": "Download Remote Pipeline",
+    "downloadRemote": {
+      "headerLabel": "Download Remote Pipeline",
+      "pipelineName": "Pipeline Name",
+      "pipelineId": "Pipeline ID",
+      "version": "Version",
+      "commitMessage": "Commit Message",
+      "actions": "Actions"
+    },
+    "remotePipeline": "Remote Pipeline",
     "getStarted": "Get Started",
     "importPipeline": "Import Pipeline",
     "invalidStatus": "Pipeline is invalid",
@@ -153,6 +172,7 @@
       "closeSnapshot": "Close Snapshot",
       "clusterManagerNode": "Cluster Manager:",
       "comfortable": "Comfortable",
+      "commitHistory": "Commit History",
       "compact": "Compact",
       "connectErrorPipeline": "Failed to Connect",
       "connectingPipeline": "Connecting...",
@@ -163,6 +183,7 @@
       "displayDensity": "Display density:",
       "emptyAlerts": "It’s all good! You don’t have any new alerts.",
       "finishingPipeline": "Finishing Pipeline...",
+      "pullLatest": "Pull Latest",
       "importPipeline": "Import Pipeline",
       "issues": "Issues",
       "more": "More",
@@ -175,6 +196,7 @@
       "processors": "Processors",
       "refreshPreview": "Refresh Preview",
       "refreshSnapshot": "Refresh Snapshot",
+      "remoteOptions": "Remote Store Options",
       "retryPipeline": "Retrying to start Pipeline in ",
       "selectorProcessors": "Selectors",
       "settings": "Settings",
@@ -429,6 +451,8 @@
       "userProvider": "User Provided"
     },
     "library": {
+      "commitMessage": "Commit Message",
+      "commitMessagePlaceholder": "Enter Commit Message",
       "descriptionPlaceholder": "Pipeline Definition Description",
       "deleteConfirmationTitle": "Delete Confirmation",
       "deleteConfirmationMessage": "Are you sure you want to delete Pipeline Configuration '{{name}}'?",
@@ -448,6 +472,9 @@
       "browse": "Browse",
       "overwritePipeline": "Overwrite Pipeline",
       "createPipelineAndImport": "Create New Pipeline & Import"
+    },
+    "publish": {
+      "headerLabel" : "Publish Pipeline"
     },
     "resetOffset": {
       "title": "Reset Origin",

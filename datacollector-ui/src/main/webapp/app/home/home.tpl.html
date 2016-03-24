@@ -7,23 +7,37 @@
   </div>
 
   <div class="create-pipeline-btn-group" ng-if="!common.isSlaveNode">
-    <h2 translate="home.getStarted">Get Started</h2>
-    <button class="btn btn-primary pull-left create-pipeline-btn"
-        ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
-        ng-click="addPipelineConfig()">
-      <span class="fa fa-plus"></span>
-      <span translate="home.createPipeline">Create Pipeline</span>
-    </button>
+    <div class="create-pipeline-btn-group-cell">
+      <h2 translate="home.getStarted">Get Started</h2>
 
-    <button class="btn btn-primary pull-left import-pipeline-btn"
-            ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
-            ng-click="importPipelineConfig()">
-      <span class="fa fa-arrow-circle-down"></span>
-      <span translate="home.importPipeline">Import Pipeline</span>
-    </button>
+      <div>
+        <button class="btn btn-primary pull-left create-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+                ng-click="addPipelineConfig()">
+          <span class="fa fa-plus"></span>
+          <span translate="home.createPipeline">Create Pipeline</span>
+        </button>
+
+        <button class="btn btn-primary pull-left import-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-click="importPipelineConfig()">
+          <span class="fa fa-arrow-circle-down"></span>
+          <span translate="home.importPipeline">Import Pipeline</span>
+        </button>
+      </div>
+
+      <div ng-if="common.authenticationType === 'sso'">
+        <button class="btn btn-primary download-pipeline-btn"
+                ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || isSlaveNode"
+                ng-click="downloadRemotePipelineConfig()">
+          <span class="fa fa-cloud-download"></span>
+          <span translate="home.downloadRemotePipeline">Download Remote Pipeline</span>
+        </button>
+      </div>
+    </div>
   </div>
-</div>
 
+</div>
 
 <div class="panel panel-default page-panel home-page" ng-show="pipelines.length > 0">
 
@@ -128,6 +142,14 @@
             <span class="fa fa-arrow-circle-down"></span>
             <span translate="home.importPipeline">Import pipeline</span>
           </a>
+
+          <a href="" class="btn btn-link import-pipeline-btn-link"
+             ng-if="common.authenticationType === 'sso'"
+             ng-click="downloadRemotePipelineConfig()">
+            <span class="fa fa-cloud-download"></span>
+            <span translate="home.remotePipeline">Remote Pipeline</span>
+          </a>
+
         </div>
       </section>
 

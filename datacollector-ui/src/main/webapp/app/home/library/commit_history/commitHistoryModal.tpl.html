@@ -1,0 +1,53 @@
+<form class="download-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title" translate="home.commitPipelineHistory.headerLabel">Pipeline Commit History</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <table class="table">
+      <caption>{{pipelineInfo.name}} Commits</caption>
+      <thead>
+      <tr>
+        <th translate="home.downloadRemote.version">Version</th>
+
+        <th translate="home.commitPipelineHistory.commitTime">Commit Time</th>
+
+        <th translate="home.commitPipelineHistory.committer">Committer</th>
+
+        <th translate="home.downloadRemote.commitMessage">Commit Message</th>
+
+        <th translate="home.downloadRemote.actions">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="remotePipeline in pipelinesCommit">
+
+        <td>{{remotePipeline.version}}</td>
+
+        <td>{{remotePipeline.commitTime | date: 'medium'}}</td>
+
+        <td>{{remotePipeline.committer}}</td>
+
+        <td>{{remotePipeline.commitMessage}}</td>
+
+        <td>
+          <a href="javascript:;" translate="global.form.getThisVersion"
+             ng-if="pipelineVersion !== remotePipeline.version"
+             ng-click="downloadRemotePipeline(remotePipeline, $index); $event.stopPropagation()">Get</a>
+          <span ng-if="pipelineVersion === remotePipeline.version">Current</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">close</button>
+  </div>
+</form>

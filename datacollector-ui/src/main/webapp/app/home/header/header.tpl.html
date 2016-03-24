@@ -97,6 +97,37 @@
         </ul>
       </div>
 
+
+      <div class="btn-group" dropdown
+           ng-if="isAuthorized([userRoles.admin, userRoles.creator]) && activeConfigStatus.executionMode != pipelineConstant.SLAVE && common.authenticationType === 'sso'"
+           ng-hide="isPipelineRunning || previewMode || snapshotMode">
+       <span class="btn btn-link dropdown-toggle icon-button" dropdown-toggle aria-expanded="true"
+             tooltip-placement="bottom" tooltip="{{'home.header.remoteOptions' | translate}}"
+             tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
+             tooltip-popup-delay="500"
+             ng-disabled="!pipelineConfig.previewable"
+             ng-click="$event.stopPropagation();">
+          <i class="fa fa-cloud fa-14x"></i>
+        </span>
+        <ul class="dropdown-menu pull-right" role="menu">
+
+          <li role="presentation">
+            <a href="#" dropdown-toggle ng-click="publishPipeline(pipelineConfig.info)"><i class="fa fa-cloud-upload"></i> {{'global.form.publish' | translate}}</a>
+          </li>
+
+          <!--li role="presentation" ng-class="{'disabled': !pipelineConfig.metadata }">
+            <a href="#" dropdown-toggle
+               ng-click="pipelineConfig.metadata && pullLatestRemotePipeline(pipelineConfig.info)"><i class="fa fa-cloud-download"></i>  {{'home.header.pullLatest' | translate}}</a>
+          </li-->
+
+          <li role="presentation" ng-class="{'disabled': !pipelineConfig.metadata }">
+            <a href="#" dropdown-toggle
+               ng-click="pipelineConfig.metadata && showCommitHistory(pipelineConfig.info, pipelineConfig.metadata)"><i class="fa fa-history"></i> {{'home.header.commitHistory' | translate}}</a>
+          </li>
+
+        </ul>
+      </div>
+
       <a class="btn btn-link icon-button"
          tooltip-placement="bottom"
          tooltip="{{'global.form.undo' | translate}}"
