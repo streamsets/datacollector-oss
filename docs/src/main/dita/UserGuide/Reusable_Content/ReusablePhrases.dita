@@ -451,7 +451,7 @@
                               <dd>The destination writes records based on the Avro schema that you
                                     provide. The schema definition is included in each file.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, do not use other compression
+                                    When using Avro compression, avoid using other compression
                                     available in the destination. </dd>
                         </dlentry>
                         <dlentry id="D-DF-AvroMess">
@@ -463,7 +463,7 @@
                                     but requires the appropriate schema management to avoid losing
                                     track of the schema associated with the data.</dd>
                               <dd>You can compress data with an Avro-supported compression codec.
-                                    When using Avro compression, do not use other compression
+                                    When using Avro compression, avoid using other compression
                                     available in the destination. </dd>
                         </dlentry>
                         <dlentry id="DEST-DataF-SDC">
