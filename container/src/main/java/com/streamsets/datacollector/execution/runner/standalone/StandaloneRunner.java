@@ -667,6 +667,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
 
         ScheduledFuture<?> metricsFuture = null;
         metricsEventRunnable.setStatsQueue(statsQueue);
+        metricsEventRunnable.setPipelineConfiguration(pipelineConfiguration);
         int refreshInterval = configuration.get(MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY,
           MetricsEventRunnable.REFRESH_INTERVAL_PROPERTY_DEFAULT);
         if(refreshInterval > 0) {
