@@ -36,6 +36,14 @@
        conref="../Reusable_Content/ReusablePhrases.dita#concept_vhs_5tz_xp/pName-long"/>. For
       information about resetting an offset through Kafka, see the Apache Kafka documentation. </dd>
     </dlentry>
+        <dlentry>
+          <dt>A pipeline that writes to Kafka keeps failing and restarting in an endless cycle.</dt>
+          <dd>This can happen when the pipeline tries to write message to Kafka 0.8 that is longer
+            than the Kafka maximum message size. </dd>
+          <dd>Workaround: Reconfigure Kafka brokers to allow larger messages or ensure that incoming
+            records are within the configured limit. <draft-comment author="Loretta">This replaces a
+              release notes known limitation for SDC-2438.</draft-comment></dd>
+        </dlentry>
    </dl>
   </p>
  </conbody>
