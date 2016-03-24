@@ -35,6 +35,7 @@ import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.stage.lib.aws.AWSRegionChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,9 +103,10 @@ public class S3Config {
   public void init(
       Stage.Context context,
       String configPrefix,
+      ProxyConfig proxyConfig,
       List<Stage.ConfigIssue> issues
   ) {
-    validateConnection(context, configPrefix, issues);
+    validateConnection(context, configPrefix, proxyConfig, issues);
     //if the folder does not end with delimiter, add one
     if(folder != null && !folder.isEmpty() && !folder.endsWith(delimiter)) {
       folder = folder + delimiter;
@@ -126,10 +128,11 @@ public class S3Config {
   private void validateConnection(
       Stage.Context context,
       String configPrefix,
+      ProxyConfig proxyConfig,
       List<Stage.ConfigIssue> issues
   ) {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
-    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(awsConfig);
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
 
     s3Client = new AmazonS3Client(credentials, clientConfig);
     s3Client.setS3ClientOptions(new S3ClientOptions().withPathStyleAccess(true));

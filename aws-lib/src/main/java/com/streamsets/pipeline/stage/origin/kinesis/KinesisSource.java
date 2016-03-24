@@ -118,7 +118,7 @@ public class KinesisSource extends BaseSource implements OffsetCommitter {
         .withMaxRecords(conf.maxBatchSize)
         .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
         .withInitialPositionInStream(conf.initialPositionInStream)
-        .withKinesisClientConfig(AWSUtil.getClientConfiguration(conf.awsConfig));
+        .withKinesisClientConfig(AWSUtil.getClientConfiguration(conf.proxyConfig));
 
     return new Worker.Builder()
         .recordProcessorFactory(recordProcessorFactory)

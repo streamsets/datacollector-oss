@@ -35,7 +35,6 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
 import com.streamsets.pipeline.stage.common.TestUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.stage.origin.s3.S3AdvancedConfig;
 import com.streamsets.pipeline.stage.origin.s3.S3Config;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -195,9 +194,6 @@ public class TestAmazonS3Target {
     s3Config.awsConfig.awsSecretAccessKey = "bar";
     s3Config.folder = folder;
     s3Config.delimiter = DELIMITER;
-
-    S3AdvancedConfig advancedConfig = new S3AdvancedConfig();
-    advancedConfig.useProxy = false;
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.compress = useCompression;

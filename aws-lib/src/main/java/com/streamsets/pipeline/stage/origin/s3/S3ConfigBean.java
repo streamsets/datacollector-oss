@@ -28,6 +28,7 @@ import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.PostProcessingOptions;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -46,6 +47,10 @@ public class S3ConfigBean {
 
   @ConfigDefBean(groups = {"S3"})
   public BasicConfig basicConfig;
+
+
+  @ConfigDefBean(groups = "ADVANCED")
+  public ProxyConfig advancedConfig;
 
   @ConfigDef(
     required = true,
@@ -69,7 +74,7 @@ public class S3ConfigBean {
   @ConfigDefBean(groups = {"S3"})
   public S3FileConfig s3FileConfig;
 
-  @ConfigDefBean(groups = {"S3"})
+  @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public S3Config s3Config;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
@@ -86,7 +91,7 @@ public class S3ConfigBean {
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
-    s3Config.init(context, S3_CONFIG_PREFIX, issues);
+    s3Config.init(context, S3_CONFIG_PREFIX, advancedConfig, issues);
 
     if(errorConfig.errorFolder != null && !errorConfig.errorFolder.isEmpty() &&
       !errorConfig.errorFolder.endsWith(s3Config.delimiter)) {

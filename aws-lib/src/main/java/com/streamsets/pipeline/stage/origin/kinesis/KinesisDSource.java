@@ -42,7 +42,7 @@ import com.streamsets.pipeline.configurablestage.DSourceOffsetCommitter;
 @GenerateResourceBundle
 public class KinesisDSource extends DSourceOffsetCommitter {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean(groups = {"KINESIS", "ADVANCED"})
   public KinesisConsumerConfigBean kinesisConfig;
 
   @Override

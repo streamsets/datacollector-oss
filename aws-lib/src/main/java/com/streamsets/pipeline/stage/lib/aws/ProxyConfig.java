@@ -1,4 +1,6 @@
 /**
+ * Copyright 2015 StreamSets Inc.
+ *
  * Licensed under the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -15,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.s3;
+package com.streamsets.pipeline.stage.lib.aws;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -23,28 +25,28 @@ import com.streamsets.pipeline.common.InterfaceStability;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
-public class S3AdvancedConfig {
+public class ProxyConfig {
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Proxy",
-      description = "Whether or not to connect to S3 through a proxy",
+      description = "Whether or not to connect to AWS through a proxy",
       defaultValue = "false",
-      displayPosition = 10,
-      group = "#0"
+      displayPosition = 5000,
+      group = "ADVANCED"
   )
   public boolean useProxy;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Proxy Host",
-    description = "Optional proxy host the client will connect through",
-    displayPosition = 20,
-    dependsOn = "useProxy",
-    triggeredByValue = "true",
-    group = "#0"
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy Host",
+      description = "Optional proxy host the client will connect through",
+      displayPosition = 5010,
+      dependsOn = "useProxy",
+      triggeredByValue = "true",
+      group = "ADVANCED"
   )
   public String proxyHost;
 
@@ -53,10 +55,10 @@ public class S3AdvancedConfig {
       type = ConfigDef.Type.NUMBER,
       label = "Proxy Port",
       description = "Optional proxy port the client will connect through",
-      displayPosition = 30,
+      displayPosition = 5020,
       dependsOn = "useProxy",
       triggeredByValue = "true",
-      group = "#0"
+      group = "ADVANCED"
   )
   public int proxyPort;
 
@@ -65,10 +67,10 @@ public class S3AdvancedConfig {
       type = ConfigDef.Type.STRING,
       label = "Proxy User",
       description = "Optional proxy user name to use if connecting through a proxy",
-      displayPosition = 40,
+      displayPosition = 5030,
       dependsOn = "useProxy",
       triggeredByValue = "true",
-      group = "#0"
+      group = "ADVANCED"
   )
   public String proxyUser;
 
@@ -77,10 +79,10 @@ public class S3AdvancedConfig {
       type = ConfigDef.Type.STRING,
       label = "Proxy Password",
       description = "Optional proxy password to use when connecting through a proxy",
-      displayPosition = 50,
+      displayPosition = 5040,
       dependsOn = "useProxy",
       triggeredByValue = "true",
-      group = "#0"
+      group = "ADVANCED"
   )
   public String proxyPassword;
 }

@@ -45,21 +45,21 @@ public class AWSUtil {
     return credentialsProvider;
   }
 
-  public static ClientConfiguration getClientConfiguration(AWSConfig awsConfig) {
+  public static ClientConfiguration getClientConfiguration(ProxyConfig config) {
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     // Optional proxy settings
-    if (awsConfig.useProxy) {
-      if (awsConfig.proxyHost != null && !awsConfig.proxyHost.isEmpty()) {
-        clientConfig.setProxyHost(awsConfig.proxyHost);
-        clientConfig.setProxyPort(awsConfig.proxyPort);
+    if (config.useProxy) {
+      if (config.proxyHost != null && !config.proxyHost.isEmpty()) {
+        clientConfig.setProxyHost(config.proxyHost);
+        clientConfig.setProxyPort(config.proxyPort);
 
-        if (awsConfig.proxyUser != null && !awsConfig.proxyUser.isEmpty()) {
-          clientConfig.setProxyUsername(awsConfig.proxyUser);
+        if (config.proxyUser != null && !config.proxyUser.isEmpty()) {
+          clientConfig.setProxyUsername(config.proxyUser);
         }
 
-        if (awsConfig.proxyPassword != null) {
-          clientConfig.setProxyPassword(awsConfig.proxyPassword);
+        if (config.proxyPassword != null) {
+          clientConfig.setProxyPassword(config.proxyPassword);
         }
       }
     }
